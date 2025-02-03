@@ -513,8 +513,8 @@ START
 
 ; Limpiamos pantalla.
 
-	ld a,%00000111
-	call Cls
+;	ld a,%00000111
+;	call Cls
 	call Pulsa_ENTER									 ; PULSA ENTER para disparar el programa.
 
 INICIALIZACION
@@ -583,7 +583,7 @@ INICIALIZACION
 ; ------------------------------------
 
 Main 
-;
+
 ; 07/11/24.
 
 ; Gestión de disparos.
@@ -1443,6 +1443,18 @@ Construye_movimientos_masticados_entidad
 ;	IX contiene (Puntero_de_impresion)
 ;	IY contiene (Puntero_objeto)
 
+;	jr $
+
+;   Puntero_de_impresion $8bef ..... $4000
+;	Posicion_actual $8bfa	   ..... $4721								
+;	Puntero_objeto $8bfc	   ..... $8540								
+;	CTRL_DESPLZ $8bfe		   ..... $00
+;	Puntero_DESPLZ_der $8c03   ..... $8530
+;	Puntero_DESPLZ_izq $8c05   ..... $838e
+;	Cuad_objeto $8c09		   ..... 1		 						
+;	Columnas $8c0a             ..... 2
+;	Columns $8bf9 	           ..... 2
+
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
 
@@ -1534,13 +1546,6 @@ Dos_Columnas
 	and 1
 	ret z
 
-;	No ajustamos (Puntero_objeto). El objeto ya ha aparecido completamente por la izquierda. (Coordenada_X)="$02".
-;	Imprimimos la entidad completa, (Columnas)=2 o 3.
-
-	ld a,ixl
-	and $1f
-	ret nz				
-
 	call Ajusta_Puntero_objeto
 
 	ret
@@ -1559,8 +1564,9 @@ Ajusta_Puntero_objeto
 
 	ld a,(Columnas)
 	ld b,a
-	ld a,3
+	ld a,(Columns)
 	sub b	
+	ret z
 	ld b,a
 
 1 inc iyl
@@ -1844,16 +1850,11 @@ Extrae_address ld e,(hl)
 ;	BIT 7 (Ctrl_0). "1" ..... Derecha.
 ;					"0" ..... Izquierda.
 
-Inicia_Puntero_objeto 
-
-	ld a,(Cuad_objeto)
-	and 1
-	push af
-	call z,Inicia_puntero_objeto_izq
-	pop af
-	ret z
-	call Inicia_puntero_objeto_der
-	ret
+Inicia_Puntero_objeto ld a,(Posicion_inicio)
+	and $1f
+	cp $10
+	jr c,Inicia_puntero_objeto_der
+	jr Inicia_puntero_objeto_izq
 
 ; Arrancamos desde la parte izquierda de la pantalla.
 ; Iniciamos (Indice_Sprite_der).  

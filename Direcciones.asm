@@ -12,26 +12,15 @@
 
 Recompone_posicion_inicio 
 
-	ld hl,(Posicion_inicio) 
-	ld a,l
-	and $1f
-	jr z,1F
-
-	cp $1f
-	jr z,3F
-
 	ld hl,Ctrl_2
 	set 0,(hl)
+
 	ld hl,(Puntero_objeto)
 	ld (Repone_puntero_objeto),hl
-	jr 2F
 
-3 call Mov_left
-	jr 2F
-
-1 call Mov_right
-2 ld hl,Sprite_vacio
+	ld hl,Sprite_vacio
 	ld (Puntero_objeto),hl
+
 	ret
 
 ; ******************************************************************************************************************************************************************************************
@@ -213,20 +202,21 @@ Mov_right ld a,(Ctrl_0)
 
 6 ld a,(CTRL_DESPLZ) 												; Velocidad 1
 	cp $fe 															
-	jr nz,8F
+	jr c,8F
 	jr 3F
 1 ld a,(CTRL_DESPLZ) 												; Velocidad 2
 	cp $fd
-	jr nz,8F
+	jr c,8F
 	jr 3F
 7 ld a,(CTRL_DESPLZ) 												; Velocidad 4
 	cp $fb
-	jr nz,8F
+	jr c,8F
 
 ; ---------- ---------- ----------
 
-3 
-	call Reaparece_izquierda 										; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+3 call Reaparece_izquierda 										; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+	call Draw
+
 ;	call Reinicio
 
 ; ---------- ---------- ----------
@@ -458,6 +448,8 @@ Mov_left
 
 4 
 	call Reaparece_derecha 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+	call Draw
+
 ;	call Reinicio
 
 ; ---------- ---------- ----------
@@ -705,8 +697,13 @@ Reaparece_izquierda ld hl,(Posicion_actual)
 	and a
 	sbc hl,bc
 	ld (Posicion_actual),hl 											; $xx1x
+
 	ld hl,Ctrl_0
 	set 1,(hl)
+
+	ld hl,Ctrl_4
+	set 1,(hl)
+
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------

@@ -534,7 +534,8 @@ Calcula_puntero_de_impresion ld a,(Cuad_objeto)
 8 call PreviousScan
 	djnz 8B
 
-7 push hl
+7 ld (Puntero_de_impresion),hl
+	push hl
 	pop ix
 
 	ld hl,(Puntero_objeto)
