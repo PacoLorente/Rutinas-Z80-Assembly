@@ -432,21 +432,21 @@ Mov_left
 
 ; ---------- ---------- ----------
 
-6 
-
-	jr $
-
-	ld a,(CTRL_DESPLZ)
+6 ld a,(CTRL_DESPLZ)
 	cp $f8 														
-	jr nc,8F
-	jr 4F
+	jr c,4F
+	jr z,4F
+	jr 8F
 1 ld a,(CTRL_DESPLZ) 												
 	cp $f9
-	jr nc,8F
-	jr 4F
+	jr c,4F
+	jr z,4F
+	jr 8F
 7 ld a,(CTRL_DESPLZ)
 	cp $fb
-	jr nc,8F
+	jr c,4F
+	jr z,4F
+	jr 8F
 
 ; ---------- ---------- ----------
 
