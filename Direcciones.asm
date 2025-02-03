@@ -686,6 +686,7 @@ Reaparece_derecha ld hl,(Posicion_actual)
 	and a
 	adc hl,bc
 	ld (Posicion_actual),hl
+	call Genera_coordenadas
 	ld hl,Ctrl_0														; $xxx1
 	set 0,(hl)
 	ret
@@ -697,6 +698,7 @@ Reaparece_izquierda ld hl,(Posicion_actual)
 	and a
 	sbc hl,bc
 	ld (Posicion_actual),hl 											; $xx1x
+	call Genera_coordenadas
 	ld hl,Ctrl_0
 	set 1,(hl)
 	ret

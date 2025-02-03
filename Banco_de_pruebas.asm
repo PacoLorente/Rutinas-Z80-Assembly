@@ -1455,6 +1455,8 @@ Construye_movimientos_masticados_entidad
 ;	Columnas $8c0a             ..... 2
 ;	Columns $8bf9 	           ..... 2
 
+;	$4d1e
+
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
 

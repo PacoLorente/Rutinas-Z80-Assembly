@@ -430,56 +430,34 @@ column ld a,l
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
-; Esta subrutina se encarga de asignar valor a la variable (Columnas), (nº de columnas del objeto que podemos pintar).
+; 	3/2/25
 ;
-; 14/12/22
+;	Modifica: A.
 ;
-;	Modifica: A y BC.
+;	Output: (Columnas).
 
 calcula_CColumnass 
 
-
-;	jr $
-
-	ld a,(Cuad_objeto)
-	and 1
-	jr z,1F
-
-; Nos encontramos en la parte izquierda de la pantalla
-
-	ld a,(Coordenada_X)
-	ld b,a
-	inc b											; (Coordenada_X)+1 en B.
-	ld a,c
-	sub b											; (Columns)-[(Coordenada_X)+1] en A.
-	jr c,2F
-	ld b,a
-	ld a,c
-	sub b
-	ld (Columnas),a
-	jr 4F
-2 ld a,c
-	ld (Columnas),a
-	jr 4F
-
-; Nos encontramos en la parte derecha de la pantalla.
-
-1 ld a,(Coordenada_X)
-	add c
+	ld a,(Posicion_actual)
+	and $1f
+	jr z,One_CColumna
 	dec a
-	sub $1f
-	jr c,3F
-	ld b,a
-	ld a,c
-	sub b
+	jr z,Due_CColumna
+	inc a
+	cp $1e
+	jr c,one_or_due_ccolumnas
+	jr z,Due_CColumna
+	jr One_CColumna
+
+one_or_due_ccolumnas ld a,(Columns)
 	ld (Columnas),a
-	jr 4F
-3 ld a,c
-	ld (Columnas),a
-4 exx
-	ld c,a
-	exx
- ret	
+	ret
+
+Due_CColumna ld a,2
+	jr 1F
+One_CColumna ld a,1
+1 ld (Columnas),a
+	ret
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
