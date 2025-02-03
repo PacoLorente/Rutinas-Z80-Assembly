@@ -697,13 +697,8 @@ Reaparece_izquierda ld hl,(Posicion_actual)
 	and a
 	sbc hl,bc
 	ld (Posicion_actual),hl 											; $xx1x
-
 	ld hl,Ctrl_0
 	set 1,(hl)
-
-	ld hl,Ctrl_4
-	set 1,(hl)
-
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------

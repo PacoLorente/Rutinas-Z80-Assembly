@@ -436,7 +436,12 @@ column ld a,l
 ;
 ;	Modifica: A y BC.
 
-calcula_CColumnass ld a,(Cuad_objeto)
+calcula_CColumnass 
+
+
+;	jr $
+
+	ld a,(Cuad_objeto)
 	and 1
 	jr z,1F
 
