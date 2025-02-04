@@ -897,7 +897,7 @@
  284+ 8A18              ; Aleatoriedad en la posición de inicio de la entidad.
  285+ 8A18              ; BadSat siempre aparecerá por la parte superior de la pantalla, $40xx. (Cuad_objeto) tendrá valor 1 o 2 dependiendo de si aparece por la mitad izquierda o derecha.
  286+ 8A18
- 287+ 8A18 12 40        Pos_inicio_entidad1	defw $4012	                        ; (Posicion_inicio).
+ 287+ 8A18 01 40        Pos_inicio_entidad1	defw $4001	                        ; (Posicion_inicio).
  288+ 8A1A 00           	db 0												; (Cuad_objeto).
  289+ 8A1B
  290+ 8A1B C0 DD        	defw Almacen_de_movimientos_masticados_Entidad_1	; (Puntero_de_almacen_de_mov_masticados)
@@ -1072,8 +1072,8 @@
  137+ 8AAF 11 11 92 00      db $11,$11,$92,0                        ; Arriba/Derecha. 2rep. --- Termina movimiento.
  138+ 8AB3
  139+ 8AB3 11 12 13 01  Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
- 140+ 8AB7 11 11 91 FD      db $11,$11,$91,253,8,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 140+ 8ABB 08 00
+ 140+ 8AB7 11 11 91 FD      db $11,$11,$91,253,9,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 140+ 8ABB 09 00
  141+ 8ABD
  142+ 8ABD 11 11 16 01  Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
  143+ 8AC1 11 11 91 FD      db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
