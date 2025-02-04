@@ -1,7 +1,7 @@
 
 ; ******************************************************************************************************************************************************************************************
 ;
-;   20/05/23
+;   4/2/25
 ;
 ;	Recompone_posicion_inicio
 ;
@@ -12,16 +12,35 @@
 
 Recompone_posicion_inicio 
 
+	ld a,1										; Para poder llamar a [Mov_left]/[Mov_right] necesitamos tener definidos (Vel_left), (Vel_right) y (Posicion_actual).
+	ld hl,Vel_left
+	ld (hl),a
+	inc l
+	ld (hl),a
+
 	ld hl,Ctrl_2
 	set 0,(hl)
-
 	ld hl,(Puntero_objeto)
 	ld (Repone_puntero_objeto),hl
 
-	ld hl,Sprite_vacio
-	ld (Puntero_objeto),hl
+	ld hl,(Posicion_inicio) 
+	ld (Posicion_actual),hl
 
+	ld a,l
+	and $1f
+	jr z,1F
+	cp $1f
+	jr nz,2F
+
+	call Mov_left
+2 ld hl,Sprite_vacio
+	ld (Puntero_objeto),hl
+	ld hl,0 
+	ld (Posicion_actual),hl
 	ret
+
+1 call Mov_right
+	jr 2B
 
 ; ******************************************************************************************************************************************************************************************
 ;

@@ -1438,12 +1438,13 @@ Construye_movimientos_masticados_entidad
 ;															; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
 	call Recompone_posicion_inicio
 
+
+
 1 call Draw
 
 ;	IX contiene (Puntero_de_impresion)
 ;	IY contiene (Puntero_objeto)
 
-;	jr $
 
 ;   Puntero_de_impresion $8bef ..... $4000
 ;	Posicion_actual $8bfa	   ..... $4721								
@@ -1852,7 +1853,9 @@ Extrae_address ld e,(hl)
 ;	BIT 7 (Ctrl_0). "1" ..... Derecha.
 ;					"0" ..... Izquierda.
 
-Inicia_Puntero_objeto ld a,(Posicion_inicio)
+Inicia_Puntero_objeto 
+
+	ld a,(Posicion_inicio)
 	and $1f
 	cp $10
 	jr c,Inicia_puntero_objeto_der
