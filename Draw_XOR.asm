@@ -161,8 +161,9 @@ Comprueba_centro call calcula_tercio
 ;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L. 
 ;	
 
-Comprueba_limite_vertical ld hl,(Posicion_actual)
-	ld a,l
+Comprueba_limite_vertical 
+
+	ld a,(Posicion_actual)
 	and $1F
 	ld d,a 											 
 	ld a,(Limite_vertical)
@@ -432,9 +433,10 @@ column ld a,l
 ;
 ; 	3/2/25
 ;
-;	Modifica: A.
+;	Modify: A.
 ;
 ;	Output: (Columnas).
+;	
 
 calcula_CColumnass 
 
