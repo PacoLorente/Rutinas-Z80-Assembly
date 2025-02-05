@@ -1526,10 +1526,6 @@ Guarda_movimiento_masticado
 
 Codifica_Puntero_de_impresion
 
-	ld a,ixh
-	bit 6,a
-	ret z
-
 	ld a,(Columnas)
 	dec a
 	jr z,Una_Columna
@@ -1622,57 +1618,59 @@ Obtenemos_puntero_de_impresion
 
 Decodifica_Puntero_de_impresion 
 
-	ld a,2
-	ld (Columnas),a
+	jr $
 
-	bit 6,b
-	jr z,1F 															; Entidad en ROM.
+;	ld a,2
+;	ld (Columnas),a
 
-	inc a
-	ld (Columnas),a
+;	bit 6,b
+;	jr z,1F 															; Entidad en ROM.
+
+;	inc a
+;	ld (Columnas),a
 
 ;	(Puntero_de_impresión) codificado.
 
-	bit 7,b
-	jr z,2F
+;	bit 7,b
+;	jr z,2F
 
 ;	Decodifica 2 Columnas.
 
-	res 7,b
-	ld a,2
-	ld (Columnas),a
-	jr 1F
+;	res 7,b
+;	ld a,2
+;	ld (Columnas),a
+;	jr 1F
 
 ;	Decodifica 1 Columna.	
 
-2 bit 5,b
-	jr z,1F
+;2 bit 5,b
+;	jr z,1F
 
-	res 5,b
-	ld a,1
-	ld (Columnas),a
+;	res 5,b
+;	ld a,1
+;	ld (Columnas),a
 
 ; 	Almacena (Puntero_de_impresion) en caja.
 
-1 ld (ix+5),c
-	ld (ix+6),b
+;1 ld (ix+5),c
+;	ld (ix+6),b
 
-	ld (Puntero_de_impresion),bc
+;	ld (Puntero_de_impresion),bc
 
 ;	Actualiza (Puntero_de_almacen_de_mov_masticados).
 
-	add hl,sp
-	ld (ix+7),l
-	ld (ix+8),h
+;	add hl,sp
+;	ld (ix+7),l
+;	ld (ix+8),h
 
-	pop bc
+;	pop bc
 
-	ld a,c
-	add b															; Comprueba si ya no hay datos en el almacén.
+;	ld a,c
+;	add b															; Comprueba si ya no hay datos en el almacén.
 
-	ld sp,(Stack)
+;	ld sp,(Stack)
 
-	call z,Reinicia_entidad_maliciosa
+;	call z,Reinicia_entidad_maliciosa
 
 	ret
 
