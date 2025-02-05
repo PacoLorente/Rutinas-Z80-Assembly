@@ -1526,6 +1526,10 @@ Guarda_movimiento_masticado
 
 Codifica_Puntero_de_impresion
 
+	ld a,ixh
+	bit 6,a
+	ret z
+
 	ld a,(Columnas)
 	dec a
 	jr z,Una_Columna
