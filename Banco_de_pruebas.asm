@@ -739,6 +739,9 @@ Main
 	push ix														; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
 	ld ix,(Puntero_de_impresion)
 	call Genera_datos_de_impresion
+
+	ld hl,(Album_de_pintado)
+
 	pop ix														; Pop .db (Tipo) de la entidad, (caja de entidades correspondiente) en IX.							
 
 	call Decrementa_Contador_de_mov_masticados					
@@ -768,6 +771,7 @@ Gestiona_siguiente_entidad
 	call Incrementa_punteros_de_cajas
 
 	pop bc
+
 	djnz 2B
 
 ; Hemos gestionado todas las entidades. 
@@ -1521,14 +1525,6 @@ Guarda_movimiento_masticado
 ;			IY contiene (Puntero_objeto)
 
 Codifica_Puntero_de_impresion
-
-; 	En 1er lugar verificamos si estamos en zona de video, RET si no es así.
-
-	ld a,ixh
-	bit 6,a
-	ret z
-
-;	Codificamos (Puntero_de_impresion) en función del nº de (Columnas) a imprimir.
 
 	ld a,(Columnas)
 	dec a
