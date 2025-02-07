@@ -604,12 +604,20 @@ Genera_disparo_de_entidad_maldosa
 
 ;*  Exclusiones.
 
-;   La entidad no podrá disparar mientras se encuentre en las filas: 0,1,15,16.
 ;   La entidad no podrá disparar si hay 7 disparos en pantalla.
 
     ld a,(Numero_de_disparos_de_entidades)
     and a
     ret z
+
+;   La entidad tiene que aparecer completamente en pantalla para poder efectuar un diaparo.
+
+    ld hl,(Puntero_de_impresion)
+    ld a,h
+    bit 6,a
+    ret z
+
+;   La entidad no podrá disparar mientras se encuentre en las filas: 0,1,15,16.
 
     ld a,(Coordenada_y)
     and a
@@ -620,6 +628,14 @@ Genera_disparo_de_entidad_maldosa
 
     cp 16
     ret nc
+
+;   La entidad no podrá disparar en las columnas 0 y 31
+
+    ld a,(Puntero_de_impresion)
+    and $1f
+    ret z
+    cp $1f
+    ret z
 
 ;   En este punto el registro B siempre está a "0" y HL apunta al `nuevo´ ( Puntero de impresión) de la entidad.
 ;   (Puntero_objeto) del disparo inicial siempre será el mismo en cualquier caso, ( para que quede centrado ) en cualquier_
