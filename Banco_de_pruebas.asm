@@ -1551,8 +1551,19 @@ Dos_Columnas
 
 Una_Columna 					
 
+; (Puntero_objeto) en ROM ????
+
 	ld a,ixh
-	set 5,a
+	bit 6,a
+	jr nz,2F
+
+; Cuando estamos apareciendo por la izquierda y el objeto está en ROM, IXH ="$f_".
+
+	set 7,a
+	set 6,a
+	set 4,a
+
+2 set 5,a
 	ld ixh,a
 
 	jr 1B
@@ -1618,59 +1629,59 @@ Obtenemos_puntero_de_impresion
 
 Decodifica_Puntero_de_impresion 
 
-	jr $
+;	Inicialmente suponemos que la entidad está apareciendo por el lado izquierdo de la pantalla, (1 Columna) y (Puntero_objeto) se encuentra en ROM, (por debajo de $4000).
 
-;	ld a,2
-;	ld (Columnas),a
+	ld a,1															
+	ld (Columnas),a
 
-;	bit 6,b
-;	jr z,1F 															; Entidad en ROM.
+	ld a,b
+	and $f0
+	cp $f0
+	jr nz,1F
 
-;	inc a
-;	ld (Columnas),a
+	res 7,b
+	res 6,b
+	jr 2F
 
-;	(Puntero_de_impresión) codificado.
+1 bit 6,b
+	jr z,3F
 
-;	bit 7,b
-;	jr z,2F
+	bit 5,b
+	jr z,3F
+	res 5,b
+	jr 2F
 
-;	Decodifica 2 Columnas.
+;	Dos Columnas ???
 
-;	res 7,b
-;	ld a,2
-;	ld (Columnas),a
-;	jr 1F
+3 ld a,3
+	ld (Columnas),a
 
-;	Decodifica 1 Columna.	
+	bit 7,b
+	jr z,2F
 
-;2 bit 5,b
-;	jr z,1F
+	res 7,b
+	dec a
+	ld (Columnas),a
 
-;	res 5,b
-;	ld a,1
-;	ld (Columnas),a
+2 ld (ix+5),c
+	ld (ix+6),b
 
-; 	Almacena (Puntero_de_impresion) en caja.
-
-;1 ld (ix+5),c
-;	ld (ix+6),b
-
-;	ld (Puntero_de_impresion),bc
+	ld (Puntero_de_impresion),bc
 
 ;	Actualiza (Puntero_de_almacen_de_mov_masticados).
 
-;	add hl,sp
-;	ld (ix+7),l
-;	ld (ix+8),h
+	add hl,sp
+	ld (ix+7),l
+	ld (ix+8),h
 
-;	pop bc
+	pop bc
 
-;	ld a,c
-;	add b															; Comprueba si ya no hay datos en el almacén.
+	ld a,c
+	add b															; Comprueba si ya no hay datos en el almacén.
 
-;	ld sp,(Stack)
+	ld sp,(Stack)
 
-;	call z,Reinicia_entidad_maliciosa
+	call z,Reinicia_entidad_maliciosa
 
 	ret
 
@@ -2080,6 +2091,9 @@ Pintando_entidades
 
 Ejecuta_escudo
 
+	ld a,3
+	ld (Columnas),a
+
 	ld a,(Shield)
 	and a
 	jr nz,Aplica_Shield
@@ -2089,9 +2103,6 @@ Borrando_Amadeus
 	ld hl,Ctrl_3
 	bit 5,(hl)
 	jr z,1F												; No borramos. No ha habido movimiento.
-
-	ld a,3
-	ld (Columnas),a
 
 	ld hl,(Album_de_borrado_Amadeus)
 	call Extrae_address
