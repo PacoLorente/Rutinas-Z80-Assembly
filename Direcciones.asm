@@ -473,7 +473,22 @@ Mov_left
 
 8 ld hl,(Posicion_actual)
 	call DESPLZ_IZQ
+
 2 ret
+
+; ---------- ---------- ----------
+
+Desaparece_por_la_izquierda
+
+	ld hl,Ctrl_0
+	bit 7,(hl)
+	jr nz,1F														; RET si estamos apareciendo.
+
+	ld hl,Ctrl_4
+	set 1,(hl)
+
+1 xor a
+	ret
 
 ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;

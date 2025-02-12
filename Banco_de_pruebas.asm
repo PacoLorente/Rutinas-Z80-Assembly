@@ -1539,11 +1539,15 @@ Dos_Columnas
 ;	Opción 1. La entidad está impresa completa en pantalla pero sólo ocupa 2 Columnas, (1er FRAME de animación).
 ;	Opción 2. La entidad está desapareciendo por la derecha, (no hay ajuste de Puntero_objeto).
 
+;	ld a,(Ctrl_4)
+;	bit 1,a
+;	jr nz,3F
+
 	ld a,(Ctrl_0)
 	bit 7,a
 	ret z													; Indica que el último movimiento ha sido a la izquierda.
 
-	ld a,ixh
+3 ld a,ixh
 	set 7,a
 	ld ixh,a
 
