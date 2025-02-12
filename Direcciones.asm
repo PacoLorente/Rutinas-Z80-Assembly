@@ -605,7 +605,7 @@ Ciclo_completo_2 ld a,(CTRL_DESPLZ)
 	ld a,(Cuad_objeto)
 	and 1
 	jr z,2F
-	ld hl,Posicion_actual                                         ; Decrementamos (Posicion_actual) en los cuadrantes 2º y 4º.
+	ld hl,Posicion_actual                                         ; Decrementamos (Posicion_actual) en los cuadrantes 1º y 3º.
 	dec (hl)
 	call Genera_coordenadas
 

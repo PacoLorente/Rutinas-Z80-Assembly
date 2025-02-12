@@ -1453,17 +1453,15 @@ Construye_movimientos_masticados_entidad
 ;	IY contiene (Puntero_objeto)
 
 
-;   Puntero_de_impresion $8bef ..... $4000
-;	Posicion_actual $8bfa	   ..... $4721								
-;	Puntero_objeto $8bfc	   ..... $8540								
-;	CTRL_DESPLZ $8bfe		   ..... $00
-;	Puntero_DESPLZ_der $8c03   ..... $8530
-;	Puntero_DESPLZ_izq $8c05   ..... $838e
-;	Cuad_objeto $8c09		   ..... 1		 						
-;	Columnas $8c0a             ..... 2
-;	Columns $8bf9 	           ..... 2
-
-;	$4d1e
+;   Puntero_de_impresion $8bef ..... $4b40
+;	Columns $8bf9 	           ..... 3
+;	Posicion_actual $8bfa	   ..... $4a80					
+;	Puntero_objeto $8bfc	   ..... $8500						
+;	CTRL_DESPLZ $8bfe		   ..... $fe
+;	Puntero_DESPLZ_der $8c03   ..... $853e
+;	Puntero_DESPLZ_izq $8c05   ..... $8390
+;	Cuad_objeto $8c09		   ..... 2	 						
+;	Columnas $8c0a             ..... 1
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
@@ -1538,6 +1536,13 @@ Codifica_Puntero_de_impresion
 
 Dos_Columnas 
 
+;	Opción 1. La entidad está impresa completa en pantalla pero sólo ocupa 2 Columnas, (1er FRAME de animación).
+;	Opción 2. La entidad está desapareciendo por la derecha, (no hay ajuste de Puntero_objeto).
+
+	ld a,(Ctrl_0)
+	bit 7,a
+	ret z													; Indica que el último movimiento ha sido a la izquierda.
+
 	ld a,ixh
 	set 7,a
 	ld ixh,a
@@ -1555,6 +1560,10 @@ Dos_Columnas
 Una_Columna 					
 
 ; (Puntero_objeto) en ROM ????
+
+	ld a,(Ctrl_0)
+	bit 7,a
+	ret z													; Indica que el último movimiento ha sido a la izquierda.
 
 	ld a,ixh
 	bit 6,a
