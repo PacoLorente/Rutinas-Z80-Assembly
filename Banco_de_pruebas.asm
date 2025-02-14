@@ -1453,7 +1453,7 @@ Construye_movimientos_masticados_entidad
 ;	IY contiene (Puntero_objeto)
 
 
-;   Puntero_de_impresion $8bef ..... $4b40
+;   Puntero_de_impresion $8bef ..... $4943
 ;	Columns $8bf9 	           ..... 3
 ;	Posicion_actual $8bfa	   ..... $4a80					
 ;	Puntero_objeto $8bfc	   ..... $8500						
@@ -1461,7 +1461,8 @@ Construye_movimientos_masticados_entidad
 ;	Puntero_DESPLZ_der $8c03   ..... $853e
 ;	Puntero_DESPLZ_izq $8c05   ..... $8390
 ;	Cuad_objeto $8c09		   ..... 2	 						
-;	Columnas $8c0a             ..... 1
+;	Columnas $8c0a             ..... 3
+
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado

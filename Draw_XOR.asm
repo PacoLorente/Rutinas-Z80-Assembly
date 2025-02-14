@@ -44,6 +44,73 @@ Draw
 	ret
 
 ; *******************************************************************************************************************************************************************************************
+; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+;
+;   14/02/25
+;
+;	Calcula el cuadrante de pantalla donde se encuentra la entidad: (Cuad_objeto), "1", "2", "3" o "4".
+;	Esta información es necesaria para poder calcular el (Puntero_de_impresion) de la entidad.
+;
+;	INPUT:  HL contiene (Posicion_actual).
+;	OUTPUT: (Cuad_objeto) contiene "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.		
+;
+;	MODIFY: A.	
+
+
+Calcula_Cuad_objeto
+
+	call calcula_tercio																			
+
+;	Ahora tenemos "0", "1" o "2" en el acumulador en función del tercio de pantalla en el que nos encontremos.
+
+	jr z,Primer_tercio 													
+	dec a
+	jr z,Segundo_tercio
+
+Tercer_tercio
+
+	call Determina_lado_de_pantalla
+	jr nz,1F
+	ld a,4
+	jr 2F
+
+1 ld a,3
+2 ld (Cuad_objeto),a
+
+	ret	
+
+Primer_tercio
+
+	call Determina_lado_de_pantalla
+	jr nz,3F
+	ld a,2
+	jr 2B
+
+3 ld a,1
+	jr 2B
+
+Segundo_tercio
+
+	ld a,l
+	cp $7f
+	jr c,Primer_tercio
+	jr z,Primer_tercio
+	jr Tercer_tercio
+
+; ------------------------------------
+
+Determina_lado_de_pantalla ld a,l
+	and $1f
+	cp $10
+	jr c,1F
+	xor a
+	ret
+
+1 ld a,1
+	ret
+
+; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 ;	21/01/23
 ;
 ; 	Comprueba_limite_horizontal.
@@ -474,7 +541,9 @@ One_CColumna ld a,1
 ;
 ;	DESTRUYE: HL,B Y A.	
 
-Calcula_puntero_de_impresion ld a,(Cuad_objeto)
+Calcula_puntero_de_impresion 
+
+	ld a,(Cuad_objeto)
 	cp 2
 	jr c,1F
 	jr z,1F
