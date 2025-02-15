@@ -1452,10 +1452,9 @@ Construye_movimientos_masticados_entidad
 ;	IX contiene (Puntero_de_impresion)
 ;	IY contiene (Puntero_objeto)
 
-
-;   Puntero_de_impresion $8bef ..... $4943
+;   Puntero_de_impresion $8bef ..... $4c44
 ;	Columns $8bf9 	           ..... 3
-;	Posicion_actual $8bfa	   ..... $4a80					
+;	Posicion_actual $8bfa	   ..... $4b84					
 ;	Puntero_objeto $8bfc	   ..... $8500						
 ;	CTRL_DESPLZ $8bfe		   ..... $fe
 ;	Puntero_DESPLZ_der $8c03   ..... $853e

@@ -424,66 +424,70 @@ Modificaccionne
 
 ; 	OUTPUT: DESTRUYE [AF] y [D].
 	 
-Inicializacion call calcula_tercio																			
-	jr z,primit 													
-	and 2
-	jr nz,segmit
-	ld a,l 															
-	cp $7f
-	jr c,primit
-	jr z,primit
-segmit call column  												
-	jr c,tercuad
-cuarcuad ld a,4
-	ld (Cuad_objeto),a
+Inicializacion 
+
+	call Calcula_Cuad_objeto
+
+	ex af,af										; Copia de respaldo de (Cuad_objeto) en A´.
+
+	ld a,(Cuad_objeto)
+	and 1
+	jr nz,Uno_Tres
+
+Dos_Cuatro
+
+	ld a,(Cuad_objeto)
+	dec a
+	dec a
+	jr z,segcuad
+	jr cuarcuad
+
+Uno_Tres
+
+	ld a,(Cuad_objeto)
+	srl a
+	jr z,primcuad 
+	jr tercuad
+
+; ----- ----- ----- ----- ----- 
+
+cuarcuad 
+
 	ld hl,$4820
 	ld (Limite_horizontal),hl
 	ld hl,Limite_vertical
 	ld (hl),$0d
-	ex af,af
 	jr 1F
+
 tercuad	
-	ld a,3
-	ld (Cuad_objeto),a 
+
 	ld hl,$4820
 	ld (Limite_horizontal),hl
 	ld hl,Limite_vertical
 	ld (hl),$12
-	ex af,af
 	jr 1F
-primit call column 													
-	jr c, primcuad 													
+
 segcuad 
-	ld a,2
-	ld (Cuad_objeto),a
+
 	ld hl,$4fc0
 	ld (Limite_horizontal),hl
 	ld hl,Limite_vertical
 	ld (hl),$0d
-	ex af,af
 	jr 1F
+
 primcuad 
-	ld a,1
-	ld (Cuad_objeto),a 
+
 	ld hl,$4fc0
 	ld (Limite_horizontal),hl
 	ld hl,Limite_vertical
 	ld (hl),$12
-	ex af,af
 
-1 push bc
-	push hl
-	push de
-
-	ld hl,(Posicion_actual)
+1 ld hl,(Posicion_actual)
 	call Genera_coordenadas
-
-	pop de
-	pop hl
-	pop bc
 
 	ld hl,Ctrl_0
 	set 5,(hl)
+
 	ret
 
 ; ------------------------------------------------------------------------------------------------------------------
@@ -541,14 +545,25 @@ One_CColumna ld a,1
 ;
 ;	DESTRUYE: HL,B Y A.	
 
-Calcula_puntero_de_impresion 
+Calcula_puntero_de_impresion
 
 	ld a,(Cuad_objeto)
-	cp 2
-	jr c,1F
-	jr z,1F
 	and 1
-	jr z,3F
+	jr nz,Lado_izquierdo
+
+Lado_derecho
+
+	ld a,(Cuad_objeto)
+	dec a
+	dec a
+	jr z,Cuadrante_dos
+	jr Cuadrante_cuatro
+
+Lado_izquierdo
+
+	ld a,(Cuad_objeto)
+	srl a
+	jr z,Cuadrante_uno 
 
 ; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
 
@@ -561,14 +576,14 @@ Calcula_puntero_de_impresion
 	djnz 9B
 	jr 7F
 
-; Estamos situados en el 4º cuadrante de pantalla. ----- ----- -----
+Cuadrante_cuatro
 
 3 ld hl,(Posicion_actual) 
 	jr 7F
 
 1 jr z,2F
 
-; Estamos situados en el 1er cuadrante de pantalla. ----- ----- -----
+Cuadrante_uno
 
 	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
 
@@ -582,7 +597,7 @@ Calcula_puntero_de_impresion
 	djnz 5B
 	jr 7F
 
-; Estamos situados en el 2º cuadrante de pantalla. ----- ----- -----
+Cuadrante_dos
 
 2 call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
 	ld b,15
@@ -590,10 +605,12 @@ Calcula_puntero_de_impresion
 	djnz 8B
 
 7 ld (Puntero_de_impresion),hl
+
 	push hl
 	pop ix
 
 	ld hl,(Puntero_objeto)
+
 	push hl
 	pop iy
 
