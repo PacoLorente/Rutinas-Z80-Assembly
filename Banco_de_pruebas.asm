@@ -1445,16 +1445,19 @@ Construye_movimientos_masticados_entidad
 ;															; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
 	call Recompone_posicion_inicio
 
-
-
 1 call Draw
+
+;	ld a,(Posicion_actual)
+;	and $1f
+;	cp 2
+;	jr z,$
 
 ;	IX contiene (Puntero_de_impresion)
 ;	IY contiene (Puntero_objeto)
 
-;   Puntero_de_impresion $8bef ..... $4c44
+;   Puntero_de_impresion $8bef ..... $4942
 ;	Columns $8bf9 	           ..... 3
-;	Posicion_actual $8bfa	   ..... $4b84					
+;	Posicion_actual $8bfa	   ..... $4882					
 ;	Puntero_objeto $8bfc	   ..... $8500						
 ;	CTRL_DESPLZ $8bfe		   ..... $fe
 ;	Puntero_DESPLZ_der $8c03   ..... $853e
