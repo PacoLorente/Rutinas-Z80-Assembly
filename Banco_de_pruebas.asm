@@ -1523,7 +1523,7 @@ Guarda_movimiento_masticado
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	26/01/25
+;	17/02/25
 ;
 ;	INPUTS: IX contiene (Puntero_de_impresion)
 ;			IY contiene (Puntero_objeto)
@@ -1539,18 +1539,7 @@ Codifica_Puntero_de_impresion
 
 Dos_Columnas 
 
-;	Opción 1. La entidad está impresa completa en pantalla pero sólo ocupa 2 Columnas, (1er FRAME de animación).
-;	Opción 2. La entidad está desapareciendo por la derecha, (no hay ajuste de Puntero_objeto).
-
-;	ld a,(Ctrl_4)
-;	bit 1,a
-;	jr nz,3F
-
-	ld a,(Ctrl_0)
-	bit 7,a
-	ret z													; Indica que el último movimiento ha sido a la izquierda.
-
-3 ld a,ixh
+	ld a,ixh
 	set 7,a
 	ld ixh,a
 
@@ -1567,10 +1556,6 @@ Dos_Columnas
 Una_Columna 					
 
 ; (Puntero_objeto) en ROM ????
-
-	ld a,(Ctrl_0)
-	bit 7,a
-	ret z													; Indica que el último movimiento ha sido a la izquierda.
 
 	ld a,ixh
 	bit 6,a
