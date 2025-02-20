@@ -23,8 +23,6 @@ FRAMES_3 equ $5c7a
 
 Sprite_vacio equ $f880													; 48 Bytes de "0".
 
-Centro_arriba equ $0160 												; Emplearemos estas constantes en la rutina de `recolocación´ del objeto:_
-Centro_abajo equ $0180 													; _[Comprueba_limite_horizontal]. El byte alto en las dos primeras constantes_
 Centro_izquierda equ $0f 												; _indica el tercio de pantalla, (línea $60 y $80 del 2º tercio de pantalla).
 Centro_derecha equ $10 													; Las constantes (Centro_izquierda) y (Centro_derecha) indican la columna $0f y $10 de pantalla.
 

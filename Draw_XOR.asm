@@ -18,6 +18,7 @@ Draw
 
 2 ld hl,(Posicion_inicio) 							; No hay (Posicion_actual), por lo que el objeto se está iniciando.
 	ld (Posicion_actual),hl							; Indicamos que (Posicion_actual) = (Posicion_inicio) y saltamos a la subrutina [Inicializacion], (donde asignaremos_			
+
 	call Inicializacion   							; _(Limite_horizontal), (Limite_vertical) y (Cuad_objeto). También asignaremos las coordenadas X e Y. (Posición 0,0)_
 ;													; _la esquina superior izquierda de la pantalla.	
 	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
@@ -110,7 +111,7 @@ Determina_lado_de_pantalla ld a,l
 	ret
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+;
 ;	16/02/25
 ;
 ; 	Comprueba_limite_horizontal.
@@ -128,6 +129,7 @@ Comprueba_limite_horizontal
 	bit 2,a											; _si hemos llegado o sobrepasado (Limite_horizontal). Seguimos con la rutina.
 	jr z,1F											; Si por el contrario hemos desaparecido por arriba o por abajo, (bit2/bit3 de (Ctrl_0)="1"))_
 	res 2,a											; _hay que modificar el puntero de posición. Antes inicializaremos los_ 
+
 2 ld (Ctrl_0),a										; _ bits 2 y 3 de (Ctrl_0).
 	call Inicializacion								
 	ret
@@ -139,15 +141,18 @@ Comprueba_limite_horizontal
 
 3 push hl						        			; (Posicion_actual).
 
-; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 ; Comprobamos si hemos llegado al (Limite_horizontal). E="0".
 
 	ex de,hl 										; Averiguamos si hemos llegado o sobrepasado el (Limite_horizontal). Hemos simplificado la operación SBC_			
+
 	ld hl,(Limite_horizontal) 						; _cargando el tercio de pantalla en el byte alto.
 	call calcula_tercio 							; (Posicion_actual) - (Limite_horizontal).
 	ld h,a 											 
+
 	ex de,hl 										; ARRIBA a ABAJO .......... E="1" cuando ( Z y NC ).
+
 	call calcula_tercio                             ; ABAJO a ARRIBA .......... E="1" cuando ( Z y C ).
 	ld h,a 											 
 	and a 											
@@ -163,23 +168,83 @@ Comprueba_limite_horizontal
 ;	Partimos de la mitad inferior de la pantalla.
 
 	ex af,af 										; Partimos de LA MITAD INFERIOR. Recupero resultado de (Posicíon - Límite) en AF.
+
     jr z,5F
-    jr c,5F 										; ABAJO a ARRIBA .......... E="1" cuando ( Z y C ). HEMOS SOBREPASADO_
+    jr c,5F 										; ABAJO a ARRIBA .......... E="1" cuando (Z y C). HEMOS SOBREPASADO_
+ 
+    pop hl
+
+	jr Calcula_centro
+
  	ld e,0											; _ (Limite_horizontal), saltamos a 7F.
-	pop hl
+
+ 	pop hl
+
 	ret
 
 ;	Partimos de la mitad superior de la pantalla.
 
 4 ex af,af 											; Partimos de LA MITAD SUPERIOR. Recupero resultado de (Posicíon - Límite) en AF.
+
 	jr z,5F
-	jr nc,5F										; E="1" cuando ( Z y NC ).
- 	ld e,0
+	jr nc,5F										; E="1" cuando (Z y NC).
+
 	pop hl
+
+	jr Calcula_centro
+
+ 	ld e,0
+
+	pop hl
+
 	ret
 
+;! Sobrepasamos el Límite_Horizontal. !!!!!!!!!!!!!!!!!!
+
 5 ld e,1 											; SOBREPASAMOS (Limite_horizontal) !!!. E="1", pop HL y RET.
+
 	pop hl
+
+	ret
+
+; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
+;
+;	INPUT: HL contiene (Posicion_actual).
+;		   AF' contiene (Cuad_objeto).
+
+Calcula_centro
+
+ 	ex af,af
+	cp 2
+	jr c,6F 											; (Cuad_objeto) en C. 
+	jr z,6F
+
+; Partimos de la parte inferior de la pantalla.
+
+	ld a,$7f
+	cp l
+
+	jr z,7F
+	jr nc,7F
+
+	ld e,0
+	ret
+
+; Partimos de la parte superior de la pantalla.
+
+6 ld a,$80
+	cp l
+
+	jr z,7F
+	jr c,7F
+
+	ld e,0
+	ret
+
+; Activa E2. Hemos superado el centro de pantalla.
+
+7 ld e,2
+
 	ret
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
