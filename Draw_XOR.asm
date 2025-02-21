@@ -38,8 +38,8 @@ Draw
 3 call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
 	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
 
-	ld a,(Ctrl_0)									; Antes de salir de la rutina REStauramos el bit5 de Ctrl_0 para que nos vuelva_
-	res 5,a											; _a ser de utilidad.
+	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
+	and %11011100									
 	ld (Ctrl_0),a
 
 	ret
@@ -249,7 +249,7 @@ Calcula_centro
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   16/02/25
+;   21/02/25
 ;
 ;	Comprueba_limite_vertical
 ;
@@ -260,6 +260,8 @@ Calcula_centro
 
 Comprueba_limite_vertical 
 
+;	Excepciones:
+
 ;	Si el registro E="2" salimos sin comprobar el límite vertical.
 
 	dec e
@@ -269,7 +271,15 @@ Comprueba_limite_vertical
 	inc e
 	inc e
 
-	ld a,(Posicion_actual)
+	ld a,(Ctrl_0)
+	bit 0,a
+	jr nz,No_centro_de_pantalla
+	bit 1,a
+	jr nz,No_centro_de_pantalla
+
+; ----- ----- ----- ----- -----
+
+2 ld a,(Posicion_actual)
 	and $1F
 	ld d,a 											 
 
@@ -318,13 +328,13 @@ Comprueba_limite_vertical
 No_centro_de_pantalla
 
 	bit 0,e
- 	ret z											 ; No hemos sobrepasado (Centro_izquierda). Si E="0", salimos sin modificar posición.
+ 	jr z,2F											 ; No hemos sobrepasado (Centro_izquierda). Si E="0", salimos sin modificar posición.
 
 	push bc 										 ; Reservo (Filas) / (Columns) en la pila.
     call Modificaccionne
 	pop bc
  
-    call Inicializacion
+2 call Inicializacion
 
 	ret 				 							 ; Salimos de la rutina.
 
@@ -336,8 +346,6 @@ No_centro_de_pantalla
 
 Limite_vertical_superado 
 
-;	jr $
-
 	push bc											 ; (Filas) / (Columns).
 
 	ld b,c
@@ -347,46 +355,23 @@ Limite_vertical_superado
 
 	ex af,af                           				 ; Consultamos el cuadrante del que partimos.
 	bit 0,a
-	jr nz,8F
+	jr nz,2F
 
 ; 	Parte DERECHA de la pantalla. Por el centro ?? o desaparecemos ??.
 
 	ex af,af 										 ; Estamos en la parte derecha de la pantalla, (cuadrantes 2º o 4º). En ese caso, sumamos (Columnas-1) a L.
-
-	push af                                          ; Guardo la posición, (L), en la pila, (la contiene el acumulador).
-
-	ld a,(Ctrl_0)
-	bit 1,a
-	jr nz,7F                                         ; Cambio de cuadrante por desaparecer por la derecha!!!                                       
-
-	pop af                                           ; Cambio de cuadrante por desaparecer por el centro!!!
-
+                               
 ; Hemos sobrepasado el (Limite_vertical) de la mitad derecha a la izquierda. Ahora necesitamos saber si E="0".
 
  	add b 				 							 ; Si hemos sobrepasado el (Limite_vertical) pero no hemos llegado al centro horizontal_			 																			
     ld l,a	 										 ; _de la pantalla, E="0" modificamos L, Inicializamos el objeto y salimos.
 	ld (Posicion_actual),hl
                                      
-	jr 11F
-							
-
-7 res 1,a											 ; Cambio de cuadrante por desaparecer por la derecha!!!. Reinicializo el bit 1 de (Ctrl_0).
-    ld (Ctrl_0),a
-	pop af
-
-	jr 10F
+	jr 4F
 
 ; Cambio de cuadrante, partimos de la parte IZQUIERDA de la pantalla. Por el centro ?? o desaparecemos ??.
 
-8 ex af,af
-
-	push af											 ; A contiene el byte bajo de (Posicion_actual).
-
-	ld a,(Ctrl_0)
-	bit 0,a											 ; Bit 0 de Ctrl_0 indica que hemos desaparecido por la izquierda.
-	jr nz,9F										 
-
-	pop af
+2 ex af,af
 
 ; Hemos sobrepasado el (Limite_vertical) de la mitad IZQUIERDA a la DERECHA. Ahora necesitamos saber si E="0".
 
@@ -394,18 +379,14 @@ Limite_vertical_superado
     ld l,a
 	ld (Posicion_actual),hl
 
-11 dec e
-	jr nz,10F
+4 dec e
+	jr nz,3F
 
 	call Modificaccionne                            ; Si hemos sobrepasado (Limite_vertical) y (Limite_horizontal), E="1". Modificamos HL,L,_
-    jr 10F
+    jr 3F
 
-9 res 0,a											; ; Cambio de cuadrante por desaparecer por la izquierda !!!!!. Reinicializo el bit 0 de (Ctrl_0).
-    ld (Ctrl_0),a
-	pop af
+3 pop bc
 
-10 pop bc
-	ld e,0
     call Inicializacion
 
 	ret
