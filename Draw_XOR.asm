@@ -272,10 +272,8 @@ Comprueba_limite_vertical
 	inc e
 
 	ld a,(Ctrl_0)
-	bit 0,a
-	jr nz,No_centro_de_pantalla
-	bit 1,a
-	jr nz,No_centro_de_pantalla
+	and 3
+	jr nz,Limite_vertical_superado
 
 ; ----- ----- ----- ----- -----
 
@@ -328,13 +326,13 @@ Comprueba_limite_vertical
 No_centro_de_pantalla
 
 	bit 0,e
- 	jr z,2F											 ; No hemos sobrepasado (Centro_izquierda). Si E="0", salimos sin modificar posición.
+ 	ret z											 ; No hemos sobrepasado (Centro_izquierda). Si E="0", salimos sin modificar posición.
 
 	push bc 										 ; Reservo (Filas) / (Columns) en la pila.
     call Modificaccionne
 	pop bc
  
-2 call Inicializacion
+	call Inicializacion
 
 	ret 				 							 ; Salimos de la rutina.
 
@@ -383,8 +381,7 @@ Limite_vertical_superado
 	jr nz,3F
 
 	call Modificaccionne                            ; Si hemos sobrepasado (Limite_vertical) y (Limite_horizontal), E="1". Modificamos HL,L,_
-    jr 3F
-
+ 
 3 pop bc
 
     call Inicializacion
