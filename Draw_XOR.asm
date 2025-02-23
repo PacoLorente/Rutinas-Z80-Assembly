@@ -172,9 +172,9 @@ Comprueba_limite_horizontal
     jr z,5F
     jr c,5F 										; ABAJO a ARRIBA .......... E="1" cuando (Z y C). HEMOS SOBREPASADO_
  
-    pop hl
+;    pop hl
 
-	jr Calcula_centro
+;	jr Calcula_centro
 
  	ld e,0											; _ (Limite_horizontal), saltamos a 7F.
 
@@ -189,9 +189,9 @@ Comprueba_limite_horizontal
 	jr z,5F
 	jr nc,5F										; E="1" cuando (Z y NC).
 
-	pop hl
+;	pop hl
 
-	jr Calcula_centro
+;	jr Calcula_centro
 
  	ld e,0
 
@@ -263,18 +263,6 @@ Comprueba_limite_vertical
 ;	Excepciones:
 
 ;	Si el registro E="2" salimos sin comprobar el límite vertical.
-
-;	ld a,(Posicion_actual)
-;	and $1f
-;	cp $10
-;	jr z,$
-
-;	dec e
-;	dec e
-;	ret z
-
-;	inc e
-;	inc e
 
 	ld a,(Ctrl_0)
 	and 3
