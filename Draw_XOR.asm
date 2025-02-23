@@ -264,12 +264,17 @@ Comprueba_limite_vertical
 
 ;	Si el registro E="2" salimos sin comprobar el límite vertical.
 
-	dec e
-	dec e
-	ret z
+;	ld a,(Posicion_actual)
+;	and $1f
+;	cp $10
+;	jr z,$
 
-	inc e
-	inc e
+;	dec e
+;	dec e
+;	ret z
+
+;	inc e
+;	inc e
 
 	ld a,(Ctrl_0)
 	and 3

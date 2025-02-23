@@ -773,7 +773,9 @@ Gestiona_siguiente_entidad
 
 	pop bc
 
-	djnz 2B
+	dec b
+	jp nz,2B
+;	djnz 2B
 
 ; Hemos gestionado todas las entidades. 
 ; ----- ----- -----
@@ -1445,9 +1447,9 @@ Construye_movimientos_masticados_entidad
 
 1 call Draw
 
-;	ld a,(Posicion_actual)
+;	ld a,(Puntero_de_impresion)
 ;	and $1f
-;	cp 2
+;	cp $1d
 ;	jr z,$
 
 ;	IX contiene (Puntero_de_impresion)
