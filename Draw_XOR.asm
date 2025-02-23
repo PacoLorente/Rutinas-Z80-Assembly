@@ -273,7 +273,15 @@ Comprueba_limite_vertical
 
 	ld a,(Ctrl_0)
 	and 3
-	jr nz,Limite_vertical_superado
+	jr z,2F
+
+	dec e
+	ret nz
+
+	call Modificaccionne  
+	call Inicializacion
+
+	ret
 
 ; ----- ----- ----- ----- -----
 

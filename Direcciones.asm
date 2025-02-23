@@ -684,9 +684,10 @@ Reaparece_derecha
 	ld a,(Posicion_actual)	 					
 	add $1f
 	ld (Posicion_actual),a
-;	call Genera_coordenadas
 	ld hl,Ctrl_0														
 	set 0,(hl)
+	ld hl,(Posicion_actual)
+	call Inicializacion
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
@@ -696,10 +697,10 @@ Reaparece_izquierda
 	ld a,(Posicion_actual)	 					
 	sub $1f
 	ld (Posicion_actual),a 											
-;	call Genera_coordenadas
-
 	ld hl,Ctrl_0
 	set 1,(hl)
+	ld hl,(Posicion_actual)
+	call Inicializacion
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
