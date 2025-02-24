@@ -273,10 +273,13 @@ Comprobacion_de_extremos
 
 	ld a,(Posicion_actual)							; E=2
 	and $1f
+	cp 4
+	jr c,7F
 	cp $1c
-	ret c
+	jr nc,7F
+	ret
 
-	ld e,0
+7 ld e,0
 	jr 6F
 
 5 inc e
