@@ -172,9 +172,9 @@ Comprueba_limite_horizontal
     jr z,5F
     jr c,5F 										; ABAJO a ARRIBA .......... E="1" cuando (Z y C). HEMOS SOBREPASADO_
  
-;    pop hl
+    pop hl
 
-;	jr Calcula_centro
+	jr Calcula_centro
 
  	ld e,0											; _ (Limite_horizontal), saltamos a 7F.
 
@@ -189,9 +189,9 @@ Comprueba_limite_horizontal
 	jr z,5F
 	jr nc,5F										; E="1" cuando (Z y NC).
 
-;	pop hl
+	pop hl
 
-;	jr Calcula_centro
+	jr Calcula_centro
 
  	ld e,0
 
@@ -262,23 +262,35 @@ Comprueba_limite_vertical
 
 ;	Excepciones:
 
-;	Si el registro E="2" salimos sin comprobar el límite vertical.
-
-	ld a,(Ctrl_0)
-	and 3
-	jr z,2F
+;	Si E=2 no cambiaremos de cuadrante a no ser que estemos a punto de desaparecer por los extremos.
 
 	dec e
-	ret nz
+	dec e
+	jr nz,5F
+	
 
-	call Modificaccionne  
-	call Inicializacion
+Comprobacion_de_extremos
 
-	ret
+	ld a,(Posicion_actual)							; E=2
+	and $1f
+	cp $1c
+	ret c
 
-; ----- ----- ----- ----- -----
+	ld e,0
+	jr 6F
 
-2 ld a,(Posicion_actual)
+5 inc e
+	inc e 											; E=0 / E=1
+
+;	Omitimos comprobar cambio de cuadrante si hemos desaparecido por los extremos.
+
+6 ld a,(Ctrl_0)
+	bit 0,a
+	jr nz,No_centro_de_pantalla
+	bit 1,a
+	jr nz,No_centro_de_pantalla
+
+	ld a,(Posicion_actual)
 	and $1F
 	ld d,a 											 
 
