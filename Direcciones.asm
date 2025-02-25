@@ -659,7 +659,7 @@ Inc_CTRL_DESPLZ ld hl,CTRL_DESPLZ
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
 ;
-;	5/2/23
+;	25/02/25
 ;
 ;	Dec_CTRL_DESPLZ
 ;
@@ -678,6 +678,8 @@ Dec_CTRL_DESPLZ ld hl,CTRL_DESPLZ
 2 ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
+;
+;	25/02/25
 
 Reaparece_derecha 
 
@@ -691,6 +693,8 @@ Reaparece_derecha
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
+;
+;	25/02/25
 
 Reaparece_izquierda 
 
@@ -704,22 +708,29 @@ Reaparece_izquierda
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
+;
+;	25/02/25
+
 
 Reaparece_abajo inc h
 	ld bc,$17e0
 	and a
 	adc hl,bc
 	ld (Posicion_actual),hl
+	call Inicializacion
 	ld hl,Ctrl_0
 	set 2,(hl)
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
+;
+;	25/02/25
 
 Reaparece_arriba ld bc,$17e0
 	and a
 	sbc hl,bc
 	ld (Posicion_actual),hl
+	call Inicializacion
 	ld hl,Ctrl_0
 	set 3,(hl)
 	ret

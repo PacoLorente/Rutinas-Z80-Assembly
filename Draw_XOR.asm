@@ -39,7 +39,7 @@ Draw
 	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
 
 	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
-	and %11011100									
+	and $d0									
 	ld (Ctrl_0),a
 
 	ret
@@ -53,7 +53,7 @@ Draw
 ;	Esta información es necesaria para poder calcular el (Puntero_de_impresion) de la entidad.
 ;
 ;	INPUT:  HL contiene (Posicion_actual).
-;	OUTPUT: (Cuad_objeto) contiene "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.		
+;	OUTPUT: (Cuad_objeto) y A contienen "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.		
 ;
 ;	MODIFY: A.	
 
@@ -112,7 +112,7 @@ Determina_lado_de_pantalla ld a,l
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	16/02/25
+;	25/02/25
 ;
 ; 	Comprueba_limite_horizontal.
 ;
@@ -121,131 +121,69 @@ Determina_lado_de_pantalla ld a,l
 ; 
 ;	Si sobrepasamos o alcanzamos el límite horizontal establecido, la rutina cargará el registro E con un "1".
 ;	Si NO HEMOS SOBREPASADO (Limite_horizontal), E="0".
-;	E="1" indica que HEMOS SOBREPASADO el (Limite_horizontal).
+;	E="2" indica que hemos alcanzado el centro de la pantalla aunque NO HEMOS SUPERADO (Limite_horizontal), (ZONA NEBULOSA).
+
+;	INPUT: HL contiene (Posicion_actual).
+
+
 
 Comprueba_limite_horizontal 
 
-	ld a,(Ctrl_0)									; Si no hemos desaparecido por arriba o por abajo, saltamos a 1F para comprobar_
-	bit 2,a											; _si hemos llegado o sobrepasado (Limite_horizontal). Seguimos con la rutina.
-	jr z,1F											; Si por el contrario hemos desaparecido por arriba o por abajo, (bit2/bit3 de (Ctrl_0)="1"))_
-	res 2,a											; _hay que modificar el puntero de posición. Antes inicializaremos los_ 
+	ld e,0											; Inicializamos E.
 
-2 ld (Ctrl_0),a										; _ bits 2 y 3 de (Ctrl_0).
-	call Inicializacion								
-	ret
+;	Exclusiones !!!
 
-1 bit 3,a
-	jr z,3F	
-	res 3,a
-	jr 2B
+	ld a,(Ctrl_0)									; RET cuando hemos desaparecido por la parte alta o baja de pantalla.
+	and $0c
+	ret nz
 
-3 push hl						        			; (Posicion_actual).
+	call calcula_tercio  							; RET cuando no estamos en el centro de la pantalla, (2º tercio).
+	ret z
 
-; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	dec a
+	dec a
+	ret z
 
-; Comprobamos si hemos llegado al (Limite_horizontal). E="0".
-
-	ex de,hl 										; Averiguamos si hemos llegado o sobrepasado el (Limite_horizontal). Hemos simplificado la operación SBC_			
-
-	ld hl,(Limite_horizontal) 						; _cargando el tercio de pantalla en el byte alto.
-	call calcula_tercio 							; (Posicion_actual) - (Limite_horizontal).
-	ld h,a 											 
-
-	ex de,hl 										; ARRIBA a ABAJO .......... E="1" cuando ( Z y NC ).
-
-	call calcula_tercio                             ; ABAJO a ARRIBA .......... E="1" cuando ( Z y C ).
-	ld h,a 											 
-	and a 											
-	sbc hl,de 										; (Posicion_actual) - (Limite_horizontal).
-
-	ex af,af 										; Guardo el registro F con los flags resultantes de la operación SBC.
+;	HL (Posicion_actual).
+;	E=0
 
 	ld a,(Cuad_objeto)
 	cp 2
-	jr c,4F
-	jr z,4F
+	jr z,1F
+	jr c,1F
 
-;	Partimos de la mitad inferior de la pantalla.
+;	Nos encontramos en la parte INFERIOR de la pantalla.
+;	En este caso superamos el CENTRO de la pantalla cuando L < $80
 
-	ex af,af 										; Partimos de LA MITAD INFERIOR. Recupero resultado de (Posicíon - Límite) en AF.
+	ld a,$80 
+	sub l
+	ret c											
+	ret z											; RET no hemos llegado al centro de la pantalla, E=0.
 
-    jr z,5F
-    jr c,5F 										; ABAJO a ARRIBA .......... E="1" cuando (Z y C). HEMOS SOBREPASADO_
- 
-    pop hl
+	ld e,2											; Zona NEBULOSA que no es poca cosa.
 
-	jr Calcula_centro
+	ld a,(Limite_horizontal)
+	sub l
+	ret c											; RET con E=2.
 
- 	ld e,0											; _ (Limite_horizontal), saltamos a 7F.
+2 dec e
+	ret												; RET con E=1.
 
- 	pop hl
+;	Nos encontramos en la parte SUPERIOR de la pantalla.
+;	En este caso superamos el CENTRO de la pantalla cuando L =< $7f
 
-	ret
+1 ld a,$7f
+	sub l
+	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
 
-;	Partimos de la mitad superior de la pantalla.
+	ld e,2											; Zona NEBULOSA que no es poca cosa.
 
-4 ex af,af 											; Partimos de LA MITAD SUPERIOR. Recupero resultado de (Posicíon - Límite) en AF.
+	ld a,(Limite_horizontal)
+	sub l
+	jr z,2B
+	jr c,2B
 
-	jr z,5F
-	jr nc,5F										; E="1" cuando (Z y NC).
-
-	pop hl
-
-	jr Calcula_centro
-
- 	ld e,0
-
-	pop hl
-
-	ret
-
-;! Sobrepasamos el Límite_Horizontal. !!!!!!!!!!!!!!!!!!
-
-5 ld e,1 											; SOBREPASAMOS (Limite_horizontal) !!!. E="1", pop HL y RET.
-
-	pop hl
-
-	ret
-
-; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- 
-;
-;	INPUT: HL contiene (Posicion_actual).
-;		   AF' contiene (Cuad_objeto).
-
-Calcula_centro
-
- 	ex af,af
-	cp 2
-	jr c,6F 											; (Cuad_objeto) en C. 
-	jr z,6F
-
-; Partimos de la parte inferior de la pantalla.
-
-	ld a,$7f
-	cp l
-
-	jr z,7F
-	jr nc,7F
-
-	ld e,0
-	ret
-
-; Partimos de la parte superior de la pantalla.
-
-6 ld a,$80
-	cp l
-
-	jr z,7F
-	jr c,7F
-
-	ld e,0
-	ret
-
-; Activa E2. Hemos superado el centro de pantalla.
-
-7 ld e,2
-
-	ret
+	ret												; RET con E=2.
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
@@ -443,84 +381,58 @@ Modificaccionne
 
 ; *************************************************************************************************************************************************************************************************
 ;
-;	13/8/22
+;	25/02/25
 ;
 ;	Inicializacion
 ;
 ;	Entrega "1", "2", "3" o "4" en (Cuad_objeto) en función del cuadrante de pantalla en el que nos encontremos.
-;	Fija los punteros del objeto a pintar, (varían en función del cuadrante en el que nos encontremos).
-;	También calcula los límites horizontal y vertical. Estos dependen del tamaño del objeto a imprimir.
-;	
-; 	La rutina se ejecuta cada vez que el objeto supera el (Limite_horizontal) y el (Limite_vertical). Esto sucede_
-;	_ cada vez que el objeto supera el centro de la pantalla tanto en sentido horizontal como vertical y cuando_
-;	_ desaparece/aparece.	
+;	Asigna (Limite_vertical) y (Limite_horizontal) en función de (Cuad_objeto).
 
-;	[Puntero_datas]: Dirección de memoria donde se encuentra el 1er byte que pinta el objeto. 
-;	[Puntero_attr_datas]: Dirección de memoria donde se encuentra el byte de atributos del objeto. 
-;
+; 	La rutina se ejecuta cada vez que la entidad supera el (Limite_horizontal) o el (Limite_vertical).
+;	También cuando la entidad desaparece/aparece por cualquier lado de la pantalla.
+
 ;	INPUT: [HL] contendrá la dirección de pantalla a la que queremos asignar cuadrante. HL=(Posicion_inicio).
 ; 		   [BC] contendrá (Filas)/(Columns) del objeto a inicializar.
-; 		   [E] ="0"
 
-; 	OUTPUT: DESTRUYE [AF] y [D].
-	 
+; 	OUTPUT: (Cuad_objeto), (Limite_vertical), (Limite_horizontal) y set5(Ctrl_0).
+;
+;	MODIFY: A,E,HL,B
+
 Inicializacion 
 
 	call Calcula_Cuad_objeto
-
-	ex af,af										; Copia de respaldo de (Cuad_objeto) en A´.
-
-	ld a,(Cuad_objeto)
+	ld e,a												; (Cuad_objeto) en A y E.
 	and 1
-	jr nz,Uno_Tres
+	jr nz,Left_screen
 
-Dos_Cuatro
+Right_screen
 
-	ld a,(Cuad_objeto)
-	dec a
-	dec a
-	jr z,segcuad
-	jr cuarcuad
-
-Uno_Tres
-
-	ld a,(Cuad_objeto)
-	srl a
-	jr z,primcuad 
-	jr tercuad
-
-; ----- ----- ----- ----- ----- 
-
-cuarcuad 
-
-	ld hl,$4820
-	ld (Limite_horizontal),hl
-	ld hl,Limite_vertical
+	ld hl,Limite_vertical								; En la parte DERECHA de la pantalla, (Limite_vertical) = "$0d".
 	ld (hl),$0d
-	jr 1F
 
-tercuad	
+	dec e
+	dec e
+	jr z,Up_screen
+	jr Down_screen
 
-	ld hl,$4820
-	ld (Limite_horizontal),hl
-	ld hl,Limite_vertical
+Left_screen
+
+	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
 	ld (hl),$12
+
+	srl e
+	jr z,Up_screen 
+
+Down_screen	
+
+	ld a,$3f
+	ld (Limite_horizontal),a
 	jr 1F
 
-segcuad 
+Up_screen 
 
-	ld hl,$4fc0
-	ld (Limite_horizontal),hl
-	ld hl,Limite_vertical
-	ld (hl),$0d
-	jr 1F
-
-primcuad 
-
-	ld hl,$4fc0
-	ld (Limite_horizontal),hl
-	ld hl,Limite_vertical
-	ld (hl),$12
+	ld a,$c0
+	ld (Limite_horizontal),a
 
 1 ld hl,(Posicion_actual)
 	call Genera_coordenadas
@@ -684,22 +596,18 @@ Operandos ld hl,(Posicion_actual)
 ;	Es una rutina de carga.
 ;	Carga los registros BC,HL y E para posteriormente llamar a la rutina de pintado [DRAW].
 ;	
-;	FUNCIONAMIENTO:
+;	OUTPUT:
 ;
 ;	- LD (Filas/Columns) del objeto a pintar en [BC].
 ;	- LD (Posicion_actual) del objeto en [HL].
-;	- LD E,0. (Dígito de control utilizado por Draw para cálculos internos de la rutina. Ha de estar a "0").
 ;
-;	DESTRUYE:
-;
-;	Logicamente, BC,HL y E quedan destruidos.	
+;	MODIFY: HL y BC.
 
 Prepara_draw ld hl,Filas 		 					 					 ; Prepara los registros BC, E y HL. 
 	ld b,(hl) 														     ; Carga Filas/Columns del objeto a pintar o inicializar en BC. 
 	inc hl 												 				 ; Carga (Posicion_actual) en HL.
 	ld c,(hl) 											
 	ld hl,(Posicion_actual)
-	ld e,0 																 ; Byte de control. Ha de estar a "0" cuando llamamos a [DRAW].
 	ret
 
 ;----------------------------------------------------------------------------------------------------------------

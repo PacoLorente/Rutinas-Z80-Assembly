@@ -7,7 +7,7 @@
 ;
 ;	Input: HL contendrá la (Posicion_actual) del Sprite.
 ;
-;	Modifica: A,BC y DE.
+;	Modifica: A,B y E.
 
 Genera_coordenadas 
 
