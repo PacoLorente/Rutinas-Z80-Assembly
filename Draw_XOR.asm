@@ -125,8 +125,6 @@ Determina_lado_de_pantalla ld a,l
 
 ;	INPUT: HL contiene (Posicion_actual).
 
-
-
 Comprueba_limite_horizontal 
 
 	ld e,0											; Inicializamos E.
@@ -198,97 +196,54 @@ Comprueba_limite_horizontal
 
 Comprueba_limite_vertical 
 
-;	Excepciones:
+	jr $
 
-;	Si E=2 no cambiaremos de cuadrante a no ser que estemos a punto de desaparecer por los extremos.
+	ld a,(Cuad_objeto)
+	and 1
+	jr z,1F
 
-	dec e
-	dec e
-	jr nz,5F
+;	Nos encontramos en la parte IZQUIERDA de la pantalla.
+
+	call Comprobacion
+	jr nc,Consulta_E
+
+;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
+
+	dec c											 				; (Columns-1) en C.
+	ld a,l
+	sub c
+	ld (Posicion_actual),a
 	
 
-Comprobacion_de_extremos
 
-	ld a,(Posicion_actual)							; E=2
-	and $1f
-	cp 4
-	jr c,7F
-	cp $1c
-	jr nc,7F
+
+
+;	Nos encontramos en la parte DERECHA de la pantalla.
+
+
+1 call Comprobacion
+
+
+
+
+
+
+
+
+
+Consulta_E
+
+
 	ret
 
-7 ld e,0
-	jr 6F
+; ----- ----- ----- ----- ----- 
 
-5 inc e
-	inc e 											; E=0 / E=1
-
-;	Omitimos comprobar cambio de cuadrante si hemos desaparecido por los extremos.
-
-6 ld a,(Ctrl_0)
-	bit 0,a
-	jr nz,No_centro_de_pantalla
-	bit 1,a
-	jr nz,No_centro_de_pantalla
-
-	ld a,(Posicion_actual)
-	and $1F
-	ld d,a 											 
-
-	ld a,(Limite_vertical)
-	cp d 											; Límite - Posición.
-	ex af,af 										; Resultado de CP d en F'.
-
-	ld a,(Cuad_objeto)								; Averiguamos en que cuadrante estamos.
-	bit 0,a
-	jr z,1F 										; Si A´es PAR, estamos en el 2º o 4º cuadrante. Saltamos a [3F], (cuadrantes 2º y 4º).
-
-;	Cuando partimos del lado IZQUIERDO de la pantalla, superamos (lIMITE_VERTICAL) cuando hay "acarreo".
-
-	ex af,af 										
-	jr c,Limite_vertical_superado										
-
-;	No hemos superado el (Limite_vertical). Estamos en zona nebulosa ???
- 
-    ld a,(Posicion_actual)
-	and $1F
- 
-    ld d,Centro_izquierda
-    sub d 											 ; Posición - Centro_izquierda.
-
-	ret z											 ; Si no hemos superado (Limite_vertical) pero si hemos superado el centro de la pantalla,_
-	ret nc											 ; _salimos sin modificar nada.
-
-    jr No_centro_de_pantalla
-
-;	Cuando partimos del lado DERECHO de la pantalla, superamos (lIMITE_VERTICAL) cuando NO HAY "acarreo".
-
-1 ex af,af 											 
-	jr nc,Limite_vertical_superado					 
-
-;	No hemos superado el (Limite_vertical). Estamos en zona nebulosa ???
-
-    ld a,(Posicion_actual)
-	and $1F
-
-    ld d,Centro_derecha
-    sub d
-
-    ret z
-    ret c                                            ; Si no hemos superado (Limite_vertical) pero si hemos superado el centro de la pantalla,_
-;                                                    ; _salimos sin modificar nada.
-No_centro_de_pantalla
-
-	bit 0,e
- 	ret z											 ; No hemos sobrepasado (Centro_izquierda). Si E="0", salimos sin modificar posición.
-
-	push bc 										 ; Reservo (Filas) / (Columns) en la pila.
-    call Modificaccionne
-	pop bc
- 
-	call Inicializacion
-
-	ret 				 							 ; Salimos de la rutina.
+Comprobacion ld a,(Posicion_actual)							
+	and $1f
+	ld d,a
+	ld a,(Limite_vertical)  
+	sub d
+	ret
 
 ; ----- ----- ----- Cambio de cuadrante ----- ----- -----
 ;
@@ -296,51 +251,6 @@ No_centro_de_pantalla
 ;	(Posicion_actual) en HL.
 ;	(Cuad_objeto) en AF´.
 
-Limite_vertical_superado 
-
-	push bc											 ; (Filas) / (Columns).
-
-	ld b,c
-	dec b											 ; (Columns)-1 en B.
-
-	ld a,l
-
-	ex af,af                           				 ; Consultamos el cuadrante del que partimos.
-	bit 0,a
-	jr nz,2F
-
-; 	Parte DERECHA de la pantalla. Por el centro ?? o desaparecemos ??.
-
-	ex af,af 										 ; Estamos en la parte derecha de la pantalla, (cuadrantes 2º o 4º). En ese caso, sumamos (Columnas-1) a L.
-                               
-; Hemos sobrepasado el (Limite_vertical) de la mitad derecha a la izquierda. Ahora necesitamos saber si E="0".
-
- 	add b 				 							 ; Si hemos sobrepasado el (Limite_vertical) pero no hemos llegado al centro horizontal_			 																			
-    ld l,a	 										 ; _de la pantalla, E="0" modificamos L, Inicializamos el objeto y salimos.
-	ld (Posicion_actual),hl
-                                     
-	jr 4F
-
-; Cambio de cuadrante, partimos de la parte IZQUIERDA de la pantalla. Por el centro ?? o desaparecemos ??.
-
-2 ex af,af
-
-; Hemos sobrepasado el (Limite_vertical) de la mitad IZQUIERDA a la DERECHA. Ahora necesitamos saber si E="0".
-
-	sub b 																						
-    ld l,a
-	ld (Posicion_actual),hl
-
-4 dec e
-	jr nz,3F
-
-	call Modificaccionne                            ; Si hemos sobrepasado (Limite_vertical) y (Limite_horizontal), E="1". Modificamos HL,L,_
- 
-3 pop bc
-
-    call Inicializacion
-
-	ret
 
 ; --------------------
 
