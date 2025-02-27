@@ -1067,8 +1067,8 @@
  137+ 8AAF 11 11 92 00      db $11,$11,$92,0                        ; Arriba/Derecha. 2rep. --- Termina movimiento.
  138+ 8AB3
  139+ 8AB3 11 12 13 01  Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
- 140+ 8AB7 11 11 91 FD      db $11,$11,$91,253,6,0                 ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 140+ 8ABB 06 00
+ 140+ 8AB7 11 11 91 FD      db $11,$11,$91,253,7,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 140+ 8ABB 07 00
  141+ 8ABD
  142+ 8ABD 11 11 16 01  Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
  143+ 8AC1 11 11 91 FD      db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
