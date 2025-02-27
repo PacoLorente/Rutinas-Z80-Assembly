@@ -185,7 +185,7 @@ Comprueba_limite_horizontal
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   21/02/25
+;   27/02/25
 ;
 ;	Comprueba_limite_vertical
 ;
@@ -196,7 +196,27 @@ Comprueba_limite_horizontal
 
 Comprueba_limite_vertical 
 
-	jr $
+;	jr $
+
+;	Exclusiones:
+
+;	No comprobamos (Limite_vertical) cuando E=2. (Zona nebulosa horizontal).
+
+	dec e
+	dec e
+	ret z
+
+	inc e
+	inc e
+
+;	No comprobamos (Limite_vertical) cuando hemos desaparecido por los extremos.
+
+	ld a,(Ctrl_0)
+	and 3
+	jr nz,Consulta_E
+
+;	E=1 y NO HEMOS DESAPARECIDO por los lados de la pantalla.
+;	Comprobamos (Limite_vertical).
 
 	ld a,(Cuad_objeto)
 	and 1
@@ -205,56 +225,60 @@ Comprueba_limite_vertical
 ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
 
 	call Comprobacion
-	jr nc,Consulta_E
+	jr nc,Comprueba_centro_vertical_izquierdo
 
-;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
+;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
+;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
 
 	dec c											 				; (Columns-1) en C.
 	ld a,l
 	sub c
 	ld (Posicion_actual),a
-	
 
-
-
+	jr Consulta_E
 
 ;	Nos encontramos en la parte DERECHA de la pantalla.
 
-
 1 call Comprobacion
+	jr c,Comprueba_centro_vertical_derecho
 
+;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
+;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
 
+	dec c											 				; (Columns-1) en C.
+	ld a,l
+	add c
+	ld (Posicion_actual),a
 
+;	E puede tener valor "0" o "1".
 
-
-
-
-
-
-Consulta_E
-
-
+Consulta_E dec e
+	call z,Modificaccionne
+	call Inicializacion
 	ret
 
 ; ----- ----- ----- ----- ----- 
 
-Comprobacion ld a,(Posicion_actual)							
+Comprobacion ld a,l							
 	and $1f
 	ld d,a
 	ld a,(Limite_vertical)  
 	sub d
 	ret
 
-; ----- ----- ----- Cambio de cuadrante ----- ----- -----
-;
-;	Filas/Columns en BC.
-;	(Posicion_actual) en HL.
-;	(Cuad_objeto) en AF´.
+Comprueba_centro_vertical_izquierdo ld a,$0f		; RET. Estamos en zona nebulosa vertical.
+	sub d
+	ret c
+	jr Consulta_E
 
+Comprueba_centro_vertical_derecho ld a,$10
+	sub d
+	ret nc
+	jr Consulta_E
 
 ; --------------------
 
-Modifica_Pos_actual ld b,15                                         ; Scanlines-1 en B.
+Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
 1 call PreviousScan
     djnz 1B
 	ld (Posicion_actual),hl

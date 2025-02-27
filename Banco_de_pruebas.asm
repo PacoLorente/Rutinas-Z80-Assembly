@@ -23,9 +23,6 @@ FRAMES_3 equ $5c7a
 
 Sprite_vacio equ $f880													; 48 Bytes de "0".
 
-Centro_izquierda equ $0f 												; _indica el tercio de pantalla, (línea $60 y $80 del 2º tercio de pantalla).
-Centro_derecha equ $10 													; Las constantes (Centro_izquierda) y (Centro_derecha) indican la columna $0f y $10 de pantalla.
-
 Almacen_de_movimientos_masticados_Amadeus equ $dbdc						; ($dbdc - $ddbf), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 Almacen_de_movimientos_masticados_Entidad_1 equ $ddc0					; $ddc0 - $eb1b ..... 3419 bytes. $0d5b.
 Almacen_de_movimientos_masticados_Entidad_2 equ $eb1c					; $eb1c - 
