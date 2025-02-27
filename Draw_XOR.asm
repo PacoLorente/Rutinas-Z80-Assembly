@@ -196,8 +196,6 @@ Comprueba_limite_horizontal
 
 Comprueba_limite_vertical 
 
-;	jr $
-
 ;	Exclusiones:
 
 ;	No comprobamos (Limite_vertical) cuando E=2. (Zona nebulosa horizontal).
@@ -234,6 +232,7 @@ Comprueba_limite_vertical
 	ld a,l
 	sub c
 	ld (Posicion_actual),a
+	call Inicializacion
 
 	jr Consulta_E
 
@@ -249,12 +248,12 @@ Comprueba_limite_vertical
 	ld a,l
 	add c
 	ld (Posicion_actual),a
+	call Inicializacion
 
 ;	E puede tener valor "0" o "1".
 
 Consulta_E dec e
 	call z,Modificaccionne
-	call Inicializacion
 	ret
 
 ; ----- ----- ----- ----- ----- 
@@ -267,12 +266,12 @@ Comprobacion ld a,l
 	ret
 
 Comprueba_centro_vertical_izquierdo ld a,$0f		; RET. Estamos en zona nebulosa vertical.
-	sub d
+	sub l
 	ret c
 	jr Consulta_E
 
 Comprueba_centro_vertical_derecho ld a,$10
-	sub d
+	sub l
 	ret nc
 	jr Consulta_E
 
@@ -282,15 +281,17 @@ Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
 1 call PreviousScan
     djnz 1B
 	ld (Posicion_actual),hl
+	call Inicializacion
 	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
 	ret
 
 ; --------------------
 
-Modifica_Pos_actual2 ld b,15                                         ; Scanlines-1 en B.
+Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
 1 call NextScan
     djnz 1B
 	ld (Posicion_actual),hl
+	call Inicializacion
 	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
 	ret
 
