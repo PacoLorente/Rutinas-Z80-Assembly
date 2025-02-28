@@ -1067,8 +1067,8 @@
  137+ 8AAF 11 11 92 00      db $11,$11,$92,0                        ; Arriba/Derecha. 2rep. --- Termina movimiento.
  138+ 8AB3
  139+ 8AB3 11 12 13 01  Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
- 140+ 8AB7 11 11 91 FD      db $11,$11,$91,253,7,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 140+ 8ABB 07 00
+ 140+ 8AB7 11 11 91 FD      db $11,$11,$91,253,15,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 140+ 8ABB 0F 00
  141+ 8ABD
  142+ 8ABD 11 11 16 01  Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
  143+ 8AC1 11 11 91 FD      db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
@@ -1124,8 +1124,8 @@
  187+ 8B59 11 11 A2 00      db $11,$11,$a2,0                        ; Arriba/izq. 2rep. --- Termina movimiento.
  188+ 8B5D
  189+ 8B5D 11 21 23 01  Izquierda_y_subiendo db $11,$21,$23,1       ; Derecha. 4rep. vel.2
- 190+ 8B61 11 11 A1 FD      db $11,$11,$a1,253,15,0                 ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 190+ 8B65 0F 00
+ 190+ 8B61 11 11 A1 FD      db $11,$11,$a1,253,8,0                 ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 190+ 8B65 08 00
  191+ 8B67
  192+ 8B67 11 11 26 01  Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
  193+ 8B6B 11 11 A1 FD      db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
@@ -5427,7 +5427,7 @@
  213+ 9A4C E6 03        	and 3
  214+ 9A4E 20 25        	jr nz,Consulta_E
  215+ 9A50
- 216+ 9A50              ;	E=1 y NO HEMOS DESAPARECIDO por los lados de la pantalla.
+ 216+ 9A50              ;	E=1 / E=0 y NO HEMOS DESAPARECIDO por los lados de la pantalla.
  217+ 9A50              ;	Comprobamos (Limite_vertical).
  218+ 9A50
  219+ 9A50 3A 09 8C     	ld a,(Cuad_objeto)
@@ -5479,351 +5479,351 @@
  265+ 9A81 92           	sub d
  266+ 9A82 C9           	ret
  267+ 9A83
- 268+ 9A83 3E 0F        Comprueba_centro_vertical_izquierdo ld a,$0f		; RET. Estamos en zona nebulosa vertical.
- 269+ 9A85 95           	sub l
+ 268+ 9A83 3E 0E        Comprueba_centro_vertical_izquierdo ld a,$0e		; RET. Estamos en zona nebulosa vertical.
+ 269+ 9A85 92           	sub d
  270+ 9A86 D8           	ret c
- 271+ 9A87 18 EC        	jr Consulta_E
- 272+ 9A89
- 273+ 9A89 3E 10        Comprueba_centro_vertical_derecho ld a,$10
- 274+ 9A8B 95           	sub l
- 275+ 9A8C D0           	ret nc
- 276+ 9A8D 18 E6        	jr Consulta_E
- 277+ 9A8F
- 278+ 9A8F              ; --------------------
+ 271+ 9A87
+ 272+ 9A87 18 EC        	jr Consulta_E
+ 273+ 9A89
+ 274+ 9A89 3E 11        Comprueba_centro_vertical_derecho ld a,$11
+ 275+ 9A8B 92           	sub d
+ 276+ 9A8C D0           	ret nc
+ 277+ 9A8D
+ 278+ 9A8D 18 E6        	jr Consulta_E
  279+ 9A8F
- 280+ 9A8F 06 0F        Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
- 281+ 9A91 CD 96 9B     1 call PreviousScan
- 282+ 9A94 10 FB            djnz 1B
- 283+ 9A96 22 FA 8B     	ld (Posicion_actual),hl
- 284+ 9A99 CD BD 9A     	call Inicializacion
- 285+ 9A9C AF           	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
- 286+ 9A9D C9           	ret
- 287+ 9A9E
- 288+ 9A9E              ; --------------------
+ 280+ 9A8F              ; --------------------
+ 281+ 9A8F
+ 282+ 9A8F 06 0F        Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
+ 283+ 9A91 CD 96 9B     1 call PreviousScan
+ 284+ 9A94 10 FB            djnz 1B
+ 285+ 9A96 22 FA 8B     	ld (Posicion_actual),hl
+ 286+ 9A99 CD BD 9A     	call Inicializacion
+ 287+ 9A9C AF           	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
+ 288+ 9A9D C9           	ret
  289+ 9A9E
- 290+ 9A9E 06 0F        Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
- 291+ 9AA0 CD 87 9B     1 call NextScan
- 292+ 9AA3 10 FB            djnz 1B
- 293+ 9AA5 22 FA 8B     	ld (Posicion_actual),hl
- 294+ 9AA8 CD BD 9A     	call Inicializacion
- 295+ 9AAB AF           	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
- 296+ 9AAC C9           	ret
- 297+ 9AAD
- 298+ 9AAD              ; --------------------
- 299+ 9AAD              ;
- 300+ 9AAD              ;	22/01/23
+ 290+ 9A9E              ; --------------------
+ 291+ 9A9E
+ 292+ 9A9E 06 0F        Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
+ 293+ 9AA0 CD 87 9B     1 call NextScan
+ 294+ 9AA3 10 FB            djnz 1B
+ 295+ 9AA5 22 FA 8B     	ld (Posicion_actual),hl
+ 296+ 9AA8 CD BD 9A     	call Inicializacion
+ 297+ 9AAB AF           	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
+ 298+ 9AAC C9           	ret
+ 299+ 9AAD
+ 300+ 9AAD              ; --------------------
  301+ 9AAD              ;
- 302+ 9AAD              ;	E="1". Hemos cambiado de cuadrante.
- 303+ 9AAD              ;	Si estamos en la mitad superior de pantalla: CALL [Modifica_Pos_actual].
- 304+ 9AAD              ;	Si estamos en la mitad inferior de pantalla: CALL [Modifica_Pos_actual2].
- 305+ 9AAD
- 306+ 9AAD
- 307+ 9AAD              Modificaccionne
+ 302+ 9AAD              ;	22/01/23
+ 303+ 9AAD              ;
+ 304+ 9AAD              ;	E="1". Hemos cambiado de cuadrante.
+ 305+ 9AAD              ;	Si estamos en la mitad superior de pantalla: CALL [Modifica_Pos_actual].
+ 306+ 9AAD              ;	Si estamos en la mitad inferior de pantalla: CALL [Modifica_Pos_actual2].
+ 307+ 9AAD
  308+ 9AAD
- 309+ 9AAD 3A 09 8C     	ld a,(Cuad_objeto)
- 310+ 9AB0 FE 02        	cp 2
- 311+ 9AB2 CC 8F 9A         call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
- 312+ 9AB5 DC 8F 9A         call c,Modifica_Pos_actual
- 313+ 9AB8 C8           	ret z
- 314+ 9AB9 CD 9E 9A         call Modifica_Pos_actual2
- 315+ 9ABC C9               ret
- 316+ 9ABD
- 317+ 9ABD              ; *************************************************************************************************************************************************************************************************
- 318+ 9ABD              ;
- 319+ 9ABD              ;	25/02/25
+ 309+ 9AAD              Modificaccionne
+ 310+ 9AAD
+ 311+ 9AAD 3A 09 8C     	ld a,(Cuad_objeto)
+ 312+ 9AB0 FE 02        	cp 2
+ 313+ 9AB2 CC 8F 9A         call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
+ 314+ 9AB5 DC 8F 9A         call c,Modifica_Pos_actual
+ 315+ 9AB8 C8           	ret z
+ 316+ 9AB9 CD 9E 9A         call Modifica_Pos_actual2
+ 317+ 9ABC C9               ret
+ 318+ 9ABD
+ 319+ 9ABD              ; *************************************************************************************************************************************************************************************************
  320+ 9ABD              ;
- 321+ 9ABD              ;	Inicializacion
+ 321+ 9ABD              ;	25/02/25
  322+ 9ABD              ;
- 323+ 9ABD              ;	Entrega "1", "2", "3" o "4" en (Cuad_objeto) en función del cuadrante de pantalla en el que nos encontremos.
- 324+ 9ABD              ;	Asigna (Limite_vertical) y (Limite_horizontal) en función de (Cuad_objeto).
- 325+ 9ABD
- 326+ 9ABD              ; 	La rutina se ejecuta cada vez que la entidad supera el (Limite_horizontal) o el (Limite_vertical).
- 327+ 9ABD              ;	También cuando la entidad desaparece/aparece por cualquier lado de la pantalla.
- 328+ 9ABD
- 329+ 9ABD              ;	INPUT: [HL] contendrá la dirección de pantalla a la que queremos asignar cuadrante. HL=(Posicion_inicio).
- 330+ 9ABD              ; 		   [BC] contendrá (Filas)/(Columns) del objeto a inicializar.
- 331+ 9ABD
- 332+ 9ABD              ; 	OUTPUT: (Cuad_objeto), (Limite_vertical), (Limite_horizontal) y set5(Ctrl_0).
- 333+ 9ABD              ;
- 334+ 9ABD              ;	MODIFY: A,E,HL,B
- 335+ 9ABD
- 336+ 9ABD              Inicializacion
+ 323+ 9ABD              ;	Inicializacion
+ 324+ 9ABD              ;
+ 325+ 9ABD              ;	Entrega "1", "2", "3" o "4" en (Cuad_objeto) en función del cuadrante de pantalla en el que nos encontremos.
+ 326+ 9ABD              ;	Asigna (Limite_vertical) y (Limite_horizontal) en función de (Cuad_objeto).
+ 327+ 9ABD
+ 328+ 9ABD              ; 	La rutina se ejecuta cada vez que la entidad supera el (Limite_horizontal) o el (Limite_vertical).
+ 329+ 9ABD              ;	También cuando la entidad desaparece/aparece por cualquier lado de la pantalla.
+ 330+ 9ABD
+ 331+ 9ABD              ;	INPUT: [HL] contendrá la dirección de pantalla a la que queremos asignar cuadrante. HL=(Posicion_inicio).
+ 332+ 9ABD              ; 		   [BC] contendrá (Filas)/(Columns) del objeto a inicializar.
+ 333+ 9ABD
+ 334+ 9ABD              ; 	OUTPUT: (Cuad_objeto), (Limite_vertical), (Limite_horizontal) y set5(Ctrl_0).
+ 335+ 9ABD              ;
+ 336+ 9ABD              ;	MODIFY: A,E,HL,B
  337+ 9ABD
- 338+ 9ABD CD D6 99     	call Calcula_Cuad_objeto
- 339+ 9AC0 5F           	ld e,a												; (Cuad_objeto) en A y E.
- 340+ 9AC1 E6 01        	and 1
- 341+ 9AC3 20 0B        	jr nz,Left_screen
- 342+ 9AC5
- 343+ 9AC5              Right_screen
+ 338+ 9ABD              Inicializacion
+ 339+ 9ABD
+ 340+ 9ABD CD D6 99     	call Calcula_Cuad_objeto
+ 341+ 9AC0 5F           	ld e,a												; (Cuad_objeto) en A y E.
+ 342+ 9AC1 E6 01        	and 1
+ 343+ 9AC3 20 0B        	jr nz,Left_screen
  344+ 9AC5
- 345+ 9AC5 21 0C 8C     	ld hl,Limite_vertical								; En la parte DERECHA de la pantalla, (Limite_vertical) = "$0d".
- 346+ 9AC8 36 0D        	ld (hl),$0d
- 347+ 9ACA
- 348+ 9ACA 1D           	dec e
- 349+ 9ACB 1D           	dec e
- 350+ 9ACC 28 12        	jr z,Up_screen
- 351+ 9ACE 18 09        	jr Down_screen
- 352+ 9AD0
- 353+ 9AD0              Left_screen
+ 345+ 9AC5              Right_screen
+ 346+ 9AC5
+ 347+ 9AC5 21 0C 8C     	ld hl,Limite_vertical								; En la parte DERECHA de la pantalla, (Limite_vertical) = "$0d".
+ 348+ 9AC8 36 0C        	ld (hl),$0c
+ 349+ 9ACA
+ 350+ 9ACA 1D           	dec e
+ 351+ 9ACB 1D           	dec e
+ 352+ 9ACC 28 12        	jr z,Up_screen
+ 353+ 9ACE 18 09        	jr Down_screen
  354+ 9AD0
- 355+ 9AD0 21 0C 8C     	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
- 356+ 9AD3 36 12        	ld (hl),$12
- 357+ 9AD5
- 358+ 9AD5 CB 3B        	srl e
- 359+ 9AD7 28 07        	jr z,Up_screen
- 360+ 9AD9
- 361+ 9AD9              Down_screen
+ 355+ 9AD0              Left_screen
+ 356+ 9AD0
+ 357+ 9AD0 21 0C 8C     	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
+ 358+ 9AD3 36 13        	ld (hl),$13
+ 359+ 9AD5
+ 360+ 9AD5 CB 3B        	srl e
+ 361+ 9AD7 28 07        	jr z,Up_screen
  362+ 9AD9
- 363+ 9AD9 3E 3F        	ld a,$3f
- 364+ 9ADB 32 0B 8C     	ld (Limite_horizontal),a
- 365+ 9ADE 18 05        	jr 1F
- 366+ 9AE0
- 367+ 9AE0              Up_screen
+ 363+ 9AD9              Down_screen
+ 364+ 9AD9
+ 365+ 9AD9 3E 1F        	ld a,$1f
+ 366+ 9ADB 32 0B 8C     	ld (Limite_horizontal),a
+ 367+ 9ADE 18 05        	jr 1F
  368+ 9AE0
- 369+ 9AE0 3E C0        	ld a,$c0
- 370+ 9AE2 32 0B 8C     	ld (Limite_horizontal),a
- 371+ 9AE5
- 372+ 9AE5 2A FA 8B     1 ld hl,(Posicion_actual)
- 373+ 9AE8 CD F0 95     	call Genera_coordenadas
- 374+ 9AEB
- 375+ 9AEB 21 F7 8B     	ld hl,Ctrl_0
- 376+ 9AEE CB EE        	set 5,(hl)
- 377+ 9AF0
- 378+ 9AF0 C9           	ret
- 379+ 9AF1
- 380+ 9AF1              ; ------------------------------------------------------------------------------------------------------------------
+ 369+ 9AE0              Up_screen
+ 370+ 9AE0
+ 371+ 9AE0 3E E0        	ld a,$e0
+ 372+ 9AE2 32 0B 8C     	ld (Limite_horizontal),a
+ 373+ 9AE5
+ 374+ 9AE5 2A FA 8B     1 ld hl,(Posicion_actual)
+ 375+ 9AE8 CD F0 95     	call Genera_coordenadas
+ 376+ 9AEB
+ 377+ 9AEB 21 F7 8B     	ld hl,Ctrl_0
+ 378+ 9AEE CB EE        	set 5,(hl)
+ 379+ 9AF0
+ 380+ 9AF0 C9           	ret
  381+ 9AF1
- 382+ 9AF1              ; Esta pequeña subrutina determina el nº de columna en la que nos encontramos, Introducimos en A el valor absoluto de L, (0-31).
- 383+ 9AF1              ;
- 384+ 9AF1              ; OUTPUT: "FLAG C". Si se produce 1, nos encontramos en las primeras 16 columnas de pantalla, (cuadrantes 1 y 3). Si no es así, (cuadrantes 2 y 4).
- 385+ 9AF1
- 386+ 9AF1 7D           column ld a,l
- 387+ 9AF2 E6 1F        	and $1f
- 388+ 9AF4 FE 10         	cp $10
- 389+ 9AF6 C9            	ret
- 390+ 9AF7
- 391+ 9AF7              ; --------------------------------------------------------------------------------------------------------------------
- 392+ 9AF7              ;
- 393+ 9AF7              ; 	3/2/25
+ 382+ 9AF1              ; ------------------------------------------------------------------------------------------------------------------
+ 383+ 9AF1
+ 384+ 9AF1              ; Esta pequeña subrutina determina el nº de columna en la que nos encontramos, Introducimos en A el valor absoluto de L, (0-31).
+ 385+ 9AF1              ;
+ 386+ 9AF1              ; OUTPUT: "FLAG C". Si se produce 1, nos encontramos en las primeras 16 columnas de pantalla, (cuadrantes 1 y 3). Si no es así, (cuadrantes 2 y 4).
+ 387+ 9AF1
+ 388+ 9AF1 7D           column ld a,l
+ 389+ 9AF2 E6 1F        	and $1f
+ 390+ 9AF4 FE 10         	cp $10
+ 391+ 9AF6 C9            	ret
+ 392+ 9AF7
+ 393+ 9AF7              ; --------------------------------------------------------------------------------------------------------------------
  394+ 9AF7              ;
- 395+ 9AF7              ;	Modify: A.
+ 395+ 9AF7              ; 	3/2/25
  396+ 9AF7              ;
- 397+ 9AF7              ;	Output: (Columnas).
+ 397+ 9AF7              ;	Modify: A.
  398+ 9AF7              ;
- 399+ 9AF7
- 400+ 9AF7              calcula_CColumnass
+ 399+ 9AF7              ;	Output: (Columnas).
+ 400+ 9AF7              ;
  401+ 9AF7
- 402+ 9AF7 3A FA 8B     	ld a,(Posicion_actual)
- 403+ 9AFA E6 1F        	and $1f
- 404+ 9AFC 28 17        	jr z,One_CColumna
- 405+ 9AFE 3D           	dec a
- 406+ 9AFF 28 10        	jr z,Due_CColumna
- 407+ 9B01 3C           	inc a
- 408+ 9B02 FE 1E        	cp $1e
- 409+ 9B04 38 04        	jr c,one_or_due_ccolumnas
- 410+ 9B06 28 09        	jr z,Due_CColumna
- 411+ 9B08 18 0B        	jr One_CColumna
- 412+ 9B0A
- 413+ 9B0A 3A F9 8B     one_or_due_ccolumnas ld a,(Columns)
- 414+ 9B0D 32 0A 8C     	ld (Columnas),a
- 415+ 9B10 C9           	ret
- 416+ 9B11
- 417+ 9B11 3E 02        Due_CColumna ld a,2
- 418+ 9B13 18 02        	jr 1F
- 419+ 9B15 3E 01        One_CColumna ld a,1
- 420+ 9B17 32 0A 8C     1 ld (Columnas),a
- 421+ 9B1A C9           	ret
- 422+ 9B1B
- 423+ 9B1B              ; --------------------------------------------------------------------------------------------------------------------
- 424+ 9B1B              ;
- 425+ 9B1B              ;   19/7/23
+ 402+ 9AF7              calcula_CColumnass
+ 403+ 9AF7
+ 404+ 9AF7 3A FA 8B     	ld a,(Posicion_actual)
+ 405+ 9AFA E6 1F        	and $1f
+ 406+ 9AFC 28 17        	jr z,One_CColumna
+ 407+ 9AFE 3D           	dec a
+ 408+ 9AFF 28 10        	jr z,Due_CColumna
+ 409+ 9B01 3C           	inc a
+ 410+ 9B02 FE 1E        	cp $1e
+ 411+ 9B04 38 04        	jr c,one_or_due_ccolumnas
+ 412+ 9B06 28 09        	jr z,Due_CColumna
+ 413+ 9B08 18 0B        	jr One_CColumna
+ 414+ 9B0A
+ 415+ 9B0A 3A F9 8B     one_or_due_ccolumnas ld a,(Columns)
+ 416+ 9B0D 32 0A 8C     	ld (Columnas),a
+ 417+ 9B10 C9           	ret
+ 418+ 9B11
+ 419+ 9B11 3E 02        Due_CColumna ld a,2
+ 420+ 9B13 18 02        	jr 1F
+ 421+ 9B15 3E 01        One_CColumna ld a,1
+ 422+ 9B17 32 0A 8C     1 ld (Columnas),a
+ 423+ 9B1A C9           	ret
+ 424+ 9B1B
+ 425+ 9B1B              ; --------------------------------------------------------------------------------------------------------------------
  426+ 9B1B              ;
- 427+ 9B1B              ;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
- 428+ 9B1B              ;	Almacena en IY (Puntero_objeto). La rutina de impresión requiere de esta dirección para situar el SP a la hora de pintar.
- 429+ 9B1B              ;
- 430+ 9B1B              ;	OUTPUT: IX Contienen el puntero de impresión.
- 431+ 9B1B              ;			HL e IY Contienen (Puntero_objeto).
- 432+ 9B1B              ;
- 433+ 9B1B              ;	DESTRUYE: HL,B Y A.
- 434+ 9B1B
- 435+ 9B1B              Calcula_puntero_de_impresion
+ 427+ 9B1B              ;   19/7/23
+ 428+ 9B1B              ;
+ 429+ 9B1B              ;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
+ 430+ 9B1B              ;	Almacena en IY (Puntero_objeto). La rutina de impresión requiere de esta dirección para situar el SP a la hora de pintar.
+ 431+ 9B1B              ;
+ 432+ 9B1B              ;	OUTPUT: IX Contienen el puntero de impresión.
+ 433+ 9B1B              ;			HL e IY Contienen (Puntero_objeto).
+ 434+ 9B1B              ;
+ 435+ 9B1B              ;	DESTRUYE: HL,B Y A.
  436+ 9B1B
- 437+ 9B1B 3A 09 8C     	ld a,(Cuad_objeto)
- 438+ 9B1E E6 01        	and 1
- 439+ 9B20 20 09        	jr nz,Lado_izquierdo
- 440+ 9B22
- 441+ 9B22              Lado_derecho
+ 437+ 9B1B              Calcula_puntero_de_impresion
+ 438+ 9B1B
+ 439+ 9B1B 3A 09 8C     	ld a,(Cuad_objeto)
+ 440+ 9B1E E6 01        	and 1
+ 441+ 9B20 20 09        	jr nz,Lado_izquierdo
  442+ 9B22
- 443+ 9B22 3A 09 8C     	ld a,(Cuad_objeto)
- 444+ 9B25 3D           	dec a
- 445+ 9B26 3D           	dec a
- 446+ 9B27 28 31        	jr z,Cuadrante_dos
- 447+ 9B29 18 14        	jr Cuadrante_cuatro
- 448+ 9B2B
- 449+ 9B2B              Lado_izquierdo
+ 443+ 9B22              Lado_derecho
+ 444+ 9B22
+ 445+ 9B22 3A 09 8C     	ld a,(Cuad_objeto)
+ 446+ 9B25 3D           	dec a
+ 447+ 9B26 3D           	dec a
+ 448+ 9B27 28 31        	jr z,Cuadrante_dos
+ 449+ 9B29 18 14        	jr Cuadrante_cuatro
  450+ 9B2B
- 451+ 9B2B 3A 09 8C     	ld a,(Cuad_objeto)
- 452+ 9B2E CB 3F        	srl a
- 453+ 9B30 28 14        	jr z,Cuadrante_uno
- 454+ 9B32
- 455+ 9B32              ; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
+ 451+ 9B2B              Lado_izquierdo
+ 452+ 9B2B
+ 453+ 9B2B 3A 09 8C     	ld a,(Cuad_objeto)
+ 454+ 9B2E CB 3F        	srl a
+ 455+ 9B30 28 14        	jr z,Cuadrante_uno
  456+ 9B32
- 457+ 9B32 CD 71 9B     	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
- 458+ 9B35
- 459+ 9B35 7D           9 ld a,l
- 460+ 9B36 E6 1F        	and $1f
- 461+ 9B38 28 2A        	jr z,7F
- 462+ 9B3A 2B           	dec hl
- 463+ 9B3B 10 F8        	djnz 9B
- 464+ 9B3D 18 25        	jr 7F
- 465+ 9B3F
- 466+ 9B3F              Cuadrante_cuatro
+ 457+ 9B32              ; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
+ 458+ 9B32
+ 459+ 9B32 CD 71 9B     	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 460+ 9B35
+ 461+ 9B35 7D           9 ld a,l
+ 462+ 9B36 E6 1F        	and $1f
+ 463+ 9B38 28 2A        	jr z,7F
+ 464+ 9B3A 2B           	dec hl
+ 465+ 9B3B 10 F8        	djnz 9B
+ 466+ 9B3D 18 25        	jr 7F
  467+ 9B3F
- 468+ 9B3F 2A FA 8B     3 ld hl,(Posicion_actual)
- 469+ 9B42 18 20        	jr 7F
- 470+ 9B44
- 471+ 9B44 28 14        1 jr z,2F
- 472+ 9B46
- 473+ 9B46              Cuadrante_uno
+ 468+ 9B3F              Cuadrante_cuatro
+ 469+ 9B3F
+ 470+ 9B3F 2A FA 8B     3 ld hl,(Posicion_actual)
+ 471+ 9B42 18 20        	jr 7F
+ 472+ 9B44
+ 473+ 9B44 28 14        1 jr z,2F
  474+ 9B46
- 475+ 9B46 CD 71 9B     	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
- 476+ 9B49
- 477+ 9B49 7D           4 ld a,l
- 478+ 9B4A E6 1F        	and $1f
- 479+ 9B4C 28 03        	jr z,6F
- 480+ 9B4E 2B           	dec hl
- 481+ 9B4F 10 F8        	djnz 4B
- 482+ 9B51 06 0F        6 ld b,15
- 483+ 9B53 CD 96 9B     5 call PreviousScan
- 484+ 9B56 10 FB        	djnz 5B
- 485+ 9B58 18 0A        	jr 7F
- 486+ 9B5A
- 487+ 9B5A              Cuadrante_dos
+ 475+ 9B46              Cuadrante_uno
+ 476+ 9B46
+ 477+ 9B46 CD 71 9B     	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 478+ 9B49
+ 479+ 9B49 7D           4 ld a,l
+ 480+ 9B4A E6 1F        	and $1f
+ 481+ 9B4C 28 03        	jr z,6F
+ 482+ 9B4E 2B           	dec hl
+ 483+ 9B4F 10 F8        	djnz 4B
+ 484+ 9B51 06 0F        6 ld b,15
+ 485+ 9B53 CD 96 9B     5 call PreviousScan
+ 486+ 9B56 10 FB        	djnz 5B
+ 487+ 9B58 18 0A        	jr 7F
  488+ 9B5A
- 489+ 9B5A CD 71 9B     2 call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
- 490+ 9B5D 06 0F        	ld b,15
- 491+ 9B5F CD 96 9B     8 call PreviousScan
- 492+ 9B62 10 FB        	djnz 8B
- 493+ 9B64
- 494+ 9B64 22 EF 8B     7 ld (Puntero_de_impresion),hl
- 495+ 9B67
- 496+ 9B67 E5           	push hl
- 497+ 9B68 DD E1        	pop ix
- 498+ 9B6A
- 499+ 9B6A 2A FC 8B     	ld hl,(Puntero_objeto)
- 500+ 9B6D
- 501+ 9B6D E5           	push hl
- 502+ 9B6E FD E1        	pop iy
- 503+ 9B70
- 504+ 9B70 C9           	ret
- 505+ 9B71
- 506+ 9B71              ; --------------------------------------------------------------------------------------------------------------------
- 507+ 9B71              ;
- 508+ 9B71              ;	2/1/23
+ 489+ 9B5A              Cuadrante_dos
+ 490+ 9B5A
+ 491+ 9B5A CD 71 9B     2 call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 492+ 9B5D 06 0F        	ld b,15
+ 493+ 9B5F CD 96 9B     8 call PreviousScan
+ 494+ 9B62 10 FB        	djnz 8B
+ 495+ 9B64
+ 496+ 9B64 22 EF 8B     7 ld (Puntero_de_impresion),hl
+ 497+ 9B67
+ 498+ 9B67 E5           	push hl
+ 499+ 9B68 DD E1        	pop ix
+ 500+ 9B6A
+ 501+ 9B6A 2A FC 8B     	ld hl,(Puntero_objeto)
+ 502+ 9B6D
+ 503+ 9B6D E5           	push hl
+ 504+ 9B6E FD E1        	pop iy
+ 505+ 9B70
+ 506+ 9B70 C9           	ret
+ 507+ 9B71
+ 508+ 9B71              ; --------------------------------------------------------------------------------------------------------------------
  509+ 9B71              ;
- 510+ 9B71              ;	Sub-rutina de [Calcula_puntero_de_impresion].
+ 510+ 9B71              ;	2/1/23
  511+ 9B71              ;
- 512+ 9B71              ;	Tras esta rutina tenemos:
+ 512+ 9B71              ;	Sub-rutina de [Calcula_puntero_de_impresion].
  513+ 9B71              ;
- 514+ 9B71              ;	OUTPUT: HL contiene (Posicion_actual).
- 515+ 9B71              ;			B contiene (Columnas)-1. Nota: Este valor `nunca' será "0". El valor mínimo es "1".
- 516+ 9B71              ;
- 517+ 9B71              ;	DESTRUYE!!!!! HL,B y A.
- 518+ 9B71
- 519+ 9B71 2A FA 8B     Operandos ld hl,(Posicion_actual)
- 520+ 9B74 3A 0A 8C     	ld a,(Columnas)
- 521+ 9B77 3D           	dec a
- 522+ 9B78 20 01        	jr nz,1F
- 523+ 9B7A 3C           	inc a
- 524+ 9B7B 47           1 ld b,a
- 525+ 9B7C C9           	ret
- 526+ 9B7D
- 527+ 9B7D              ; --------------------------------------------------------------------------------------------------------------------
- 528+ 9B7D              ;
- 529+ 9B7D              ;	Prepara_draw
+ 514+ 9B71              ;	Tras esta rutina tenemos:
+ 515+ 9B71              ;
+ 516+ 9B71              ;	OUTPUT: HL contiene (Posicion_actual).
+ 517+ 9B71              ;			B contiene (Columnas)-1. Nota: Este valor `nunca' será "0". El valor mínimo es "1".
+ 518+ 9B71              ;
+ 519+ 9B71              ;	DESTRUYE!!!!! HL,B y A.
+ 520+ 9B71
+ 521+ 9B71 2A FA 8B     Operandos ld hl,(Posicion_actual)
+ 522+ 9B74 3A 0A 8C     	ld a,(Columnas)
+ 523+ 9B77 3D           	dec a
+ 524+ 9B78 20 01        	jr nz,1F
+ 525+ 9B7A 3C           	inc a
+ 526+ 9B7B 47           1 ld b,a
+ 527+ 9B7C C9           	ret
+ 528+ 9B7D
+ 529+ 9B7D              ; --------------------------------------------------------------------------------------------------------------------
  530+ 9B7D              ;
- 531+ 9B7D              ;	Es una rutina de carga.
- 532+ 9B7D              ;	Carga los registros BC,HL y E para posteriormente llamar a la rutina de pintado [DRAW].
- 533+ 9B7D              ;
- 534+ 9B7D              ;	OUTPUT:
+ 531+ 9B7D              ;	Prepara_draw
+ 532+ 9B7D              ;
+ 533+ 9B7D              ;	Es una rutina de carga.
+ 534+ 9B7D              ;	Carga los registros BC,HL y E para posteriormente llamar a la rutina de pintado [DRAW].
  535+ 9B7D              ;
- 536+ 9B7D              ;	- LD (Filas/Columns) del objeto a pintar en [BC].
- 537+ 9B7D              ;	- LD (Posicion_actual) del objeto en [HL].
- 538+ 9B7D              ;
- 539+ 9B7D              ;	MODIFY: HL y BC.
- 540+ 9B7D
- 541+ 9B7D 21 F8 8B     Prepara_draw ld hl,Filas 		 					 					 ; Prepara los registros BC, E y HL.
- 542+ 9B80 46           	ld b,(hl) 														     ; Carga Filas/Columns del objeto a pintar o inicializar en BC.
- 543+ 9B81 23           	inc hl 												 				 ; Carga (Posicion_actual) en HL.
- 544+ 9B82 4E           	ld c,(hl)
- 545+ 9B83 2A FA 8B     	ld hl,(Posicion_actual)
- 546+ 9B86 C9           	ret
- 547+ 9B87
- 548+ 9B87              ;----------------------------------------------------------------------------------------------------------------
- 549+ 9B87              ;
- 550+ 9B87              ;	5/08/22
+ 536+ 9B7D              ;	OUTPUT:
+ 537+ 9B7D              ;
+ 538+ 9B7D              ;	- LD (Filas/Columns) del objeto a pintar en [BC].
+ 539+ 9B7D              ;	- LD (Posicion_actual) del objeto en [HL].
+ 540+ 9B7D              ;
+ 541+ 9B7D              ;	MODIFY: HL y BC.
+ 542+ 9B7D
+ 543+ 9B7D 21 F8 8B     Prepara_draw ld hl,Filas 		 					 					 ; Prepara los registros BC, E y HL.
+ 544+ 9B80 46           	ld b,(hl) 														     ; Carga Filas/Columns del objeto a pintar o inicializar en BC.
+ 545+ 9B81 23           	inc hl 												 				 ; Carga (Posicion_actual) en HL.
+ 546+ 9B82 4E           	ld c,(hl)
+ 547+ 9B83 2A FA 8B     	ld hl,(Posicion_actual)
+ 548+ 9B86 C9           	ret
+ 549+ 9B87
+ 550+ 9B87              ;----------------------------------------------------------------------------------------------------------------
  551+ 9B87              ;
- 552+ 9B87              ;   NextScan.
+ 552+ 9B87              ;	5/08/22
  553+ 9B87              ;
- 554+ 9B87              ;   Calcula la dirección de mem. de pantalla donde se sitúa el siguiente scanline. (Inc H, línea abajo).
+ 554+ 9B87              ;   NextScan.
  555+ 9B87              ;
- 556+ 9B87              ;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el siguiente scanline.
+ 556+ 9B87              ;   Calcula la dirección de mem. de pantalla donde se sitúa el siguiente scanline. (Inc H, línea abajo).
  557+ 9B87              ;
- 558+ 9B87              ;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
+ 558+ 9B87              ;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el siguiente scanline.
  559+ 9B87              ;
- 560+ 9B87              ;       DESTRUIDOS: AF y HL !!!
+ 560+ 9B87              ;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
  561+ 9B87              ;
- 562+ 9B87              ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
+ 562+ 9B87              ;       DESTRUIDOS: AF y HL !!!
  563+ 9B87              ;
- 564+ 9B87
- 565+ 9B87 24           NextScan inc h          ; Incrementamos el scanline.
- 566+ 9B88 7C               ld a,h
- 567+ 9B89 E6 07            and 7
- 568+ 9B8B C0               ret nz              ; Salimos de la rutina si el scanline se encuentra entre (1-7).
- 569+ 9B8C
- 570+ 9B8C 7D           	ld a,l              ; Scanlines a "0", cambiamos de tercio. (Siempre que estemos en la última línea, LLL).
- 571+ 9B8D C6 20            add a,$20           ; Vamos a comprobarlo...
- 572+ 9B8F 6F               ld l,a
- 573+ 9B90 D8               ret c               ; Salimos si se produce el cambio de tercio.
- 574+ 9B91
- 575+ 9B91 7C               ld a,h              ; No estamos en la última línea del tercio, por lo que inicializamos H restando una_
- 576+ 9B92 D6 08            sub 8               ; _unidad a los bits que definen el tercio TT, (sub $08).
- 577+ 9B94 67               ld h,a
- 578+ 9B95 C9               ret
- 579+ 9B96
- 580+ 9B96              ;----------------------------------------------------------------------------------------------------------------
- 581+ 9B96              ;
- 582+ 9B96              ;	5/08/22
+ 564+ 9B87              ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
+ 565+ 9B87              ;
+ 566+ 9B87
+ 567+ 9B87 24           NextScan inc h          ; Incrementamos el scanline.
+ 568+ 9B88 7C               ld a,h
+ 569+ 9B89 E6 07            and 7
+ 570+ 9B8B C0               ret nz              ; Salimos de la rutina si el scanline se encuentra entre (1-7).
+ 571+ 9B8C
+ 572+ 9B8C 7D           	ld a,l              ; Scanlines a "0", cambiamos de tercio. (Siempre que estemos en la última línea, LLL).
+ 573+ 9B8D C6 20            add a,$20           ; Vamos a comprobarlo...
+ 574+ 9B8F 6F               ld l,a
+ 575+ 9B90 D8               ret c               ; Salimos si se produce el cambio de tercio.
+ 576+ 9B91
+ 577+ 9B91 7C               ld a,h              ; No estamos en la última línea del tercio, por lo que inicializamos H restando una_
+ 578+ 9B92 D6 08            sub 8               ; _unidad a los bits que definen el tercio TT, (sub $08).
+ 579+ 9B94 67               ld h,a
+ 580+ 9B95 C9               ret
+ 581+ 9B96
+ 582+ 9B96              ;----------------------------------------------------------------------------------------------------------------
  583+ 9B96              ;
- 584+ 9B96              ;   PreviousScan.
+ 584+ 9B96              ;	5/08/22
  585+ 9B96              ;
- 586+ 9B96              ;   Calcula la dirección de mem. de pantalla donde se sitúa el scanline anterior. (Dec H, línea arriba).
+ 586+ 9B96              ;   PreviousScan.
  587+ 9B96              ;
- 588+ 9B96              ;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el scanline anterior.
+ 588+ 9B96              ;   Calcula la dirección de mem. de pantalla donde se sitúa el scanline anterior. (Dec H, línea arriba).
  589+ 9B96              ;
- 590+ 9B96              ;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
+ 590+ 9B96              ;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el scanline anterior.
  591+ 9B96              ;
- 592+ 9B96              ;       DESTRUIDOS: AF y HL !!!
+ 592+ 9B96              ;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
  593+ 9B96              ;
- 594+ 9B96              ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
+ 594+ 9B96              ;       DESTRUIDOS: AF y HL !!!
  595+ 9B96              ;
- 596+ 9B96
- 597+ 9B96 7C           PreviousScan ld a,h
- 598+ 9B97 25               dec h               ; Dec H.
- 599+ 9B98 E6 07            and 7
- 600+ 9B9A C0               ret nz              ; Salimos de la rutina si el scanline se encuentra entre (1-7).
- 601+ 9B9B
- 602+ 9B9B 7D               ld a,l              ; Estabamos en el scanline "0" y al decrementar nos situamos en el "7" y cambiamos de tercio.
- 603+ 9B9C D6 20            sub $20             ; Vamos a comprobarlo...
- 604+ 9B9E 6F               ld l,a
- 605+ 9B9F D8               ret c               ; Salimos si estábamos en la primera línea y se produce el cambio de tercio.
- 606+ 9BA0
- 607+ 9BA0 7C               ld a,h              ; No estamos en la primera línea del tercio, por lo que inicializamos H sumando una_
- 608+ 9BA1 C6 08            add a,8             ; _unidad a los bits que definen el tercio TT, (add a,$08).
- 609+ 9BA3 67               ld h,a
- 610+ 9BA4 C9               ret
- 611+ 9BA5
- 612+ 9BA5
+ 596+ 9B96              ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
+ 597+ 9B96              ;
+ 598+ 9B96
+ 599+ 9B96 7C           PreviousScan ld a,h
+ 600+ 9B97 25               dec h               ; Dec H.
+ 601+ 9B98 E6 07            and 7
+ 602+ 9B9A C0               ret nz              ; Salimos de la rutina si el scanline se encuentra entre (1-7).
+ 603+ 9B9B
+ 604+ 9B9B 7D               ld a,l              ; Estabamos en el scanline "0" y al decrementar nos situamos en el "7" y cambiamos de tercio.
+ 605+ 9B9C D6 20            sub $20             ; Vamos a comprobarlo...
+ 606+ 9B9E 6F               ld l,a
+ 607+ 9B9F D8               ret c               ; Salimos si estábamos en la primera línea y se produce el cambio de tercio.
+ 608+ 9BA0
+ 609+ 9BA0 7C               ld a,h              ; No estamos en la primera línea del tercio, por lo que inicializamos H sumando una_
+ 610+ 9BA1 C6 08            add a,8             ; _unidad a los bits que definen el tercio TT, (add a,$08).
+ 611+ 9BA3 67               ld h,a
+ 612+ 9BA4 C9               ret
  613+ 9BA5
  614+ 9BA5
  615+ 9BA5
@@ -5834,6 +5834,8 @@
  620+ 9BA5
  621+ 9BA5
  622+ 9BA5
+ 623+ 9BA5
+ 624+ 9BA5
 # file closed: Draw_XOR.asm
 2399  9BA5              	include "Direcciones.asm"
 # file opened: Direcciones.asm

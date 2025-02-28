@@ -213,7 +213,7 @@ Comprueba_limite_vertical
 	and 3
 	jr nz,Consulta_E
 
-;	E=1 y NO HEMOS DESAPARECIDO por los lados de la pantalla.
+;	E=1 / E=0 y NO HEMOS DESAPARECIDO por los lados de la pantalla.
 ;	Comprobamos (Limite_vertical).
 
 	ld a,(Cuad_objeto)
@@ -265,14 +265,16 @@ Comprobacion ld a,l
 	sub d
 	ret
 
-Comprueba_centro_vertical_izquierdo ld a,$0f		; RET. Estamos en zona nebulosa vertical.
-	sub l
+Comprueba_centro_vertical_izquierdo ld a,$0e		; RET. Estamos en zona nebulosa vertical.
+	sub d
 	ret c
+
 	jr Consulta_E
 
-Comprueba_centro_vertical_derecho ld a,$10
-	sub l
+Comprueba_centro_vertical_derecho ld a,$11
+	sub d
 	ret nc
+
 	jr Consulta_E
 
 ; --------------------
@@ -343,7 +345,7 @@ Inicializacion
 Right_screen
 
 	ld hl,Limite_vertical								; En la parte DERECHA de la pantalla, (Limite_vertical) = "$0d".
-	ld (hl),$0d
+	ld (hl),$0c
 
 	dec e
 	dec e
@@ -353,20 +355,20 @@ Right_screen
 Left_screen
 
 	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
-	ld (hl),$12
+	ld (hl),$13
 
 	srl e
 	jr z,Up_screen 
 
 Down_screen	
 
-	ld a,$3f
+	ld a,$1f
 	ld (Limite_horizontal),a
 	jr 1F
 
 Up_screen 
 
-	ld a,$c0
+	ld a,$e0
 	ld (Limite_horizontal),a
 
 1 ld hl,(Posicion_actual)
