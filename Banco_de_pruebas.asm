@@ -1445,23 +1445,18 @@ Construye_movimientos_masticados_entidad
 
 1 call Draw
 
-;	ld a,(Puntero_de_impresion)
-;	and $1f
-;	cp $1d
-;	jr z,$
-
 ;	IX contiene (Puntero_de_impresion)
 ;	IY contiene (Puntero_objeto)
 
-;   Puntero_de_impresion $8bef ..... $4942
+;   Puntero_de_impresion $8bef ..... $4f5e
 ;	Columns $8bf9 	           ..... 3
-;	Posicion_actual $8bfa	   ..... $4882					
-;	Puntero_objeto $8bfc	   ..... $8500						
-;	CTRL_DESPLZ $8bfe		   ..... $fe
-;	Puntero_DESPLZ_der $8c03   ..... $853e
-;	Puntero_DESPLZ_izq $8c05   ..... $8390
-;	Cuad_objeto $8c09		   ..... 2	 						
-;	Columnas $8c0a             ..... 3
+;	Posicion_actual $8bfa	   ..... $4e9f					
+;	Puntero_objeto $8bfc	   ..... $85a0						
+;	CTRL_DESPLZ $8bfe		   ..... $f9
+;	Puntero_DESPLZ_der $8c03   ..... $8534
+;	Puntero_DESPLZ_izq $8c05   ..... $839a
+;	Cuad_objeto $8c09		   ..... 1	 						
+;	Columnas $8c0a             ..... 1
 
 
 	call Codifica_Puntero_de_impresion
