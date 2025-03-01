@@ -200,12 +200,11 @@ Comprueba_limite_vertical
 
 ;	No comprobamos (Limite_vertical) cuando E=2. (Zona nebulosa horizontal).
 
-	dec e
-	dec e
-	ret z
+	ld a,e
 
-	inc e
-	inc e
+	dec a
+	dec a
+	ret z
 
 ;	No comprobamos (Limite_vertical) cuando hemos desaparecido por los extremos.
 
@@ -252,7 +251,10 @@ Comprueba_limite_vertical
 
 ;	E puede tener valor "0" o "1".
 
-Consulta_E dec e
+Consulta_E 
+
+	ld a,e
+	dec a
 	call z,Modificaccionne
 	ret
 
