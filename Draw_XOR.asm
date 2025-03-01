@@ -379,17 +379,6 @@ Up_screen
 
 	ret
 
-; ------------------------------------------------------------------------------------------------------------------
-
-; Esta pequeña subrutina determina el nº de columna en la que nos encontramos, Introducimos en A el valor absoluto de L, (0-31).
-; 
-; OUTPUT: "FLAG C". Si se produce 1, nos encontramos en las primeras 16 columnas de pantalla, (cuadrantes 1 y 3). Si no es así, (cuadrantes 2 y 4).
-
-column ld a,l
-	and $1f 											
- 	cp $10												
- 	ret
-
 ; --------------------------------------------------------------------------------------------------------------------
 ;
 ; 	3/2/25
