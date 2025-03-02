@@ -187,7 +187,7 @@ Codo_abajo_izq. db $11,$11,$61,1            ; Abajo/izq. 1rep.
     db $11,$11,$a2,0                        ; Arriba/izq. 2rep. --- Termina movimiento.
 
 Izquierda_y_subiendo db $11,$21,$23,1       ; Derecha. 4rep. vel.2
-    db $11,$11,$a1,253,8,0                 ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+    db $11,$11,$a1,253,1,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
 
 Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
     db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.

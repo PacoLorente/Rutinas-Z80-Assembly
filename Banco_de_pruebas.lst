@@ -1124,8 +1124,8 @@
  187+ 8B59 11 11 A2 00      db $11,$11,$a2,0                        ; Arriba/izq. 2rep. --- Termina movimiento.
  188+ 8B5D
  189+ 8B5D 11 21 23 01  Izquierda_y_subiendo db $11,$21,$23,1       ; Derecha. 4rep. vel.2
- 190+ 8B61 11 11 A1 FD      db $11,$11,$a1,253,8,0                 ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 190+ 8B65 08 00
+ 190+ 8B61 11 11 A1 FD      db $11,$11,$a1,253,1,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 190+ 8B65 01 00
  191+ 8B67
  192+ 8B67 11 11 26 01  Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
  193+ 8B6B 11 11 A1 FD      db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
