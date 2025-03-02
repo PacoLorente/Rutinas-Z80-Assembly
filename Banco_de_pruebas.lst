@@ -1067,8 +1067,8 @@
  137+ 8AAF 11 11 92 00      db $11,$11,$92,0                        ; Arriba/Derecha. 2rep. --- Termina movimiento.
  138+ 8AB3
  139+ 8AB3 11 12 13 01  Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
- 140+ 8AB7 11 11 91 FD      db $11,$11,$91,253,15,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 140+ 8ABB 0F 00
+ 140+ 8AB7 11 11 91 FD      db $11,$11,$91,253,1,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 140+ 8ABB 01 00
  141+ 8ABD
  142+ 8ABD 11 11 16 01  Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
  143+ 8AC1 11 11 91 FD      db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
@@ -1124,8 +1124,8 @@
  187+ 8B59 11 11 A2 00      db $11,$11,$a2,0                        ; Arriba/izq. 2rep. --- Termina movimiento.
  188+ 8B5D
  189+ 8B5D 11 21 23 01  Izquierda_y_subiendo db $11,$21,$23,1       ; Derecha. 4rep. vel.2
- 190+ 8B61 11 11 A1 FD      db $11,$11,$a1,253,1,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 190+ 8B65 01 00
+ 190+ 8B61 11 11 A1 FD      db $11,$11,$a1,253,15,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 190+ 8B65 0F 00
  191+ 8B67
  192+ 8B67 11 11 26 01  Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
  193+ 8B6B 11 11 A1 FD      db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
@@ -5583,7 +5583,7 @@
  377+ 9AE4              Right_screen
  378+ 9AE4
  379+ 9AE4 21 0C 8C     	ld hl,Limite_vertical								; En la parte DERECHA de la pantalla, (Limite_vertical) = "$0d".
- 380+ 9AE7 36 0C        	ld (hl),$0c
+ 380+ 9AE7 36 0A        	ld (hl),$0a 	; $0c
  381+ 9AE9
  382+ 9AE9 1D           	dec e
  383+ 9AEA 1D           	dec e
@@ -5593,7 +5593,7 @@
  387+ 9AEF              Left_screen
  388+ 9AEF
  389+ 9AEF 21 0C 8C     	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
- 390+ 9AF2 36 13        	ld (hl),$13
+ 390+ 9AF2 36 15        	ld (hl),$15	;	$13
  391+ 9AF4
  392+ 9AF4 CB 3B        	srl e
  393+ 9AF6 28 07        	jr z,Up_screen
