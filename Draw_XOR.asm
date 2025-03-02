@@ -204,11 +204,38 @@ Comprueba_limite_vertical
 
 	dec a
 	dec a
-	ret z
+	jr nz,2F
+
+Salida_nebulosamente_por_la_derecha
+
+;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
+
+	ld a,(Posicion_actual)
+	and $1f
+	cp $1e
+	ret c
+
+; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
+;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa. 
+
+	ld a,(Cuad_objeto)
+	and 1
+	ret z 							; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+
+	ld a,(Cuad_objeto)
+	inc a
+	ld (Cuad_objeto),a 				; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+
+	dec c											 				; (Columns-1) en C.
+	ld a,l
+	sub c
+	ld (Posicion_actual),a
+
+	ret
 
 ;	No comprobamos (Limite_vertical) cuando hemos desaparecido por los extremos.
 
-	ld a,(Ctrl_0)
+2 ld a,(Ctrl_0)
 	and 3
 	jr nz,Consulta_E
 

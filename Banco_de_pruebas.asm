@@ -770,10 +770,7 @@ Gestiona_siguiente_entidad
 	call Incrementa_punteros_de_cajas
 
 	pop bc
-
-	dec b
-	jp nz,2B
-;	djnz 2B
+	djnz 2B
 
 ; Hemos gestionado todas las entidades. 
 ; ----- ----- -----
