@@ -377,7 +377,7 @@ Inicializacion
 Right_screen
 
 	ld hl,Limite_vertical								; En la parte DERECHA de la pantalla, (Limite_vertical) = "$0d".
-	ld (hl),$0a 	; $0c
+	ld (hl),$05       ;$0d 	
 
 	dec e
 	dec e
@@ -387,20 +387,20 @@ Right_screen
 Left_screen
 
 	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
-	ld (hl),$15	;	$13
+	ld (hl),$1a		;$12
 
 	srl e
 	jr z,Up_screen 
 
 Down_screen	
 
-	ld a,$1f
+	ld a,$00    		;$40
 	ld (Limite_horizontal),a
 	jr 1F
 
 Up_screen 
 
-	ld a,$e0
+	ld a,$e0            ;$c0
 	ld (Limite_horizontal),a
 
 1 ld hl,(Posicion_actual)

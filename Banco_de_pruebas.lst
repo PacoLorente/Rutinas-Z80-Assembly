@@ -892,7 +892,7 @@
  284+ 8A18              ; Aleatoriedad en la posición de inicio de la entidad.
  285+ 8A18              ; BadSat siempre aparecerá por la parte superior de la pantalla, $40xx. (Cuad_objeto) tendrá valor 1 o 2 dependiendo de si aparece por la mitad izquierda o derecha.
  286+ 8A18
- 287+ 8A18 00 40        Pos_inicio_entidad1	defw $4000	                        ; (Posicion_inicio).
+ 287+ 8A18 02 40        Pos_inicio_entidad1	defw $4002	                        ; (Posicion_inicio).
  288+ 8A1A 00           	db 0												; (Cuad_objeto).
  289+ 8A1B
  290+ 8A1B C0 DD        	defw Almacen_de_movimientos_masticados_Entidad_1	; (Puntero_de_almacen_de_mov_masticados)
@@ -5583,7 +5583,7 @@
  377+ 9AE4              Right_screen
  378+ 9AE4
  379+ 9AE4 21 0C 8C     	ld hl,Limite_vertical								; En la parte DERECHA de la pantalla, (Limite_vertical) = "$0d".
- 380+ 9AE7 36 0A        	ld (hl),$0a 	; $0c
+ 380+ 9AE7 36 05        	ld (hl),$05       ;$0d
  381+ 9AE9
  382+ 9AE9 1D           	dec e
  383+ 9AEA 1D           	dec e
@@ -5593,20 +5593,20 @@
  387+ 9AEF              Left_screen
  388+ 9AEF
  389+ 9AEF 21 0C 8C     	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
- 390+ 9AF2 36 15        	ld (hl),$15	;	$13
+ 390+ 9AF2 36 1A        	ld (hl),$1a		;$12
  391+ 9AF4
  392+ 9AF4 CB 3B        	srl e
  393+ 9AF6 28 07        	jr z,Up_screen
  394+ 9AF8
  395+ 9AF8              Down_screen
  396+ 9AF8
- 397+ 9AF8 3E 1F        	ld a,$1f
+ 397+ 9AF8 3E 00        	ld a,$00    		;$40
  398+ 9AFA 32 0B 8C     	ld (Limite_horizontal),a
  399+ 9AFD 18 05        	jr 1F
  400+ 9AFF
  401+ 9AFF              Up_screen
  402+ 9AFF
- 403+ 9AFF 3E E0        	ld a,$e0
+ 403+ 9AFF 3E E0        	ld a,$e0            ;$c0
  404+ 9B01 32 0B 8C     	ld (Limite_horizontal),a
  405+ 9B04
  406+ 9B04 2A FA 8B     1 ld hl,(Posicion_actual)
