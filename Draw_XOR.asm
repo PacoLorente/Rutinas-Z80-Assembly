@@ -206,31 +206,7 @@ Comprueba_limite_vertical
 	dec a
 	jr nz,2F
 
-Salida_nebulosamente_por_la_derecha
-
-;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
-
-	ld a,(Posicion_actual)
-	and $1f
-	cp $1e
-	ret c
-
-; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
-;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa. 
-
-	ld a,(Cuad_objeto)
-	and 1
-	ret z 							; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
-
-	ld a,(Cuad_objeto)
-	inc a
-	ld (Cuad_objeto),a 				; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
-
-	dec c											 				; (Columns-1) en C.
-	ld a,l
-	sub c
-	ld (Posicion_actual),a
-
+	call Salida_nebulosamente_por_la_derecha
 	ret
 
 ;	No comprobamos (Limite_vertical) cuando hemos desaparecido por los extremos.
@@ -345,6 +321,33 @@ Modificaccionne
     call Modifica_Pos_actual2
     ret
 
+Salida_nebulosamente_por_la_derecha
+
+;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
+
+	ld a,(Posicion_actual)
+	and $1f
+	cp $1e
+	ret c
+
+; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
+;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa. 
+
+	ld a,(Cuad_objeto)
+	and 1
+	ret z 							; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+
+	ld a,(Cuad_objeto)
+	inc a
+	ld (Cuad_objeto),a 				; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+
+	dec c											 				; (Columns-1) en C.
+	ld a,l
+	sub c
+	ld (Posicion_actual),a
+
+	ret
+
 ; *************************************************************************************************************************************************************************************************
 ;
 ;	25/02/25
@@ -442,10 +445,9 @@ One_CColumna ld a,1
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
-;   19/7/23
+;   2/3/25
 ;
 ;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
-;	Almacena en IY (Puntero_objeto). La rutina de impresión requiere de esta dirección para situar el SP a la hora de pintar.
 ;
 ;	OUTPUT: IX Contienen el puntero de impresión.
 ;			HL e IY Contienen (Puntero_objeto).
@@ -476,42 +478,45 @@ Lado_izquierdo
 
 	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
 
-9 ld a,l
+	ld a,l
 	and $1f
-	jr z,7F
-	dec hl
-	djnz 9B
-	jr 7F
+	jr z,4F
+
+6 dec hl
+	djnz 6B
+
+	jr 4F
 
 Cuadrante_cuatro
 
-3 ld hl,(Posicion_actual) 
-	jr 7F
-
-1 jr z,2F
+	ld hl,(Posicion_actual) 
+	jr 4F
 
 Cuadrante_uno
 
 	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
 
-4 ld a,l
+	ld a,l
 	and $1f
-	jr z,6F
-	dec hl
-	djnz 4B
-6 ld b,15
-5 call PreviousScan
-	djnz 5B
-	jr 7F
+	jr z,3F
+
+1 dec hl
+	djnz 1B
+
+3 ld b,15
+2 call PreviousScan
+	djnz 2B
+
+	jr 4F
 
 Cuadrante_dos
 
-2 call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
+	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
 	ld b,15
-8 call PreviousScan
-	djnz 8B
+5 call PreviousScan
+	djnz 5B
 
-7 ld (Puntero_de_impresion),hl
+4 ld (Puntero_de_impresion),hl
 
 	push hl
 	pop ix
