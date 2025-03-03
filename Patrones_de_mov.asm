@@ -113,7 +113,9 @@ Indice_mov_Baile_de_BadSat defw Bajo_decelerando
 ; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)               
 ;                               Izquierda_y_subiendo+8 (7)  
 
-Bajo_decelerando db $12,$11,$4f,1           ; Abajo (vel_2). 15rep.        
+Bajo_decelerando db $12,$11,$4f,1           ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)
+;                                           ; %0100 1111 ... Abajo 15 Repeticiones.
+;                                           ;     
     db $11,$11,$42,0                        ; Abajo.  2rep. --- Termina movimiento.
 
 F_1 db $11,$11,$41,1                        
