@@ -1041,140 +1041,144 @@
  113+ 8A63              ; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)
  114+ 8A63              ;                               Izquierda_y_subiendo+8 (7)
  115+ 8A63
- 116+ 8A63 12 11 4F 00  Bajo_decelerando db $12,$11,$4f,0           ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)
- 117+ 8A67              ;                                           ; %0100 1111 ... Abajo 15 Repeticiones.
- 118+ 8A67              ;                                           ;
- 119+ 8A67 11 11 42 00      db $11,$11,$42,0                        ; Abajo.  2rep. --- Termina movimiento.
- 120+ 8A6B
- 121+ 8A6B 11 11 41 01  F_1 db $11,$11,$41,1
- 122+ 8A6F 11 11 01 FD      db $11,$11,$01,253,8,0                  ; Abajo - Pausa1. 8rep.
- 122+ 8A73 08 00
- 123+ 8A75
- 124+ 8A75 11 11 41 01  F_2 db $11,$11,$41,1
- 125+ 8A79 11 11 02 FD      db $11,$11,$02,253,15,254               ; Abajo - Pausa2. 15rep --- Fija puntero de bucle. (Voy por aquí 23/7/23).
- 125+ 8A7D 0F FE
- 126+ 8A7F
- 127+ 8A7F 11 11 51 01  Codo_abajo_derecha db $11,$11,$51,1         ; Abajo/Derecha. 1rep.
- 128+ 8A83 11 11 43 01      db $11,$11,$43,1                        ; Abajo. 3rep.
- 129+ 8A87 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
- 130+ 8A8B 11 11 41 01      db $11,$11,$41,1                        ; Abajo. 1rep.
- 131+ 8A8F 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
- 132+ 8A93 11 11 11 01      db $11,$11,$11,1                        ; Derecha. 1rep.s
- 133+ 8A97 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
- 134+ 8A9B 11 11 13 01      db $11,$11,$13,1                        ; Derecha. 3rep.
- 135+ 8A9F 11 11 51 01      db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
- 136+ 8AA3 11 12 12 01      db $11,$12,$12,1                        ; Derecha. 2rep. vel.2
- 137+ 8AA7 11 11 91 01      db $11,$11,$91,1                        ; Arriba/Derecha. 1rep.
- 138+ 8AAB 11 12 12 01      db $11,$12,$12,1                        ; Derecha. 2rep. vel.2
- 139+ 8AAF 11 11 92 00      db $11,$11,$92,0                        ; Arriba/Derecha. 2rep. --- Termina movimiento.
- 140+ 8AB3
- 141+ 8AB3 11 12 13 01  Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
- 142+ 8AB7 11 11 91 FD      db $11,$11,$91,253,1,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 142+ 8ABB 01 00
- 143+ 8ABD
- 144+ 8ABD 11 11 16 01  Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
- 145+ 8AC1 11 11 91 FD      db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 145+ 8AC5 02 00
- 146+ 8AC7
- 147+ 8AC7 11 11 11 01  F_3 db $11,$11,$11,1
- 148+ 8ACB 11 11 01 FD      db $11,$11,$01,253,4,0
- 148+ 8ACF 04 00
- 149+ 8AD1
- 150+ 8AD1 11 11 11 01  F_4 db $11,$11,$11,1
- 151+ 8AD5 11 11 02 FD      db $11,$11,$02,253,8,0
- 151+ 8AD9 08 00
- 152+ 8ADB
- 153+ 8ADB 11 11 16 01  Derecha_y_bajando db $11,$11,$16,1          ; Derecha. 4rep. vel.2
- 154+ 8ADF 11 11 51 FD      db $11,$11,$51,253,2,0
- 154+ 8AE3 02 00
- 155+ 8AE5
- 156+ 8AE5 11 12 13 01  Derecha_y_bajando_1 db $11,$12,$13,1        ; Derecha. 4rep. vel.2
- 157+ 8AE9 11 11 51 FD      db $11,$11,$51,253,6,0
- 157+ 8AED 06 00
- 158+ 8AEF
- 159+ 8AEF 11 11 16 01  Derecha_y_bajando_2 db $11,$11,$16,1        ; Derecha. 4rep. vel.2
- 160+ 8AF3 11 11 51 FD      db $11,$11,$51,253,6,0
- 160+ 8AF7 06 00
- 161+ 8AF9
- 162+ 8AF9              ; Medio círculo bajando. Entra de izq. a derecha y sale de derecha a izq.
- 163+ 8AF9
- 164+ 8AF9 11 11 51 01  Codo_derecha_abajo db $11,$11,$51,1         ; Abajo/Derecha. 1rep.
- 165+ 8AFD 11 11 13 01      db $11,$11,$13,1                        ; Derecha. 3rep.
- 166+ 8B01 11 11 51 01      db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
- 167+ 8B05 11 11 13 01      db $11,$11,$13,1                        ; Derecha. 3rep.
- 168+ 8B09 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
- 169+ 8B0D 11 11 11 01      db $11,$11,$11,1                        ; Derecha. 1rep.
- 170+ 8B11 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
- 171+ 8B15 11 11 41 01      db $11,$11,$41,1                        ; Abajo. 1rep.
- 172+ 8B19 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
- 173+ 8B1D 11 11 43 01      db $11,$11,$43,1                        ; Abajo. 3rep.
- 174+ 8B21 11 11 51 01      db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
- 175+ 8B25 11 11 43 00      db $11,$11,$43,0                        ; Abajo. 3rep.
- 176+ 8B29
- 177+ 8B29 11 11 61 01  Codo_abajo_izq. db $11,$11,$61,1            ; Abajo/izq. 1rep.
- 178+ 8B2D 11 11 43 01      db $11,$11,$43,1                        ; Abajo. 3rep.
- 179+ 8B31 11 11 62 01      db $11,$11,$62,1                        ; Abajo/izq. 2rep.
- 180+ 8B35 11 11 41 01      db $11,$11,$41,1                        ; Abajo. 1rep.
- 181+ 8B39 11 11 62 01      db $11,$11,$62,1                        ; Abajo/izq. 2rep.
- 182+ 8B3D 11 11 21 01      db $11,$11,$21,1                        ; izq. 1rep.
- 183+ 8B41 11 11 62 01      db $11,$11,$62,1                        ; Abajo/izq. 2rep.
- 184+ 8B45 11 11 23 01      db $11,$11,$23,1                        ; izq. 3rep.
- 185+ 8B49 11 11 61 01      db $11,$11,$61,1                        ; Abajo/izq. 1rep.
- 186+ 8B4D 11 21 22 01      db $11,$21,$22,1                        ; izq. 2rep. vel.2
- 187+ 8B51 11 11 A1 01      db $11,$11,$a1,1                        ; Arriba/izq. 1rep.
- 188+ 8B55 11 21 22 01      db $11,$21,$22,1                        ; izq. 2rep. vel.2
- 189+ 8B59 11 11 A2 00      db $11,$11,$a2,0                        ; Arriba/izq. 2rep. --- Termina movimiento.
- 190+ 8B5D
- 191+ 8B5D 11 21 23 01  Izquierda_y_subiendo db $11,$21,$23,1       ; Derecha. 4rep. vel.2
- 192+ 8B61 11 11 A1 FD      db $11,$11,$a1,253,15,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 192+ 8B65 0F 00
- 193+ 8B67
- 194+ 8B67 11 11 26 01  Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
- 195+ 8B6B 11 11 A1 FD      db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 195+ 8B6F 02 00
- 196+ 8B71
- 197+ 8B71 11 11 21 01  F_5 db $11,$11,$21,1
- 198+ 8B75 11 11 01 FD      db $11,$11,$01,253,4,0
- 198+ 8B79 04 00
- 199+ 8B7B
- 200+ 8B7B 11 11 21 01  F_6 db $11,$11,$21,1
- 201+ 8B7F 11 11 02 FD      db $11,$11,$02,253,8,0
- 201+ 8B83 08 00
- 202+ 8B85
- 203+ 8B85 11 11 26 01  Izquierda_y_bajando db $11,$11,$26,1          ; Derecha. 4rep. vel.2
- 204+ 8B89 11 11 61 FD      db $11,$11,$61,253,2,0
- 204+ 8B8D 02 00
- 205+ 8B8F
- 206+ 8B8F 11 21 23 01  Izquierda_y_bajando_1 db $11,$21,$23,1        ; Derecha. 4rep. vel.2
- 207+ 8B93 11 11 61 FD      db $11,$11,$61,253,6,0
- 207+ 8B97 06 00
- 208+ 8B99
- 209+ 8B99 11 11 26 01  Izquierda_y_bajando_2 db $11,$11,$26,1        ; Derecha. 4rep. vel.2
- 210+ 8B9D 11 11 61 FD      db $11,$11,$61,253,6,0
- 210+ 8BA1 06 00
- 211+ 8BA3
- 212+ 8BA3 11 11 A1 01  Codo_izquierda_abajo db $11,$11,$a1,1          ; Arriba/Izq. 1rep.
- 213+ 8BA7 11 11 23 01      db $11,$11,$23,1                           ; Izq. 3rep.
- 214+ 8BAB 11 11 61 01      db $11,$11,$61,1                           ; Abajo/Izq. 1rep.
- 215+ 8BAF 11 11 23 01      db $11,$11,$23,1                           ; Izq. 3rep.
- 216+ 8BB3 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
- 217+ 8BB7 11 11 21 01      db $11,$11,$21,1                           ; Izq. 1rep.
- 218+ 8BBB 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
- 219+ 8BBF 11 11 41 01      db $11,$11,$41,1                           ; Abajo. 1rep.
- 220+ 8BC3 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
- 221+ 8BC7 11 11 43 01      db $11,$11,$43,1                           ; Abajo. 3rep.
- 222+ 8BCB 11 11 61 01      db $11,$11,$61,1                           ; Abajo/Izq. 1rep.
- 223+ 8BCF 11 11 43 00      db $11,$11,$43,0                           ; Abajo. 3rep.
- 224+ 8BD3
- 225+ 8BD3
- 226+ 8BD3
- 227+ 8BD3
+ 116+ 8A63 12 11 42     Bajo_decelerando db $12,$11,$42             ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)
+ 117+ 8A66              ;                                           ; %0100 1111 ... ($42), Abajo 2x2 Pixels.
+ 118+ 8A66              ;                                           ; Random_1 (1-10) Repeticiones.
+ 119+ 8A66 0A           Random_1_1_10 db 10                         ; (1-10).
+ 120+ 8A67
+ 121+ 8A67 11 11 42 00      db $11,$11,$42,0                        ; Up, (vel.1) - Down, (vel.1) - Left, (vel.1) - Right, (vel.1)
+ 122+ 8A6B              ;                                           ; %0100 0010 ... ($42), Abajo 2 Pixels.
+ 123+ 8A6B              ;                                           ; NEXT MOV.
+ 124+ 8A6B
+ 125+ 8A6B 11 11 41 01  F_1 db $11,$11,$41,1
+ 126+ 8A6F 11 11 01 FD      db $11,$11,$01,253,8,0                  ; Abajo - Pausa1. 8rep.
+ 126+ 8A73 08 00
+ 127+ 8A75
+ 128+ 8A75 11 11 41 01  F_2 db $11,$11,$41,1
+ 129+ 8A79 11 11 02 FD      db $11,$11,$02,253,15,254               ; Abajo - Pausa2. 15rep --- Fija puntero de bucle. (Voy por aquí 23/7/23).
+ 129+ 8A7D 0F FE
+ 130+ 8A7F
+ 131+ 8A7F 11 11 51 01  Codo_abajo_derecha db $11,$11,$51,1         ; Abajo/Derecha. 1rep.
+ 132+ 8A83 11 11 43 01      db $11,$11,$43,1                        ; Abajo. 3rep.
+ 133+ 8A87 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
+ 134+ 8A8B 11 11 41 01      db $11,$11,$41,1                        ; Abajo. 1rep.
+ 135+ 8A8F 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
+ 136+ 8A93 11 11 11 01      db $11,$11,$11,1                        ; Derecha. 1rep.s
+ 137+ 8A97 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
+ 138+ 8A9B 11 11 13 01      db $11,$11,$13,1                        ; Derecha. 3rep.
+ 139+ 8A9F 11 11 51 01      db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
+ 140+ 8AA3 11 12 12 01      db $11,$12,$12,1                        ; Derecha. 2rep. vel.2
+ 141+ 8AA7 11 11 91 01      db $11,$11,$91,1                        ; Arriba/Derecha. 1rep.
+ 142+ 8AAB 11 12 12 01      db $11,$12,$12,1                        ; Derecha. 2rep. vel.2
+ 143+ 8AAF 11 11 92 00      db $11,$11,$92,0                        ; Arriba/Derecha. 2rep. --- Termina movimiento.
+ 144+ 8AB3
+ 145+ 8AB3 11 12 13 01  Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
+ 146+ 8AB7 11 11 91 FD      db $11,$11,$91,253,1,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 146+ 8ABB 01 00
+ 147+ 8ABD
+ 148+ 8ABD 11 11 16 01  Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
+ 149+ 8AC1 11 11 91 FD      db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 149+ 8AC5 02 00
+ 150+ 8AC7
+ 151+ 8AC7 11 11 11 01  F_3 db $11,$11,$11,1
+ 152+ 8ACB 11 11 01 FD      db $11,$11,$01,253,4,0
+ 152+ 8ACF 04 00
+ 153+ 8AD1
+ 154+ 8AD1 11 11 11 01  F_4 db $11,$11,$11,1
+ 155+ 8AD5 11 11 02 FD      db $11,$11,$02,253,8,0
+ 155+ 8AD9 08 00
+ 156+ 8ADB
+ 157+ 8ADB 11 11 16 01  Derecha_y_bajando db $11,$11,$16,1          ; Derecha. 4rep. vel.2
+ 158+ 8ADF 11 11 51 FD      db $11,$11,$51,253,2,0
+ 158+ 8AE3 02 00
+ 159+ 8AE5
+ 160+ 8AE5 11 12 13 01  Derecha_y_bajando_1 db $11,$12,$13,1        ; Derecha. 4rep. vel.2
+ 161+ 8AE9 11 11 51 FD      db $11,$11,$51,253,6,0
+ 161+ 8AED 06 00
+ 162+ 8AEF
+ 163+ 8AEF 11 11 16 01  Derecha_y_bajando_2 db $11,$11,$16,1        ; Derecha. 4rep. vel.2
+ 164+ 8AF3 11 11 51 FD      db $11,$11,$51,253,6,0
+ 164+ 8AF7 06 00
+ 165+ 8AF9
+ 166+ 8AF9              ; Medio círculo bajando. Entra de izq. a derecha y sale de derecha a izq.
+ 167+ 8AF9
+ 168+ 8AF9 11 11 51 01  Codo_derecha_abajo db $11,$11,$51,1         ; Abajo/Derecha. 1rep.
+ 169+ 8AFD 11 11 13 01      db $11,$11,$13,1                        ; Derecha. 3rep.
+ 170+ 8B01 11 11 51 01      db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
+ 171+ 8B05 11 11 13 01      db $11,$11,$13,1                        ; Derecha. 3rep.
+ 172+ 8B09 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
+ 173+ 8B0D 11 11 11 01      db $11,$11,$11,1                        ; Derecha. 1rep.
+ 174+ 8B11 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
+ 175+ 8B15 11 11 41 01      db $11,$11,$41,1                        ; Abajo. 1rep.
+ 176+ 8B19 11 11 52 01      db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
+ 177+ 8B1D 11 11 43 01      db $11,$11,$43,1                        ; Abajo. 3rep.
+ 178+ 8B21 11 11 51 01      db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
+ 179+ 8B25 11 11 43 00      db $11,$11,$43,0                        ; Abajo. 3rep.
+ 180+ 8B29
+ 181+ 8B29 11 11 61 01  Codo_abajo_izq. db $11,$11,$61,1            ; Abajo/izq. 1rep.
+ 182+ 8B2D 11 11 43 01      db $11,$11,$43,1                        ; Abajo. 3rep.
+ 183+ 8B31 11 11 62 01      db $11,$11,$62,1                        ; Abajo/izq. 2rep.
+ 184+ 8B35 11 11 41 01      db $11,$11,$41,1                        ; Abajo. 1rep.
+ 185+ 8B39 11 11 62 01      db $11,$11,$62,1                        ; Abajo/izq. 2rep.
+ 186+ 8B3D 11 11 21 01      db $11,$11,$21,1                        ; izq. 1rep.
+ 187+ 8B41 11 11 62 01      db $11,$11,$62,1                        ; Abajo/izq. 2rep.
+ 188+ 8B45 11 11 23 01      db $11,$11,$23,1                        ; izq. 3rep.
+ 189+ 8B49 11 11 61 01      db $11,$11,$61,1                        ; Abajo/izq. 1rep.
+ 190+ 8B4D 11 21 22 01      db $11,$21,$22,1                        ; izq. 2rep. vel.2
+ 191+ 8B51 11 11 A1 01      db $11,$11,$a1,1                        ; Arriba/izq. 1rep.
+ 192+ 8B55 11 21 22 01      db $11,$21,$22,1                        ; izq. 2rep. vel.2
+ 193+ 8B59 11 11 A2 00      db $11,$11,$a2,0                        ; Arriba/izq. 2rep. --- Termina movimiento.
+ 194+ 8B5D
+ 195+ 8B5D 11 21 23 01  Izquierda_y_subiendo db $11,$21,$23,1       ; Derecha. 4rep. vel.2
+ 196+ 8B61 11 11 A1 FD      db $11,$11,$a1,253,15,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 196+ 8B65 0F 00
+ 197+ 8B67
+ 198+ 8B67 11 11 26 01  Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
+ 199+ 8B6B 11 11 A1 FD      db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 199+ 8B6F 02 00
+ 200+ 8B71
+ 201+ 8B71 11 11 21 01  F_5 db $11,$11,$21,1
+ 202+ 8B75 11 11 01 FD      db $11,$11,$01,253,4,0
+ 202+ 8B79 04 00
+ 203+ 8B7B
+ 204+ 8B7B 11 11 21 01  F_6 db $11,$11,$21,1
+ 205+ 8B7F 11 11 02 FD      db $11,$11,$02,253,8,0
+ 205+ 8B83 08 00
+ 206+ 8B85
+ 207+ 8B85 11 11 26 01  Izquierda_y_bajando db $11,$11,$26,1          ; Derecha. 4rep. vel.2
+ 208+ 8B89 11 11 61 FD      db $11,$11,$61,253,2,0
+ 208+ 8B8D 02 00
+ 209+ 8B8F
+ 210+ 8B8F 11 21 23 01  Izquierda_y_bajando_1 db $11,$21,$23,1        ; Derecha. 4rep. vel.2
+ 211+ 8B93 11 11 61 FD      db $11,$11,$61,253,6,0
+ 211+ 8B97 06 00
+ 212+ 8B99
+ 213+ 8B99 11 11 26 01  Izquierda_y_bajando_2 db $11,$11,$26,1        ; Derecha. 4rep. vel.2
+ 214+ 8B9D 11 11 61 FD      db $11,$11,$61,253,6,0
+ 214+ 8BA1 06 00
+ 215+ 8BA3
+ 216+ 8BA3 11 11 A1 01  Codo_izquierda_abajo db $11,$11,$a1,1          ; Arriba/Izq. 1rep.
+ 217+ 8BA7 11 11 23 01      db $11,$11,$23,1                           ; Izq. 3rep.
+ 218+ 8BAB 11 11 61 01      db $11,$11,$61,1                           ; Abajo/Izq. 1rep.
+ 219+ 8BAF 11 11 23 01      db $11,$11,$23,1                           ; Izq. 3rep.
+ 220+ 8BB3 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
+ 221+ 8BB7 11 11 21 01      db $11,$11,$21,1                           ; Izq. 1rep.
+ 222+ 8BBB 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
+ 223+ 8BBF 11 11 41 01      db $11,$11,$41,1                           ; Abajo. 1rep.
+ 224+ 8BC3 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
+ 225+ 8BC7 11 11 43 01      db $11,$11,$43,1                           ; Abajo. 3rep.
+ 226+ 8BCB 11 11 61 01      db $11,$11,$61,1                           ; Abajo/Izq. 1rep.
+ 227+ 8BCF 11 11 43 00      db $11,$11,$43,0                           ; Abajo. 3rep.
  228+ 8BD3
  229+ 8BD3
  230+ 8BD3
  231+ 8BD3
  232+ 8BD3
  233+ 8BD3
+ 234+ 8BD3
+ 235+ 8BD3
+ 236+ 8BD3
+ 237+ 8BD3
 # file closed: Patrones_de_mov.asm
  144  8BD3              	include "Niveles.asm"
 # file opened: Niveles.asm
