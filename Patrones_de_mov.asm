@@ -115,6 +115,7 @@ Indice_mov_Baile_de_BadSat defw Bajo_decelerando
 
 Bajo_decelerando db $12,$11,$42             ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)
 ;                                           ; %0100 1111 ... ($42), Abajo 2x2 Pixels.
+
 ;                                           ; Random_1 (1-10) Repeticiones.
 Random_1_1_10 db 10                         ; (1-10).              
 
@@ -122,28 +123,34 @@ Random_1_1_10 db 10                         ; (1-10).
 ;                                           ; %0100 0010 ... ($42), Abajo 2 Pixels.
 ;                                           ; NEXT MOV.
 
+; Desaceleración.
+
 F_1 db $11,$11,$41,1                        
     db $11,$11,$01,253,8,0                  ; Abajo - Pausa1. 8rep.
 
 F_2 db $11,$11,$41,1                            
-    db $11,$11,$02,253,15,254               ; Abajo - Pausa2. 15rep --- Fija puntero de bucle. (Voy por aquí 23/7/23).
+    db $11,$11,$02,253,15,254               ; Abajo - Pausa2. 15rep --- Fija puntero de bucle. 
 
-Codo_abajo_derecha db $11,$11,$51,1         ; Abajo/Derecha. 1rep.
-    db $11,$11,$43,1                        ; Abajo. 3rep.
-    db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
-    db $11,$11,$41,1                        ; Abajo. 1rep.
-    db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
-    db $11,$11,$11,1                        ; Derecha. 1rep.s
-    db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
-    db $11,$11,$13,1                        ; Derecha. 3rep.
-    db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
-    db $11,$12,$12,1                        ; Derecha. 2rep. vel.2
-    db $11,$11,$91,1                        ; Arriba/Derecha. 1rep.
-    db $11,$12,$12,1                        ; Derecha. 2rep. vel.2
-    db $11,$11,$92,0                        ; Arriba/Derecha. 2rep. --- Termina movimiento.
+Codo_abajo_derecha db $11,$11,$51,1         
+    db $11,$11,$43,1                        
+    db $11,$11,$52,1                        
+    db $11,$11,$41,1                        
+    db $11,$11,$52,1                        
+    db $11,$11,$11,1                        
+    db $11,$11,$52,1                        
+    db $11,$11,$13,1                        
+    db $11,$11,$51,1                        
+    db $11,$12,$12,1                        
+    db $11,$11,$91,1                        
+    db $11,$12,$12,1                        
+    db $11,$11,$92,0                        
 
 Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
-    db $11,$11,$91,253,1,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+    db $11,$11,$91,253                      ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+
+Random_2_1_15 db 8
+
+    db 0
 
 Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
     db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
@@ -154,46 +161,61 @@ F_3 db $11,$11,$11,1
 F_4 db $11,$11,$11,1
     db $11,$11,$02,253,8,0
 
-Derecha_y_bajando db $11,$11,$16,1          ; Derecha. 4rep. vel.2
-    db $11,$11,$51,253,2,0
+Derecha_y_bajando db $11,$11,$16,1          
+    db $11,$11,$51,253,2,0                  
 
-Derecha_y_bajando_1 db $11,$12,$13,1        ; Derecha. 4rep. vel.2
-    db $11,$11,$51,253,6,0
+Derecha_y_bajando_1 db $11,$12,$13,1        
+    db $11,$11,$51,253
 
-Derecha_y_bajando_2 db $11,$11,$16,1        ; Derecha. 4rep. vel.2
-    db $11,$11,$51,253,6,0
+;   Random_3_1_15 y Random_4_1_15 han de ser iguales !!!!!!!!!.
+;   -----------------------------------------------------------
+
+Random_3_1_15 db 6
+
+    db 0   
+
+Derecha_y_bajando_2 db $11,$11,$16,1        
+    db $11,$11,$51,253
+
+Random_4_1_15 db 6
+
+    db 0   
 
 ; Medio círculo bajando. Entra de izq. a derecha y sale de derecha a izq.
 
-Codo_derecha_abajo db $11,$11,$51,1         ; Abajo/Derecha. 1rep.
-    db $11,$11,$13,1                        ; Derecha. 3rep.
-    db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
-    db $11,$11,$13,1                        ; Derecha. 3rep.
-    db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
-    db $11,$11,$11,1                        ; Derecha. 1rep.
-    db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
-    db $11,$11,$41,1                        ; Abajo. 1rep.
-    db $11,$11,$52,1                        ; Abajo/Derecha. 2rep.
-    db $11,$11,$43,1                        ; Abajo. 3rep.        
-    db $11,$11,$51,1                        ; Abajo/Derecha. 1rep.
-    db $11,$11,$43,0                        ; Abajo. 3rep.
+Codo_derecha_abajo db $11,$11,$51,1         
+    db $11,$11,$13,1                        
+    db $11,$11,$51,1                        
+    db $11,$11,$13,1                        
+    db $11,$11,$52,1                        
+    db $11,$11,$11,1                        
+    db $11,$11,$52,1                        
+    db $11,$11,$41,1                        
+    db $11,$11,$52,1                        
+    db $11,$11,$43,1                                
+    db $11,$11,$51,1                        
+    db $11,$11,$43,0                        
 
-Codo_abajo_izq. db $11,$11,$61,1            ; Abajo/izq. 1rep.
-    db $11,$11,$43,1                        ; Abajo. 3rep.
-    db $11,$11,$62,1                        ; Abajo/izq. 2rep.
-    db $11,$11,$41,1                        ; Abajo. 1rep.
-    db $11,$11,$62,1                        ; Abajo/izq. 2rep.
-    db $11,$11,$21,1                        ; izq. 1rep.
-    db $11,$11,$62,1                        ; Abajo/izq. 2rep.
-    db $11,$11,$23,1                        ; izq. 3rep.
-    db $11,$11,$61,1                        ; Abajo/izq. 1rep.
-    db $11,$21,$22,1                        ; izq. 2rep. vel.2
-    db $11,$11,$a1,1                        ; Arriba/izq. 1rep.
-    db $11,$21,$22,1                        ; izq. 2rep. vel.2
-    db $11,$11,$a2,0                        ; Arriba/izq. 2rep. --- Termina movimiento.
+Codo_abajo_izq. db $11,$11,$61,1            
+    db $11,$11,$43,1                        
+    db $11,$11,$62,1                        
+    db $11,$11,$41,1                        
+    db $11,$11,$62,1                        
+    db $11,$11,$21,1                        
+    db $11,$11,$62,1                        
+    db $11,$11,$23,1                        
+    db $11,$11,$61,1                        
+    db $11,$21,$22,1                        
+    db $11,$11,$a1,1                        
+    db $11,$21,$22,1                        
+    db $11,$11,$a2,0                        
 
-Izquierda_y_subiendo db $11,$21,$23,1       ; Derecha. 4rep. vel.2
-    db $11,$11,$a1,253,15,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+Izquierda_y_subiendo db $11,$21,$23,1       
+    db $11,$11,$a1,253
+
+Random_5_1_15 db 15
+
+    db 0                     
 
 Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
     db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
@@ -208,10 +230,23 @@ Izquierda_y_bajando db $11,$11,$26,1          ; Derecha. 4rep. vel.2
     db $11,$11,$61,253,2,0
 
 Izquierda_y_bajando_1 db $11,$21,$23,1        ; Derecha. 4rep. vel.2
-    db $11,$11,$61,253,6,0
+    db $11,$11,$61,253
+
+
+;   Random_6_1_15 y Random_7_1_15 han de ser iguales !!!!!!!!!.
+;   -----------------------------------------------------------
+
+
+Random_6_1_15 db 6
+
+    db 0  
 
 Izquierda_y_bajando_2 db $11,$11,$26,1        ; Derecha. 4rep. vel.2
-    db $11,$11,$61,253,6,0
+    db $11,$11,$61,253
+
+Random_7_1_15 db 6
+
+    db 0  
 
 Codo_izquierda_abajo db $11,$11,$a1,1          ; Arriba/Izq. 1rep.
     db $11,$11,$23,1                           ; Izq. 3rep.

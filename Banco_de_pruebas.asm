@@ -296,6 +296,7 @@ Contador_general_de_mov_masticados_Entidad_4 defw 0
 
 ; Movimiento. ------------------------------------------------------------------------------------------------------
 
+Puntero_tabla_Random defw 0
 Puntero_indice_mov defw 0							    ; Puntero índice del patrón de movimiento de la entidad. "0" No hay movimiento.
 Puntero_mov defw 0										; Guarda la posición de memoria en la que nos encontramos dentro de la cadena de movimiento.
 Puntero_indice_mov_bucle defw 0							; 

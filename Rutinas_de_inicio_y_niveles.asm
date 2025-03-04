@@ -23,7 +23,23 @@ Genera_movimientos_masticados_del_nivel
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
 	ld a,c														; (Tipo) de la entidad en A.
+	call Situa_en_Tabla_Random
+	call Aplica_rnd_al_baile
 
+	pop bc
+	pop hl
+
+;!  4/3/25
+
+;	Con el (Tipo) de entidad en A, nos podemos situar en la Tabla_Random de la entidad correspondiente.
+
+;	jr $
+
+
+	push hl
+	push bc
+
+	ld a,c	
 	call Situa_en_Caja_Master									; Situa HL en el 1er .db de la "Caja Master" que corresponde a este (Tipo) de entidad.
 
 ;	Caja Master inicializada ???
@@ -110,7 +126,7 @@ Inicializa_1er_Nivel
 
 ; ----------------------
 ;
-;	13/11/24
+;	4/3/25
 ;
 
 Situa_en_Caja_Master
@@ -123,12 +139,17 @@ Situa_en_Caja_Master
 	call Extrae_address
 	ret
 
-; ----------------------
 
-; Fija_velocidades ld de,Perfiles_de_velocidad
-; 	ld bc,4
-; 	ldir
-; 	ret
+Situa_en_Tabla_Random
+
+    call Calcula_salto_en_BC
+    ld hl,Indice_de_tablas_Random
+    and a
+    adc hl,bc
+  	ld (Puntero_tabla_Random),hl
+	call Extrae_address
+	ret
+
 
 Situa_Puntero_indice_mov ld a,(hl)     	 							; Cargamos A con el (Tipo) de la 1ª entidad del Nivel.       
     call Calcula_salto_en_BC
