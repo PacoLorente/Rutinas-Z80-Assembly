@@ -29,13 +29,6 @@ Genera_movimientos_masticados_del_nivel
 	pop bc
 	pop hl
 
-;!  4/3/25
-
-;	Con el (Tipo) de entidad en A, nos podemos situar en la Tabla_Random de la entidad correspondiente.
-
-;	jr $
-
-
 	push hl
 	push bc
 
@@ -91,6 +84,166 @@ Movimientos_masticados_construidos
 
 	ld c,(hl)													; (Tipo) de la siguiente entidad en C.
 	djnz 1B														; dec (Numero_de_entidades).
+
+	ret
+
+; --------------------------------------------------------------------------------------------------------------
+;
+;	6/3/25
+;
+;	En 1er lugar identificamos si existe .db de CTRL, ($00).
+;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio. 
+;
+;	El siguiente .defw indica:
+;
+;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
+;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
+;
+;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
+;	
+;	Tabla_Random_Entidad_tipo_1
+
+;	defw $0f01
+;	defw Random_2_1_15
+
+;	db 0,2
+;	defw $0f01
+;	defw Random_3_1_15	;	Igual
+;	defw Random_4_1_15	;	Igual
+
+;	defw 0
+
+Aplica_rnd_al_baile
+
+	call RND_ini
+
+	xor a
+
+2 ex af,af 									; A' contiene el .db que acompaña al byte de control, ($00).
+;												; Inicializamos a $00, (no existe).
+
+; 	digit ctrl ??
+;   Yes if "$00".
+;	HL se encuentra en el 1er .db de la Tabla_Random de la entidad correspondiente.	
+
+	ld a,(hl)
+	and a
+	jr nz,Load_limits							; A es NZ. El nº RND sólo se aplica a una única dirección de mem.
+
+; Almacenamos en A' el nº de direcciones que compartiran nº RND y sitúamos HL en el .defw que indica los límites.
+
+	inc l
+	ld a,(hl)	
+	ex af,af
+	inc l
+	ld a,(hl)
+
+Load_limits
+
+	ld c,a
+	inc l
+	ld b,(hl)
+
+;	Límites que tendrá este nº RND en BC.
+;	B contiene lím.sup. y C contiene límite inf.
+
+	inc l
+
+	call Extrae_address_y_avanza
+	ret z  										; Z Indica: FIN de la Tabla_Random.
+
+;	HL apunta a la dirección donde hemos de alojar el nº rnd.
+;	DE está situado en la siguiente línea de la Tabla.
+;	Obtenemos el nº RND.
+
+1 call Get_RND    								; Nº RND , (sin filtrar) en A.
+	call Filtra_RND
+
+;	Introducimos nº rnd filtrado.
+
+3 ld (hl),a
+	ex de,hl
+
+;	Tenemos que seguir utilizando este nº RND con la siguiente .defw ???
+;	Para averiguarlo consultamos el byte de "Repeticiones", (A´).
+
+	ex af,af
+	and a
+	jr z,2B
+
+; Más direcciones con el mismo mov.
+
+	dec a
+	ex af,af
+
+	push af
+	call Extrae_address_y_avanza
+	pop af
+
+	jr 3B
+
+	ret
+
+; ----- ----- -----
+;
+;	HL' será el puntero que se irá desplazando por los distintos nº aleatorios.
+;	Comenzamos por el último, (Numeros_aleatorios+6).
+;	B actúa como contador, (7 nº aleatorios).	
+
+RND_ini	exx
+	ld hl,Numeros_aleatorios+6
+	ld b,7
+	exx
+	ret
+
+; ----- ----- -----
+;
+;	Extrae el nº aleatorio, decrementa el contador de nº RND, (B) y actualiza el puntero HL' situándolo en el siguiente nº.
+;	Inicializamos HL y B cuando hemos terminado de introducir todos los nº., (call RND_ini).
+;		
+
+Get_RND	exx
+	ld a,(hl)
+	djnz 1F
+	exx
+	call RND_ini
+	ret
+1 dec l
+	exx
+	ret
+
+; ----- ----- -----
+
+Filtra_RND and %00111100		; Convertimos el byte, (RND), en Nibble, valores comprendidos entre (0-15).
+	srl a	 					
+	srl a  						; % 00001111, nº RND (0-15).
+
+	cp b
+	ret z 						; RET, nº rnd = Límite sup.	
+	jr c,1F
+
+	ld a,b 						; RET, nº rnd = Límite sup.
+	ret
+
+;	Comprobamos el límite inferior.
+
+1 cp c
+	ret z 						; RET, nº rnd = Límite inf. 
+	ret nc 						; RET, nº rnd dentro de los límites.
+	ld a,c 						; RET, nº rnd = Límite inf. 
+	ret
+
+; ----- ----- -----
+
+Extrae_address_y_avanza call Extrae_address
+
+	ld a,h 						
+	or l
+	ret z 						; Detecta FIN de Tabla_Random.
+				
+	inc de
+	inc de 						; DE será el puntero que se irá desplazando por las distintas líneas de la Tabla_Random.
+	;							; Lo situamos en la siguiente línea de la tabla.
 
 	ret
 
