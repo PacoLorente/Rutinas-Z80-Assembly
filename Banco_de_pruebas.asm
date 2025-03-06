@@ -536,6 +536,8 @@ INICIALIZACION
 ;														   _reponiendo entidades eliminadas.
 	call Prepara_Cajas_de_Entidades
 
+;	Inicia Amadeus.
+
 	call Inicia_Amadeus
 
 ;														 ; La rutina [Genera_datos_de_impresion] habilita las interrupciones antes del RET. 

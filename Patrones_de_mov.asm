@@ -69,7 +69,13 @@
 
 ; ----- ----- ----- ----- -----
 
-Indice_mov_Baile_de_BadSat defw Bajo_decelerando
+Indice_mov_Baile_de_BadSat 
+
+    defw Left_Ini
+    defw Right_Ini
+
+
+Left_Ini defw Bajo_decelerando
     defw F_1
     defw F_2
     defw Codo_abajo_derecha
@@ -81,7 +87,7 @@ Indice_mov_Baile_de_BadSat defw Bajo_decelerando
     defw Derecha_y_bajando_1
     defw Derecha_y_bajando_2
     defw Codo_derecha_abajo
-    defw Codo_abajo_izq.
+    defw Codo_abajo_izq
     defw Izquierda_y_subiendo
     defw Izquierda_y_subiendo_1
     defw F_5
@@ -91,6 +97,33 @@ Indice_mov_Baile_de_BadSat defw Bajo_decelerando
     defw Izquierda_y_bajando_2
     defw Codo_izquierda_abajo
     defw 0                                  ; Fin de patrón de movimiento.
+
+Right_Ini defw Bajo_decelerando
+    defw F_1
+    defw F_2
+
+    defw Codo_abajo_izq
+    defw Izquierda_y_subiendo
+    defw Izquierda_y_subiendo_1
+    defw F_5
+    defw F_6
+    defw Izquierda_y_bajando
+    defw Izquierda_y_bajando_1
+    defw Izquierda_y_bajando_2
+    defw Codo_izquierda_abajo
+
+    defw Codo_abajo_derecha
+    defw Derecha_y_subiendo
+    defw Derecha_y_subiendo_1
+    defw F_3
+    defw F_4
+    defw Derecha_y_bajando
+    defw Derecha_y_bajando_1
+    defw Derecha_y_bajando_2
+    defw Codo_derecha_abajo 
+
+    defw 0           
+
 
 ;! En que parte del movimiento estamos??? Cabe el movimiento completo?
 
@@ -196,7 +229,7 @@ Codo_derecha_abajo db $11,$11,$51,1
     db $11,$11,$51,1                        
     db $11,$11,$43,0                        
 
-Codo_abajo_izq. db $11,$11,$61,1            
+Codo_abajo_izq db $11,$11,$61,1            
     db $11,$11,$43,1                        
     db $11,$11,$62,1                        
     db $11,$11,$41,1                        

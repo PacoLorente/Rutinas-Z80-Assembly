@@ -1,6 +1,6 @@
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   13/11/24
+;   6/3/24
 
 ;	Prepara las CAJAS MASTER y genera los movimientos masticados de todas las entidades que aparecerán en el nivel.
 
@@ -22,9 +22,9 @@ Genera_movimientos_masticados_del_nivel
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
-	ld a,c														; (Tipo) de la entidad en A.
-	call Situa_en_Tabla_Random
-	call Aplica_rnd_al_baile
+;	ld a,c														; (Tipo) de la entidad en A.
+;	call Situa_en_Tabla_Random
+;	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
@@ -50,17 +50,17 @@ Genera_movimientos_masticados_del_nivel
 	call Definicion_segun_tipo									; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW					; Vuelca los datos de la definición de entidad en DRAW.
 
-	ld a,(Tipo)
-	call Situa_Puntero_indice_mov			 	 				; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
-
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
-;	ld hl,(RND_SP)												; RND_SP Puntero que se va desplazando por el SET de nº aleatorios.
-;	ld a,(hl)
-;	and $1f														; Define el nº de columna por el que va a aparecer la entidad.
+	ld hl,Numeros_aleatorios+5									; RND_SP Puntero que se va desplazando por el SET de nº aleatorios.
+	ld a,(hl)
+	and $1f														; Define el nº de columna por el que va a aparecer la entidad.
 
-;	ld hl,Posicion_inicio
-;	ld (hl),a
+	ld hl,Posicion_inicio
+	ld (hl),a
+
+	ld a,(Tipo)
+	call Situa_Puntero_indice_mov			 	 				; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
 
 ;	Ya disponemos de una (Posicion_inicio) aleatoria y la definición de la entidad en la "Bandeja DRAW". 
 ;	Generamos "Movimientos masticados" de la entidad.
@@ -78,8 +78,8 @@ Genera_movimientos_masticados_del_nivel
 Movimientos_masticados_construidos 
 
 	pop bc														; Pop (Numero_de_entidades)/(Tipo).
-
 	pop hl														; Pop (Datos_de_nivel).
+
 	inc l														; Datos_de_nivel +1 en HL.
 
 	ld c,(hl)													; (Tipo) de la siguiente entidad en C.
@@ -202,7 +202,9 @@ RND_ini	exx
 ;	Inicializamos HL y B cuando hemos terminado de introducir todos los nº., (call RND_ini).
 ;		
 
-Get_RND	exx
+Get_RND	
+
+	exx
 	ld a,(hl)
 	djnz 1F
 	exx
@@ -303,14 +305,41 @@ Situa_en_Tabla_Random
 	call Extrae_address
 	ret
 
+; -----------------------------------------------------------
+;
+;	6/3/25
 
-Situa_Puntero_indice_mov ld a,(hl)     	 							; Cargamos A con el (Tipo) de la 1ª entidad del Nivel.       
+Situa_Puntero_indice_mov 
+
+	ld a,(Tipo)     	 						; Cargamos A con el (Tipo) de la entidad del Nivel.       
+
     call Calcula_salto_en_BC
     ld hl,Indice_de_mov_segun_tipo_de_entidad
     and a
     adc hl,bc
     call Extrae_address
-    ld (Puntero_indice_mov),hl
+
+; La entidad que estamos iniciando es de Tipo 1, (BadSat)??
+; Si es así, hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde_
+; _el que se inicia la entidad.
+
+	ld a,(Tipo)
+	and %01111111
+	dec a
+	jr nz,1F
+
+; Seleccionamos Danza.
+
+	ld a,(Posicion_inicio)
+	cp $10
+	jr c,1F
+
+	inc l
+	inc l
+
+1 call Extrae_address
+	ld (Puntero_indice_mov),hl
+ 
     ret
 
 ;---------------------------------------------------------------------------------------------------------------
