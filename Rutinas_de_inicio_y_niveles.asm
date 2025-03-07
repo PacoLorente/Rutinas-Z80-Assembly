@@ -1,30 +1,23 @@
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   6/3/24
-
+;   7/3/25
+;
 ;	Prepara las CAJAS MASTER y genera los movimientos masticados de todas las entidades que aparecerán en el nivel.
+;
+;	INPUTS:		B contiene (Numero_de_entidades).
+;				C contiene el (Tipo) de la 1ª entidad del nivel.
 
 Genera_movimientos_masticados_del_nivel 
 
-; 	Tras ejecutar [Inicializa_Nivel] tenemos:
 
-;	(Puntero_indice_NIVELES) apunta al nivel en el que nos encontramos, (dentro del índice).
-;	(Numero_de_entidades) contiene el nº de entidades que conforman el nivel.
-;	HL contiene (Datos_de_nivel), apunta al .db, (tipo) de la 1ª entidad del Nivel.
-
-	dec l
-	ld b,(hl)													; B contiene (Numero_de_entidades).
-	inc l														; C contiene (Tipo) de la 1ª entidad del nivel.
-	ld c,(hl)													
-
-1 push hl														; Push (Datos_de_nivel).
+	push hl														; Push (Datos_de_nivel).
 	push bc														; Push (Numero_de_entidades)/(Tipo).
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
-;	ld a,c														; (Tipo) de la entidad en A.
-;	call Situa_en_Tabla_Random
-;	call Aplica_rnd_al_baile
+	ld a,c														; (Tipo) de la entidad en A.
+	call Situa_en_Tabla_Random
+	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
@@ -52,7 +45,7 @@ Genera_movimientos_masticados_del_nivel
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
-	ld hl,Numeros_aleatorios+5									; RND_SP Puntero que se va desplazando por el SET de nº aleatorios.
+	ld hl,Numeros_aleatorios+5									
 	ld a,(hl)
 	and $1f														; Define el nº de columna por el que va a aparecer la entidad.
 
@@ -83,7 +76,7 @@ Movimientos_masticados_construidos
 	inc l														; Datos_de_nivel +1 en HL.
 
 	ld c,(hl)													; (Tipo) de la siguiente entidad en C.
-	djnz 1B														; dec (Numero_de_entidades).
+	djnz Genera_movimientos_masticados_del_nivel 				; dec (Numero_de_entidades).
 
 	ret
 
@@ -251,31 +244,32 @@ Extrae_address_y_avanza call Extrae_address
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   9/11/24
+;   7/3/25
 ;
-;	Carga el nº de entidades del nivel en (Numero_de_entidades). 
-;	Fija los perfiles de velocidad según el Nivel de dificultad.
-;	Sitúa el puntero (Datos_de_nivel) en la dirección de memoria donde se encuentra el .db que define el (Tipo)_
-;	_ de la 1ª entidad del Nivel.
+;	Inicializa el 1er Nivel del juego.
+;	
+;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
+;						(Numero_de_entidades)    ... Contiene el nº de entidades del nivel, (.db).
+;						(Datos_de_nivel)         ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
 ;
-;	Sitúa (Puntero_indice_mov) en la coreografía correcta.
-
-;	MODIFICA: HL,DE y A. 
-;	ACTUALIZA: (Puntero_indice_NIVELES), (Numero_de_entidades) y (Datos_de_nivel).
-
-Inicializa_1er_Nivel 
-
-;	Inicializa 1er Nivel y sitúa (Puntero_indice_NIVELES) en el 2º Nivel.
+;			B contiene (Numero_de_entidades).
+;			C contiene el (Tipo) de la 1ª entidad del nivel.
+;
+;	MODIFY: A,HL,BC y DE.
+;
+Inicializa_Nivel 
 
 	ld hl,Indice_de_niveles
-	call Extrae_address   
-	ld (Puntero_indice_NIVELES),de				 ; Situamos (Puntero_indice_NIVELES) en el 2º Nivel del índice.
+	call Extrae_address   						 ; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
+	ld (Puntero_indice_NIVELES),de				 ; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
 
 	ld a,(hl)
-	ld (Numero_de_entidades),a					 ; Fijamos el nº de entidades que tiene el nivel.
+	ld (Numero_de_entidades),a					 ; Inicializa (Numero_de_entidades).
+	ld b,a
 
 	inc l
-	ld (Datos_de_nivel),hl						 ; (Datos_de_nivel) ahora apunta a la dirección de mem. donde se encuentra el .db que indica el (Tipo) de la 1ª entidad del Nivel.
+	ld (Datos_de_nivel),hl						 ; Inicializa (Datos_de_nivel), .defw que define el (Tipo) de la 1ª entidad del Nivel_1	 
+	ld c,(hl)													
 
 	ret 										 
 
@@ -294,11 +288,16 @@ Situa_en_Caja_Master
 	call Extrae_address
 	ret
 
+; -----------------------------------------------------------
+;
+;	7/3/25
+
+;	INPUTS: A contiene el (Tipo) de la entidad que estamos iniciando.
 
 Situa_en_Tabla_Random
 
     call Calcula_salto_en_BC
-    ld hl,Indice_de_tablas_Random
+	ld hl,Indice_de_tablas_Random
     and a
     adc hl,bc
   	ld (Puntero_tabla_Random),hl

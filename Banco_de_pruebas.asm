@@ -529,9 +529,9 @@ INICIALIZACION
 	call Inicia_albumes_de_lineas_Amadeus
 	call Inicia_albumes_de_disparos
 
-;	Inicia 1er Nivel.
+;	Inicia el 1er nivel del juego.
 
-	call Inicializa_1er_Nivel							 ; Inicializa el 1er nivel del juego.
+	call Inicializa_Nivel								 ; Inicializa el 1er nivel del juego.
 	call Genera_movimientos_masticados_del_nivel		 ; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
 ;														   _reponiendo entidades eliminadas.
 	call Prepara_Cajas_de_Entidades
@@ -1696,11 +1696,31 @@ Cargamos_registros_con_explosion
 	ld l,(ix+5)
 	ld h,(ix+6)			
 
-	push hl
+;	Detectamos si la explosión entra en el extremo derecho de la pantalla, de no ser así modificamos 
+;	_el (Puntero_de_impresion).
+
+;	ld a,l
+;	and $1f
+;	cp $1d
+;	jr z,1F
+
+;	call nc,Corrige_explosion_lado_derecho
+
+1 push hl
 	pop ix															; (Puntero_de_impresion) en IX.
 
 	ret
 
+;Corrige_explosion_lado_derecho
+
+;	ld a,l
+;	and %11110000
+;	add $0d
+;	ld l,a
+
+;	ld (ix+5),l
+
+	ret
 
 Cargamos_registros_con_explosion_Amadeus
 
@@ -2222,10 +2242,12 @@ Teclado
 
 ; ------------------------------------------------------------------------------------------------------------------------ 
 ;
-;	06/07/24
+;	7/3/25
 ;
 
 Genera_explosion 
+
+;	call Obtenemos_puntero_de_impresion
 
 	ld hl,Clock_explosion								
 	dec (hl)
