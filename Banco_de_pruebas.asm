@@ -672,7 +672,9 @@ Main
 	set 2,(hl)
 	call Change
 
-2 push bc 												; Nº de entidades en curso.
+Bucle_de_entidades 
+
+	push bc 											; Nº de entidades en curso.
 
 6 ld ix,(Puntero_store_caja)							;! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 	call Salta_caja_de_entidades_vacia
@@ -731,7 +733,10 @@ Main
 
 ; -------------------------------------------
 
-3 call Obtenemos_puntero_de_impresion							; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.			ok.
+3 call Obtenemos_puntero_de_impresion							; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
+;																; (Puntero_objeto) en DE; 
+;		    													; (Puntero_de_impresion) codificado en BC.
+	call Decodifica_Puntero_de_impresion
 
 	push de
 	call Entidad_a_Tabla_de_pintado								; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
@@ -773,7 +778,9 @@ Gestiona_siguiente_entidad
 	call Incrementa_punteros_de_cajas
 
 	pop bc
-	djnz 2B
+	
+	dec b
+	jp nz,Bucle_de_entidades 
 
 ; Hemos gestionado todas las entidades. 
 ; ----- ----- -----
@@ -1598,9 +1605,18 @@ Actualiza_Puntero_de_almacen_de_mov_masticados
 
 ; ------------------------------------------
 ;
-;	23/11/24
+;	8/3/25
 ;
-;	Almacena (Puntero_de_impresion) en su caja y en la bandeja DRAW. Actualiza (Puntero_de_almacen_de_mov_masticados).
+;	Extraemos del Almacen_de_mov_masticados:
+;
+;	INPUTS: IX,(Puntero_store_caja). 
+;		    (1er .db de la caja de la entidad en curso, (Tipo).)
+;
+;	OUTPUTS: (Puntero_objeto) en DE.
+;	         (Puntero_de_impresion) codificado en BC.
+;			 (Puntero_de_almacen_de_mov_masticados) actualizado.
+;
+;	MODIFY: A,BC,DE y HL. 
 
 
 Obtenemos_puntero_de_impresion
@@ -1609,6 +1625,17 @@ Obtenemos_puntero_de_impresion
 	ld h,(ix+8)
 
 ;	hl apunta al .defw (Puntero_de_almacen_de_mov_masticados).
+;	Comprueba si hemos finalizado todos los mov. masticados de la entidad.
+	
+	ld c,(hl)
+	inc hl
+	ld b,(hl)
+	dec hl
+
+	ld a,c
+	or b															; Comprueba si ya no hay datos en el almacén.
+
+	call z,Reinicia_entidad_maliciosa
 
 	ld (Stack),sp
 	ld sp,hl
@@ -1619,6 +1646,15 @@ Obtenemos_puntero_de_impresion
 
 	pop de															; (Puntero_objeto) en DE.
 	pop bc															; (Puntero_de_impresion) codificado en BC.
+
+	add hl,sp
+
+	ld (ix+7),l
+	ld (ix+8),h 													; 
+
+	ld sp,(Stack)
+
+	ret
 
 ; Decodificamos (Puntero_de_impresion) para almacenarlo correctamente.
 
@@ -1665,21 +1701,6 @@ Decodifica_Puntero_de_impresion
 
 	ld (Puntero_de_impresion),bc
 
-;	Actualiza (Puntero_de_almacen_de_mov_masticados).
-
-	add hl,sp
-	ld (ix+7),l
-	ld (ix+8),h
-
-	pop bc
-
-	ld a,c
-	add b															; Comprueba si ya no hay datos en el almacén.
-
-	ld sp,(Stack)
-
-	call z,Reinicia_entidad_maliciosa
-
 	ret
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -1696,29 +1717,8 @@ Cargamos_registros_con_explosion
 	ld l,(ix+5)
 	ld h,(ix+6)			
 
-;	Detectamos si la explosión entra en el extremo derecho de la pantalla, de no ser así modificamos 
-;	_el (Puntero_de_impresion).
-
-;	ld a,l
-;	and $1f
-;	cp $1d
-;	jr z,1F
-
-;	call nc,Corrige_explosion_lado_derecho
-
-1 push hl
+	push hl
 	pop ix															; (Puntero_de_impresion) en IX.
-
-	ret
-
-;Corrige_explosion_lado_derecho
-
-;	ld a,l
-;	and %11110000
-;	add $0d
-;	ld l,a
-
-;	ld (ix+5),l
 
 	ret
 
