@@ -2365,16 +2365,14 @@ Siguiente_frame_explosion
 	jr Borra_entidad_colisionada
 
 ; ----- ----- ----- ----- -----
+;
+;	10/3/25
 
 calcula_CColumnass_Explosion_entidad
 
 	ld a,l
 	and $1f
-
-	jr z,Una_columna_izq
-	dec a
-	jr z,Dos_columnas_izq
-	inc a
+	jr z,Aparece_izquierda
 
 	ex af,af
 	ld a,3
@@ -2386,24 +2384,23 @@ calcula_CColumnass_Explosion_entidad
 
 	jr z,Dos_columnas_derecha
 
+Aparece_derecha
+
 	ld a,1
 	ld (Columnas),a
 	ret
 
-Dos_columnas_derecha ld a,2
+Dos_columnas_derecha 
+
+	ld a,2
 	ld (Columnas),a
 	ret
 
-Dos_columnas_izq inc a
+Aparece_izquierda inc a
 	inc a
-	ld (Columnas),a	
-	inc e
-	ret
-
-Una_columna_izq inc a
 	ld (Columnas),a
 	inc e
-	inc e
+
 	ret
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
