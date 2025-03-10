@@ -601,10 +601,10 @@ Main
 
 
 ;! ON/OF disparo de entidades:
-;!	ld hl,CLOCK_disparos_de_entidades
-;!	dec (hl)
-;!	call z,Autoriza_disparo_de_entidades
 
+	ld hl,CLOCK_disparos_de_entidades
+	dec (hl)
+	call z,Autoriza_disparo_de_entidades
 
 	ld hl,(Clock_next_entity)
 	ld bc,(FRAMES)
