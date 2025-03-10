@@ -739,6 +739,10 @@ Bucle_de_entidades
 	call Decodifica_Puntero_de_impresion
 
 	push de
+
+;	IX apunta al 1er .db de la caja.
+;	DE (Puntero_objeto).
+
 	call Entidad_a_Tabla_de_pintado								; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
 	call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
 	pop de
@@ -2242,12 +2246,10 @@ Teclado
 
 ; ------------------------------------------------------------------------------------------------------------------------ 
 ;
-;	7/3/25
+;	10/3/25
 ;
 
 Genera_explosion 
-
-;	call Obtenemos_puntero_de_impresion
 
 	ld hl,Clock_explosion								
 	dec (hl)
@@ -2255,12 +2257,21 @@ Genera_explosion
 
 Borra_entidad_colisionada
 
+	call Cargamos_registros_con_explosion
+	call calcula_CColumnass_Explosion_entidad
+
+	push ix 														; (Puntero_de_impresion).
+	push de 														; (Puntero_objeto).
+
+	ld ix,(Puntero_store_caja)
 	call Entidad_a_Tabla_de_pintado									; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
 
-	push ix
-	call Cargamos_registros_con_explosion
-	call Genera_datos_de_impresion
+	pop de
 	pop ix
+
+	call Genera_datos_de_impresion
+
+	ld ix,(Puntero_store_caja)
 
 	xor a
 	inc a 															; Necesario NZ a la salida de la subrutina.
@@ -2354,6 +2365,48 @@ Siguiente_frame_explosion
 	jr Borra_entidad_colisionada
 
 ; ----- ----- ----- ----- -----
+
+calcula_CColumnass_Explosion_entidad
+
+	ld a,l
+	and $1f
+
+	jr z,Una_columna_izq
+	dec a
+	jr z,Dos_columnas_izq
+	inc a
+
+	ex af,af
+	ld a,3
+	ld (Columnas),a
+	ex af,af
+
+	cp $1e
+	ret c
+
+	jr z,Dos_columnas_derecha
+
+	ld a,1
+	ld (Columnas),a
+	ret
+
+Dos_columnas_derecha ld a,2
+	ld (Columnas),a
+	ret
+
+Dos_columnas_izq inc a
+	inc a
+	ld (Columnas),a	
+	inc e
+	ret
+
+Una_columna_izq inc a
+	ld (Columnas),a
+	inc e
+	inc e
+	ret
+
+; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 Genera_explosion_Amadeus
 

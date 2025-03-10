@@ -35,7 +35,9 @@ Draw
 ; -----------------------
 ; -----------------------
 
-3 call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+3 ld a,(Posicion_actual) 							
+
+	call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
 	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
 
 	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
@@ -416,13 +418,13 @@ Up_screen
 ; 	3/2/25
 ;
 ;	Modify: A.
-;
-;	Output: (Columnas).
+;	
+;	INPUT: A contiene el byte bajo de (Posicion_actual).
+;	OUTPUT: (Columnas).
 ;	
 
 calcula_CColumnass 
 
-	ld a,(Posicion_actual)
 	and $1f
 	jr z,One_CColumna
 	dec a
