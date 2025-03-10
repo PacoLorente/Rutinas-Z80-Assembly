@@ -2415,7 +2415,21 @@ Borra_Amadeus_impactado
 
 	call Change_Amadeus
 	call Cargamos_registros_con_explosion_Amadeus
-	call Genera_datos_de_impresion_Amadeus
+
+;	Detecta si Amadeus esta pegado al extremo derecho de la pantalla.
+;	IX contiene (Puntero_de_impresion) de Amadeus.
+
+	ld a,ixl
+	and $1f
+	cp $1e
+	jr nz,2F
+
+;	La explosión de Amadeus ocupa tres columnas por lo que corregiremos su (Puntero_de_impresion) para_
+;	_que no aparezca parte de la explosión en la 1ª columna de pantalla.
+
+	dec ixl 														; ($1d).
+
+2 call Genera_datos_de_impresion_Amadeus
 
 	ld hl,Ctrl_3
 	set 5,(hl)														; Indicamos que hay movimiento, (se modifica el Sprite debido a la explosión).
