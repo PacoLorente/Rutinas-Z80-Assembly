@@ -153,10 +153,10 @@ Comprueba_limite_horizontal
 ;	Nos encontramos en la parte INFERIOR de la pantalla.
 ;	En este caso superamos el CENTRO de la pantalla cuando L < $80
 
-	ld a,$80 
+	ld a,$7f 
 	sub l
 	ret c											
-	ret z											; RET no hemos llegado al centro de la pantalla, E=0.
+	ret nz											; RET no hemos llegado al centro de la pantalla, E=0.
 
 	ld e,2											; Zona NEBULOSA que no es poca cosa.
 
@@ -170,9 +170,10 @@ Comprueba_limite_horizontal
 ;	Nos encontramos en la parte SUPERIOR de la pantalla.
 ;	En este caso superamos el CENTRO de la pantalla cuando L =< $7f
 
-1 ld a,$7f
+1 ld a,$80
 	sub l
 	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
+	ret nz
 
 	ld e,2											; Zona NEBULOSA que no es poca cosa.
 
@@ -185,7 +186,7 @@ Comprueba_limite_horizontal
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   27/02/25
+;   12/3/25
 ;
 ;	Comprueba_limite_vertical
 ;
@@ -198,7 +199,8 @@ Comprueba_limite_vertical
 
 ;	Exclusiones:
 
-;	No comprobamos (Limite_vertical) cuando E=2. (Zona nebulosa horizontal).
+;	No comprobamos (Limite_vertical) cuando E=2. (Zona nebulosa horizontal) pero si modificamos (Cuad_objeto)_
+;	y (Posicion_actual) para evitar que haya problemas de impresión en la salida por los extremos.
 
 	ld a,e
 
@@ -207,6 +209,8 @@ Comprueba_limite_vertical
 	jr nz,2F
 
 	call Salida_nebulosamente_por_la_derecha
+	ret z
+	call Salida_nebulosamente_por_la_izquierda
 	ret
 
 ;	No comprobamos (Limite_vertical) cuando hemos desaparecido por los extremos.
@@ -321,9 +325,13 @@ Modificaccionne
     call Modifica_Pos_actual2
     ret
 
+; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
 Salida_nebulosamente_por_la_derecha
 
 ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
+
+	jr $
 
 	ld a,(Posicion_actual)
 	and $1f
@@ -341,9 +349,42 @@ Salida_nebulosamente_por_la_derecha
 	inc a
 	ld (Cuad_objeto),a 				; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
 
-	dec c											 				; (Columns-1) en C.
+	dec c							; (Columns-1) en C.
 	ld a,l
 	sub c
+	ld (Posicion_actual),a
+
+	dec e
+	dec e 							; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
+
+	ret
+
+Salida_nebulosamente_por_la_izquierda
+
+;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado izquierdo ???.
+
+	jr $
+
+	ld a,(Posicion_actual)
+	and $1f
+	cp $01
+	ret nc
+	ret nz
+
+; 	Existe posibilidad de desaparecer por el lado izquierdo de la pantalla. Si (Cuad_objeto) indica que_
+;	_estamos en la parte derecha de la pantalla, (2/4), la salida será defectuosa. 
+
+	ld a,(Cuad_objeto)
+	and 1
+	ret nz 							; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+
+	ld a,(Cuad_objeto)
+	dec a 
+	ld (Cuad_objeto),a 				; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+
+	dec c											 				; (Columns-1) en C.
+	ld a,l
+	inc c
 	ld (Posicion_actual),a
 
 	ret
@@ -387,7 +428,6 @@ Left_screen
 
 	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
 	ld (hl),$12	   
-
 	srl e
 	jr z,Up_screen 
 
