@@ -270,7 +270,7 @@ Posicion_inicio defw 0									; Dirección de pantalla donde aparece el objeto.
 Cuad_objeto db 0										; Almacena el cuadrante de pantalla donde se encuentra el objeto, (1,2,3,4). [DRAW]
 Columnas db 0
 
-Limite_horizontal db 0	 								; Dirección de pantalla, (scanline), calculado en función del tamaño del Sprite. Si el objeto llega a esta línea se modifica_    
+;Limite_horizontal db 0	 								; Dirección de pantalla, (scanline), calculado en función del tamaño del Sprite. Si el objeto llega a esta línea se modifica_    
 ; 														; _(Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
 Limite_vertical db 0 									; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
 
@@ -425,6 +425,7 @@ Ctrl_3 db 0												; 2º Byte de Ctrl. general, (no específico) a una únic
 Ctrl_4 db 0												; 4º Byte de Ctrl. general, (no específico) a una única entidad.																		
 ;
 ;															BIT 0, "1" Cada vez que se incrementan las entidades en curso, este bit se pone a "1". Esto hará que una entidad pase de "dormida" a "activa".
+;															BIT 1, (INVESTIGAR !!!)
 
 Ctrl_5 db 0												;	BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria. 
 ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.
@@ -510,8 +511,8 @@ START
 
 ; Limpiamos pantalla.
 
-;	ld a,%00000111
-;	call Cls
+	ld a,%00000111
+	call Cls
 	call Pulsa_ENTER									 ; PULSA ENTER para disparar el programa.
 
 INICIALIZACION

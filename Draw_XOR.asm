@@ -1,32 +1,34 @@
 ; ******************************************************************************************************************************************************************************************
 ;
-; 26/06/23
+; 13/3/25
 ;
 ; DRAW. ************************************************************************************************************************************************************************************
 
 Draw 
 
 	call Prepara_draw 
-	ld a,h 						 					; El objeto existe, o se está iniciando?. Si se está iniciando, (Posicion_inicio = Posicion_actual) y saltamos_
-	and a 											; _a la subrutina [Inicializacion] donde asignaremos cuadrante y límites.
-	jr z,2F
 
-	ld a,(Cuad_objeto)			 					; El objeto ya se inició. Cargamos en A el cuadrante de pantalla en el que lo hizo y saltamos a 1F.
-	jr 1F
+	ld a,h 						 					
+	or l 											
+	jr nz,1F 										; jr, entidad iniciada.
 
-;	Inicia entidad.
+; --------------------------------------------------
 
-2 ld hl,(Posicion_inicio) 							; No hay (Posicion_actual), por lo que el objeto se está iniciando.
-	ld (Posicion_actual),hl							; Indicamos que (Posicion_actual) = (Posicion_inicio) y saltamos a la subrutina [Inicializacion], (donde asignaremos_			
-
-	call Inicializacion   							; _(Limite_horizontal), (Limite_vertical) y (Cuad_objeto). También asignaremos las coordenadas X e Y. (Posición 0,0)_
-;													; _la esquina superior izquierda de la pantalla.	
+Inicializacion
+	
+	ld hl,(Posicion_inicio) 						
+	ld (Posicion_actual),hl										
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
 	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
+	jr 3F
+
+; --------------------------------------------------
 
 1 ld a,(Ctrl_0)
 	bit 5,a
-	jr nz,3F										; Si acabamos de inicializar un objeto, NO COMPROBAMOS LÍMITES. 
-
+	jr nz,3F										
+;													
 	call Comprueba_limite_horizontal   				
 	call Comprueba_limite_vertical
 
@@ -116,13 +118,6 @@ Determina_lado_de_pantalla ld a,l
 ;
 ; 	Comprueba_limite_horizontal.
 ;
-;	La rutina comprueba si hemos sobrepasado el (Limite_horizontal) definido en la rutina [Inicializacion]. Este será:_
-;	_ $4fc0 si partimos de los cuadrantes 1 o 2 de pantalla o $4820 si partimos de los cuadrantes 3 o 4.
-; 
-;	Si sobrepasamos o alcanzamos el límite horizontal establecido, la rutina cargará el registro E con un "1".
-;	Si NO HEMOS SOBREPASADO (Limite_horizontal), E="0".
-;	E="2" indica que hemos alcanzado el centro de la pantalla aunque NO HEMOS SUPERADO (Limite_horizontal), (ZONA NEBULOSA).
-
 ;	INPUT: HL contiene (Posicion_actual).
 
 Comprueba_limite_horizontal 
@@ -131,16 +126,14 @@ Comprueba_limite_horizontal
 
 ;	Exclusiones !!!
 
-	ld a,(Ctrl_0)									; RET cuando hemos desaparecido por la parte alta o baja de pantalla.
-	and $0c
-	ret nz
-
 	call calcula_tercio  							; RET cuando no estamos en el centro de la pantalla, (2º tercio).
 	ret z
 
 	dec a
 	dec a
 	ret z
+
+; ----------------------------------- Comprobamos límite.
 
 ;	HL (Posicion_actual).
 ;	E=0
@@ -155,38 +148,53 @@ Comprueba_limite_horizontal
 
 	ld a,$7f 
 	sub l
-	ret c											
-	ret nz											; RET no hemos llegado al centro de la pantalla, E=0.
-
+	ret c			 								; RET no hemos llegado al centro de la pantalla, E=0.								
+										
 	ld e,2											; Zona NEBULOSA que no es poca cosa.
 
-	ld a,(Limite_horizontal)
+	ld a,$3f 										; (Limite_horizontal) = "$3f".
 	sub l
 	ret c											; RET con E=2.
 
-2 dec e
+	call Modificaccionne
+
+	ld a,(Cuad_objeto)
+	inc a
+	inc a
+	ld (Cuad_objeto),a
+
+	dec e
+
 	ret												; RET con E=1.
 
 ;	Nos encontramos en la parte SUPERIOR de la pantalla.
-;	En este caso superamos el CENTRO de la pantalla cuando L =< $7f
+;	En este caso superamos el CENTRO de la pantalla cuando L => $80.
 
 1 ld a,$80
 	sub l
 	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
-	ret nz
 
 	ld e,2											; Zona NEBULOSA que no es poca cosa.
 
-	ld a,(Limite_horizontal)
+;	
+	ld a,$c0 				 						; (Limite_horizontal) = "$c0".
 	sub l
-	jr z,2B
-	jr c,2B
+	ret nc 											; RET Estamos en zona nebulosa horizontal, no hemos superado (Limite_horizontal). E=2.
 
-	ret												; RET con E=2.
+	call Modificaccionne
+
+	ld a,(Cuad_objeto)
+	dec a
+	dec a
+	ld (Cuad_objeto),a
+
+	dec e 											; Hemos modificado (Posicion_actual) debido a que hemos superado el (Limite_horizontal). E=1.
+
+	ret												
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   12/3/25
+;   13/3/25
 ;
 ;	Comprueba_limite_vertical
 ;
@@ -197,36 +205,15 @@ Comprueba_limite_horizontal
 
 Comprueba_limite_vertical 
 
-;	Exclusiones:
-
-;	No comprobamos (Limite_vertical) cuando E=2. (Zona nebulosa horizontal) pero si modificamos (Cuad_objeto)_
-;	y (Posicion_actual) para evitar que haya problemas de impresión en la salida por los extremos.
-
-	ld a,e
-
-	dec a
-	dec a
-	jr nz,2F
-
-	call Salida_nebulosamente_por_la_derecha
-	ret z
-	call Salida_nebulosamente_por_la_izquierda
-	ret
-
-;	No comprobamos (Limite_vertical) cuando hemos desaparecido por los extremos.
-
-2 ld a,(Ctrl_0)
-	and 3
-	jr nz,Consulta_E
-
-;	E=1 / E=0 y NO HEMOS DESAPARECIDO por los lados de la pantalla.
-;	Comprobamos (Limite_vertical).
-
 	ld a,(Cuad_objeto)
 	and 1
-	jr z,1F
+	jr z,2F
 
 ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
+;	-----------------------------------------------------
+
+	ld a,$13
+	ld (Limite_vertical),a
 
 	call Comprobacion
 	jr nc,Comprueba_centro_vertical_izquierdo
@@ -238,14 +225,21 @@ Comprueba_limite_vertical
 	ld a,l
 	sub c
 	ld (Posicion_actual),a
-	call Inicializacion
 
-	jr Consulta_E
+	ld a,(Cuad_objeto)
+	inc a
+	ld (Cuad_objeto),a
+
+	jr Consulta_E 
 
 ;	Nos encontramos en la parte DERECHA de la pantalla.
+;	-----------------------------------------------------
 
-1 call Comprobacion
-	jr c,Comprueba_centro_vertical_derecho
+2 ld a,$0c
+	ld (Limite_vertical),a
+
+	call Comprobacion
+	jr c,Comprueba_centro_vertical_derecho 							; No hemos superado (Limite_vertical). Estamos nébulus???.
 
 ;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
 ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
@@ -254,15 +248,22 @@ Comprueba_limite_vertical
 	ld a,l
 	add c
 	ld (Posicion_actual),a
-	call Inicializacion
 
-;	E puede tener valor "0" o "1".
+	ld a,(Cuad_objeto)
+	dec a
+	ld (Cuad_objeto),a
+
+;	Consultamos E.
 
 Consulta_E 
 
-	ld a,e
-	dec a
-	call z,Modificaccionne
+	dec e
+	dec e
+	ret z
+
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
+
 	ret
 
 ; ----- ----- ----- ----- ----- 
@@ -274,45 +275,44 @@ Comprobacion ld a,l
 	sub d
 	ret
 
-Comprueba_centro_vertical_izquierdo ld a,$0e		; RET. Estamos en zona nebulosa vertical.
+Comprueba_centro_vertical_izquierdo ld a,$10		
 	sub d
-	ret c
-
-	jr Consulta_E
-
-Comprueba_centro_vertical_derecho ld a,$11
+	jr nc,Centro_no_alcanzado
+	ret 
+	
+Comprueba_centro_vertical_derecho ld a,$0f
 	sub d
-	ret nc
-
-	jr Consulta_E
-
-; --------------------
-
-Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
-1 call PreviousScan
-    djnz 1B
-	ld (Posicion_actual),hl
-	call Inicializacion
-	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
+	jr c,Centro_no_alcanzado
 	ret
 
-; --------------------
+Centro_no_alcanzado
 
-Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
-1 call NextScan
-    djnz 1B
-	ld (Posicion_actual),hl
-	call Inicializacion
-	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
+;	No hemos alcanzado el centro de la pantalla.
+;	Consultamos E.
+
+	ld a,e
+	and 1
+	ret z
+
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
 	ret
 
-; --------------------
+; --------------------------------------------------------------------------
 ;
-;	22/01/23
+;	13/3/25
 ;
-;	E="1". Hemos cambiado de cuadrante. 
-;	Si estamos en la mitad superior de pantalla: CALL [Modifica_Pos_actual].
-;	Si estamos en la mitad inferior de pantalla: CALL [Modifica_Pos_actual2].
+;	Modifica (Posicion_actual). 
+;
+;	En función de la mitad de pantalla de la que partamos:
+;
+;	CALL [Modifica_Pos_actual], si partimos de la mitad superior de la pantalla. 
+;	CALL [Modifica_Pos_actual2], si partimos de la mitad inferior de la pantalla.
+;
+;	INPUTS: HL contiene (Posicion_actual).
+;	OUTPUT: Actualiza (Posicion_actual).
+;	MODIFY: A y HL.
+
 
 
 Modificaccionne 
@@ -320,18 +320,31 @@ Modificaccionne
 	ld a,(Cuad_objeto)
 	cp 2
     call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
+    ret z
     call c,Modifica_Pos_actual
 	ret z
     call Modifica_Pos_actual2
     ret
+
+Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
+1 call PreviousScan
+	djnz 1B
+	ld (Posicion_actual),hl
+	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
+	ret
+
+Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
+1 call NextScan
+	djnz 1B
+	ld (Posicion_actual),hl
+	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
+	ret
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 Salida_nebulosamente_por_la_derecha
 
 ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
-
-	jr $
 
 	ld a,(Posicion_actual)
 	and $1f
@@ -363,8 +376,6 @@ Salida_nebulosamente_por_la_izquierda
 
 ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado izquierdo ???.
 
-	jr $
-
 	ld a,(Posicion_actual)
 	and $1f
 	cp $01
@@ -386,67 +397,6 @@ Salida_nebulosamente_por_la_izquierda
 	ld a,l
 	inc c
 	ld (Posicion_actual),a
-
-	ret
-
-; *************************************************************************************************************************************************************************************************
-;
-;	25/02/25
-;
-;	Inicializacion
-;
-;	Entrega "1", "2", "3" o "4" en (Cuad_objeto) en función del cuadrante de pantalla en el que nos encontremos.
-;	Asigna (Limite_vertical) y (Limite_horizontal) en función de (Cuad_objeto).
-
-; 	La rutina se ejecuta cada vez que la entidad supera el (Limite_horizontal) o el (Limite_vertical).
-;	También cuando la entidad desaparece/aparece por cualquier lado de la pantalla.
-
-;	INPUT: [HL] contendrá la dirección de pantalla a la que queremos asignar cuadrante. HL=(Posicion_inicio).
-; 		   [BC] contendrá (Filas)/(Columns) del objeto a inicializar.
-
-; 	OUTPUT: (Cuad_objeto), (Limite_vertical), (Limite_horizontal) y set5(Ctrl_0).
-;
-;	MODIFY: A,E,HL,B
-
-Inicializacion 
-
-	call Calcula_Cuad_objeto
-	ld e,a												; (Cuad_objeto) en A y E.
-	and 1
-	jr nz,Left_screen
-
-Right_screen
-
-	ld hl,Limite_vertical								; En la parte DERECHA de la pantalla, (Limite_vertical) = "$0d".
-	ld (hl),$0d       	
-	dec e
-	dec e
-	jr z,Up_screen
-	jr Down_screen
-
-Left_screen
-
-	ld hl,Limite_vertical								; En la parte IZQUIERDA de la pantalla, (Limite_vertical) = "$12".
-	ld (hl),$12	   
-	srl e
-	jr z,Up_screen 
-
-Down_screen	
-
-	ld a,$40    
-	ld (Limite_horizontal),a
-	jr 1F
-
-Up_screen 
-
-	ld a,$c0
-	ld (Limite_horizontal),a
-
-1 ld hl,(Posicion_actual)
-	call Genera_coordenadas
-
-	ld hl,Ctrl_0
-	set 5,(hl)
 
 	ret
 

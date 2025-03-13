@@ -1,4 +1,3 @@
-
 ; ******************************************************************************************************************************************************************************************
 ;
 ;   4/2/25
@@ -688,8 +687,10 @@ Reaparece_derecha
 	ld (Posicion_actual),a
 	ld hl,Ctrl_0														
 	set 0,(hl)
+	set 5,(hl)
 	ld hl,(Posicion_actual)
-	call Inicializacion
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
@@ -703,8 +704,10 @@ Reaparece_izquierda
 	ld (Posicion_actual),a 											
 	ld hl,Ctrl_0
 	set 1,(hl)
+	set 5,(hl)
 	ld hl,(Posicion_actual)
-	call Inicializacion
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
@@ -717,9 +720,11 @@ Reaparece_abajo inc h
 	and a
 	adc hl,bc
 	ld (Posicion_actual),hl
-	call Inicializacion
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
 	ld hl,Ctrl_0
 	set 2,(hl)
+	set 5,(hl)
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
@@ -730,9 +735,11 @@ Reaparece_arriba ld bc,$17e0
 	and a
 	sbc hl,bc
 	ld (Posicion_actual),hl
-	call Inicializacion
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
 	ld hl,Ctrl_0
 	set 3,(hl)
+	set 5,(hl)
 	ret
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

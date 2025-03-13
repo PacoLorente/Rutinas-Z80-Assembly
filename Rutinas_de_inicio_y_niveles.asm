@@ -45,7 +45,7 @@ Genera_movimientos_masticados_del_nivel
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
-	ld hl,Numeros_aleatorios+5									
+	ld hl,Numeros_aleatorios									
 	ld a,(hl)
 	and $1f														; Define el nº de columna por el que va a aparecer la entidad.
 
