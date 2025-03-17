@@ -1318,28 +1318,23 @@ Inicializa_India_y_limpia_Tabla_de_impresion
 
 Ordena_tabla_de_impresion
 
-; 5794 T/states.
-; 6278 T/states.
-; 5310 T/states.
-
-; Inicializamos punteros (India_SP) e (India_2_SP).
-; Inicializamos contador de comparaciones, [C].
-; Cargamos los registros A y B para efectuar comparación.
+;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
 
 	ld iyl,0
 
 	ld a,(Entidades_en_curso)
 	cp 4 	;	4
-	ret c 										; Tiene que haber 4 (Entidades_en_curso) en pantalla para poder ejecutar esta rutina.
+	ret c 										; < 4 entidades, no ordenamos la Tabla.
 
 	dec a
-	ld c,a 										; (Entidades_en_curso)-1 en C. Puede haber menos de 7 ebtidades.
+	ld c,a 										; (Entidades_en_curso)-1 en C.
 	ld d,c 										; Copia de respaldo.
 
 	ld a,(hl)									; Nº de Fila de la 1ª entidad, (1er byte de la tabla).
 
 	ld hl,Tabla_de_pintado+4
 	ld b,(hl)
+
 	ld (India_2_SP),hl
 
 1 cp b  				 						; Compara filas, (entidad X & entidad X).
@@ -1360,11 +1355,12 @@ Trueque
 ;  			A contiene en nº de fila de (India_SP).
 ;			HL contiene (India_2_SP). 
 
-	push de 									; Preservo DE pues D contiene una copia de respaldo.
+	push de 									; Preservo DE pues D contiene (Entidades_en_curso)-1.
 	push hl										; Preservo (India_2_SP).
 
 	ld de,(India_SP)
 	ex de,hl
+
 	ld (hl),b
 	ld (de),a									; (Flia) de (India_SP) ---- NTERCAMBIADA ---- (Flia) de (India_2_SP).
 
@@ -1449,13 +1445,16 @@ Prepara_salida
 	ret
 
 
-Intercambia_1_byte inc l
+Intercambia_1_byte 
+
+	inc l
 	inc e
 	ld b,(hl)
 	ld a,(de)
 	ex de,hl
 	ld (hl),b
 	ld (de),a												; Byte de menor peso de las dos direcciones de memoria, ----- INTERCAMBIADAS -----.
+
 	ret
 
 ; -----------------------------------------------------------------------------------
