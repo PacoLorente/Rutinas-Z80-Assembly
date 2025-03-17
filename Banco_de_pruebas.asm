@@ -781,6 +781,15 @@ Bucle_de_entidades
 
 Gestiona_siguiente_entidad
  
+;	Tabla_de_pintado $8900
+;	India_SP $8cb4 ..... $8904
+;	Puntero_store_caja $8c81
+;	Puntero_restore_caja $8c83
+;	Indice_restore_caja $8c85
+;	Album_de_pintado $8c94 ..... $811a
+;	Scanlines_album_SP $8cb2 ..... $813d
+;	Album_de_borrado $8c96
+
 	call Incrementa_punteros_de_cajas
 
 	pop bc
@@ -790,6 +799,12 @@ Gestiona_siguiente_entidad
 
 ; Hemos gestionado todas las entidades. 
 ; ----- ----- -----
+
+	ld a,(Entidades_en_curso)
+	cp 4
+	di
+	jr z,$
+	ei
 
 	call Inicializa_India_y_limpia_Tabla_de_impresion 			; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
 	call Ordena_tabla_de_impresion
@@ -1460,20 +1475,6 @@ Construye_movimientos_masticados_entidad
 	call Recompone_posicion_inicio
 
 1 call Draw
-
-;	IX contiene (Puntero_de_impresion)
-;	IY contiene (Puntero_objeto)
-
-;   Puntero_de_impresion $8bef ..... $4f5e
-;	Columns $8bf9 	           ..... 3
-;	Posicion_actual $8bfa	   ..... $4e9f					
-;	Puntero_objeto $8bfc	   ..... $85a0						
-;	CTRL_DESPLZ $8bfe		   ..... $f9
-;	Puntero_DESPLZ_der $8c03   ..... $8534
-;	Puntero_DESPLZ_izq $8c05   ..... $839a
-;	Cuad_objeto $8c09		   ..... 1	 						
-;	Columnas $8c0a             ..... 1
-
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
