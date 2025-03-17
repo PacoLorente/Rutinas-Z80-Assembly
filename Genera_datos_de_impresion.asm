@@ -21,9 +21,11 @@ Genera_datos_de_impresion
 
     ld hl,0
 
-    push ix
+    push ix                                         ; (Puntero_de_impresion).
+
     dec sp
     adc hl,sp
+
     push de
 
 ; Recuperamos SP.

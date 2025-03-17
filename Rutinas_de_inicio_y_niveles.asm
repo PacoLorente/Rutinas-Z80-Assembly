@@ -1,6 +1,6 @@
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   7/3/25
+;   17/4/25
 ;
 ;	Prepara las CAJAS MASTER y genera los movimientos masticados de todas las entidades que aparecerán en el nivel.
 ;
@@ -9,14 +9,27 @@
 
 Genera_movimientos_masticados_del_nivel 
 
-
 	push hl														; Push (Datos_de_nivel).
 	push bc														; Push (Numero_de_entidades)/(Tipo).
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
-	ld a,c														; (Tipo) de la entidad en A.
-	call Situa_en_Tabla_Random
+	ld a,c														
+	ex af,af
+	ld a,c 														; (Tipo) de la entidad en A y A´.
+
+	call Situa_en_Caja_Master									; Situa HL en el 1er .db de la "Caja Master" que corresponde a este (Tipo) de entidad.
+
+;	Caja Master inicializada ???
+;	HL en 1er .db de la Caja Master.
+
+	ld a,(hl)
+	and a
+	jr nz,Movimientos_masticados_construidos 
+
+	ex af,af 													; (Tipo) de la entidad en A.
+
+	call Situa_en_Tabla_Random 									; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
 	call Aplica_rnd_al_baile
 
 	pop bc
@@ -25,21 +38,9 @@ Genera_movimientos_masticados_del_nivel
 	push hl
 	push bc
 
-	ld a,c	
-	call Situa_en_Caja_Master									; Situa HL en el 1er .db de la "Caja Master" que corresponde a este (Tipo) de entidad.
-
-;	Caja Master inicializada ???
-
-	ld a,(hl)
-	and a
-	jr nz,Movimientos_masticados_construidos 
-
 ;	Construimos movimientos masticados de este (Tipo) de entidad.
 
-	pop bc
 	ld a,c														; (Tipo) de la entidad en A.
-	push bc
-
 	call Definicion_segun_tipo									; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW					; Vuelca los datos de la definición de entidad en DRAW.
 
@@ -112,7 +113,7 @@ Aplica_rnd_al_baile
 
 	xor a
 
-2 ex af,af 									; A' contiene el .db que acompaña al byte de control, ($00).
+2 ex af,af 										; A' contiene el .db que acompaña al byte de control, ($00).
 ;												; Inicializamos a $00, (no existe).
 
 ; 	digit ctrl ??

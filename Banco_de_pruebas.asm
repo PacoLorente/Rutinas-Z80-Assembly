@@ -540,7 +540,6 @@ INICIALIZACION
 ;	Inicia Amadeus.
 
 	call Inicia_Amadeus
-
 ;														 ; La rutina [Genera_datos_de_impresion] habilita las interrupciones antes del RET. 
 ;														 ; DI nos asegura que no vamos a ejecutar FRAME hasta que no tengamos todas las entidades iniciadas.
 ;														 ; La rutina [Genera_datos_de_impresion] activa las interrupciones antes del RET.
@@ -658,20 +657,22 @@ Main
 1 ld a,(Entidades_en_curso)
 	and a
 	jp z,Gestion_de_Amadeus									; Si no hay entidades en curso saltamos a [Avanza_puntero_de_Scanlines_album_de_entidades].
+
 	ld b,a													; No hay entidades que gestionar.
 
 ; ( Código que ejecutamos con cada entidad: ).
 
 ; --------------------------------------- GESTIÓN DE ENTIDADES. !!!!!!!!!!
-;
-;	Se produce MOVIMIENTO. Intercambio de Álbumes, (borrado-pintado).
 
-	ld hl,Tabla_de_pintado
+	ld hl,Tabla_de_pintado 								; Inicializa `Tabla_de_pintado´.
 	ld (India_SP),hl
 
-	ld hl,Ctrl_3
+	ld hl,Ctrl_3 										; Indica que se produce movimiento.
 	set 2,(hl)
-	call Change
+
+	call Change 										; Intercambio `Album_de_pintado - Album_de_borrado´.
+;														; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
+;	 													; _viceversa.
 
 Bucle_de_entidades 
 
@@ -739,20 +740,20 @@ Bucle_de_entidades
 ;		    													; (Puntero_de_impresion) codificado en BC.
 	call Decodifica_Puntero_de_impresion
 
-	push de
+	push de 													; (Puntero_objeto).
 
 ;	IX apunta al 1er .db de la caja.
 ;	DE (Puntero_objeto).
 
 	call Entidad_a_Tabla_de_pintado								; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
 	call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
+
 	pop de
 
 	push ix														; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
+
 	ld ix,(Puntero_de_impresion)
 	call Genera_datos_de_impresion
-
-	ld hl,(Album_de_pintado)
 
 	pop ix														; Pop .db (Tipo) de la entidad, (caja de entidades correspondiente) en IX.							
 
@@ -1271,6 +1272,9 @@ Entidad_a_Tabla_de_pintado
 ;
 ;	27/03/24
 ;
+;	Limpia el `resto de la tabla de impresión´ y sitúa el puntero de la tabla, (India_SP) al_
+;	_comienzo de la misma.
+
 
 Inicializa_India_y_limpia_Tabla_de_impresion 
 
@@ -2045,16 +2049,16 @@ Actualiza_pantalla
 
 	ld a,(Ctrl_3)
 	bit 2,a
-	jr z,Ejecuta_escudo                                             ; No hay movimiento de entidades. Saltamos a Amadeus.
+	jr z,Ejecuta_escudo                                             				; No hay movimiento de entidades. Saltamos a Amadeus.
 
 ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
 
-	ld bc,Indice_Sprite_der+1
-	ld (Puntero_indice_mov),bc
+	ld bc,Indice_Sprite_der
 
 Borrando_entidades
 
 	ld hl,(Scanlines_album_SP)
+
 	call Extrae_address
 	inc h
 	dec h
@@ -2062,26 +2066,26 @@ Borrando_entidades
 
 ;	Borramos entidades, pero antes... indicamos (Columnas).
 
-	ld bc,(Puntero_indice_mov)
 	ld a,(bc)
 	ld (Columnas),a
 
 	xor a
 	ld (bc),a
 	inc c
-	ld (Puntero_indice_mov),bc
 
+	push bc
 	call Pinta_Sprites
+	pop bc
+
 	jr Borrando_entidades
 	
 Pintando_entidades
 
 ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
 
-	ld bc,Indice_Sprite_der+1
-	ld (Puntero_indice_mov),bc
+	ld bc,Indice_Sprite_der
 
-	ld hl,(India_SP)
+3 ld hl,(India_SP)
 	inc l
 	call Extrae_address
 	inc h
@@ -2096,10 +2100,9 @@ Pintando_entidades
 	ld a,(de)
 	ld (Columnas),a
 
-	ld bc,(Puntero_indice_mov)
 	ld (bc),a
 	inc c
-	ld (Puntero_indice_mov),bc
+	push bc
 
 	inc e
 	ld (India_SP),de
@@ -2107,7 +2110,9 @@ Pintando_entidades
 	call Extrae_address
 	call Pinta_Sprites
 
-	jr Pintando_entidades
+	pop bc
+
+	jr 3B
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
