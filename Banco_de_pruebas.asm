@@ -740,21 +740,17 @@ Bucle_de_entidades
 ;		    													; (Puntero_de_impresion) codificado en BC.
 	call Decodifica_Puntero_de_impresion
 
-	push de 													; (Puntero_objeto).
-
 ;	IX apunta al 1er .db de la caja.
 ;	DE (Puntero_objeto).
 
+	push de 													; (Puntero_objeto).
 	call Entidad_a_Tabla_de_pintado								; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
 	call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
-
 	pop de
 
 	push ix														; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
-
 	ld ix,(Puntero_de_impresion)
 	call Genera_datos_de_impresion
-
 	pop ix														; Pop .db (Tipo) de la entidad, (caja de entidades correspondiente) en IX.							
 
 	call Decrementa_Contador_de_mov_masticados					
@@ -1317,8 +1313,12 @@ Ordena_tabla_de_impresion
 	ld iyl,0
 
 	ld a,(Entidades_en_curso)
-	cp 4 	;	4
-	ret c 										; < 4 entidades, no ordenamos la Tabla.
+;	cp 4 	
+;	ret c 										; < 4 entidades, no ordenamos la Tabla.
+
+	di
+	jr $
+	ei
 
 	dec a
 	ld c,a 										; (Entidades_en_curso)-1 en C.
@@ -2081,7 +2081,23 @@ Pintando_entidades
 
 ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
 
-	ld bc,Indice_Sprite_der
+;	ld a,(Entidades_en_curso)
+;	cp 4
+;	di
+;	jr z,$
+;	ei
+
+;	Tabla_de_pintado $8900
+;	India_SP $8cb4 ..... $8904
+;	Puntero_store_caja $8c81
+;	Puntero_restore_caja $8c83
+;	Indice_restore_caja $8c85
+;	Album_de_pintado $8c94 ..... $811a
+;	Scanlines_album_SP $8cb2 
+;	Album_de_borrado $8c96 ..... $8000
+;	FRAMES $5c78 ..... $025b
+
+	ld bc,Indice_Sprite_der	;	$8c56
 
 3 ld hl,(India_SP)
 	inc l
