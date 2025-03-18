@@ -800,12 +800,6 @@ Gestiona_siguiente_entidad
 ; Hemos gestionado todas las entidades. 
 ; ----- ----- -----
 
-	ld a,(Entidades_en_curso)
-	cp 4
-	di
-	jr z,$
-	ei
-
 	call Inicializa_India_y_limpia_Tabla_de_impresion 			; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
 	call Ordena_tabla_de_impresion
 	call Inicia_punteros_de_cajas 								; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
@@ -1367,6 +1361,9 @@ Trueque
 	call Intercambia_1_byte
 	call Intercambia_1_byte
 
+;	Intercambiamos (Columnas).
+
+	call Intercambia_1_byte
 
 ; Volvemos a iniciar A. Vuelve a contener `el nuevo contenido, (Fila), de (India_SP).
 ; Recuperamos (India_2_SP) en HL.
@@ -1449,6 +1446,7 @@ Intercambia_1_byte
 
 	inc l
 	inc e
+
 	ld b,(hl)
 	ld a,(de)
 	ex de,hl
