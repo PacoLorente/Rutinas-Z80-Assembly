@@ -404,7 +404,7 @@ Switch db 0
 Techo defw 0
 Scanlines_album_SP defw 0
 India_SP defw Tabla_de_pintado 
-India_2_SP defw Tabla_de_pintado+3
+India_2_SP defw 0
 
 Ctrl_3 db 0												; 2º Byte de Ctrl. general, (no específico) a una única entidad.
 ;
@@ -777,15 +777,6 @@ Bucle_de_entidades
 
 Gestiona_siguiente_entidad
  
-;	Tabla_de_pintado $8900
-;	India_SP $8cb4 ..... $8904
-;	Puntero_store_caja $8c81
-;	Puntero_restore_caja $8c83
-;	Indice_restore_caja $8c85
-;	Album_de_pintado $8c94 ..... $811a
-;	Scanlines_album_SP $8cb2 ..... $813d
-;	Album_de_borrado $8c96
-
 	call Incrementa_punteros_de_cajas
 
 	pop bc
@@ -797,7 +788,7 @@ Gestiona_siguiente_entidad
 ; ----- ----- -----
 
 	call Inicializa_India_y_limpia_Tabla_de_impresion 			; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
-	call Ordena_tabla_de_impresion
+;	call Ordena_tabla_de_impresion
 	call Inicia_punteros_de_cajas 								; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
 
 	call Borra_diferencia
@@ -1304,59 +1295,69 @@ Inicializa_India_y_limpia_Tabla_de_impresion
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	31/3/24
+;	19/3/25
 
 Ordena_tabla_de_impresion
 
 ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
 
-	ld iyl,0
-
 	ld a,(Entidades_en_curso)
-;	cp 4 	
-;	ret c 										; < 4 entidades, no ordenamos la Tabla.
-
-	di
-	jr $
-	ei
+	cp 4 	
+	ret c 										; < 4 entidades, no ordenamos la Tabla.
 
 	dec a
 	ld c,a 										; (Entidades_en_curso)-1 en C.
 	ld d,c 										; Copia de respaldo.
 
 	ld a,(hl)									; Nº de Fila de la 1ª entidad, (1er byte de la tabla).
-
 	ld hl,Tabla_de_pintado+4
 	ld b,(hl)
-
 	ld (India_2_SP),hl
 
-1 cp b  				 						; Compara filas, (entidad X & entidad X).
-	call c, Avanza_India_2_SP
-	call z, Avanza_India_2_SP
-
-	dec iyl
-	jr z,2F
-
-
-; --------------------------------------------------------------------------------------------------------------
+; --- --- --- --- --- --- ---
 ;
-;	7/4/24
+;	Comparador.
+
+1 cp b  				 						
+	jr c, Avanza_India_2_SP
+	jr z, Avanza_India_2_SP
+;
+; --- --- --- --- --- --- --- 
+
+	call Trueque
+	jr Avanza_India_2_SP
+
+	ret
+
+Avanza_India_2_SP
+
+	dec c
+	call z,Avanza_punteros_indios
+	ret z 										; Tabla_de_pintado ordenada !!!
+
+	inc l
+	inc l
+	inc l
+	inc l
+
+	ld b,(hl)
+	ld (India_2_SP),hl 							; Siguiente entidad en la Tabla.
+
+	jr 1B 										; Salta al comparador.
 
 Trueque 
-
-; INPUTS:   B contiene el nº de fila de (India_2_SP).
-;  			A contiene en nº de fila de (India_SP).
-;			HL contiene (India_2_SP). 
 
 	push de 									; Preservo DE pues D contiene (Entidades_en_curso)-1.
 	push hl										; Preservo (India_2_SP).
 
+;	Intercambia (Fila).
+
 	ld de,(India_SP)
 	ex de,hl
-
 	ld (hl),b
-	ld (de),a									; (Flia) de (India_SP) ---- NTERCAMBIADA ---- (Flia) de (India_2_SP).
+	ld (de),a									
+
+;	Intercambia .defw (Album_de_pintado).
 
 	call Intercambia_1_byte
 	call Intercambia_1_byte
@@ -1374,42 +1375,14 @@ Trueque
 	pop hl
 	pop de
 
+	ret
+
 ; --------------------------------------------------------------------------------------------------------------
  
-	call Avanza_India_2_SP
-
-2 inc d
-	dec d
-	ret z 										; Todas las (Entidades_en_curso) ordenadas.
-	jr 1B
-
-	ret
-
-; ----- ----- ----- ----- -----
-
-Avanza_India_2_SP
-
-	dec c
-	jr z,Avanza_punteros_indios
-
-	inc iyl
-
-	inc l
-	inc l
-	inc l
-	inc l
-
-	ld b,(hl)
-	ld (India_2_SP),hl 							; Siguiente entidad en la Tabla.
-
-	ret
-
-; ----- ----- ----- ----- -----
-
 Avanza_punteros_indios 
 
 	dec d
-	jr z,Prepara_salida 
+	jr z,Prepara_salida
 
 	ld c,d
 
@@ -1423,24 +1396,17 @@ Avanza_punteros_indios
 	ld a,(hl)
 	ld (India_SP),hl
 
-	inc l
-	inc l
-	inc l
-	inc l
-
-	ld b,(hl)
-	ld (India_2_SP),hl
-
-	inc iyl
-
 	ret
 
 Prepara_salida 
 
 	ld hl,Tabla_de_pintado
 	ld (India_SP),hl
+	xor a
+
 	ret
 
+;	----- ----- ----- ----- -----
 
 Intercambia_1_byte 
 
