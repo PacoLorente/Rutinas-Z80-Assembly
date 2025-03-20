@@ -872,6 +872,9 @@ End_frame
 	ld hl,(Album_de_borrado)
 	ld (Scanlines_album_SP),hl
 
+	ld hl,Tabla_de_borrado
+	ld (India_3_SP),hl
+
 	ld hl,Ctrl_3
 	set 0,(hl) 											; Indica Frame completo. 
 	res 3,(hl)
@@ -1279,7 +1282,7 @@ Entidad_a_Tabla_de_pintado
 Inicializa_India_y_limpia_Tabla_de_impresion 
 
 	ld hl,(India_SP)
-	ld bc,Indice_de_almacenes_de_mov_masticados-1							; Bytes de (Tabla_de_pintado)-1.
+	ld bc,Tabla_de_borrado-1												; Bytes de (Tabla_de_pintado)-1.
 
 	ld a,c
 	sub l
@@ -2021,40 +2024,51 @@ Actualiza_pantalla
 
 ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
 
-;	ld a,(Entidades_en_curso)
-;	dec a
-;	jr z,$
-
-	ld hl,Scanlines_album
-
-
-
-	ld hl,Tabla_de_borrado
-	ld (India_3_SP),hl
-
-Borrando_entidades
-
+	ld hl,(Scanlines_album_SP)
 	call Extrae_address
 	inc h
 	dec h
 	jr z,Pintando_entidades
 
-;	Borramos entidades, pero antes... indicamos (Columnas).
+	jr $
 
-	ld a,(bc)
+Borrando_entidades
+
+;	Adquirimos (Columnas).
+
+	ld hl,(India_3_SP)
+
+	ld a,(hl)
+	and a
+	jr z,Pintando_entidades
+
 	ld (Columnas),a
 
-	xor a
-	ld (bc),a
-	inc c
+;	Limpiamos (Columnas) de (India_3_SP)
 
-	push bc
+	xor a
+	ld (hl),a
+
+;	Adquirimos dirección de Scanlies_album.
+
+	inc l
+
+	call Extrae_address
+
+	ld (de),a
+	inc e
+	ld (de),a
+	inc e
+	ld (India_3_SP),de
+
 	call Pinta_Sprites
-	pop bc
 
 	jr Borrando_entidades
 	
 Pintando_entidades
+
+	ld hl,Tabla_de_borrado
+	ld (India_3_SP),hl
 
 	ld hl,(India_SP)
 	inc l
@@ -2079,11 +2093,11 @@ Pintando_entidades
 	ex de,hl
 	ld hl,(India_3_SP)
 
+	ld (hl),a
+	inc l
 	ld (hl),e
 	inc l
 	ld (hl),d
-	inc l
-	ld (hl),a
 	inc l
 
 	ld (India_3_SP),hl
@@ -2139,8 +2153,6 @@ Pintando_Amadeus
 
 	ld a,1												; Borde azul.
 	out ($fe),a
-
-	jr $
 
 	ret									 
 
