@@ -356,7 +356,6 @@ Prepara_Cajas_de_Entidades
 	call Inicia_punteros_de_cajas								; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
 ;																; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
 	call Inicializa_Numero_parcial_de_entidades					; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
-
 	ld hl,(Datos_de_nivel)										; Tipo de la 1ª entidad del Nivel.
 
 ; En este punto:
@@ -380,7 +379,6 @@ Prepara_Cajas_de_Entidades
 ;																; DE apunta ahora al 1er .db de la siguiente caja de entidades.
 
 ; En este punto debemos generar coordenadas y puntero de impresión.:
-;
 ;
 ; ------------------------------------------------------ IX
 ; ------------------------------------------------------ IX
@@ -406,7 +404,7 @@ Prepara_Cajas_de_Entidades
 
  	call Entidad_a_Tabla_de_pintado								; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
 
-	pop ix														; Pop (Puntero_de_impresion) en IX.
+ 	pop ix														; Pop (Puntero_de_impresion) en IX.
 	pop de														; Pop (Puntero_objeto) en DE.
 
 	call Genera_datos_de_impresion

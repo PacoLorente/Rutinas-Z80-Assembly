@@ -16,6 +16,7 @@ Numeros_aleatorios ds 7
 	org $8900	
 
 Tabla_de_pintado ds 24								 ; No puede haber cambio de byte alto en la Tabla_de_pintado, ese es el motivo del "org".
+Tabla_de_borrado ds 18
 
 ;	db 0, defw 0, db 0
 ;	.....

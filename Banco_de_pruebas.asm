@@ -405,6 +405,7 @@ Techo defw 0
 Scanlines_album_SP defw 0
 India_SP defw Tabla_de_pintado 
 India_2_SP defw 0
+India_3_SP defw Tabla_de_borrado
 
 Ctrl_3 db 0												; 2º Byte de Ctrl. general, (no específico) a una única entidad.
 ;
@@ -678,6 +679,9 @@ Bucle_de_entidades
 
 	push bc 											; Nº de entidades en curso.
 
+;	En primer lugar vamos a crear un puntero para ir almacenando las columnas de las distintas unidades.
+;	Utilizamos (Puntero_indice_mov) como puntero e Indice_Sprite_der como primer .db de almacenamiento.
+
 6 ld ix,(Puntero_store_caja)							;! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 	call Salta_caja_de_entidades_vacia
 
@@ -788,7 +792,7 @@ Gestiona_siguiente_entidad
 ; ----- ----- -----
 
 	call Inicializa_India_y_limpia_Tabla_de_impresion 			; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
-;	call Ordena_tabla_de_impresion
+	call Ordena_tabla_de_impresion
 	call Inicia_punteros_de_cajas 								; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
 
 	call Borra_diferencia
@@ -2017,11 +2021,18 @@ Actualiza_pantalla
 
 ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
 
-	ld bc,Indice_Sprite_der
+;	ld a,(Entidades_en_curso)
+;	dec a
+;	jr z,$
+
+	ld hl,Scanlines_album
+
+
+
+	ld hl,Tabla_de_borrado
+	ld (India_3_SP),hl
 
 Borrando_entidades
-
-	ld hl,(Scanlines_album_SP)
 
 	call Extrae_address
 	inc h
@@ -2045,27 +2056,7 @@ Borrando_entidades
 	
 Pintando_entidades
 
-;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
-
-;	ld a,(Entidades_en_curso)
-;	cp 4
-;	di
-;	jr z,$
-;	ei
-
-;	Tabla_de_pintado $8900
-;	India_SP $8cb4 ..... $8904
-;	Puntero_store_caja $8c81
-;	Puntero_restore_caja $8c83
-;	Indice_restore_caja $8c85
-;	Album_de_pintado $8c94 ..... $811a
-;	Scanlines_album_SP $8cb2 
-;	Album_de_borrado $8c96 ..... $8000
-;	FRAMES $5c78 ..... $025b
-
-	ld bc,Indice_Sprite_der	;	$8c56
-
-3 ld hl,(India_SP)
+	ld hl,(India_SP)
 	inc l
 	call Extrae_address
 	inc h
@@ -2080,19 +2071,31 @@ Pintando_entidades
 	ld a,(de)
 	ld (Columnas),a
 
-	ld (bc),a
-	inc c
-	push bc
-
 	inc e
 	ld (India_SP),de
+
+; Datos a Tabla_de_borrado.
+
+	ex de,hl
+	ld hl,(India_3_SP)
+
+	ld (hl),e
+	inc l
+	ld (hl),d
+	inc l
+	ld (hl),a
+	inc l
+
+	ld (India_3_SP),hl
+
+	ex de,hl
+
+; ----- ----- ----- -----
 
 	call Extrae_address
 	call Pinta_Sprites
 
-	pop bc
-
-	jr 3B
+	jr Pintando_entidades
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
@@ -2136,6 +2139,8 @@ Pintando_Amadeus
 
 	ld a,1												; Borde azul.
 	out ($fe),a
+
+	jr $
 
 	ret									 
 
