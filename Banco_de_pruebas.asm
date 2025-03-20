@@ -2030,7 +2030,7 @@ Actualiza_pantalla
 	dec h
 	jr z,Pintando_entidades
 
-	jr $
+;	jr $
 
 Borrando_entidades
 
@@ -2061,6 +2061,7 @@ Borrando_entidades
 	inc e
 	ld (India_3_SP),de
 
+	call Extrae_address
 	call Pinta_Sprites
 
 	jr Borrando_entidades
