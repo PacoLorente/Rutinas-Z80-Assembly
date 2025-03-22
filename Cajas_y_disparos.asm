@@ -150,8 +150,8 @@ Indice_de_cajas_de_entidades
 	defw Caja_2
 	defw Caja_3
 	defw Caja_4
-	defw Caja_5
-	defw Caja_6
+;	defw Caja_5
+;	defw Caja_6
 ;	defw Caja_7
 
 	defw 0
@@ -219,6 +219,8 @@ Caja_3 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 
 ; ---------- ---------- ---------- ---------- ----------
 
+	org $8a00	
+
 Caja_4 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	db 0 												; (Contador_de_vueltas).
 	db 0												; (Impacto).
@@ -229,23 +231,21 @@ Caja_4 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 
 ; ---------- ---------- ---------- ---------- ----------
 
-Caja_5 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
-	db 0 												; (Contador_de_vueltas).
-	db 0												; (Impacto).
-	defw 0												; (Puntero_de_impresion).
-	defw 0												; (Puntero_de_almacen_de_mov_masticados).
-	defw 0 												; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+;Caja_5 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
+;	db 0 												; (Contador_de_vueltas).
+;	db 0												; (Impacto).
+;	defw 0												; (Puntero_de_impresion).
+;	defw 0												; (Puntero_de_almacen_de_mov_masticados).
+;	defw 0 												; (Contador_de_mov_masticados).
+;	db 0												; (Velocidad). 					
 
-	org $8a00	
-
-Caja_6 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y)..
-	db 0 												; (Contador_de_vueltas).
-	db 0												; (Impacto).
-	defw 0												; (Puntero_de_impresion).
-	defw 0												; (Puntero_de_almacen_de_mov_masticados).
-	defw 0 												; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+;Caja_6 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y)..
+;	db 0 												; (Contador_de_vueltas).
+;	db 0												; (Impacto).
+;	defw 0												; (Puntero_de_impresion).
+;	defw 0												; (Puntero_de_almacen_de_mov_masticados).
+;	defw 0 												; (Contador_de_mov_masticados).
+;	db 0												; (Velocidad). 					
 
 ; ---------- ---------- ---------- ---------- ----------	
 

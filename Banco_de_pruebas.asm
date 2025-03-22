@@ -496,7 +496,7 @@ Shield db 90											; Temporización principal. Indica el tiempo que el escud
 Shield_2 db 0 											; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
 Shield_3 db 0
 
-Lives db 7
+Lives db 5
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -605,7 +605,7 @@ Main
 
 	ld hl,CLOCK_disparos_de_entidades
 	dec (hl)
-	call z,Autoriza_disparo_de_entidades
+2	call z,Autoriza_disparo_de_entidades
 
 	ld hl,(Clock_next_entity)
 	ld bc,(FRAMES)
@@ -2030,8 +2030,6 @@ Actualiza_pantalla
 	dec h
 	jr z,Pintando_entidades
 
-;	jr $
-
 Borrando_entidades
 
 ;	Adquirimos (Columnas).
@@ -2071,7 +2069,7 @@ Pintando_entidades
 	ld hl,Tabla_de_borrado
 	ld (India_3_SP),hl
 
-	ld hl,(India_SP)
+3 ld hl,(India_SP)
 	inc l
 	call Extrae_address
 	inc h
@@ -2110,7 +2108,7 @@ Pintando_entidades
 	call Extrae_address
 	call Pinta_Sprites
 
-	jr Pintando_entidades
+	jr 3B
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
