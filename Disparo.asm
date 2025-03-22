@@ -960,6 +960,10 @@ Consulta_Impacto
 
     ret z
 
+;    di
+;    jr $
+;    ei
+
     ld a,(Impacto2)    
     set 3,a
     ld (Impacto2),a
@@ -967,6 +971,7 @@ Consulta_Impacto
     push hl
     call Genera_coordenadas_de_disparo_Amadeus
     pop hl
+
     call Elimina_disparo_Amadeus
 
     ret
@@ -1255,30 +1260,35 @@ Genera_coordenadas_de_disparo_Amadeus
 
 ; ----------------------------------------------
 ;
-;   27/08/24
+;   22/03/25
 ;
-;   INPUTS: HL contiene la dirección de caja del disparo correspondiente, (1er .db de la caja).
+;   INPUTS: HL contiene el .defw (Puntero_objeto) de la caja de disparo de Amadeus.
 ;   OUTPUT: FLAG Z indica NO IMPACTO, NZ indica IMPACTO.
 
 Detecta_impacto_en_disparo_de_Amadeus
 
 Extraccion_de_datos                                        
 
-    inc de
-    inc de                                                 ;    Se sitúa en Puntero_objeto aumentado del disparo para comprobar colisión.   
+; Album_de_pintado_disparos_Amadeus $8cac
+; Album_de_borrado_disparos_Amadeus $8cae
+; Amadeus_disparos_scanlines_album equ $827c
+; Amadeus_disparos_scanlines_album_2 equ $8282
 
     ld e,(hl)
-    inc hl
+    inc l
     ld d,(hl)
 
-    inc hl                                                 
+    inc e
+    inc e                                                  ; DE contiene (Puntero_objeto) `aumentado' del_
+;                                                          ; _disparo de Amadeus.
+    inc l                                                 
 
     ld c,(hl)
-    inc hl
+    inc l
     ld b,(hl)
  
     push bc 
-    pop hl                                                 ;    Puntero_de_impresión del disparo en HL.
+    pop hl                                                 ; Puntero_de_impresión del disparo en HL.
 
 ;   La detección de colisión se efectúa con el disparo impreso en pantalla.
 
@@ -1291,11 +1301,12 @@ Detecta_impacto_
     and (hl)
     ret nz
 
-    inc de
-    inc hl
+    inc e
+    inc l
 
     ld a,(de)
     and (hl)
+
     ret
 
 ; -------------------------------------------------------------------------------------------------------------
