@@ -427,6 +427,8 @@ Ctrl_4 db 0												; 4º Byte de Ctrl. general, (no específico) a una únic
 ;
 ;															BIT 0, "1" Cada vez que se incrementan las entidades en curso, este bit se pone a "1". Esto hará que una entidad pase de "dormida" a "activa".
 ;															BIT 1, (INVESTIGAR !!!)
+;															BIT 2, "1" Indica que hemos eliminado el disparo de Amadeus. La rutina [Motor_Disparos_Amadeus] autorizará_
+;																   _uno nuevo si este bit está a "1" en el siguiente FRAME.
 
 Ctrl_5 db 0												;	BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria. 
 ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.

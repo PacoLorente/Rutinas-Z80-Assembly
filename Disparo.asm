@@ -778,7 +778,7 @@ Modifica_puntero_de_impresion
 
 ; --------------------------------------------------------------------------------------
 ;
-;   28/11/24
+;   23/3/25
 ;
 
 Compara_con_coordenadas_de_disparo
@@ -828,6 +828,15 @@ Comprueba_coordenada_X
     ret nz
 
 Activa_Impacto_en_entidad
+
+; Esta unidad ha sido impactada. 
+; En 1er lugar eliminamos el disparo de Amadeus.
+
+    ld hl,Disparo_Amad 
+    inc l
+    inc l
+
+    call Elimina_disparo_Amadeus
 
 ;   Indica Impacto en la entidad por disparo de Amadeus, "2".
 
@@ -920,12 +929,24 @@ Limpia_album_de_pintado_disparos_entidades
 
 ; --------------------------------------------------------------------------------------
 ;
-;   29/09/24
+;   23/3/25
 ;
 
 Motor_Disparos_Amadeus
 
-    ld hl,Disparo_Amad+1
+    ld hl,Ctrl_4
+    bit 2,(hl)
+    jr z,1F
+
+; En el frame anterior ha desaparecido un disparo de Amadeus. Autorizamos un nuevo `disparo'.
+; Evito de esta manera que se elimine un disparo y se autorize uno nuevo en el mismo FRAME.
+
+    res 2,(hl)
+
+    ld a,1
+    ld (Permiso_de_disparo_Amadeus),a
+
+1 ld hl,Disparo_Amad+1
 
     inc (hl)
     dec (hl)
@@ -954,15 +975,16 @@ Consulta_Impacto
 
     push hl
     dec hl                                      
+
     call Detecta_impacto_en_disparo_de_Amadeus                          ; Nos situamos en el 1er .db de la caja y comprobamos Impacto.  
+
     pop hl
     inc hl                                                              ; (Puntero_de_impresion) en HL.
 
     ret z
 
-;    di
-;    jr $
-;    ei
+; Impacto en el proyectil de Amadeus !!!
+; Puede existir impacto con otro proyectil. Hay que detectarlo.
 
     ld a,(Impacto2)    
     set 3,a
@@ -971,8 +993,6 @@ Consulta_Impacto
     push hl
     call Genera_coordenadas_de_disparo_Amadeus
     pop hl
-
-    call Elimina_disparo_Amadeus
 
     ret
 
@@ -1017,21 +1037,20 @@ Elimina_disparo_Amadeus
 ;   Disparo_1A defw 0									; Puntero objeto.
 ;   	defw 0											; Puntero de impresión.
 
-    dec hl
-    dec hl
+    inc l
 
     xor a
-    ld (hl),a
-    inc hl
-    ld (hl),a                                           ;? Puntero_objeto borrado.
 
-    inc hl
     ld (hl),a
-    inc hl
-    ld (hl),a                                           ;? Puntero_de_impresion borrado.
+    dec l
+    ld (hl),a
+    dec l
+    ld (hl),a
+    dec l
+    ld (hl),a                                           ; Disparo de Amadeus borrado.
 
-    ld a,1
-    ld (Permiso_de_disparo_Amadeus),a
+    ld hl,Ctrl_4
+    set 2,(hl)
 
     call Limpia_album_de_pintado_disparos_Amadeus
 
