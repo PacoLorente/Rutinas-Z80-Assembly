@@ -77,9 +77,9 @@ Disparo_1 db 0							    ; Control.
 ;
 ;	Índice de cajas_Masters.
 ;
-;	11/11/24
+;	26/3/25
 ;
-;	12 bytes.
+;	13 bytes.
 
 Indice_de_cajas_master						
 
@@ -96,6 +96,7 @@ Caja_master_1 db 0,0,0									; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------	
 
@@ -106,6 +107,7 @@ Caja_master_2 db 0,0,0									; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------	
 
@@ -116,6 +118,7 @@ Caja_master_3 db 0,0,0									; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------
 
@@ -126,6 +129,7 @@ Caja_master_4 db 0,0,0									; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------
 
@@ -136,6 +140,7 @@ Caja_master_5 db 0,0,0									; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; Atributos.
 
 ; -------------------------------------------------------------------------------------
 ;
@@ -165,9 +170,9 @@ Indice_de_cajas_de_entidades
 
 ; ---------- ---------- ---------- ---------- ----------
 ;
-;	28/05/24
+;	26/3/25
 ;
-; 	Cada caja tiene 14 bytes !!!
+; 	Cada caja tiene 13 bytes !!!
 ;
 ;	En principio Amadeus mo utiliza los parámetros: (Contador_de_vueltas) y (Velocidad). Estarán a "0" aunque no descarto utilizarlos más adelante para otra función.
 
@@ -179,12 +184,13 @@ p.imp.amadeus defw 0									; (Puntero_de_impresion).
 Pamm_Amadeus defw 0										; (Puntero_de_almacen_de_mov_masticados).
 Comm_Amadeus defw 0 									; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+Attr_Amadeus db 0 										; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------
 ;
-;	22/01/24
+;	26/3/25
 ;
-; 	Cada caja tiene 12 bytes !!!
+; 	Cada caja tiene 13 bytes !!!
 ;
 ;	Para darle más velocidad al motor incrementamos sólo el byte bajo cuando trabajamos con las cajas de entidades. Este es el motivo del ORG antes de la última caja.
 
@@ -196,6 +202,7 @@ Caja_1 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------	
 
@@ -206,6 +213,7 @@ Caja_2 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------	
 
@@ -216,6 +224,7 @@ Caja_3 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------
 
@@ -228,6 +237,7 @@ Caja_4 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 												; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
+	db 0 												; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------
 
@@ -238,6 +248,7 @@ Caja_4 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 ;	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 ;	defw 0 												; (Contador_de_mov_masticados).
 ;	db 0												; (Velocidad). 					
+;	db 0 												; (Attr).
 
 ;Caja_6 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y)..
 ;	db 0 												; (Contador_de_vueltas).
@@ -246,6 +257,7 @@ Caja_4 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 ;	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 ;	defw 0 												; (Contador_de_mov_masticados).
 ;	db 0												; (Velocidad). 					
+;	db 0 												; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------	
 
@@ -256,6 +268,7 @@ Caja_4 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 ;	defw 0												; (Puntero_de_almacen_de_mov_masticados).
 ;	defw 0 												; (Contador_de_mov_masticados).
 ;	db 0												; (Velocidad). 					
+;	db 0 												; (Attr).
 
 ; -------------------------------------------------------------------------------------
 ;
@@ -285,10 +298,11 @@ Entidad_1 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns).
 ; Aleatoriedad en la posición de inicio de la entidad.
 ; BadSat siempre aparecerá por la parte superior de la pantalla, $40xx. (Cuad_objeto) tendrá valor 1 o 2 dependiendo de si aparece por la mitad izquierda o derecha.
 
-Pos_inicio_entidad1	defw $4011	                        ; (Posicion_inicio).
+Pos_inicio_entidad1	defw $4000	                        ; (Posicion_inicio).
 	db 0												; (Cuad_objeto).
 
 	defw Almacen_de_movimientos_masticados_Entidad_1	; (Puntero_de_almacen_de_mov_masticados)
+	db 4 												; (Attr).
 
 ;	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -296,13 +310,25 @@ Entidad_2 db $81,2,2		                   			; (Tipo) / (Filas) / (Columns).
 	db 1												; (Contador_de_vueltas).
 	defw Indice_Badsat_der								; (Indice_Sprite_der).
 	defw Indice_Badsat_izq								; (Indice_Sprite_izq).
-	defw $5040                                      	; (Posicion_inicio).
+	defw $4000                                      	; (Posicion_inicio).
 	db 1												; (Cuad_objeto).
 	defw Almacen_de_movimientos_masticados_Entidad_1	; (Puntero_de_almacen_de_mov_masticados)
+	db 4 												; (Attr).
 
+;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;	COLORES: 0 ..... NEGRO
+;    		 1 ..... AZUL 
+; 			 2 ..... ROJO  ..... "20".
+;			 3 ..... MAGENTA .... "10".
+; 			 4 ..... VERDE ..... 
+; 			 5 ..... CIAN ..... "8".
+;			 6 ..... AMARILLO ..... "4".
+; 			 7 ..... BLANCO
+;
 ; -------------------------------------------------------------------------------------
 ;
-;	28/05/24
+;	26/3/25
 ;
 ;	Definición de Amadeus.
 ;
@@ -316,3 +342,4 @@ Definicion_Amadeus db 0,2,2		                     	; (Tipo) / (Filas) / (Columns
 	defw $50c1	                                     	; (Posicion_inicio).
 	db 3												; (Cuad_objeto).
 	defw Almacen_de_movimientos_masticados_Amadeus		; (Puntero_de_almacen_de_mov_masticados).
+	db 5 												; (Attr).

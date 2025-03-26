@@ -1,3 +1,45 @@
+; ---------------------------------------------------------------------------------------------------------------------
+;
+;	13/03/24
+;
+;	Inicialización de los álbumes de líneas, (pintado/borrado).
+
+Inicia_albumes_de_lineas
+
+	ld hl,Scanlines_album
+	ld (Album_de_pintado),hl
+	ld (Scanlines_album_SP),hl
+
+	ld hl,Scanlines_album_2
+	ld (Album_de_borrado),hl
+
+	ret
+
+Inicia_albumes_de_lineas_Amadeus
+
+	ld hl,Amadeus_scanlines_album
+	ld (Album_de_pintado_Amadeus),hl
+	ld hl,Amadeus_scanlines_album_2
+	ld (Album_de_borrado_Amadeus),hl
+
+	ret
+
+Inicia_albumes_de_disparos
+
+	ld hl,Amadeus_disparos_scanlines_album
+	ld (Album_de_pintado_disparos_Amadeus),hl
+	ld hl,Amadeus_disparos_scanlines_album_2
+	ld (Album_de_borrado_disparos_Amadeus),hl
+
+	ld hl,Entidades_disparos_scanlines_album
+	ld (Album_de_pintado_disparos_Entidades),hl
+	ld (Nivel_scan_disparos_album_de_pintado),hl
+
+	ld hl,Entidades_disparos_scanlines_album_2
+	ld (Album_de_borrado_disparos_Entidades),hl
+
+	ret
+
 ;---------------------------------------------------------------------------------------------------------------
 ;
 ;   17/4/25
@@ -80,6 +122,79 @@ Movimientos_masticados_construidos
 	djnz Genera_movimientos_masticados_del_nivel 				; dec (Numero_de_entidades).
 
 	ret
+
+; -----------------------------------------------------------------------------------
+;
+;	20/01/24
+;
+;
+
+Construye_movimientos_masticados_entidad	
+
+	ld hl,(Puntero_de_almacen_de_mov_masticados)			; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
+	push hl
+	call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+;															; _ el (Contador_de_mov_masticados).    
+	call Inicia_Puntero_objeto								; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+;															; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
+	call Recompone_posicion_inicio
+
+1 call Draw
+
+	call Codifica_Puntero_de_impresion
+	call Guarda_movimiento_masticado
+
+	call Movimiento
+
+	ld a,(Ctrl_3)											; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
+	bit 1,a 												; _ que corresponde a esta entidad.
+	jr z,1B
+
+;	Hemos completado el almacén de movimientos masticados de la entidad.
+;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
+
+	pop hl 													; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
+	ld (Puntero_de_almacen_de_mov_masticados),hl
+
+; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados). 
+
+	call Situa_en_contador_general_de_mov_masticados
+
+; HL apunta al 1er byte del (Contador_general_de_mov_masticados) de esta entidad.
+; Guardamos (Contador_de_mov_masticados) en el (Contador_general_de_mov_masticados) de esta entidad.
+
+	ld bc,(Contador_de_mov_masticados)
+
+	ld (hl),c
+	inc hl
+	ld (hl),b
+
+	ret
+
+; -----------------------------------------------------------------------------------
+;
+;	28/12/23
+;
+;	Guarda el "movimiento_masticado" en el {Almacen_de_movimientos_masticados} de la entidad.
+;	Actualiza el (Puntero_de_almacen_de_mov_masticados) tras el guardado.
+
+Guarda_movimiento_masticado	
+
+	ld (Stack),sp
+	ld sp,(Puntero_de_almacen_de_mov_masticados)			; Guardamos el movimiento masticado en el almacén.
+
+    push ix 												; Pushea el Puntero_de_impresión, (1er scanline).
+    push iy 												; Pushea Puntero_objeto.
+ 
+    ld sp,(Stack)
+
+   	ld hl,(Contador_de_mov_masticados)						; Incrementa en una unidad el (Contador_de_mov_masticados).
+	inc hl
+	ld (Contador_de_mov_masticados),hl
+
+    call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+;															; _ el (Contador_de_mov_masticados).    
+    ret
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
@@ -374,8 +489,9 @@ Prepara_Cajas_de_Entidades
 	push de
 	pop ix 														;! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 
-	ld bc,12
+	ld bc,13
 	ldir														; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
+
 ;																; DE apunta ahora al 1er .db de la siguiente caja de entidades.
 
 ; En este punto debemos generar coordenadas y puntero de impresión.:
@@ -654,7 +770,7 @@ Situa_en_datos_de_definicion and a
 
 ; ----------------------------------------------------------------------------------------------------------
 ;
-;	24/6/24
+;	26/3/25
 ;
 ;	Introduce una definición de entidad en la bandeja DRAW para generar los "movimientos masticados" de este tipo_
 ;	_ de entidad.
@@ -686,24 +802,28 @@ Definicion_de_entidad_a_bandeja_DRAW
 	ldir 										; Hemos volcado (Puntero_de_almacen_de_mov_masticados).
 
 	ld de,Posicion_inicio
-	ld bc,3									; 3 FRAMES de explosión.!!!!!!!!!!!!!!
-	ldir 									; Vuelco (Frames_explosion).
+	ld bc,3										; 3 FRAMES de explosión.!!!!!!!!!!!!!!
+	ldir 										; Vuelco (Frames_explosion).
 
 	ld de,Puntero_de_almacen_de_mov_masticados
 	ld bc,2
 	ldir
 
+	ld de,Attr
+	ld a,(hl) 									; Volcamos (Attr).
+	ld (de),a
+
 	ret
 
 ; ----------------------------------------------------------------------------------------------------------
 ;
-;	1/8/24
+;	26/3/25
 ;
 
 Parametros_de_bandeja_DRAW_a_caja 
 
 	ld hl,Bandeja_DRAW
-	ld bc,12
+	ld bc,13
 	ldir													 
 	ret
 

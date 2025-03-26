@@ -192,6 +192,8 @@ Velocidad db 0 											; 5 vueltas max. 5 vueltas       1 - 0 (1ª vuelta - v
 ;																						 8 - 2 (4ª vuelta - velocidad 2)
 ;																					   $10 - 4 (5ª vuelta - velocidad 3) 																		
 
+Attr db 0 												; Atributos de la entidad.
+
 Ctrl_2 db 0 											
 ;														BIT 0, Los sprites se inician con un `sprite vacío', (sprite formado por "ceros"), cuando la rutina_
 ;															_ [Genera_datos_de_impresion] guarda su 1ª imagen.
@@ -429,6 +431,8 @@ Ctrl_4 db 0												; 4º Byte de Ctrl. general, (no específico) a una únic
 ;															BIT 1, (INVESTIGAR !!!)
 ;															BIT 2, "1" Indica que hemos eliminado el disparo de Amadeus. La rutina [Motor_Disparos_Amadeus] autorizará_
 ;																   _uno nuevo si este bit está a "1" en el siguiente FRAME.
+;															BIT 3, "1" Indica que se ha asignado un color RND a la entidad. 
+; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta´.
 
 Ctrl_5 db 0												;	BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria. 
 ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.
@@ -548,6 +552,7 @@ INICIALIZACION
 ;														 ; La rutina [Genera_datos_de_impresion] activa las interrupciones antes del RET.
 	ld de,Amadeus_BOX
 	call Parametros_de_bandeja_DRAW_a_caja	 			 ; Volcamos Amadeus en (Amadeus_BOX).
+
 	call Limpiamos_bandeja_DRAW
 
 ; 	Situamos a Amadeus en el centro de la pantalla y pintamos.
@@ -607,7 +612,7 @@ Main
 
 	ld hl,CLOCK_disparos_de_entidades
 	dec (hl)
-2	call z,Autoriza_disparo_de_entidades
+	call z,Autoriza_disparo_de_entidades
 
 	ld hl,(Clock_next_entity)
 	ld bc,(FRAMES)
@@ -750,8 +755,13 @@ Bucle_de_entidades
 ;	DE (Puntero_objeto).
 
 	push de 													; (Puntero_objeto).
+
+;	Lineas de attrs a Tabla_de_pintado
+
+	call Attrs_a_Tabla_de_pintado
 	call Entidad_a_Tabla_de_pintado								; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
 	call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
+
 	pop de
 
 	push ix														; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
@@ -773,7 +783,7 @@ Bucle_de_entidades
 	ld (ix+1),c													; Actualiza las coordenadas de la entidad.
 	ld (ix+2),b			
 
-; TODO: Generamos disparo ???
+;	TODO: Generamos disparo ???
 
 	ld a,(Permiso_de_disparo_Entidades)
 	and a
@@ -891,6 +901,156 @@ End_frame
 	halt												
 
 	jp Main
+
+; ------------------------------------------------------------------------
+; ------------------------------------------------------------------------
+; ------------------------------------------------------------------------
+
+; ------------------------------------------------------------------------
+;
+;	25/3/25
+;
+;	Introduce las direcciones de attrs. de esta entidad en la (Tabla_de_pintado).
+;	El 1er byte será el `valor' del attr. Este valor variará en función del nº de vueltas, (Contador_de_vueltas).
+;	
+;	INPUTS: BC contiene (Puntero_de_impresion).
+
+;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;	COLORES: 0 ..... NEGRO
+;    		 1 ..... AZUL 
+; 			 2 ..... ROJO  ..... "20".
+;			 3 ..... MAGENTA .... "10".
+; 			 4 ..... VERDE ..... 
+; 			 5 ..... CIAN ..... "8".
+;			 6 ..... AMARILLO ..... "4".
+; 			 7 ..... BLANCO
+
+Attrs_a_Tabla_de_pintado
+
+	ld de,(India_SP)
+
+; En 1er lugar definimos el valor del attr. en función del (Contador_de_vueltas).
+
+;	call Fija_color_entidad
+
+;	di
+;	jr $
+;	ei
+
+;	push bc
+;	pop hl 										; HL contiene (Puntero_de_impresion).
+
+;	ld de,(India_SP)
+
+;	La entidad está apareciendo por la parte alta de la pantalla ???. 
+
+;	ld a,h
+;	cp $40
+;	jr z,Two_Files														
+;	jr nc,1F
+
+;	ld h,$40
+;	jr Two_Files
+
+;1 cp $48
+;	jr z,Two_Files
+;	cp $50
+;	jr z,Two_Files 								; Only I need two attr's lines when entity is in $40,$48 or $50 scanline.
+
+;Three_Files 
+
+;	call Vuelca_dos_filas_de_attr
+;	call Vuelca_fila_de_attr
+;	ret
+
+;Two_Files 
+
+;	call Vuelca_dos_filas_de_attr
+	ret
+
+Fija_color_entidad ld a,(ix+3) 					; (Contador_de_vueltas) en A.
+	cp $20
+	jr nz,Fija_magenta
+
+Fija_rojo ld a,%01000010 						; Rojo - brillo.
+	jr 1F
+
+Fija_magenta cp $10
+	jr nz,Fija_verde
+
+	ld a,%01000011 								; Magenta - brillo.
+	jr 1F
+
+Fija_verde cp $08
+	jr nz,Fija_amarillo
+
+	ld a,%01000100 								; Verde - brillo.
+	jr 1F
+
+Fija_amarillo cp $04
+	jr nz,Color_rnd
+
+	ld a,%01000110 								; Amarillo - brillo.
+	jr 1F
+
+Color_rnd 
+
+	ld a,(Ctrl_4)
+	set 3,a
+	ld (Ctrl_4),a
+
+	ld a,(RND_SP)
+	and 7
+	jr nz,1F
+
+	inc a 										; Nunca NEGRO.
+
+1 ld (de),a
+	inc e
+	ld (India_SP),de
+
+	ret
+
+; ----- ----- ----- ----- ----- ----- -----
+
+Vuelca_fila_de_attr	
+
+	ld a,(Columnas)
+	ld b,a 	
+
+	ex de,hl
+
+1 ld (hl),e
+	inc l
+	ld (hl),d
+	inc l
+	inc e 										; Dirección de la siguiente (Columna) en HL.
+	djnz 1B
+
+	ex de,hl
+
+	ret
+
+Vuelca_dos_filas_de_attr 
+
+	call Extrae_address
+	add $58
+	ld h,a
+
+	push hl
+	call Vuelca_fila_de_attr
+	pop hl
+
+	ld a,l
+	add 32
+	ld l,a
+
+	push hl
+	call Vuelca_fila_de_attr
+	pop hl
+
+	ret
 
 ;------------------------------------------
 ;
@@ -1430,79 +1590,6 @@ Intercambia_1_byte
 
 	ret
 
-; -----------------------------------------------------------------------------------
-;
-;	20/01/24
-;
-;
-
-Construye_movimientos_masticados_entidad	
-
-	ld hl,(Puntero_de_almacen_de_mov_masticados)			; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
-	push hl
-	call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-;															; _ el (Contador_de_mov_masticados).    
-	call Inicia_Puntero_objeto								; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
-;															; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
-	call Recompone_posicion_inicio
-
-1 call Draw
-
-	call Codifica_Puntero_de_impresion
-	call Guarda_movimiento_masticado
-
-	call Movimiento
-
-	ld a,(Ctrl_3)											; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
-	bit 1,a 												; _ que corresponde a esta entidad.
-	jr z,1B
-
-;	Hemos completado el almacén de movimientos masticados de la entidad.
-;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
-
-	pop hl 													; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
-	ld (Puntero_de_almacen_de_mov_masticados),hl
-
-; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados). 
-
-	call Situa_en_contador_general_de_mov_masticados
-
-; HL apunta al 1er byte del (Contador_general_de_mov_masticados) de esta entidad.
-; Guardamos (Contador_de_mov_masticados) en el (Contador_general_de_mov_masticados) de esta entidad.
-
-	ld bc,(Contador_de_mov_masticados)
-
-	ld (hl),c
-	inc hl
-	ld (hl),b
-
-	ret
-
-; -----------------------------------------------------------------------------------
-;
-;	28/12/23
-;
-;	Guarda el "movimiento_masticado" en el {Almacen_de_movimientos_masticados} de la entidad.
-;	Actualiza el (Puntero_de_almacen_de_mov_masticados) tras el guardado.
-
-Guarda_movimiento_masticado	
-
-	ld (Stack),sp
-	ld sp,(Puntero_de_almacen_de_mov_masticados)			; Guardamos el movimiento masticado en el almacén.
-
-    push ix 												; Pushea el Puntero_de_impresión, (1er scanline).
-    push iy 												; Pushea Puntero_objeto.
- 
-    ld sp,(Stack)
-
-   	ld hl,(Contador_de_mov_masticados)						; Incrementa en una unidad el (Contador_de_mov_masticados).
-	inc hl
-	ld (Contador_de_mov_masticados),hl
-
-    call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-;															; _ el (Contador_de_mov_masticados).    
-    ret
-
 ; --------------------------------------------------------------------------------------------------------------
 ;
 ;	17/02/25
@@ -1770,48 +1857,6 @@ Genera_datos_de_impresion_Amadeus
 
 	ret
 	
-; ---------------------------------------------------------------------------------------------------------------------
-;
-;	13/03/24
-;
-;	Inicialización de los álbumes de líneas, (pintado/borrado).
-
-Inicia_albumes_de_lineas
-
-	ld hl,Scanlines_album
-	ld (Album_de_pintado),hl
-	ld (Scanlines_album_SP),hl
-
-	ld hl,Scanlines_album_2
-	ld (Album_de_borrado),hl
-
-	ret
-
-Inicia_albumes_de_lineas_Amadeus
-
-	ld hl,Amadeus_scanlines_album
-	ld (Album_de_pintado_Amadeus),hl
-	ld hl,Amadeus_scanlines_album_2
-	ld (Album_de_borrado_Amadeus),hl
-
-	ret
-
-Inicia_albumes_de_disparos
-
-	ld hl,Amadeus_disparos_scanlines_album
-	ld (Album_de_pintado_disparos_Amadeus),hl
-	ld hl,Amadeus_disparos_scanlines_album_2
-	ld (Album_de_borrado_disparos_Amadeus),hl
-
-	ld hl,Entidades_disparos_scanlines_album
-	ld (Album_de_pintado_disparos_Entidades),hl
-	ld (Nivel_scan_disparos_album_de_pintado),hl
-
-	ld hl,Entidades_disparos_scanlines_album_2
-	ld (Album_de_borrado_disparos_Entidades),hl
-
-	ret
-
 ; ---------------------------------------------------------------------------------------------------------------------
 ;
 ; 8/1/23
