@@ -15,7 +15,7 @@ Numeros_aleatorios ds 7
 
 	org $8900	
 
-Tabla_de_pintado ds 24								 ; No puede haber cambio de byte alto en la Tabla_de_pintado, ese es el motivo del "org".
+Tabla_de_pintado ds 30								 ; No puede haber cambio de byte alto en la Tabla_de_pintado, ese es el motivo del "org".
 Tabla_de_borrado ds 18
 
 ;	db 0, defw 0, db 0
@@ -217,6 +217,8 @@ Caja_2 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 
 ; ---------- ---------- ---------- ---------- ----------	
 
+	org $8a00	
+
 Caja_3 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	db 0 												; (Contador_de_vueltas).
 	db 0												; (Impacto).
@@ -227,8 +229,6 @@ Caja_3 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	db 0 												; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------
-
-	org $8a00	
 
 Caja_4 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	db 0 												; (Contador_de_vueltas).
