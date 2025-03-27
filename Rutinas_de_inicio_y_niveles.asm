@@ -708,6 +708,18 @@ Reinicia_entidad_maliciosa
 
 	call Obtenemos_puntero_de_impresion
 
+;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;	COLORES: 0 ..... NEGRO
+;    		 1 ..... AZUL 
+; 			 2 ..... ROJO  ..... "20".
+;			 3 ..... MAGENTA .... "10".
+; 			 4 ..... VERDE ..... 
+; 			 5 ..... CIAN ..... "8".
+;			 6 ..... AMARILLO ..... "4".
+; 			 7 ..... BLANCO
+;
+
 ; Incrementa (Contador_de_vueltas)x2. 
 ; (Velocidad) de la entidad será: (Contador_de_vueltas)/4.
 
@@ -725,16 +737,55 @@ Reinicia_entidad_maliciosa
 
 	ld (ix+11),a 								; ld (Velocidad),a
 
+; Attr. 
+
+; A contiene (Velocidad).
+
+	call nz, Define_attr 						; No modificamos attr. si no hay cambio de velocidad.
+
+; Límitador. 
+
 	ld a,$40
 	cp (ix+3)
 	ret nz
-
-; Límitador. 
 
 ;	Limita el valor de (Contador_de_vueltas) a "$20" y de (Velocidad) a "$04". 
 
 	sra (ix+3)
 	sra (ix+11)
+
+	ret
+
+; ----- ----- ----- ----- -----
+;
+;	27/3/25
+;
+;	Define (Attr) en función de la (Velocidad).
+;
+
+Define_attr	
+
+	dec a
+	jr z,Amarillo
+	inc a
+
+	cp 2
+	jr z,Magenta
+
+	cp 4
+	jr z,Cyan
+
+Rojo ld a,%01000010	
+	jr 2F
+
+Cyan ld a,%01000101
+	jr 2F
+
+Magenta ld a,%01000011
+	jr 2F
+
+Amarillo ld a,%01000110
+2 ld (ix+12),a
 
 	ret
 

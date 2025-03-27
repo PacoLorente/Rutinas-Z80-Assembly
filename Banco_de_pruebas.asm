@@ -745,6 +745,8 @@ Bucle_de_entidades
 	ld (Impacto),a												; Colocamos el .db (Impacto) de la entidad en curso a "0".
 
 ; -------------------------------------------
+ 
+; Movement !!!
 
 3 call Obtenemos_puntero_de_impresion							; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
 ;																; (Puntero_objeto) en DE; 
@@ -756,9 +758,6 @@ Bucle_de_entidades
 
 	push de 													; (Puntero_objeto).
 
-;	Lineas de attrs a Tabla_de_pintado
-
-	call Attrs_a_Tabla_de_pintado
 	call Entidad_a_Tabla_de_pintado								; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
 	call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
 
@@ -905,152 +904,6 @@ End_frame
 ; ------------------------------------------------------------------------
 ; ------------------------------------------------------------------------
 ; ------------------------------------------------------------------------
-
-; ------------------------------------------------------------------------
-;
-;	25/3/25
-;
-;	Introduce las direcciones de attrs. de esta entidad en la (Tabla_de_pintado).
-;	El 1er byte será el `valor' del attr. Este valor variará en función del nº de vueltas, (Contador_de_vueltas).
-;	
-;	INPUTS: BC contiene (Puntero_de_impresion).
-
-;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
-;
-;	COLORES: 0 ..... NEGRO
-;    		 1 ..... AZUL 
-; 			 2 ..... ROJO  ..... "20".
-;			 3 ..... MAGENTA .... "10".
-; 			 4 ..... VERDE ..... 
-; 			 5 ..... CIAN ..... "8".
-;			 6 ..... AMARILLO ..... "4".
-; 			 7 ..... BLANCO
-
-Attrs_a_Tabla_de_pintado
-
-	ld de,(India_SP)
-
-; En 1er lugar definimos el valor del attr. en función del (Contador_de_vueltas).
-
-;	call Fija_color_entidad
-
-;	di
-;	jr $
-;	ei
-
-;	push bc
-;	pop hl 										; HL contiene (Puntero_de_impresion).
-
-;	ld de,(India_SP)
-
-;	La entidad está apareciendo por la parte alta de la pantalla ???. 
-
-;	ld a,h
-;	cp $40
-;	jr z,Two_Files														
-;	jr nc,1F
-
-;	ld h,$40
-;	jr Two_Files
-
-;1 cp $48
-;	jr z,Two_Files
-;	cp $50
-;	jr z,Two_Files 								; Only I need two attr's lines when entity is in $40,$48 or $50 scanline.
-
-;Three_Files 
-
-;	call Vuelca_dos_filas_de_attr
-;	call Vuelca_fila_de_attr
-;	ret
-
-;Two_Files 
-
-;	call Vuelca_dos_filas_de_attr
-	ret
-
-Fija_color_entidad ld a,(ix+3) 					; (Contador_de_vueltas) en A.
-	cp $20
-	jr nz,Fija_magenta
-
-Fija_rojo ld a,%01000010 						; Rojo - brillo.
-	jr 1F
-
-Fija_magenta cp $10
-	jr nz,Fija_verde
-
-	ld a,%01000011 								; Magenta - brillo.
-	jr 1F
-
-Fija_verde cp $08
-	jr nz,Fija_amarillo
-
-	ld a,%01000100 								; Verde - brillo.
-	jr 1F
-
-Fija_amarillo cp $04
-	jr nz,Color_rnd
-
-	ld a,%01000110 								; Amarillo - brillo.
-	jr 1F
-
-Color_rnd 
-
-	ld a,(Ctrl_4)
-	set 3,a
-	ld (Ctrl_4),a
-
-	ld a,(RND_SP)
-	and 7
-	jr nz,1F
-
-	inc a 										; Nunca NEGRO.
-
-1 ld (de),a
-	inc e
-	ld (India_SP),de
-
-	ret
-
-; ----- ----- ----- ----- ----- ----- -----
-
-Vuelca_fila_de_attr	
-
-	ld a,(Columnas)
-	ld b,a 	
-
-	ex de,hl
-
-1 ld (hl),e
-	inc l
-	ld (hl),d
-	inc l
-	inc e 										; Dirección de la siguiente (Columna) en HL.
-	djnz 1B
-
-	ex de,hl
-
-	ret
-
-Vuelca_dos_filas_de_attr 
-
-	call Extrae_address
-	add $58
-	ld h,a
-
-	push hl
-	call Vuelca_fila_de_attr
-	pop hl
-
-	ld a,l
-	add 32
-	ld l,a
-
-	push hl
-	call Vuelca_fila_de_attr
-	pop hl
-
-	ret
 
 ;------------------------------------------
 ;
