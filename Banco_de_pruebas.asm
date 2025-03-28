@@ -1253,35 +1253,37 @@ Borra_diferencia
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	23/11/24
+;	28/3/25
 ;
 ;	INPUT: IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).	
+;
+;	Estructura de cada línea en la (Tabla_de_pintado):
+;
+;	(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
+;	.db, .db, .db, .defw
 
 Entidad_a_Tabla_de_pintado
 
-; Almacena la Coordenada Y de la entidad en curso.
+	ld hl,(India_SP) 				 
 
-; El 1er .db de la tabla almacena (Columna_Y) de la entidad en curso.
+	ld e,(ix+2)
+	ld d,(ix+12)
+	ld a,(Columnas)
 
-	ld a,(ix+2)
-	ld hl,(India_SP)
-	ld (hl),a
+	ld (hl),e        ; (Columna_Y).     
 	inc l
-
-; Almacena la dirección de memoria, (dentro del album de scanlines), de la entidad en curso.
+	ld (hl),d 		 ; (Attr).
+	inc l
+	ld (hl),a 		 ; (Columnas).
+	inc l
 
 	ld de,(Scanlines_album_SP)
 
-	ld (hl),e
+	ld (hl),e   
 	inc l
-	ld (hl),d
-	inc l
+	ld (hl),d 		 
+	inc l 			 ; (Album_de_pintado
 
-; El 4º .db de la tabla será (Columnas).
-
-	ld a,(Columnas)
-	ld (hl),a
-	inc l
 	ld (India_SP),hl
 
 	ret
@@ -1317,7 +1319,7 @@ Inicializa_India_y_limpia_Tabla_de_impresion
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	19/3/25
+;	28/3/25
 
 Ordena_tabla_de_impresion
 
@@ -1332,8 +1334,9 @@ Ordena_tabla_de_impresion
 	ld d,c 										; Copia de respaldo.
 
 	ld a,(hl)									; Nº de Fila de la 1ª entidad, (1er byte de la tabla).
-	ld hl,Tabla_de_pintado+4
+	ld hl,Tabla_de_pintado+5
 	ld b,(hl)
+
 	ld (India_2_SP),hl
 
 ; --- --- --- --- --- --- ---
@@ -1357,6 +1360,7 @@ Avanza_India_2_SP
 	call z,Avanza_punteros_indios
 	ret z 										; Tabla_de_pintado ordenada !!!
 
+	inc l
 	inc l
 	inc l
 	inc l
@@ -1410,6 +1414,7 @@ Avanza_punteros_indios
 
 	ld hl,(India_SP)
 
+	inc l
 	inc l
 	inc l
 	inc l
@@ -1966,26 +1971,38 @@ Borrando_entidades
 	
 Pintando_entidades
 
-	ld hl,Tabla_de_borrado
-	ld (India_3_SP),hl
+;	(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
+;	.db, .db, .db, .defw
 
-3 ld hl,(India_SP)
+	ld hl,Tabla_de_borrado
+	ld (India_3_SP),hl 					; Inicializa el puntero de la (Tabla_de_borrado).
+
+;	Recabamos los datos de la (Tabla_de_pintado).
+
+3 ld hl,(India_SP) 						
+
 	inc l
-	call Extrae_address
-	inc h
-	dec h
+	ld a,(hl) 							
+	and a
 	jr z,Ejecuta_escudo
 
-;	Adquiere (Columnas).
+	ld (Attr),a
+	inc l
 
-	inc e
-	inc e
-
-	ld a,(de)
+	ld a,(hl) 							
 	ld (Columnas),a
+	inc l
+
+	call Extrae_address 				; .defw (Album_de_pintado) en HL.
 
 	inc e
-	ld (India_SP),de
+	inc e
+
+	ld (India_SP),de 					; Puntero (India_SP) situado en la siguiente línea de la tabla.
+;
+;										; Tenemos: C, (Columna_Y).
+; 												   B, (Attr).
+; 												   A, (Columnas).
 
 ; Datos a Tabla_de_borrado.
 
