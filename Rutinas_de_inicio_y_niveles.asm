@@ -770,18 +770,18 @@ Define_attr
 	inc a
 
 	cp 2
-	jr z,Magenta
+	jr z,Blanco
 
 	cp 4
-	jr z,Cyan
+	jr z,Magenta
 
 Rojo ld a,%01000010	
 	jr 2F
 
-Cyan ld a,%01000101
+Magenta ld a,%01000011
 	jr 2F
 
-Magenta ld a,%01000011
+Blanco ld a,%01000111
 	jr 2F
 
 Amarillo ld a,%01000110
