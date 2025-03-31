@@ -2,6 +2,7 @@
 ;
 ;   15/1/25
 ;
+;   INPUT: A contiene (Columnas).
 
 Pinta_Sprites
 
@@ -37,6 +38,42 @@ Pinta_rapido                            ;   1520 t/states.
 
 Pinta_rapido_3_Columnas
 
+; Attr. 3 (Columnas).
+
+    pop hl
+    push hl
+
+; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
+
+    ld a,h
+    cp $48
+    jr z,4F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs. 
+
+    and $0f    
+    jr z,4F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs. 
+
+; Indica 3 Filas de attr.
+
+    ld a,(Ctrl_4)
+    set 4,a
+    ld (Ctrl_4),a
+
+4 ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+
+; ----- ----- -----
+
     pop hl
 
     ld a,(de)
@@ -173,7 +210,49 @@ Pinta_rapido_3_Columnas
     ld (hl),a
     inc e
 
+; Attr. 3 (Columnas).
+
     pop hl
+    push hl
+
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+6 ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+
+    ld a,(Ctrl_4)
+    bit 4,a
+    jr z,5F
+
+; 3ª Fila de Atributos.
+
+    res 4,a
+    ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
+
+    dec l
+    dec l
+
+    ld a,l
+    add 32
+    ld l,a
+
+    jr nc,6B
+
+    inc h
+    jr 6B
+
+; ----- ----- -----
+ 
+5 pop hl
 
     ld a,(de)
     xor (hl)
@@ -316,6 +395,40 @@ Pinta_rapido_3_Columnas
 
 Pinta_rapido_2_Columnas
 
+; Attr. 2 (Columnas).
+
+    pop hl
+    push hl
+
+; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
+
+    ld a,h
+    cp $48
+    jr z,7F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs. 
+
+    and $0f    
+    jr z,7F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs. 
+
+; Indica 3 Filas de attr.
+
+    ld a,(Ctrl_4)
+    set 4,a
+    ld (Ctrl_4),a
+
+7 ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+    ld (hl),c
+    inc l
+    ld (hl),c
+
+; ----- ----- -----
+
     pop hl
 
     ld a,(de)
@@ -420,7 +533,46 @@ Pinta_rapido_2_Columnas
     inc e
     inc e
 
+; Attr. 2 (Columnas).
+
     pop hl
+    push hl
+
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+8 ld (hl),c
+    inc l
+    ld (hl),c
+
+    ld a,(Ctrl_4)
+    bit 4,a
+    jr z,9F
+
+; 3ª Fila de Atributos.
+
+    res 4,a
+    ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
+
+    dec l
+
+    ld a,l
+    add 32
+    ld l,a
+
+    jr nc,8B
+
+    inc h
+    jr 8B
+
+; ----- ----- -----
+
+9 pop hl
 
     ld a,(de)
     xor (hl)
@@ -531,6 +683,38 @@ Pinta_rapido_2_Columnas
 
 Pinta_rapido_1_Columna
 
+; Attr. 1 (Columnas).
+
+    pop hl
+    push hl
+
+; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
+
+    ld a,h
+    cp $48
+    jr z,10F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs. 
+
+    and $0f    
+    jr z,10F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs. 
+
+; Indica 3 Filas de attr.
+
+    ld a,(Ctrl_4)
+    set 4,a
+    ld (Ctrl_4),a
+
+10 ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+    ld (hl),c
+
+; ----- ----- -----
+
     pop hl
 
     ld a,(de)
@@ -603,7 +787,42 @@ Pinta_rapido_1_Columna
     inc e
     inc e
 
+; Attr. 1 (Columnas).
+
     pop hl
+    push hl
+
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+11 ld (hl),c
+
+    ld a,(Ctrl_4)
+    bit 4,a
+    jr z,12F
+
+; 3ª Fila de Atributos.
+
+    res 4,a
+    ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
+
+    ld a,l
+    add 32
+    ld l,a
+
+    jr nc,11B
+    inc h
+
+    jr 11B
+
+; ----- ----- -----
+
+12 pop hl
 
     ld a,(de)
     xor (hl)

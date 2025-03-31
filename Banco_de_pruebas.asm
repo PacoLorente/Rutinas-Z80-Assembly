@@ -433,6 +433,7 @@ Ctrl_4 db 0												; 4º Byte de Ctrl. general, (no específico) a una únic
 ;																   _uno nuevo si este bit está a "1" en el siguiente FRAME.
 ;															BIT 3, "1" Indica que se ha asignado un color RND a la entidad. 
 ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta´.
+; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
 
 Ctrl_5 db 0												;	BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria. 
 ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.
@@ -1939,15 +1940,27 @@ Borrando_entidades
 
 ;	Adquirimos (Columnas).
 
-	ld hl,(India_3_SP)
+;	jr $
+
+	ld hl,(India_3_SP) 							; (Attr), (Columnas) y (.defw).
 
 	ld a,(hl)
 	and a
 	jr z,Pintando_entidades
 
+	ld c,a 										; (Attr) en C.
+
+;	Limpiamos (Attr) de (India_3_SP).
+
+	xor a
+	ld (hl),a
+
+	inc l
+
+	ld a,(hl) 									; (Columnas) en A.
 	ld (Columnas),a
 
-;	Limpiamos (Columnas) de (India_3_SP)
+;	Limpiamos (Columnas) de (India_3_SP).
 
 	xor a
 	ld (hl),a
@@ -1982,11 +1995,14 @@ Pintando_entidades
 3 ld hl,(India_SP) 						
 
 	inc l
+
 	ld a,(hl) 							
 	and a
-	jr z,Ejecuta_escudo
+	jr z,Ejecuta_escudo 				; (Tabla_de_pintado) vacía. Saltamos a Amadeus.
 
 	ld (Attr),a
+	ld c,a 	 							; (Attr) en C.
+
 	inc l
 
 	ld a,(hl) 							
@@ -2009,9 +2025,11 @@ Pintando_entidades
 	ex de,hl
 	ld hl,(India_3_SP)
 
-	ld (hl),a
+	ld (hl),c 							; (Attr).
 	inc l
-	ld (hl),e
+	ld (hl),a 							; (Columnas).
+	inc l
+	ld (hl),e 							; (.defw) dentro del (Album_de_pintado).
 	inc l
 	ld (hl),d
 	inc l
@@ -2033,6 +2051,9 @@ Ejecuta_escudo
 
 	ld a,3
 	ld (Columnas),a
+
+	ld a,(Attr_Amadeus)
+	ld c,a
 
 	ld a,(Shield)
 	and a

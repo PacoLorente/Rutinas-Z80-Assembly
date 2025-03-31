@@ -16,7 +16,7 @@ Numeros_aleatorios ds 7
 	org $8900	
 
 Tabla_de_pintado ds 30								 ; No puede haber cambio de byte alto en la Tabla_de_pintado, ese es el motivo del "org".
-Tabla_de_borrado ds 18
+Tabla_de_borrado ds 24
 
 ;	db 0, defw 0, db 0
 ;	.....
@@ -302,7 +302,7 @@ Pos_inicio_entidad1	defw $4000	                        ; (Posicion_inicio).
 	db 0												; (Cuad_objeto).
 
 	defw Almacen_de_movimientos_masticados_Entidad_1	; (Puntero_de_almacen_de_mov_masticados)
-	db 4 												; (Attr).
+	db %01000100 										; (Attr).
 
 ;	-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -313,7 +313,7 @@ Entidad_2 db $81,2,2		                   			; (Tipo) / (Filas) / (Columns).
 	defw $4000                                      	; (Posicion_inicio).
 	db 1												; (Cuad_objeto).
 	defw Almacen_de_movimientos_masticados_Entidad_1	; (Puntero_de_almacen_de_mov_masticados)
-	db 4 												; (Attr).
+	db %01000100 										; (Attr).
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;
@@ -342,4 +342,4 @@ Definicion_Amadeus db 0,2,2		                     	; (Tipo) / (Filas) / (Columns
 	defw $50c1	                                     	; (Posicion_inicio).
 	db 3												; (Cuad_objeto).
 	defw Almacen_de_movimientos_masticados_Amadeus		; (Puntero_de_almacen_de_mov_masticados).
-	db 5 												; (Attr).
+	db %01000101 										; (Attr). 
