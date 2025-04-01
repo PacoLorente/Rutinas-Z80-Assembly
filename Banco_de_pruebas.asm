@@ -611,9 +611,9 @@ Main
 
 ;! ON/OF disparo de entidades:
 
-;	ld hl,CLOCK_disparos_de_entidades
-;	dec (hl)
-;	call z,Autoriza_disparo_de_entidades
+	ld hl,CLOCK_disparos_de_entidades
+	dec (hl)
+	call z,Autoriza_disparo_de_entidades
 
 	ld hl,(Clock_next_entity)
 	ld bc,(FRAMES)
@@ -978,6 +978,8 @@ Reinicia_Amadeus
 	ld (Pamm_Amadeus),hl						; Inicializa el puntero de almacén de movimientos masticados.
 	ld hl,$003d
 	ld (Comm_Amadeus),hl						; Inicializa el contador de movimientos masticados.
+	ld a,%01000101
+	ld (Attr_Amadeus),a 						; Tras la explosión volvemos a ser azules.
 
 ;	limpiamos el álbum de borrado.
 
@@ -1633,14 +1635,22 @@ Decodifica_Puntero_de_impresion
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
-;	25/11/24
+;	1/4/25
+;
+;	Tras ejecutar esta rutina tendremos:
+;
+;	DE ..... (Puntero_objeto) de la explosión.
+;	IX ..... (Puntero_de_impresion) de la explosión. 
 
 Cargamos_registros_con_explosion
 
 	ld l,(ix+7)
 	ld h,(ix+8)														
+
+; (Puntero_de_almacen_de_mov_masticados) en HL.
+
 	call Extrae_address
-	ex de,hl														; Puntero objeto, (Explosión), en DE.
+	ex de,hl														; Puntero objeto de la (Explosión), en DE.
 
 	ld l,(ix+5)
 	ld h,(ix+6)			
@@ -1906,7 +1916,7 @@ Limpia_caja_de_entidades
 	ld e,l
 	ld d,h
 	inc e
-	ld bc,11
+	ld bc,12
 	ldir 
 	ret
 
@@ -2197,7 +2207,14 @@ Genera_explosion
 
 Borra_entidad_colisionada
 
-	call Cargamos_registros_con_explosion
+	ld a,(Filas)
+	and a
+	jr nz,1F
+
+	ld a,%01000110 													; Amarillo.
+	ld (ix+12),a
+
+1 call Cargamos_registros_con_explosion
 	call calcula_CColumnass_Explosion_entidad
 
 	push ix 														; (Puntero_de_impresion).
@@ -2219,6 +2236,13 @@ Borra_entidad_colisionada
 	ret
 
 Siguiente_frame_explosion
+
+	ld a,%01000010  												; Rojo.
+	ld (ix+12),a
+
+	ld a,(Filas)
+	xor 1
+	ld (Filas),a
 
 	ld (hl),4 														; Inicializamos (Clock_explosion), (velocidad de la explosión).
 
@@ -2263,7 +2287,7 @@ Siguiente_frame_explosion
 	push ix
 	pop de
 
-	ld bc,12
+	ld bc,13
 	ldir	
 
 ; Generamos (Puntero_de_impresion) y coordenadas de la nueva entidad restaurada.
@@ -2294,7 +2318,7 @@ Siguiente_frame_explosion
 	dec (hl)		
 
 	call Limpia_caja_de_entidades
-	jr Borra_entidad_colisionada
+	jp Borra_entidad_colisionada
 
 1 inc hl
 	inc hl
@@ -2302,7 +2326,7 @@ Siguiente_frame_explosion
 	ld (ix+7),l
 	ld (ix+8),h														; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
 
-	jr Borra_entidad_colisionada
+	jp Borra_entidad_colisionada
 
 ; ----- ----- ----- ----- -----
 ;
@@ -2353,7 +2377,14 @@ Genera_explosion_Amadeus
 
 Borra_Amadeus_impactado
 
-	call Change_Amadeus
+	ld a,(Columns)
+	and a
+	jr nz,3F
+
+	ld a,%01000110 													; Amarillo.
+	ld (Attr_Amadeus),a
+
+3 call Change_Amadeus
 	call Cargamos_registros_con_explosion_Amadeus
 
 ;	Detecta si Amadeus esta pegado al extremo derecho de la pantalla.
@@ -2383,6 +2414,13 @@ Siguiente_frame_explosion_Amadeus
 
 	ld (hl),5 														; Inicializamos (Clock_explosion_Amadeus), (velocidad de la explosión).
 
+	ld a,%01000010  												; Rojo.
+	ld (Attr_Amadeus),a
+
+	ld a,(Columns)
+	xor 1
+	ld (Columns),a
+
 ; Avanza Frame de explosión.
 
 	ld hl,(Pamm_Amadeus)
@@ -2397,6 +2435,7 @@ Siguiente_frame_explosion_Amadeus
 
 	xor a
 	ld (Impacto_Amadeus),a
+
 	ld hl,Ctrl_3
 	set 6,(hl)
 

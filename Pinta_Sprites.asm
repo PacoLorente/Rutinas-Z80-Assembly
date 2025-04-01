@@ -1,8 +1,9 @@
 ; -----------------------------------------------------------------------------
 ;
-;   15/1/25
+;   1/4/25
 ;
 ;   INPUT: A contiene (Columnas).
+;          C contiene (Attr).
 
 Pinta_Sprites
 
@@ -908,6 +909,46 @@ Pinta_lento
 
 Pinta_lento_3_Columnas
 
+; La entidad está desapareciendo por la parte baja de la pantalla. 1 o 2 Filas de Attrs.
+; Attr. 3 (Columnas).
+
+    pop hl
+    push hl
+
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+
+    dec l
+    dec l
+
+; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
+
+    ld a,l
+    cp $e0
+    jr nc,1F
+
+    add 32
+    ld l,a
+
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+
+; ----- ----- -----
+
 1 pop hl
 
     ld a,(de)
@@ -933,6 +974,39 @@ Pinta_lento_3_Columnas
 
 Pinta_lento_2_Columnas
 
+; La entidad está desapareciendo por la parte baja de la pantalla. Sólo 1 Fila de Attr.
+; Attr. 2 (Columnas).
+
+    pop hl
+    push hl
+
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+    ld (hl),c
+    inc l
+    ld (hl),c
+
+    dec l
+ 
+; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
+
+    ld a,l
+    cp $e0
+    jr nc,2F
+
+    add 32
+    ld l,a
+
+    ld (hl),c
+    inc l
+    ld (hl),c
+
 2 pop hl
 
     ld a,(de)
@@ -953,6 +1027,34 @@ Pinta_lento_2_Columnas
     ret
 
 Pinta_lento_1_Columna
+
+
+; La entidad está desapareciendo por la parte baja de la pantalla. Sólo 1 Fila de Attr.
+; Attr. 1 (Columnas).
+
+    pop hl
+    push hl
+
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+    ld (hl),c
+
+ ; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
+
+    ld a,l
+    cp $e0
+    jr nc,3F
+
+    add 32
+    ld l,a
+
+    ld (hl),c
 
 3 pop hl
 
