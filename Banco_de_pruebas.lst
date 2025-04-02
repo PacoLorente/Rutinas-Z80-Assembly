@@ -66,7 +66,7 @@
   65  82F3
   66  82F3              ; Disparos.
   67  82F3
-  68  82F3 CD 4A A7     	call Pinta_disparos_Amadeus
+  68  82F3 CD 5B A7     	call Pinta_disparos_Amadeus
   69  82F6 CD F3 A3     	call Pinta_disparos_Entidades
   70  82F9
   71  82F9              ; Shield -----------------------
@@ -1804,14 +1804,14 @@
  597  8D72              ; Gestión de disparos.
  598  8D72
  599  8D72 CD 85 8F     	call Change_Disparos								; Intercambiamos los álbumes de disparos.
- 600  8D75 CD 39 A4     	call Motor_de_disparos_entidades
- 601  8D78 CD EC A6     	call Motor_Disparos_Amadeus							; Mueve y detecta colisión de los disparos de Amadeus.
+ 600  8D75 CD 4A A4     	call Motor_de_disparos_entidades
+ 601  8D78 CD FD A6     	call Motor_Disparos_Amadeus							; Mueve y detecta colisión de los disparos de Amadeus.
  602  8D7B
  603  8D7B              ; En el FRAME que acabamos de pintar puede existir una posible colisión entre alguna entidad y Amadeus.
  604  8D7B              ; Si alguna de las coordenadas_X de alguna entidad que esté en zona de Amadeus coincide con alguna de las coordenadas_X de Amadeus, habrá que comprobar si existe colisión.
  605  8D7B              ; Este hecho lo indica el bit2 de (Impacto2).
  606  8D7B
- 607  8D7B CD 97 A8     	call Detecta_colision_nave_entidad 					; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
+ 607  8D7B CD B9 A8     	call Detecta_colision_nave_entidad 					; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
  608  8D7E
  609  8D7E              ; TEMPORIZACIONES !!!!!!!!!!!!!!!!
  610  8D7E
@@ -1922,7 +1922,7 @@
  715  8DE8
  716  8DE8 3A E1 8C     5 ld a,(Impacto2)
  717  8DEB CB 5F        	bit 3,a
- 718  8DED C4 7B A6     	call nz,Compara_con_coordenadas_de_disparo
+ 718  8DED C4 8C A6     	call nz,Compara_con_coordenadas_de_disparo
  719  8DF0
  720  8DF0              ; Existe colisión entre esta entidad y Amadeus ???
  721  8DF0
@@ -1996,7 +1996,7 @@
  789  8E3B A7           	and a
  790  8E3C C4 D6 8E     	call nz,Entidad_genera_disparo_si_procede
  791  8E3F
- 792  8E3F CD 11 A8     4 call Colision_Entidad_Amadeus									; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
+ 792  8E3F CD 33 A8     4 call Colision_Entidad_Amadeus									; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
  793  8E42
  794  8E42              Gestiona_siguiente_entidad
  795  8E42
@@ -2081,10 +2081,10 @@
  874  8E94              ; 23/08/24 Llegados a este punto: NO HAY POSIBILIDAD DE GENERAR MÁS DISPAROS.
  875  8E94              ; Generamos los datos de impresión en el álbum_de_pintado y limpiamos el sobrante de datos del anterior FRAME si toca.
  876  8E94
- 877  8E94 CD 96 A5     	call Genera_datos_de_impresion_disparos_Entidades
- 878  8E97 CD 7C A7     	call Genera_datos_de_impresion_disparos_Amadeus		; Genera los datos de impresión de los disparos de Amadeus y entidades.
- 879  8E9A CD C8 A6     	call Calcula_bytes_pintado_disparos
- 880  8E9D CD D5 A6     	call Limpia_album_de_pintado_disparos_entidades
+ 877  8E94 CD A7 A5     	call Genera_datos_de_impresion_disparos_Entidades
+ 878  8E97 CD 9E A7     	call Genera_datos_de_impresion_disparos_Amadeus		; Genera los datos de impresión de los disparos de Amadeus y entidades.
+ 879  8E9A CD D9 A6     	call Calcula_bytes_pintado_disparos
+ 880  8E9D CD E6 A6     	call Limpia_album_de_pintado_disparos_entidades
  881  8EA0
  882  8EA0              ; ------------ ------------- --------------
  883  8EA0
@@ -2148,7 +2148,7 @@
  941  8ED6 2A F1 8C     	ld hl,(Puntero_num_aleatorios_disparos)
  942  8ED9 CB 06        	rlc (hl)
  943  8EDB
- 944  8EDB DC E6 A5     	call c,Genera_disparo_de_entidad_maldosa
+ 944  8EDB DC F7 A5     	call c,Genera_disparo_de_entidad_maldosa
  945  8EDE
  946  8EDE C9           	ret
  947  8EDF
@@ -2311,7 +2311,7 @@
 1104  8F8C EB           	ex de,hl
 1105  8F8D 22 BC 8C     	ld (Album_de_pintado_disparos_Amadeus),hl
 1106  8F90 ED 53 BE 8C  	ld (Album_de_borrado_disparos_Amadeus),de
-1107  8F94 CD BD A6     	call Limpia_album_de_pintado_disparos_Amadeus
+1107  8F94 CD CE A6     	call Limpia_album_de_pintado_disparos_Amadeus
 1108  8F97
 1109  8F97              ; Álbumes de entidades.
 1110  8F97
@@ -3382,7 +3382,7 @@
 2175  9331 DB FE        	in a,($fe)
 2176  9333 E6 10        	and $10
 2177  9335
-2178  9335 CC 9B A7     	call z,Genera_disparo_Amadeus
+2178  9335 CC BD A7     	call z,Genera_disparo_Amadeus
 2179  9338
 2180  9338 3E F7        1 ld a,$f7		  											; Rutina de TECLADO. Detecta cuando se pulsan las teclas "1" y "2"  y llama a las rutinas de "Mov_izq" y "Mov_der". $f7  detecta fila de teclas: (5,4,3,2,1).
 2181  933A DB FE        	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
@@ -8002,7 +8002,7 @@
 # file opened: Disparo.asm
    1+ A3F3              ; --------------------------------------------------------------------------------------
    2+ A3F3              ;
-   3+ A3F3              ;   25/10/24
+   3+ A3F3              ;   2/4/25
    4+ A3F3              ;
    5+ A3F3
    6+ A3F3              Pinta_disparos_Entidades
@@ -8013,1592 +8013,1640 @@
   11+ A3FB 3E 02            ld a,2
   12+ A3FD 08               ex af,af
   13+ A3FE
-  14+ A3FE 06 07        3 ld b,7                            ; Nº máximo de disparos. Fuerza la salida del album cuando hemos pintado 7 veces_
-  15+ A400              ;                                     _ aunque IYL+IYH+E no sea "0". (No hay separacíon entre el álbum de borrado y el de pintado).
-  16+ A400              ;                                     _ No encontraría "0".
-  17+ A400 FD E1        4 pop iy
-  18+ A402 D1               pop de                          ; 1er .db IYL
-  19+ A403              ;                                   ; 2º  .db IYH
-  20+ A403              ;                                   ; 3er .db E.
-  21+ A403              ;   Album vacío ???
-  22+ A403
-  23+ A403 FD 7D            ld a,iyl
-  24+ A405 FD 84            add iyh
-  25+ A407 83               add e
-  26+ A408 28 1F            jr z,1F
-  27+ A40A
-  28+ A40A              ;   Imprime album, (contiene datos).
-  29+ A40A
-  30+ A40A 3B               dec sp
-  31+ A40B
-  32+ A40B E1               pop hl                          ; Puntero de impresión en HL.
+  14+ A3FE 0E 07            ld c,7                          ; (Attr). de los disparos.
+  15+ A400
+  16+ A400 06 07        3 ld b,7                            ; Nº máximo de disparos. Fuerza la salida del album cuando hemos pintado 7 veces_
+  17+ A402              ;                                     _ aunque IYL+IYH+E no sea "0". (No hay separacíon entre el álbum de borrado y el de pintado).
+  18+ A402              ;                                     _ No encontraría "0".
+  19+ A402
+  20+ A402
+  21+ A402 FD E1        4 pop iy
+  22+ A404 D1               pop de                          ; 1er .db IYL
+  23+ A405              ;                                   ; 2º  .db IYH
+  24+ A405              ;                                   ; 3er .db E.
+  25+ A405              ;                                   ; .db que pintan el disparo, ej.: $18 $00 $00, (Puntero_objeto) del disparo, 3 .db's.
+  26+ A405
+  27+ A405              ;   Album vacío ???
+  28+ A405
+  29+ A405 FD 7D            ld a,iyl
+  30+ A407 FD 84            add iyh
+  31+ A409 83               add e
+  32+ A40A 28 2E            jr z,1F                         ; Álbum vacío salta a 1F.
   33+ A40C
-  34+ A40C              ; Imprime el 1er scanline del disparo.
+  34+ A40C              ;   Imprime album, (contiene datos).
   35+ A40C
-  36+ A40C FD 7D            ld a,iyl
-  37+ A40E AE               xor (hl)
-  38+ A40F 77               ld (hl),a
-  39+ A410
-  40+ A410 2C               inc l
-  41+ A411
-  42+ A411 FD 7C            ld a,iyh
-  43+ A413 AE               xor (hl)
-  44+ A414 77               ld (hl),a
-  45+ A415
-  46+ A415 2C               inc l
-  47+ A416
-  48+ A416 7B               ld a,e
-  49+ A417 AE               xor (hl)
-  50+ A418 77               ld (hl),a
-  51+ A419
-  52+ A419              ; Imprime el 2º scanline del disparo.
-  53+ A419
-  54+ A419 E1               pop hl
-  55+ A41A
-  56+ A41A FD 7D            ld a,iyl
-  57+ A41C AE               xor (hl)
-  58+ A41D 77               ld (hl),a
-  59+ A41E
-  60+ A41E 2C               inc l
-  61+ A41F
-  62+ A41F FD 7C            ld a,iyh
-  63+ A421 AE               xor (hl)
-  64+ A422 77               ld (hl),a
-  65+ A423
-  66+ A423 2C               inc l
-  67+ A424
-  68+ A424 7B               ld a,e
-  69+ A425 AE               xor (hl)
-  70+ A426 77               ld (hl),a
-  71+ A427
-  72+ A427 10 D7            djnz 4B
-  73+ A429
-  74+ A429 08           1 ex af,af
-  75+ A42A 3D               dec a
-  76+ A42B 20 05            jr nz,2F
-  77+ A42D
-  78+ A42D ED 7B B0 8C      ld sp,(Stack)
-  79+ A431 C9               ret
-  80+ A432
-  81+ A432 ED 7B C0 8C  2 ld sp,(Album_de_pintado_disparos_Entidades)
-  82+ A436 08               ex af,af
-  83+ A437 18 C5            jr 3B
-  84+ A439
-  85+ A439              ; --------------------------------------------------------------------------------------
-  86+ A439              ;
-  87+ A439              ;   2/12/24
-  88+ A439              ;
-  89+ A439
-  90+ A439              Motor_de_disparos_entidades
-  91+ A439
-  92+ A439 3A C8 8C         ld a,(Numero_de_disparos_de_entidades)
-  93+ A43C FE 07            cp 7
-  94+ A43E C8               ret z                                                                ; Salimos si todas las cajas están vacías.
-  95+ A43F
-  96+ A43F 06 07            ld b,7                                                               ; Contador de disparos, (cajas de disparos).
-  97+ A441 21 44 89         ld hl,Indice_de_disparos_entidades
-  98+ A444
-  99+ A444 CD B8 91     1 call Extrae_address
- 100+ A447 1C               inc e
- 101+ A448 1C               inc e
- 102+ A449 ED 53 DD 8C      ld (Puntero_DESPLZ_DISPARO_ENTIDADES),de
- 103+ A44D
- 104+ A44D               ; Caja vacía ???
- 105+ A44D
- 106+ A44D 2D               dec l
- 107+ A44E 7E               ld a,(hl)
- 108+ A44F A7               and a
- 109+ A450 28 45            jr z,3F                                                              ; Caja vacía.
- 110+ A452
- 111+ A452              ; --- Trabajamos con caja:
- 112+ A452
- 113+ A452 2C               inc l
- 114+ A453
- 115+ A453              ; --- Existe posibilidad de impacto ???
- 116+ A453
- 117+ A453 3A 03 8D         ld a,(Shield)
- 118+ A456 A7               and a
- 119+ A457 20 07            jr nz,6F                                                             ; No comprobamos impacto. El escudo está activado.
- 120+ A459
- 121+ A459 CB 46            bit 0,(hl)
- 122+ A45B C4 9B A4         call nz, Comprueba_impacto_con_Amadeus
- 123+ A45E 20 37            jr nz,3F
- 124+ A460
- 125+ A460 CD 22 A5     6 call Rota_disparo_si_procede
- 126+ A463
- 127+ A463              ; ------------------------------------------------------------
- 128+ A463
- 129+ A463 2D               dec l
- 130+ A464 2D               dec l
- 131+ A465
- 132+ A465 CD B8 91         call Extrae_address
- 133+ A468
- 134+ A468              ;   (Puntero_de_impresion) del disparo en HL
- 135+ A468              ;   Hay que modificar el puntero de impresión ??? ---------------------
- 136+ A468
- 137+ A468 3A DC 8C         ld a,(Ctrl_5)
- 138+ A46B CB 57            bit 2,a
- 139+ A46D 28 09            jr z,4F
- 140+ A46F
- 141+ A46F CB 97            res 2,a
- 142+ A471 32 DC 8C         ld (Ctrl_5),a
- 143+ A474 2C               inc l
- 144+ A475 2C               inc l
- 145+ A476 18 0C            jr 5F
- 146+ A478
- 147+ A478 CB 5F        4 bit 3,a
- 148+ A47A 28 08            jr z,5F
- 149+ A47C
- 150+ A47C CB 9F            res 3,a
- 151+ A47E 32 DC 8C         ld (Ctrl_5),a
- 152+ A481 2D               dec l
- 153+ A482 2D               dec l
- 154+ A483 2D               dec l
- 155+ A484
- 156+ A484              ; ---------------------------------------------------------------------
- 157+ A484
- 158+ A484              ;! Velocidad del disparo de entidades.
- 159+ A484
- 160+ A484 CD 9E 9E     5 call NextScan
- 161+ A487 CD 9E 9E         call NextScan
- 162+ A48A
- 163+ A48A              ; Después de mover el disparo comprobamos si ha salido por la parte baja de la pantalla.
- 164+ A48A
- 165+ A48A CD FF A4         call Fin_de_disparo_de_entidad
- 166+ A48D
- 167+ A48D EB               ex de,hl
- 168+ A48E
- 169+ A48E 73               ld (hl),e
- 170+ A48F 23               inc hl
- 171+ A490 72               ld (hl),d                                                            ; Nuevo (Puntero_de_impresion) en su correspondiente caja.
- 172+ A491
- 173+ A491 2A DD 8C         ld hl,(Puntero_DESPLZ_DISPARO_ENTIDADES)
- 174+ A494 18 02            jr 2F
- 175+ A496
- 176+ A496 C9               ret
- 177+ A497
- 178+ A497 EB           3 ex de,hl
- 179+ A498 10 AA        2 djnz 1B
- 180+ A49A
- 181+ A49A C9               ret
- 182+ A49B
- 183+ A49B              ; ------------- ------------- ------------
- 184+ A49B              ;
- 185+ A49B              ;   1/11/24
- 186+ A49B
- 187+ A49B              Comprueba_impacto_con_Amadeus
- 188+ A49B
- 189+ A49B              ;   El disparo se encuentra en zona de Amadeus.
- 190+ A49B              ;   Comparten coordenadas ?, hay riesgo de colisión ??
- 191+ A49B
- 192+ A49B              ;   Modificamos registros, así que guardamos ...
- 193+ A49B
- 194+ A49B C5               push bc
- 195+ A49C E5               push hl
- 196+ A49D D5               push de
- 197+ A49E
- 198+ A49E 2D               dec l
- 199+ A49F 2D               dec l
- 200+ A4A0
- 201+ A4A0 CD B8 91         call Extrae_address
- 202+ A4A3
- 203+ A4A3 3A D6 89         ld a,(CX_Amadeus)
- 204+ A4A6 4F               ld c,a              ; 1ª coordenada X de Amadeus en C.
- 205+ A4A7
- 206+ A4A7 7D               ld a,l
- 207+ A4A8 E6 1F            and $1f             ; 1ª coordenada X del disparo en A.
- 208+ A4AA
- 209+ A4AA 06 03            ld b,3
- 210+ A4AC
- 211+ A4AC B9           1 cp c
- 212+ A4AD 28 15            jr z,Coincidencia
- 213+ A4AF 0C               inc c
- 214+ A4B0 10 FA            djnz 1B
- 215+ A4B2
- 216+ A4B2 0D               dec c
- 217+ A4B3 0D               dec c
- 218+ A4B4 0D               dec c
- 219+ A4B5
- 220+ A4B5 3C               inc a
- 221+ A4B6 B9               cp c
- 222+ A4B7 28 0B            jr z,Coincidencia
- 223+ A4B9
- 224+ A4B9 3C               inc a
- 225+ A4BA B9               cp c
- 226+ A4BB 28 07            jr z,Coincidencia
- 227+ A4BD
- 228+ A4BD D1           2 pop de
- 229+ A4BE E1               pop hl
- 230+ A4BF C1               pop bc
- 231+ A4C0
- 232+ A4C0              ; No se produce impacto, restauramos el bit0 de Control antes de salir.
- 233+ A4C0
- 234+ A4C0 CB 86            res 0,(hl)
- 235+ A4C2 AF               xor a                       ; Z before RET.
- 236+ A4C3 C9               ret
- 237+ A4C4
- 238+ A4C4              Coincidencia
- 239+ A4C4
- 240+ A4C4              ;   Alguna de las coordenadas X del disparo coincide con alguna de las coordenadas X de Amadeus.
- 241+ A4C4              ;   Existe posibilidad de impacto.
- 242+ A4C4              ;   Vamos a averiguarlo ...
- 243+ A4C4
- 244+ A4C4 1D               dec e
- 245+ A4C5 1D               dec e
- 246+ A4C6 1D               dec e
- 247+ A4C7
- 248+ A4C7              ; DE en Puntero_objeto del disparo.
- 249+ A4C7              ; HL en Puntero_de_impresión del disparo.
- 250+ A4C7
- 251+ A4C7              ; Comparador:
- 252+ A4C7
- 253+ A4C7 06 03            ld b,3
- 254+ A4C9
- 255+ A4C9 1A           3 ld a,(de)
- 256+ A4CA 4F               ld c,a
- 257+ A4CB A6               and (hl)
- 258+ A4CC B9               cp c
- 259+ A4CD 20 06            jr nz,Amadeus_impactado
- 260+ A4CF
- 261+ A4CF 2C               inc l
- 262+ A4D0 1C               inc e
- 263+ A4D1
- 264+ A4D1 10 F6            djnz 3B
- 265+ A4D3
- 266+ A4D3 18 E8            jr 2B
- 267+ A4D5
- 268+ A4D5              Amadeus_impactado
- 269+ A4D5
- 270+ A4D5              ; Borramos disparo.
- 271+ A4D5
- 272+ A4D5              ;   Exclusion.
- 273+ A4D5
- 274+ A4D5 D1               pop de
- 275+ A4D6 E1               pop hl
- 276+ A4D7
- 277+ A4D7 E5               push hl
- 278+ A4D8 D5               push de
- 279+ A4D9
- 280+ A4D9 CD 8D A5         call Borra_6_bytes
- 281+ A4DC
- 282+ A4DC 21 C8 8C         ld hl,Numero_de_disparos_de_entidades
- 283+ A4DF 34               inc (hl)                                                            ; Incrementamos el nº de disparos de entidades.
- 284+ A4E0
- 285+ A4E0              ; Iniciamos el proceso de explosión de Amadeus.
- 286+ A4E0
- 287+ A4E0 21 D9 89         ld hl,Impacto_Amadeus
- 288+ A4E3 36 01            ld (hl),1
- 289+ A4E5
- 290+ A4E5              ; Corregimos la posición de Amadeus siempre que se encuentre en el extremo derecho de la pantalla.
- 291+ A4E5              ; Evitamos así que la explosión aparezca también por el lado izquierdo de la pantalla.
- 292+ A4E5
- 293+ A4E5 3A DA 89         ld a,(p.imp.amadeus)
- 294+ A4E8 FE DE            cp $de
- 295+ A4EA 20 04            jr nz,1F
- 296+ A4EC
- 297+ A4EC 3D               dec a
- 298+ A4ED 32 DA 89         ld (p.imp.amadeus),a
- 299+ A4F0
- 300+ A4F0              ; Situamos también el (Puntero_de_almacen_de_mov_masticados) de Amadeus en la primero explosión.
- 301+ A4F0
- 302+ A4F0 11 60 88     1 ld de,Indice_Explosion_Amadeus
- 303+ A4F3 21 DC 89         ld hl,Pamm_Amadeus
- 304+ A4F6
- 305+ A4F6 73               ld (hl),e
- 306+ A4F7 23               inc hl
- 307+ A4F8 72               ld (hl),d
- 308+ A4F9
- 309+ A4F9 D1               pop de
- 310+ A4FA E1               pop hl
- 311+ A4FB C1               pop bc
- 312+ A4FC
- 313+ A4FC AF               xor a
- 314+ A4FD 3C               inc a               ; NZ before RET.
- 315+ A4FE C9               ret
- 316+ A4FF
- 317+ A4FF              ; ------------- ------------- ------------
- 318+ A4FF              ;
- 319+ A4FF              ;   31/10/24
- 320+ A4FF
- 321+ A4FF              Fin_de_disparo_de_entidad
- 322+ A4FF
- 323+ A4FF              ; Estamos en zona de Amadeus ??
- 324+ A4FF
- 325+ A4FF 7C               ld a,h
- 326+ A500 FE 54            cp $54
- 327+ A502 38 0D            jr c,1F
- 328+ A504
- 329+ A504 D5               push de                                                              ; DE se encuentra en el .db (Puntero_de_impresion) de la caja del disparo que estamos moviendo.
- 330+ A505
- 331+ A505 5D               ld e,l
- 332+ A506 54               ld d,h
- 333+ A507
- 334+ A507 21 E0 57         ld hl,$57e0
- 335+ A50A ED 52            sbc hl,de
- 336+ A50C
- 337+ A50C 38 6F            jr c,Elimina_disparo_entidad
- 338+ A50E
- 339+ A50E 6B               ld l,e
- 340+ A50F 62               ld h,d
+  36+ A40C 3B               dec sp
+  37+ A40D
+  38+ A40D E1               pop hl                          ; Puntero de impresión del 1er scanline en HL.
+  39+ A40E E5               push hl
+  40+ A40F
+  41+ A40F              ; Atributos.
+  42+ A40F
+  43+ A40F 7C               ld a,h
+  44+ A410 E6 18            and $18
+  45+ A412 CB 2F            sra a
+  46+ A414 CB 2F            sra a
+  47+ A416 CB 2F            sra a
+  48+ A418 C6 58            add $58
+  49+ A41A 67               ld h,a
+  50+ A41B
+  51+ A41B 71               ld (hl),c
+  52+ A41C
+  53+ A41C              ; Imprime el 1er scanline del disparo.
+  54+ A41C
+  55+ A41C E1               pop hl
+  56+ A41D
+  57+ A41D FD 7D            ld a,iyl
+  58+ A41F AE               xor (hl)
+  59+ A420 77               ld (hl),a
+  60+ A421
+  61+ A421 2C               inc l
+  62+ A422
+  63+ A422 FD 7C            ld a,iyh
+  64+ A424 AE               xor (hl)
+  65+ A425 77               ld (hl),a
+  66+ A426
+  67+ A426 2C               inc l
+  68+ A427
+  69+ A427 7B               ld a,e
+  70+ A428 AE               xor (hl)
+  71+ A429 77               ld (hl),a
+  72+ A42A
+  73+ A42A              ; Imprime el 2º scanline del disparo.
+  74+ A42A
+  75+ A42A E1               pop hl                          ; Puntero de impresión del 2º scanline en HL.
+  76+ A42B
+  77+ A42B FD 7D            ld a,iyl
+  78+ A42D AE               xor (hl)
+  79+ A42E 77               ld (hl),a
+  80+ A42F
+  81+ A42F 2C               inc l
+  82+ A430
+  83+ A430 FD 7C            ld a,iyh
+  84+ A432 AE               xor (hl)
+  85+ A433 77               ld (hl),a
+  86+ A434
+  87+ A434 2C               inc l
+  88+ A435
+  89+ A435 7B               ld a,e
+  90+ A436 AE               xor (hl)
+  91+ A437 77               ld (hl),a
+  92+ A438
+  93+ A438 10 C8            djnz 4B
+  94+ A43A
+  95+ A43A 08           1 ex af,af
+  96+ A43B 3D               dec a
+  97+ A43C 20 05            jr nz,2F
+  98+ A43E
+  99+ A43E ED 7B B0 8C      ld sp,(Stack)
+ 100+ A442 C9               ret
+ 101+ A443
+ 102+ A443 ED 7B C0 8C  2 ld sp,(Album_de_pintado_disparos_Entidades)
+ 103+ A447 08               ex af,af
+ 104+ A448 18 B6            jr 3B
+ 105+ A44A
+ 106+ A44A              ; --------------------------------------------------------------------------------------
+ 107+ A44A              ;
+ 108+ A44A              ;   2/12/24
+ 109+ A44A              ;
+ 110+ A44A
+ 111+ A44A              Motor_de_disparos_entidades
+ 112+ A44A
+ 113+ A44A 3A C8 8C         ld a,(Numero_de_disparos_de_entidades)
+ 114+ A44D FE 07            cp 7
+ 115+ A44F C8               ret z                                                                ; Salimos si todas las cajas están vacías.
+ 116+ A450
+ 117+ A450 06 07            ld b,7                                                               ; Contador de disparos, (cajas de disparos).
+ 118+ A452 21 44 89         ld hl,Indice_de_disparos_entidades
+ 119+ A455
+ 120+ A455 CD B8 91     1 call Extrae_address
+ 121+ A458 1C               inc e
+ 122+ A459 1C               inc e
+ 123+ A45A ED 53 DD 8C      ld (Puntero_DESPLZ_DISPARO_ENTIDADES),de
+ 124+ A45E
+ 125+ A45E               ; Caja vacía ???
+ 126+ A45E
+ 127+ A45E 2D               dec l
+ 128+ A45F 7E               ld a,(hl)
+ 129+ A460 A7               and a
+ 130+ A461 28 45            jr z,3F                                                              ; Caja vacía.
+ 131+ A463
+ 132+ A463              ; --- Trabajamos con caja:
+ 133+ A463
+ 134+ A463 2C               inc l
+ 135+ A464
+ 136+ A464              ; --- Existe posibilidad de impacto ???
+ 137+ A464
+ 138+ A464 3A 03 8D         ld a,(Shield)
+ 139+ A467 A7               and a
+ 140+ A468 20 07            jr nz,6F                                                             ; No comprobamos impacto. El escudo está activado.
+ 141+ A46A
+ 142+ A46A CB 46            bit 0,(hl)
+ 143+ A46C C4 AC A4         call nz, Comprueba_impacto_con_Amadeus
+ 144+ A46F 20 37            jr nz,3F
+ 145+ A471
+ 146+ A471 CD 33 A5     6 call Rota_disparo_si_procede
+ 147+ A474
+ 148+ A474              ; ------------------------------------------------------------
+ 149+ A474
+ 150+ A474 2D               dec l
+ 151+ A475 2D               dec l
+ 152+ A476
+ 153+ A476 CD B8 91         call Extrae_address
+ 154+ A479
+ 155+ A479              ;   (Puntero_de_impresion) del disparo en HL
+ 156+ A479              ;   Hay que modificar el puntero de impresión ??? ---------------------
+ 157+ A479
+ 158+ A479 3A DC 8C         ld a,(Ctrl_5)
+ 159+ A47C CB 57            bit 2,a
+ 160+ A47E 28 09            jr z,4F
+ 161+ A480
+ 162+ A480 CB 97            res 2,a
+ 163+ A482 32 DC 8C         ld (Ctrl_5),a
+ 164+ A485 2C               inc l
+ 165+ A486 2C               inc l
+ 166+ A487 18 0C            jr 5F
+ 167+ A489
+ 168+ A489 CB 5F        4 bit 3,a
+ 169+ A48B 28 08            jr z,5F
+ 170+ A48D
+ 171+ A48D CB 9F            res 3,a
+ 172+ A48F 32 DC 8C         ld (Ctrl_5),a
+ 173+ A492 2D               dec l
+ 174+ A493 2D               dec l
+ 175+ A494 2D               dec l
+ 176+ A495
+ 177+ A495              ; ---------------------------------------------------------------------
+ 178+ A495
+ 179+ A495              ;! Velocidad del disparo de entidades.
+ 180+ A495
+ 181+ A495 CD 9E 9E     5 call NextScan
+ 182+ A498 CD 9E 9E         call NextScan
+ 183+ A49B
+ 184+ A49B              ; Después de mover el disparo comprobamos si ha salido por la parte baja de la pantalla.
+ 185+ A49B
+ 186+ A49B CD 10 A5         call Fin_de_disparo_de_entidad
+ 187+ A49E
+ 188+ A49E EB               ex de,hl
+ 189+ A49F
+ 190+ A49F 73               ld (hl),e
+ 191+ A4A0 23               inc hl
+ 192+ A4A1 72               ld (hl),d                                                            ; Nuevo (Puntero_de_impresion) en su correspondiente caja.
+ 193+ A4A2
+ 194+ A4A2 2A DD 8C         ld hl,(Puntero_DESPLZ_DISPARO_ENTIDADES)
+ 195+ A4A5 18 02            jr 2F
+ 196+ A4A7
+ 197+ A4A7 C9               ret
+ 198+ A4A8
+ 199+ A4A8 EB           3 ex de,hl
+ 200+ A4A9 10 AA        2 djnz 1B
+ 201+ A4AB
+ 202+ A4AB C9               ret
+ 203+ A4AC
+ 204+ A4AC              ; ------------- ------------- ------------
+ 205+ A4AC              ;
+ 206+ A4AC              ;   1/11/24
+ 207+ A4AC
+ 208+ A4AC              Comprueba_impacto_con_Amadeus
+ 209+ A4AC
+ 210+ A4AC              ;   El disparo se encuentra en zona de Amadeus.
+ 211+ A4AC              ;   Comparten coordenadas ?, hay riesgo de colisión ??
+ 212+ A4AC
+ 213+ A4AC              ;   Modificamos registros, así que guardamos ...
+ 214+ A4AC
+ 215+ A4AC C5               push bc
+ 216+ A4AD E5               push hl
+ 217+ A4AE D5               push de
+ 218+ A4AF
+ 219+ A4AF 2D               dec l
+ 220+ A4B0 2D               dec l
+ 221+ A4B1
+ 222+ A4B1 CD B8 91         call Extrae_address
+ 223+ A4B4
+ 224+ A4B4 3A D6 89         ld a,(CX_Amadeus)
+ 225+ A4B7 4F               ld c,a              ; 1ª coordenada X de Amadeus en C.
+ 226+ A4B8
+ 227+ A4B8 7D               ld a,l
+ 228+ A4B9 E6 1F            and $1f             ; 1ª coordenada X del disparo en A.
+ 229+ A4BB
+ 230+ A4BB 06 03            ld b,3
+ 231+ A4BD
+ 232+ A4BD B9           1 cp c
+ 233+ A4BE 28 15            jr z,Coincidencia
+ 234+ A4C0 0C               inc c
+ 235+ A4C1 10 FA            djnz 1B
+ 236+ A4C3
+ 237+ A4C3 0D               dec c
+ 238+ A4C4 0D               dec c
+ 239+ A4C5 0D               dec c
+ 240+ A4C6
+ 241+ A4C6 3C               inc a
+ 242+ A4C7 B9               cp c
+ 243+ A4C8 28 0B            jr z,Coincidencia
+ 244+ A4CA
+ 245+ A4CA 3C               inc a
+ 246+ A4CB B9               cp c
+ 247+ A4CC 28 07            jr z,Coincidencia
+ 248+ A4CE
+ 249+ A4CE D1           2 pop de
+ 250+ A4CF E1               pop hl
+ 251+ A4D0 C1               pop bc
+ 252+ A4D1
+ 253+ A4D1              ; No se produce impacto, restauramos el bit0 de Control antes de salir.
+ 254+ A4D1
+ 255+ A4D1 CB 86            res 0,(hl)
+ 256+ A4D3 AF               xor a                       ; Z before RET.
+ 257+ A4D4 C9               ret
+ 258+ A4D5
+ 259+ A4D5              Coincidencia
+ 260+ A4D5
+ 261+ A4D5              ;   Alguna de las coordenadas X del disparo coincide con alguna de las coordenadas X de Amadeus.
+ 262+ A4D5              ;   Existe posibilidad de impacto.
+ 263+ A4D5              ;   Vamos a averiguarlo ...
+ 264+ A4D5
+ 265+ A4D5 1D               dec e
+ 266+ A4D6 1D               dec e
+ 267+ A4D7 1D               dec e
+ 268+ A4D8
+ 269+ A4D8              ; DE en Puntero_objeto del disparo.
+ 270+ A4D8              ; HL en Puntero_de_impresión del disparo.
+ 271+ A4D8
+ 272+ A4D8              ; Comparador:
+ 273+ A4D8
+ 274+ A4D8 06 03            ld b,3
+ 275+ A4DA
+ 276+ A4DA 1A           3 ld a,(de)
+ 277+ A4DB 4F               ld c,a
+ 278+ A4DC A6               and (hl)
+ 279+ A4DD B9               cp c
+ 280+ A4DE 20 06            jr nz,Amadeus_impactado
+ 281+ A4E0
+ 282+ A4E0 2C               inc l
+ 283+ A4E1 1C               inc e
+ 284+ A4E2
+ 285+ A4E2 10 F6            djnz 3B
+ 286+ A4E4
+ 287+ A4E4 18 E8            jr 2B
+ 288+ A4E6
+ 289+ A4E6              Amadeus_impactado
+ 290+ A4E6
+ 291+ A4E6              ; Borramos disparo.
+ 292+ A4E6
+ 293+ A4E6              ;   Exclusion.
+ 294+ A4E6
+ 295+ A4E6 D1               pop de
+ 296+ A4E7 E1               pop hl
+ 297+ A4E8
+ 298+ A4E8 E5               push hl
+ 299+ A4E9 D5               push de
+ 300+ A4EA
+ 301+ A4EA CD 9E A5         call Borra_6_bytes
+ 302+ A4ED
+ 303+ A4ED 21 C8 8C         ld hl,Numero_de_disparos_de_entidades
+ 304+ A4F0 34               inc (hl)                                                            ; Incrementamos el nº de disparos de entidades.
+ 305+ A4F1
+ 306+ A4F1              ; Iniciamos el proceso de explosión de Amadeus.
+ 307+ A4F1
+ 308+ A4F1 21 D9 89         ld hl,Impacto_Amadeus
+ 309+ A4F4 36 01            ld (hl),1
+ 310+ A4F6
+ 311+ A4F6              ; Corregimos la posición de Amadeus siempre que se encuentre en el extremo derecho de la pantalla.
+ 312+ A4F6              ; Evitamos así que la explosión aparezca también por el lado izquierdo de la pantalla.
+ 313+ A4F6
+ 314+ A4F6 3A DA 89         ld a,(p.imp.amadeus)
+ 315+ A4F9 FE DE            cp $de
+ 316+ A4FB 20 04            jr nz,1F
+ 317+ A4FD
+ 318+ A4FD 3D               dec a
+ 319+ A4FE 32 DA 89         ld (p.imp.amadeus),a
+ 320+ A501
+ 321+ A501              ; Situamos también el (Puntero_de_almacen_de_mov_masticados) de Amadeus en la primero explosión.
+ 322+ A501
+ 323+ A501 11 60 88     1 ld de,Indice_Explosion_Amadeus
+ 324+ A504 21 DC 89         ld hl,Pamm_Amadeus
+ 325+ A507
+ 326+ A507 73               ld (hl),e
+ 327+ A508 23               inc hl
+ 328+ A509 72               ld (hl),d
+ 329+ A50A
+ 330+ A50A D1               pop de
+ 331+ A50B E1               pop hl
+ 332+ A50C C1               pop bc
+ 333+ A50D
+ 334+ A50D AF               xor a
+ 335+ A50E 3C               inc a               ; NZ before RET.
+ 336+ A50F C9               ret
+ 337+ A510
+ 338+ A510              ; ------------- ------------- ------------
+ 339+ A510              ;
+ 340+ A510              ;   31/10/24
  341+ A510
- 342+ A510 D1               pop de
- 343+ A511
- 344+ A511 7C           1 ld a,h
- 345+ A512 FE 50            cp $50
- 346+ A514 D8               ret c
- 347+ A515
- 348+ A515 7D               ld a,l
- 349+ A516 FE C0            cp $c0
- 350+ A518 D8               ret c
- 351+ A519
- 352+ A519              ; Estamos en zona de Amadeus. Ponemos a "1" el bit0 de Control del disparo para indicarlo.
- 353+ A519              ; Así podremos comprobar si hay colisión más adelante.
- 354+ A519
- 355+ A519 1C               inc e
- 356+ A51A 1C               inc e
- 357+ A51B
- 358+ A51B EB               ex de,hl
- 359+ A51C CB C6            set 0,(hl)
- 360+ A51E EB               ex de,hl
- 361+ A51F
- 362+ A51F 1D               dec e
- 363+ A520 1D               dec e
- 364+ A521
- 365+ A521 C9               ret
- 366+ A522
- 367+ A522              ; ----------------------------------------------------------
- 368+ A522              ;
- 369+ A522              ;   08/10/24
- 370+ A522
- 371+ A522              ;   Estructura de un disparo de entidades.
- 372+ A522
- 373+ A522              ;   Disparo_1 defw 0								; Puntero objeto.
- 374+ A522              ; 	defw 0											; Puntero de impresión.
- 375+ A522              ;	defw 0											; Control.
- 376+ A522
- 377+ A522              ;   El byte bajo de Control indica la velocidad a la que fué lanzado el disparo, (Velocidad)_
- 378+ A522              ;   _de la entidad en el momento de disparar.
- 379+ A522
- 380+ A522              ;   El byte alto muestra la siguiente información:
- 381+ A522              ;
- 382+ A522              ;   Nibble bajo    ..... Inicialmente contiene "7d". Utilizaremos estos bits para desplazar X nº de veces el disparo hacia abajo_
- 383+ A522              ;                        _antes de desplazarse a derecha/izquierda.
- 384+ A522              ;
- 385+ A522              ;   Nibble alto    ..... Bits (6) y (7) ..... Indican si el disparo va hacia la derecha o hacia la izquierda.
- 386+ A522              ;
- 387+ A522              ;                        10xx ..... Izquierda.
- 388+ A522              ;                        01xx ..... Derecha.
- 389+ A522              ;                        00xx ..... Recto.
- 390+ A522
- 391+ A522              Rota_disparo_si_procede
- 392+ A522
- 393+ A522              ;   Nos situamos en el byte alto de (Control).
- 394+ A522
- 395+ A522 CB 76            bit 6,(hl)
- 396+ A524 20 2D            jr nz,Rota_a_derecha
- 397+ A526 CB 7E            bit 7,(hl)
- 398+ A528 C8               ret z                                                               ; Salimos el disparo va recto, no se modifica.
- 399+ A529
- 400+ A529              Rota_a_izq
- 401+ A529
- 402+ A529 E5               push hl
- 403+ A52A
- 404+ A52A 7D               ld a,l
- 405+ A52B D6 05            sub 5
- 406+ A52D 6F               ld l,a
- 407+ A52E
- 408+ A52E E5               push hl
- 409+ A52F FD E1            pop iy
- 410+ A531
- 411+ A531 A7               and a
- 412+ A532
- 413+ A532 FD CB 02 16      rl (iy+02)
- 414+ A536 FD CB 01 16      rl (iy+01)
- 415+ A53A FD CB 00 16      rl (iy+00)
- 416+ A53E
- 417+ A53E 30 3B            jr nc,Exit
- 418+ A540
- 419+ A540              ; Desplazamiento completo hasta Carry.
- 420+ A540              ; Modificamos datos y decremento (Puntero_de_impresión).
- 421+ A540
- 422+ A540 FD 36 02 03      ld (iy+02),$03
- 423+ A544 FD 36 01 00      ld (iy+01),$00
- 424+ A548 FD 36 00 00      ld (iy+00),$00
- 425+ A54C
- 426+ A54C 21 DC 8C         ld hl,Ctrl_5
- 427+ A54F CB DE            set 3,(hl)
- 428+ A551
- 429+ A551 18 28            jr Exit
- 430+ A553
- 431+ A553              Rota_a_derecha
- 432+ A553
- 433+ A553 E5               push hl
- 434+ A554
- 435+ A554 7D               ld a,l
- 436+ A555 D6 05            sub 5
- 437+ A557 6F               ld l,a
- 438+ A558
- 439+ A558 E5               push hl
- 440+ A559 FD E1            pop iy
- 441+ A55B
- 442+ A55B A7               and a
- 443+ A55C
- 444+ A55C FD CB 00 1E      rr (iy+00)
- 445+ A560 FD CB 01 1E      rr (iy+01)
- 446+ A564 FD CB 02 1E      rr (iy+02)
- 447+ A568
- 448+ A568 30 11            jr nc,Exit
- 449+ A56A
- 450+ A56A              ; Desplazamiento completo hasta Carry.
- 451+ A56A              ; Modificamos datos e incremento (Puntero_de_impresión).
- 452+ A56A
- 453+ A56A FD 36 00 01      ld (iy+00),$01
- 454+ A56E FD 36 01 80      ld (iy+01),$80
- 455+ A572 FD 36 02 00      ld (iy+02),$00
- 456+ A576
- 457+ A576 21 DC 8C         ld hl,Ctrl_5
- 458+ A579 CB D6            set 2,(hl)
- 459+ A57B
- 460+ A57B E1           Exit pop hl
- 461+ A57C C9               ret
- 462+ A57D
- 463+ A57D              ; ------------ ----------- ------------
- 464+ A57D              ;
- 465+ A57D              ;   25/9/24
- 466+ A57D
- 467+ A57D              Elimina_disparo_entidad
- 468+ A57D
- 469+ A57D 21 C8 8C         ld hl,Numero_de_disparos_de_entidades
- 470+ A580 34               inc (hl)                                                            ; Incrementamos el nº de disparos de entidades.
- 471+ A581
- 472+ A581 E1               pop hl
- 473+ A582 E5               push hl
- 474+ A583
- 475+ A583 2C               inc l
- 476+ A584 2C               inc l
- 477+ A585
- 478+ A585 CD 8D A5         call Borra_6_bytes
- 479+ A588
- 480+ A588 D1               pop de
- 481+ A589
- 482+ A589 21 00 00         ld hl,0
- 483+ A58C
- 484+ A58C C9               ret
- 485+ A58D
- 486+ A58D              ; ----- ----- ----- ----- -----
- 487+ A58D
- 488+ A58D              Borra_6_bytes
- 489+ A58D
- 490+ A58D 16 06            ld d,6                                                    ; Contador
- 491+ A58F AF               xor a                                                     ; Borrador
- 492+ A590 77           1 ld (hl),a
- 493+ A591 2D               dec l
- 494+ A592 15               dec d
- 495+ A593 20 FB            jr nz,1B
- 496+ A595
- 497+ A595 C9               ret
+ 342+ A510              Fin_de_disparo_de_entidad
+ 343+ A510
+ 344+ A510              ; Estamos en zona de Amadeus ??
+ 345+ A510
+ 346+ A510 7C               ld a,h
+ 347+ A511 FE 54            cp $54
+ 348+ A513 38 0D            jr c,1F
+ 349+ A515
+ 350+ A515 D5               push de                                                              ; DE se encuentra en el .db (Puntero_de_impresion) de la caja del disparo que estamos moviendo.
+ 351+ A516
+ 352+ A516 5D               ld e,l
+ 353+ A517 54               ld d,h
+ 354+ A518
+ 355+ A518 21 E0 57         ld hl,$57e0
+ 356+ A51B ED 52            sbc hl,de
+ 357+ A51D
+ 358+ A51D 38 6F            jr c,Elimina_disparo_entidad
+ 359+ A51F
+ 360+ A51F 6B               ld l,e
+ 361+ A520 62               ld h,d
+ 362+ A521
+ 363+ A521 D1               pop de
+ 364+ A522
+ 365+ A522 7C           1 ld a,h
+ 366+ A523 FE 50            cp $50
+ 367+ A525 D8               ret c
+ 368+ A526
+ 369+ A526 7D               ld a,l
+ 370+ A527 FE C0            cp $c0
+ 371+ A529 D8               ret c
+ 372+ A52A
+ 373+ A52A              ; Estamos en zona de Amadeus. Ponemos a "1" el bit0 de Control del disparo para indicarlo.
+ 374+ A52A              ; Así podremos comprobar si hay colisión más adelante.
+ 375+ A52A
+ 376+ A52A 1C               inc e
+ 377+ A52B 1C               inc e
+ 378+ A52C
+ 379+ A52C EB               ex de,hl
+ 380+ A52D CB C6            set 0,(hl)
+ 381+ A52F EB               ex de,hl
+ 382+ A530
+ 383+ A530 1D               dec e
+ 384+ A531 1D               dec e
+ 385+ A532
+ 386+ A532 C9               ret
+ 387+ A533
+ 388+ A533              ; ----------------------------------------------------------
+ 389+ A533              ;
+ 390+ A533              ;   08/10/24
+ 391+ A533
+ 392+ A533              ;   Estructura de un disparo de entidades.
+ 393+ A533
+ 394+ A533              ;   Disparo_1 defw 0								; Puntero objeto.
+ 395+ A533              ; 	defw 0											; Puntero de impresión.
+ 396+ A533              ;	defw 0											; Control.
+ 397+ A533
+ 398+ A533              ;   El byte bajo de Control indica la velocidad a la que fué lanzado el disparo, (Velocidad)_
+ 399+ A533              ;   _de la entidad en el momento de disparar.
+ 400+ A533
+ 401+ A533              ;   El byte alto muestra la siguiente información:
+ 402+ A533              ;
+ 403+ A533              ;   Nibble bajo    ..... Inicialmente contiene "7d". Utilizaremos estos bits para desplazar X nº de veces el disparo hacia abajo_
+ 404+ A533              ;                        _antes de desplazarse a derecha/izquierda.
+ 405+ A533              ;
+ 406+ A533              ;   Nibble alto    ..... Bits (6) y (7) ..... Indican si el disparo va hacia la derecha o hacia la izquierda.
+ 407+ A533              ;
+ 408+ A533              ;                        10xx ..... Izquierda.
+ 409+ A533              ;                        01xx ..... Derecha.
+ 410+ A533              ;                        00xx ..... Recto.
+ 411+ A533
+ 412+ A533              Rota_disparo_si_procede
+ 413+ A533
+ 414+ A533              ;   Nos situamos en el byte alto de (Control).
+ 415+ A533
+ 416+ A533 CB 76            bit 6,(hl)
+ 417+ A535 20 2D            jr nz,Rota_a_derecha
+ 418+ A537 CB 7E            bit 7,(hl)
+ 419+ A539 C8               ret z                                                               ; Salimos el disparo va recto, no se modifica.
+ 420+ A53A
+ 421+ A53A              Rota_a_izq
+ 422+ A53A
+ 423+ A53A E5               push hl
+ 424+ A53B
+ 425+ A53B 7D               ld a,l
+ 426+ A53C D6 05            sub 5
+ 427+ A53E 6F               ld l,a
+ 428+ A53F
+ 429+ A53F E5               push hl
+ 430+ A540 FD E1            pop iy
+ 431+ A542
+ 432+ A542 A7               and a
+ 433+ A543
+ 434+ A543 FD CB 02 16      rl (iy+02)
+ 435+ A547 FD CB 01 16      rl (iy+01)
+ 436+ A54B FD CB 00 16      rl (iy+00)
+ 437+ A54F
+ 438+ A54F 30 3B            jr nc,Exit
+ 439+ A551
+ 440+ A551              ; Desplazamiento completo hasta Carry.
+ 441+ A551              ; Modificamos datos y decremento (Puntero_de_impresión).
+ 442+ A551
+ 443+ A551 FD 36 02 03      ld (iy+02),$03
+ 444+ A555 FD 36 01 00      ld (iy+01),$00
+ 445+ A559 FD 36 00 00      ld (iy+00),$00
+ 446+ A55D
+ 447+ A55D 21 DC 8C         ld hl,Ctrl_5
+ 448+ A560 CB DE            set 3,(hl)
+ 449+ A562
+ 450+ A562 18 28            jr Exit
+ 451+ A564
+ 452+ A564              Rota_a_derecha
+ 453+ A564
+ 454+ A564 E5               push hl
+ 455+ A565
+ 456+ A565 7D               ld a,l
+ 457+ A566 D6 05            sub 5
+ 458+ A568 6F               ld l,a
+ 459+ A569
+ 460+ A569 E5               push hl
+ 461+ A56A FD E1            pop iy
+ 462+ A56C
+ 463+ A56C A7               and a
+ 464+ A56D
+ 465+ A56D FD CB 00 1E      rr (iy+00)
+ 466+ A571 FD CB 01 1E      rr (iy+01)
+ 467+ A575 FD CB 02 1E      rr (iy+02)
+ 468+ A579
+ 469+ A579 30 11            jr nc,Exit
+ 470+ A57B
+ 471+ A57B              ; Desplazamiento completo hasta Carry.
+ 472+ A57B              ; Modificamos datos e incremento (Puntero_de_impresión).
+ 473+ A57B
+ 474+ A57B FD 36 00 01      ld (iy+00),$01
+ 475+ A57F FD 36 01 80      ld (iy+01),$80
+ 476+ A583 FD 36 02 00      ld (iy+02),$00
+ 477+ A587
+ 478+ A587 21 DC 8C         ld hl,Ctrl_5
+ 479+ A58A CB D6            set 2,(hl)
+ 480+ A58C
+ 481+ A58C E1           Exit pop hl
+ 482+ A58D C9               ret
+ 483+ A58E
+ 484+ A58E              ; ------------ ----------- ------------
+ 485+ A58E              ;
+ 486+ A58E              ;   25/9/24
+ 487+ A58E
+ 488+ A58E              Elimina_disparo_entidad
+ 489+ A58E
+ 490+ A58E 21 C8 8C         ld hl,Numero_de_disparos_de_entidades
+ 491+ A591 34               inc (hl)                                                            ; Incrementamos el nº de disparos de entidades.
+ 492+ A592
+ 493+ A592 E1               pop hl
+ 494+ A593 E5               push hl
+ 495+ A594
+ 496+ A594 2C               inc l
+ 497+ A595 2C               inc l
  498+ A596
- 499+ A596              ; --------------------------------------------------------------------------------------
- 500+ A596              ;
- 501+ A596              ;   12/10/24
- 502+ A596              ;
- 503+ A596
- 504+ A596              Genera_datos_de_impresion_disparos_Entidades
- 505+ A596
- 506+ A596 3E 07            ld a,7
- 507+ A598 08               ex af,af                                                  ;? 7 Disparos como 7 amores.
- 508+ A599
- 509+ A599              ; ---------------
- 510+ A599
- 511+ A599              ;   En 1er lugar nos situamos en la 1ª caja de disparos de entidades.
- 512+ A599
- 513+ A599 21 44 89          ld hl,Indice_de_disparos_entidades
- 514+ A59C
- 515+ A59C CD B8 91     1 call Extrae_address
- 516+ A59F
- 517+ A59F 13               inc de
- 518+ A5A0 13               inc de
- 519+ A5A1
- 520+ A5A1 ED 53 DD 8C      ld (Puntero_DESPLZ_DISPARO_ENTIDADES),de
- 521+ A5A5
- 522+ A5A5 2D               dec l
- 523+ A5A6 7E               ld a,(hl)
- 524+ A5A7 A7               and a                                                     ;? Si el byte alto de control es "0" significa que la caja está vacía.
- 525+ A5A8 28 33            jr z,Situa_en_siguiente_caja                              ;? Avanzamos a la siguiente caja en ese caso.
- 526+ A5AA
- 527+ A5AA              ; ----- ----- ----- -----
- 528+ A5AA
- 529+ A5AA 2D               dec l
- 530+ A5AB CD B8 91         call Extrae_address
- 531+ A5AE E5               push hl
- 532+ A5AF
- 533+ A5AF 1D               dec e
- 534+ A5B0
- 535+ A5B0 EB               ex de,hl
- 536+ A5B1
- 537+ A5B1 4E               ld c,(hl)                                                 ;? 3er byte del disparo de C.
- 538+ A5B2 2D               dec l
- 539+ A5B3 46               ld b,(hl)                                                 ;? 2º byte del disparo de B.
- 540+ A5B4 2D               dec l
- 541+ A5B5 5E               ld e,(hl)                                                 ;? 1er byte del disparo de E.
+ 499+ A596 CD 9E A5         call Borra_6_bytes
+ 500+ A599
+ 501+ A599 D1               pop de
+ 502+ A59A
+ 503+ A59A 21 00 00         ld hl,0
+ 504+ A59D
+ 505+ A59D C9               ret
+ 506+ A59E
+ 507+ A59E              ; ----- ----- ----- ----- -----
+ 508+ A59E
+ 509+ A59E              Borra_6_bytes
+ 510+ A59E
+ 511+ A59E 16 06            ld d,6                                                    ; Contador
+ 512+ A5A0 AF               xor a                                                     ; Borrador
+ 513+ A5A1 77           1 ld (hl),a
+ 514+ A5A2 2D               dec l
+ 515+ A5A3 15               dec d
+ 516+ A5A4 20 FB            jr nz,1B
+ 517+ A5A6
+ 518+ A5A6 C9               ret
+ 519+ A5A7
+ 520+ A5A7              ; --------------------------------------------------------------------------------------
+ 521+ A5A7              ;
+ 522+ A5A7              ;   12/10/24
+ 523+ A5A7              ;
+ 524+ A5A7
+ 525+ A5A7              Genera_datos_de_impresion_disparos_Entidades
+ 526+ A5A7
+ 527+ A5A7 3E 07            ld a,7
+ 528+ A5A9 08               ex af,af                                                  ;? 7 Disparos como 7 amores.
+ 529+ A5AA
+ 530+ A5AA              ; ---------------
+ 531+ A5AA
+ 532+ A5AA              ;   En 1er lugar nos situamos en la 1ª caja de disparos de entidades.
+ 533+ A5AA
+ 534+ A5AA 21 44 89          ld hl,Indice_de_disparos_entidades
+ 535+ A5AD
+ 536+ A5AD CD B8 91     1 call Extrae_address
+ 537+ A5B0
+ 538+ A5B0 13               inc de
+ 539+ A5B1 13               inc de
+ 540+ A5B2
+ 541+ A5B2 ED 53 DD 8C      ld (Puntero_DESPLZ_DISPARO_ENTIDADES),de
  542+ A5B6
- 543+ A5B6 E1               pop hl                                                    ;? Puntero de impresión en HL.
- 544+ A5B7
- 545+ A5B7              Genera_scanlines_de_los_disparos_de_entidades.
- 546+ A5B7
- 547+ A5B7 FD 2A C4 8C      ld iy,(Nivel_scan_disparos_album_de_pintado)
- 548+ A5BB FD 73 00         ld (iy+0),e
- 549+ A5BE FD 70 01         ld (iy+1),b
- 550+ A5C1 FD 71 02         ld (iy+2),c
- 551+ A5C4
- 552+ A5C4 FD 75 03         ld (iy+3),l
- 553+ A5C7 FD 74 04         ld (iy+4),h
- 554+ A5CA
- 555+ A5CA CD 9E 9E         call NextScan
- 556+ A5CD
- 557+ A5CD FD 75 05         ld (iy+5),l
- 558+ A5D0 FD 74 06         ld (iy+6),h
- 559+ A5D3
- 560+ A5D3 FD E5            push iy
- 561+ A5D5 E1               pop hl
- 562+ A5D6
- 563+ A5D6 3E 07            ld a,7
- 564+ A5D8 85               add l
- 565+ A5D9 6F               ld l,a
- 566+ A5DA
- 567+ A5DA 22 C4 8C         ld (Nivel_scan_disparos_album_de_pintado),hl
- 568+ A5DD
- 569+ A5DD              ; ----- ----- ----- -----
- 570+ A5DD
- 571+ A5DD              Situa_en_siguiente_caja
- 572+ A5DD
- 573+ A5DD 08               ex af,af                                                  ;? Actualiza contador de cajas y RET si "Z".
- 574+ A5DE 3D               dec a
- 575+ A5DF C8               ret z
- 576+ A5E0
- 577+ A5E0 08               ex af,af
- 578+ A5E1 2A DD 8C         ld hl,(Puntero_DESPLZ_DISPARO_ENTIDADES)
- 579+ A5E4 18 B6            jr 1B
- 580+ A5E6
- 581+ A5E6              ; --------------------------------------------------------------------------------------
- 582+ A5E6              ;
- 583+ A5E6              ;   12/10/24
- 584+ A5E6              ;
- 585+ A5E6
- 586+ A5E6              Genera_disparo_de_entidad_maldosa
- 587+ A5E6
- 588+ A5E6              ;   Estructura de un disparo de entidades.
- 589+ A5E6
- 590+ A5E6              ;   Disparo_1 defw 0								; Puntero objeto.
- 591+ A5E6              ; 	defw 0											; Puntero de impresión.
- 592+ A5E6              ;	defw 0											; Control.
- 593+ A5E6
- 594+ A5E6              ;   El byte bajo de Control indica la velocidad a la que fué lanzado el disparo, (Velocidad)_
- 595+ A5E6              ;   _de la entidad en el momento de disparar.
- 596+ A5E6
- 597+ A5E6              ;   El byte de control muestra la siguiente información:
- 598+ A5E6
- 599+ A5E6              ;   Nibble alto    ..... Bits (6) y (7) ..... Indican si el disparo va hacia la derecha o hacia la izquierda.
- 600+ A5E6              ;
- 601+ A5E6              ;                        10xx ..... Izquierda.
- 602+ A5E6              ;                        01xx ..... Derecha.
- 603+ A5E6              ;                        00xx ..... Recto.
- 604+ A5E6
- 605+ A5E6              ;*  Exclusiones.
- 606+ A5E6
- 607+ A5E6              ;   La entidad no podrá disparar si hay 7 disparos en pantalla.
- 608+ A5E6
- 609+ A5E6 3A C8 8C         ld a,(Numero_de_disparos_de_entidades)
- 610+ A5E9 A7               and a
- 611+ A5EA C8               ret z
- 612+ A5EB
- 613+ A5EB              ;   La entidad tiene que aparecer completamente en pantalla para poder efectuar un diaparo.
- 614+ A5EB
- 615+ A5EB 2A 65 8C         ld hl,(Puntero_de_impresion)
- 616+ A5EE 7C               ld a,h
- 617+ A5EF CB 77            bit 6,a
- 618+ A5F1 C8               ret z
- 619+ A5F2
- 620+ A5F2              ;   La entidad no podrá disparar mientras se encuentre en las filas: 0,1,15,16.
- 621+ A5F2
- 622+ A5F2 3A 62 8C         ld a,(Coordenada_y)
- 623+ A5F5 A7               and a
- 624+ A5F6 C8               ret z
+ 543+ A5B6 2D               dec l
+ 544+ A5B7 7E               ld a,(hl)
+ 545+ A5B8 A7               and a                                                     ;? Si el byte alto de control es "0" significa que la caja está vacía.
+ 546+ A5B9 28 33            jr z,Situa_en_siguiente_caja                              ;? Avanzamos a la siguiente caja en ese caso.
+ 547+ A5BB
+ 548+ A5BB              ; ----- ----- ----- -----
+ 549+ A5BB
+ 550+ A5BB 2D               dec l
+ 551+ A5BC CD B8 91         call Extrae_address
+ 552+ A5BF E5               push hl
+ 553+ A5C0
+ 554+ A5C0 1D               dec e
+ 555+ A5C1
+ 556+ A5C1 EB               ex de,hl
+ 557+ A5C2
+ 558+ A5C2 4E               ld c,(hl)                                                 ;? 3er byte del disparo de C.
+ 559+ A5C3 2D               dec l
+ 560+ A5C4 46               ld b,(hl)                                                 ;? 2º byte del disparo de B.
+ 561+ A5C5 2D               dec l
+ 562+ A5C6 5E               ld e,(hl)                                                 ;? 1er byte del disparo de E.
+ 563+ A5C7
+ 564+ A5C7 E1               pop hl                                                    ;? Puntero de impresión en HL.
+ 565+ A5C8
+ 566+ A5C8              Genera_scanlines_de_los_disparos_de_entidades.
+ 567+ A5C8
+ 568+ A5C8 FD 2A C4 8C      ld iy,(Nivel_scan_disparos_album_de_pintado)
+ 569+ A5CC FD 73 00         ld (iy+0),e
+ 570+ A5CF FD 70 01         ld (iy+1),b
+ 571+ A5D2 FD 71 02         ld (iy+2),c
+ 572+ A5D5
+ 573+ A5D5 FD 75 03         ld (iy+3),l
+ 574+ A5D8 FD 74 04         ld (iy+4),h
+ 575+ A5DB
+ 576+ A5DB CD 9E 9E         call NextScan
+ 577+ A5DE
+ 578+ A5DE FD 75 05         ld (iy+5),l
+ 579+ A5E1 FD 74 06         ld (iy+6),h
+ 580+ A5E4
+ 581+ A5E4 FD E5            push iy
+ 582+ A5E6 E1               pop hl
+ 583+ A5E7
+ 584+ A5E7 3E 07            ld a,7
+ 585+ A5E9 85               add l
+ 586+ A5EA 6F               ld l,a
+ 587+ A5EB
+ 588+ A5EB 22 C4 8C         ld (Nivel_scan_disparos_album_de_pintado),hl
+ 589+ A5EE
+ 590+ A5EE              ; ----- ----- ----- -----
+ 591+ A5EE
+ 592+ A5EE              Situa_en_siguiente_caja
+ 593+ A5EE
+ 594+ A5EE 08               ex af,af                                                  ;? Actualiza contador de cajas y RET si "Z".
+ 595+ A5EF 3D               dec a
+ 596+ A5F0 C8               ret z
+ 597+ A5F1
+ 598+ A5F1 08               ex af,af
+ 599+ A5F2 2A DD 8C         ld hl,(Puntero_DESPLZ_DISPARO_ENTIDADES)
+ 600+ A5F5 18 B6            jr 1B
+ 601+ A5F7
+ 602+ A5F7              ; --------------------------------------------------------------------------------------
+ 603+ A5F7              ;
+ 604+ A5F7              ;   12/10/24
+ 605+ A5F7              ;
+ 606+ A5F7
+ 607+ A5F7              Genera_disparo_de_entidad_maldosa
+ 608+ A5F7
+ 609+ A5F7              ;   Estructura de un disparo de entidades.
+ 610+ A5F7
+ 611+ A5F7              ;   Disparo_1 defw 0								; Puntero objeto.
+ 612+ A5F7              ; 	defw 0											; Puntero de impresión.
+ 613+ A5F7              ;	defw 0											; Control.
+ 614+ A5F7
+ 615+ A5F7              ;   El byte bajo de Control indica la velocidad a la que fué lanzado el disparo, (Velocidad)_
+ 616+ A5F7              ;   _de la entidad en el momento de disparar.
+ 617+ A5F7
+ 618+ A5F7              ;   El byte de control muestra la siguiente información:
+ 619+ A5F7
+ 620+ A5F7              ;   Nibble alto    ..... Bits (6) y (7) ..... Indican si el disparo va hacia la derecha o hacia la izquierda.
+ 621+ A5F7              ;
+ 622+ A5F7              ;                        10xx ..... Izquierda.
+ 623+ A5F7              ;                        01xx ..... Derecha.
+ 624+ A5F7              ;                        00xx ..... Recto.
  625+ A5F7
- 626+ A5F7 3D               dec a
- 627+ A5F8 C8               ret z
- 628+ A5F9
- 629+ A5F9 FE 10            cp 16
- 630+ A5FB D0               ret nc
- 631+ A5FC
- 632+ A5FC              ;   La entidad no podrá disparar en las columnas 0 y 31
+ 626+ A5F7              ;*  Exclusiones.
+ 627+ A5F7
+ 628+ A5F7              ;   La entidad no podrá disparar si hay 7 disparos en pantalla.
+ 629+ A5F7
+ 630+ A5F7 3A C8 8C         ld a,(Numero_de_disparos_de_entidades)
+ 631+ A5FA A7               and a
+ 632+ A5FB C8               ret z
  633+ A5FC
- 634+ A5FC 3A 65 8C         ld a,(Puntero_de_impresion)
- 635+ A5FF E6 1F            and $1f
- 636+ A601 C8               ret z
- 637+ A602 FE 1F            cp $1f
- 638+ A604 C8               ret z
- 639+ A605
- 640+ A605              ;   En este punto el registro B siempre está a "0" y HL apunta al `nuevo´ ( Puntero de impresión) de la entidad.
- 641+ A605              ;   (Puntero_objeto) del disparo inicial siempre será el mismo en cualquier caso, ( para que quede centrado ) en cualquier_
- 642+ A605              ;   _ posición de cualquier entidad, (como ocurre con el puntero de impresión de las explosiones de entidades).
- 643+ A605
- 644+ A605 21 CA 8C         ld hl,Permiso_de_disparo_Entidades
- 645+ A608 35               dec (hl)                                            ; No más disparos en este FRAME.
- 646+ A609
- 647+ A609              ;   Decrementa el numero de disparos de entidades.
- 648+ A609
- 649+ A609 21 C8 8C         ld hl,Numero_de_disparos_de_entidades
- 650+ A60C 35               dec (hl)
- 651+ A60D
- 652+ A60D 21 44 89         ld hl,Indice_de_disparos_entidades
- 653+ A610
- 654+ A610 CD B8 91     1 call Extrae_address
- 655+ A613
- 656+ A613 13               inc de
- 657+ A614 13               inc de
- 658+ A615
- 659+ A615 ED 53 DD 8C      ld (Puntero_DESPLZ_DISPARO_ENTIDADES),de
- 660+ A619
- 661+ A619              ;   Comprobamos si la caja está vacía.
- 662+ A619
- 663+ A619 2D               dec l
- 664+ A61A 7E               ld a,(hl)
- 665+ A61B A7               and a
- 666+ A61C 20 1D            jr nz,Situa_en_siguiente_disparo                    ; Avanza a la siguiente caja si esta esta completa.
- 667+ A61E 2C               inc l
- 668+ A61F
- 669+ A61F              ;   Caja vacía, vamos a generar un disparo.
- 670+ A61F              ;   Empezaremos de atrás hacia adelante, (1º los bytes de control), asi podremos modificar el (Puntero_de_impresión) antes de guardarlo.
- 671+ A61F
- 672+ A61F CD 40 A6         call Genera_byte_inclinacion
- 673+ A622
- 674+ A622 7E               ld a,(hl)
- 675+ A623 08               ex af,af                                            ; Copia de seguridad del byte de inclinación en A´.
+ 634+ A5FC              ;   La entidad tiene que aparecer completamente en pantalla para poder efectuar un diaparo.
+ 635+ A5FC
+ 636+ A5FC 2A 65 8C         ld hl,(Puntero_de_impresion)
+ 637+ A5FF 7C               ld a,h
+ 638+ A600 CB 77            bit 6,a
+ 639+ A602 C8               ret z
+ 640+ A603
+ 641+ A603              ;   La entidad no podrá disparar mientras se encuentre en las filas: 0,1,15,16.
+ 642+ A603
+ 643+ A603 3A 62 8C         ld a,(Coordenada_y)
+ 644+ A606 A7               and a
+ 645+ A607 C8               ret z
+ 646+ A608
+ 647+ A608 3D               dec a
+ 648+ A609 C8               ret z
+ 649+ A60A
+ 650+ A60A FE 10            cp 16
+ 651+ A60C D0               ret nc
+ 652+ A60D
+ 653+ A60D              ;   La entidad no podrá disparar en las columnas 0 y 31
+ 654+ A60D
+ 655+ A60D 3A 65 8C         ld a,(Puntero_de_impresion)
+ 656+ A610 E6 1F            and $1f
+ 657+ A612 C8               ret z
+ 658+ A613 FE 1F            cp $1f
+ 659+ A615 C8               ret z
+ 660+ A616
+ 661+ A616              ;   En este punto el registro B siempre está a "0" y HL apunta al `nuevo´ ( Puntero de impresión) de la entidad.
+ 662+ A616              ;   (Puntero_objeto) del disparo inicial siempre será el mismo en cualquier caso, ( para que quede centrado ) en cualquier_
+ 663+ A616              ;   _ posición de cualquier entidad, (como ocurre con el puntero de impresión de las explosiones de entidades).
+ 664+ A616
+ 665+ A616 21 CA 8C         ld hl,Permiso_de_disparo_Entidades
+ 666+ A619 35               dec (hl)                                            ; No más disparos en este FRAME.
+ 667+ A61A
+ 668+ A61A              ;   Decrementa el numero de disparos de entidades.
+ 669+ A61A
+ 670+ A61A 21 C8 8C         ld hl,Numero_de_disparos_de_entidades
+ 671+ A61D 35               dec (hl)
+ 672+ A61E
+ 673+ A61E 21 44 89         ld hl,Indice_de_disparos_entidades
+ 674+ A621
+ 675+ A621 CD B8 91     1 call Extrae_address
  676+ A624
- 677+ A624 2D               dec l
- 678+ A625
- 679+ A625 CD 5C A6         call Modifica_puntero_de_impresion                  ; (También seleccionamos en IY el puntero objeto adecuado, izq. o derecha) y fija en BC el (Puntero_de_impresion).
- 680+ A628
- 681+ A628 70               ld (hl),b
- 682+ A629 2D               dec l
- 683+ A62A 71               ld (hl),c
- 684+ A62B
- 685+ A62B 2D               dec l
- 686+ A62C
- 687+ A62C              ;   Por último, generamos los tres .db que imprimirán el disparo en pantalla.
- 688+ A62C
- 689+ A62C FD 7E 02         ld a,(iy+02)
- 690+ A62F 77               ld (hl),a
- 691+ A630 2D               dec l
- 692+ A631
- 693+ A631 FD 7E 01         ld a,(iy+01)
- 694+ A634 77               ld (hl),a
- 695+ A635 2D               dec l
- 696+ A636
- 697+ A636 FD 7E 00         ld a,(iy+00)
- 698+ A639 77               ld (hl),a
- 699+ A63A
- 700+ A63A C9               ret
- 701+ A63B
- 702+ A63B              ;   --- --- ---
- 703+ A63B
- 704+ A63B              Situa_en_siguiente_disparo
- 705+ A63B
- 706+ A63B 2A DD 8C         ld hl,(Puntero_DESPLZ_DISPARO_ENTIDADES)
- 707+ A63E 18 D0            jr 1B
- 708+ A640
- 709+ A640              ; --------------------------------------------------------------------------------------
- 710+ A640              ;
- 711+ A640              ;   09/10/24
- 712+ A640              ;
- 713+ A640
- 714+ A640              Genera_byte_inclinacion
- 715+ A640
- 716+ A640              ; Determina tendencia del disparo.
- 717+ A640
- 718+ A640 3A D6 89         ld a,(CX_Amadeus)
- 719+ A643 47               ld b,a
- 720+ A644 3A 61 8C         ld a,(Coordenada_X)
- 721+ A647 90               sub b
- 722+ A648 38 07            jr c,Disparo_a_derecha
- 723+ A64A
- 724+ A64A FE 06        Disparo_a_izquierda cp 6
- 725+ A64C
- 726+ A64C D8               ret c
- 727+ A64D C8               ret z
- 728+ A64E
- 729+ A64E CB FE            set 7,(hl)
- 730+ A650 C9               ret
- 731+ A651
- 732+ A651 47           Disparo_a_derecha ld b,a
- 733+ A652 3E FF            ld a,$ff
- 734+ A654 90               sub b
- 735+ A655
- 736+ A655 FE 05            cp 5
- 737+ A657
- 738+ A657 D8               ret c
- 739+ A658 C8               ret z
- 740+ A659
- 741+ A659 CB F6            set 6,(hl)
- 742+ A65B C9               ret
- 743+ A65C
- 744+ A65C              ; --------------------------------------------------------------------------------------
- 745+ A65C              ;
- 746+ A65C              ;   09/10/24
- 747+ A65C              ;
- 748+ A65C
- 749+ A65C              Modifica_puntero_de_impresion
- 750+ A65C
- 751+ A65C              ;   Puntero de impresión del disparo en BC.
- 752+ A65C
- 753+ A65C E5               push hl
- 754+ A65D
- 755+ A65D 2A DF 8C         ld hl,(Puntero_de_impresion_disparo_de_entidad)
- 756+ A660 CD 9E 9E         call NextScan
- 757+ A663
- 758+ A663 4D               ld c,l
- 759+ A664 44               ld b,h
- 760+ A665
- 761+ A665 E1               pop hl
- 762+ A666
- 763+ A666 08               ex af,af
- 764+ A667 CB 77            bit 6,a
- 765+ A669 28 06            jr z,1F
- 766+ A66B
- 767+ A66B FD 21 70 83  2 ld iy,Disparo_de_entidad_derecho
- 768+ A66F 0C               inc c
- 769+ A670 C9               ret
- 770+ A671
- 771+ A671 CB 7F        1 bit 7,a
- 772+ A673 28 F6            jr z,2B
- 773+ A675
- 774+ A675 FD 21 73 83      ld iy,Disparo_de_entidad_izquierdo
- 775+ A679 0D               dec c
- 776+ A67A
- 777+ A67A C9               ret
- 778+ A67B
- 779+ A67B              ; --------------------------------------------------------------------------------------
- 780+ A67B              ;
- 781+ A67B              ;   23/3/25
- 782+ A67B              ;
- 783+ A67B
- 784+ A67B              Compara_con_coordenadas_de_disparo
- 785+ A67B
- 786+ A67B DD 7E 02         ld a,(ix+2)                                                 ; ld a,(coordenada_y)
- 787+ A67E 47               ld b,a
- 788+ A67F 3A E4 8C         ld a,(Coordenadas_disparo_certero)
- 789+ A682 90               sub b
- 790+ A683
- 791+ A683              ; A = "0" ok
- 792+ A683              ; A = "1" ok
- 793+ A683
- 794+ A683 28 08            jr z,Comprueba_coordenada_X
- 795+ A685 3D               dec a
- 796+ A686 28 05            jr z,Comprueba_coordenada_X
- 797+ A688
- 798+ A688              ; A = "$ff" ok
- 799+ A688
- 800+ A688 FE FE            cp $fe
- 801+ A68A 28 01            jr z,Comprueba_coordenada_X
- 802+ A68C
- 803+ A68C C9               ret
- 804+ A68D
- 805+ A68D              Comprueba_coordenada_X
- 806+ A68D
- 807+ A68D DD 7E 01         ld a,(ix+1)                                                  ; ld a,(Coordenada_X)
- 808+ A690 47               ld b,a
- 809+ A691 21 E5 8C         ld hl,Coordenadas_disparo_certero+1
- 810+ A694 7E               ld a,(hl)
- 811+ A695 90               sub b
- 812+ A696
- 813+ A696              ; A = "0" ok
- 814+ A696              ; A = "1" ok
- 815+ A696
- 816+ A696 28 09            jr z,Activa_Impacto_en_entidad
- 817+ A698 3D               dec a
- 818+ A699 28 06            jr z,Activa_Impacto_en_entidad
- 819+ A69B
- 820+ A69B              ; A = "2" ok
- 821+ A69B
- 822+ A69B 3D               dec a
- 823+ A69C 28 03            jr z,Activa_Impacto_en_entidad
- 824+ A69E
- 825+ A69E              ; A = "$ff"
- 826+ A69E
- 827+ A69E FE FD            cp $fd
- 828+ A6A0 C0               ret nz
- 829+ A6A1
- 830+ A6A1              Activa_Impacto_en_entidad
- 831+ A6A1
- 832+ A6A1              ; Esta unidad ha sido impactada.
- 833+ A6A1              ; En 1er lugar eliminamos el disparo de Amadeus.
- 834+ A6A1
- 835+ A6A1 21 40 89         ld hl,Disparo_Amad
- 836+ A6A4 2C               inc l
- 837+ A6A5 2C               inc l
- 838+ A6A6
- 839+ A6A6 CD 36 A7         call Elimina_disparo_Amadeus
- 840+ A6A9
- 841+ A6A9              ;   Indica Impacto en la entidad por disparo de Amadeus, "2".
- 842+ A6A9
- 843+ A6A9 3E 02            ld a,2
- 844+ A6AB DD 77 04         ld (ix+4),a                                                  ; (ix+4) = (Impacto)
- 845+ A6AE
- 846+ A6AE              ;   (Puntero_de_almacen_de_mov_masticados) ahora apuntará a la explosión.
- 847+ A6AE
- 848+ A6AE 11 C0 87         ld de,Indice_Explosion_entidades
- 849+ A6B1
- 850+ A6B1 DD 73 07         ld (ix+7),e
- 851+ A6B4 DD 72 08         ld (ix+8),d                                                  ; (ix+7/8) = (Puntero_de_almacen_de_mov_masticados).
- 852+ A6B7
- 853+ A6B7              ;   Hemos encontrado la entidad impactada, Restauramos FLAG para dejar de buscar en este FRAME.
- 854+ A6B7
- 855+ A6B7 21 E1 8C         ld hl,Impacto2
- 856+ A6BA CB 9E            res 3,(hl)
- 857+ A6BC
- 858+ A6BC C9               ret
- 859+ A6BD
- 860+ A6BD              ; --------------------------------------------------------------------------------------
- 861+ A6BD              ;
- 862+ A6BD              ;   13/10/24
- 863+ A6BD              ;
- 864+ A6BD
- 865+ A6BD              ;   HL contiene (Album_de_pintado_disparos_Amadeus).
- 866+ A6BD
- 867+ A6BD              Limpia_album_de_pintado_disparos_Amadeus
- 868+ A6BD
- 869+ A6BD 2A BC 8C         ld hl,(Album_de_pintado_disparos_Amadeus)
- 870+ A6C0 06 06            ld b,6
- 871+ A6C2 AF               xor a
- 872+ A6C3 77           1 ld (hl),a
- 873+ A6C4 2C               inc l
- 874+ A6C5 10 FC            djnz 1B
- 875+ A6C7
- 876+ A6C7 C9               ret
- 877+ A6C8
- 878+ A6C8              ; --------------------------------------------------------------------------------------
- 879+ A6C8              ;
- 880+ A6C8              ;   29/09/24
- 881+ A6C8              ;
- 882+ A6C8
- 883+ A6C8              Calcula_bytes_pintado_disparos
- 884+ A6C8
- 885+ A6C8 2A C0 8C         ld hl,(Album_de_pintado_disparos_Entidades)
- 886+ A6CB 45               ld b,l
- 887+ A6CC 2A C4 8C         ld hl,(Nivel_scan_disparos_album_de_pintado)
- 888+ A6CF 7D               ld a,l
- 889+ A6D0
- 890+ A6D0 90               sub b
- 891+ A6D1 32 C6 8C         ld (Num_de_bytes_album_de_disparos),a
- 892+ A6D4
- 893+ A6D4 C9               ret
- 894+ A6D5
- 895+ A6D5              ; --------------------------------------------------------------------------------------
- 896+ A6D5              ;
- 897+ A6D5              ;   26/10/24
- 898+ A6D5              ;
- 899+ A6D5              ;   Limpia la diferencia de bytes entre el (album_de_pintado_disparos) del FRAME anterior y el_
- 900+ A6D5              ;   _(album_de_pintado_disparos) del FRAME actual, (siempre que el álbum del FRAME anterior contenga más_
- 901+ A6D5              ;   _disparos que el álbum del FRAME actual).
- 902+ A6D5
- 903+ A6D5              Limpia_album_de_pintado_disparos_entidades
- 904+ A6D5
- 905+ A6D5 21 C7 8C         ld hl,Num_de_bytes_album_de_disparos+1
- 906+ A6D8 7E               ld a,(hl)
- 907+ A6D9 2D               dec l
- 908+ A6DA 46               ld b,(hl)
- 909+ A6DB 90               sub b
- 910+ A6DC
- 911+ A6DC D8               ret c
- 912+ A6DD C8               ret z
- 913+ A6DE
- 914+ A6DE F5               push af
- 915+ A6DF 80               add b
- 916+ A6E0 77               ld (hl),a
- 917+ A6E1 F1               pop af
- 918+ A6E2
- 919+ A6E2              ; Clean.
- 920+ A6E2
- 921+ A6E2 47           2 ld b,a
- 922+ A6E3 AF               xor a
- 923+ A6E4 2A C4 8C         ld hl,(Nivel_scan_disparos_album_de_pintado)
- 924+ A6E7 77           1 ld (hl),a
- 925+ A6E8 23               inc hl
- 926+ A6E9 10 FC            djnz 1B
- 927+ A6EB
- 928+ A6EB C9               ret
- 929+ A6EC
- 930+ A6EC              ; --------------------------------------------------------------------------------------
- 931+ A6EC              ;
- 932+ A6EC              ;   23/3/25
- 933+ A6EC              ;
- 934+ A6EC
- 935+ A6EC              Motor_Disparos_Amadeus
- 936+ A6EC
- 937+ A6EC 21 DB 8C         ld hl,Ctrl_4
- 938+ A6EF CB 56            bit 2,(hl)
- 939+ A6F1 28 07            jr z,1F
- 940+ A6F3
- 941+ A6F3              ; En el frame anterior ha desaparecido un disparo de Amadeus. Autorizamos un nuevo `disparo'.
- 942+ A6F3              ; Evito de esta manera que se elimine un disparo y se autorize uno nuevo en el mismo FRAME.
- 943+ A6F3
- 944+ A6F3 CB 96            res 2,(hl)
- 945+ A6F5
- 946+ A6F5 3E 01            ld a,1
- 947+ A6F7 32 C9 8C         ld (Permiso_de_disparo_Amadeus),a
- 948+ A6FA
- 949+ A6FA 21 41 89     1 ld hl,Disparo_Amad+1
+ 677+ A624 13               inc de
+ 678+ A625 13               inc de
+ 679+ A626
+ 680+ A626 ED 53 DD 8C      ld (Puntero_DESPLZ_DISPARO_ENTIDADES),de
+ 681+ A62A
+ 682+ A62A              ;   Comprobamos si la caja está vacía.
+ 683+ A62A
+ 684+ A62A 2D               dec l
+ 685+ A62B 7E               ld a,(hl)
+ 686+ A62C A7               and a
+ 687+ A62D 20 1D            jr nz,Situa_en_siguiente_disparo                    ; Avanza a la siguiente caja si esta esta completa.
+ 688+ A62F 2C               inc l
+ 689+ A630
+ 690+ A630              ;   Caja vacía, vamos a generar un disparo.
+ 691+ A630              ;   Empezaremos de atrás hacia adelante, (1º los bytes de control), asi podremos modificar el (Puntero_de_impresión) antes de guardarlo.
+ 692+ A630
+ 693+ A630 CD 51 A6         call Genera_byte_inclinacion
+ 694+ A633
+ 695+ A633 7E               ld a,(hl)
+ 696+ A634 08               ex af,af                                            ; Copia de seguridad del byte de inclinación en A´.
+ 697+ A635
+ 698+ A635 2D               dec l
+ 699+ A636
+ 700+ A636 CD 6D A6         call Modifica_puntero_de_impresion                  ; (También seleccionamos en IY el puntero objeto adecuado, izq. o derecha) y fija en BC el (Puntero_de_impresion).
+ 701+ A639
+ 702+ A639 70               ld (hl),b
+ 703+ A63A 2D               dec l
+ 704+ A63B 71               ld (hl),c
+ 705+ A63C
+ 706+ A63C 2D               dec l
+ 707+ A63D
+ 708+ A63D              ;   Por último, generamos los tres .db que imprimirán el disparo en pantalla.
+ 709+ A63D
+ 710+ A63D FD 7E 02         ld a,(iy+02)
+ 711+ A640 77               ld (hl),a
+ 712+ A641 2D               dec l
+ 713+ A642
+ 714+ A642 FD 7E 01         ld a,(iy+01)
+ 715+ A645 77               ld (hl),a
+ 716+ A646 2D               dec l
+ 717+ A647
+ 718+ A647 FD 7E 00         ld a,(iy+00)
+ 719+ A64A 77               ld (hl),a
+ 720+ A64B
+ 721+ A64B C9               ret
+ 722+ A64C
+ 723+ A64C              ;   --- --- ---
+ 724+ A64C
+ 725+ A64C              Situa_en_siguiente_disparo
+ 726+ A64C
+ 727+ A64C 2A DD 8C         ld hl,(Puntero_DESPLZ_DISPARO_ENTIDADES)
+ 728+ A64F 18 D0            jr 1B
+ 729+ A651
+ 730+ A651              ; --------------------------------------------------------------------------------------
+ 731+ A651              ;
+ 732+ A651              ;   09/10/24
+ 733+ A651              ;
+ 734+ A651
+ 735+ A651              Genera_byte_inclinacion
+ 736+ A651
+ 737+ A651              ; Determina tendencia del disparo.
+ 738+ A651
+ 739+ A651 3A D6 89         ld a,(CX_Amadeus)
+ 740+ A654 47               ld b,a
+ 741+ A655 3A 61 8C         ld a,(Coordenada_X)
+ 742+ A658 90               sub b
+ 743+ A659 38 07            jr c,Disparo_a_derecha
+ 744+ A65B
+ 745+ A65B FE 06        Disparo_a_izquierda cp 6
+ 746+ A65D
+ 747+ A65D D8               ret c
+ 748+ A65E C8               ret z
+ 749+ A65F
+ 750+ A65F CB FE            set 7,(hl)
+ 751+ A661 C9               ret
+ 752+ A662
+ 753+ A662 47           Disparo_a_derecha ld b,a
+ 754+ A663 3E FF            ld a,$ff
+ 755+ A665 90               sub b
+ 756+ A666
+ 757+ A666 FE 05            cp 5
+ 758+ A668
+ 759+ A668 D8               ret c
+ 760+ A669 C8               ret z
+ 761+ A66A
+ 762+ A66A CB F6            set 6,(hl)
+ 763+ A66C C9               ret
+ 764+ A66D
+ 765+ A66D              ; --------------------------------------------------------------------------------------
+ 766+ A66D              ;
+ 767+ A66D              ;   09/10/24
+ 768+ A66D              ;
+ 769+ A66D
+ 770+ A66D              Modifica_puntero_de_impresion
+ 771+ A66D
+ 772+ A66D              ;   Puntero de impresión del disparo en BC.
+ 773+ A66D
+ 774+ A66D E5               push hl
+ 775+ A66E
+ 776+ A66E 2A DF 8C         ld hl,(Puntero_de_impresion_disparo_de_entidad)
+ 777+ A671 CD 9E 9E         call NextScan
+ 778+ A674
+ 779+ A674 4D               ld c,l
+ 780+ A675 44               ld b,h
+ 781+ A676
+ 782+ A676 E1               pop hl
+ 783+ A677
+ 784+ A677 08               ex af,af
+ 785+ A678 CB 77            bit 6,a
+ 786+ A67A 28 06            jr z,1F
+ 787+ A67C
+ 788+ A67C FD 21 70 83  2 ld iy,Disparo_de_entidad_derecho
+ 789+ A680 0C               inc c
+ 790+ A681 C9               ret
+ 791+ A682
+ 792+ A682 CB 7F        1 bit 7,a
+ 793+ A684 28 F6            jr z,2B
+ 794+ A686
+ 795+ A686 FD 21 73 83      ld iy,Disparo_de_entidad_izquierdo
+ 796+ A68A 0D               dec c
+ 797+ A68B
+ 798+ A68B C9               ret
+ 799+ A68C
+ 800+ A68C              ; --------------------------------------------------------------------------------------
+ 801+ A68C              ;
+ 802+ A68C              ;   23/3/25
+ 803+ A68C              ;
+ 804+ A68C
+ 805+ A68C              Compara_con_coordenadas_de_disparo
+ 806+ A68C
+ 807+ A68C DD 7E 02         ld a,(ix+2)                                                 ; ld a,(coordenada_y)
+ 808+ A68F 47               ld b,a
+ 809+ A690 3A E4 8C         ld a,(Coordenadas_disparo_certero)
+ 810+ A693 90               sub b
+ 811+ A694
+ 812+ A694              ; A = "0" ok
+ 813+ A694              ; A = "1" ok
+ 814+ A694
+ 815+ A694 28 08            jr z,Comprueba_coordenada_X
+ 816+ A696 3D               dec a
+ 817+ A697 28 05            jr z,Comprueba_coordenada_X
+ 818+ A699
+ 819+ A699              ; A = "$ff" ok
+ 820+ A699
+ 821+ A699 FE FE            cp $fe
+ 822+ A69B 28 01            jr z,Comprueba_coordenada_X
+ 823+ A69D
+ 824+ A69D C9               ret
+ 825+ A69E
+ 826+ A69E              Comprueba_coordenada_X
+ 827+ A69E
+ 828+ A69E DD 7E 01         ld a,(ix+1)                                                  ; ld a,(Coordenada_X)
+ 829+ A6A1 47               ld b,a
+ 830+ A6A2 21 E5 8C         ld hl,Coordenadas_disparo_certero+1
+ 831+ A6A5 7E               ld a,(hl)
+ 832+ A6A6 90               sub b
+ 833+ A6A7
+ 834+ A6A7              ; A = "0" ok
+ 835+ A6A7              ; A = "1" ok
+ 836+ A6A7
+ 837+ A6A7 28 09            jr z,Activa_Impacto_en_entidad
+ 838+ A6A9 3D               dec a
+ 839+ A6AA 28 06            jr z,Activa_Impacto_en_entidad
+ 840+ A6AC
+ 841+ A6AC              ; A = "2" ok
+ 842+ A6AC
+ 843+ A6AC 3D               dec a
+ 844+ A6AD 28 03            jr z,Activa_Impacto_en_entidad
+ 845+ A6AF
+ 846+ A6AF              ; A = "$ff"
+ 847+ A6AF
+ 848+ A6AF FE FD            cp $fd
+ 849+ A6B1 C0               ret nz
+ 850+ A6B2
+ 851+ A6B2              Activa_Impacto_en_entidad
+ 852+ A6B2
+ 853+ A6B2              ; Esta unidad ha sido impactada.
+ 854+ A6B2              ; En 1er lugar eliminamos el disparo de Amadeus.
+ 855+ A6B2
+ 856+ A6B2 21 40 89         ld hl,Disparo_Amad
+ 857+ A6B5 2C               inc l
+ 858+ A6B6 2C               inc l
+ 859+ A6B7
+ 860+ A6B7 CD 47 A7         call Elimina_disparo_Amadeus
+ 861+ A6BA
+ 862+ A6BA              ;   Indica Impacto en la entidad por disparo de Amadeus, "2".
+ 863+ A6BA
+ 864+ A6BA 3E 02            ld a,2
+ 865+ A6BC DD 77 04         ld (ix+4),a                                                  ; (ix+4) = (Impacto)
+ 866+ A6BF
+ 867+ A6BF              ;   (Puntero_de_almacen_de_mov_masticados) ahora apuntará a la explosión.
+ 868+ A6BF
+ 869+ A6BF 11 C0 87         ld de,Indice_Explosion_entidades
+ 870+ A6C2
+ 871+ A6C2 DD 73 07         ld (ix+7),e
+ 872+ A6C5 DD 72 08         ld (ix+8),d                                                  ; (ix+7/8) = (Puntero_de_almacen_de_mov_masticados).
+ 873+ A6C8
+ 874+ A6C8              ;   Hemos encontrado la entidad impactada, Restauramos FLAG para dejar de buscar en este FRAME.
+ 875+ A6C8
+ 876+ A6C8 21 E1 8C         ld hl,Impacto2
+ 877+ A6CB CB 9E            res 3,(hl)
+ 878+ A6CD
+ 879+ A6CD C9               ret
+ 880+ A6CE
+ 881+ A6CE              ; --------------------------------------------------------------------------------------
+ 882+ A6CE              ;
+ 883+ A6CE              ;   13/10/24
+ 884+ A6CE              ;
+ 885+ A6CE
+ 886+ A6CE              ;   HL contiene (Album_de_pintado_disparos_Amadeus).
+ 887+ A6CE
+ 888+ A6CE              Limpia_album_de_pintado_disparos_Amadeus
+ 889+ A6CE
+ 890+ A6CE 2A BC 8C         ld hl,(Album_de_pintado_disparos_Amadeus)
+ 891+ A6D1 06 06            ld b,6
+ 892+ A6D3 AF               xor a
+ 893+ A6D4 77           1 ld (hl),a
+ 894+ A6D5 2C               inc l
+ 895+ A6D6 10 FC            djnz 1B
+ 896+ A6D8
+ 897+ A6D8 C9               ret
+ 898+ A6D9
+ 899+ A6D9              ; --------------------------------------------------------------------------------------
+ 900+ A6D9              ;
+ 901+ A6D9              ;   29/09/24
+ 902+ A6D9              ;
+ 903+ A6D9
+ 904+ A6D9              Calcula_bytes_pintado_disparos
+ 905+ A6D9
+ 906+ A6D9 2A C0 8C         ld hl,(Album_de_pintado_disparos_Entidades)
+ 907+ A6DC 45               ld b,l
+ 908+ A6DD 2A C4 8C         ld hl,(Nivel_scan_disparos_album_de_pintado)
+ 909+ A6E0 7D               ld a,l
+ 910+ A6E1
+ 911+ A6E1 90               sub b
+ 912+ A6E2 32 C6 8C         ld (Num_de_bytes_album_de_disparos),a
+ 913+ A6E5
+ 914+ A6E5 C9               ret
+ 915+ A6E6
+ 916+ A6E6              ; --------------------------------------------------------------------------------------
+ 917+ A6E6              ;
+ 918+ A6E6              ;   26/10/24
+ 919+ A6E6              ;
+ 920+ A6E6              ;   Limpia la diferencia de bytes entre el (album_de_pintado_disparos) del FRAME anterior y el_
+ 921+ A6E6              ;   _(album_de_pintado_disparos) del FRAME actual, (siempre que el álbum del FRAME anterior contenga más_
+ 922+ A6E6              ;   _disparos que el álbum del FRAME actual).
+ 923+ A6E6
+ 924+ A6E6              Limpia_album_de_pintado_disparos_entidades
+ 925+ A6E6
+ 926+ A6E6 21 C7 8C         ld hl,Num_de_bytes_album_de_disparos+1
+ 927+ A6E9 7E               ld a,(hl)
+ 928+ A6EA 2D               dec l
+ 929+ A6EB 46               ld b,(hl)
+ 930+ A6EC 90               sub b
+ 931+ A6ED
+ 932+ A6ED D8               ret c
+ 933+ A6EE C8               ret z
+ 934+ A6EF
+ 935+ A6EF F5               push af
+ 936+ A6F0 80               add b
+ 937+ A6F1 77               ld (hl),a
+ 938+ A6F2 F1               pop af
+ 939+ A6F3
+ 940+ A6F3              ; Clean.
+ 941+ A6F3
+ 942+ A6F3 47           2 ld b,a
+ 943+ A6F4 AF               xor a
+ 944+ A6F5 2A C4 8C         ld hl,(Nivel_scan_disparos_album_de_pintado)
+ 945+ A6F8 77           1 ld (hl),a
+ 946+ A6F9 23               inc hl
+ 947+ A6FA 10 FC            djnz 1B
+ 948+ A6FC
+ 949+ A6FC C9               ret
  950+ A6FD
- 951+ A6FD 34               inc (hl)
- 952+ A6FE 35               dec (hl)
- 953+ A6FF
- 954+ A6FF C8               ret z                                                                ; Salimos si la caja no contiene disparo.
- 955+ A700
- 956+ A700              ;   Esta caja contiene un disparo.
- 957+ A700
- 958+ A700 CD 07 A7         call Consulta_Impacto
- 959+ A703 CC 1D A7         call z,Mueve_disparo_Amadeus
- 960+ A706
- 961+ A706 C9               ret
- 962+ A707
- 963+ A707              ; ----------------------
- 964+ A707              ;
- 965+ A707              ;
- 966+ A707              ;   Nos colocamos en el .db (Impacto) e interrogamos.
- 967+ A707              ;
- 968+ A707              ;   OUTPUT: (Z) / (NZ) FLAG. NZ indica que existe (Impacto).
- 969+ A707
- 970+ A707
- 971+ A707              Consulta_Impacto
- 972+ A707
- 973+ A707              ;   Vamos a comprobar si existe (Impacto) de este disparo con alguna entidad antes de mover la entidad y el propio disparo. Lo vamos a hacer así para que la detección_
- 974+ A707              ;   _sea lo más coherente posible.
- 975+ A707
- 976+ A707 E5               push hl
- 977+ A708 2B               dec hl
- 978+ A709
- 979+ A709 CD F8 A7         call Detecta_impacto_en_disparo_de_Amadeus                          ; Nos situamos en el 1er .db de la caja y comprobamos Impacto.
- 980+ A70C
- 981+ A70C E1               pop hl
- 982+ A70D 23               inc hl                                                              ; (Puntero_de_impresion) en HL.
- 983+ A70E
- 984+ A70E C8               ret z
- 985+ A70F
- 986+ A70F              ; Impacto en el proyectil de Amadeus !!!
- 987+ A70F              ; Puede existir impacto con otro proyectil. Hay que detectarlo.
- 988+ A70F
- 989+ A70F 3A E1 8C         ld a,(Impacto2)
- 990+ A712 CB DF            set 3,a
- 991+ A714 32 E1 8C         ld (Impacto2),a
- 992+ A717
- 993+ A717 E5               push hl
- 994+ A718 CD E5 A7         call Genera_coordenadas_de_disparo_Amadeus
- 995+ A71B E1               pop hl
- 996+ A71C
- 997+ A71C C9               ret
- 998+ A71D
- 999+ A71D              ; ----------------------
-1000+ A71D              ;
-1001+ A71D              ;
-1002+ A71D              ;   INPUTS: HL debe apuntar al (Puntero_de_impresion) del disparo.
-1003+ A71D
-1004+ A71D              Mueve_disparo_Amadeus
-1005+ A71D
-1006+ A71D CD B8 91         call Extrae_address
-1007+ A720
-1008+ A720 CD AD 9E         call PreviousScan
-1009+ A723 CD AD 9E         call PreviousScan
-1010+ A726 CD AD 9E         call PreviousScan
-1011+ A729 CD AD 9E         call PreviousScan
-1012+ A72C
-1013+ A72C              ; Después de mover el disparo comprobamos si ha salido de la parte alta de la pantalla.
-1014+ A72C
-1015+ A72C 7C               ld a,h
-1016+ A72D D6 40            sub $40
-1017+ A72F EB               ex de,hl
-1018+ A730 38 04            jr c,Elimina_disparo_Amadeus
-1019+ A732
-1020+ A732               ; Introduce nuevo puntero_de_impresión en la caja.
-1021+ A732
-1022+ A732 73               ld (hl),e
-1023+ A733 23               inc hl
-1024+ A734 72               ld (hl),d
-1025+ A735
-1026+ A735 C9               ret
-1027+ A736
-1028+ A736              ; ----------------------
-1029+ A736              ;
-1030+ A736              ;   29/9/24
-1031+ A736
-1032+ A736              Elimina_disparo_Amadeus
-1033+ A736
-1034+ A736              ; HL apunta al .db (Puntero_de_impresion) del disparo.
-1035+ A736              ; Recordemos la estructura de datos de una caja de disparos de Amadeus:
-1036+ A736
-1037+ A736              ;   Disparo_1A defw 0									; Puntero objeto.
-1038+ A736              ;   	defw 0											; Puntero de impresión.
-1039+ A736
-1040+ A736 2C               inc l
-1041+ A737
-1042+ A737 AF               xor a
-1043+ A738
-1044+ A738 77               ld (hl),a
-1045+ A739 2D               dec l
-1046+ A73A 77               ld (hl),a
-1047+ A73B 2D               dec l
-1048+ A73C 77               ld (hl),a
-1049+ A73D 2D               dec l
-1050+ A73E 77               ld (hl),a                                           ; Disparo de Amadeus borrado.
-1051+ A73F
-1052+ A73F 21 DB 8C         ld hl,Ctrl_4
-1053+ A742 CB D6            set 2,(hl)
-1054+ A744
-1055+ A744 CD BD A6         call Limpia_album_de_pintado_disparos_Amadeus
-1056+ A747
-1057+ A747 AF               xor a
-1058+ A748 3C               inc a                                               ;? Siempre que eliminamos un disparo tenemos: "NZ".
-1059+ A749
-1060+ A749 C9               ret
-1061+ A74A
-1062+ A74A              ; --------------------------------------------------------------------------------------
-1063+ A74A              ;
-1064+ A74A              ;   13/10/24
-1065+ A74A              ;
-1066+ A74A
-1067+ A74A              Pinta_disparos_Amadeus
-1068+ A74A
-1069+ A74A 06 02            ld b,2
-1070+ A74C ED 73 B0 8C      ld (Stack),sp
-1071+ A750 ED 7B BE 8C      ld sp,(Album_de_borrado_disparos_Amadeus)
-1072+ A754 D1           3 pop de
-1073+ A755 14               inc d
-1074+ A756 15               dec d
-1075+ A757 28 1C            jr z,1F
-1076+ A759 E1               pop hl
-1077+ A75A
-1078+ A75A              Imprime_scanlines_en_pantalla
-1079+ A75A
-1080+ A75A              ; 1er scanline
-1081+ A75A
-1082+ A75A 1A               ld a,(de)
-1083+ A75B AE               xor (hl)
-1084+ A75C 77               ld (hl),a
-1085+ A75D
-1086+ A75D 1C               inc e
-1087+ A75E 2C               inc l
-1088+ A75F
-1089+ A75F 1A               ld a,(de)
-1090+ A760 AE               xor (hl)
-1091+ A761 77               ld (hl),a
-1092+ A762
-1093+ A762 1D               dec e
-1094+ A763 E1               pop hl
-1095+ A764
-1096+ A764              ; 2º scanline
-1097+ A764
-1098+ A764 1A               ld a,(de)
-1099+ A765 AE               xor (hl)
-1100+ A766 77               ld (hl),a
-1101+ A767
-1102+ A767 1C               inc e
-1103+ A768 2C               inc l
-1104+ A769
-1105+ A769 1A               ld a,(de)
-1106+ A76A AE               xor (hl)
-1107+ A76B 77               ld (hl),a
-1108+ A76C
-1109+ A76C 1D               dec e
-1110+ A76D
-1111+ A76D 18 06            jr 1F
-1112+ A76F
-1113+ A76F ED 7B BC 8C  2 ld sp,(Album_de_pintado_disparos_Amadeus)
-1114+ A773 18 DF            jr 3B
-1115+ A775 10 F8        1 djnz 2B
-1116+ A777 ED 7B B0 8C      ld sp,(Stack)
-1117+ A77B C9               ret
-1118+ A77C
-1119+ A77C              ; --------------------------------------------------------------------------------------
-1120+ A77C              ;
-1121+ A77C              ;   13/10/24
-1122+ A77C              ;
-1123+ A77C              ;   Modifica: HL,BC y DE.
-1124+ A77C
-1125+ A77C
-1126+ A77C              Genera_datos_de_impresion_disparos_Amadeus
-1127+ A77C
-1128+ A77C ED 73 B0 8C      ld (Stack),sp
-1129+ A780 31 40 89         ld sp,Disparo_Amad                                        ;? SP se sitúa en el .db (Puntero objeto) de la caja de disparos de Amadeus.
-1130+ A783 D1               pop de                                                    ;? Puntero_objeto del disparo en DE.
-1131+ A784
-1132+ A784 14               inc d                                                     ;? Salimos si no hay disparo.
-1133+ A785 15               dec d
-1134+ A786
-1135+ A786 28 0E            jr z,Salida
-1136+ A788
-1137+ A788              Genera_scanlines_de_disparo_Amadeus
-1138+ A788
-1139+ A788 E1               pop hl                                                    ;? Puntero_objeto del disparo en DE.
-1140+ A789              ;                                                             ;? Puntero_de_impresión del disparo en HL.
-1141+ A789 ED 7B BC 8C      ld sp,(Album_de_pintado_disparos_Amadeus)
-1142+ A78D
-1143+ A78D C1               pop bc
-1144+ A78E C1               pop bc
-1145+ A78F C1               pop bc
-1146+ A790
-1147+ A790 E5               push hl                                                   ;? Sube 2º scanline al álbum.
-1148+ A791 CD AD 9E         call PreviousScan
-1149+ A794 E5               push hl                                                   ;? Sube 1er scanline al álbum.
-1150+ A795 D5               push de                                                   ;? Sube Puntero_objeto del disparo al álbum.
-1151+ A796
-1152+ A796              Salida
-1153+ A796
-1154+ A796 ED 7B B0 8C      ld sp,(Stack)
-1155+ A79A
-1156+ A79A C9               ret
-1157+ A79B
-1158+ A79B              ; --------------------------------------------------------------------------------------
-1159+ A79B              ;
-1160+ A79B              ;   12/09/24
-1161+ A79B              ;
-1162+ A79B
-1163+ A79B              Genera_disparo_Amadeus
-1164+ A79B
-1165+ A79B              ;*  Exclusiones.
-1166+ A79B
-1167+ A79B 3A C9 8C         ld a,(Permiso_de_disparo_Amadeus)
-1168+ A79E A7               and a
-1169+ A79F C8               ret z                                                    ;? Salimos si no hay permiso de disparo.
-1170+ A7A0
-1171+ A7A0 3D               dec a
-1172+ A7A1 32 C9 8C         ld (Permiso_de_disparo_Amadeus),a                        ;? No volveremos a tener permiso de disparo hasta que desaparezaca este disparo.
-1173+ A7A4
-1174+ A7A4              Define_puntero_objeto_disparo
-1175+ A7A4
-1176+ A7A4              ;   Inicializamos contador.
-1177+ A7A4
-1178+ A7A4 06 00            ld b,0
+ 951+ A6FD              ; --------------------------------------------------------------------------------------
+ 952+ A6FD              ;
+ 953+ A6FD              ;   23/3/25
+ 954+ A6FD              ;
+ 955+ A6FD
+ 956+ A6FD              Motor_Disparos_Amadeus
+ 957+ A6FD
+ 958+ A6FD 21 DB 8C         ld hl,Ctrl_4
+ 959+ A700 CB 56            bit 2,(hl)
+ 960+ A702 28 07            jr z,1F
+ 961+ A704
+ 962+ A704              ; En el frame anterior ha desaparecido un disparo de Amadeus. Autorizamos un nuevo `disparo'.
+ 963+ A704              ; Evito de esta manera que se elimine un disparo y se autorize uno nuevo en el mismo FRAME.
+ 964+ A704
+ 965+ A704 CB 96            res 2,(hl)
+ 966+ A706
+ 967+ A706 3E 01            ld a,1
+ 968+ A708 32 C9 8C         ld (Permiso_de_disparo_Amadeus),a
+ 969+ A70B
+ 970+ A70B 21 41 89     1 ld hl,Disparo_Amad+1
+ 971+ A70E
+ 972+ A70E 34               inc (hl)
+ 973+ A70F 35               dec (hl)
+ 974+ A710
+ 975+ A710 C8               ret z                                                                ; Salimos si la caja no contiene disparo.
+ 976+ A711
+ 977+ A711              ;   Esta caja contiene un disparo.
+ 978+ A711
+ 979+ A711 CD 18 A7         call Consulta_Impacto
+ 980+ A714 CC 2E A7         call z,Mueve_disparo_Amadeus
+ 981+ A717
+ 982+ A717 C9               ret
+ 983+ A718
+ 984+ A718              ; ----------------------
+ 985+ A718              ;
+ 986+ A718              ;
+ 987+ A718              ;   Nos colocamos en el .db (Impacto) e interrogamos.
+ 988+ A718              ;
+ 989+ A718              ;   OUTPUT: (Z) / (NZ) FLAG. NZ indica que existe (Impacto).
+ 990+ A718
+ 991+ A718
+ 992+ A718              Consulta_Impacto
+ 993+ A718
+ 994+ A718              ;   Vamos a comprobar si existe (Impacto) de este disparo con alguna entidad antes de mover la entidad y el propio disparo. Lo vamos a hacer así para que la detección_
+ 995+ A718              ;   _sea lo más coherente posible.
+ 996+ A718
+ 997+ A718 E5               push hl
+ 998+ A719 2B               dec hl
+ 999+ A71A
+1000+ A71A CD 1A A8         call Detecta_impacto_en_disparo_de_Amadeus                          ; Nos situamos en el 1er .db de la caja y comprobamos Impacto.
+1001+ A71D
+1002+ A71D E1               pop hl
+1003+ A71E 23               inc hl                                                              ; (Puntero_de_impresion) en HL.
+1004+ A71F
+1005+ A71F C8               ret z
+1006+ A720
+1007+ A720              ; Impacto en el proyectil de Amadeus !!!
+1008+ A720              ; Puede existir impacto con otro proyectil. Hay que detectarlo.
+1009+ A720
+1010+ A720 3A E1 8C         ld a,(Impacto2)
+1011+ A723 CB DF            set 3,a
+1012+ A725 32 E1 8C         ld (Impacto2),a
+1013+ A728
+1014+ A728 E5               push hl
+1015+ A729 CD 07 A8         call Genera_coordenadas_de_disparo_Amadeus
+1016+ A72C E1               pop hl
+1017+ A72D
+1018+ A72D C9               ret
+1019+ A72E
+1020+ A72E              ; ----------------------
+1021+ A72E              ;
+1022+ A72E              ;
+1023+ A72E              ;   INPUTS: HL debe apuntar al (Puntero_de_impresion) del disparo.
+1024+ A72E
+1025+ A72E              Mueve_disparo_Amadeus
+1026+ A72E
+1027+ A72E CD B8 91         call Extrae_address
+1028+ A731
+1029+ A731 CD AD 9E         call PreviousScan
+1030+ A734 CD AD 9E         call PreviousScan
+1031+ A737 CD AD 9E         call PreviousScan
+1032+ A73A CD AD 9E         call PreviousScan
+1033+ A73D
+1034+ A73D              ; Después de mover el disparo comprobamos si ha salido de la parte alta de la pantalla.
+1035+ A73D
+1036+ A73D 7C               ld a,h
+1037+ A73E D6 40            sub $40
+1038+ A740 EB               ex de,hl
+1039+ A741 38 04            jr c,Elimina_disparo_Amadeus
+1040+ A743
+1041+ A743               ; Introduce nuevo puntero_de_impresión en la caja.
+1042+ A743
+1043+ A743 73               ld (hl),e
+1044+ A744 23               inc hl
+1045+ A745 72               ld (hl),d
+1046+ A746
+1047+ A746 C9               ret
+1048+ A747
+1049+ A747              ; ----------------------
+1050+ A747              ;
+1051+ A747              ;   29/9/24
+1052+ A747
+1053+ A747              Elimina_disparo_Amadeus
+1054+ A747
+1055+ A747              ; HL apunta al .db (Puntero_de_impresion) del disparo.
+1056+ A747              ; Recordemos la estructura de datos de una caja de disparos de Amadeus:
+1057+ A747
+1058+ A747              ;   Disparo_1A defw 0									; Puntero objeto.
+1059+ A747              ;   	defw 0											; Puntero de impresión.
+1060+ A747
+1061+ A747 2C               inc l
+1062+ A748
+1063+ A748 AF               xor a
+1064+ A749
+1065+ A749 77               ld (hl),a
+1066+ A74A 2D               dec l
+1067+ A74B 77               ld (hl),a
+1068+ A74C 2D               dec l
+1069+ A74D 77               ld (hl),a
+1070+ A74E 2D               dec l
+1071+ A74F 77               ld (hl),a                                           ; Disparo de Amadeus borrado.
+1072+ A750
+1073+ A750 21 DB 8C         ld hl,Ctrl_4
+1074+ A753 CB D6            set 2,(hl)
+1075+ A755
+1076+ A755 CD CE A6         call Limpia_album_de_pintado_disparos_Amadeus
+1077+ A758
+1078+ A758 AF               xor a
+1079+ A759 3C               inc a                                               ;? Siempre que eliminamos un disparo tenemos: "NZ".
+1080+ A75A
+1081+ A75A C9               ret
+1082+ A75B
+1083+ A75B              ; --------------------------------------------------------------------------------------
+1084+ A75B              ;
+1085+ A75B              ;   2/4/25
+1086+ A75B              ;
+1087+ A75B              ;   Pinta los dos scanlines y char. de atributos del disparo de Amadeus.
+1088+ A75B
+1089+ A75B              Pinta_disparos_Amadeus
+1090+ A75B
+1091+ A75B 06 02            ld b,2
+1092+ A75D
+1093+ A75D 0E 07            ld c,%00000111                                      ; Blanco.
+1094+ A75F
+1095+ A75F ED 73 B0 8C      ld (Stack),sp
+1096+ A763 ED 7B BE 8C      ld sp,(Album_de_borrado_disparos_Amadeus)
+1097+ A767
+1098+ A767 D1           3 pop de
+1099+ A768
+1100+ A768 14               inc d
+1101+ A769 15               dec d
+1102+ A76A 28 2B            jr z,1F                                             ; Álbum vacío salta a 1F.
+1103+ A76C
+1104+ A76C              ;    jr $
+1105+ A76C
+1106+ A76C E1               pop hl
+1107+ A76D E5               push hl
+1108+ A76E
+1109+ A76E              ; Atributos.
+1110+ A76E
+1111+ A76E 7C               ld a,h
+1112+ A76F E6 18            and $18
+1113+ A771 CB 2F            sra a
+1114+ A773 CB 2F            sra a
+1115+ A775 CB 2F            sra a
+1116+ A777 C6 58            add $58
+1117+ A779 67               ld h,a
+1118+ A77A
+1119+ A77A 71               ld (hl),c
+1120+ A77B
+1121+ A77B              Imprime_scanlines_en_pantalla
+1122+ A77B
+1123+ A77B              ; (Puntero_objeto) del disparo en DE.
+1124+ A77B              ; (Puntero_de_impresion) en HL.
+1125+ A77B
+1126+ A77B              ; 1er scanline
+1127+ A77B
+1128+ A77B E1               pop hl
+1129+ A77C
+1130+ A77C 1A               ld a,(de)
+1131+ A77D AE               xor (hl)
+1132+ A77E 77               ld (hl),a
+1133+ A77F
+1134+ A77F 1C               inc e
+1135+ A780 2C               inc l
+1136+ A781
+1137+ A781 1A               ld a,(de)
+1138+ A782 AE               xor (hl)
+1139+ A783 77               ld (hl),a
+1140+ A784
+1141+ A784 1D               dec e
+1142+ A785 E1               pop hl
+1143+ A786
+1144+ A786              ; 2º scanline
+1145+ A786
+1146+ A786 1A               ld a,(de)
+1147+ A787 AE               xor (hl)
+1148+ A788 77               ld (hl),a
+1149+ A789
+1150+ A789 1C               inc e
+1151+ A78A 2C               inc l
+1152+ A78B
+1153+ A78B 1A               ld a,(de)
+1154+ A78C AE               xor (hl)
+1155+ A78D 77               ld (hl),a
+1156+ A78E
+1157+ A78E 1D               dec e
+1158+ A78F
+1159+ A78F 18 06            jr 1F
+1160+ A791
+1161+ A791 ED 7B BC 8C  2 ld sp,(Album_de_pintado_disparos_Amadeus)
+1162+ A795 18 D0            jr 3B
+1163+ A797 10 F8        1 djnz 2B
+1164+ A799 ED 7B B0 8C      ld sp,(Stack)
+1165+ A79D C9               ret
+1166+ A79E
+1167+ A79E              ; --------------------------------------------------------------------------------------
+1168+ A79E              ;
+1169+ A79E              ;   13/10/24
+1170+ A79E              ;
+1171+ A79E              ;   Modifica: HL,BC y DE.
+1172+ A79E
+1173+ A79E
+1174+ A79E              Genera_datos_de_impresion_disparos_Amadeus
+1175+ A79E
+1176+ A79E ED 73 B0 8C      ld (Stack),sp
+1177+ A7A2 31 40 89         ld sp,Disparo_Amad                                        ;? SP se sitúa en el .db (Puntero objeto) de la caja de disparos de Amadeus.
+1178+ A7A5 D1               pop de                                                    ;? Puntero_objeto del disparo en DE.
 1179+ A7A6
-1180+ A7A6 2A DA 89         ld hl,(p.imp.amadeus)
-1181+ A7A9 2C               inc l
-1182+ A7AA
-1183+ A7AA 3E 80            ld a,$80
-1184+ A7AC BE               cp (hl)
-1185+ A7AD 28 0D            jr z,1F
-1186+ A7AF
-1187+ A7AF 04               inc b
-1188+ A7B0
-1189+ A7B0 3E 60            ld a,$60
-1190+ A7B2 BE               cp (hl)
-1191+ A7B3 28 07            jr z,1F
-1192+ A7B5
-1193+ A7B5
-1194+ A7B5 04               inc b
-1195+ A7B6
-1196+ A7B6 3E 18            ld a,$18
-1197+ A7B8 BE               cp (hl)
-1198+ A7B9 28 01            jr z,1F
-1199+ A7BB
-1200+ A7BB 04               inc b
-1201+ A7BC
-1202+ A7BC              ;   Calcula el Puntero_de_impresión del disparo.
+1180+ A7A6 14               inc d                                                     ;? Salimos si no hay disparo.
+1181+ A7A7 15               dec d
+1182+ A7A8
+1183+ A7A8 28 0E            jr z,Salida
+1184+ A7AA
+1185+ A7AA              Genera_scanlines_de_disparo_Amadeus
+1186+ A7AA
+1187+ A7AA E1               pop hl                                                    ;? Puntero_objeto del disparo en DE.
+1188+ A7AB              ;                                                             ;? Puntero_de_impresión del disparo en HL.
+1189+ A7AB ED 7B BC 8C      ld sp,(Album_de_pintado_disparos_Amadeus)
+1190+ A7AF
+1191+ A7AF C1               pop bc
+1192+ A7B0 C1               pop bc
+1193+ A7B1 C1               pop bc
+1194+ A7B2
+1195+ A7B2 E5               push hl                                                   ;? Sube 2º scanline al álbum.
+1196+ A7B3 CD AD 9E         call PreviousScan
+1197+ A7B6 E5               push hl                                                   ;? Sube 1er scanline al álbum.
+1198+ A7B7 D5               push de                                                   ;? Sube Puntero_objeto del disparo al álbum.
+1199+ A7B8
+1200+ A7B8              Salida
+1201+ A7B8
+1202+ A7B8 ED 7B B0 8C      ld sp,(Stack)
 1203+ A7BC
-1204+ A7BC              ;   El Puntero_de_impresión del disparo apunta al último scanline de los tres que componen el disparo, (el de abajo).
-1205+ A7BC
-1206+ A7BC CD AD 9E     1 call PreviousScan
-1207+ A7BF
-1208+ A7BF 78               ld a,b
-1209+ A7C0 CB 3F            srl a
-1210+ A7C2 28 03            jr z,4F
-1211+ A7C4
-1212+ A7C4              ; --- Guarda el puntero_de_impresión del disparo en la pila.
-1213+ A7C4 E5               push hl
-1214+ A7C5 18 02            jr 5F
-1215+ A7C7 2D           4 dec l
-1216+ A7C8 E5               push hl
-1217+ A7C9              ; ---
-1218+ A7C9
-1219+ A7C9              ;   Calcula el Puntero_objeto del disparo.
-1220+ A7C9
-1221+ A7C9 21 76 83     5 ld hl,Indice_disparo_Amadeus
-1222+ A7CC 04               inc b
-1223+ A7CD 05               dec b
-1224+ A7CE 28 04            jr z,2F
-1225+ A7D0
-1226+ A7D0              ;   Nos desplazamos por el índice de disparos.
-1227+ A7D0
-1228+ A7D0 2C           3 inc l
-1229+ A7D1 2C               inc l
-1230+ A7D2 10 FC            djnz 3B
-1231+ A7D4
-1232+ A7D4              ; --- Guarda el Puntero_objeto del disparo en la pila.
-1233+ A7D4 CD B8 91     2 call Extrae_address
-1234+ A7D7 E5               push hl
-1235+ A7D8              ; ---
-1236+ A7D8
-1237+ A7D8              ; Almacenamos (Puntero_objeto) y (Puntero_de_impresion) en su correspondiente caja.
-1238+ A7D8              ; HL en el 1er .db de la caja.
-1239+ A7D8
-1240+ A7D8 21 40 89         ld hl,Disparo_Amad
-1241+ A7DB
-1242+ A7DB 06 02            ld b,2
-1243+ A7DD
-1244+ A7DD D1           6 pop de
-1245+ A7DE 73               ld (hl),e
-1246+ A7DF 23               inc hl
-1247+ A7E0 72               ld (hl),d
-1248+ A7E1 23               inc hl
-1249+ A7E2
-1250+ A7E2 10 F9            djnz 6B
-1251+ A7E4
-1252+ A7E4 C9               ret
-1253+ A7E5
-1254+ A7E5              Genera_coordenadas_de_disparo_Amadeus
-1255+ A7E5
-1256+ A7E5              ;   HL deberá apuntar al .db (Puntero_de_impresion) del disparo.
-1257+ A7E5              ;   Esta parte de la rutina sólo aplica cuando un disparo nuestro alcanza a una entidad.
-1258+ A7E5              ;   Genera las coordenadas de nuestro disparo certero y activa el correspondiente FLAG, (bit3 Impacto2).
-1259+ A7E5
-1260+ A7E5 CD B8 91         call Extrae_address
-1261+ A7E8 CD BA 97         call Genera_coordenadas
-1262+ A7EB
-1263+ A7EB 3D               dec a
-1264+ A7EC
-1265+ A7EC 21 E4 8C         ld hl,Coordenadas_disparo_certero
-1266+ A7EF 77               ld (hl),a                                           ;   Almacenamos la Coordenada_Y, (Fila) del disparo.
-1267+ A7F0 23               inc hl
-1268+ A7F1 3A 61 8C         ld a,(Coordenada_X)
-1269+ A7F4 77               ld (hl),a                                           ;   Almacenamos la Coordenada_X, (Columna) del disparo.
-1270+ A7F5
-1271+ A7F5 AF               xor a
-1272+ A7F6 3C               inc a                                               ;   Fuerza "NZ" a la salida.
-1273+ A7F7
-1274+ A7F7 C9               ret
-1275+ A7F8
-1276+ A7F8              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1277+ A7F8              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1278+ A7F8              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1279+ A7F8
-1280+ A7F8              ; ----------------------------------------------
-1281+ A7F8              ;
-1282+ A7F8              ;   22/03/25
-1283+ A7F8              ;
-1284+ A7F8              ;   INPUTS: HL contiene el .defw (Puntero_objeto) de la caja de disparo de Amadeus.
-1285+ A7F8              ;   OUTPUT: FLAG Z indica NO IMPACTO, NZ indica IMPACTO.
-1286+ A7F8
-1287+ A7F8              Detecta_impacto_en_disparo_de_Amadeus
-1288+ A7F8
-1289+ A7F8              Extraccion_de_datos
-1290+ A7F8
-1291+ A7F8              ; Album_de_pintado_disparos_Amadeus $8cac
-1292+ A7F8              ; Album_de_borrado_disparos_Amadeus $8cae
-1293+ A7F8              ; Amadeus_disparos_scanlines_album equ $827c
-1294+ A7F8              ; Amadeus_disparos_scanlines_album_2 equ $8282
-1295+ A7F8
-1296+ A7F8 5E               ld e,(hl)
-1297+ A7F9 2C               inc l
-1298+ A7FA 56               ld d,(hl)
-1299+ A7FB
-1300+ A7FB 1C               inc e
-1301+ A7FC 1C               inc e                                                  ; DE contiene (Puntero_objeto) `aumentado' del_
-1302+ A7FD              ;                                                          ; _disparo de Amadeus.
-1303+ A7FD 2C               inc l
-1304+ A7FE
-1305+ A7FE 4E               ld c,(hl)
-1306+ A7FF 2C               inc l
-1307+ A800 46               ld b,(hl)
-1308+ A801
-1309+ A801 C5               push bc
-1310+ A802 E1               pop hl                                                 ; Puntero_de_impresión del disparo en HL.
-1311+ A803
-1312+ A803              ;   La detección de colisión se efectúa con el disparo impreso en pantalla.
-1313+ A803
-1314+ A803 CD AD 9E         call PreviousScan
-1315+ A806 CD AD 9E         call PreviousScan
-1316+ A809
-1317+ A809              Detecta_impacto_
-1318+ A809
-1319+ A809 1A               ld a,(de)
-1320+ A80A A6               and (hl)
-1321+ A80B C0               ret nz
-1322+ A80C
-1323+ A80C 1C               inc e
-1324+ A80D 2C               inc l
-1325+ A80E
-1326+ A80E 1A               ld a,(de)
-1327+ A80F A6               and (hl)
-1328+ A810
-1329+ A810 C9               ret
-1330+ A811
-1331+ A811              ; -------------------------------------------------------------------------------------------------------------
-1332+ A811              ;
-1333+ A811              ;   25/11//24
-1334+ A811              ;
-1335+ A811              ;   La entidad se encuentra en la fila $14,$15 o $16 de pantalla.
-1336+ A811              ;   Vamos a comprobar si la entidad ocupa alguna de las columnas ocupadas por Amadeus y por lo_
-1337+ A811              ;   _ tanto, existe riesgo alto de colisión entre ambas.
-1338+ A811              ;
-1339+ A811              ;   MODIFICA: HL,DE,BC y A.
-1340+ A811              ;   OUTPUTS: (Coordenadas_X_Entidad) y (Coordenadas_X_Amadeus) contienen el nº de las columnas que ocupan en pantalla.
-1341+ A811              ;            (Impacto) se coloca a "1" si coincide alguna de las columnas. Alto riesgo de colisión.
-1342+ A811
-1343+ A811              Colision_Entidad_Amadeus
-1344+ A811
-1345+ A811              ; Posible contacto de entidad con Amadeus. ?????
-1346+ A811
-1347+ A811              ; Exclusiones:
-1348+ A811
-1349+ A811 3A 03 8D         ld a,(Shield)
-1350+ A814 A7               and a
-1351+ A815 C0               ret nz                                                 ; No comprobamos contacto si existe Shield.
-1352+ A816
-1353+ A816 21 DA 8C         ld hl,Ctrl_3
-1354+ A819 CB 76            bit 6,(hl)
-1355+ A81B C0               ret nz                                                 ; Salimos si Amadeus ha sido destruido y estamos esperando nueva nave o mensaje final.
-1356+ A81C
-1357+ A81C 21 E1 8C         ld hl,Impacto2                                         ; Salimos si tenemos una posible colisión de una entidad anterior. Tenemos almacenadas las coordenadas X de otra entidad.
-1358+ A81F CB 56            bit 2,(hl)
-1359+ A821 C0               ret nz
-1360+ A822
-1361+ A822 DD 7E 02     	ld a,(ix+2)                                            ; ld a,(coordenada_y)
-1362+ A825 FE 14        	cp $14
-1363+ A827 D8           	ret c                                                  ; Salimos si la entidad no está en zona de Amadeus.
-1364+ A828
-1365+ A828 3A D9 89         ld a,(Impacto_Amadeus)                                 ; Evita que se produzca colisión con dos entidades a la vez.
-1366+ A82B A7               and a
-1367+ A82C C0               ret nz
-1368+ A82D
-1369+ A82D              Genera_coordenadas_X
-1370+ A82D
-1371+ A82D              ;   Guardamos las coordenadas_X de la entidad y Amadeus en sus correspondientes almacenes.
-1372+ A82D              ;   DRAW tiene almacenados, en este momento, los datos de la última ENTIDAD que hemos desplazado.
-1373+ A82D
-1374+ A82D              ;   Limpiamos almacenes.
-1375+ A82D
-1376+ A82D              ;    call Limpia_Coordenadas_X
-1377+ A82D
-1378+ A82D              ;   Almacenamos las coordenadas X de la entidad peligrosa, (en curso).
-1379+ A82D
-1380+ A82D 21 E6 8C         ld hl,Coordenadas_X_Entidad
-1381+ A830 DD 7E 01         ld a,(ix+1)                                             ; ld a,(Coordenada_X)
-1382+ A833 CD 59 A8         call Guarda_coordenadas_X
-1383+ A836
-1384+ A836              ;   Almacenamos las coordenadas X de Amadeus.
-1385+ A836
-1386+ A836 3A D6 89         ld a,(CX_Amadeus)
-1387+ A839 CD 59 A8         call Guarda_coordenadas_X
-1388+ A83C
-1389+ A83C DD E5            push ix
-1390+ A83E CD 6D A8         call Compara_coordenadas_X
-1391+ A841 DD E1            pop ix
-1392+ A843
-1393+ A843 C0               ret nz
-1394+ A844
-1395+ A844 3E 01            ld a,1                                               ; El .db (Impacto)="1" indica que es altamente probable que esta_
-1396+ A846 DD 77 04         ld (ix+4),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y
-1397+ A849
-1398+ A849 DD 7D            ld a,ixl
-1399+ A84B C6 04            add 4
-1400+ A84D DD 6F            ld ixl,a
-1401+ A84F
-1402+ A84F DD 22 E2 8C      ld (Entidad_sospechosa_de_colision),ix               ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.
-1403+ A853
-1404+ A853 21 E1 8C         ld hl,Impacto2                                       ; _ alguna de las columnas_X que ocupa coinciden con las de Amadeus.
-1405+ A856 CB D6            set 2,(hl)
-1406+ A858
-1407+ A858 C9               ret
-1408+ A859
-1409+ A859               ; ----- ----- ----- ----- -----
-1410+ A859
-1411+ A859 77           Guarda_coordenadas_X ld (hl),a
-1412+ A85A 3C               inc a
-1413+ A85B 2C               inc l
-1414+ A85C 77               ld (hl),a
-1415+ A85D 3C               inc a
-1416+ A85E 2C               inc l
-1417+ A85F 77               ld (hl),a
-1418+ A860 2C               inc l
-1419+ A861 C9               ret
-1420+ A862
-1421+ A862 AF           Limpia_Coordenadas_X xor a
-1422+ A863 06 06            ld b,6
-1423+ A865 21 E9 8C         ld hl,Coordenadas_X_Amadeus
-1424+ A868 77           1 ld (hl),a
-1425+ A869 23               inc hl
-1426+ A86A 10 FC            djnz 1B
-1427+ A86C C9               ret
-1428+ A86D
-1429+ A86D              ; ----- ----- ----- ----- -----
-1430+ A86D
-1431+ A86D              Compara_coordenadas_X
-1432+ A86D
-1433+ A86D DD 21 E6 8C      ld ix,Coordenadas_X_Entidad
-1434+ A871 DD 7E 00         ld a,(ix+0)
-1435+ A874 CD 82 A8         call Comparando
-1436+ A877 C8               ret z
-1437+ A878
-1438+ A878 3C               inc a
-1439+ A879 CD 91 A8         call Comparando_1
-1440+ A87C C8               ret z
-1441+ A87D
-1442+ A87D 3C               inc a
-1443+ A87E CD 91 A8         call Comparando_1
-1444+ A881 C9               ret
-1445+ A882
-1446+ A882              ; ----- ----- ----- ----- -----
-1447+ A882              ;
-1448+ A882              ;   4/12/23
-1449+ A882              ;
-1450+ A882              ;   Sub. de [Compara_coordenadas_X]. Deja de comparar cuando encuentra coincidencia.
-1451+ A882
-1452+ A882              Comparando
-1453+ A882
-1454+ A882 DD 2C            inc ixl
-1455+ A884 DD 2C            inc ixl
-1456+ A886 DD 2C            inc ixl
-1457+ A888
-1458+ A888 DD 46 00         ld b,(ix+0)
-1459+ A88B DD 4E 01         ld c,(ix+1)
-1460+ A88E DD 56 02         ld d,(ix+2)
-1461+ A891
-1462+ A891 B8           Comparando_1 cp b
-1463+ A892 C8               ret z
-1464+ A893 B9               cp c
-1465+ A894 C8               ret z
-1466+ A895 BA               cp d
-1467+ A896 C9               ret
-1468+ A897
-1469+ A897              ; -----------------------------------------------------------------------
-1470+ A897              ;
-1471+ A897              ;   04/7/24
-1472+ A897              ;
-1473+ A897
-1474+ A897              Detecta_colision_nave_entidad
-1475+ A897
-1476+ A897              ; Exclusiones:
-1477+ A897
-1478+ A897              ; Salimos de la rutina si no hay advertencia de posible colisión.
-1479+ A897
-1480+ A897 21 E1 8C     	ld hl,Impacto2
-1481+ A89A CB 56        	bit 2,(hl)
-1482+ A89C C8           	ret z
-1483+ A89D
-1484+ A89D              ; Detección byte a byte de colisión ENTIDAD-NAVE.
-1485+ A89D
-1486+ A89D 2A DC 89         ld hl,(Pamm_Amadeus)
-1487+ A8A0 CD B8 91         call Extrae_address
-1488+ A8A3 54               ld d,h
-1489+ A8A4 5D               ld e,l                                         ; (Puntero_objeto) en DE.
-1490+ A8A5
-1491+ A8A5 2A DA 89         ld hl,(p.imp.amadeus)                          ; (Puntero_de_impresion) en HL.
-1492+ A8A8 06 10            ld b,16                                        ; Contador de scanlines en B.
-1493+ A8AA FD 2E 03         ld iyl,3                                       ; Contador de impacto. Si su valor es "0" se considera "Colisión". Esto me permitirá ajustar la sensibilidad de la colisión en Amadeus.
-1494+ A8AD
-1495+ A8AD C5           1 push bc
-1496+ A8AE 06 03            ld b,3
-1497+ A8B0 E5               push hl
-1498+ A8B1
-1499+ A8B1              ; .db
-1500+ A8B1
-1501+ A8B1 1A           3 ld a,(de)
-1502+ A8B2 A7               and a
-1503+ A8B3 20 03            jr nz,4F
-1504+ A8B5
-1505+ A8B5 2C               inc l
-1506+ A8B6 18 08            jr 2F                                         ; No aplica CPI, no hay píxels en este .db.
-1507+ A8B8
-1508+ A8B8 ED A1        4 cpi                                             ; Comparamos el 1er .db de los tres de ancho que tiene el sprite de Amadeus.
-1509+ A8BA 28 04            jr z,2F
-1510+ A8BC
-1511+ A8BC              ; Impacto.
-1512+ A8BC FD 2D            dec iyl
-1513+ A8BE 28 22            jr z,5F
-1514+ A8C0
-1515+ A8C0 1C           2 inc e
-1516+ A8C1 10 EE            djnz 3B
-1517+ A8C3
-1518+ A8C3 E1               pop hl
-1519+ A8C4
-1520+ A8C4              ; Hay salto de línea en el puntero de impresión ???
-1521+ A8C4
-1522+ A8C4 7C               ld a,h
-1523+ A8C5 D6 57            sub $57
-1524+ A8C7 20 0A            jr nz,6F
-1525+ A8C9
-1526+ A8C9              ; Comprobamos la parte baja de Amadeus. Modifico manualmente el salto de línea en HL para no haver llamadas a [NextScan].
-1527+ A8C9
-1528+ A8C9 2A DA 89         ld hl,(p.imp.amadeus)
-1529+ A8CC 3E 20            ld a,$20
-1530+ A8CE A7               and a
-1531+ A8CF 85               add l
-1532+ A8D0 6F               ld l,a
-1533+ A8D1 18 01            jr 7F
-1534+ A8D3
-1535+ A8D3 24           6 inc h
-1536+ A8D4
-1537+ A8D4 C1           7 pop bc
-1538+ A8D5 10 D6            djnz 1B
-1539+ A8D7
-1540+ A8D7              ;   Fin de la comparativa.
-1541+ A8D7
-1542+ A8D7              ;   NO HAY COLISIÓN !!!!!.
-1543+ A8D7              ;
-1544+ A8D7              ;   .db (Impacto) de Amadeus a "0".
-1545+ A8D7              ;   RES el bit2 de (Impacto2).
-1546+ A8D7              ;
-1547+ A8D7              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
-1548+ A8D7              ;   Lo colocamos a "0".
-1549+ A8D7
-1550+ A8D7 21 E1 8C         ld hl,Impacto2
-1551+ A8DA CB 96            res 2,(hl)
-1552+ A8DC 2A E2 8C         ld hl,(Entidad_sospechosa_de_colision)
-1553+ A8DF 36 00            ld (hl),0                                       ; Coloca a "0" el .db (Impacto) de la (Entidad_sospechosa_de_colision).
-1554+ A8E1 C9               ret
-1555+ A8E2
-1556+ A8E2              ;   COLISIÓN !!!!!.
-1557+ A8E2              ;
-1558+ A8E2              ;   .db (Impacto) de Amadeus a "1".
-1559+ A8E2              ;   SET el bit3 de (Impacto2).
-1560+ A8E2              ;
-1561+ A8E2              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
+1204+ A7BC C9               ret
+1205+ A7BD
+1206+ A7BD              ; --------------------------------------------------------------------------------------
+1207+ A7BD              ;
+1208+ A7BD              ;   12/09/24
+1209+ A7BD              ;
+1210+ A7BD
+1211+ A7BD              Genera_disparo_Amadeus
+1212+ A7BD
+1213+ A7BD              ;*  Exclusiones.
+1214+ A7BD
+1215+ A7BD 3A C9 8C         ld a,(Permiso_de_disparo_Amadeus)
+1216+ A7C0 A7               and a
+1217+ A7C1 C8               ret z                                                    ;? Salimos si no hay permiso de disparo.
+1218+ A7C2
+1219+ A7C2 3D               dec a
+1220+ A7C3 32 C9 8C         ld (Permiso_de_disparo_Amadeus),a                        ;? No volveremos a tener permiso de disparo hasta que desaparezaca este disparo.
+1221+ A7C6
+1222+ A7C6              Define_puntero_objeto_disparo
+1223+ A7C6
+1224+ A7C6              ;   Inicializamos contador.
+1225+ A7C6
+1226+ A7C6 06 00            ld b,0
+1227+ A7C8
+1228+ A7C8 2A DA 89         ld hl,(p.imp.amadeus)
+1229+ A7CB 2C               inc l
+1230+ A7CC
+1231+ A7CC 3E 80            ld a,$80
+1232+ A7CE BE               cp (hl)
+1233+ A7CF 28 0D            jr z,1F
+1234+ A7D1
+1235+ A7D1 04               inc b
+1236+ A7D2
+1237+ A7D2 3E 60            ld a,$60
+1238+ A7D4 BE               cp (hl)
+1239+ A7D5 28 07            jr z,1F
+1240+ A7D7
+1241+ A7D7
+1242+ A7D7 04               inc b
+1243+ A7D8
+1244+ A7D8 3E 18            ld a,$18
+1245+ A7DA BE               cp (hl)
+1246+ A7DB 28 01            jr z,1F
+1247+ A7DD
+1248+ A7DD 04               inc b
+1249+ A7DE
+1250+ A7DE              ;   Calcula el Puntero_de_impresión del disparo.
+1251+ A7DE
+1252+ A7DE              ;   El Puntero_de_impresión del disparo apunta al último scanline de los tres que componen el disparo, (el de abajo).
+1253+ A7DE
+1254+ A7DE CD AD 9E     1 call PreviousScan
+1255+ A7E1
+1256+ A7E1 78               ld a,b
+1257+ A7E2 CB 3F            srl a
+1258+ A7E4 28 03            jr z,4F
+1259+ A7E6
+1260+ A7E6              ; --- Guarda el puntero_de_impresión del disparo en la pila.
+1261+ A7E6 E5               push hl
+1262+ A7E7 18 02            jr 5F
+1263+ A7E9 2D           4 dec l
+1264+ A7EA E5               push hl
+1265+ A7EB              ; ---
+1266+ A7EB
+1267+ A7EB              ;   Calcula el Puntero_objeto del disparo.
+1268+ A7EB
+1269+ A7EB 21 76 83     5 ld hl,Indice_disparo_Amadeus
+1270+ A7EE 04               inc b
+1271+ A7EF 05               dec b
+1272+ A7F0 28 04            jr z,2F
+1273+ A7F2
+1274+ A7F2              ;   Nos desplazamos por el índice de disparos.
+1275+ A7F2
+1276+ A7F2 2C           3 inc l
+1277+ A7F3 2C               inc l
+1278+ A7F4 10 FC            djnz 3B
+1279+ A7F6
+1280+ A7F6              ; --- Guarda el Puntero_objeto del disparo en la pila.
+1281+ A7F6 CD B8 91     2 call Extrae_address
+1282+ A7F9 E5               push hl
+1283+ A7FA              ; ---
+1284+ A7FA
+1285+ A7FA              ; Almacenamos (Puntero_objeto) y (Puntero_de_impresion) en su correspondiente caja.
+1286+ A7FA              ; HL en el 1er .db de la caja.
+1287+ A7FA
+1288+ A7FA 21 40 89         ld hl,Disparo_Amad
+1289+ A7FD
+1290+ A7FD 06 02            ld b,2
+1291+ A7FF
+1292+ A7FF D1           6 pop de
+1293+ A800 73               ld (hl),e
+1294+ A801 23               inc hl
+1295+ A802 72               ld (hl),d
+1296+ A803 23               inc hl
+1297+ A804
+1298+ A804 10 F9            djnz 6B
+1299+ A806
+1300+ A806 C9               ret
+1301+ A807
+1302+ A807              Genera_coordenadas_de_disparo_Amadeus
+1303+ A807
+1304+ A807              ;   HL deberá apuntar al .db (Puntero_de_impresion) del disparo.
+1305+ A807              ;   Esta parte de la rutina sólo aplica cuando un disparo nuestro alcanza a una entidad.
+1306+ A807              ;   Genera las coordenadas de nuestro disparo certero y activa el correspondiente FLAG, (bit3 Impacto2).
+1307+ A807
+1308+ A807 CD B8 91         call Extrae_address
+1309+ A80A CD BA 97         call Genera_coordenadas
+1310+ A80D
+1311+ A80D 3D               dec a
+1312+ A80E
+1313+ A80E 21 E4 8C         ld hl,Coordenadas_disparo_certero
+1314+ A811 77               ld (hl),a                                           ;   Almacenamos la Coordenada_Y, (Fila) del disparo.
+1315+ A812 23               inc hl
+1316+ A813 3A 61 8C         ld a,(Coordenada_X)
+1317+ A816 77               ld (hl),a                                           ;   Almacenamos la Coordenada_X, (Columna) del disparo.
+1318+ A817
+1319+ A817 AF               xor a
+1320+ A818 3C               inc a                                               ;   Fuerza "NZ" a la salida.
+1321+ A819
+1322+ A819 C9               ret
+1323+ A81A
+1324+ A81A              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1325+ A81A              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1326+ A81A              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1327+ A81A
+1328+ A81A              ; ----------------------------------------------
+1329+ A81A              ;
+1330+ A81A              ;   22/03/25
+1331+ A81A              ;
+1332+ A81A              ;   INPUTS: HL contiene el .defw (Puntero_objeto) de la caja de disparo de Amadeus.
+1333+ A81A              ;   OUTPUT: FLAG Z indica NO IMPACTO, NZ indica IMPACTO.
+1334+ A81A
+1335+ A81A              Detecta_impacto_en_disparo_de_Amadeus
+1336+ A81A
+1337+ A81A              Extraccion_de_datos
+1338+ A81A
+1339+ A81A              ; Album_de_pintado_disparos_Amadeus $8cac
+1340+ A81A              ; Album_de_borrado_disparos_Amadeus $8cae
+1341+ A81A              ; Amadeus_disparos_scanlines_album equ $827c
+1342+ A81A              ; Amadeus_disparos_scanlines_album_2 equ $8282
+1343+ A81A
+1344+ A81A 5E               ld e,(hl)
+1345+ A81B 2C               inc l
+1346+ A81C 56               ld d,(hl)
+1347+ A81D
+1348+ A81D 1C               inc e
+1349+ A81E 1C               inc e                                                  ; DE contiene (Puntero_objeto) `aumentado' del_
+1350+ A81F              ;                                                          ; _disparo de Amadeus.
+1351+ A81F 2C               inc l
+1352+ A820
+1353+ A820 4E               ld c,(hl)
+1354+ A821 2C               inc l
+1355+ A822 46               ld b,(hl)
+1356+ A823
+1357+ A823 C5               push bc
+1358+ A824 E1               pop hl                                                 ; Puntero_de_impresión del disparo en HL.
+1359+ A825
+1360+ A825              ;   La detección de colisión se efectúa con el disparo impreso en pantalla.
+1361+ A825
+1362+ A825 CD AD 9E         call PreviousScan
+1363+ A828 CD AD 9E         call PreviousScan
+1364+ A82B
+1365+ A82B              Detecta_impacto_
+1366+ A82B
+1367+ A82B 1A               ld a,(de)
+1368+ A82C A6               and (hl)
+1369+ A82D C0               ret nz
+1370+ A82E
+1371+ A82E 1C               inc e
+1372+ A82F 2C               inc l
+1373+ A830
+1374+ A830 1A               ld a,(de)
+1375+ A831 A6               and (hl)
+1376+ A832
+1377+ A832 C9               ret
+1378+ A833
+1379+ A833              ; -------------------------------------------------------------------------------------------------------------
+1380+ A833              ;
+1381+ A833              ;   25/11//24
+1382+ A833              ;
+1383+ A833              ;   La entidad se encuentra en la fila $14,$15 o $16 de pantalla.
+1384+ A833              ;   Vamos a comprobar si la entidad ocupa alguna de las columnas ocupadas por Amadeus y por lo_
+1385+ A833              ;   _ tanto, existe riesgo alto de colisión entre ambas.
+1386+ A833              ;
+1387+ A833              ;   MODIFICA: HL,DE,BC y A.
+1388+ A833              ;   OUTPUTS: (Coordenadas_X_Entidad) y (Coordenadas_X_Amadeus) contienen el nº de las columnas que ocupan en pantalla.
+1389+ A833              ;            (Impacto) se coloca a "1" si coincide alguna de las columnas. Alto riesgo de colisión.
+1390+ A833
+1391+ A833              Colision_Entidad_Amadeus
+1392+ A833
+1393+ A833              ; Posible contacto de entidad con Amadeus. ?????
+1394+ A833
+1395+ A833              ; Exclusiones:
+1396+ A833
+1397+ A833 3A 03 8D         ld a,(Shield)
+1398+ A836 A7               and a
+1399+ A837 C0               ret nz                                                 ; No comprobamos contacto si existe Shield.
+1400+ A838
+1401+ A838 21 DA 8C         ld hl,Ctrl_3
+1402+ A83B CB 76            bit 6,(hl)
+1403+ A83D C0               ret nz                                                 ; Salimos si Amadeus ha sido destruido y estamos esperando nueva nave o mensaje final.
+1404+ A83E
+1405+ A83E 21 E1 8C         ld hl,Impacto2                                         ; Salimos si tenemos una posible colisión de una entidad anterior. Tenemos almacenadas las coordenadas X de otra entidad.
+1406+ A841 CB 56            bit 2,(hl)
+1407+ A843 C0               ret nz
+1408+ A844
+1409+ A844 DD 7E 02     	ld a,(ix+2)                                            ; ld a,(coordenada_y)
+1410+ A847 FE 14        	cp $14
+1411+ A849 D8           	ret c                                                  ; Salimos si la entidad no está en zona de Amadeus.
+1412+ A84A
+1413+ A84A 3A D9 89         ld a,(Impacto_Amadeus)                                 ; Evita que se produzca colisión con dos entidades a la vez.
+1414+ A84D A7               and a
+1415+ A84E C0               ret nz
+1416+ A84F
+1417+ A84F              Genera_coordenadas_X
+1418+ A84F
+1419+ A84F              ;   Guardamos las coordenadas_X de la entidad y Amadeus en sus correspondientes almacenes.
+1420+ A84F              ;   DRAW tiene almacenados, en este momento, los datos de la última ENTIDAD que hemos desplazado.
+1421+ A84F
+1422+ A84F              ;   Limpiamos almacenes.
+1423+ A84F
+1424+ A84F              ;    call Limpia_Coordenadas_X
+1425+ A84F
+1426+ A84F              ;   Almacenamos las coordenadas X de la entidad peligrosa, (en curso).
+1427+ A84F
+1428+ A84F 21 E6 8C         ld hl,Coordenadas_X_Entidad
+1429+ A852 DD 7E 01         ld a,(ix+1)                                             ; ld a,(Coordenada_X)
+1430+ A855 CD 7B A8         call Guarda_coordenadas_X
+1431+ A858
+1432+ A858              ;   Almacenamos las coordenadas X de Amadeus.
+1433+ A858
+1434+ A858 3A D6 89         ld a,(CX_Amadeus)
+1435+ A85B CD 7B A8         call Guarda_coordenadas_X
+1436+ A85E
+1437+ A85E DD E5            push ix
+1438+ A860 CD 8F A8         call Compara_coordenadas_X
+1439+ A863 DD E1            pop ix
+1440+ A865
+1441+ A865 C0               ret nz
+1442+ A866
+1443+ A866 3E 01            ld a,1                                               ; El .db (Impacto)="1" indica que es altamente probable que esta_
+1444+ A868 DD 77 04         ld (ix+4),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y
+1445+ A86B
+1446+ A86B DD 7D            ld a,ixl
+1447+ A86D C6 04            add 4
+1448+ A86F DD 6F            ld ixl,a
+1449+ A871
+1450+ A871 DD 22 E2 8C      ld (Entidad_sospechosa_de_colision),ix               ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.
+1451+ A875
+1452+ A875 21 E1 8C         ld hl,Impacto2                                       ; _ alguna de las columnas_X que ocupa coinciden con las de Amadeus.
+1453+ A878 CB D6            set 2,(hl)
+1454+ A87A
+1455+ A87A C9               ret
+1456+ A87B
+1457+ A87B               ; ----- ----- ----- ----- -----
+1458+ A87B
+1459+ A87B 77           Guarda_coordenadas_X ld (hl),a
+1460+ A87C 3C               inc a
+1461+ A87D 2C               inc l
+1462+ A87E 77               ld (hl),a
+1463+ A87F 3C               inc a
+1464+ A880 2C               inc l
+1465+ A881 77               ld (hl),a
+1466+ A882 2C               inc l
+1467+ A883 C9               ret
+1468+ A884
+1469+ A884 AF           Limpia_Coordenadas_X xor a
+1470+ A885 06 06            ld b,6
+1471+ A887 21 E9 8C         ld hl,Coordenadas_X_Amadeus
+1472+ A88A 77           1 ld (hl),a
+1473+ A88B 23               inc hl
+1474+ A88C 10 FC            djnz 1B
+1475+ A88E C9               ret
+1476+ A88F
+1477+ A88F              ; ----- ----- ----- ----- -----
+1478+ A88F
+1479+ A88F              Compara_coordenadas_X
+1480+ A88F
+1481+ A88F DD 21 E6 8C      ld ix,Coordenadas_X_Entidad
+1482+ A893 DD 7E 00         ld a,(ix+0)
+1483+ A896 CD A4 A8         call Comparando
+1484+ A899 C8               ret z
+1485+ A89A
+1486+ A89A 3C               inc a
+1487+ A89B CD B3 A8         call Comparando_1
+1488+ A89E C8               ret z
+1489+ A89F
+1490+ A89F 3C               inc a
+1491+ A8A0 CD B3 A8         call Comparando_1
+1492+ A8A3 C9               ret
+1493+ A8A4
+1494+ A8A4              ; ----- ----- ----- ----- -----
+1495+ A8A4              ;
+1496+ A8A4              ;   4/12/23
+1497+ A8A4              ;
+1498+ A8A4              ;   Sub. de [Compara_coordenadas_X]. Deja de comparar cuando encuentra coincidencia.
+1499+ A8A4
+1500+ A8A4              Comparando
+1501+ A8A4
+1502+ A8A4 DD 2C            inc ixl
+1503+ A8A6 DD 2C            inc ixl
+1504+ A8A8 DD 2C            inc ixl
+1505+ A8AA
+1506+ A8AA DD 46 00         ld b,(ix+0)
+1507+ A8AD DD 4E 01         ld c,(ix+1)
+1508+ A8B0 DD 56 02         ld d,(ix+2)
+1509+ A8B3
+1510+ A8B3 B8           Comparando_1 cp b
+1511+ A8B4 C8               ret z
+1512+ A8B5 B9               cp c
+1513+ A8B6 C8               ret z
+1514+ A8B7 BA               cp d
+1515+ A8B8 C9               ret
+1516+ A8B9
+1517+ A8B9              ; -----------------------------------------------------------------------
+1518+ A8B9              ;
+1519+ A8B9              ;   04/7/24
+1520+ A8B9              ;
+1521+ A8B9
+1522+ A8B9              Detecta_colision_nave_entidad
+1523+ A8B9
+1524+ A8B9              ; Exclusiones:
+1525+ A8B9
+1526+ A8B9              ; Salimos de la rutina si no hay advertencia de posible colisión.
+1527+ A8B9
+1528+ A8B9 21 E1 8C     	ld hl,Impacto2
+1529+ A8BC CB 56        	bit 2,(hl)
+1530+ A8BE C8           	ret z
+1531+ A8BF
+1532+ A8BF              ; Detección byte a byte de colisión ENTIDAD-NAVE.
+1533+ A8BF
+1534+ A8BF 2A DC 89         ld hl,(Pamm_Amadeus)
+1535+ A8C2 CD B8 91         call Extrae_address
+1536+ A8C5 54               ld d,h
+1537+ A8C6 5D               ld e,l                                         ; (Puntero_objeto) en DE.
+1538+ A8C7
+1539+ A8C7 2A DA 89         ld hl,(p.imp.amadeus)                          ; (Puntero_de_impresion) en HL.
+1540+ A8CA 06 10            ld b,16                                        ; Contador de scanlines en B.
+1541+ A8CC FD 2E 03         ld iyl,3                                       ; Contador de impacto. Si su valor es "0" se considera "Colisión". Esto me permitirá ajustar la sensibilidad de la colisión en Amadeus.
+1542+ A8CF
+1543+ A8CF C5           1 push bc
+1544+ A8D0 06 03            ld b,3
+1545+ A8D2 E5               push hl
+1546+ A8D3
+1547+ A8D3              ; .db
+1548+ A8D3
+1549+ A8D3 1A           3 ld a,(de)
+1550+ A8D4 A7               and a
+1551+ A8D5 20 03            jr nz,4F
+1552+ A8D7
+1553+ A8D7 2C               inc l
+1554+ A8D8 18 08            jr 2F                                         ; No aplica CPI, no hay píxels en este .db.
+1555+ A8DA
+1556+ A8DA ED A1        4 cpi                                             ; Comparamos el 1er .db de los tres de ancho que tiene el sprite de Amadeus.
+1557+ A8DC 28 04            jr z,2F
+1558+ A8DE
+1559+ A8DE              ; Impacto.
+1560+ A8DE FD 2D            dec iyl
+1561+ A8E0 28 22            jr z,5F
 1562+ A8E2
-1563+ A8E2 E1           5 pop hl
-1564+ A8E3 C1               pop bc
-1565+ A8E4
-1566+ A8E4 21 D9 89         ld hl,Impacto_Amadeus
-1567+ A8E7 36 01            ld (hl),1
-1568+ A8E9 21 E1 8C         ld hl,Impacto2                                 ; Cuando se produce Colisión, RES el bit2 de (Impacto2) y_
-1569+ A8EC CB 96            res 2,(hl)                                     ; _ SET el bit3. El bit3 de (Impacto2) indica que hay contacto_
-1570+ A8EE
-1571+ A8EE 11 C0 87         ld de,Indice_Explosion_entidades
-1572+ A8F1 2A E2 8C         ld hl,(Entidad_sospechosa_de_colision)         ; Situamos el (Puntero_de_almacen_de_mov_masticados) de la entidad impactada en la primera palabra del índice de explosiones.
-1573+ A8F4
-1574+ A8F4 23               inc hl
-1575+ A8F5 23               inc hl
-1576+ A8F6 23               inc hl
-1577+ A8F7
-1578+ A8F7 73               ld (hl),e
-1579+ A8F8 23               inc hl
-1580+ A8F9 72               ld (hl),d
-1581+ A8FA
-1582+ A8FA              ; Situamos también el (Puntero_de_almacen_de_mov_masticados) de Amadeus en la primero explosión.
-1583+ A8FA
-1584+ A8FA 11 60 88         ld de,Indice_Explosion_Amadeus
-1585+ A8FD 21 DC 89         ld hl,Pamm_Amadeus
-1586+ A900
-1587+ A900 73               ld (hl),e
-1588+ A901 23               inc hl
-1589+ A902 72               ld (hl),d
-1590+ A903
-1591+ A903 C9               ret
-1592+ A904
-1593+ A904
-1594+ A904
+1563+ A8E2 1C           2 inc e
+1564+ A8E3 10 EE            djnz 3B
+1565+ A8E5
+1566+ A8E5 E1               pop hl
+1567+ A8E6
+1568+ A8E6              ; Hay salto de línea en el puntero de impresión ???
+1569+ A8E6
+1570+ A8E6 7C               ld a,h
+1571+ A8E7 D6 57            sub $57
+1572+ A8E9 20 0A            jr nz,6F
+1573+ A8EB
+1574+ A8EB              ; Comprobamos la parte baja de Amadeus. Modifico manualmente el salto de línea en HL para no haver llamadas a [NextScan].
+1575+ A8EB
+1576+ A8EB 2A DA 89         ld hl,(p.imp.amadeus)
+1577+ A8EE 3E 20            ld a,$20
+1578+ A8F0 A7               and a
+1579+ A8F1 85               add l
+1580+ A8F2 6F               ld l,a
+1581+ A8F3 18 01            jr 7F
+1582+ A8F5
+1583+ A8F5 24           6 inc h
+1584+ A8F6
+1585+ A8F6 C1           7 pop bc
+1586+ A8F7 10 D6            djnz 1B
+1587+ A8F9
+1588+ A8F9              ;   Fin de la comparativa.
+1589+ A8F9
+1590+ A8F9              ;   NO HAY COLISIÓN !!!!!.
+1591+ A8F9              ;
+1592+ A8F9              ;   .db (Impacto) de Amadeus a "0".
+1593+ A8F9              ;   RES el bit2 de (Impacto2).
+1594+ A8F9              ;
+1595+ A8F9              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
+1596+ A8F9              ;   Lo colocamos a "0".
+1597+ A8F9
+1598+ A8F9 21 E1 8C         ld hl,Impacto2
+1599+ A8FC CB 96            res 2,(hl)
+1600+ A8FE 2A E2 8C         ld hl,(Entidad_sospechosa_de_colision)
+1601+ A901 36 00            ld (hl),0                                       ; Coloca a "0" el .db (Impacto) de la (Entidad_sospechosa_de_colision).
+1602+ A903 C9               ret
+1603+ A904
+1604+ A904              ;   COLISIÓN !!!!!.
+1605+ A904              ;
+1606+ A904              ;   .db (Impacto) de Amadeus a "1".
+1607+ A904              ;   SET el bit3 de (Impacto2).
+1608+ A904              ;
+1609+ A904              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
+1610+ A904
+1611+ A904 E1           5 pop hl
+1612+ A905 C1               pop bc
+1613+ A906
+1614+ A906 21 D9 89         ld hl,Impacto_Amadeus
+1615+ A909 36 01            ld (hl),1
+1616+ A90B 21 E1 8C         ld hl,Impacto2                                 ; Cuando se produce Colisión, RES el bit2 de (Impacto2) y_
+1617+ A90E CB 96            res 2,(hl)                                     ; _ SET el bit3. El bit3 de (Impacto2) indica que hay contacto_
+1618+ A910
+1619+ A910 11 C0 87         ld de,Indice_Explosion_entidades
+1620+ A913 2A E2 8C         ld hl,(Entidad_sospechosa_de_colision)         ; Situamos el (Puntero_de_almacen_de_mov_masticados) de la entidad impactada en la primera palabra del índice de explosiones.
+1621+ A916
+1622+ A916 23               inc hl
+1623+ A917 23               inc hl
+1624+ A918 23               inc hl
+1625+ A919
+1626+ A919 73               ld (hl),e
+1627+ A91A 23               inc hl
+1628+ A91B 72               ld (hl),d
+1629+ A91C
+1630+ A91C              ; Situamos también el (Puntero_de_almacen_de_mov_masticados) de Amadeus en la primero explosión.
+1631+ A91C
+1632+ A91C 11 60 88         ld de,Indice_Explosion_Amadeus
+1633+ A91F 21 DC 89         ld hl,Pamm_Amadeus
+1634+ A922
+1635+ A922 73               ld (hl),e
+1636+ A923 23               inc hl
+1637+ A924 72               ld (hl),d
+1638+ A925
+1639+ A925 C9               ret
+1640+ A926
+1641+ A926
+1642+ A926
 # file closed: Disparo.asm
-2462  A904
-2463  A904              	SAVESNA "Pruebas.sna", START
-2464  A904
-2465  A904
-2466  A904
-2467  A904
+2462  A926
+2463  A926              	SAVESNA "Pruebas.sna", START
+2464  A926
+2465  A926
+2466  A926
+2467  A926
 # file closed: Banco_de_pruebas.asm

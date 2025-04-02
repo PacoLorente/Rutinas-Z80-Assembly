@@ -1,6 +1,6 @@
 ; --------------------------------------------------------------------------------------
 ;
-;   25/10/24
+;   2/4/25
 ;
 
 Pinta_disparos_Entidades
@@ -11,27 +11,48 @@ Pinta_disparos_Entidades
     ld a,2
     ex af,af
 
+    ld c,7                          ; (Attr). de los disparos.
+
 3 ld b,7                            ; Nº máximo de disparos. Fuerza la salida del album cuando hemos pintado 7 veces_
 ;                                     _ aunque IYL+IYH+E no sea "0". (No hay separacíon entre el álbum de borrado y el de pintado).
 ;                                     _ No encontraría "0".
+
+
 4 pop iy
     pop de                          ; 1er .db IYL
 ;                                   ; 2º  .db IYH
 ;                                   ; 3er .db E.
+;                                   ; .db que pintan el disparo, ej.: $18 $00 $00, (Puntero_objeto) del disparo, 3 .db's.
+
 ;   Album vacío ???
 
     ld a,iyl
     add iyh
     add e
-    jr z,1F
+    jr z,1F                         ; Álbum vacío salta a 1F.
 
 ;   Imprime album, (contiene datos).   
 
     dec sp
 
-    pop hl                          ; Puntero de impresión en HL.
+    pop hl                          ; Puntero de impresión del 1er scanline en HL.
+    push hl
+
+; Atributos.
+
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+    ld (hl),c                                           
 
 ; Imprime el 1er scanline del disparo.
+
+    pop hl
 
     ld a,iyl    
     xor (hl)
@@ -51,7 +72,7 @@ Pinta_disparos_Entidades
 
 ; Imprime el 2º scanline del disparo.
 
-    pop hl
+    pop hl                          ; Puntero de impresión del 2º scanline en HL.
 
     ld a,iyl    
     xor (hl)
@@ -1061,23 +1082,50 @@ Elimina_disparo_Amadeus
 
 ; --------------------------------------------------------------------------------------
 ;
-;   13/10/24
+;   2/4/25
 ;
+;   Pinta los dos scanlines y char. de atributos del disparo de Amadeus.
 
 Pinta_disparos_Amadeus
 
     ld b,2
+
+    ld c,%00000111                                      ; Blanco.                    
+
     ld (Stack),sp 
     ld sp,(Album_de_borrado_disparos_Amadeus)
+
 3 pop de
+
     inc d
     dec d
-    jr z,1F
+    jr z,1F                                             ; Álbum vacío salta a 1F.
+
+;    jr $
+
     pop hl
+    push hl
+
+; Atributos.
+
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
+
+    ld (hl),c                                           
 
 Imprime_scanlines_en_pantalla
 
+; (Puntero_objeto) del disparo en DE.
+; (Puntero_de_impresion) en HL.
+
 ; 1er scanline
+
+    pop hl
 
     ld a,(de)
     xor (hl)
