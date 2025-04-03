@@ -12,24 +12,32 @@ Indice_de_niveles
 	defw 0
 	defw 0
 
-Nivel_1 db 5
-	db 1,1,1,1,1
+; NIVEL_1. Tres tipos de BadSat. 
+
+Nivel_1 db 2
+	db 1,2
 
 Nivel_2 db 12									; Nº de entidades.
 	db 2,1,1,1,1,2								; Tipo de entidad que vamos a introducir en las 7 cajas de DRAW.			
 	db 2,1,1,1,1,2
 
+	defw 0
+	defw 0
+
 ; --------------------------------------------------------------------------------------------------------------
 
 Indice_de_tablas_Random
 
-	defw Tabla_Random_Entidad_tipo_1
-;	defw Tabla_Random_Entidad_tipo_2
+; Entidades (Tipo) (1), (2) y (3). Son entidades (tipo) BadSat.
+
+	defw Tabla_Random_BadSat
+	defw Tabla_Random_BadSat
+	defw Tabla_Random_BadSat
+
 ;	...
 ;	...
 ;	+ Tablas ...
 
-	defw 0
 	defw 0
 
 ; --------------------------------------------------------------------------------------------------------------
@@ -47,7 +55,7 @@ Indice_de_tablas_Random
 ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
 ;	
 
-Tabla_Random_Entidad_tipo_1
+Tabla_Random_BadSat
 
 	defw $0a01
 	defw Random_1_1_10

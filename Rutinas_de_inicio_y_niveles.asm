@@ -47,20 +47,21 @@ Inicia_albumes_de_disparos
 ;	Prepara las CAJAS MASTER y genera los movimientos masticados de todas las entidades que aparecerán en el nivel.
 ;
 ;	INPUTS:		B contiene (Numero_de_entidades).
-;				C contiene el (Tipo) de la 1ª entidad del nivel.
+;						C contiene el (Tipo) de la 1ª entidad del nivel.
+; 					 	HL contiene (Datos_de_nivel).
 
 Genera_movimientos_masticados_del_nivel 
 
-	push hl														; Push (Datos_de_nivel).
+	push hl															; Push (Datos_de_nivel).
 	push bc														; Push (Numero_de_entidades)/(Tipo).
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
 	ld a,c														
 	ex af,af
-	ld a,c 														; (Tipo) de la entidad en A y A´.
+	ld a,c 															; (Tipo) de la entidad en A y A´.
 
-	call Situa_en_Caja_Master									; Situa HL en el 1er .db de la "Caja Master" que corresponde a este (Tipo) de entidad.
+	call Situa_en_Caja_Master							; Situa HL en el 1er .db de la "Caja Master" que corresponde a este (Tipo) de entidad.
 
 ;	Caja Master inicializada ???
 ;	HL en 1er .db de la Caja Master.
@@ -69,9 +70,9 @@ Genera_movimientos_masticados_del_nivel
 	and a
 	jr nz,Movimientos_masticados_construidos 
 
-	ex af,af 													; (Tipo) de la entidad en A.
+	ex af,af 														; (Tipo) de la entidad en A.
 
-	call Situa_en_Tabla_Random 									; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+	call Situa_en_Tabla_Random 						; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
 	call Aplica_rnd_al_baile
 
 	pop bc
@@ -82,21 +83,29 @@ Genera_movimientos_masticados_del_nivel
 
 ;	Construimos movimientos masticados de este (Tipo) de entidad.
 
-	ld a,c														; (Tipo) de la entidad en A.
-	call Definicion_segun_tipo									; HL apunta al 1er .db que define la entidad.
+	ld a,c																				; (Tipo) de la entidad en A.
+
+	call Definicion_segun_tipo												; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW					; Vuelca los datos de la definición de entidad en DRAW.
+
+; 	Ya tenemos la definición de entidad en la bandeja_DRAW.
+;	Inicializamos (Puntero_de_almacen_de_mov_masticados) para poder generar todos los mov. masticados.
+
+	ld hl,(Puntero_indice_de_almacenes)
+	call Extrae_address
+	ld (Puntero_de_almacen_de_mov_masticados),hl 			; Fija el (Puntero_de_almacen_de_mov_masticados) al comienzo del 1er almacén.
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
 	ld hl,Numeros_aleatorios									
 	ld a,(hl)
-	and $1f														; Define el nº de columna por el que va a aparecer la entidad.
+	and $1f																			; Define el nº de columna por el que va a aparecer la entidad.
 
 	ld hl,Posicion_inicio
 	ld (hl),a
 
 	ld a,(Tipo)
-	call Situa_Puntero_indice_mov			 	 				; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
+	call Situa_Puntero_indice_mov			 	 						; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
 
 ;	Ya disponemos de una (Posicion_inicio) aleatoria y la definición de la entidad en la "Bandeja DRAW". 
 ;	Generamos "Movimientos masticados" de la entidad.
@@ -109,17 +118,24 @@ Genera_movimientos_masticados_del_nivel
 	ld e,l
 	ld d,h
 
-	call Parametros_de_bandeja_DRAW_a_caja	 					; Caja de entidades Master completa.
+	call Parametros_de_bandeja_DRAW_a_caja	 				; Caja de entidades Master completa.
 
 Movimientos_masticados_construidos 
 
-	pop bc														; Pop (Numero_de_entidades)/(Tipo).
-	pop hl														; Pop (Datos_de_nivel).
+; Hemos completado un ^ Almacén_de_mov_masticados ^.
+; Vamos a asignar una dirección de comienzo al almacén siguiente.
 
-	inc l														; Datos_de_nivel +1 en HL.
+;	jr $
 
-	ld c,(hl)													; (Tipo) de la siguiente entidad en C.
-	djnz Genera_movimientos_masticados_del_nivel 				; dec (Numero_de_entidades).
+;	call Situa_en_nuevo_almacen
+
+	pop bc																				; Pop (Numero_de_entidades)/(Tipo).
+	pop hl																				; Pop (Datos_de_nivel).
+
+	inc l																					; Datos_de_nivel +1 en HL.
+
+	ld c,(hl)																			; (Tipo) de la siguiente entidad en C.
+	djnz Genera_movimientos_masticados_del_nivel 			; dec (Numero_de_entidades).
 
 	ret
 
@@ -150,10 +166,11 @@ Construye_movimientos_masticados_entidad
 	bit 1,a 												; _ que corresponde a esta entidad.
 	jr z,1B
 
-;	Hemos completado el almacén de movimientos masticados de la entidad.
+;	Hemos completado el almacén de movimientos masticados de la entidad. ($EBB4).
 ;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
 
 	pop hl 													; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
+
 	ld (Puntero_de_almacen_de_mov_masticados),hl
 
 ; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados). 
@@ -195,6 +212,31 @@ Guarda_movimiento_masticado
     call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
 ;															; _ el (Contador_de_mov_masticados).    
     ret
+
+; -----------------------------------------------------------------------------
+;
+;	3/4/25
+;
+;	Adelanta (Puntero_indice_de_almacenes) dentro del índice de almacenes de mov. masticados.
+;	Sitúa (Puntero_de_almacen_de_mov_masticados) al principio del siguiente almacén.
+
+Situa_en_nuevo_almacen ld hl,(Puntero_de_almacen_de_mov_masticados)
+
+	dec hl
+	dec hl
+
+	ex de,hl
+
+	ld hl,(Puntero_indice_de_almacenes)
+	inc l
+	inc l
+	ld (Puntero_indice_de_almacenes),hl
+
+	ld (hl),e
+	inc l
+	ld (hl),d
+
+	ret
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
@@ -365,26 +407,26 @@ Extrae_address_y_avanza call Extrae_address
 ;	Inicializa el 1er Nivel del juego.
 ;	
 ;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
-;						(Numero_de_entidades)    ... Contiene el nº de entidades del nivel, (.db).
-;						(Datos_de_nivel)         ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
+;									(Numero_de_entidades)    ... Contiene el nº de entidades del nivel, (.db).
+;									(Datos_de_nivel)         ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
 ;
-;			B contiene (Numero_de_entidades).
-;			C contiene el (Tipo) de la 1ª entidad del nivel.
+;					B contiene (Numero_de_entidades).
+;					C contiene el (Tipo) de la 1ª entidad del nivel.
 ;
 ;	MODIFY: A,HL,BC y DE.
-;
+
 Inicializa_Nivel 
 
 	ld hl,Indice_de_niveles
-	call Extrae_address   						 ; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
-	ld (Puntero_indice_NIVELES),de				 ; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
+	call Extrae_address   						 									; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
+	ld (Puntero_indice_NIVELES),de											; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
 
 	ld a,(hl)
-	ld (Numero_de_entidades),a					 ; Inicializa (Numero_de_entidades).
+	ld (Numero_de_entidades),a					 							; Inicializa (Numero_de_entidades).
 	ld b,a
 
 	inc l
-	ld (Datos_de_nivel),hl						 ; Inicializa (Datos_de_nivel), .defw que define el (Tipo) de la 1ª entidad del Nivel_1	 
+	ld (Datos_de_nivel),hl															; Inicializa (Datos_de_nivel), .defw que define el (Tipo) de la 1ª entidad del Nivel_1	 
 	ld c,(hl)													
 
 	ret 										 
@@ -427,7 +469,6 @@ Situa_en_Tabla_Random
 Situa_Puntero_indice_mov 
 
 	ld a,(Tipo)     	 						; Cargamos A con el (Tipo) de la entidad del Nivel.       
-
     call Calcula_salto_en_BC
     ld hl,Indice_de_mov_segun_tipo_de_entidad
     and a
@@ -695,12 +736,15 @@ Reinicia_entidad_maliciosa
 ; 	En 2º lugar hay que inicializar el (Puntero_de_almacen_de_mov_masticados).
 
 	ld a,(ix+0)															; ld a,(Tipo)
-	call Definicion_segun_tipo											; HL apunta al 1er .db (Tipo) de la "Definición" de este (Tipo) de entidad.	
+
+	call Situa_en_Caja_Master
+
+; HL apunta al 1er .db de la Caja_Master_correspondiente a este (Tipo) de entidad.
 
 	ld a,l
-	add 11
-	ld l,a 																; Situamos en el .defw (Almacen_de_movimientos_masticados) de la definición de entidad.
-
+	add 7
+	ld l,a 																; Situamos en el .defw (Almacen_de_movimientos_masticados) de la Caja_Master correspondiente_ 
+; 																			; _a este (Tipo) de entidad.
 	call Extrae_address
 
 	ld (ix+7),l

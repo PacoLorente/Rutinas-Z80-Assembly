@@ -8,9 +8,9 @@
 ;
 ;	
 
-	org $fdff															; (Debajo de la pila).
+	org $fdff																									; (Debajo de la pila).
 
-	defw $82ea															; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
+	defw $82ea																								; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
 
 ;
 ;	12/10/24
@@ -18,34 +18,32 @@
 ; 	Constantes del programa.
 ;
  
-FRAMES equ $5c78														; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
+FRAMES equ $5c78																						; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
-Sprite_vacio equ $f880													; 48 Bytes de "0".
+Sprite_vacio equ $f880																				; 48 Bytes de "0".
 
 Almacen_de_movimientos_masticados_Amadeus equ $dbdc						; ($dbdc - $ddbf), 483 bytes. $1e3. Movimientos masticados de Amadeus.
-Almacen_de_movimientos_masticados_Entidad_1 equ $ddc0					; $ddc0 - $eb1b ..... 3419 bytes. $0d5b.
-Almacen_de_movimientos_masticados_Entidad_2 equ $eb1c					; $eb1c - 
 
-Scanlines_album equ $8000	;	($8000 - $8118) 						; Inicialmente 280 bytes, $118. 
+; Scanlines_album. 
+
+; 35 bytes por entidad, (7 entidades). 
+
+; 1. 2 Bytes ..... .defw  Puntero_objeto, (mem. address donde se encuentran los .db que forman los distintos sprites).
+; 2. 1 Byte ..... .db  Indica el nº de scanlines que vamos a imprimir del sprite. Generalmente 16 scanlines.
+; El nº de scanlines será menor cuando estemos `desapareciendo´ por la parte baja de la pantalla.					 	
+; 3. 32 Bytes, (como máximo). Screen mem. address de cada uno de los scanlines que forman el sprite.
+
+Scanlines_album equ $8000	;	($8000 - $8118) 										; Inicialmente 280 bytes, $118. 
 Scanlines_album_2 equ $811a	;    ($811a - $8232)
-Amadeus_scanlines_album equ $8234	;	($8234 - $8256) 				; Inicialmente 34 bytes, $22.
+Amadeus_scanlines_album equ $8234	;	($8234 - $8256) 						; Inicialmente 34 bytes, $22.
 Amadeus_scanlines_album_2 equ $8258	;	($8258 - $827a)
 
-Amadeus_disparos_scanlines_album equ $827c	;	($827c - $8281) 		; 6 Bytes, (1 único disparo).
+Amadeus_disparos_scanlines_album equ $827c	;	($827c - $8281) 			; 6 Bytes, (1 único disparo).
 Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 
 Entidades_disparos_scanlines_album equ $8288	;	($828c - $82bc)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
 Entidades_disparos_scanlines_album_2 equ $82b9	;	($82bf - $82f1)
-
-;																		; Scanlines_album. 
-
-;                                                       				; 35 bytes por entidad, (7 entidades). 
-
-;																		; 1. 2 Bytes ..... .defw  Puntero_objeto, (mem. address donde se encuentran los .db que forman los distintos sprites).
-;                                                       				; 2. 1 Byte ..... .db  Indica el nº de scanlines que vamos a imprimir del sprite. Generalmente 16 scanlines.
-;																		; El nº de scanlines será menor cuando estemos `desapareciendo´ por la parte baja de la pantalla.					 	
-; 																		; 3. 32 Bytes, (como máximo). Screen mem. address de cada uno de los scanlines que forman el sprite.
 
 ;	Reloj del juego. IM2 ---------------------------------------------------------------------------------------------------------------------------------------------------
 ;
@@ -75,22 +73,21 @@ Temporizacion_shield
 	ld hl,Shield
 	ld a,(hl)
 	and a
-	jr z,Incrementa_FRAMES		;	No hay escudo. Se agotó el tiempo Shield.		
+	jr z,Incrementa_FRAMES					;	No hay escudo. Se agotó el tiempo Shield.		
 
-	dec (hl)					;	Decrementa tiempo Shield, (Shield).	
+	dec (hl)											;	Decrementa tiempo Shield, (Shield).	
 
 	inc hl
-	dec (hl)					;	Decrementa temporizador de estados, (Shield_2).
+	dec (hl)											;	Decrementa temporizador de estados, (Shield_2).
 
 	jr nz,Incrementa_FRAMES
 
-; El temporizador de estados a llegado a "0". HL apunta a (Shield_2).
-
-Cambio_de_estado
+															
+Cambio_de_estado      						; El temporizador de estados a llegado a "0". HL apunta a (Shield_2).
 
 ;	Indica cambio de estado.
 
-	inc hl						;	Sitúa en (Shield_3).	
+	inc hl												;	Sitúa en (Shield_3).	
 
 	bit 3,(hl)
 	jr z,2F	
@@ -99,15 +96,13 @@ Cambio_de_estado
 
 	jr Incrementa_FRAMES
 
-2 rlc (hl)						; 	Sitúa en (Shield_3) y rotamos bit. (Indica cambio de comportamiento).
+2 rlc (hl)												; 	Sitúa en (Shield_3) y rotamos bit. (Indica cambio de comportamiento).
 
-;	Carga en (Shield_2) la siguiente temporización.
-
-	ld hl,(Puntero_datos_shield)
+	ld hl,(Puntero_datos_shield) 			;	Carga en (Shield_2) la siguiente temporización.
 	inc hl
 	ld (Puntero_datos_shield),hl
 	ld a,(hl)
-	ld (Shield_2),a				;	Iniciamos (Shield_2) con la nueva temporización.
+	ld (Shield_2),a									;	Iniciamos (Shield_2) con la nueva temporización.
 
 Incrementa_FRAMES
 
@@ -153,12 +148,12 @@ Incrementa_FRAMES
 Bandeja_DRAW ; -----------------------------------------------------------------------------------------------
 
 Tipo db 0												; Clase de la entidad. Cada `tipo´ de Entidad tiene unas características únicas que lo distinguen de otros tipos: 
-;															- Patrón de movimiento.
-Coordenada_X db 0 										; Coordenada X del objeto. (En chars.)
-Coordenada_y db 0 										; Coordenada Y del objeto. (En chars.)
+;															
+Coordenada_X db 0 							; Coordenada X del objeto. (En chars.)
+Coordenada_y db 0 								; Coordenada Y del objeto. (En chars.)
 
-Contador_de_vueltas db 0								; Contador de vueltas de entidades. Inicialmente su valor es "1". El bit se desplaza una posición a la izquierda cada vez que la entidad_
-;														; _desaparece por la parte baja de la pantalla. Esta variable se utiliza para incrementar el perfil de velocidad de las entidades.
+Contador_de_vueltas db 0					; Contador de vueltas de entidades. Inicialmente su valor es "1". El bit se desplaza una posición a la izquierda cada vez que la entidad_
+;															; _desaparece por la parte baja de la pantalla. Esta variable se utiliza para incrementar el perfil de velocidad de las entidades.
 
 ; Incrementa el contador de vueltas, (el contador cuenta 4 vueltas máximo).
 ; El perfil de velocidad de la entidad será: (Contador_de_vueltas)/8.
@@ -171,84 +166,84 @@ Contador_de_vueltas db 0								; Contador de vueltas de entidades. Inicialmente
 ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".   
 
 Impacto db 0											; Si después del movimiento de la entidad, (Impacto) se coloca a "1",_
-;														; _ existen muchas posibilidades de que esta entidad haya colisionado con Amadeus. 
-; 														; Hay que comprobar la posible colisión después de mover Amadeus. En este caso, (Impacto2)="3".
+;																; _ existen muchas posibilidades de que esta entidad haya colisionado con Amadeus. 
+; 																; Hay que comprobar la posible colisión después de mover Amadeus. En este caso, (Impacto2)="3".
 
-Puntero_de_impresion defw 0								; Contiene el puntero de impresión, (calculado por DRAW). Esta dirección la utilizará la rutina_
-;														; _ [Guarda_coordenadas_X] y [Compara_coordenadas_X] para detectar la colisión ENTIDAD-AMADEUS.
+Puntero_de_impresion defw 0					; Contiene el puntero de impresión, (calculado por DRAW). Esta dirección la utilizará la rutina_
+;																; _ [Guarda_coordenadas_X] y [Compara_coordenadas_X] para detectar la colisión ENTIDAD-AMADEUS.
 
 Puntero_de_almacen_de_mov_masticados defw 0
 
-;	Almacén donde la entidad guía va guardando comportamiento ya calculado, (rutinas DRAW).
+;																; Almacén donde la entidad guía va guardando comportamiento ya calculado, (rutinas DRAW).
 
-Contador_de_mov_masticados defw 0						; Contador de 16bits. La "Entidad_guía" lo aumenta en una unidad cada vez que hace el "pushado" de las tres_
-;														; _palabras que componen el "movimiento_masticado".  
+Contador_de_mov_masticados defw 0	; Contador de 16bits. La "Entidad_guía" lo aumenta en una unidad cada vez que hace el "pushado" de las tres_
+;																; _palabras que componen el "movimiento_masticado".  
 
 ; Variables de funcionamiento de las rutinas de movimiento. (Mov_left), (Mov_right), (Mov_up), (Mov_down).
 
-Velocidad db 0 											; 5 vueltas max. 5 vueltas       1 - 0 (1ª vuelta - velocidad 0)
-;																						 2 - 0 (2ª vuelta - velocidad 0)
-;																						 4 - 1 (3ª vuelta - velocidad 1)
-;																						 8 - 2 (4ª vuelta - velocidad 2)
-;																					   $10 - 4 (5ª vuelta - velocidad 3) 																		
+Velocidad db 0 										; 5 vueltas max. 5 vueltas       1 - 0 (1ª vuelta - velocidad 0)
+;																					 2 - 0 (2ª vuelta - velocidad 0)
+;																					 4 - 1 (3ª vuelta - velocidad 1)
+;																					 8 - 2 (4ª vuelta - velocidad 2)
+;																				 $10 - 4 (5ª vuelta - velocidad 3) 																		
 
-Attr db 0 												; Atributos de la entidad.
+Attr db 0 													; Atributos de la entidad.
 
 Ctrl_2 db 0 											
-;														BIT 0, Los sprites se inician con un `sprite vacío', (sprite formado por "ceros"), cuando la rutina_
-;															_ [Genera_datos_de_impresion] guarda su 1ª imagen.
-;															_ Más adelante las rutinas [Mov_left] y [Mov_right] restauraran (Puntero_objeto). Si el 1er movimiento
-; 															_ que hace la entidad después de iniciarse es hacia arriba/abajo no se restaurará (Puntero_objeto), pués_
-; 															_ las rutinas [Mov_up] y [Mov_down] no necesitan modificar el sprite.
-;															_ El bit5 a "1" nos indica que el sprite se inicia por arriba o por abajo y por lo tanto hay que restaurar_
-;															_ (Puntero_objeto) con (Repone_puntero_objeto) una vez iniciado y realizada su 1ª `foto'.
+;																BIT 0, Los sprites se inician con un `sprite vacío', (sprite formado por "ceros"), cuando la rutina_
+;																_ [Genera_datos_de_impresion] guarda su 1ª imagen.
+;																_ Más adelante las rutinas [Mov_left] y [Mov_right] restauraran (Puntero_objeto). Si el 1er movimiento
+; 																_ que hace la entidad después de iniciarse es hacia arriba/abajo no se restaurará (Puntero_objeto), pués_
+; 																_ las rutinas [Mov_up] y [Mov_down] no necesitan modificar el sprite.
+;																_ El bit5 a "1" nos indica que el sprite se inicia por arriba o por abajo y por lo tanto hay que restaurar_
+;																_ (Puntero_objeto) con (Repone_puntero_objeto) una vez iniciado y realizada su 1ª `foto'.
 ;														
-;														BIT 1, Este bit a "1" indica que se ha iniciado el proceso de EXPLOSIÓN en una entidad.
-;														BIT 2, Este bit es activado por [Movimiento]. Indica que hemos `iniciado un desplazamiento'._
-;															_ Evita que volvamos a iniciar el desplazamiento cada vez que ejecutemos [Movimiento].
-;														BIT 3, Indica que (Cola_de_desplazamiento)="254". Esto quiere decir que repetiremos (1-255 veces),_
-;															_ el último MOVIMIENTO que hayamos ejecutado.
-;														BIT 4, ???
-;														BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
+;																BIT 1, Este bit a "1" indica que se ha iniciado el proceso de EXPLOSIÓN en una entidad.
+;																BIT 2, Este bit es activado por [Movimiento]. Indica que hemos `iniciado un desplazamiento'._
+;																_ Evita que volvamos a iniciar el desplazamiento cada vez que ejecutemos [Movimiento].
+;																BIT 3, Indica que (Cola_de_desplazamiento)="254". Esto quiere decir que repetiremos (1-255 veces),_
+;																_ el último MOVIMIENTO que hayamos ejecutado.
+;																BIT 4, ???
+;																BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
 
-Ctrl_0 db 0 											; Byte de control. A través de este byte de control. Las rutinas de desplazamiento: [Mov_right], [Mov_left], [Mov_up] y [Mov_down],_
-;														; _indican a las subrutinas de recolocación del objeto de la rutina [DRAW]: [Comprueba_limite_horizontal] y [Comprueba_limite_vertical],_
-; 														; _que desaparecemos por un extremo de la pantalla y hemos de `reaparecer´ por el contrario. 
-; 														; Este dato es necesario debido a que las rutinas de recolocación, están ideadas para recolocar el puntero (Posicion_actual), cuando pasamos_
-; 														; _de un cuadrante a otro de la pantalla pero no preveen la `desaparición´ por un extremo del cuadrante y la `reaparición´ por el otro.
+Ctrl_0 db 0 												; Byte de control. A través de este byte de control. Las rutinas de desplazamiento: [Mov_right], [Mov_left], [Mov_up] y [Mov_down],_
+;																; _indican a las subrutinas de recolocación del objeto de la rutina [DRAW]: [Comprueba_limite_horizontal] y [Comprueba_limite_vertical],_
+; 																; _que desaparecemos por un extremo de la pantalla y hemos de `reaparecer´ por el contrario. 
+; 																; Este dato es necesario debido a que las rutinas de recolocación, están ideadas para recolocar el puntero (Posicion_actual), cuando pasamos_
+; 																; _de un cuadrante a otro de la pantalla pero no preveen la `desaparición´ por un extremo del cuadrante y la `reaparición´ por el otro.
 ;
-; 														DESCRIPCIÖN:
+; 																DESCRIPCIÖN:
 ;
-; 														SET 0, [Reaparece_derecha]. El bit 0 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_left] detecta que el objeto ha `desaparecido´ por el_
+; 																SET 0, [Reaparece_derecha]. El bit 0 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_left] detecta que el objeto ha `desaparecido´ por el_
 ; 																_lado izquierdo de la pantalla y ha de `reaparecer´ por el derecho. ([Comprueba_limite_vertical]).
-; 														SET 1, [Reaparece_izquierda]. El bit 1 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_right] detecta que el objeto ha `desaparecido´ por el_
+; 																SET 1, [Reaparece_izquierda]. El bit 1 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_right] detecta que el objeto ha `desaparecido´ por el_
 ; 																_lado derecho de la pantalla y ha de `reaparecer´ por el izquierdo. ([Comprueba_limite_vertical]).
-; 														SET 2, [Reaparece_abajo]. El bit 2 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_up] detecta que el objeto ha `desaparecido´ por la_
+; 																SET 2, [Reaparece_abajo]. El bit 2 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_up] detecta que el objeto ha `desaparecido´ por la_
 ; 																_parte superior de la pantalla y ha de `reaparecer´ por el inferior. ([Comprueba_limite_horizontal]).
-; 														SET 3, [Reaparece_arriba]. El bit 3 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_down] detecta que el objeto ha `desaparecido´ por la_
+; 																SET 3, [Reaparece_arriba]. El bit 3 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_down] detecta que el objeto ha `desaparecido´ por la_
 ; 																_parte inferior de la pantalla y ha de `reaparecer´ por la superior. ([Comprueba_limite_horizontal]).
-; 														SET 4, El Bit4 a "1", indica que hubo movimiento de la entidad. Necesitamos esta información
+; 																SET 4, El Bit4 a "1", indica que hubo movimiento de la entidad. Necesitamos esta información
 ;												                _para "NO BORRAR/PINTAR" en objeto si NO hubo MOVIMIENTO. 
-;														SET 5, La rutina [Inicializacion] de Draw_XOR.asm, pone este bit a "1". Con esta información evitamos ejecutar las
+;																SET 5, La rutina [Inicializacion] de Draw_XOR.asm, pone este bit a "1". Con esta información evitamos ejecutar las
 ;																_rutinas: (Comprueba_limite_horizontal) y (Comprueba_limite_vertical) justo después de `inicializar´ un objeto.
-; 														SET 6, Está a "1" si el Sprite que tenemos cargado en el `Engine´ es AMADEUS.
+; 																SET 6, Está a "1" si el Sprite que tenemos cargado en el `Engine´ es AMADEUS.
 ;
-; 														SET 7, El bit 7 se encuentra alto, ("1"), cuando el último movimiento horizontal se ha producido a la "DERECHA".
+; 																SET 7, El bit 7 se encuentra alto, ("1"), cuando el último movimiento horizontal se ha producido a la "DERECHA".
 ; 															   _ Utilizo la información que proporciona este BIT para modificar (CTRL_DESPLZ) si el siguiente movimiento_
 ; 															   _ se va a producir a la izquierda. "1" DERECHA - "0" IZQUIERDA.
 
 ; ----- ----- De aquí para arriba son los datos que se trasfieren a las cajas de entidades. ¡¡¡¡¡
 
-Filas db 0												; Filas. [DRAW]
-Columns db 0 	  										; Nº de columnas. [DRAW]
-Posicion_actual defw 0									; Dirección actual del Sprite. [DRAW]
-Puntero_objeto defw 0									; Donde están los datos para pintar el Sprite.
+Filas db 0												    ; Filas. [DRAW]
+Columns db 0 	  									  	; Nº de columnas. [DRAW]
+Posicion_actual defw 0							; Dirección actual del Sprite. [DRAW]
+Puntero_objeto defw 0								; Donde están los datos para pintar el Sprite.
 
 ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ---------- 
 
-CTRL_DESPLZ db 0										; Este byte nos indica la posición que tiene el Sprite dentro del mapa de desplazamientos.
-; 														; El hecho de que este byte sea distinto de "0", indica que se ha modificado el nº de columnas del objeto.
-; 														; Cuando vamos a imprimir un Sprite en pantalla, la rutina de pintado consultará este byte para situar (Puntero_objeto). [Mov_left]. 
+CTRL_DESPLZ db 0									; Este byte nos indica la posición que tiene el Sprite dentro del mapa de desplazamientos.
+; 																; El hecho de que este byte sea distinto de "0", indica que se ha modificado el nº de columnas del objeto.
+; 																; Cuando vamos a imprimir un Sprite en pantalla, la rutina de pintado consultará este byte para situar (Puntero_objeto). [Mov_left]. 
 
 ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ---------- 
 
@@ -268,17 +263,14 @@ Indice_Sprite_izq defw 0
 Puntero_DESPLZ_der defw 0
 Puntero_DESPLZ_izq defw 0
 
-Posicion_inicio defw 0									; Dirección de pantalla donde aparece el objeto. [DRAW].
+Posicion_inicio defw 0								; Dirección de pantalla donde aparece el objeto. [DRAW].
 Cuad_objeto db 0										; Almacena el cuadrante de pantalla donde se encuentra el objeto, (1,2,3,4). [DRAW]
 Columnas db 0
-
-;Limite_horizontal db 0	 								; Dirección de pantalla, (scanline), calculado en función del tamaño del Sprite. Si el objeto llega a esta línea se modifica_    
-; 														; _(Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
-Limite_vertical db 0 									; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
+Limite_vertical db 0 								; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
 
 ; variables de control general.
 
-Frames_explosion db 0 									; Nº de Frames que tiene la explosión.
+Frames_explosion db 0 							; Nº de Frames que tiene la explosión.
 
 ; Variables de funcionamiento, (No incluidas en base de datos de entidades), a partir de aquí!!!!!
 
@@ -286,8 +278,8 @@ Perfiles_de_velocidad
 
 Vel_left db 0 											; Velocidad izquierda. Nº de píxeles que desplazamos el objeto a izquierda. 1, 2, 4 u 8 px.
 Vel_right db 0 											; Velocidad derecha. Nº de píxeles que desplazamos el objeto a derecha. 1, 2, 4 u 8 px.
-Vel_up db 0 											; Velocidad subida. Nº de píxeles que desplazamos el objeto hacia arriba. (De 1 a 7px).
-Vel_down db 0 											; Velocidad bajada. Nº de píxeles que desplazamos el objeto hacia abajo. (De 1 a 7px).
+Vel_up db 0 												; Velocidad subida. Nº de píxeles que desplazamos el objeto hacia arriba. (De 1 a 7px).
+Vel_down db 0 										; Velocidad bajada. Nº de píxeles que desplazamos el objeto hacia abajo. (De 1 a 7px).
 
 ; Contadores de 16 bits.
 
@@ -299,55 +291,58 @@ Contador_general_de_mov_masticados_Entidad_4 defw 0
 ; Movimiento. ------------------------------------------------------------------------------------------------------
 
 Puntero_tabla_Random defw 0
-Puntero_indice_mov defw 0							    ; Puntero índice del patrón de movimiento de la entidad. "0" No hay movimiento.
-Puntero_mov defw 0										; Guarda la posición de memoria en la que nos encontramos dentro de la cadena de movimiento.
-Puntero_indice_mov_bucle defw 0							; 
+Puntero_indice_mov defw 0						; Puntero índice del patrón de movimiento de la entidad. "0" No hay movimiento.
+Puntero_mov defw 0								; Guarda la posición de memoria en la que nos encontramos dentro de la cadena de movimiento.
+Puntero_indice_mov_bucle defw 0							 
 ;														
 ;                   									
-Incrementa_puntero db 0									; Byte que iremos sumando a (Puntero_indice_mov) para ir escalando por las_
-;														; _ distintas cadenas de movimiento del índice de movimiento de la entidad._
-;														; Va aumentando su valor en saltos de 2 uds, (0,2,4,6,8).
+Incrementa_puntero db 0						; Byte que iremos sumando a (Puntero_indice_mov) para ir escalando por las_
+;																; _ distintas cadenas de movimiento del índice de movimiento de la entidad._
+;																; Va aumentando su valor en saltos de 2 uds, (0,2,4,6,8).
+
 Incrementa_puntero_backup db 0
-Repetimos_desplazamiento db 0							; El nibble bajo del 3er byte que compone un desplazamiento, indica el nº de veces que_
-;														; repetimos dicho desplazamiento. Ese valor se almacena en esta variable, ($1-$f). NUNCA SERÁ "0".
-Repetimos_desplazamiento_backup db 0					; Restaura (Repetimos_desplazamiento) cuando este llega a "0".
-Repetimos_movimiento db 0								; Byte que indica el nº de veces que repetimos el último MOVIMIENTO.
-Cola_de_desplazamiento db 0								; Este byte indica:
+Repetimos_desplazamiento db 0				; El nibble bajo del 3er byte que compone un desplazamiento, indica el nº de veces que_
+;																; repetimos dicho desplazamiento. Ese valor se almacena en esta variable, ($1-$f). NUNCA SERÁ "0".
+
+Repetimos_desplazamiento_backup db 0	; Restaura (Repetimos_desplazamiento) cuando este llega a "0".
+Repetimos_movimiento db 0						; Byte que indica el nº de veces que repetimos el último MOVIMIENTO.
+Cola_de_desplazamiento db 0						; Este byte indica:
+
 ;
-;														;	"$00" ..... Hemos finalizado la cadena de movimiento.
-;														;				En este caso hemos de incrementar (Puntero_indice_mov)_
-;														;				_ y pasar a la siguiente cadena de movimiento del índice.
+;																;	"$00" ..... Hemos finalizado la cadena de movimiento.
+;																;				En este caso hemos de incrementar (Puntero_indice_mov)_
+;																;				_ y pasar a la siguiente cadena de movimiento del índice.
 ;
-;														;	"$01 - "$fe" ..... Repetición del movimiento. 
-;														;						Nº de veces que vamos a repetir el movimiento completo.
-;														;						En este caso, volveremos a inicializar (Puntero_mov),_	
-;														;						_ con (Puntero_indice_mov) y decrementaremos (Cola_de_desplazamiento).
+;																;	"$01 - "$fe" ..... Repetición del movimiento. 
+;																;						Nº de veces que vamos a repetir el movimiento completo.
+;																;						En este caso, volveremos a inicializar (Puntero_mov),_	
+;																;						_ con (Puntero_indice_mov) y decrementaremos (Cola_de_desplazamiento).
 ;				
-;														;	"$ff" ..... Bucle infinito de repetición. 
-;														;				Nunca vamos a saltar a la siguiente cadena de movimiento del índice,_	
-;														;				,_ (si es que la hay). Volvemos a inicializar (Puntero_mov) con (Puntero_indice_mov).	
+;																;	"$ff" ..... Bucle infinito de repetición. 
+;																;				Nunca vamos a saltar a la siguiente cadena de movimiento del índice,_	
+;																;				,_ (si es que la hay). Volvemos a inicializar (Puntero_mov) con (Puntero_indice_mov).	
 
-Ctrl_1 db 0 											; Byte de control de propósito general.
+Ctrl_1 db 0 												; Byte de control de propósito general.
 
-;														DESCRIPCIÓN:
+;																DESCRIPCIÓN:
 ;
-;														BIT 0, La rutina de generación de disparos, [Genera_disparo], pone este bit a "1" para indicar a la_
-;															_ rutina [Genera_datos_de_impresion] que los datos a guardar pertenecen a un disparo y no a una entidad,_
-;															_ por lo tanto hemos de almacenarlos en `Scanlines_album_disparos´ en lugar de `Scanlines_album´.
-;														BIT 1, Este bit indica que el disparo sale de la pantalla, ($4000-$57ff).
-;														BIT 2, Este bit a "1" indica que un disparo de Amadeus ha alcanzado a una entidad. Como no sabemos cual,_
-;															_ hemos de comparar las coordenadas de (Coordenadas_disparo_certero) con las de cada entidad.
+;																BIT 0, La rutina de generación de disparos, [Genera_disparo], pone este bit a "1" para indicar a la_
+;																_ rutina [Genera_datos_de_impresion] que los datos a guardar pertenecen a un disparo y no a una entidad,_
+;																_ por lo tanto hemos de almacenarlos en `Scanlines_album_disparos´ en lugar de `Scanlines_album´.
+;																BIT 1, Este bit indica que el disparo sale de la pantalla, ($4000-$57ff).
+;																BIT 2, Este bit a "1" indica que un disparo de Amadeus ha alcanzado a una entidad. Como no sabemos cual,_
+;																_ hemos de comparar las coordenadas de (Coordenadas_disparo_certero) con las de cada entidad.
 
-;														BIT 3, Recarga de nueva oleada.
-;														BIT 4, Recarga de nueva oleada.
-;														BIT 5, FREEEEEEEEE !!!!!!!!!!!!!!!!!
-;														BIT 6, **** Frame completo.
-;														BIT 7, Indica que ya está tomada la foto de Amadeus. No tomaremos otra hasta el próximo FRAME.
+;																BIT 3, Recarga de nueva oleada.
+;																BIT 4, Recarga de nueva oleada.
+;																BIT 5, FREEEEEEEEE !!!!!!!!!!!!!!!!!
+;																BIT 6, **** Frame completo.
+;																BIT 7, Indica que ya está tomada la foto de Amadeus. No tomaremos otra hasta el próximo FRAME.
 
-Repone_puntero_objeto defw 0							; Almacena (Puntero_objeto). Cuando el Sprite se inicia por arriba o por abajo,_
-; 														; _ hay que sustituirlo por un `sprite vacío' para que no se vea el 1er o último scanline.
-; 														; _ Cuando hemos terminado de iniciarlo y guardado su foto, hemos de recuperar su (Puntero_objeto).
-;														; (Repone_puntero_objeto) es una copia de respaldo de (Puntero_objeto) y su función es restaurarlo.
+Repone_puntero_objeto defw 0				; Almacena (Puntero_objeto). Cuando el Sprite se inicia por arriba o por abajo,_
+; 																; _ hay que sustituirlo por un `sprite vacío' para que no se vea el 1er o último scanline.
+; 																; _ Cuando hemos terminado de iniciarlo y guardado su foto, hemos de recuperar su (Puntero_objeto).
+;																; (Repone_puntero_objeto) es una copia de respaldo de (Puntero_objeto) y su función es restaurarlo.
 
 ; Gestión de ENTIDADES y CAJAS.
 
@@ -356,13 +351,13 @@ Puntero_restore_caja defw 0
 Indice_restore_caja defw 0
 Puntero_indice_master defw 0
 
-Numero_de_entidades db 0								; Nº total de entidades maliciosas que contiene el nivel.
-Numero_parcial_de_entidades db 0						; Nº de cajas que contiene un bloque de entidades. (7 Cajas).
-Entidades_en_curso db 0									; Entidades en pantalla.
+Numero_de_entidades db 0						; Nº total de entidades maliciosas que contiene el nivel.
+Numero_parcial_de_entidades db 0		; Nº de cajas que contiene un bloque de entidades. (7 Cajas).
+Entidades_en_curso db 0							; Entidades en pantalla.
 
-Puntero_indice_ENTIDADES defw 0 						; Se desplazará por el índice de entidades para `meterlas' en cajas.
-Datos_de_entidad defw 0									; Contiene los bytes de información de la entidad hacia la que apunta el 
-;														; _ puntero (Indice_entidades).
+Puntero_indice_ENTIDADES defw 0 		; Se desplazará por el índice de entidades para `meterlas' en cajas.
+Datos_de_entidad defw 0						; Contiene los bytes de información de la entidad hacia la que apunta el 
+;																; _ puntero (Indice_entidades).
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
@@ -371,10 +366,10 @@ Datos_de_entidad defw 0									; Contiene los bytes de información de la entid
 ;	Álbumes.
 
 Stack defw 0 											; La rutinas de pintado, utilizan esta_
-;														; _variable para almacenar lo posición del puntero_
-; 														; _de pila, SP.
-Stack_2 defw 0											; 2º variable destinada a almacenar el puntero de pila, SP.
-;														; La utiliza la rutina [Extrae_foto_registros].
+;																; _variable para almacenar lo posición del puntero_
+; 																; _de pila, SP.
+Stack_2 defw 0										; 2º variable destinada a almacenar el puntero de pila, SP.
+;																; La utiliza la rutina [Extrae_foto_registros].
 
 ; Impresión. ----------------------------------------------------------------------------------------------------
 
@@ -398,7 +393,7 @@ Num_de_bytes_album_de_disparos_borrado db 0
 Numero_de_disparos_de_entidades db 7
 
 Permiso_de_disparo_Amadeus db 1							; A "1", se puede generar disparo.
-Permiso_de_disparo_Entidades db 0						; A "1", se puede generar disparo.
+Permiso_de_disparo_Entidades db 0							; A "1", se puede generar disparo.
 
 Techo_Scanlines_album defw 0
 Techo_Scanlines_album_2 defw 0
@@ -409,7 +404,7 @@ India_SP defw Tabla_de_pintado
 India_2_SP defw 0
 India_3_SP defw Tabla_de_borrado
 
-Ctrl_3 db 0												; 2º Byte de Ctrl. general, (no específico) a una única entidad.
+Ctrl_3 db 0											; 2º Byte de Ctrl. general, (no específico) a una única entidad.
 ;
 ;															BIT 0, "1" Indica que el FRAME está completo, (hemos podido hacer la foto de todas las entidades).
 ;															BIT 1, "1" Indica que hemos completado todo el patrón de movimientos de este tipo de entidad.
@@ -443,64 +438,60 @@ Ctrl_5 db 0												;	BIT 1, "1" Indica que la entidad en curso es la alcanza
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0			; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
-Impacto2 db 0											; Byte de control de impactos.
+Impacto2 db 0																	; Byte de control de impactos.
 
 ;
-;														; bit_2. La rutina [Genera_coordenadas_X] coloca este bit a "1" para indicar que hay una posible colisión entre una entidad y Amadeus.
-;																 Una de la entidades ha entrado en zona de Amadeus y alguna de sus columnas coincide con las de nuestra nave.
-;																 El bit indica que hay que ejecutar [Detecta_colision_nave_entidad] al principio de [Main], (Construcción del frame).
-;														; bit_3. La rutina [Genera_coordenadas_de_disparo_Amadeus] pone este bit a "1" para indicar que un disparo de Amadeus ha alcanzado a una entidad.
-
-
-
-
-
-
+;																						; bit_2. La rutina [Genera_coordenadas_X] coloca este bit a "1" para indicar que hay una posible colisión entre una entidad y Amadeus.
+;																						; Una de la entidades ha entrado en zona de Amadeus y alguna de sus columnas coincide con las de nuestra nave.
+;																						; El bit indica que hay que ejecutar [Detecta_colision_nave_entidad] al principio de [Main], (Construcción del frame).
+;																						; bit_3. La rutina [Genera_coordenadas_de_disparo_Amadeus] pone este bit a "1" para indicar que un disparo de Amadeus ha alcanzado a una entidad.
 
 Entidad_sospechosa_de_colision defw 0					; Almacena la dirección de memoria donde se encuentra el .db_
-;														; _(Impacto) de la entidad que ocupa el mismo espacio que Amadeus.
-;														; Necesitaremos poner a "0" este .db en el caso de que finalmente no se produzca colisión.
+;																				; _(Impacto) de la entidad que ocupa el mismo espacio que Amadeus.
+;																				; Necesitaremos poner a "0" este .db en el caso de que finalmente no se produzca colisión.
 
-Coordenadas_disparo_certero ds 2						; Almacenamos aquí las coordenadas del disparo que alcanza a una entidad, (Fila, Columna).
-;											            ; (Coordenadas_disparo_certero)=Y ..... (Coordenadas_disparo_certero +1)=X.
-Coordenadas_X_Entidad ds 3  							; 3 Bytes reservados para almacenar las 3 posibles columnas_
-;														; _ que puede ocupar el sprite de una entidad. (Colisión).
+Coordenadas_disparo_certero ds 2							; Almacenamos aquí las coordenadas del disparo que alcanza a una entidad, (Fila, Columna).
+;											           							; (Coordenadas_disparo_certero)=Y ..... (Coordenadas_disparo_certero +1)=X.
+Coordenadas_X_Entidad ds 3  								; 3 Bytes reservados para almacenar las 3 posibles columnas_
+;																				; _ que puede ocupar el sprite de una entidad. (Colisión).
 Coordenadas_X_Amadeus ds 3								; 3 Bytes reservados para almacenar las 3 posibles columnas_
-;														; _ que puede ocupar el sprite de Amadeus. (Colisión).
+;																				; _ que puede ocupar el sprite de Amadeus. (Colisión).
 
 ;---------------------------------------------------------------------------------------------------------------
 
 ; Relojes y temporizaciones.
 
-Clock_explosion db 4													; Temporización de las explosiones, (velocidad de la explosión).
+Clock_explosion db 4												; Temporización de las explosiones, (velocidad de la explosión).
 Clock_explosion_Amadeus db 5
-Temp_new_live db 100													; Tiempo que tarda en aparecer una nueva nave Amadeus tras ser destruida.
+Temp_new_live db 100											; Tiempo que tarda en aparecer una nueva nave Amadeus tras ser destruida.
 
-RND_SP defw Numeros_aleatorios											; Puntero que se irá desplazando por el SET de nº aleatorios.
+RND_SP defw Numeros_aleatorios															; Puntero que se irá desplazando por el SET de nº aleatorios.
 Puntero_num_aleatorios_disparos defw Numeros_aleatorios					; Puntero que se irá desplazando por el SET de nº aleatorios, (para generar disparos de entidades).
 Numero_rnd_disparos db 0
 
-Clock_next_entity defw 0												; Transcurrido este tiempo aparece una nueva entidad.
-Repone_CLOCK_disparos db $a0											; Reloj, decreciente.
+Clock_next_entity defw 0										; Transcurrido este tiempo aparece una nueva entidad.
+Repone_CLOCK_disparos db $a0								; Reloj decreciente.
 CLOCK_disparos_de_entidades db $a0
 
 ;---------------------------------------------------------------------------------------------------------------
 
 ; Gestión de NIVELES.
 
-Nivel db 0												; Nivel actual del juego.
+Nivel db 0																; Nivel actual del juego.
 Puntero_indice_NIVELES defw 0
-Datos_de_nivel defw 0									; Este puntero se va desplazando por los distintos bytes_
-; 														; _ que definen el NIVEL.
+Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1					
+																				
+Datos_de_nivel defw 0												; Este puntero se va desplazando por los distintos bytes_
+; 																				; _ que definen el NIVEL.
 
 ; ---------------------------------------------------------------------------------------------------------------
 
 ; Temporizaciones Shield.
 
-Datos_Shield db 2,1,2,1									; Tiempos.
-Puntero_datos_shield defw 0								; Señala distintos tiempos para introducirlos en (Shield_2).
-Shield db 90											; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".					
-Shield_2 db 0 											; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
+Datos_Shield db 2,1,2,1											; Tiempos.
+Puntero_datos_shield defw 0									; Señala distintos tiempos para introducirlos en (Shield_2).
+Shield db 90																; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".					
+Shield_2 db 0 															; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
 Shield_3 db 0
 
 Lives db 5
@@ -511,41 +502,42 @@ Lives db 5
 
 START 
 
-	ld sp,0												; Situamos el inicio de Stack.
-	ld a,$fd 											; IM2 ON. Vector de interrupciones a $fdff, (defw debajo de la pila).
-	ld i,a 												; Byte alto de la dirección donde se encuentra nuestro vector de interrupciones en el registro I. ($a9). El byte bajo será siempre $ff.
-	IM 2 											    ; Habilitamos el modo 2 de INTERRUPCIONES.
+	ld sp,0																	; Situamos el inicio de Stack.
+	ld a,$fd 																; IM2 ON. Vector de interrupciones a $fdff, (defw debajo de la pila).
+	ld i,a 																	; Byte alto de la dirección donde se encuentra nuestro vector de interrupciones en el registro I. ($a9). El byte bajo será siempre $ff.
+	IM 2 											   							; Habilitamos el modo 2 de INTERRUPCIONES.
 	DI 					
 
 ; Limpiamos pantalla.
 
-	ld a,%00000111
+	ld a,%00000111 													; Fondo NEGRO, tinta BLANCA.
 	call Cls
-	call Pulsa_ENTER									 ; PULSA ENTER para disparar el programa.
+	call Pulsa_ENTER													; PULSA ENTER para disparar el programa.
 
 INICIALIZACION
 
-	ld b,7   											 ; Generamos 7 nº aleatorios.
-	call Derivando_RND 									 ; Rutina de generación de nº aleatorios.
+	ld b,7   											 						; Generamos 7 nº aleatorios.
+	call Derivando_RND 										 	; Rutina de generación de nº aleatorios.
 	call Extrae_numero_aleatorio_y_avanza
 	ld l,a
 	ld h,0
-	ld (Clock_next_entity),hl 							 ; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla. 
+	ld (Clock_next_entity),hl 									 	; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla. 
 
-;	Inicia los álbumes de líneas.
+;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
 
 	call Inicia_albumes_de_lineas						 
 	call Inicia_albumes_de_lineas_Amadeus
 	call Inicia_albumes_de_disparos
 
-;	Inicia el 1er nivel del juego.
+;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
 
-	call Inicializa_Nivel								 ; Inicializa el 1er nivel del juego.
-	call Genera_movimientos_masticados_del_nivel		 ; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
-;														   _reponiendo entidades eliminadas.
+	call Inicializa_Nivel								 						; Inicializa el 1er nivel del juego.
+	call Genera_movimientos_masticados_del_nivel		 	; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
+;														   								_reponiendo entidades eliminadas.
+
 	call Prepara_Cajas_de_Entidades
 
-;	Inicia Amadeus.
+;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
 
 	call Inicia_Amadeus
 ;														 ; La rutina [Genera_datos_de_impresion] habilita las interrupciones antes del RET. 
