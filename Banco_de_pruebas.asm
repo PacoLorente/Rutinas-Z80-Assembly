@@ -498,7 +498,7 @@ Lives db 5
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
-;	13/11/24
+;	3/4/25
 
 START 
 
@@ -517,7 +517,9 @@ START
 INICIALIZACION
 
 	ld b,7   											 						; Generamos 7 nº aleatorios.
+	ld hl,Numeros_aleatorios 									; Dirección de mem. donde almacenamos los nº RND.
 	call Derivando_RND 										 	; Rutina de generación de nº aleatorios.
+
 	call Extrae_numero_aleatorio_y_avanza
 	ld l,a
 	ld h,0

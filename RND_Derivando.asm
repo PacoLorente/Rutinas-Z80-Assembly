@@ -1,15 +1,14 @@
 ; ****************************************************************************************************************************************************************************************** 
 ;
-;   21/04/24
+;   3/4/25
 ;      
 ;   Construyo un nº aleatorio. Método: "DERIVANDO."
 ;   (XOR) bit a bit.
 ;
 ;   INPUTS: B contendrá el nº de números aleatorios que queremos generar, (0-$ff).
+;                 HL contendrá la dirección de mem. donde vamos a almacenar los (B) nº RND. 
 
 Derivando_RND 
-
-    ld hl,Numeros_aleatorios
 
 3 ld a,r      			                ; La semilla inicial de nuestro nº aleatorio la proporciona el registro `R´. Cargamos A con R.
     push bc    

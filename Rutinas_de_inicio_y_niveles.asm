@@ -64,26 +64,13 @@ Genera_movimientos_masticados_del_nivel
 	call Situa_en_Caja_Master							; Situa HL en el 1er .db de la "Caja Master" que corresponde a este (Tipo) de entidad.
 
 ;	Caja Master inicializada ???
-;	HL en 1er .db de la Caja Master.
+;	HL en el 1er .db de la Caja Master correspondiente, (definida por (Tipo)).
 
 	ld a,(hl)
 	and a
 	jr nz,Movimientos_masticados_construidos 
 
-	ex af,af 														; (Tipo) de la entidad en A.
-
-	call Situa_en_Tabla_Random 						; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
-	call Aplica_rnd_al_baile
-
-	pop bc
-	pop hl
-
-	push hl
-	push bc
-
-;	Construimos movimientos masticados de este (Tipo) de entidad.
-
-	ld a,c																				; (Tipo) de la entidad en A.
+	ex af,af 																			; (Tipo) de la entidad en A.
 
 	call Definicion_segun_tipo												; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW					; Vuelca los datos de la definición de entidad en DRAW.
@@ -95,9 +82,31 @@ Genera_movimientos_masticados_del_nivel
 	call Extrae_address
 	ld (Puntero_de_almacen_de_mov_masticados),hl 			; Fija el (Puntero_de_almacen_de_mov_masticados) al comienzo del 1er almacén.
 
+
+;	Construimos movimientos masticados de este (Tipo) de entidad.
+
+	ld b,7   											 						
+	ld hl,Numeros_aleatorios_baile 							
+	call Derivando_RND 										 	; Generamos 7 nº RND para construir los mov. masticados.
+
+; $88f6 (Donde se almacenan los nº aleatorios). 
+
+	ld a,(Tipo)
+
+	call Situa_en_Tabla_Random 						; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+;	$8c45
+
+	call Aplica_rnd_al_baile
+
+	pop bc
+	pop hl
+
+	push hl
+	push bc
+
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
-	ld hl,Numeros_aleatorios									
+	ld hl,Numeros_aleatorios_baile+3								
 	ld a,(hl)
 	and $1f																			; Define el nº de columna por el que va a aparecer la entidad.
 
@@ -122,12 +131,9 @@ Genera_movimientos_masticados_del_nivel
 
 Movimientos_masticados_construidos 
 
-; Hemos completado un ^ Almacén_de_mov_masticados ^.
-; Vamos a asignar una dirección de comienzo al almacén siguiente.
+; Generamos un nuevo set de nº aleatorios para poder generar un NUEVO baile distinto.
 
-;	jr $
-
-;	call Situa_en_nuevo_almacen
+	jr $
 
 	pop bc																				; Pop (Numero_de_entidades)/(Tipo).
 	pop hl																				; Pop (Datos_de_nivel).
@@ -165,6 +171,14 @@ Construye_movimientos_masticados_entidad
 	ld a,(Ctrl_3)											; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
 	bit 1,a 												; _ que corresponde a esta entidad.
 	jr z,1B
+
+;	jr $
+
+
+; Hemos completado un ^ Almacén_de_mov_masticados ^.
+; Vamos a asignar una dirección de comienzo al almacén siguiente.
+
+	call Situa_en_nuevo_almacen
 
 ;	Hemos completado el almacén de movimientos masticados de la entidad. ($EBB4).
 ;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
@@ -342,7 +356,7 @@ Load_limits
 ;	B actúa como contador, (7 nº aleatorios).	
 
 RND_ini	exx
-	ld hl,Numeros_aleatorios+6
+	ld hl,Numeros_aleatorios_baile+6
 	ld b,7
 	exx
 	ret
