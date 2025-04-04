@@ -622,9 +622,27 @@ PreviousScan ld a,h
     ld h,a
     ret
 
+; -----------------------------------------------------------------
+;
+;	4/4/25
+;
+;	Limpia un espacio de la memoria.
+;
+;	INPUTS:  HL apunta al 1er byte del espacio de memoria que queremos limpiar.
+;				   BC indica el nº de bytes que vamos a poner a "0".
+;
+;	MODIFY: HL,DE,BC
 
-	
+Clean_mem	xor a
+	ld (hl),a
 
+	push hl
+	pop de
+	inc e
+
+	ldir
+
+	ret
 
 
 

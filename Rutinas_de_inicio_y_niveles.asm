@@ -73,6 +73,7 @@ Genera_movimientos_masticados_del_nivel
 	ex af,af 																			; (Tipo) de la entidad en A.
 
 	call Definicion_segun_tipo												; HL apunta al 1er .db que define la entidad.
+
 	call Definicion_de_entidad_a_bandeja_DRAW					; Vuelca los datos de la definición de entidad en DRAW.
 
 ; 	Ya tenemos la definición de entidad en la bandeja_DRAW.
@@ -82,18 +83,19 @@ Genera_movimientos_masticados_del_nivel
 	call Extrae_address
 	ld (Puntero_de_almacen_de_mov_masticados),hl 			; Fija el (Puntero_de_almacen_de_mov_masticados) al comienzo del 1er almacén.
 
-
-;	Construimos movimientos masticados de este (Tipo) de entidad.
+;	Construimos los movimientos masticados de este (Tipo) de entidad.
+; 	Para ello vamos a generar otro SET  con 7 nº aleatorios. Necesitamos generar nuevos nº cada vez que fabricamos_
+;	_una danza. Así conseguimos que el baile generado sea distinto del anterior.
 
 	ld b,7   											 						
 	ld hl,Numeros_aleatorios_baile 							
-	call Derivando_RND 										 	; Generamos 7 nº RND para construir los mov. masticados.
+	call Derivando_RND 										 				; Generamos 7 nº RND para construir los mov. masticados.
 
 ; $88f6 (Donde se almacenan los nº aleatorios). 
 
 	ld a,(Tipo)
 
-	call Situa_en_Tabla_Random 						; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+	call Situa_en_Tabla_Random 											; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
 ;	$8c45
 
 	call Aplica_rnd_al_baile
@@ -131,9 +133,21 @@ Genera_movimientos_masticados_del_nivel
 
 Movimientos_masticados_construidos 
 
-; Generamos un nuevo set de nº aleatorios para poder generar un NUEVO baile distinto.
+;	Preparamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
+;	_de otro (Tipo) de entidad.
+;	Limpiamos !!!
 
-	jr $
+	ld hl,Tipo
+	ld bc,36
+
+	call Clean_mem
+
+	ld hl,Puntero_tabla_Random
+	ld bc,17
+
+	call Clean_mem
+
+; Generamos un nuevo set de nº aleatorios para poder generar un NUEVO baile distinto.
 
 	pop bc																				; Pop (Numero_de_entidades)/(Tipo).
 	pop hl																				; Pop (Datos_de_nivel).
@@ -153,12 +167,12 @@ Movimientos_masticados_construidos
 
 Construye_movimientos_masticados_entidad	
 
-	ld hl,(Puntero_de_almacen_de_mov_masticados)			; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
+	ld hl,(Puntero_de_almacen_de_mov_masticados)						; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
 	push hl
-	call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-;															; _ el (Contador_de_mov_masticados).    
-	call Inicia_Puntero_objeto								; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
-;															; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
+	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+;																										; _ el (Contador_de_mov_masticados).    
+	call Inicia_Puntero_objeto															; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+;																										; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
 	call Recompone_posicion_inicio
 
 1 call Draw
@@ -168,12 +182,9 @@ Construye_movimientos_masticados_entidad
 
 	call Movimiento
 
-	ld a,(Ctrl_3)											; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
-	bit 1,a 												; _ que corresponde a esta entidad.
+	ld a,(Ctrl_3)																					; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
+	bit 1,a 																							; _ que corresponde a esta entidad.
 	jr z,1B
-
-;	jr $
-
 
 ; Hemos completado un ^ Almacén_de_mov_masticados ^.
 ; Vamos a asignar una dirección de comienzo al almacén siguiente.
