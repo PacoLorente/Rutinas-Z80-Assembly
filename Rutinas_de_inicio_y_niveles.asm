@@ -79,6 +79,9 @@ Genera_movimientos_masticados_del_nivel
 ; 	Ya tenemos la definición de entidad en la bandeja_DRAW.
 ;	Inicializamos (Puntero_de_almacen_de_mov_masticados) para poder generar todos los mov. masticados.
 
+; $ddc0 ..... Almacén_1. (3.38Kb).
+; $eafa - $fbe1 ..... Almacén_2.(4.32Kb).
+
 	ld hl,(Puntero_indice_de_almacenes)
 	call Extrae_address
 	ld (Puntero_de_almacen_de_mov_masticados),hl 			; Fija el (Puntero_de_almacen_de_mov_masticados) al comienzo del 1er almacén.
@@ -96,15 +99,15 @@ Genera_movimientos_masticados_del_nivel
 	ld a,(Tipo)
 
 	call Situa_en_Tabla_Random 											; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
-;	$8c45
+;	$8c52 
 
 	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
 
-	push hl
-	push bc
+	push hl															; Push (Datos_de_nivel).
+	push bc														; Push (Numero_de_entidades)/(Tipo).
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
@@ -135,7 +138,12 @@ Movimientos_masticados_construidos
 
 ;	Preparamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
 ;	_de otro (Tipo) de entidad.
-;	Limpiamos !!!
+;
+;	Limpiamos bandeja y variables.
+
+	xor a
+	ld (Ctrl_3),a 																		; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
+;																							; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados. 
 
 	ld hl,Tipo
 	ld bc,36
@@ -147,12 +155,16 @@ Movimientos_masticados_construidos
 
 	call Clean_mem
 
+
+
 ; Generamos un nuevo set de nº aleatorios para poder generar un NUEVO baile distinto.
 
 	pop bc																				; Pop (Numero_de_entidades)/(Tipo).
 	pop hl																				; Pop (Datos_de_nivel).
 
 	inc l																					; Datos_de_nivel +1 en HL.
+
+	ld (Datos_de_nivel),hl 														; Actualizamos (Datos_de_nivel).
 
 	ld c,(hl)																			; (Tipo) de la siguiente entidad en C.
 	djnz Genera_movimientos_masticados_del_nivel 			; dec (Numero_de_entidades).
@@ -199,6 +211,12 @@ Construye_movimientos_masticados_entidad
 	ld (Puntero_de_almacen_de_mov_masticados),hl
 
 ; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados). 
+
+	ld hl,Datos_de_nivel
+	call Extrae_address
+	ld a,(hl)
+
+	jr $
 
 	call Situa_en_contador_general_de_mov_masticados
 
@@ -493,7 +511,6 @@ Situa_en_Tabla_Random
 
 Situa_Puntero_indice_mov 
 
-	ld a,(Tipo)     	 						; Cargamos A con el (Tipo) de la entidad del Nivel.       
     call Calcula_salto_en_BC
     ld hl,Indice_de_mov_segun_tipo_de_entidad
     and a

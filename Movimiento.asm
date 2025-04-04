@@ -382,15 +382,20 @@ Inicializa_Puntero_indice_mov_2
 
 ; ----------------------------------------------------------------------
 ;
-;   24/11/24
+;   4/4/25
 ;
 ;   Sitúa HL en el .defw (Contador_general_de_mov_masticados) de este (Tipo) de entidad.
+;
+;   INPUT: A contiene el Tipo de entidad, (1), (2), ... , etc. (Definiciones).
 
-Situa_en_contador_general_de_mov_masticados ld a,(ix+0)             ; ld a,(Tipo)
+
+Situa_en_contador_general_de_mov_masticados
+
     call Calcula_salto_en_BC
     ld hl,Contador_general_de_mov_masticados_Entidad_1
     and a
     adc hl,bc
+
     ret
 
 ; ----------------------------------------------------------------------
