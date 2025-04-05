@@ -79,9 +79,6 @@ Genera_movimientos_masticados_del_nivel
 ; 	Ya tenemos la definición de entidad en la bandeja_DRAW.
 ;	Inicializamos (Puntero_de_almacen_de_mov_masticados) para poder generar todos los mov. masticados.
 
-; $ddc0 ..... Almacén_1. (3.38Kb).
-; $eafa - $fbe1 ..... Almacén_2.(4.32Kb).
-
 	ld hl,(Puntero_indice_de_almacenes)
 	call Extrae_address
 	ld (Puntero_de_almacen_de_mov_masticados),hl 			; Fija el (Puntero_de_almacen_de_mov_masticados) al comienzo del 1er almacén.
@@ -155,8 +152,6 @@ Movimientos_masticados_construidos
 
 	call Clean_mem
 
-
-
 ; Generamos un nuevo set de nº aleatorios para poder generar un NUEVO baile distinto.
 
 	pop bc																				; Pop (Numero_de_entidades)/(Tipo).
@@ -168,6 +163,14 @@ Movimientos_masticados_construidos
 
 	ld c,(hl)																			; (Tipo) de la siguiente entidad en C.
 	djnz Genera_movimientos_masticados_del_nivel 			; dec (Numero_de_entidades).
+
+; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades, 
+; _ inicializamos el puntero (Datos_de_nivel), situándolo en la 1ª entidad.
+
+	ld hl,(Puntero_indice_NIVELES)
+	call Extrae_address
+	inc l
+	ld (Datos_de_nivel),hl
 
 	ret
 
@@ -201,12 +204,12 @@ Construye_movimientos_masticados_entidad
 ; Hemos completado un ^ Almacén_de_mov_masticados ^.
 ; Vamos a asignar una dirección de comienzo al almacén siguiente.
 
-	call Situa_en_nuevo_almacen
+	call Situa_en_nuevo_almacen 													; DE contiene (Puntero_de_almacen_de_mov_masticados).
 
-;	Hemos completado el almacén de movimientos masticados de la entidad. ($EBB4).
+;	Hemos completado el almacén de movimientos masticados de la entidad. 
 ;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
 
-	pop hl 													; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
+	pop hl 																							; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
 
 	ld (Puntero_de_almacen_de_mov_masticados),hl
 
@@ -215,8 +218,6 @@ Construye_movimientos_masticados_entidad
 	ld hl,Datos_de_nivel
 	call Extrae_address
 	ld a,(hl)
-
-	jr $
 
 	call Situa_en_contador_general_de_mov_masticados
 
@@ -243,17 +244,17 @@ Guarda_movimiento_masticado
 	ld (Stack),sp
 	ld sp,(Puntero_de_almacen_de_mov_masticados)			; Guardamos el movimiento masticado en el almacén.
 
-    push ix 												; Pushea el Puntero_de_impresión, (1er scanline).
-    push iy 												; Pushea Puntero_objeto.
+    push ix 																			; Pushea el Puntero_de_impresión, (1er scanline).
+    push iy 																			; Pushea Puntero_objeto.
  
     ld sp,(Stack)
 
-   	ld hl,(Contador_de_mov_masticados)						; Incrementa en una unidad el (Contador_de_mov_masticados).
+   	ld hl,(Contador_de_mov_masticados)								; Incrementa en una unidad el (Contador_de_mov_masticados).
 	inc hl
 	ld (Contador_de_mov_masticados),hl
 
     call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-;															; _ el (Contador_de_mov_masticados).    
+;																								; _ el (Contador_de_mov_masticados).    
     ret
 
 ; -----------------------------------------------------------------------------
@@ -314,7 +315,7 @@ Aplica_rnd_al_baile
 	xor a
 
 2 ex af,af 										; A' contiene el .db que acompaña al byte de control, ($00).
-;												; Inicializamos a $00, (no existe).
+;														; Inicializamos a $00, (no existe).
 
 ; 	digit ctrl ??
 ;   Yes if "$00".
@@ -344,7 +345,7 @@ Load_limits
 	inc l
 
 	call Extrae_address_y_avanza
-	ret z  										; Z Indica: FIN de la Tabla_Random.
+	ret z  												; Z Indica: FIN de la Tabla_Random.
 
 ;	HL apunta a la dirección donde hemos de alojar el nº rnd.
 ;	DE está situado en la siguiente línea de la Tabla.
@@ -439,7 +440,7 @@ Extrae_address_y_avanza call Extrae_address
 				
 	inc de
 	inc de 						; DE será el puntero que se irá desplazando por las distintas líneas de la Tabla_Random.
-	;							; Lo situamos en la siguiente línea de la tabla.
+	;								; Lo situamos en la siguiente línea de la tabla.
 
 	ret
 
@@ -551,17 +552,20 @@ Prepara_Cajas_de_Entidades
 
 ; Preparamos los punteros de las cajas de entidades:
 
-	call Inicia_punteros_de_cajas								; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
-;																; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
+	call Inicia_punteros_de_cajas											; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
+;																							; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
 	call Inicializa_Numero_parcial_de_entidades					; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
-	ld hl,(Datos_de_nivel)										; Tipo de la 1ª entidad del Nivel.
+
+	jr $
+
+	ld hl,(Datos_de_nivel)														; Tipo de la 1ª entidad del Nivel.
 
 ; En este punto:
 ;
 ; HL está situado en el 1er .db del Nivel que indica el `tipo´ de entidad a volcar en la 1ª caja de entidades.
 ; B contiene (Numero_parcial_de_entidades).
 
-1 push bc 														; Push (Numero_parcial_de_entidades).
+1 push bc 																			; Push (Numero_parcial_de_entidades).
 
 	ld a,(hl)
 
