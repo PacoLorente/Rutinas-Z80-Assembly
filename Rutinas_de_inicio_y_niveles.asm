@@ -556,8 +556,6 @@ Prepara_Cajas_de_Entidades
 ;																							; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
 	call Inicializa_Numero_parcial_de_entidades					; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
 
-	jr $
-
 	ld hl,(Datos_de_nivel)														; Tipo de la 1ª entidad del Nivel.
 
 ; En este punto:
@@ -569,17 +567,17 @@ Prepara_Cajas_de_Entidades
 
 	ld a,(hl)
 
-	call Situa_en_Caja_Master									; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
+	call Situa_en_Caja_Master												; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
 
-	ld de,(Puntero_store_caja)									; DE apunta al 1er .db de la "Caja de entidades" en curso. 								
+	ld de,(Puntero_store_caja)												; DE apunta al 1er .db de la "Caja de entidades" en curso. 								
 
 	push de
-	pop ix 														;! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+	pop ix 																				;! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 
 	ld bc,13
-	ldir														; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
+	ldir																					; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
 
-;																; DE apunta ahora al 1er .db de la siguiente caja de entidades.
+;																							; DE apunta ahora al 1er .db de la siguiente caja de entidades.
 
 ; En este punto debemos generar coordenadas y puntero de impresión.:
 ;
@@ -588,15 +586,23 @@ Prepara_Cajas_de_Entidades
 ; ------------------------------------------------------ IX
 ; ------------------------------------------------------ IX
 
-	push ix														; Push 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+	push ix															; Push 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 
 	call Obtenemos_puntero_de_impresion
+	call Decodifica_Puntero_de_impresion
 
-	ld l,(ix+5)
-	ld h,(ix+6)													; (Puntero_de_impresion) en HL.
+; HL ..... (Puntero_de_almacen_de_mov_masticados).
+; DE ..... (Puntero_objeto).
+; BC ..... (Puntero_de_impresion) decodificado.
+
+	ld (ix+5),c
+	ld (ix+6),b 													; (Puntero_de_impresion) en Caja_de_entidades.
+
+	ld l,c
+	ld h,b															; (Puntero_de_impresion) en HL.
 
 	push de														; Push (Puntero_objeto). 
-	push hl														; Push (Puntero_de_impresion).
+	push hl															; Push (Puntero_de_impresion).
 
 	call Genera_coordenadas
 
@@ -605,7 +611,7 @@ Prepara_Cajas_de_Entidades
 	ld (ix+1),c
 	ld (ix+2),b													; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
 
- 	call Entidad_a_Tabla_de_pintado								; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
+	call Entidad_a_Tabla_de_pintado								; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
 
  	pop ix														; Pop (Puntero_de_impresion) en IX.
 	pop de														; Pop (Puntero_objeto) en DE.

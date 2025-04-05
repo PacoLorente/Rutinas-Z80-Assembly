@@ -21,7 +21,7 @@
 FRAMES equ $5c78																						; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
-Sprite_vacio equ $f880																				; 48 Bytes de "0".
+Sprite_vacio equ $8336																				; 48 Bytes de "0".
 
 Almacen_de_movimientos_masticados_Amadeus equ $dbdc						; ($dbdc - $ddbf), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
