@@ -23,7 +23,7 @@ FRAMES_3 equ $5c7a
 
 Sprite_vacio equ $8336																				; 48 Bytes de "0".
 
-Almacen_de_movimientos_masticados_Amadeus equ $dbdc						; ($dbdc - $ddbf), 483 bytes. $1e3. Movimientos masticados de Amadeus.
+Almacen_de_movimientos_masticados_Amadeus equ $d000						; ($dbdc - $d1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
 ; Scanlines_album. 
 
@@ -968,7 +968,7 @@ Reinicia_Amadeus
 
 	ld hl,$50cf
 	ld (p.imp.amadeus),hl						; Inicializa el puntero de impresión.
-	ld hl,$dccc
+	ld hl,$d0f0
 	ld (Pamm_Amadeus),hl						; Inicializa el puntero de almacén de movimientos masticados.
 	ld hl,$003d
 	ld (Comm_Amadeus),hl						; Inicializa el contador de movimientos masticados.

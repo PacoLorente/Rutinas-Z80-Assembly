@@ -131,6 +131,13 @@ Genera_movimientos_masticados_del_nivel
 
 	call Parametros_de_bandeja_DRAW_a_caja	 				; Caja de entidades Master completa.
 
+;	DE está situado en el .db (Clase_de_la entidad) de la Caja_Master que hemos completado.
+;	Guardamos (Clase_de_la_entidad) en la Caja_Master.
+
+	ld hl,(Datos_de_nivel)
+	ld a,(hl)
+	ld (de),a
+
 Movimientos_masticados_construidos 
 
 ;	Preparamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
@@ -574,7 +581,7 @@ Prepara_Cajas_de_Entidades
 	push de
 	pop ix 																				;! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 
-	ld bc,13
+	ld bc,14
 	ldir																					; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
 
 ;																							; DE apunta ahora al 1er .db de la siguiente caja de entidades.
@@ -776,18 +783,19 @@ Decrementa_Contador_de_mov_masticados
 
 ; ---------------------------------------------------------------------
 ;
-;	24/11/24
+;	5/4/25
 
 Reinicia_entidad_maliciosa 
 
 ;	En 1er lugar actualizamos el (Contador_de_mov_masticados).
+; 	IX está situado en el 1er .db de la caja de la entidad a reiniciar.
 
-	call Situa_en_contador_general_de_mov_masticados					; [[Movimiento]]
+	ld a,(ix+13)																				; (Clase_de_entidad) en A.
+
+	call Situa_en_contador_general_de_mov_masticados					
 	call Transfiere_datos_de_contadores
 
 ; 	En 2º lugar hay que inicializar el (Puntero_de_almacen_de_mov_masticados).
-
-	ld a,(ix+0)															; ld a,(Tipo)
 
 	call Situa_en_Caja_Master
 
@@ -795,8 +803,8 @@ Reinicia_entidad_maliciosa
 
 	ld a,l
 	add 7
-	ld l,a 																; Situamos en el .defw (Almacen_de_movimientos_masticados) de la Caja_Master correspondiente_ 
-; 																			; _a este (Tipo) de entidad.
+	ld l,a 																						; Situamos en el .defw (Almacen_de_movimientos_masticados) de la Caja_Master correspondiente_ 
+; 																									; _a este (Tipo) de entidad.
 	call Extrae_address
 
 	ld (ix+7),l
@@ -825,19 +833,19 @@ Reinicia_entidad_maliciosa
 ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
 ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".   
 
-	sla (ix+3)									; sla x2 (Contador_de_vueltas). Inicialmente es "1".
+	sla (ix+3)																						; sla x2 (Contador_de_vueltas). Inicialmente es "1".
 
-	ld a,(ix+3)   								; ld a,(Contador_de_vueltas)	
+	ld a,(ix+3)   																					; ld a,(Contador_de_vueltas)	
 	sra a
 	sra a
 
-	ld (ix+11),a 								; ld (Velocidad),a
+	ld (ix+11),a 																					; ld (Velocidad),a
 
 ; Attr. 
 
 ; A contiene (Velocidad).
 
-	call nz, Define_attr 						; No modificamos attr. si no hay cambio de velocidad.
+	call nz, Define_attr 																		; No modificamos attr. si no hay cambio de velocidad.
 
 ; Límitador. 
 

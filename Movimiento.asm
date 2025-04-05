@@ -406,9 +406,12 @@ Situa_en_contador_general_de_mov_masticados
 ;   
 ;   INPUT: HL apunta al (.defw) (Contador_general_de_mov_masticados) de este (Tipo) de entidad).
 
-Transfiere_datos_de_contadores ld c,(hl)
+Transfiere_datos_de_contadores 
+
+    ld c,(hl)
     inc hl
     ld b,(hl)                                                   ; BC contiene los mov_masticados totales de este (Tipo) de entidad.
     ld (ix+9),c
     ld (ix+10),b                                                ; ld (Contador_de_mov_masticados),bc
+
     ret

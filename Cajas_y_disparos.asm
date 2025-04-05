@@ -22,7 +22,7 @@ Tabla_de_borrado ds 24
 ;	db 0, defw 0, db 0
 ;	.....
 
-Almacen_de_movimientos_masticados_1 defw $ddc0									
+Almacen_de_movimientos_masticados_1 defw $d1e4									
 Almacen_de_movimientos_masticados_2 defw 0
 Almacen_de_movimientos_masticados_3 defw 0
 
@@ -98,6 +98,7 @@ Caja_master_1 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 											; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
 	db 0 											; Atributos.
+	db 0 											; (Clase_de_la entidad).
 
 ; ---------- ---------- ---------- ---------- ----------	
 
@@ -109,6 +110,7 @@ Caja_master_2 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 											; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
 	db 0 											; Atributos.
+	db 0 											; (Clase_de_la entidad).
 
 ; ---------- ---------- ---------- ---------- ----------	
 
@@ -120,6 +122,7 @@ Caja_master_3 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 											; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
 	db 0 											; Atributos.
+	db 0 											; (Clase_de_la entidad).
 
 ; ---------- ---------- ---------- ---------- ----------
 
@@ -131,6 +134,7 @@ Caja_master_4 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 											; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
 	db 0 											; Atributos.
+	db 0 											; (Clase_de_la entidad).
 
 ; ---------- ---------- ---------- ---------- ----------
 
@@ -142,6 +146,7 @@ Caja_master_5 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 											; (Contador_de_mov_masticados).
 	db 0												; (Velocidad). 					
 	db 0 											; Atributos.
+	db 0 											; (Clase_de_la entidad).
 
 ; -------------------------------------------------------------------------------------
 ;
@@ -195,6 +200,7 @@ Attr_Amadeus db 0 										; (Attr).
 ;
 ;	Para darle más velocidad al motor incrementamos sólo el byte bajo cuando trabajamos con las cajas de entidades. Este es el motivo del ORG antes de la última caja.
 
+	org $8a00	
 
 Caja_1 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	db 0															; (Contador_de_vueltas).
@@ -204,10 +210,9 @@ Caja_1 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 														; (Contador_de_mov_masticados).
 	db 0															; (Velocidad). 					
 	db 0 														; (Attr).
+	db 0 														; (Clase_de_la entidad).
 
 ; ---------- ---------- ---------- ---------- ----------	
-
-	org $8a00	
 
 Caja_2 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	db 0 														; (Contador_de_vueltas).
@@ -217,6 +222,7 @@ Caja_2 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 														; (Contador_de_mov_masticados).
 	db 0															; (Velocidad). 					
 	db 0 														; (Attr).
+	db 0 														; (Clase_de_la entidad).
 
 ; ---------- ---------- ---------- ---------- ----------	
 
@@ -228,6 +234,7 @@ Caja_3 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 														; (Contador_de_mov_masticados).
 	db 0															; (Velocidad). 					
 	db 0 														; (Attr).
+	db 0															; (Clase_de_la entidad).
 
 ; ---------- ---------- ---------- ---------- ----------
 
@@ -239,6 +246,7 @@ Caja_4 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 														; (Contador_de_mov_masticados).
 	db 0															; (Velocidad). 					
 	db 0 														; (Attr).
+	db 0															; (Clase_de_la entidad).
 
 ; ---------- ---------- ---------- ---------- ----------
 
@@ -250,6 +258,9 @@ Caja_5 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	defw 0 														; (Contador_de_mov_masticados).
 	db 0															; (Velocidad). 					
 	db 0 														; (Attr).
+	db 0															; (Clase_de_la entidad).
+
+; ---------- ---------- ---------- ---------- ----------
 
 ;Caja_6 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y)..
 ;	db 0 														; (Contador_de_vueltas).
