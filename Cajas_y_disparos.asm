@@ -284,25 +284,20 @@ Caja_5 db 0,0,0											; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 
 ; -------------------------------------------------------------------------------------
 ;
-;	06/12/24
+;	06/4/25
 ;
-;	TIPOS de "Entidades maliciosas" que quieren conquistar la Tierra.	
+;	CLASES de "Entidades maliciosas" que quieren conquistar la Tierra.	
 ;
-;	Notas de funcionamiento: (Cuad_objeto) siempre será "1" independientemente de su (Posicion_inicio).
-;		De no ser así, la rutina [Recompone_posicion_inicio] generará problemas a la hora de hacer que_
-;		_ la entidad aparezca `al píxel', por la parte derecha de la pantalla. Esto se debe a como están_
-;		_ construidas las rutinas [Mov_right] y [Mov_left].
+;	(Definiciones de entidades).
 
 Indice_de_definiciones_de_entidades
 
-	defw Entidad_1
-	defw Entidad_2
+	defw Entidad_Clase_1
+	defw Entidad_Clase_2
 
-;	DEFINICIONES DE ENTIDADES. (20 Bytes).
+; Entidades (Tipo) BADSAT. (Satélites poseidos). 
 
-;	BADSAT, (Satélite malvado). ------------------------------------------------------------------------------------------------------------------------------------	
-
-Entidad_1 db $81,2,2		                     					; (Tipo) / (Filas) / (Columns).
+Entidad_Clase_1 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns).
 	db 1																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
 	defw Indice_Badsat_der										; (Indice_Sprite_der).
 	defw Indice_Badsat_izq										; (Indice_Sprite_izq).
@@ -310,14 +305,14 @@ Entidad_1 db $81,2,2		                     					; (Tipo) / (Filas) / (Columns).
 ; La posición de inicio de la entidad es aleatoria.
 ; BadSat aparece por la parte alta de la pantalla o por la parte izquierda.
 
-Pos_inicio_entidad1	defw $4000	                    		; (Posicion_inicio).
+Pos_inicio_entidad_Clase_1	defw $4000	                ; (Posicion_inicio).
 	db 0																		; (Cuad_objeto).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 													; (Attr).
 
-;	BADSAT, (Satélite malvado). ------------------------------------------------------------------------------------------------------------------------------------	
+; ----- . ----- . ----- . ----- . -----
 
-Entidad_2 db $81,2,2		                     					; (Tipo) / (Filas) / (Columns).
+Entidad_Clase_2 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns).
 	db 2																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
 	defw Indice_Badsat_der										; (Indice_Sprite_der).
 	defw Indice_Badsat_izq										; (Indice_Sprite_izq).
@@ -325,10 +320,11 @@ Entidad_2 db $81,2,2		                     					; (Tipo) / (Filas) / (Columns).
 ; La posición de inicio de la entidad es aleatoria.
 ; BadSat aparece por la parte alta de la pantalla o por la parte izquierda.
 
-Pos_inicio_entidad2	defw $4000	                    		; (Posicion_inicio).
+Pos_inicio_entidad_Clase_2	defw $4000	                ; (Posicion_inicio).
 	db 0																		; (Cuad_objeto).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
 	db %01000110 													; (Attr).
+
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;

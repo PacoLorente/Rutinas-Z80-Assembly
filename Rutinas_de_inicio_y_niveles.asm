@@ -44,7 +44,7 @@ Inicia_albumes_de_disparos
 ;
 ;   17/4/25
 ;
-;	Prepara las CAJAS MASTER y genera los movimientos masticados de todas las entidades que aparecerán en el nivel.
+;	Prepara las CAJAS MASTER y genera los movimientos masticados de todos los (Tipo)s de entidades de los que consta el nivel.
 ;
 ;	INPUTS:		B contiene (Numero_de_entidades).
 ;						C contiene el (Tipo) de la 1ª entidad del nivel.
@@ -550,7 +550,7 @@ Situa_Puntero_indice_mov
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   13/11/24
+;   6/4/25
 ;
 ;	Esta rutina se encarga de prepara todas las cajas de entidades. Cuando comienza un nivel han de estar todas completas.
 
@@ -618,14 +618,14 @@ Prepara_Cajas_de_Entidades
 	ld (ix+1),c
 	ld (ix+2),b													; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
 
-	call Entidad_a_Tabla_de_pintado								; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
+	call Entidad_a_Tabla_de_pintado					; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
 
- 	pop ix														; Pop (Puntero_de_impresion) en IX.
-	pop de														; Pop (Puntero_objeto) en DE.
+ 	pop ix															; Pop (Puntero_de_impresion) en IX.
+	pop de															; Pop (Puntero_objeto) en DE.
 
 	call Genera_datos_de_impresion
 
-	pop ix														; Pop 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+	pop ix															; Pop 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 
 ; Actualizamos (Contador_de_mov_masticados) tras la foto.	
 
@@ -635,10 +635,11 @@ Prepara_Cajas_de_Entidades
 
 ; Siguiente entidad del Nivel.
 
-	ld hl,(Datos_de_nivel)										; Nos situamos en el .db que define el (Tipo) de la siguiente_
-	inc hl 														; _ entidad del Nivel.
+	ld hl,(Datos_de_nivel)									; Nos situamos en el .db que define el (Tipo) de la siguiente_
+	inc l 																; _ entidad del Nivel.
+	ld (Datos_de_nivel),hl
 
-	pop bc 														; Recuperamos (Numero_parcial_de_entidades), (nº de cajas que vamos a rellenar)
+	pop bc 															; Recuperamos (Numero_parcial_de_entidades), (nº de cajas que vamos a rellenar)
 
 	djnz 1B
 
