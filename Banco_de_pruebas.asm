@@ -626,8 +626,8 @@ Main
 ; _ (Clock_next_entity) para la siguiente entidad.
 
 ; --- Numero_de_entidades db 0								; Nº total de entidades maliciosas que contiene el nivel.
-; --- Numero_parcial_de_entidades db 7						; Nº de cajas que contiene un bloque de entidades. (7 Cajas).
-; --- Entidades_en_curso db 0								; Entidades en pantalla.
+; --- Numero_parcial_de_entidades db 5					; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
+; --- Entidades_en_curso db 0									; Entidades en pantalla.
 
 	ld hl,Numero_parcial_de_entidades
 	ld b,(hl)
@@ -636,10 +636,10 @@ Main
 	dec b
 
 	di
-	jr z,$													;! Nivel superado !!!!!
+	jr z,$													;					! Nivel superado !!!!!
 	ei
 
-	ld a,(Entidades_en_curso)								; Entidades que hay en pantalla.
+	ld a,(Entidades_en_curso)									; Entidades que hay en pantalla.
 	cp b
 	jr z,1F
 	jr nc,1F
@@ -650,36 +650,36 @@ Main
 	ld (Entidades_en_curso),a
 
 	ld hl,Ctrl_4
-	set 0,(hl)												; Permiso para activar a una entidad "dormida".
+	set 0,(hl)																; Permiso para activar a una entidad "dormida".
 
 ; - Define el tiempo que ha de transcurrir para que aparezca la siguiente entidad. ----------------------------
 
-;	call Extrae_numero_aleatorio_y_avanza 					; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
+;	call Extrae_numero_aleatorio_y_avanza 			; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
 ;	call Define_Clock_next_entity
 
 1 ld a,(Entidades_en_curso)
 	and a
 	jp z,Gestion_de_Amadeus									; Si no hay entidades en curso saltamos a [Avanza_puntero_de_Scanlines_album_de_entidades].
 
-	ld b,a													; No hay entidades que gestionar.
+	ld b,a																	; No hay entidades que gestionar.
 
 ; ( Código que ejecutamos con cada entidad: ).
 
 ; --------------------------------------- GESTIÓN DE ENTIDADES. !!!!!!!!!!
 
-	ld hl,Tabla_de_pintado 								; Inicializa `Tabla_de_pintado´.
+	ld hl,Tabla_de_pintado 										; Inicializa `Tabla_de_pintado´.
 	ld (India_SP),hl
 
-	ld hl,Ctrl_3 										; Indica que se produce movimiento.
+	ld hl,Ctrl_3 															; Indica que se produce movimiento.
 	set 2,(hl)
 
-	call Change 										; Intercambio `Album_de_pintado - Album_de_borrado´.
-;														; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
-;	 													; _viceversa.
+	call Change 															; Intercambio `Album_de_pintado - Album_de_borrado´.
+;																				; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
+;	 																			; _viceversa.
 
 Bucle_de_entidades 
 
-	push bc 											; Nº de entidades en curso.
+	push bc 																; Nº de entidades en curso.
 
 ;	En primer lugar vamos a crear un puntero para ir almacenando las columnas de las distintas unidades.
 ;	Utilizamos (Puntero_indice_mov) como puntero e Indice_Sprite_der como primer .db de almacenamiento.
@@ -1568,8 +1568,8 @@ Obtenemos_puntero_de_impresion
 	ld h,a
 	ld l,h															; ld hl,"0"
 
-	pop de															; (Puntero_objeto) en DE.
-	pop bc															; (Puntero_de_impresion) codificado en BC.
+	pop de														; (Puntero_objeto) en DE.
+	pop bc														; (Puntero_de_impresion) codificado en BC.
 
 	add hl,sp
 
@@ -2197,7 +2197,7 @@ Genera_explosion
 
 	ld hl,Clock_explosion								
 	dec (hl)
-	jr z,Siguiente_frame_explosion									; Gestionamos la siguiente entidad.
+	jr z,Siguiente_frame_explosion							; Gestionamos la siguiente entidad.
 
 Borra_entidad_colisionada
 
@@ -2211,11 +2211,11 @@ Borra_entidad_colisionada
 1 call Cargamos_registros_con_explosion
 	call calcula_CColumnass_Explosion_entidad
 
-	push ix 														; (Puntero_de_impresion).
-	push de 														; (Puntero_objeto).
+	push ix 																; (Puntero_de_impresion).
+	push de 																; (Puntero_objeto).
 
 	ld ix,(Puntero_store_caja)
-	call Entidad_a_Tabla_de_pintado									; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
+	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
 
 	pop de
 	pop ix
@@ -2225,25 +2225,25 @@ Borra_entidad_colisionada
 	ld ix,(Puntero_store_caja)
 
 	xor a
-	inc a 															; Necesario NZ a la salida de la subrutina.
+	inc a 																	; Necesario NZ a la salida de la subrutina.
 
 	ret
 
 Siguiente_frame_explosion
 
-	ld a,%01000010  												; Rojo.
+	ld a,%01000010  													; Rojo.
 	ld (ix+12),a
 
 	ld a,(Filas)
 	xor 1
 	ld (Filas),a
 
-	ld (hl),4 														; Inicializamos (Clock_explosion), (velocidad de la explosión).
+	ld (hl),4 																; Inicializamos (Clock_explosion), (velocidad de la explosión).
 
 ; Avanza Frame de explosión.
 
 	ld l,(ix+7)
-	ld h,(ix+8)														; ld hl,(Puntero_de_almacen_de_mov_masticados).
+	ld h,(ix+8)															; ld hl,(Puntero_de_almacen_de_mov_masticados).
 
 	ld bc,Indice_Explosion_entidades+4
 
@@ -2255,9 +2255,9 @@ Siguiente_frame_explosion
 ; Fín de la entidad !!!!!!!!!!!!!
 ; Gestionamos entidades !!!!!!!!!!!!!!!!!!!!!!!!!!
 
-; Numero_de_entidades db 0								; Nº total de entidades maliciosas que contiene el nivel.
+; Numero_de_entidades db 0									; Nº total de entidades maliciosas que contiene el nivel.
 ; Numero_parcial_de_entidades db 0						; Nº de cajas que contiene un bloque de entidades. (6 Cajas).
-; Entidades_en_curso db 0								; Entidades en pantalla.
+; Entidades_en_curso db 0										; Entidades en pantalla.
 
 ; La entidad eliminada, es la última del nivel ?
 
@@ -2275,18 +2275,23 @@ Siguiente_frame_explosion
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
 ; IX apunta al 1er .db de la entidad eliminada.
 
-	ld hl,(Puntero_indice_master)
-	call Extrae_address
+	ld hl,(Datos_de_nivel)
+	ld a,(hl) 																; Clase de la siguiente entidad que hay que reponer en la caja.
+	inc l
+	ld (Datos_de_nivel),hl
+
+	call Situa_en_Caja_Master									; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
 
 	push ix
 	pop de
 
-	ld bc,13
+	ld bc,14
 	ldir	
 
 ; Generamos (Puntero_de_impresion) y coordenadas de la nueva entidad restaurada.
 
 	call Obtenemos_puntero_de_impresion
+	call Decodifica_Puntero_de_impresion
 
 	ld l,(ix+5)
 	inc l
@@ -2300,7 +2305,7 @@ Siguiente_frame_explosion
 	ld (ix+2),b													; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
 
 	xor a
-	inc a 														; Necesario NZ a la salida de la subrutina.
+	inc a 															; Necesario NZ a la salida de la subrutina.
 
 	ret
 

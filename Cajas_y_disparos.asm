@@ -323,7 +323,7 @@ Entidad_Clase_2 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns
 Pos_inicio_entidad_Clase_2	defw $4000	                ; (Posicion_inicio).
 	db 0																		; (Cuad_objeto).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000110 													; (Attr).
+	db %01000100 													; (Attr).
 
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
