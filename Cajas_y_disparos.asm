@@ -323,7 +323,7 @@ Entidad_Clase_2 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns
 Pos_inicio_entidad_Clase_2	defw $4000	                ; (Posicion_inicio).
 	db 0																		; (Cuad_objeto).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000100 													; (Attr).
+	db %01000001 													; (Attr).
 
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
@@ -353,4 +353,4 @@ Definicion_Amadeus db 0,2,2		                     						; (Tipo) / (Filas) / (Co
 	defw $50c1	                                     									; (Posicion_inicio).
 	db 3																						; (Cuad_objeto).
 	defw Almacen_de_movimientos_masticados_Amadeus		; (Puntero_de_almacen_de_mov_masticados).
-	db %01000101 																	; (Attr). 
+	db %01000101																	; (Attr). 

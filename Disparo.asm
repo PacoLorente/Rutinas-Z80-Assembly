@@ -20,6 +20,7 @@ Motor_de_disparos_entidades
  ; Caja vacía ???
 
     dec l
+
     ld a,(hl)
     and a
     jr z,3F                                                              ; Caja vacía.

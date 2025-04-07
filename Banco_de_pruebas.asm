@@ -2269,6 +2269,7 @@ Siguiente_frame_explosion
 
 	dec a
 	ld (Numero_de_entidades),a
+
 	ld hl,Entidades_en_curso
 	dec (hl)
 
