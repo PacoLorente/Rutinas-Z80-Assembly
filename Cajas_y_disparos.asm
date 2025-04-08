@@ -22,7 +22,7 @@ Tabla_de_borrado ds 24
 ;	db 0, defw 0, db 0
 ;	.....
 
-Almacen_de_movimientos_masticados_1 defw $d1e4									
+Almacen_de_movimientos_masticados_1 defw $c1e6									
 Almacen_de_movimientos_masticados_2 defw 0
 Almacen_de_movimientos_masticados_3 defw 0
 
@@ -323,7 +323,7 @@ Entidad_Clase_2 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns
 Pos_inicio_entidad_Clase_2	defw $4000	                ; (Posicion_inicio).
 	db 0																		; (Cuad_objeto).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000001 													; (Attr).
+	db %01000101 													; (Attr).
 
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).

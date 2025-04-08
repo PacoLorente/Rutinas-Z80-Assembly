@@ -8,7 +8,7 @@
 ;
 ;	
 
-	org $fdff																									; (Debajo de la pila).
+	org $fcff																								; (Debajo de la pila).
 
 	defw $82ea																								; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
 
@@ -18,12 +18,12 @@
 ; 	Constantes del programa.
 ;
  
-FRAMES equ $5c78																						; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
+FRAMES equ $5c78																							; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
-Sprite_vacio equ $8336																				; 48 Bytes de "0".
+Sprite_vacio equ $8336																						; 48 Bytes de "0".
 
-Almacen_de_movimientos_masticados_Amadeus equ $d000						; ($dbdc - $d1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
+Almacen_de_movimientos_masticados_Amadeus equ $c000															; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
 ; Scanlines_album. 
 
@@ -503,7 +503,7 @@ Lives db 5
 START 
 
 	ld sp,0																	; Situamos el inicio de Stack.
-	ld a,$fd 																; IM2 ON. Vector de interrupciones a $fdff, (defw debajo de la pila).
+	ld a,$fc 																; IM2 ON. Vector de interrupciones a $fdff, (defw debajo de la pila).
 	ld i,a 																	; Byte alto de la dirección donde se encuentra nuestro vector de interrupciones en el registro I. ($a9). El byte bajo será siempre $ff.
 	IM 2 											   							; Habilitamos el modo 2 de INTERRUPCIONES.
 	DI 					
