@@ -281,13 +281,6 @@ Vel_right db 0 											; Velocidad derecha. Nº de píxeles que desplazamos e
 Vel_up db 0 												; Velocidad subida. Nº de píxeles que desplazamos el objeto hacia arriba. (De 1 a 7px).
 Vel_down db 0 										; Velocidad bajada. Nº de píxeles que desplazamos el objeto hacia abajo. (De 1 a 7px).
 
-; Contadores de 16 bits.
-
-Contador_general_de_mov_masticados_Entidad_1 defw 0  	
-Contador_general_de_mov_masticados_Entidad_2 defw 0
-Contador_general_de_mov_masticados_Entidad_3 defw 0
-Contador_general_de_mov_masticados_Entidad_4 defw 0
-
 ; Movimiento. ------------------------------------------------------------------------------------------------------
 
 Puntero_tabla_Random defw 0
@@ -481,7 +474,7 @@ Nivel db 0																; Nivel actual del juego.
 Puntero_indice_NIVELES defw 0
 Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1					
 																				
-Datos_de_nivel defw 0												; Este puntero se va desplazando por los distintos bytes_
+Puntero_de_entidades defw 0												; Este puntero se va desplazando por los distintos bytes_
 ; 																				; _ que definen el NIVEL.
 
 ; ---------------------------------------------------------------------------------------------------------------
@@ -964,11 +957,24 @@ Actuaiza_sp_de_disparos_de_entidades
 
 Reinicia_Amadeus
 
+;	Debuggg. Datos para reiniciar Amadeus.
+
+; 89C8 Amadeus_BOX db 0										; (Tipo).
+; 89C9 CX_Amadeus db $02,$0d                                ; (Coordenada_X), (Coordenada_Y).
+; 89CB db 0													; (Contador_de_vueltas).
+; 89CC Impacto_Amadeus	db 0								; (Impacto).
+; 89CD p.imp.amadeus defw $50de								; (Puntero_de_impresion).
+; 89CF Pamm_Amadeus defw $c0f0								; (Puntero_de_almacen_de_mov_masticados).
+; 89D1 Comm_Amadeus defw $003d 								; (Contador_de_mov_masticados).
+; 89D3 db 0           										; (Velocidad).
+; 89D4 Attr_Amadeus db $45 									; (Attr).
+
+
 ;	Reinicia posición y estado.
 
-	ld hl,$50cf
+	ld hl,$50de
 	ld (p.imp.amadeus),hl						; Inicializa el puntero de impresión.
-	ld hl,$d0f0
+	ld hl,$c0f0
 	ld (Pamm_Amadeus),hl						; Inicializa el puntero de almacén de movimientos masticados.
 	ld hl,$003d
 	ld (Comm_Amadeus),hl						; Inicializa el contador de movimientos masticados.
@@ -2276,10 +2282,10 @@ Siguiente_frame_explosion
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
 ; IX apunta al 1er .db de la entidad eliminada.
 
-	ld hl,(Datos_de_nivel)
+	ld hl,(Puntero_de_entidades)
 	ld a,(hl) 																; Clase de la siguiente entidad que hay que reponer en la caja.
 	inc l
-	ld (Datos_de_nivel),hl
+	ld (Puntero_de_entidades),hl
 
 	call Situa_en_Caja_Master									; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
 

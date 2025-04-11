@@ -48,11 +48,14 @@ Inicia_albumes_de_disparos
 ;
 ;	INPUTS:		B contiene (Numero_de_entidades).
 ;						C contiene el (Tipo) de la 1ª entidad del nivel.
-; 					 	HL contiene (Datos_de_nivel).
+; 					 	HL contiene (Puntero_de_entidades).
 
 Genera_movimientos_masticados_del_nivel 
 
-	push hl															; Push (Datos_de_nivel).
+
+;	jr $
+
+	push hl															; Push (Puntero_de_entidades).
 	push bc														; Push (Numero_de_entidades)/(Tipo).
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
@@ -103,7 +106,7 @@ Genera_movimientos_masticados_del_nivel
 	pop bc
 	pop hl
 
-	push hl															; Push (Datos_de_nivel).
+	push hl															; Push (Puntero_de_entidades).
 	push bc														; Push (Numero_de_entidades)/(Tipo).
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
@@ -134,7 +137,7 @@ Genera_movimientos_masticados_del_nivel
 ;	DE está situado en el .db (Clase_de_la entidad) de la Caja_Master que hemos completado.
 ;	Guardamos (Clase_de_la_entidad) en la Caja_Master.
 
-	ld hl,(Datos_de_nivel)
+	ld hl,(Puntero_de_entidades)
 	ld a,(hl)
 	ld (de),a
 
@@ -162,22 +165,22 @@ Movimientos_masticados_construidos
 ; Generamos un nuevo set de nº aleatorios para poder generar un NUEVO baile distinto.
 
 	pop bc																				; Pop (Numero_de_entidades)/(Tipo).
-	pop hl																				; Pop (Datos_de_nivel).
+	pop hl																				; Pop (Puntero_de_entidades).
 
-	inc l																					; Datos_de_nivel +1 en HL.
+	inc l																					; Puntero_de_entidades +1 en HL.
 
-	ld (Datos_de_nivel),hl 														; Actualizamos (Datos_de_nivel).
+	ld (Puntero_de_entidades),hl 														; Actualizamos (Puntero_de_entidades).
 
 	ld c,(hl)																			; (Tipo) de la siguiente entidad en C.
 	djnz Genera_movimientos_masticados_del_nivel 			; dec (Numero_de_entidades).
 
 ; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades, 
-; _ inicializamos el puntero (Datos_de_nivel), situándolo en la 1ª entidad.
+; _ inicializamos el puntero (Puntero_de_entidades), situándolo en la 1ª entidad.
 
 	ld hl,(Puntero_indice_NIVELES)
 	call Extrae_address
 	inc l
-	ld (Datos_de_nivel),hl
+	ld (Puntero_de_entidades),hl
 
 	ret
 
@@ -222,7 +225,7 @@ Construye_movimientos_masticados_entidad
 
 ; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados). 
 
-	ld hl,Datos_de_nivel
+	ld hl,Puntero_de_entidades
 	call Extrae_address
 	ld a,(hl)
 
@@ -453,13 +456,13 @@ Extrae_address_y_avanza call Extrae_address
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   7/3/25
+;   14/4/25
 ;
 ;	Inicializa el 1er Nivel del juego.
 ;	
 ;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
 ;									(Numero_de_entidades)    ... Contiene el nº de entidades del nivel, (.db).
-;									(Datos_de_nivel)         ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
+;									(Puntero_de_entidades)         ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
 ;
 ;					B contiene (Numero_de_entidades).
 ;					C contiene el (Tipo) de la 1ª entidad del nivel.
@@ -472,12 +475,14 @@ Inicializa_Nivel
 	call Extrae_address   						 									; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
 	ld (Puntero_indice_NIVELES),de											; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
 
+; Nº de entidades del 1er nivel en A y B.
+
 	ld a,(hl)
 	ld (Numero_de_entidades),a					 							; Inicializa (Numero_de_entidades).
 	ld b,a
 
 	inc l
-	ld (Datos_de_nivel),hl															; Inicializa (Datos_de_nivel), .defw que define el (Tipo) de la 1ª entidad del Nivel_1	 
+	ld (Puntero_de_entidades),hl															; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1	 
 	ld c,(hl)													
 
 	ret 										 
@@ -563,7 +568,7 @@ Prepara_Cajas_de_Entidades
 ;																							; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
 	call Inicializa_Numero_parcial_de_entidades					; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
 
-	ld hl,(Datos_de_nivel)														; Tipo de la 1ª entidad del Nivel.
+	ld hl,(Puntero_de_entidades)														; Tipo de la 1ª entidad del Nivel.
 
 ; En este punto:
 ;
@@ -635,9 +640,9 @@ Prepara_Cajas_de_Entidades
 
 ; Siguiente entidad del Nivel.
 
-	ld hl,(Datos_de_nivel)									; Nos situamos en el .db que define el (Tipo) de la siguiente_
+	ld hl,(Puntero_de_entidades)									; Nos situamos en el .db que define el (Tipo) de la siguiente_
 	inc l 																; _ entidad del Nivel.
-	ld (Datos_de_nivel),hl
+	ld (Puntero_de_entidades),hl
 
 	pop bc 															; Recuperamos (Numero_parcial_de_entidades), (nº de cajas que vamos a rellenar)
 

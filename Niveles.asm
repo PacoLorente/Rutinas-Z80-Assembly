@@ -14,8 +14,8 @@ Indice_de_niveles
 
 ; NIVEL_1. Tres tipos de BadSat. 
 
-Nivel_1 db 5
-	db 1,2,1,2,1
+Nivel_1 db 1
+	db 3
 
 Nivel_2 db 12									; Nº de entidades.
 	db 2,1,1,1,1,2								; Tipo de entidad que vamos a introducir en las 7 cajas de DRAW.			
@@ -31,8 +31,8 @@ Indice_de_tablas_Random
 ; Entidades (Tipo) (1), (2) y (3). Son entidades (tipo) BadSat.
 
 	defw Tabla_Random_BadSat
-	defw Tabla_Random_BadSat
-	defw Tabla_Random_BadSat
+	defw 0
+	defw 0
 
 ;	...
 ;	...

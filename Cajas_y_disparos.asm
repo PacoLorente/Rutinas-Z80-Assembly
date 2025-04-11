@@ -26,6 +26,14 @@ Almacen_de_movimientos_masticados_1 defw $c1e6
 Almacen_de_movimientos_masticados_2 defw 0
 Almacen_de_movimientos_masticados_3 defw 0
 
+	defw 0
+
+Contador_general_de_mov_masticados_Entidad_1 defw 0  	
+Contador_general_de_mov_masticados_Entidad_2 defw 0
+Contador_general_de_mov_masticados_Entidad_3 defw 0
+
+	defw 0
+	
 ; -------------------------------------------------------------------------------------------------------
 
 Indice_de_mov_segun_tipo_de_entidad defw Indice_mov_Baile_de_BadSat
@@ -35,7 +43,7 @@ Indice_de_mov_segun_tipo_de_entidad defw Indice_mov_Baile_de_BadSat
 
 ;* Caja del disparo de Amadeus y cajas de disparos de entidades.
 
-Disparo_Amad defw 0				; Puntero objeto.
+Disparo_Amad defw 0							; Puntero objeto.
 	defw 0									; Puntero de impresión.
 
 Indice_de_disparos_entidades defw Disparo_1
@@ -48,31 +56,31 @@ Indice_de_disparos_entidades defw Disparo_1
 
 	db 0,0,0								; Puntero objeto.
 	defw 0									; Puntero de impresión.
-Disparo_7 db 0	     					; Control.
+Disparo_7 db 0	     						; Control.
 						
 	db 0,0,0								; Puntero objeto.
 	defw 0									; Puntero de impresión.
-Disparo_6 db 0		    				; Control.
+Disparo_6 db 0		    					; Control.
 
 	db 0,0,0								; Puntero objeto.
 	defw 0									; Puntero de impresión.
-Disparo_5 db 0			    			; Control.
+Disparo_5 db 0			    				; Control.
 						
 	db 0,0,0								; Puntero objeto.
 	defw 0									; Puntero de impresión.
-Disparo_4 db 0				     		; Control.
+Disparo_4 db 0				     			; Control.
 
 	db 0,0,0								; Puntero objeto.
 	defw 0									; Puntero de impresión.
-Disparo_3 db 0					    	; Control.
+Disparo_3 db 0					    		; Control.
 						
 	db 0,0,0								; Puntero objeto.
 	defw 0									; Puntero de impresión.
-Disparo_2 db 0						    ; Control.
+Disparo_2 db 0						    	; Control.
 
 	db 0,0,0								; Puntero objeto.
 	defw 0									; Puntero de impresión.
-Disparo_1 db 0							; Control.
+Disparo_1 db 0								; Control.
 		
 ; -------------------------------------------------------------------------------------
 ;
@@ -87,8 +95,6 @@ Indice_de_cajas_master
 	defw Caja_master_1
 	defw Caja_master_2
 	defw Caja_master_3
-	defw Caja_master_4
-	defw Caja_master_5
 
 Caja_master_1 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	db 0												; (Contador_de_vueltas).
@@ -124,30 +130,6 @@ Caja_master_3 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
 	db 0 											; Atributos.
 	db 0 											; (Clase_de_la entidad).
 
-; ---------- ---------- ---------- ---------- ----------
-
-Caja_master_4 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
-	db 0 											; (Contador_de_vueltas).
-	db 0												; (Impacto).
-	defw 0											; (Puntero_de_impresion).
-	defw 0											; (Puntero_de_almacen_de_mov_masticados).
-	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
-	db 0 											; Atributos.
-	db 0 											; (Clase_de_la entidad).
-
-; ---------- ---------- ---------- ---------- ----------
-
-Caja_master_5 db 0,0,0					; (Tipo) / (Coordenada_X) / (Coordenada_Y).
-	db 0 											; (Contador_de_vueltas).
-	db 0												; (Impacto).
-	defw 0											; (Puntero_de_impresion).
-	defw 0											; (Puntero_de_almacen_de_mov_masticados).
-	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
-	db 0 											; Atributos.
-	db 0 											; (Clase_de_la entidad).
-
 ; -------------------------------------------------------------------------------------
 ;
 ;	Índice de cajas de entidades.
@@ -162,6 +144,7 @@ Indice_de_cajas_de_entidades
 	defw Caja_3
 	defw Caja_4
 	defw Caja_5
+
 ;	defw Caja_6
 ;	defw Caja_7
 
@@ -182,15 +165,15 @@ Indice_de_cajas_de_entidades
 ;
 ;	En principio Amadeus mo utiliza los parámetros: (Contador_de_vueltas) y (Velocidad). Estarán a "0" aunque no descarto utilizarlos más adelante para otra función.
 
-Amadeus_BOX db 0										; (Tipo).
-CX_Amadeus db 0,$15                                ; (Coordenada_X), (Coordenada_Y).
-	db 0															; (Contador_de_vueltas).
+Amadeus_BOX db 0									; (Tipo).
+CX_Amadeus db 0,$15                                 ; (Coordenada_X), (Coordenada_Y).
+	db 0											; (Contador_de_vueltas).
 Impacto_Amadeus	db 0								; (Impacto).
 p.imp.amadeus defw 0								; (Puntero_de_impresion).
-Pamm_Amadeus defw 0								; (Puntero_de_almacen_de_mov_masticados).
+Pamm_Amadeus defw 0									; (Puntero_de_almacen_de_mov_masticados).
 Comm_Amadeus defw 0 								; (Contador_de_mov_masticados).
-	db 0															; (Velocidad). 					
-Attr_Amadeus db 0 										; (Attr).
+	db 0											; (Velocidad). 					
+Attr_Amadeus db 0 									; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------
 ;
@@ -294,6 +277,7 @@ Indice_de_definiciones_de_entidades
 
 	defw Entidad_Clase_1
 	defw Entidad_Clase_2
+	defw Entidad_Clase_3
 
 ; Entidades (Tipo) BADSAT. (Satélites poseidos). 
 
@@ -325,6 +309,20 @@ Pos_inicio_entidad_Clase_2	defw $4000	                ; (Posicion_inicio).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
 	db %01000101 													; (Attr).
 
+; ----- . ----- . ----- . ----- . -----
+
+Entidad_Clase_3 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns).
+	db 2																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
+	defw Indice_Badsat_der										; (Indice_Sprite_der).
+	defw Indice_Badsat_izq										; (Indice_Sprite_izq).
+
+; La posición de inicio de la entidad es aleatoria.
+; BadSat aparece por la parte alta de la pantalla o por la parte izquierda.
+
+Pos_inicio_entidad_Clase_3	defw $4000	                ; (Posicion_inicio).
+	db 0																		; (Cuad_objeto).
+	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
+	db %01000001 													; (Attr).
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;
