@@ -10,7 +10,7 @@
 
 	org $fcff																								; (Debajo de la pila).
 
-	defw $82ea																								; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
+	defw $8310																								; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
 
 ;
 ;	12/10/24
@@ -21,7 +21,7 @@
 FRAMES equ $5c78																							; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
-Sprite_vacio equ $8336																						; 48 Bytes de "0".
+Sprite_vacio equ $82c1																						; 48 Bytes de "0".
 
 Almacen_de_movimientos_masticados_Amadeus equ $c000															; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
@@ -42,15 +42,15 @@ Amadeus_scanlines_album_2 equ $8258	;	($8258 - $827a)
 Amadeus_disparos_scanlines_album equ $827c	;	($827c - $8281) 			; 6 Bytes, (1 único disparo).
 Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 
-Entidades_disparos_scanlines_album equ $8288	;	($828c - $82bc)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
-Entidades_disparos_scanlines_album_2 equ $82b9	;	($82bf - $82f1)
+Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
+Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
 ;	Reloj del juego. IM2 ---------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ;	13/08/24
 ;
 
-	org $82ea
+	org $8310
 
 	push af
 	push hl
