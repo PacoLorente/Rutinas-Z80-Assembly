@@ -47,37 +47,38 @@ Inicia_albumes_de_disparos
 ;	Prepara las CAJAS MASTER y genera los movimientos masticados de todos los (Tipo)s de entidades de los que consta el nivel.
 ;
 ;	INPUTS:		B contiene (Numero_de_entidades).
-;						C contiene el (Tipo) de la 1ª entidad del nivel.
+;						C contiene la (Clase) de la 1ª entidad del nivel.
 ; 					 	HL contiene (Puntero_de_entidades).
 
-Genera_movimientos_masticados_del_nivel 
-
-
-;	jr $
+Prepara_Cajas_Master 
 
 	push hl															; Push (Puntero_de_entidades).
-	push bc														; Push (Numero_de_entidades)/(Tipo).
+	push bc														; Push (Numero_de_entidades)/(Clase).
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
 	ld a,c														
 	ex af,af
-	ld a,c 															; (Tipo) de la entidad en A y A´.
+	ld a,c 															; (Clase) de la entidad en A y A´.
 
-	call Situa_en_Caja_Master							; Situa HL en el 1er .db de la "Caja Master" que corresponde a este (Tipo) de entidad.
+	jr $
+
+;	call Situa_en_Caja_Master							; Situa HL en el 1er .db de 1ª Caja_Master_vacía.
 
 ;	Caja Master inicializada ???
 ;	HL en el 1er .db de la Caja Master correspondiente, (definida por (Tipo)).
 
-	ld a,(hl)
-	and a
-	jr nz,Movimientos_masticados_construidos 
+;	ld a,(hl)
+;	and a
+;	jr nz,Movimientos_masticados_construidos 
 
-	ex af,af 																			; (Tipo) de la entidad en A.
+;	ex af,af 																			; (Tipo) de la entidad en A.
 
 	call Definicion_segun_tipo												; HL apunta al 1er .db que define la entidad.
 
 	call Definicion_de_entidad_a_bandeja_DRAW					; Vuelca los datos de la definición de entidad en DRAW.
+
+	jr $
 
 ; 	Ya tenemos la definición de entidad en la bandeja_DRAW.
 ;	Inicializamos (Puntero_de_almacen_de_mov_masticados) para poder generar todos los mov. masticados.
@@ -172,7 +173,7 @@ Movimientos_masticados_construidos
 	ld (Puntero_de_entidades),hl 														; Actualizamos (Puntero_de_entidades).
 
 	ld c,(hl)																			; (Tipo) de la siguiente entidad en C.
-	djnz Genera_movimientos_masticados_del_nivel 			; dec (Numero_de_entidades).
+	djnz Prepara_Cajas_Master 			; dec (Numero_de_entidades).
 
 ; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades, 
 ; _ inicializamos el puntero (Puntero_de_entidades), situándolo en la 1ª entidad.
@@ -931,10 +932,9 @@ Situa_en_datos_de_definicion and a
 
 ; ----------------------------------------------------------------------------------------------------------
 ;
-;	26/3/25
+;	12/4/25
 ;
-;	Introduce una definición de entidad en la bandeja DRAW para generar los "movimientos masticados" de este tipo_
-;	_ de entidad.
+;	Introduce una definición de entidad en la bandeja DRAW para generar sus "movimientos masticados".
 ;
 ;	INPUTS: HL apunta al 1er .db de datos de la definición de la entidad.
 ;			
@@ -944,34 +944,34 @@ Situa_en_datos_de_definicion and a
 
 Definicion_de_entidad_a_bandeja_DRAW 	
 
-	ld de,Bandeja_DRAW	 						; DE apunta al 1er .db de la bandeja_DRAW, (Tipo).
-	ld a,(hl) 									; Volcamos Tipo.
+	ld de,Bandeja_DRAW+1	 						; DE apunta al 1er .db de la bandeja_DRAW, (Tipo).
+	ld a,(hl) 													; Volcamos Tipo.
 	ld (de),a
 	inc hl
 ;												
-	ld de,Filas									; Volcamos (Filas) y (Columns).
+	ld de,Filas												; Volcamos (Filas) y (Columns).
 	ld bc,2
-	ldir										; Hemos volcado (Contador_de_vueltas), (Indice_Sprite_der) y (Indice_Sprite_izq).
-;												; HL, (origen), apunta ahora al .db (Posicion_inicio), hay que situar DE.
+	ldir															; Hemos volcado (Contador_de_vueltas), (Indice_Sprite_der) y (Indice_Sprite_izq).
+;																	; HL, (origen), apunta ahora al .db (Posicion_inicio), hay que situar DE.
 	ld de,Contador_de_vueltas 
 	ld a,(hl)
 	ld (de),a
-	inc hl										; Hemos volcado (Posicion_inicio) y (Cuad_objeto).
+	inc hl														; Hemos volcado (Posicion_inicio) y (Cuad_objeto).
 
 	ld de,Indice_Sprite_der
 	ld bc,4
-	ldir 										; Hemos volcado (Puntero_de_almacen_de_mov_masticados).
+	ldir 															; Hemos volcado (Puntero_de_almacen_de_mov_masticados).
 
 	ld de,Posicion_inicio
-	ld bc,3										; 3 FRAMES de explosión.!!!!!!!!!!!!!!
-	ldir 										; Vuelco (Frames_explosion).
+	ld bc,3														; 3 FRAMES de explosión.!!!!!!!!!!!!!!
+	ldir 															; Vuelco (Frames_explosion).
 
 	ld de,Puntero_de_almacen_de_mov_masticados
 	ld bc,2
 	ldir
 
 	ld de,Attr
-	ld a,(hl) 									; Volcamos (Attr).
+	ld a,(hl) 													; Volcamos (Attr).
 	ld (de),a
 
 	ret

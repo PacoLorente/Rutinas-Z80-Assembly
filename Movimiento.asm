@@ -392,7 +392,7 @@ Inicializa_Puntero_indice_mov_2
 Situa_en_contador_general_de_mov_masticados
 
     call Calcula_salto_en_BC
-    ld hl,Contador_general_de_mov_masticados_Entidad_1
+    ld hl,Contador_general_de_mov_masticados_1
     and a
     adc hl,bc
 

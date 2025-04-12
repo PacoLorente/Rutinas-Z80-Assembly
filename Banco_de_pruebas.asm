@@ -147,8 +147,13 @@ Incrementa_FRAMES
 
 Bandeja_DRAW ; -----------------------------------------------------------------------------------------------
 
-Tipo db 0												; Clase de la entidad. Cada `tipo´ de Entidad tiene unas características únicas que lo distinguen de otros tipos: 
-;															
+Clase db 0  											; A cada entidad se le asigna un nº o (Clase) para poder asignarle una de las 3 Cajas_Master. 
+; 															; En cada (Nivel) sólo puede haber 3 (Clases) diferentes de entidad pués sólo dispondremos de_
+; 															; _tres almacenes de Mov_masticados y 3 Cajas_Master.
+; 															; Las entidades de (Clase) 1, 2 y 3 son de (Tipo) 1, (BadSat).
+
+Tipo db 0												; Cada `tipo´ de Entidad tiene unas características únicas que lo distinguen de otros tipos.
+; 															; Las entidades del mismo (Tipo) comparte el MISMO PATRÓN DE MOVIMIENTO. 															
 Coordenada_X db 0 							; Coordenada X del objeto. (En chars.)
 Coordenada_y db 0 								; Coordenada Y del objeto. (En chars.)
 
@@ -188,6 +193,8 @@ Velocidad db 0 										; 5 vueltas max. 5 vueltas       1 - 0 (1ª vuelta - ve
 ;																				 $10 - 4 (5ª vuelta - velocidad 3) 																		
 
 Attr db 0 													; Atributos de la entidad.
+
+; ----- ----- De aquí para arriba son los datos que se trasfieren a las cajas de entidades. ¡¡¡¡¡
 
 Ctrl_2 db 0 											
 ;																BIT 0, Los sprites se inician con un `sprite vacío', (sprite formado por "ceros"), cuando la rutina_
@@ -231,8 +238,6 @@ Ctrl_0 db 0 												; Byte de control. A través de este byte de control. La
 ; 																SET 7, El bit 7 se encuentra alto, ("1"), cuando el último movimiento horizontal se ha producido a la "DERECHA".
 ; 															   _ Utilizo la información que proporciona este BIT para modificar (CTRL_DESPLZ) si el siguiente movimiento_
 ; 															   _ se va a producir a la izquierda. "1" DERECHA - "0" IZQUIERDA.
-
-; ----- ----- De aquí para arriba son los datos que se trasfieren a las cajas de entidades. ¡¡¡¡¡
 
 Filas db 0												    ; Filas. [DRAW]
 Columns db 0 	  									  	; Nº de columnas. [DRAW]
@@ -527,7 +532,7 @@ INICIALIZACION
 ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
 
 	call Inicializa_Nivel								 						; Inicializa el 1er nivel del juego.
-	call Genera_movimientos_masticados_del_nivel		 	; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
+	call Prepara_Cajas_Master	 										; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
 ;														   								_reponiendo entidades eliminadas.
 
 	call Prepara_Cajas_de_Entidades
