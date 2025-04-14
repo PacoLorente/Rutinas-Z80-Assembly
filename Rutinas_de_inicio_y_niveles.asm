@@ -61,71 +61,58 @@ Prepara_Cajas_Master
 	ex af,af
 	ld a,c 															; (Clase) de la entidad en A y A´.
 
-	jr $
+	call Situa_en_Caja_Master							; A=Z indica que hemos de generar los movimientos masticados de esta (Clase) de entidad.
+; 																		; A=NZ indica que esta (Clase) de entidad ya tiene generados los mov_masticados. 
+; 																		; Saltaremos a la siguiente entidad del nivel.
+	and a
+	jr nz, Avanza_siguiente_entidad_del_nivel 
 
-;	call Situa_en_Caja_Master							; Situa HL en el 1er .db de 1ª Caja_Master_vacía.
+; Generamos movimientos masticados.
 
-;	Caja Master inicializada ???
-;	HL en el 1er .db de la Caja Master correspondiente, (definida por (Tipo)).
+;	En 1er lugar cargaremos la bandeja DRAW con la definición de esta (Clase) de entidad para poder generar todos los movimientos masticados.
 
-;	ld a,(hl)
-;	and a
-;	jr nz,Movimientos_masticados_construidos 
+	ld a,c 																	; (A) = (Clase).										
+	call Definicion_segun_tipo									; HL apunta al 1er .db que define la entidad.
+	call Definicion_de_entidad_a_bandeja_DRAW		; Vuelca los datos de la definición de entidad en DRAW.
 
-;	ex af,af 																			; (Tipo) de la entidad en A.
+;	ld (Puntero_de_almacen_de_mov_masticados),hl 			
 
-	call Definicion_segun_tipo												; HL apunta al 1er .db que define la entidad.
-
-	call Definicion_de_entidad_a_bandeja_DRAW					; Vuelca los datos de la definición de entidad en DRAW.
-
-	jr $
-
-; 	Ya tenemos la definición de entidad en la bandeja_DRAW.
-;	Inicializamos (Puntero_de_almacen_de_mov_masticados) para poder generar todos los mov. masticados.
-
-	ld hl,(Puntero_indice_de_almacenes)
-	call Extrae_address
-	ld (Puntero_de_almacen_de_mov_masticados),hl 			; Fija el (Puntero_de_almacen_de_mov_masticados) al comienzo del 1er almacén.
-
-;	Construimos los movimientos masticados de este (Tipo) de entidad.
-; 	Para ello vamos a generar otro SET  con 7 nº aleatorios. Necesitamos generar nuevos nº cada vez que fabricamos_
-;	_una danza. Así conseguimos que el baile generado sea distinto del anterior.
+;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
+;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
+;	coreografías distintas.
 
 	ld b,7   											 						
 	ld hl,Numeros_aleatorios_baile 							
-	call Derivando_RND 										 				; Generamos 7 nº RND para construir los mov. masticados.
-
-; $88f6 (Donde se almacenan los nº aleatorios). 
+	call Derivando_RND 										 	; Generamos 7 nº RND para construir los mov. masticados.
 
 	ld a,(Tipo)
-
-	call Situa_en_Tabla_Random 											; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
-;	$8c52 
-
+	call Situa_en_Tabla_Random 								; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
 	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
 
-	push hl															; Push (Puntero_de_entidades).
-	push bc														; Push (Numero_de_entidades)/(Tipo).
+	push hl																	; Push (Puntero_de_entidades).
+	push bc																; Push (Numero_de_entidades)/(Tipo).
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
 	ld hl,Numeros_aleatorios_baile+3								
 	ld a,(hl)
-	and $1f																			; Define el nº de columna por el que va a aparecer la entidad.
+	and $1f																; Define el nº de columna por el que va a aparecer la entidad.
 
 	ld hl,Posicion_inicio
 	ld (hl),a
 
 	ld a,(Tipo)
-	call Situa_Puntero_indice_mov			 	 						; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
+	call Situa_Puntero_indice_mov			 	 			; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
 
 ;	Ya disponemos de una (Posicion_inicio) aleatoria y la definición de la entidad en la "Bandeja DRAW". 
 ;	Generamos "Movimientos masticados" de la entidad.
 
 	call Construye_movimientos_masticados_entidad
+
+Movimientos_masticados_construidos 
 
 	ld hl,(Puntero_indice_master)
 	call Extrae_address
@@ -133,18 +120,9 @@ Prepara_Cajas_Master
 	ld e,l
 	ld d,h
 
-	call Parametros_de_bandeja_DRAW_a_caja	 				; Caja de entidades Master completa.
+	call Parametros_de_bandeja_DRAW_a_Caja_Master	 	; Caja de entidades Master completa.
 
-;	DE está situado en el .db (Clase_de_la entidad) de la Caja_Master que hemos completado.
-;	Guardamos (Clase_de_la_entidad) en la Caja_Master.
-
-	ld hl,(Puntero_de_entidades)
-	ld a,(hl)
-	ld (de),a
-
-Movimientos_masticados_construidos 
-
-;	Preparamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
+;	Limpiamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
 ;	_de otro (Tipo) de entidad.
 ;
 ;	Limpiamos bandeja y variables.
@@ -153,8 +131,8 @@ Movimientos_masticados_construidos
 	ld (Ctrl_3),a 																		; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
 ;																							; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados. 
 
-	ld hl,Tipo
-	ld bc,36
+	ld hl,Clase
+	ld bc,37
 
 	call Clean_mem
 
@@ -163,17 +141,19 @@ Movimientos_masticados_construidos
 
 	call Clean_mem
 
+; Avanza a la siguiente entidad del nivel.
 ; Generamos un nuevo set de nº aleatorios para poder generar un NUEVO baile distinto.
+
+Avanza_siguiente_entidad_del_nivel 
 
 	pop bc																				; Pop (Numero_de_entidades)/(Tipo).
 	pop hl																				; Pop (Puntero_de_entidades).
 
 	inc l																					; Puntero_de_entidades +1 en HL.
-
-	ld (Puntero_de_entidades),hl 														; Actualizamos (Puntero_de_entidades).
+	ld (Puntero_de_entidades),hl 											; Actualizamos (Puntero_de_entidades).
 
 	ld c,(hl)																			; (Tipo) de la siguiente entidad en C.
-	djnz Prepara_Cajas_Master 			; dec (Numero_de_entidades).
+	djnz Prepara_Cajas_Master 												; dec (Numero_de_entidades).
 
 ; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades, 
 ; _ inicializamos el puntero (Puntero_de_entidades), situándolo en la 1ª entidad.
@@ -193,8 +173,13 @@ Movimientos_masticados_construidos
 
 Construye_movimientos_masticados_entidad	
 
-	ld hl,(Puntero_de_almacen_de_mov_masticados)						; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
+	ld hl,(Puntero_indice_de_almacenes)											; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
+	call Extrae_address
+
+	ld (Puntero_de_almacen_de_mov_masticados),hl
+
 	push hl
+
 	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
 ;																										; _ el (Contador_de_mov_masticados).    
 	call Inicia_Puntero_objeto															; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
@@ -228,8 +213,9 @@ Construye_movimientos_masticados_entidad
 
 	ld hl,Puntero_de_entidades
 	call Extrae_address
-	ld a,(hl)
 
+	ld a,(hl) 																						
+	ld (Clase),a                    																; (Clase).
 	call Situa_en_contador_general_de_mov_masticados
 
 ; HL apunta al 1er byte del (Contador_general_de_mov_masticados) de esta entidad.
@@ -463,7 +449,8 @@ Extrae_address_y_avanza call Extrae_address
 ;	
 ;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
 ;									(Numero_de_entidades)    ... Contiene el nº de entidades del nivel, (.db).
-;									(Puntero_de_entidades)         ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
+;									(Puntero_de_entidades)    ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
+; 									(Puntero_indice_master)	... Se sitúa en la 1ª de las 3 Cajas_Master.
 ;
 ;					B contiene (Numero_de_entidades).
 ;					C contiene el (Tipo) de la 1ª entidad del nivel.
@@ -472,10 +459,18 @@ Extrae_address_y_avanza call Extrae_address
 
 Inicializa_Nivel 
 
+; Inicializa puntero de Cajas_Master.
+
+	ld hl,Indice_de_cajas_master
+	ld (Puntero_indice_master),hl
+
+; Inicializa (Puntero_indice_NIVELES).
+
 	ld hl,Indice_de_niveles
 	call Extrae_address   						 									; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
 	ld (Puntero_indice_NIVELES),de											; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
 
+; Inicializa (Puntero_de_entidades).
 ; Nº de entidades del 1er nivel en A y B.
 
 	ld a,(hl)
@@ -490,18 +485,37 @@ Inicializa_Nivel
 
 ; ----------------------
 ;
-;	4/3/25
+;	14/4/25
 ;
+;	INPUT: A, A' y C contienen la (Clase) de la entidad.
+;	OUTPUT: Flag Z activo:
+;				   A = Z ..... Indica que tenemos que generar los movimientos masticados de esta (Clase) de entidad.
+;	 			   A = NZ ..... Indica que esta Caja_Master ya está iniciada con esta (Clase) de entidad. 
 
 Situa_en_Caja_Master
 
-    call Calcula_salto_en_BC
-    ld hl,Indice_de_cajas_master
-    and a
-    adc hl,bc
-  	ld (Puntero_indice_master),hl
-	call Extrae_address
-	ret
+	ld hl,(Puntero_indice_master)
+1 call Extrae_address
+	cp (hl) 																							
+	ret z 																							; RET. Flag Z y A contiene (Clase), (NZ). Indica que esta Caja_Master está iniciada y contiene_
+; 																										; _una entidad de esta (Clase).
+	xor a
+	inc (hl)
+	dec (hl)
+	ret z 																							; RET. Flag Z y A="$00". Indica que esta Caja_Master está vacía. Hay que generar los movimientos_
+; 																										; _masticados de esta (Clase) de entidad.
+; Caja_Master iniciada con otra (Clase) de entidad.
+; Saltamos a la siguiente:
+
+	ld a,c 		
+
+	inc e
+	inc e 	
+
+	ld (Puntero_indice_master),de 													; (Puntero_indice_master) salta a la siguiente Caja_Master.
+	ex de,hl 																						; Esta caja está iniciada con otra (Clase) de entidad.
+ 																										
+	jr 1B
 
 ; -----------------------------------------------------------
 ;
@@ -720,12 +734,12 @@ Definicion_segun_tipo
 ;	6/7/24
 
 
-Store_Restore_cajas	
+;Store_Restore_cajas	
 
-	ld de,(Puntero_store_caja) 								
-	call Parametros_de_bandeja_DRAW_a_caja	 					; Caja de entidades completa.
-	call Incrementa_punteros_de_cajas
-	ret
+;	ld de,(Puntero_store_caja) 								
+;	call Parametros_de_bandeja_DRAW_a_caja	 					; Caja de entidades completa.
+;	call Incrementa_punteros_de_cajas
+;	ret
 
 ; ---------------------------------------------------------------------
 ;
@@ -981,10 +995,10 @@ Definicion_de_entidad_a_bandeja_DRAW
 ;	26/3/25
 ;
 
-Parametros_de_bandeja_DRAW_a_caja 
+Parametros_de_bandeja_DRAW_a_Caja_Master 
 
 	ld hl,Bandeja_DRAW
-	ld bc,13
+	ld bc,14
 	ldir													 
 	ret
 

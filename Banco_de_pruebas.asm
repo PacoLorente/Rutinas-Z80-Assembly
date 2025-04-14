@@ -196,6 +196,8 @@ Attr db 0 													; Atributos de la entidad.
 
 ; ----- ----- De aquí para arriba son los datos que se trasfieren a las cajas de entidades. ¡¡¡¡¡
 
+
+
 Ctrl_2 db 0 											
 ;																BIT 0, Los sprites se inician con un `sprite vacío', (sprite formado por "ceros"), cuando la rutina_
 ;																_ [Genera_datos_de_impresion] guarda su 1ª imagen.
@@ -535,6 +537,23 @@ INICIALIZACION
 	call Prepara_Cajas_Master	 										; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
 ;														   								_reponiendo entidades eliminadas.
 
+	jr $
+
+;8944 E6 C1        Almacen_de_movimientos_masticados_1 defw $c1e6
+;  26+ 8946 00 00        Almacen_de_movimientos_masticados_2 defw 0
+;  27+ 8948 00 00        Almacen_de_movimientos_masticados_3 defw 0
+;  28+ 894A
+;  29+ 894A 00 00        	defw 0
+;  30+ 894C
+;  31+ 894C 00 00        Contador_general_de_mov_masticados_1 defw 0
+;  32+ 894E 00 00        Contador_general_de_mov_masticados_2 defw 0
+;  33+ 8950 00 00        Contador_general_de_mov_masticados_3 defw 0
+
+;8994 9A 89        	defw Caja_master_1
+;  96+ 8996 A8 89        	defw Caja_master_2
+;  97+ 8998 B6 89        	defw Caja_master_3
+
+
 	call Prepara_Cajas_de_Entidades
 
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
@@ -544,7 +563,7 @@ INICIALIZACION
 ;														 ; DI nos asegura que no vamos a ejecutar FRAME hasta que no tengamos todas las entidades iniciadas.
 ;														 ; La rutina [Genera_datos_de_impresion] activa las interrupciones antes del RET.
 	ld de,Amadeus_BOX
-	call Parametros_de_bandeja_DRAW_a_caja	 			 ; Volcamos Amadeus en (Amadeus_BOX).
+	call Parametros_de_bandeja_DRAW_a_Caja_Master	 			 ; Volcamos Amadeus en (Amadeus_BOX).
 
 	call Limpiamos_bandeja_DRAW
 
