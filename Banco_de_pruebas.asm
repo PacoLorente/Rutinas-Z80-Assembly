@@ -481,7 +481,7 @@ Nivel db 0																; Nivel actual del juego.
 Puntero_indice_NIVELES defw 0
 Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1					
 																				
-Puntero_de_entidades defw 0												; Este puntero se va desplazando por los distintos bytes_
+Puntero_de_entidades defw 0									; Este puntero se va desplazando por los distintos bytes_
 ; 																				; _ que definen el NIVEL.
 
 ; ---------------------------------------------------------------------------------------------------------------

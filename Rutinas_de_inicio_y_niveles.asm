@@ -112,6 +112,8 @@ Prepara_Cajas_Master
 
 	call Construye_movimientos_masticados_entidad
 
+	jr $
+
 Movimientos_masticados_construidos 
 
 	ld hl,(Puntero_indice_master)
@@ -173,7 +175,7 @@ Avanza_siguiente_entidad_del_nivel
 
 Construye_movimientos_masticados_entidad	
 
-	ld hl,(Puntero_indice_de_almacenes)											; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
+	ld hl,(Puntero_indice_de_almacenes)
 	call Extrae_address
 
 	ld (Puntero_de_almacen_de_mov_masticados),hl
@@ -200,7 +202,7 @@ Construye_movimientos_masticados_entidad
 ; Hemos completado un ^ Almacén_de_mov_masticados ^.
 ; Vamos a asignar una dirección de comienzo al almacén siguiente.
 
-	call Situa_en_nuevo_almacen 													; DE contiene (Puntero_de_almacen_de_mov_masticados).
+	call Prepara_nuevo_almacen 														; DE contiene (Puntero_de_almacen_de_mov_masticados).
 
 ;	Hemos completado el almacén de movimientos masticados de la entidad. 
 ;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
@@ -211,14 +213,9 @@ Construye_movimientos_masticados_entidad
 
 ; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados). 
 
-	ld hl,Puntero_de_entidades
-	call Extrae_address
+   	call Situa_en_contador_general_de_mov_masticados
 
-	ld a,(hl) 																						
-	ld (Clase),a                    																; (Clase).
-	call Situa_en_contador_general_de_mov_masticados
-
-; HL apunta al 1er byte del (Contador_general_de_mov_masticados) de esta entidad.
+; HL apunta al 1er byte del 1er (Contador_general_de_mov_masticados) vacío.
 ; Guardamos (Contador_de_mov_masticados) en el (Contador_general_de_mov_masticados) de esta entidad.
 
 	ld bc,(Contador_de_mov_masticados)
@@ -254,14 +251,13 @@ Guarda_movimiento_masticado
 ;																								; _ el (Contador_de_mov_masticados).    
     ret
 
-; -----------------------------------------------------------------------------
+; ---------------------------------------------------------------------
 ;
-;	3/4/25
-;
-;	Adelanta (Puntero_indice_de_almacenes) dentro del índice de almacenes de mov. masticados.
-;	Sitúa (Puntero_de_almacen_de_mov_masticados) al principio del siguiente almacén.
+;	15/4/25
 
-Situa_en_nuevo_almacen ld hl,(Puntero_de_almacen_de_mov_masticados)
+Prepara_nuevo_almacen
+
+	ld hl,(Puntero_de_almacen_de_mov_masticados)
 
 	dec hl
 	dec hl
@@ -278,6 +274,29 @@ Situa_en_nuevo_almacen ld hl,(Puntero_de_almacen_de_mov_masticados)
 	ld (hl),d
 
 	ret
+
+; ----------------------------------------------------------------------
+;
+;   14/4/25
+;
+;   Sitúa HL en el .defw del 1er (Contador_general_de_mov_masticados) vacío.
+;
+
+Situa_en_contador_general_de_mov_masticados
+
+;   Sitúa en la 1ª de las tres variables.
+
+    ld hl,Contador_general_de_mov_masticados_1
+1 ld a,(hl)
+    and a    
+    ret z
+
+;	Avanzamos a la siguiente si esta ya contiene una cantidad.
+
+    inc l
+    inc l
+
+    jr 1B
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
@@ -448,8 +467,8 @@ Extrae_address_y_avanza call Extrae_address
 ;	Inicializa el 1er Nivel del juego.
 ;	
 ;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
-;									(Numero_de_entidades)    ... Contiene el nº de entidades del nivel, (.db).
-;									(Puntero_de_entidades)    ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
+;									(Numero_de_entidades) ... Contiene el nº de entidades del nivel, (.db).
+;									(Puntero_de_entidades) ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
 ; 									(Puntero_indice_master)	... Se sitúa en la 1ª de las 3 Cajas_Master.
 ;
 ;					B contiene (Numero_de_entidades).

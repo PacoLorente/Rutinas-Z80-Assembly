@@ -26,14 +26,10 @@ Almacen_de_movimientos_masticados_1 defw $c1e6
 Almacen_de_movimientos_masticados_2 defw 0
 Almacen_de_movimientos_masticados_3 defw 0
 
-	defw 0
-
 Contador_general_de_mov_masticados_1 defw 0  	
 Contador_general_de_mov_masticados_2 defw 0
 Contador_general_de_mov_masticados_3 defw 0
 
-	defw 0
-	
 ; -------------------------------------------------------------------------------------------------------
 
 Indice_de_mov_segun_tipo_de_entidad defw Indice_mov_Baile_de_BadSat
