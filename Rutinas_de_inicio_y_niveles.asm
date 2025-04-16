@@ -112,8 +112,6 @@ Prepara_Cajas_Master
 
 	call Construye_movimientos_masticados_entidad
 
-	jr $
-
 Movimientos_masticados_construidos 
 
 	ld hl,(Puntero_indice_master)
@@ -513,7 +511,9 @@ Inicializa_Nivel
 
 Situa_en_Caja_Master
 
-	ld hl,(Puntero_indice_master)
+	ld hl,Indice_de_cajas_master	
+	ld (Puntero_indice_master),hl
+
 1 call Extrae_address
 	cp (hl) 																							
 	ret z 																							; RET. Flag Z y A contiene (Clase), (NZ). Indica que esta Caja_Master está iniciada y contiene_
@@ -531,7 +531,8 @@ Situa_en_Caja_Master
 	inc e
 	inc e 	
 
-	ld (Puntero_indice_master),de 													; (Puntero_indice_master) salta a la siguiente Caja_Master.
+	ld (Puntero_indice_master),de
+
 	ex de,hl 																						; Esta caja está iniciada con otra (Clase) de entidad.
  																										
 	jr 1B
@@ -602,11 +603,11 @@ Prepara_Cajas_de_Entidades
 ;																							; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
 	call Inicializa_Numero_parcial_de_entidades					; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
 
-	ld hl,(Puntero_de_entidades)														; Tipo de la 1ª entidad del Nivel.
+	ld hl,(Puntero_de_entidades)											; Clase de la 1ª entidad del Nivel.
 
 ; En este punto:
 ;
-; HL está situado en el 1er .db del Nivel que indica el `tipo´ de entidad a volcar en la 1ª caja de entidades.
+; HL está situado en el 1er .db del Nivel que indica la `Clase´ de entidad a volcar en la 1ª caja de entidades.
 ; B contiene (Numero_parcial_de_entidades).
 
 1 push bc 																			; Push (Numero_parcial_de_entidades).
@@ -618,7 +619,7 @@ Prepara_Cajas_de_Entidades
 	ld de,(Puntero_store_caja)												; DE apunta al 1er .db de la "Caja de entidades" en curso. 								
 
 	push de
-	pop ix 																				;! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+	pop ix 																				; ! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 
 	ld bc,14
 	ldir																					; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
@@ -632,17 +633,13 @@ Prepara_Cajas_de_Entidades
 ; ------------------------------------------------------ IX
 ; ------------------------------------------------------ IX
 
-	push ix															; Push 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+	push ix																				; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
 	call Obtenemos_puntero_de_impresion
 	call Decodifica_Puntero_de_impresion
 
-; HL ..... (Puntero_de_almacen_de_mov_masticados).
-; DE ..... (Puntero_objeto).
-; BC ..... (Puntero_de_impresion) decodificado.
-
-	ld (ix+5),c
-	ld (ix+6),b 													; (Puntero_de_impresion) en Caja_de_entidades.
+	ld (ix+6),c
+	ld (ix+7),b 													; (Puntero_de_impresion) en Caja_de_entidades.
 
 	ld l,c
 	ld h,b															; (Puntero_de_impresion) en HL.
@@ -654,8 +651,8 @@ Prepara_Cajas_de_Entidades
 
 	ld bc,(Coordenada_X)
 
-	ld (ix+1),c
-	ld (ix+2),b													; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+	ld (ix+2),c
+	ld (ix+3),b													; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
 
 	call Entidad_a_Tabla_de_pintado					; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
 
@@ -669,13 +666,30 @@ Prepara_Cajas_de_Entidades
 ; Actualizamos (Contador_de_mov_masticados) tras la foto.	
 
 	call Decrementa_Contador_de_mov_masticados
-	call Limpiamos_bandeja_DRAW									
+
+;	Borramos las variables DRAW que hemos utilizado para preparar la Tabla_de_pintado y los scanlines_
+;	_en el álbum_de_pintado.
+
+; Variables DRAW utilizadas:
+
+;	(Columnas).
+;	(Puntero_de_impresion).
+;	(Coordenada_X).
+;	(Coordenada_Y).
+
+	ld hl,0
+	ld (Coordenada_X),hl
+	ld (Puntero_de_impresion),hl
+	ld (Columnas),hl
+
 	call Incrementa_punteros_de_cajas
+
+	jr $
 
 ; Siguiente entidad del Nivel.
 
-	ld hl,(Puntero_de_entidades)									; Nos situamos en el .db que define el (Tipo) de la siguiente_
-	inc l 																; _ entidad del Nivel.
+	ld hl,(Puntero_de_entidades)						; (Clase) de la siguiente entidad del nivel.
+	inc l 																
 	ld (Puntero_de_entidades),hl
 
 	pop bc 															; Recuperamos (Numero_parcial_de_entidades), (nº de cajas que vamos a rellenar)
@@ -750,74 +764,19 @@ Definicion_segun_tipo
 
 ; ---------------------------------------------------------------------
 ;
-;	6/7/24
-
-
-;Store_Restore_cajas	
-
-;	ld de,(Puntero_store_caja) 								
-;	call Parametros_de_bandeja_DRAW_a_caja	 					; Caja de entidades completa.
-;	call Incrementa_punteros_de_cajas
-;	ret
-
-; ---------------------------------------------------------------------
-;
-;	23/6/24
-;
-;	Limpiamos lo más rápido posible la Bandeja DRAW.
-;
-;	MODIFY: HL
-
-Limpiamos_bandeja_DRAW 
-
-	ld (Stack),sp
-	ld sp,Vel_left 
-	
-	xor a
-	ld h,a
-	ld l,a
-
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-	push hl
-
-	inc sp
-
-	push hl
-	ld sp,(Stack)
-
-	ret
-
-; ---------------------------------------------------------------------
-;
 ;	23/11/24
 ;
 ;	Actualiza el (Contador_de_mov_masticados) de la entidad.
 
 Decrementa_Contador_de_mov_masticados 
 
-	ld l,(ix+9)
-	ld h,(ix+10)
+	ld l,(ix+10)
+	ld h,(ix+11)
 
 	dec hl
 
-	ld (ix+9),l
-	ld (ix+10),h
+	ld (ix+10),l
+	ld (ix+11),h
 
 	ret
 
@@ -965,7 +924,7 @@ Situa_en_datos_de_definicion and a
 
 ; ----------------------------------------------------------------------------------------------------------
 ;
-;	12/4/25
+;	15/4/25
 ;
 ;	Introduce una definición de entidad en la bandeja DRAW para generar sus "movimientos masticados".
 ;
@@ -977,11 +936,10 @@ Situa_en_datos_de_definicion and a
 
 Definicion_de_entidad_a_bandeja_DRAW 	
 
-	ld de,Bandeja_DRAW+1	 						; DE apunta al 1er .db de la bandeja_DRAW, (Tipo).
-	ld a,(hl) 													; Volcamos Tipo.
-	ld (de),a
-	inc hl
-;												
+	ld de,Bandeja_DRAW   	 						; DE apunta al 1er .db de la bandeja_DRAW, (Clase).
+	ld bc,2
+	ldir 															; Volcamos (Clase) y (Tipo).
+
 	ld de,Filas												; Volcamos (Filas) y (Columns).
 	ld bc,2
 	ldir															; Hemos volcado (Contador_de_vueltas), (Indice_Sprite_der) y (Indice_Sprite_izq).

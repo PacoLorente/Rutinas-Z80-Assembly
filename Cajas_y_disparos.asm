@@ -26,6 +26,8 @@ Almacen_de_movimientos_masticados_1 defw $c1e6
 Almacen_de_movimientos_masticados_2 defw 0
 Almacen_de_movimientos_masticados_3 defw 0
 
+	defw 0
+
 Contador_general_de_mov_masticados_1 defw 0  	
 Contador_general_de_mov_masticados_2 defw 0
 Contador_general_de_mov_masticados_3 defw 0
@@ -281,7 +283,7 @@ Indice_de_definiciones_de_entidades
 
 ; Entidades (Tipo) BADSAT. (Satélites poseidos). 
 
-Entidad_Clase_1 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns).
+Entidad_Clase_1 db 1,$81,2,2		                     		; (Clase) /(Tipo) / (Filas) / (Columns).
 	db 1																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
 	defw Indice_Badsat_der										; (Indice_Sprite_der).
 	defw Indice_Badsat_izq										; (Indice_Sprite_izq).
@@ -292,7 +294,7 @@ Entidad_Clase_1 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns
 
 ; ----- . ----- . ----- . ----- . -----
 
-Entidad_Clase_2 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns).
+Entidad_Clase_2 db 2,$81,2,2		                     		; (Clase) /(Tipo) / (Filas) / (Columns).
 	db 2																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
 	defw Indice_Badsat_der										; (Indice_Sprite_der).
 	defw Indice_Badsat_izq										; (Indice_Sprite_izq).
@@ -303,7 +305,7 @@ Entidad_Clase_2 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns
 
 ; ----- . ----- . ----- . ----- . -----
 
-Entidad_Clase_3 db $81,2,2		                     		; (Tipo) / (Filas) / (Columns).
+Entidad_Clase_3 db 3,$81,2,2		                     		; (Clase) /(Tipo) / (Filas) / (Columns).
 	db 2																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
 	defw Indice_Badsat_der										; (Indice_Sprite_der).
 	defw Indice_Badsat_izq										; (Indice_Sprite_izq).

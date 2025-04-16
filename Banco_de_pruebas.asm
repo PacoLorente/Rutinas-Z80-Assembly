@@ -535,26 +535,9 @@ INICIALIZACION
 
 	call Inicializa_Nivel								 						; Inicializa el 1er nivel del juego.
 	call Prepara_Cajas_Master	 										; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
-;														   								_reponiendo entidades eliminadas.
+	call Prepara_Cajas_de_Entidades
 
 	jr $
-
-;8944 E6 C1        Almacen_de_movimientos_masticados_1 defw $c1e6
-;  26+ 8946 00 00        Almacen_de_movimientos_masticados_2 defw 0
-;  27+ 8948 00 00        Almacen_de_movimientos_masticados_3 defw 0
-;  28+ 894A
-;  29+ 894A 00 00        	defw 0
-;  30+ 894C
-;  31+ 894C 00 00        Contador_general_de_mov_masticados_1 defw 0
-;  32+ 894E 00 00        Contador_general_de_mov_masticados_2 defw 0
-;  33+ 8950 00 00        Contador_general_de_mov_masticados_3 defw 0
-
-;8994 9A 89        	defw Caja_master_1
-;  96+ 8996 A8 89        	defw Caja_master_2
-;  97+ 8998 B6 89        	defw Caja_master_3
-
-
-	call Prepara_Cajas_de_Entidades
 
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
 
@@ -565,7 +548,11 @@ INICIALIZACION
 	ld de,Amadeus_BOX
 	call Parametros_de_bandeja_DRAW_a_Caja_Master	 			 ; Volcamos Amadeus en (Amadeus_BOX).
 
-	call Limpiamos_bandeja_DRAW
+;	Limpiamos la bandeja DRAW.
+
+	ld hl,Clase
+	ld bc,37
+	call Clean_mem
 
 ; 	Situamos a Amadeus en el centro de la pantalla y pintamos.
 
@@ -1293,8 +1280,8 @@ Entidad_a_Tabla_de_pintado
 
 	ld hl,(India_SP) 				 
 
-	ld e,(ix+2)
-	ld d,(ix+12)
+	ld e,(ix+3)
+	ld d,(ix+13)
 	ld a,(Columnas)
 
 	ld (hl),e        ; (Columna_Y).     
@@ -1575,8 +1562,8 @@ Actualiza_Puntero_de_almacen_de_mov_masticados
 
 Obtenemos_puntero_de_impresion
 
-	ld l,(ix+7)
-	ld h,(ix+8)
+	ld l,(ix+8)
+	ld h,(ix+9)
 
 ;	hl apunta al .defw (Puntero_de_almacen_de_mov_masticados).
 ;	Comprueba si hemos finalizado todos los mov. masticados de la entidad.
@@ -1603,8 +1590,8 @@ Obtenemos_puntero_de_impresion
 
 	add hl,sp
 
-	ld (ix+7),l
-	ld (ix+8),h 													; 
+	ld (ix+8),l
+	ld (ix+9),h 													; 
 
 	ld sp,(Stack)
 
@@ -1650,8 +1637,8 @@ Decodifica_Puntero_de_impresion
 	dec a
 	ld (Columnas),a
 
-2 ld (ix+5),c
-	ld (ix+6),b
+2 ld (ix+6),c
+	ld (ix+7),b
 
 	ld (Puntero_de_impresion),bc
 
