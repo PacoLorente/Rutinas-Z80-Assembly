@@ -537,8 +537,6 @@ INICIALIZACION
 	call Prepara_Cajas_Master	 										; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
 	call Prepara_Cajas_de_Entidades
 
-	jr $
-
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
 
 	call Inicia_Amadeus
@@ -609,9 +607,9 @@ Main
 
 ;! ON/OF disparo de entidades:
 
-	ld hl,CLOCK_disparos_de_entidades
-	dec (hl)
-	call z,Autoriza_disparo_de_entidades
+;	ld hl,CLOCK_disparos_de_entidades
+;	dec (hl)
+;	call z,Autoriza_disparo_de_entidades
 
 	ld hl,(Clock_next_entity)
 	ld bc,(FRAMES)

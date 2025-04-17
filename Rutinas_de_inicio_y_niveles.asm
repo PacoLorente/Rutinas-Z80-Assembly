@@ -537,6 +537,32 @@ Situa_en_Caja_Master
  																										
 	jr 1B
 
+; -------------------------------------------------------------------------------------------------
+;
+;	17/4/25
+;
+;	Busca en las tres Cajas_Master una entidad de la (Clase) que contiene el registro A_
+;	_para completar las Cajas_de_entidades.
+;
+;	INPUT: A contiene la (Clase) de entidad.
+
+Obtiene_datos_de_Caja_Master
+
+	ld hl,Indice_de_cajas_master	
+	ld (Puntero_indice_master),hl
+
+1 call Extrae_address
+	cp (hl) 																							
+	ret z 																							; RET pues esta Caja_Master es de la (Clase) que necesitamos.																						
+
+	inc e
+	inc e
+
+	ld (Puntero_indice_master),de
+	ex de,hl 																						
+ 																										
+	jr 1B
+
 ; -----------------------------------------------------------
 ;
 ;	7/3/25
@@ -614,7 +640,7 @@ Prepara_Cajas_de_Entidades
 
 	ld a,(hl)
 
-	call Situa_en_Caja_Master												; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
+	call Obtiene_datos_de_Caja_Master								; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
 
 	ld de,(Puntero_store_caja)												; DE apunta al 1er .db de la "Caja de entidades" en curso. 								
 
@@ -684,8 +710,6 @@ Prepara_Cajas_de_Entidades
 
 	call Incrementa_punteros_de_cajas
 
-	jr $
-
 ; Siguiente entidad del Nivel.
 
 	ld hl,(Puntero_de_entidades)						; (Clase) de la siguiente entidad del nivel.
@@ -708,7 +732,9 @@ Prepara_Cajas_de_Entidades
 ; 	Cargamos la definición de Amadeus en DRAW.
 ;	Nos situamos en el 1er .db, (Tipo), de la definición de Amadeus.
 
-Inicia_Amadeus ld hl,Definicion_Amadeus
+Inicia_Amadeus 
+
+	ld hl,Definicion_Amadeus
 	call Definicion_de_entidad_a_bandeja_DRAW				; Vuelca los datos de la definición de Amadeus en DRAW.
 
 	
@@ -786,28 +812,34 @@ Decrementa_Contador_de_mov_masticados
 
 Reinicia_entidad_maliciosa 
 
-;	En 1er lugar actualizamos el (Contador_de_mov_masticados).
-; 	IX está situado en el 1er .db de la caja de la entidad a reiniciar.
+	ld a,(ix)														
 
-	ld a,(ix+13)																				; (Clase_de_entidad) en A.
+;	(Clase) de la entidad en A.
+;	Hemos completado todos los movimientos masticados de la entidad.
+;	Inicializamos el contador de mov_masticados de la Caja_Master correspondiente.
 
-	call Situa_en_contador_general_de_mov_masticados					
-	call Transfiere_datos_de_contadores
+	call Obtiene_datos_de_Caja_Master
+	call Inicializa_Contador_de_mov_masticados
 
 ; 	En 2º lugar hay que inicializar el (Puntero_de_almacen_de_mov_masticados).
+;	DE apunta al .defw (Contador_de_mov_masticados) de la Caja_Master.
 
-	call Situa_en_Caja_Master
+	dec e
+	dec e
 
-; HL apunta al 1er .db de la Caja_Master_correspondiente a este (Tipo) de entidad.
+	ex de,hl
 
-	ld a,l
-	add 7
-	ld l,a 																						; Situamos en el .defw (Almacen_de_movimientos_masticados) de la Caja_Master correspondiente_ 
-; 																									; _a este (Tipo) de entidad.
-	call Extrae_address
+	ld a,(hl)
+	ld (ix+8),a
+	inc hl
+	ld a,(hl)
+	ld (ix+9),a
 
-	ld (ix+7),l
-	ld (ix+8),h
+;	(Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados) de la entidad inicializados.
+
+	di
+	jr $
+	ei
 
 	call Obtenemos_puntero_de_impresion
 
@@ -832,13 +864,13 @@ Reinicia_entidad_maliciosa
 ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
 ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".   
 
-	sla (ix+3)																						; sla x2 (Contador_de_vueltas). Inicialmente es "1".
+	sla (ix+4)																						; sla x2 (Contador_de_vueltas). Inicialmente es "1".
 
-	ld a,(ix+3)   																					; ld a,(Contador_de_vueltas)	
+	ld a,(ix+4)   																					; ld a,(Contador_de_vueltas)	
 	sra a
 	sra a
 
-	ld (ix+11),a 																					; ld (Velocidad),a
+	ld (ix+12),a 																					; ld (Velocidad),a
 
 ; Attr. 
 
@@ -849,13 +881,13 @@ Reinicia_entidad_maliciosa
 ; Límitador. 
 
 	ld a,$40
-	cp (ix+3)
+	cp (ix+4)
 	ret nz
 
 ;	Limita el valor de (Contador_de_vueltas) a "$20" y de (Velocidad) a "$04". 
 
-	sra (ix+3)
-	sra (ix+11)
+	sra (ix+4)
+	sra (ix+12)
 
 	ret
 
@@ -888,7 +920,7 @@ Blanco ld a,%01000111
 	jr 2F
 
 Amarillo ld a,%01000110
-2 ld (ix+12),a
+2 ld (ix+13),a
 
 	ret
 
@@ -997,7 +1029,7 @@ Parametros_de_bandeja_DRAW_a_Caja_Master
 Inicializa_Numero_parcial_de_entidades 
 
 	ld a,(Numero_de_entidades)							 ; Nº TOTAL de las entidades del NIVEL.
-	cp 5												 ; "4" es el nº total de cajas de entidades de las que disponemos.
+	cp 5												 					 ; "5" es el nº total de cajas de entidades de las que disponemos.
 	jr c,1F
 	jr z,1F
 

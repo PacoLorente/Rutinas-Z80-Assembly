@@ -163,13 +163,10 @@ Indice_de_cajas_de_entidades
 
 ; ---------- ---------- ---------- ---------- ----------
 ;
-;	12/4/25
-;
-; 	Cada caja tiene 14 bytes !!!
+;	17/4/25
 ;
 
-	db 0 													; (Clase).
-Amadeus_BOX db 0									; (Tipo).
+Amadeus_BOX db 0,0								; (Clase), (Tipo).
 CX_Amadeus db 0,$15                            ; (Coordenada_X), (Coordenada_Y).
 	db 0														; (Contador_de_vueltas).
 Impacto_Amadeus	db 0							; (Impacto).
@@ -327,7 +324,7 @@ Entidad_Clase_3 db 3,$81,2,2		                     		; (Clase) /(Tipo) / (Filas)
 ;
 ; -------------------------------------------------------------------------------------
 ;
-;	26/3/25
+;	17/4/25
 ;
 ;	Definición de Amadeus.
 ;
@@ -336,7 +333,7 @@ Entidad_Clase_3 db 3,$81,2,2		                     		; (Clase) /(Tipo) / (Filas)
 
 Definicion_Amadeus 
 
-	db 0,2,2		                     													; (Tipo) / (Filas) / (Columns).
+	db 0,0,2,2		                     												; (Clase),(Tipo) / (Filas) / (Columns).
 	db 0																						; (Contador_de_vueltas).
 	defw Indice_Amadeus_der													; (Indice_Sprite_der).
 	defw Indice_Amadeus_izq													; (Indice_Sprite_izq).
