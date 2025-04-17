@@ -1940,17 +1940,13 @@ Actualiza_pantalla
 
 Borrando_entidades
 
-;	Adquirimos (Columnas).
-
-;	jr $
-
-	ld hl,(India_3_SP) 							; (Attr), (Columnas) y (.defw).
+	ld hl,(India_3_SP) 															; (Attr), (Columnas) y (.defw).
 
 	ld a,(hl)
 	and a
 	jr z,Pintando_entidades
 
-	ld c,a 										; (Attr) en C.
+	ld c,a 																				; (Attr) en C.
 
 ;	Limpiamos (Attr) de (India_3_SP).
 
@@ -1959,7 +1955,7 @@ Borrando_entidades
 
 	inc l
 
-	ld a,(hl) 									; (Columnas) en A.
+	ld a,(hl) 																			; (Columnas) en A.
 	ld (Columnas),a
 
 ;	Limpiamos (Columnas) de (India_3_SP).

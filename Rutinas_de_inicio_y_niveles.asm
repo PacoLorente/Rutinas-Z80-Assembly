@@ -652,21 +652,6 @@ Prepara_Cajas_de_Entidades
 
 ;																							; DE apunta ahora al 1er .db de la siguiente caja de entidades.
 
-
-;89DE 00           			db 1 											; (Clase).
-; 190+ 89DF 00           db 81 											; (Tipo).
-; 191+ 89E0 00           	db 07 											; (Coordenada_X).
-; 192+ 89E1 00           	db 0c											; (Coordenada_Y).
-; 193+ 89E2 00           	db 01											; (Contador_de_vueltas).
-; 194+ 89E3 00           	db 0												; (Impacto).
-; 195+ 89E4 00 00      defw 57fb										; (Puntero_de_impresion).
-; 196+ 89E6 00 00      defw c1e6									; (Puntero_de_almacen_de_mov_masticados).
-; 197+ 89E8 00 00      defw 03de 									; (Contador_de_mov_masticados).
-; 198+ 89EA 00           	db 0												; (Velocidad).
-; 199+ 89EB 00           	db 44 											; Atributos.
-
-
-
 ; En este punto debemos generar coordenadas y puntero de impresión.:
 ;
 ; ------------------------------------------------------ IX
