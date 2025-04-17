@@ -700,7 +700,7 @@ Modifica_puntero_de_impresion
 
 Compara_con_coordenadas_de_disparo
 
-    ld a,(ix+2)                                                 ; ld a,(coordenada_y)
+    ld a,(ix+3)                                                 ; ld a,(coordenada_y)
     ld b,a
     ld a,(Coordenadas_disparo_certero)
     sub b
@@ -721,7 +721,7 @@ Compara_con_coordenadas_de_disparo
 
 Comprueba_coordenada_X
 
-    ld a,(ix+1)                                                  ; ld a,(Coordenada_X)
+    ld a,(ix+2)                                                  ; ld a,(Coordenada_X)
     ld b,a
     ld hl,Coordenadas_disparo_certero+1
     ld a,(hl)
@@ -758,14 +758,14 @@ Activa_Impacto_en_entidad
 ;   Indica Impacto en la entidad por disparo de Amadeus, "2".
 
     ld a,2
-    ld (ix+4),a                                                  ; (ix+4) = (Impacto)
+    ld (ix+5),a                                                  ; (ix+4) = (Impacto)
 
 ;   (Puntero_de_almacen_de_mov_masticados) ahora apuntará a la explosión.
 
     ld de,Indice_Explosion_entidades
 
-    ld (ix+7),e
-    ld (ix+8),d                                                  ; (ix+7/8) = (Puntero_de_almacen_de_mov_masticados).
+    ld (ix+8),e
+    ld (ix+9),d                                                  ; (ix+7/8) = (Puntero_de_almacen_de_mov_masticados).
 
 ;   Hemos encontrado la entidad impactada, Restauramos FLAG para dejar de buscar en este FRAME.
 
@@ -1218,7 +1218,7 @@ Colision_Entidad_Amadeus
     bit 2,(hl)
     ret nz
 
-	ld a,(ix+2)                                            ; ld a,(coordenada_y) 
+	ld a,(ix+3)                                            ; ld a,(coordenada_y) 
 	cp $14
 	ret c                                                  ; Salimos si la entidad no está en zona de Amadeus.
 
@@ -1238,7 +1238,7 @@ Genera_coordenadas_X
 ;   Almacenamos las coordenadas X de la entidad peligrosa, (en curso).
 
     ld hl,Coordenadas_X_Entidad
-    ld a,(ix+1)                                             ; ld a,(Coordenada_X)
+    ld a,(ix+2)                                             ; ld a,(Coordenada_X)
     call Guarda_coordenadas_X
 
 ;   Almacenamos las coordenadas X de Amadeus.
@@ -1253,10 +1253,10 @@ Genera_coordenadas_X
     ret nz
 
     ld a,1                                               ; El .db (Impacto)="1" indica que es altamente probable que esta_
-    ld (ix+4),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y 
+    ld (ix+5),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y 
 
     ld a,ixl
-    add 4
+    add 5
     ld ixl,a
 
     ld (Entidad_sospechosa_de_colision),ix               ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.

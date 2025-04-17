@@ -14,8 +14,8 @@ Indice_de_niveles
 
 ; NIVEL_1. Tres tipos de BadSat. 
 
-Nivel_1 db 1
-	db 1
+Nivel_1 db 5
+	db 2,3,2,3,2
 
 Nivel_2 db 12									; Nº de entidades.
 	db 2,1,1,1,1,2								; Tipo de entidad que vamos a introducir en las 7 cajas de DRAW.			

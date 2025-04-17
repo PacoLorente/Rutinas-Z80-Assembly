@@ -771,9 +771,12 @@ Reinicio
 
 	ret
 
-Limpia_contenido_hl	ld (hl),a
+Limpia_contenido_hl	
+
+	ld (hl),a
 	inc hl
 	ld (hl),a
+
 	ret	
 	
 ; ----------------------------------------------------------------------------------------------------------------

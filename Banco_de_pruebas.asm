@@ -8,7 +8,7 @@
 ;
 ;	
 
-	org $fcff																								; (Debajo de la pila).
+	org $fcff																									; (Debajo de la pila).
 
 	defw $8310																								; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
 
@@ -18,12 +18,12 @@
 ; 	Constantes del programa.
 ;
  
-FRAMES equ $5c78																							; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
+FRAMES equ $5c78																						; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
-Sprite_vacio equ $82c1																						; 48 Bytes de "0".
+Sprite_vacio equ $82c1																				; 48 Bytes de "0".
 
-Almacen_de_movimientos_masticados_Amadeus equ $c000															; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
+Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
 ; Scanlines_album. 
 
@@ -607,9 +607,9 @@ Main
 
 ;! ON/OF disparo de entidades:
 
-;	ld hl,CLOCK_disparos_de_entidades
-;	dec (hl)
-;	call z,Autoriza_disparo_de_entidades
+	ld hl,CLOCK_disparos_de_entidades
+	dec (hl)
+	call z,Autoriza_disparo_de_entidades
 
 	ld hl,(Clock_next_entity)
 	ld bc,(FRAMES)
@@ -654,11 +654,6 @@ Main
 	ld hl,Ctrl_4
 	set 0,(hl)																; Permiso para activar a una entidad "dormida".
 
-; - Define el tiempo que ha de transcurrir para que aparezca la siguiente entidad. ----------------------------
-
-;	call Extrae_numero_aleatorio_y_avanza 			; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
-;	call Define_Clock_next_entity
-
 1 ld a,(Entidades_en_curso)
 	and a
 	jp z,Gestion_de_Amadeus									; Si no hay entidades en curso saltamos a [Avanza_puntero_de_Scanlines_album_de_entidades].
@@ -686,12 +681,12 @@ Bucle_de_entidades
 ;	En primer lugar vamos a crear un puntero para ir almacenando las columnas de las distintas unidades.
 ;	Utilizamos (Puntero_indice_mov) como puntero e Indice_Sprite_der como primer .db de almacenamiento.
 
-6 ld ix,(Puntero_store_caja)							;! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+6 ld ix,(Puntero_store_caja)										;! A partir de ahora IX apunta al 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 	call Salta_caja_de_entidades_vacia
 
 ; Esta caja contiene datos. Es una entidad "dormida"???. Si no es así gestionamos esta entidad, (jr 5F).
 
-	ld a,(ix+0) 
+	ld a,(ix+1) 
 	bit 7,a 
 	jr z,5F
 
@@ -699,12 +694,13 @@ Bucle_de_entidades
 
 	ld hl,Ctrl_4
 	bit 0,(hl)
-	call z,Incrementa_punteros_de_cajas 				; Si no tenemos permiso para despertarla saltaremos a la siguiente entidad activa.
+	call z,Incrementa_punteros_de_cajas 					; Si no tenemos permiso para despertarla saltaremos a la siguiente entidad activa.
+
 	jr z,6B 
 
-	res 0,(hl)											; Restaura bit "despertador".
+	res 0,(hl)																; Restaura bit "despertador".
 	res 7,a
-	ld (ix+0),a											; Convierte esta entidad dormilona en una entidad ACTIVA.
+	ld (ix+1),a															; Convierte esta entidad dormilona en una entidad ACTIVA.
 
 ; En 1er lugar, ... existe (Impacto) de un disparo de Amadeus en esta entidad ???
 ; Si es así, comprobamos si es la entidad en curso la alcanzada por nuestro disparo. 
@@ -715,12 +711,12 @@ Bucle_de_entidades
 
 ; Existe colisión entre esta entidad y Amadeus ???
 
-	ld a,(ix+4)													; (ix+4) - (Impacto)
+	ld a,(ix+5)															; (ix+5) - (Impacto)
 	bit 1,a
 	call nz,Genera_explosion
 	jr nz,Gestiona_siguiente_entidad
 
-	ld a,(ix+4)													; ld a,(Impacto)								 
+	ld a,(ix+5)															; ld a,(Impacto)								 
 	and a
 	jr z,3F
 
@@ -739,23 +735,23 @@ Bucle_de_entidades
 
 ; Falsa colisión !!!	
 	
-	ld (Impacto),a												; Colocamos el .db (Impacto) de la entidad en curso a "0".
+	ld (Impacto),a														; Colocamos el .db (Impacto) de la entidad en curso a "0".
 
 ; -------------------------------------------
  
 ; Movement !!!
 
-3 call Obtenemos_puntero_de_impresion							; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
-;																; (Puntero_objeto) en DE; 
-;		    													; (Puntero_de_impresion) codificado en BC.
+3 call Obtenemos_puntero_de_impresion				; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
+;																				; (Puntero_objeto) en DE; 
+;		    																	; (Puntero_de_impresion) codificado en BC.
 	call Decodifica_Puntero_de_impresion
 
 ;	IX apunta al 1er .db de la caja.
 ;	DE (Puntero_objeto).
 
-	push de 													; (Puntero_objeto).
+	push de 																; (Puntero_objeto).
 
-	call Entidad_a_Tabla_de_pintado								; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
+	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
 	call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
 
 	pop de
@@ -776,8 +772,8 @@ Bucle_de_entidades
 
 	ld bc,(Coordenada_X)
 
-	ld (ix+1),c													; Actualiza las coordenadas de la entidad.
-	ld (ix+2),b			
+	ld (ix+2),c													; Actualiza las coordenadas de la entidad.
+	ld (ix+3),b			
 
 ;	TODO: Generamos disparo ???
 
@@ -966,19 +962,6 @@ Actuaiza_sp_de_disparos_de_entidades
 
 Reinicia_Amadeus
 
-;	Debuggg. Datos para reiniciar Amadeus.
-
-; 89C8 Amadeus_BOX db 0										; (Tipo).
-; 89C9 CX_Amadeus db $02,$0d                                ; (Coordenada_X), (Coordenada_Y).
-; 89CB db 0													; (Contador_de_vueltas).
-; 89CC Impacto_Amadeus	db 0								; (Impacto).
-; 89CD p.imp.amadeus defw $50de								; (Puntero_de_impresion).
-; 89CF Pamm_Amadeus defw $c0f0								; (Puntero_de_almacen_de_mov_masticados).
-; 89D1 Comm_Amadeus defw $003d 								; (Contador_de_mov_masticados).
-; 89D3 db 0           										; (Velocidad).
-; 89D4 Attr_Amadeus db $45 									; (Attr).
-
-
 ;	Reinicia posición y estado.
 
 	ld hl,$50de
@@ -1034,7 +1017,7 @@ Reinicia_Amadeus
 
 Ajusta_velocidad_entidad 
 
-	ld a,(ix+11)						; ld a,(Velocidad)
+	ld a,(ix+12)						; ld a,(Velocidad)
 	and a
 	ret z 								; En la 1ª vuelta (Contador_de_vueltas) será "1" o "2", dependiendo de si queremos_
 	;									  _ una o dos vueltas "lentas" iniciales. En ambos casos, (Velocidad)="0", pues:
@@ -1052,19 +1035,19 @@ Ajusta_velocidad_entidad
 
 
 	sla a 								; Multiplica x2 (Velocidad) en cada FRAME.
-	ld (ix+11),a						; ld (Velocidad),a
+	ld (ix+12),a						; ld (Velocidad),a
 	and $10
 	ret z
 	
 ; Restaura (Velocidad) a razón del nº de vueltas. Se ha superado (Velocidad)x8. 	
 
-	ld a,(ix+3)							; ld a,(Contador_de_vueltas)
+	ld a,(ix+4)							; ld a,(Contador_de_vueltas)
 	sra a
 	sra a
-	ld (ix+11),a	
+	ld (ix+12),a	
 
-	ld l,(ix+7)
-	ld h,(ix+8)							; HL contiene (Puntero_de_almacen_de_mov_masticados)
+	ld l,(ix+8)
+	ld h,(ix+9)							; HL contiene (Puntero_de_almacen_de_mov_masticados)
 
 ;	ld hl,(Puntero_de_almacen_de_mov_masticados)
 	inc hl
@@ -1073,8 +1056,8 @@ Ajusta_velocidad_entidad
 	inc hl
 ;	ld (Puntero_de_almacen_de_mov_masticados),hl
 
-	ld (ix+7),l
-	ld (ix+8),h							; (Puntero_de_almacen_de_mov_masticados) actualizado.
+	ld (ix+8),l
+	ld (ix+9),h							; (Puntero_de_almacen_de_mov_masticados) actualizado.
 
 	ret
 
@@ -1653,16 +1636,16 @@ Decodifica_Puntero_de_impresion
 
 Cargamos_registros_con_explosion
 
-	ld l,(ix+7)
-	ld h,(ix+8)														
+	ld l,(ix+8)
+	ld h,(ix+9)														
 
 ; (Puntero_de_almacen_de_mov_masticados) en HL.
 
 	call Extrae_address
 	ex de,hl														; Puntero objeto de la (Explosión), en DE.
 
-	ld l,(ix+5)
-	ld h,(ix+6)			
+	ld l,(ix+6)
+	ld h,(ix+7)			
 
 	push hl
 	pop ix															; (Puntero_de_impresion) en IX.
@@ -1826,7 +1809,7 @@ Inicia_puntero_objeto_izq ld hl,(Indice_Sprite_izq)
 	
 Salta_caja_de_entidades_vacia 
 
-	ld a,(ix+0)
+	ld a,(ix+1)
 	and a
 	ret nz					
 
@@ -1925,7 +1908,7 @@ Limpia_caja_de_entidades
 	ld e,l
 	ld d,h
 	inc e
-	ld bc,12
+	ld bc,13
 	ldir 
 	ret
 
@@ -2221,7 +2204,7 @@ Borra_entidad_colisionada
 	jr nz,1F
 
 	ld a,%01000110 													; Amarillo.
-	ld (ix+12),a
+	ld (ix+13),a
 
 1 call Cargamos_registros_con_explosion
 	call calcula_CColumnass_Explosion_entidad
@@ -2247,7 +2230,7 @@ Borra_entidad_colisionada
 Siguiente_frame_explosion
 
 	ld a,%01000010  													; Rojo.
-	ld (ix+12),a
+	ld (ix+13),a
 
 	ld a,(Filas)
 	xor 1
@@ -2257,8 +2240,8 @@ Siguiente_frame_explosion
 
 ; Avanza Frame de explosión.
 
-	ld l,(ix+7)
-	ld h,(ix+8)															; ld hl,(Puntero_de_almacen_de_mov_masticados).
+	ld l,(ix+8)
+	ld h,(ix+9)															; ld hl,(Puntero_de_almacen_de_mov_masticados).
 
 	ld bc,Indice_Explosion_entidades+4
 
@@ -2296,7 +2279,7 @@ Siguiente_frame_explosion
 	inc l
 	ld (Puntero_de_entidades),hl
 
-	call Situa_en_Caja_Master									; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
+	call Obtiene_datos_de_Caja_Master					; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
 
 	push ix
 	pop de
@@ -2309,16 +2292,16 @@ Siguiente_frame_explosion
 	call Obtenemos_puntero_de_impresion
 	call Decodifica_Puntero_de_impresion
 
-	ld l,(ix+5)
+	ld l,(ix+6)
 	inc l
-	ld h,(ix+6)													; (Puntero_de_impresion) en HL.
+	ld h,(ix+7)													; (Puntero_de_impresion) en HL.
 
 	call Genera_coordenadas
 
 	ld bc,(Coordenada_X)
 
-	ld (ix+1),c
-	ld (ix+2),b													; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+	ld (ix+2),c
+	ld (ix+3),b													; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
 
 	xor a
 	inc a 															; Necesario NZ a la salida de la subrutina.
@@ -2338,8 +2321,8 @@ Siguiente_frame_explosion
 1 inc hl
 	inc hl
 
-	ld (ix+7),l
-	ld (ix+8),h														; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
+	ld (ix+8),l
+	ld (ix+9),h														; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
 
 	jp Borra_entidad_colisionada
 
