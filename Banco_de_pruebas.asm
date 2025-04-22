@@ -503,7 +503,7 @@ Lives db 5
 START 
 
 	ld sp,0																	; Situamos el inicio de Stack.
-	ld a,$fc 																; IM2 ON. Vector de interrupciones a $fdff, (defw debajo de la pila).
+	ld a,$fc 																; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
 	ld i,a 																	; Byte alto de la dirección donde se encuentra nuestro vector de interrupciones en el registro I. ($a9). El byte bajo será siempre $ff.
 	IM 2 											   							; Habilitamos el modo 2 de INTERRUPCIONES.
 	DI 					
@@ -604,22 +604,23 @@ Main
 
 ; TEMPORIZACIONES !!!!!!!!!!!!!!!!
 
-
 ;! ON/OF disparo de entidades:
 
 	ld hl,CLOCK_disparos_de_entidades
 	dec (hl)
 	call z,Autoriza_disparo_de_entidades
 
+;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
+
 	ld hl,(Clock_next_entity)
-	ld bc,(FRAMES)
+	ld bc,(FRAMES) 
 	and a
 	sbc hl,bc
 	jr nz,1F
 
 ; - Define el tiempo que ha de transcurrir para que aparezca la siguiente entidad. ----------------------------
 
-	call Extrae_numero_aleatorio_y_avanza 					; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
+	call Extrae_numero_aleatorio_y_avanza 			; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
 	call Define_Clock_next_entity
 
 ; GESTIÓN DE ENTIDADES.
@@ -637,9 +638,14 @@ Main
 	inc b
 	dec b
 
+; Debugggg !!!!!! -----------------------------------------
+
+	ld hl,(Clock_next_entity)
 	di
-	jr z,$													;					! Nivel superado !!!!!
+	jr z,$																		; ! Nivel superado !!!!!
 	ei
+
+; ----------------------------------------------------------------
 
 	ld a,(Entidades_en_curso)									; Entidades que hay en pantalla.
 	cp b
@@ -1114,13 +1120,13 @@ Change_Disparos
 
 ; ------------------------------------
 ;
-; 1/05/24
+; 	22/04/25
 
-; Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
-; Si el puntero está situado en el último nº, lo volvemos a situar al principio.
+; 	Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
+; 	Si el puntero está situado en el último nº, lo volvemos a situar al principio.
 
 ;	DESTRUYE: HL,DE,A
-;	OUTPUTS: A contiene un Nº aleatorio. Actualizamos (RND_SP).
+;	OUTPUTS: A contiene un Nº aleatorio. Actualiza el puntero de nº aleatorios (RND_SP).
 
 ;	Variables implicadas: (RND_SP).
 
@@ -1142,23 +1148,22 @@ Extrae_numero_aleatorio_y_avanza
 ; Coloca el nº aleatorio en A y mueve el puntero al siguiente nº.
 
 1 ld a,(hl)
-	inc hl
+	inc l
 	ld (RND_SP),hl
+
 	ret
 
 ; ------------------------------------
 ;
-; 1/05/24
+; 	22/04/25
 
-; Hacemos que el nº contenido en el registro A tenga un valor comprendido entre ($32 y $c8).
-; (1 a 4 segundos).
-; Actualizamos (Clock_next_entity) con A.
+; 	Hacemos que el nº contenido en el registro A tenga un valor comprendido entre ($32 y $c8).
+; 	(1 a 4 segundos).
+; 	Actualizamos (Clock_next_entity) con A.
 
 ;	DESTRUYE: A y B.
-;	OUTPUTS: A contiene un Nº aleatorio comprendido entre ($32 y $c8).
-;			 Actualiza (Clock_next_entity) con A.
-
-;	Variables implicadas: (Clock_next_entity).
+;	OUTPUTS: A contiene un Nº aleatorio. Valor mínimo, ($34).
+;			 		Actualiza (Clock_next_entity) con A.
 
 ; Notas:
 
@@ -1168,7 +1173,7 @@ Extrae_numero_aleatorio_y_avanza
 ; 	$c8 4 seg.
 ; 	$fa 5 seg.
 
-; $ffff 1310,7 seg, 22 minutos.
+; 	$ffff 1310,7 seg, 22 minutos.
 
 ;	$0100  5 seg. aproximadamente.
 ;	$0200 10 seg. aproximadamente.
@@ -1180,16 +1185,19 @@ Extrae_numero_aleatorio_y_avanza
 Define_Clock_next_entity 
 
 	cp $34
-	jr c,1F  						; nº demasiado bajo, < 1 seg.
+	jr c,1F  										; nº demasiado bajo, < 1 seg.
 
 ; En función de los minutos que llevemos de juego las entidades irán apareciendo más lentamente.
 
 3 ld c,a
-	ld b,0							; BC contendrá un valor entre 5-10 segundos.
+	ld b,0										; BC contendrá un valor entre 5-10 segundos.
+
 	ld hl,(FRAMES)
 	and a
 	adc hl,bc
+
 	ld (Clock_next_entity),hl  		; Actualizamos variable.
+
 	ret
 
 1 ld a,$34
@@ -1197,7 +1205,7 @@ Define_Clock_next_entity
 
 ; ------------------------------------
 ;
-; 18/03/24
+; 	18/03/24
 
 Borra_diferencia 
 
