@@ -560,6 +560,12 @@ INICIALIZACION
 
 	call Genera_datos_de_impresion_Amadeus
 
+;	Inicializa techo y suelo de (Clock_next_entity). 
+;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
+
+	ld a,$80
+	ld (Vel_left),a
+
 ;! ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	call Inicia_punteros_de_cajas						 ; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
@@ -1155,17 +1161,7 @@ Extrae_numero_aleatorio_y_avanza
 
 ; ------------------------------------
 ;
-; 	22/04/25
-
-; 	Hacemos que el nº contenido en el registro A tenga un valor comprendido entre ($32 y $c8).
-; 	(1 a 4 segundos).
-; 	Actualizamos (Clock_next_entity) con A.
-
-;	DESTRUYE: A y B.
-;	OUTPUTS: A contiene un Nº aleatorio. Valor mínimo, ($34).
-;			 		Actualiza (Clock_next_entity) con A.
-
-; Notas:
+; 	23/04/25
 
 ; 	$32 1 seg.
 ; 	$64 2 seg.
@@ -1184,24 +1180,26 @@ Extrae_numero_aleatorio_y_avanza
 
 Define_Clock_next_entity 
 
-	cp $34
-	jr c,1F  										; nº demasiado bajo, < 1 seg.
+	ld hl,Vel_left
+	cp (hl)
+	ld c,a
+	jr nc,1F
 
-; En función de los minutos que llevemos de juego las entidades irán apareciendo más lentamente.
+;	Por debajo del límite inferior.
 
-3 ld c,a
-	ld b,0										; BC contendrá un valor entre 5-10 segundos.
+	ld c,(hl)
+	jr 1F
 
+;	Actualiza (Clock_next_entity).
+
+1 ld b,0
+	
 	ld hl,(FRAMES)
 	and a
 	adc hl,bc
-
 	ld (Clock_next_entity),hl  		; Actualizamos variable.
 
 	ret
-
-1 ld a,$34
-	jr 3B
 
 ; ------------------------------------
 ;
