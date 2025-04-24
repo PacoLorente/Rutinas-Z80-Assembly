@@ -562,8 +562,9 @@ INICIALIZACION
 
 ;	Inicializa techo y suelo de (Clock_next_entity). 
 ;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
+;	Este valor irá decreciendo conforme van apareciendo entidades.
 
-	ld a,$80
+	ld a,$ff
 	ld (Vel_left),a
 
 ;! ---------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1180,6 +1181,10 @@ Extrae_numero_aleatorio_y_avanza
 
 Define_Clock_next_entity 
 
+;	di
+;	jr $
+;	ei
+
 	ld hl,Vel_left
 	cp (hl)
 	ld c,a
@@ -1188,6 +1193,10 @@ Define_Clock_next_entity
 ;	Por debajo del límite inferior.
 
 	ld c,(hl)
+	ld a,c
+	sub 10
+	ld (hl),a
+
 	jr 1F
 
 ;	Actualiza (Clock_next_entity).
