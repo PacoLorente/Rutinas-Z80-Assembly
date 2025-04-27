@@ -846,31 +846,19 @@ Limpia_album_de_pintado_disparos_entidades
 
 ; --------------------------------------------------------------------------------------
 ;
-;   23/3/25
+;   27/4/25
 ;
 
 Motor_Disparos_Amadeus
 
-    ld hl,Ctrl_4
-    bit 2,(hl)
-    jr z,1F
-
-; En el frame anterior ha desaparecido un disparo de Amadeus. Autorizamos un nuevo `disparo'.
-; Evito de esta manera que se elimine un disparo y se autorize uno nuevo en el mismo FRAME.
-
-    res 2,(hl)
-
-    ld a,1
-    ld (Permiso_de_disparo_Amadeus),a
-
-1 ld hl,Disparo_Amad+1
+    ld hl,Disparo_Amad+1
 
     inc (hl)
     dec (hl)
-    
+
     ret z                                                                ; Salimos si la caja no contiene disparo.
 
-;   Esta caja contiene un disparo.
+;   Existe un disparo de Amadeus.
 
     call Consulta_Impacto
     call z,Mueve_disparo_Amadeus
@@ -951,7 +939,7 @@ Elimina_disparo_Amadeus
 ; HL apunta al .db (Puntero_de_impresion) del disparo.
 ; Recordemos la estructura de datos de una caja de disparos de Amadeus:
 
-;   Disparo_1A defw 0									; Puntero objeto.
+;   Disparo_1A defw 0							; Puntero objeto.
 ;   	defw 0											; Puntero de impresión.
 
     inc l
@@ -966,10 +954,10 @@ Elimina_disparo_Amadeus
     dec l
     ld (hl),a                                           ; Disparo de Amadeus borrado.
 
-    ld hl,Ctrl_4
-    set 2,(hl)
-
     call Limpia_album_de_pintado_disparos_Amadeus
+
+    ld a,1
+    ld (Permiso_de_disparo_Amadeus),a
 
     xor a
     inc a                                               ;? Siempre que eliminamos un disparo tenemos: "NZ".

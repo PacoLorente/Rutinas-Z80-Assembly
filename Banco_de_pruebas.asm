@@ -424,8 +424,6 @@ Ctrl_4 db 0												; 4º Byte de Ctrl. general, (no específico) a una únic
 ;
 ;															BIT 0, "1" Cada vez que se incrementan las entidades en curso, este bit se pone a "1". Esto hará que una entidad pase de "dormida" a "activa".
 ;															BIT 1, (INVESTIGAR !!!)
-;															BIT 2, "1" Indica que hemos eliminado el disparo de Amadeus. La rutina [Motor_Disparos_Amadeus] autorizará_
-;																   _uno nuevo si este bit está a "1" en el siguiente FRAME.
 ;															BIT 3, "1" Indica que se ha asignado un color RND a la entidad. 
 ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta´.
 ; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
@@ -599,9 +597,9 @@ Main
 
 ; Gestión de disparos.
 
-	call Change_Disparos								; Intercambiamos los álbumes de disparos.
+	call Change_Disparos											; Intercambiamos los álbumes de disparos.
 	call Motor_de_disparos_entidades
-	call Motor_Disparos_Amadeus							; Mueve y detecta colisión de los disparos de Amadeus.
+	call Motor_Disparos_Amadeus								; Mueve y detecta colisión de los disparos de Amadeus.
 
 ; En el FRAME que acabamos de pintar puede existir una posible colisión entre alguna entidad y Amadeus. 
 ; Si alguna de las coordenadas_X de alguna entidad que esté en zona de Amadeus coincide con alguna de las coordenadas_X de Amadeus, habrá que comprobar si existe colisión.
@@ -1180,10 +1178,6 @@ Extrae_numero_aleatorio_y_avanza
 ;	$0600 30 seg. aproximadamente.
 
 Define_Clock_next_entity 
-
-;	di
-;	jr $
-;	ei
 
 	ld hl,Vel_left
 	cp (hl)
@@ -1895,7 +1889,7 @@ Pulsa_ENTER ld a,$bf 									; Esperamos la pulsación de la tecla "ENTER".
 Inicia_Shield	
 
 	ld hl,Datos_Shield
-	ld (Puntero_datos_shield),hl 						; Inicia el puntero (Puntero_datos_shield), lo situamos en la 1ª temporización.
+	ld (Puntero_datos_shield),hl 				; Inicia el puntero (Puntero_datos_shield), lo situamos en la 1ª temporización.
 
 	ld a,(hl)
 	ld (Shield_2),a										; (Shield_2) contiene la primera temporización.
@@ -2065,12 +2059,17 @@ Ejecuta_escudo
 	ld a,3
 	ld (Columnas),a
 
-	ld a,(Attr_Amadeus)
-	ld c,a
+;	ld a,(Attr_Amadeus)
+;	ld c,a
 
 	ld a,(Shield)
 	and a
 	jr nz,Aplica_Shield
+
+; -------------------------- debugggggg
+
+	ld a,(Attr_Amadeus)
+	ld c,a
 
 Borrando_Amadeus
 
@@ -2111,6 +2110,8 @@ Aplica_Shield
 ;	Bit 1 "1" (Shield_3) Sólo borra.
 ;		  "0"     ""     Borra/Pinta.
 ;	Bit 2    ""  RET.	 No borra, no pinta. 
+
+	ld c,%01000010 								; Mientras se aplica Shield, Amadeus parpadea en rojo.
 
 	ld hl,Shield_3
 

@@ -298,7 +298,7 @@ Entidad_Clase_2 db 2,$81,2,2		                     		; (Clase) /(Tipo) / (Filas)
 	defw $4000	                										; (Posicion_inicio).
 	db 0																		; (Cuad_objeto).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000101 													; (Attr).
+	db %01000100 													; (Attr).
 
 ; ----- . ----- . ----- . ----- . -----
 
@@ -309,7 +309,7 @@ Entidad_Clase_3 db 3,$81,2,2		                     		; (Clase) /(Tipo) / (Filas)
 	defw $4000	                										; (Posicion_inicio).
 	db 0																		; (Cuad_objeto).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000001 													; (Attr).
+	db %01000100 													; (Attr).
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;
