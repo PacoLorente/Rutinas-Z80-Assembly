@@ -66,7 +66,7 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 	call Pinta_disparos_Amadeus 
 	call Pinta_disparos_Entidades
 
-; Shield -----------------------
+; Actualiza variables Shield ----------------------- ----------------------- ------------------------  
 
 Temporizacion_shield 
 
@@ -83,7 +83,7 @@ Temporizacion_shield
 	jr nz,Incrementa_FRAMES
 
 															
-Cambio_de_estado      						; El temporizador de estados a llegado a "0". HL apunta a (Shield_2).
+Cambio_de_estado      						; 	El temporizador de estados a llegado a "0". HL apunta a (Shield_2).
 
 ;	Indica cambio de estado.
 
@@ -140,7 +140,7 @@ Incrementa_FRAMES
 
 ; --------------------------------------------------------------------------------
 ;
-; 12/05/24
+; 29/4/25
 ;
 ; Parámetros DRAW. 	
 ;
@@ -486,13 +486,16 @@ Puntero_de_entidades defw 0									; Este puntero se va desplazando por los dis
 
 ; Temporizaciones Shield.
 
-Datos_Shield db 2,1,2,1											; Tiempos.
+Lives db 3 																
+Shields db 3 															; Nº de Shields
+
+; Temporizaciones Shield.
+
+Datos_Shield db 4,1,4,1											; Tiempos. (Frecuencia del parpadeo de Amadeus).
 Puntero_datos_shield defw 0									; Señala distintos tiempos para introducirlos en (Shield_2).
 Shield db 90																; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".					
-Shield_2 db 0 															; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
+Shield_2 db 0 															; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
 Shield_3 db 0
-
-Lives db 5
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -646,6 +649,7 @@ Main
 ; Debugggg !!!!!! -----------------------------------------
 
 	ld hl,(Clock_next_entity)
+
 	di
 	jr z,$																		; ! Nivel superado !!!!!
 	ei
@@ -1886,16 +1890,24 @@ Pulsa_ENTER ld a,$bf 									; Esperamos la pulsación de la tecla "ENTER".
 ;	13/07/24
 ;
 
+; Variables Shield.
+
+; Datos_Shield db 4,1,4,1											; Tiempos. (Frecuencia del parpadeo de Amadeus).
+; Puntero_datos_shield defw 0									; Señala distintos tiempos para introducirlos en (Shield_2).
+; Shield db 90															; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".					
+; Shield_2 db 0 														; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
+; Shield_3 db 0
+
 Inicia_Shield	
 
 	ld hl,Datos_Shield
-	ld (Puntero_datos_shield),hl 				; Inicia el puntero (Puntero_datos_shield), lo situamos en la 1ª temporización.
+	ld (Puntero_datos_shield),hl 								; Inicia el puntero (Puntero_datos_shield), lo situamos en la 1ª temporización.
 
 	ld a,(hl)
-	ld (Shield_2),a										; (Shield_2) contiene la primera temporización.
+	ld (Shield_2),a														; (Shield_2) contiene la primera temporización.
 
 	ld a,1
-	ld (Shield_3),a										; (Shield_3) se inicia con "1".
+	ld (Shield_3),a														; (Shield_3) se inicia con "1".
 
 	ret
 
@@ -2104,6 +2116,8 @@ Pintando_Amadeus
 	out ($fe),a
 
 	ret									 
+
+;	Ejecuta Shield. 
 
 Aplica_Shield 
 
