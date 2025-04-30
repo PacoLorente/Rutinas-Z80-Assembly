@@ -493,7 +493,7 @@ Shields db 3 															; Nº de Shields
 
 Datos_Shield db 4,1,4,1											; Tiempos. (Frecuencia del parpadeo de Amadeus).
 Puntero_datos_shield defw 0									; Señala distintos tiempos para introducirlos en (Shield_2).
-Shield db 90																; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".					
+Shield db 100																; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".					
 Shield_2 db 0 															; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
 Shield_3 db 0
 
@@ -2071,8 +2071,8 @@ Ejecuta_escudo
 	ld a,3
 	ld (Columnas),a
 
-;	ld a,(Attr_Amadeus)
-;	ld c,a
+	ld a,(Attr_Amadeus)
+	ld c,a
 
 	ld a,(Shield)
 	and a
@@ -2125,11 +2125,10 @@ Aplica_Shield
 ;		  "0"     ""     Borra/Pinta.
 ;	Bit 2    ""  RET.	 No borra, no pinta. 
 
-	ld c,%01000010 								; Mientras se aplica Shield, Amadeus parpadea en rojo.
-
 	ld hl,Shield_3
 
 	bit 3,(hl)
+
 	jr nz,Pintando_Amadeus
 
 	bit 2,(hl)
@@ -2178,6 +2177,7 @@ Borra_Pinta_Amadeus_shield
 
 	call Borra_Amadeus_shield
 	call Pinta_Amadeus_shield
+
 	ret
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
