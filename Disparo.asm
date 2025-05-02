@@ -861,15 +861,22 @@ Motor_Disparos_Amadeus
 ;   Existe un disparo de Amadeus.
 
     call Consulta_Impacto
-    call z,Mueve_disparo_Amadeus
-
+    call Mueve_disparo_Amadeus                        ; Movemos el disparo de Amadeus aunque exista colisión, (bit3 Impacto2 a "1")_
+;                                                                            _pués no sabemos si se trata de una entidad u otro objeto.
     ret
 
 ; ----------------------
 ;
+;   1/5/25
 ;
-;   Nos colocamos en el .db (Impacto) e interrogamos.
+;   Estructura del disparo de Amadeus.
 ;
+;   Disparo_Amad defw 0                            ; Puntero objeto.
+;                           defw 0                            ; Puntero de impresión.
+;
+;   INPUTS: HL apunta al byte alto de (Puntero objeto) del disparo de Amadeus.
+
+
 ;   OUTPUT: (Z) / (NZ) FLAG. NZ indica que existe (Impacto).
 
 
@@ -879,25 +886,27 @@ Consulta_Impacto
 ;   _sea lo más coherente posible. 
 
     push hl
+ 
     dec hl                                      
 
     call Detecta_impacto_en_disparo_de_Amadeus                          ; Nos situamos en el 1er .db de la caja y comprobamos Impacto.  
 
     pop hl
-    inc hl                                                              ; (Puntero_de_impresion) en HL.
+ 
+    inc hl                                                                                            ; (Puntero_de_impresion) en HL.
 
-    ret z
+    ret z                                                                                             ; RET. No hay impacto.
 
 ; Impacto en el proyectil de Amadeus !!!
 ; Puede existir impacto con otro proyectil. Hay que detectarlo.
 
-    ld a,(Impacto2)    
+    ld a,(Impacto2)                                                                             ; Indica que hemos alcanzado un objeto, puede ser una entidad u otro objeto.
     set 3,a
     ld (Impacto2),a
  
-    push hl
+    push hl                                                                                         ; PUSH Puntero_de_impresion del disparo.
     call Genera_coordenadas_de_disparo_Amadeus
-    pop hl
+    pop hl                                                                                           ; POP Puntero_de_impresion del disparo.
 
     ret
 
@@ -1101,9 +1110,9 @@ Define_puntero_objeto_disparo
 
 Genera_coordenadas_de_disparo_Amadeus
 
-;   HL deberá apuntar al .db (Puntero_de_impresion) del disparo.
-;   Esta parte de la rutina sólo aplica cuando un disparo nuestro alcanza a una entidad.
-;   Genera las coordenadas de nuestro disparo certero y activa el correspondiente FLAG, (bit3 Impacto2).
+;   HL apunta al .db (Puntero_de_impresion) del disparo de Amadeus.
+;   Esta parte de la rutina sólo aplica cuando un disparo nuestro alcanza algún objeto.
+;   Genera las coordenadas de nuestro disparo.
 
     call Extrae_address
     call Genera_coordenadas
@@ -1146,8 +1155,8 @@ Extraccion_de_datos
     ld d,(hl)
 
     inc e
-    inc e                                                  ; DE contiene (Puntero_objeto) `aumentado' del_
-;                                                          ; _disparo de Amadeus.
+    inc e                                                   ; DE contiene Puntero_objeto `aumentado' del_
+;                                                                _disparo de Amadeus.
     inc l                                                 
 
     ld c,(hl)

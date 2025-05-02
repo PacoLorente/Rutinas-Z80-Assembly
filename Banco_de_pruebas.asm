@@ -724,7 +724,7 @@ Bucle_de_entidades
 	bit 3,a
 	call nz,Compara_con_coordenadas_de_disparo
 
-; Existe colisión entre esta entidad y Amadeus ???
+; Existe colisión en esta entidad por un disparo de Amadeus ???
 
 	ld a,(ix+5)															; (ix+5) - (Impacto)
 	bit 1,a
@@ -807,12 +807,15 @@ Gestiona_siguiente_entidad
 	dec b
 	jp nz,Bucle_de_entidades 
 
+	ld hl,Impacto2 																; Inicializamos el FLAG de impacto.
+	res 3,(hl)
+
 ; Hemos gestionado todas las entidades. 
 ; ----- ----- -----
 
-	call Inicializa_India_y_limpia_Tabla_de_impresion 			; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
+	call Inicializa_India_y_limpia_Tabla_de_impresion 		; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
 	call Ordena_tabla_de_impresion
-	call Inicia_punteros_de_cajas 								; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
+	call Inicia_punteros_de_cajas 										; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
 
 	call Borra_diferencia
 
@@ -864,6 +867,8 @@ Amadeus_vivo
 	and a
 	call nz, Genera_explosion_Amadeus
 	jr nz, End_frame
+
+;	Tras la gestión de Amadeus hacemos la lectura del teclado.
 
 	call Teclado
 	ld hl,Ctrl_3
@@ -1007,9 +1012,6 @@ Reinicia_Amadeus
 ;	Reinicia temporizaciones.
 
 	call Inicia_Shield
-
-	ld a,90
-	ld (Shield),a
 
 	ld a,100
 	ld (Temp_new_live),a
@@ -2182,22 +2184,45 @@ Borra_Pinta_Amadeus_shield
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	19/6/24
+;	1/5/25
 ;
 	
 Teclado
 
-; Está habilitado el disparo de Amadeus??, podemos disparar??. Si no es así saltamos a 1F.
+; Shield.
 
-	ld a,$f7												; "5" para disparar.
+	ld a,(Shields)
+	and a
+	jr z,2F 													; NO leemos SHIELD, no quedan escudos.
+
+	ld a,(Shield)
+	and a
+	jr nz,2F 												; No leemos SHIELD, estamos ejecutando escudo.
+
+	ld a,$7f
+	in a,($fe)
+	and $01
+	call z,Inicia_Shield      							; "SPACE" para SHIELD.
+	jr nz,2F
+
+	ld a,90
+	ld (Shield),a 										; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
+
+	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
+	dec (hl)	
+
+; Disparo.
+
+2 ld a,$f7													; "5" para disparar.
 	in a,($fe)
 	and $10
-
 	call z,Genera_disparo_Amadeus
+
+; Movement.
 
 1 ld a,$f7		  											; Rutina de TECLADO. Detecta cuando se pulsan las teclas "1" y "2"  y llama a las rutinas de "Mov_izq" y "Mov_der". $f7  detecta fila de teclas: (5,4,3,2,1).
 	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
-	and $01													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $01 resulta "0"  llama a la rutina "Mov_izq".
+	and $01												; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $01 resulta "0"  llama a la rutina "Mov_izq".
     call z,Amadeus_a_izquierda							
 
 	ld a,$f7
@@ -2207,7 +2232,7 @@ Teclado
 
 	ld a,$f7
 	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
-	and $02													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $02 resulta "0"  llama a la rutina "Mov_der".
+	and $02												; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $02 resulta "0"  llama a la rutina "Mov_der".
 	call z,Amadeus_a_derecha
 
 	ret	
