@@ -31,7 +31,99 @@ Disparo_fdb DEFB $1f,$80 						; (No se imprime, detección de colisión).
 
 ; ----------------------------------------------------------------------------------------
 
-; Badsat_izq. 2x2.
+; Badplate.
+
+Indice_Badplate_der defw Badplate
+	defw 0	
+	defw Badplate_F9							; [$F9] right - [$FA] left 
+	defw 0	
+	defw Badplate_Fb     						; [$FB] right - [$FC] left                     
+	defw 0	
+	defw Badplate_Fd							; [$FD] right - [$FE] left 
+	defw 0	 									; (Fín de índice).
+
+Indice_Badplate_izq defw Badplate
+	defw 0	
+	defw Badplate_Fd							; [$F9] right - [$FA] left 
+	defw 0	
+	defw Badplate_Fb     						; [$FB] right - [$FC] left                     
+	defw 0	
+	defw Badplate_F9							; [$FD] right - [$FE] left 
+	defw 0	 									; (Fín de índice).
+
+Badplate
+
+	DEFB	$06,$00,$00
+	DEFB    $19,$00,$00
+	DEFB	$20,$80,$00
+	DEFB	$20,$80,$00
+	DEFB	$03,$C0,$00
+	DEFB	$04,$20,$00
+	DEFB	$0C,$B0,$00
+	DEFB	$08,$90,$00
+	DEFB	$09,$90,$00
+	DEFB	$19,$98,$00
+	DEFB	$79,$1E,$00
+	DEFB	$D9,$1F,$00
+	DEFB	$FC,$37,$00
+	DEFB 	$6F,$FE,$00
+	DEFB	$3D,$DC,$00
+	DEFB	$0F,$F0,$00
+
+Badplate_F9 DEFB $00,$40,$00
+	DEFB	$00,$A0,$00
+	DEFB	$00,$A0,$00
+	DEFB	$00,$20,$00
+	DEFB	$00,$F0,$00
+	DEFB	$01,$08,$00
+	DEFB	$03,$0C,$00
+	DEFB	$02,$04,$00
+	DEFB	$02,$64,$00
+	DEFB	$06,$66,$00
+	DEFB	$1E,$05,$80
+	DEFB	$36,$07,$C0
+	DEFB	$3F,$0F,$C0
+	DEFB	$1D,$FB,$80
+	DEFB	$0F,$DF,$00
+	DEFB	$03,$FC,$00 ; $F9 (2º DESPLZ a derecha).
+
+	org $8400
+
+Badplate_Fb DEFB $00,$60,$00
+	DEFB	$00,$90,$00
+	DEFB	$01,$08,$00
+	DEFB	$01,$08,$00
+	DEFB	$00,$3C,$00
+	DEFB	$00,$42,$00
+	DEFB	$00,$CB,$00
+	DEFB	$00,$89,$00
+	DEFB	$00,$99,$00
+	DEFB	$01,$99,$80
+	DEFB	$07,$91,$E0
+	DEFB	$0D,$91,$F0
+	DEFB	$0F,$C3,$70
+	DEFB	$06,$FF,$E0
+	DEFB	$03,$DD,$C0
+	DEFB	$00,$FF,$00 ; $Fb (4º DESPLZ a derecha).
+
+Badplate_Fd DEFB $00,$0C,$00
+	DEFB	$00,$12,$00
+	DEFB	$00,$62,$00
+	DEFB	$00,$02,$00
+	DEFB	$00,$0F,$00
+	DEFB	$00,$10,$80
+	DEFB	$00,$30,$C0
+	DEFB	$00,$20,$40
+	DEFB	$00,$26,$40
+	DEFB	$00,$66,$60
+	DEFB	$01,$E0,$58
+	DEFB	$03,$60,$7C
+	DEFB	$03,$F0,$FC
+	DEFB	$01,$DF,$B8
+	DEFB	$00,$FD,$F0
+	DEFB	$00,$3F,$C0 ; $Fd (6º DESPLZ a derecha).
+
+; Badsat.
 
 Indice_Badsat_izq defw Badsat_izquierda
 	defw Badsat_izq_fe
@@ -65,8 +157,6 @@ Badsat_izq_f8 DEFB $00,$04,$00,$01,$0A,$00,$01,$15
 	DEFB	$05,$70,$00,$0B,$FC,$00,$15,$F4
 	DEFB	$00,$2A,$20,$00,$55,$30,$00,$2A
 	DEFB	$00,$00,$14,$00,$00,$08,$00,$00 ; $F8 (7º DESPLZ a izquierda).
-
-	org $8400
 
 Badsat_izq_f9 DEFB $00,$02,$00,$00,$85,$00,$00,$8A
 	DEFB	$80,$00,$95,$40,$00,$AA,$80,$00
@@ -102,8 +192,6 @@ Badsat_izq_fd DEFB $00,$00,$20,$00,$08,$50,$00,$08
 	DEFB	$00,$2B,$80,$00,$5F,$F8,$00,$AF
 	DEFB	$80,$01,$51,$00,$02,$A9,$00,$01
 	DEFB	$51,$00,$00,$A0,$00,$00,$40,$00 ; $Fd (2º DESPLZ a izquierda).
-
-	org $8500
 
 Badsat_izq_fe DEFB $00,$00,$10,$00,$04,$28,$00,$04
 	DEFB	$54,$00,$04,$AA,$00,$05,$54,$00
@@ -167,6 +255,8 @@ Badsat_der_fb DEFB $01,$00,$00,$02,$84,$00,$05,$44
 	DEFB	$40,$00,$22,$A0,$00,$65,$50,$00
 	DEFB	$02,$A0,$00,$01,$40,$00,$00,$80 ; $Fb (4º DESPLZ a derecha).
 
+	org $8700
+
 Badsat_der_fc DEFB $00,$80,$00,$01,$42,$00,$02,$A2
 	DEFB	$00,$05,$52,$00,$02,$AA,$00,$01
 	DEFB	$52,$00,$00,$BF,$F0,$00,$36,$00
@@ -210,7 +300,7 @@ Indice_Amadeus_izq defw Amadeus
 	defw Amadeus_F9							; [$FD] right - [$FE] left 
 	defw 0	 								; (Fín de índice).
 
-	org $8700
+;	org $8700
 
 Amadeus DEFB $01,$80,0
 	DEFB	$23,$C4,0
@@ -228,6 +318,8 @@ Amadeus DEFB $01,$80,0
 	DEFB	$FB,$DF,0
 	DEFB	$8B,$D1,0
 	DEFB	$71,$8E,0 						; Sprite principal, (sin desplazar).
+
+	org $8800
 
 Amadeus_F9 DEFB	$00,$60,$00,$08,$F1,$00,$09,$99
 	DEFB	$00,$09,$09,$00,$0B,$0D,$00,$1B
@@ -273,14 +365,14 @@ Explosion_entidades_1 DEFB $00,$10,$00
 	DEFB	$04,$00,$00
 	DEFB	$08,$00,$00
 
-	org $8800
-
 Explosion_entidades_2 DEFB $08,$00,$00,$05,$38,$10,$03,$BC
 	DEFB	$20,$06,$00,$C0,$04,$06,$C0,$00
 	DEFB	$37,$00,$00,$7F,$00,$03,$DD,$80
 	DEFB	$03,$FE,$00,$03,$3A,$70,$01,$9C
 	DEFB	$60,$01,$F6,$40,$04,$F8,$80,$06
 	DEFB	$00,$00,$08,$00,$00,$00,$00,$00
+
+	org $8900
 
 Explosion_entidades_3 DEFB $03,$18,$10,$04,$00,$20,$08,$00
 	DEFB	$40,$00,$00,$C0,$00,$06,$00,$00
