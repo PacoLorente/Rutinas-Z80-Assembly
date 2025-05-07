@@ -277,6 +277,7 @@ Indice_de_definiciones_de_entidades
 	defw Entidad_Clase_1
 	defw Entidad_Clase_2
 	defw Entidad_Clase_3
+	defw Entidad_Clase_4
 
 ; Entidades (Tipo) BADSAT. (Satélites poseidos). 
 
@@ -310,6 +311,19 @@ Entidad_Clase_3 db 3,$81,2,2		                     		; (Clase) /(Tipo) / (Filas)
 	db 0																		; (Cuad_objeto).
 	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 													; (Attr).
+
+; ----- . ----- . ----- . ----- . -----
+;
+;	Badplate.
+
+Entidad_Clase_4 db 4,$82,2,2		                     		; (Clase) /(Tipo) / (Filas) / (Columns).
+	db 1																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
+	defw Indice_Badplate_der										; (Indice_Sprite_der).
+	defw Indice_Badplate_izq										; (Indice_Sprite_izq).
+	defw $4000	                										; (Posicion_inicio).
+	db 0																		; (Cuad_objeto).
+	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
+	db %01000110 													; (Attr).
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;

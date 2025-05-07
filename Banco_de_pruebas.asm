@@ -1013,6 +1013,9 @@ Reinicia_Amadeus
 
 	call Inicia_Shield
 
+	ld a,90
+	ld (Shield),a 										; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
+
 	ld a,100
 	ld (Temp_new_live),a
 

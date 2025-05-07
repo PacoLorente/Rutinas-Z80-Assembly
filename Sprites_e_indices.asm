@@ -54,7 +54,7 @@ Indice_Badplate_izq defw Badplate
 Badplate
 
 	DEFB	$06,$00,$00
-	DEFB    $19,$00,$00
+	DEFB	$19,$00,$00
 	DEFB	$20,$80,$00
 	DEFB	$20,$80,$00
 	DEFB	$03,$C0,$00
@@ -64,47 +64,47 @@ Badplate
 	DEFB	$09,$90,$00
 	DEFB	$19,$98,$00
 	DEFB	$79,$1E,$00
-	DEFB	$D9,$1F,$00
+	DEFB	$F9,$1F,$00
 	DEFB	$FC,$37,$00
-	DEFB 	$6F,$FE,$00
+	DEFB	$6F,$FE,$00
 	DEFB	$3D,$DC,$00
-	DEFB	$0F,$F0,$00
+	DEFB	$0F,$F0,$00							; Sprite principal, (sin desplazar).
 
-Badplate_F9 DEFB $00,$40,$00
-	DEFB	$00,$A0,$00
-	DEFB	$00,$A0,$00
-	DEFB	$00,$20,$00
+Badplate_F9 DEFB $01,$80,$00
+	DEFB	$06,$40,$00
+	DEFB	$08,$20,$00
+	DEFB	$08,$20,$00
 	DEFB	$00,$F0,$00
 	DEFB	$01,$08,$00
-	DEFB	$03,$0C,$00
-	DEFB	$02,$04,$00
+	DEFB	$03,$2C,$00
+	DEFB	$02,$24,$00
 	DEFB	$02,$64,$00
 	DEFB	$06,$66,$00
-	DEFB	$1E,$05,$80
-	DEFB	$36,$07,$C0
-	DEFB	$3F,$0F,$C0
-	DEFB	$1D,$FB,$80
-	DEFB	$0F,$DF,$00
-	DEFB	$03,$FC,$00 ; $F9 (2º DESPLZ a derecha).
+	DEFB	$1E,$47,$80
+	DEFB	$36,$47,$C0
+	DEFB	$3F,$0D,$C0
+	DEFB	$1B,$FF,$80
+	DEFB	$0F,$77,$00
+	DEFB	$03,$FC,$00 						; $F9 (2º DESPLZ a derecha).
 
 	org $8400
 
-Badplate_Fb DEFB $00,$60,$00
-	DEFB	$00,$90,$00
-	DEFB	$01,$08,$00
-	DEFB	$01,$08,$00
+Badplate_Fb DEFB $00,$30,$00
+	DEFB	$00,$48,$00
+	DEFB	$01,$88,$00
+	DEFB	$00,$08,$00
 	DEFB	$00,$3C,$00
 	DEFB	$00,$42,$00
-	DEFB	$00,$CB,$00
-	DEFB	$00,$89,$00
+	DEFB	$00,$C3,$00
+	DEFB	$00,$81,$00
 	DEFB	$00,$99,$00
 	DEFB	$01,$99,$80
-	DEFB	$07,$91,$E0
-	DEFB	$0D,$91,$F0
-	DEFB	$0F,$C3,$70
-	DEFB	$06,$FF,$E0
-	DEFB	$03,$DD,$C0
-	DEFB	$00,$FF,$00 ; $Fb (4º DESPLZ a derecha).
+	DEFB	$07,$81,$60
+	DEFB	$0D,$81,$F0
+	DEFB	$0F,$C3,$F0
+	DEFB	$07,$7E,$E0
+	DEFB	$03,$F7,$C0
+	DEFB	$00,$FF,$00 						; $Fb (4º DESPLZ a derecha).
 
 Badplate_Fd DEFB $00,$0C,$00
 	DEFB	$00,$12,$00
@@ -121,7 +121,7 @@ Badplate_Fd DEFB $00,$0C,$00
 	DEFB	$03,$F0,$FC
 	DEFB	$01,$DF,$B8
 	DEFB	$00,$FD,$F0
-	DEFB	$00,$3F,$C0 ; $Fd (6º DESPLZ a derecha).
+	DEFB	$00,$3F,$C0 						; $Fd (6º DESPLZ a derecha).
 
 ; Badsat.
 
