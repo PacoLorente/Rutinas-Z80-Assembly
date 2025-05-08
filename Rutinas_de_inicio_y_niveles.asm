@@ -87,7 +87,7 @@ Prepara_Cajas_Master
 
 	ld a,(Tipo)
 	call Situa_en_Tabla_Random 								; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
-	call Aplica_rnd_al_baile
+;	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
@@ -97,12 +97,7 @@ Prepara_Cajas_Master
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
-	ld hl,Numeros_aleatorios_baile+3								
-	ld a,(hl)
-	and $1f																; Define el nº de columna por el que va a aparecer la entidad.
-
-	ld hl,Posicion_inicio
-	ld (hl),a
+	call Determina_posicion_de_inicio
 
 	ld a,(Tipo)
 	call Situa_Puntero_indice_mov			 	 			; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
@@ -162,6 +157,33 @@ Avanza_siguiente_entidad_del_nivel
 	call Extrae_address
 	inc l
 	ld (Puntero_de_entidades),hl
+
+	ret
+
+; -----------------------------------------------------------------------------------
+;
+;	8/5/25
+;
+
+
+Determina_posicion_de_inicio
+
+	ld hl,Numeros_aleatorios_baile+3								
+	ld a,(hl)
+	and $1f																; Define el nº de columna por el que va a aparecer la entidad.
+
+;	Tenemos un nº aleatorio, (Columna de inicio) en A.
+
+	ld d,a 												
+	ld a,(Tipo)											; (Tipo) $81 Badsat, $82 Badplate.
+	and 2
+	ld a,d
+	jr z,1F
+
+	jr $	;	[Prepara_cajas_master] debuggg
+
+1 ld hl,Posicion_inicio
+	ld (hl),a
 
 	ret
 
