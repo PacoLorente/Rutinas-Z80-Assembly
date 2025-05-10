@@ -34,94 +34,82 @@ Disparo_fdb DEFB $1f,$80 						; (No se imprime, detección de colisión).
 ; Badplate.
 
 Indice_Badplate_der defw Badplate
-	defw 0	
-	defw Badplate_F9							; [$F9] right - [$FA] left 
-	defw 0	
-	defw Badplate_Fb     						; [$FB] right - [$FC] left                     
-	defw 0	
-	defw Badplate_Fd							; [$FD] right - [$FE] left 
-	defw 0	 									; (Fín de índice).
+	defw Badplate_f8								
+	defw Badplate_f9							
+	defw Badplate_fa	
+	defw Badplate_fb     						                     
+	defw Badplate_fc	
+	defw Badplate_fd							 
+	defw Badplate_fe	 									
 
 Indice_Badplate_izq defw Badplate
-	defw 0	
-	defw Badplate_Fd							; [$F9] right - [$FA] left 
-	defw 0	
-	defw Badplate_Fb     						; [$FB] right - [$FC] left                     
-	defw 0	
-	defw Badplate_F9							; [$FD] right - [$FE] left 
-	defw 0	 									; (Fín de índice).
+	defw Badplate_fe	
+	defw Badplate_fd							 
+	defw Badplate_fc	
+	defw Badplate_fb     						                     
+	defw Badplate_fa	
+	defw Badplate_f9							 
+	defw Badplate_f8	 									
 
-Badplate
+Badplate DEFB $03,$00,$00,$04,$80,$00,$08,$80
+	DEFB	$00,$33,$C0,$00,$04,$20,$00,$0C
+	DEFB	$B0,$00,$08,$90,$00,$09,$90,$00
+	DEFB	$09,$90,$00,$19,$18,$00,$79,$1E
+	DEFB	$00,$DC,$27,$00,$B7,$F3,$00,$6C
+	DEFB	$9E,$00,$3C,$CC,$00,$0F,$F0,$00		; Sprite principal, (sin desplazar). 1ª Animación.
 
-	DEFB	$06,$00,$00
-	DEFB	$19,$00,$00
-	DEFB	$20,$80,$00
-	DEFB	$20,$80,$00
-	DEFB	$03,$C0,$00
-	DEFB	$04,$20,$00
-	DEFB	$0C,$B0,$00
-	DEFB	$08,$90,$00
-	DEFB	$09,$90,$00
-	DEFB	$19,$98,$00
-	DEFB	$79,$1E,$00
-	DEFB	$F9,$1F,$00
-	DEFB	$FC,$37,$00
-	DEFB	$6F,$FE,$00
-	DEFB	$3D,$DC,$00
-	DEFB	$0F,$F0,$00							; Sprite principal, (sin desplazar).
-
-Badplate_F9 DEFB $01,$80,$00
-	DEFB	$06,$40,$00
-	DEFB	$08,$20,$00
-	DEFB	$08,$20,$00
-	DEFB	$00,$F0,$00
-	DEFB	$01,$08,$00
-	DEFB	$03,$2C,$00
-	DEFB	$02,$24,$00
-	DEFB	$02,$64,$00
-	DEFB	$06,$66,$00
-	DEFB	$1E,$47,$80
-	DEFB	$36,$47,$C0
-	DEFB	$3F,$0D,$C0
-	DEFB	$1B,$FF,$80
-	DEFB	$0F,$77,$00
-	DEFB	$03,$FC,$00 						; $F9 (2º DESPLZ a derecha).
+Badplate_f8 DEFB $00,$60,$00,$00,$90,$00,$00,$90
+	DEFB	$00,$03,$C0,$00,$04,$20,$00,$0C
+	DEFB	$30,$00,$08,$10,$00,$09,$90,$00
+	DEFB	$09,$90,$00,$18,$18,$00,$78,$1E
+	DEFB	$00,$DC,$27,$00,$B7,$F3,$00,$6C
+	DEFB	$9E,$00,$3C,$CC,$00,$0F,$F0,$00		; $f8 Sprite principal, (sin desplazar). 2ª Animación.
 
 	org $8400
 
-Badplate_Fb DEFB $00,$30,$00
-	DEFB	$00,$48,$00
-	DEFB	$01,$88,$00
-	DEFB	$00,$08,$00
-	DEFB	$00,$3C,$00
-	DEFB	$00,$42,$00
-	DEFB	$00,$C3,$00
-	DEFB	$00,$81,$00
-	DEFB	$00,$99,$00
-	DEFB	$01,$99,$80
-	DEFB	$07,$81,$60
-	DEFB	$0D,$81,$F0
-	DEFB	$0F,$C3,$F0
-	DEFB	$07,$7E,$E0
-	DEFB	$03,$F7,$C0
-	DEFB	$00,$FF,$00 						; $Fb (4º DESPLZ a derecha).
+Badplate_f9 DEFB $00,$C0,$00,$01,$20,$00,$02,$20
+	DEFB	$00,$0C,$F0,$00,$01,$08,$00,$03
+	DEFB	$2C,$00,$02,$24,$00,$02,$64,$00
+	DEFB	$02,$64,$00,$06,$46,$00,$1E,$47
+	DEFB	$80,$37,$09,$C0,$2D,$FC,$C0,$1B
+	DEFB	$27,$80,$0F,$33,$00,$03,$FC,$00		; $f9 (1er DESPLZ a derecha). 1ª Animación.
 
-Badplate_Fd DEFB $00,$0C,$00
-	DEFB	$00,$12,$00
-	DEFB	$00,$62,$00
-	DEFB	$00,$02,$00
-	DEFB	$00,$0F,$00
-	DEFB	$00,$10,$80
-	DEFB	$00,$30,$C0
-	DEFB	$00,$20,$40
-	DEFB	$00,$26,$40
-	DEFB	$00,$66,$60
-	DEFB	$01,$E0,$58
-	DEFB	$03,$60,$7C
-	DEFB	$03,$F0,$FC
-	DEFB	$01,$DF,$B8
-	DEFB	$00,$FD,$F0
-	DEFB	$00,$3F,$C0 						; $Fd (6º DESPLZ a derecha).
+Badplate_fa DEFB $00,$18,$00,$00,$24,$00,$00,$24
+	DEFB	$00,$00,$F0,$00,$01,$08,$00,$03
+	DEFB	$0C,$00,$02,$04,$00,$02,$64,$00
+	DEFB	$02,$64,$00,$06,$06,$00,$1E,$07
+	DEFB	$80,$37,$09,$C0,$2D,$FC,$C0,$1B
+	DEFB	$27,$80,$0F,$33,$00,$03,$FC,$00		; $fa (1er DESPLZ a derecha). 2ª Animación.
+
+Badplate_fb DEFB $00,$30,$00,$00,$48,$00,$00,$88
+	DEFB	$00,$00,$3C,$00,$00,$42,$00,$00
+	DEFB	$C3,$00,$00,$89,$00,$00,$99,$00
+	DEFB	$00,$99,$00,$01,$91,$80,$07,$81
+	DEFB	$E0,$0D,$C2,$F0,$0B,$7E,$70,$07
+	DEFB	$33,$60,$03,$B9,$C0,$00,$FF,$00 	; $Fb (2º DESPLZ a derecha). 1ª Animación.
+
+Badplate_fc DEFB $00,$06,$00,$00,$09,$00,$00,$08
+	DEFB	$80,$00,$3C,$60,$00,$42,$00,$00
+	DEFB	$C3,$00,$00,$89,$00,$00,$99,$00
+	DEFB	$00,$99,$00,$01,$91,$80,$07,$81
+	DEFB	$E0,$0D,$C2,$F0,$0B,$7E,$70,$07
+	DEFB	$33,$60,$03,$B9,$C0,$00,$FF,$00		; $Fc (2º DESPLZ a derecha). 2ª Animación.
+
+Badplate_fd DEFB $00,$0C,$00,$00,$12,$00,$00,$22
+	DEFB	$00,$00,$0F,$00,$00,$10,$80,$00
+	DEFB	$30,$C0,$00,$22,$40,$00,$26,$40
+	DEFB	$00,$26,$40,$00,$64,$60,$01,$E0
+	DEFB	$78,$03,$70,$BC,$02,$DF,$9C,$01
+	DEFB	$CC,$D8,$00,$EE,$70,$00,$3F,$C0 	; $Fd (3er DESPLZ a derecha). 1ª Animación.
+
+	org $8500
+
+Badplate_fe DEFB $00,$01,$80,$00,$02,$40,$00,$02
+	DEFB	$20,$00,$0F,$18,$00,$10,$80,$00
+	DEFB	$30,$C0,$00,$22,$40,$00,$26,$40
+	DEFB	$00,$26,$40,$00,$64,$60,$01,$E0
+	DEFB	$78,$03,$70,$BC,$02,$DF,$9C,$01
+	DEFB	$CC,$D8,$00,$EE,$70,$00,$3F,$C0		; $Fe (3er DESPLZ a derecha). 2ª Animación.
 
 ; Badsat.
 
@@ -255,14 +243,14 @@ Badsat_der_fb DEFB $01,$00,$00,$02,$84,$00,$05,$44
 	DEFB	$40,$00,$22,$A0,$00,$65,$50,$00
 	DEFB	$02,$A0,$00,$01,$40,$00,$00,$80 ; $Fb (4º DESPLZ a derecha).
 
-	org $8700
-
 Badsat_der_fc DEFB $00,$80,$00,$01,$42,$00,$02,$A2
 	DEFB	$00,$05,$52,$00,$02,$AA,$00,$01
 	DEFB	$52,$00,$00,$BF,$F0,$00,$36,$00
 	DEFB	$00,$3A,$80,$00,$FF,$40,$00,$BE
 	DEFB	$A0,$00,$11,$50,$00,$32,$A8,$00
 	DEFB	$01,$50,$00,$00,$A0,$00,$00,$40 ; $Fc (5º DESPLZ a derecha).
+
+	org $8800
 
 Badsat_der_fd DEFB $00,$40,$00,$00,$A1,$00,$01,$51
 	DEFB	$00,$02,$A9,$00,$01,$55,$00,$00
@@ -319,14 +307,14 @@ Amadeus DEFB $01,$80,0
 	DEFB	$8B,$D1,0
 	DEFB	$71,$8E,0 						; Sprite principal, (sin desplazar).
 
-	org $8800
-
 Amadeus_F9 DEFB	$00,$60,$00,$08,$F1,$00,$09,$99
 	DEFB	$00,$09,$09,$00,$0B,$0D,$00,$1B
 	DEFB	$6D,$80,$1B,$FD,$80,$19,$F9,$80
 	DEFB	$39,$F9,$C0,$3C,$F3,$C0,$3D,$FB
 	DEFB	$C0,$3F,$FF,$C0,$3E,$F7,$C0,$3E
 	DEFB	$F7,$C0,$22,$F4,$40,$1C,$63,$80 ; $F9 (2º DESPLZ a derecha).
+
+	org $8900
 
 Amadeus_Fb DEFB	$00,$18,$00,$02,$3C,$40,$02,$66
 	DEFB	$40,$02,$42,$40,$02,$C3,$40,$06
@@ -372,8 +360,6 @@ Explosion_entidades_2 DEFB $08,$00,$00,$05,$38,$10,$03,$BC
 	DEFB	$60,$01,$F6,$40,$04,$F8,$80,$06
 	DEFB	$00,$00,$08,$00,$00,$00,$00,$00
 
-	org $8900
-
 Explosion_entidades_3 DEFB $03,$18,$10,$04,$00,$20,$08,$00
 	DEFB	$40,$00,$00,$C0,$00,$06,$00,$00
 	DEFB	$15,$00,$08,$1E,$00,$00,$14,$30
@@ -386,6 +372,8 @@ Explosion_entidades_3 DEFB $03,$18,$10,$04,$00,$20,$08,$00
 Indice_Explosion_Amadeus defw Explosion_Amadeus_1
 	defw Explosion_Amadeus_2
 	defw Explosion_Amadeus_3
+
+	org $8a00
 
 Explosion_Amadeus_1	DEFB $00,$18,$02
 	DEFB	$02,$3C,$36

@@ -367,7 +367,7 @@ Ciclo_completo ld a,(CTRL_DESPLZ)
 	cp $ff
 	jr z,1F 												     ; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
 	and $f0
-	jr nz,3F
+	ret nz
 
 ; (CTRL_DESPLZ) fuera de rango, (por encima de $ff), hay que reajustar.	
 
@@ -376,11 +376,14 @@ Ciclo_completo ld a,(CTRL_DESPLZ)
 	ld a,$f8
 	add b
 	ld (CTRL_DESPLZ),a 
-	jr 3F
+	ret
+
 1 ld hl,Columns													 ; Tras 8 desplazamientos el objeto desplazado es igual al original.
 	dec (hl) 													 ; Decrementamos el nº de (Columns).
+
 	xor a 														 ; Reiniciamos (CTRL_DESPLZ).
 	ld (CTRL_DESPLZ),a 
+
 	ld a,(Cuad_objeto) 											 ; Si estamos situados en el cuadrante 1º o 3º de la pantalla no modificamos_
 	and 1 														 ; _(Posicion_actual). Limpiamos la (Caja_de_DESPLZ) y salimos.
 	jr nz,2F
@@ -393,9 +396,10 @@ Ciclo_completo ld a,(CTRL_DESPLZ)
 ; Inicia el puntero de Sprite.
 
 2 call Inicia_puntero_objeto_der
-3 ret
 
-; ******************************************************************************************************************************************************************************************
+	ret
+
+; ---------------------------------------------------------
 ;
 ;	15/02/23
 ;
@@ -582,7 +586,7 @@ modifica_parametros_1er_DESPLZ ld a,(CTRL_DESPLZ) 				    ; Incrementamos el nª
 Ciclo_completo_2 ld a,(CTRL_DESPLZ)
 	cp $f7
 	jr z,1F 												   		; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
-	jr nc,3F
+	ret nc
 
 ; (CTRL_DESPLZ) fuera de rango, (por debajo de $f7), hay que reajustar.
 
@@ -594,25 +598,30 @@ Ciclo_completo_2 ld a,(CTRL_DESPLZ)
 	ld a,$ff
 	sub b
 	ld (CTRL_DESPLZ),a
-	jr 3F
+	ret
 
 ; Se completa el ciclo de movimiento. (CTRL_DESPLZ)="0", se generan coordenadas y se corrige (Posicion_actual).
 
 1 ld hl,Columns
 	dec (hl)
+
 	xor a
 	ld (CTRL_DESPLZ),a
+
 	ld a,(Cuad_objeto)
 	and 1
 	jr z,2F
+
 	ld hl,Posicion_actual                                         ; Decrementamos (Posicion_actual) en los cuadrantes 1º y 3º.
 	dec (hl)
+
 	call Genera_coordenadas
 
 ; Inicia (Puntero_DESPLZ_izq) y (Puntero_objeto).
 
 2 call Inicia_puntero_objeto_izq 
-3 ret
+
+	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
 ;

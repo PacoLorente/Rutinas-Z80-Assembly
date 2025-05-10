@@ -11,7 +11,7 @@
 ;	
 ;	Los 6 últimos bytes contienen el borrado/pintado de Amadeus, (Amadeus_scanlines_album).
 
-	org $8a00	
+	org $8a90	
 
 Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
@@ -215,8 +215,6 @@ Caja_2
 	db 0 											; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------	
-
-	org $8b00
 
 Caja_3 
 

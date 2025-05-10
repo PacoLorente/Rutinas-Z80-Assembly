@@ -87,7 +87,7 @@ Prepara_Cajas_Master
 
 	ld a,(Tipo)
 	call Situa_en_Tabla_Random 								; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
-;	call Aplica_rnd_al_baile
+	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
@@ -174,13 +174,13 @@ Determina_posicion_de_inicio
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 
-	ld d,a 												
-	ld a,(Tipo)											; (Tipo) $81 Badsat, $82 Badplate.
-	and 2
-	ld a,d
-	jr z,1F
+;	ld d,a 												
+;	ld a,(Tipo)											; (Tipo) $81 Badsat, $82 Badplate.
+;	and 2
+;	ld a,d
+;	jr z,1F
 
-	jr $	;	[Prepara_cajas_master] debuggg
+;	jr $	;	[Prepara_cajas_master] debuggg
 
 1 ld hl,Posicion_inicio
 	ld (hl),a
