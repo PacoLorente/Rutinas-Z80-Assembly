@@ -218,8 +218,27 @@ Mov_right ld a,(Ctrl_0)
 
 ; ---------- ---------- ----------
 
-3 call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
-;	call Reinicio
+3 
+
+;	call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+	call Reinicio
+
+;	Homos generado todos los movimientos.
+
+	ld a,(Ctrl_3)
+	set 1,a
+	ld (Ctrl_3),a
+
+	jr 2F
+;				
+
+
+
+
+
+
+
+
 
 ; ---------- ---------- ----------
 ;
@@ -232,14 +251,14 @@ Mov_right ld a,(Ctrl_0)
 	djnz 5B
 	ld hl,Posicion_actual											; Decrementamos su posición actual, pués al desplazarlo a la derecha, volvemos a incrementar el nº de (Columns) y _
 	dec (hl)														; _ (Posicion_actual) ha pasado de $00 a $01.
-	call Genera_coordenadas
-	jr 2F 															; Salimos para pintar la nueva posición.
+2 call Genera_coordenadas
+	ret  															; Salimos para pintar la nueva posición.
 
 ; ---------- ---------- ----------
 
 8 ld hl,(Posicion_actual)
 	call DESPLZ_DER
-2 ret
+	ret
 
 ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;

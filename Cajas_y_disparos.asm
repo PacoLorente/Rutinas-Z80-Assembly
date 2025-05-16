@@ -35,7 +35,7 @@ Contador_general_de_mov_masticados_3 defw 0
 ; -------------------------------------------------------------------------------------------------------
 
 Indice_de_mov_segun_tipo_de_entidad defw Indice_mov_Baile_de_BadSat
-;	defw ...
+	defw Indice_mov_Baile_de_Badplate
 ; 	defw ...
 	defw 0
 
@@ -269,6 +269,8 @@ Caja_5
 ;	CLASES de "Entidades maliciosas" que quieren conquistar la Tierra.	
 ;
 ;	(Definiciones de entidades).
+;
+;	El (Tipo) de la entidad define el patrón de movimientos.
 
 Indice_de_definiciones_de_entidades
 

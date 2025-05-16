@@ -85,9 +85,9 @@ Prepara_Cajas_Master
 	ld hl,Numeros_aleatorios_baile 							
 	call Derivando_RND 										 	; Generamos 7 nº RND para construir los mov. masticados.
 
-	ld a,(Tipo)
-	call Situa_en_Tabla_Random 								; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
-	call Aplica_rnd_al_baile
+;	ld a,(Tipo)
+;	call Situa_en_Tabla_Random 								; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+;	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
@@ -162,7 +162,7 @@ Avanza_siguiente_entidad_del_nivel
 
 ; -----------------------------------------------------------------------------------
 ;
-;	8/5/25
+;	16/5/25
 ;
 
 
@@ -174,14 +174,21 @@ Determina_posicion_de_inicio
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 
-;	ld d,a 												
-;	ld a,(Tipo)											; (Tipo) $81 Badsat, $82 Badplate.
-;	and 2
-;	ld a,d
-;	jr z,1F
+	ld d,a 												
+	ld a,(Tipo)											; (Tipo) $81 Badsat, $82 Badplate.
+	and 2
+	ld a,d
+	jr z,1F
 
-;	jr $	;	[Prepara_cajas_master] debuggg
+; Entidad tipo Badplate. Si nuestro nº RND es "<= $0f" aparecerá por la izquierda.
+; ">" you see it by the right side.  
 
+	cp $0f
+	jr c,2F
+	ld a,$1f
+	jr 1F
+
+2 xor a
 1 ld hl,Posicion_inicio
 	ld (hl),a
 
@@ -193,7 +200,9 @@ Determina_posicion_de_inicio
 ;
 ;
 
-Construye_movimientos_masticados_entidad	
+Construye_movimientos_masticados_entidad
+
+	jr $	
 
 	ld hl,(Puntero_indice_de_almacenes)
 	call Extrae_address
@@ -617,10 +626,10 @@ Situa_Puntero_indice_mov
 ; Si es así, hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde_
 ; _el que se inicia la entidad.
 
-	ld a,(Tipo)
-	and %01111111
-	dec a
-	jr nz,1F
+;	ld a,(Tipo)
+;	and %01111111
+;	dec a
+;	jr nz,1F
 
 ; Seleccionamos Danza.
 

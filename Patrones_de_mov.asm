@@ -68,6 +68,26 @@
 ;                                           ;               _ esta dirección y no se situará al comienzo del índice del patrón de movimiento.         
 
 ; ----- ----- ----- ----- -----
+Indice_mov_Baile_de_Badplate
+
+    defw Left_Ini82
+    defw Right_Ini82
+
+Left_Ini82 defw Bajo_decelerando
+    defw F_1
+    defw F_2
+    defw Desplaza_derecha
+    defw 0
+
+Right_Ini82 
+
+    jr $
+
+    defw Bajo_decelerando
+    defw F_1
+    defw F_2
+
+    defw 0
 
 Indice_mov_Baile_de_BadSat 
 
@@ -145,6 +165,9 @@ Right_Ini defw Bajo_decelerando
 ;                               Izquierda_y_subiendo+8 (7)  
 ; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)               
 ;                               Izquierda_y_subiendo+8 (7)  
+
+Tira_pa_la_derecha db $11,$11,$1f,$ff
+
 
 Bajo_decelerando db $12,$11,$42             ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)
 ;                                           ; %0100 1111 ... ($42), Abajo 2x2 Pixels.
