@@ -1,6 +1,6 @@
 ; ******************************************************************************************************************************************************************************************
 ;
-;   4/2/25
+;   19/5/25
 ;
 ;	Recompone_posicion_inicio
 ;
@@ -19,6 +19,7 @@ Recompone_posicion_inicio
 
 	ld hl,Ctrl_2
 	set 0,(hl)
+
 	ld hl,(Puntero_objeto)
 	ld (Repone_puntero_objeto),hl
 
@@ -28,15 +29,28 @@ Recompone_posicion_inicio
 	ld a,l
 	and $1f
 	jr z,1F
+
+; No estamos apareciendo por la parte izquierda. Lo estamos haciendo por la parte derecha?
+
 	cp $1f
 	jr nz,2F
 
 	call Mov_left
+
+; No vamos a aparecer por ningún extremo. Cargamos Sprite vacío pues vamos a ir apareciendo por la_
+; _parte alta de la pantalla.
+
 2 ld hl,Sprite_vacio
 	ld (Puntero_objeto),hl
+
+; Colocamos (Posicion_actual) a "$00" para que la rutina DRAW inicialice esta entidad.
+
 	ld hl,0 
 	ld (Posicion_actual),hl
+
 	ret
+
+; Vamos a aparecer por la parte izquierda de la pantalla.
 
 1 call Mov_right
 	jr 2B
@@ -220,16 +234,16 @@ Mov_right ld a,(Ctrl_0)
 
 3 
 
-;	call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
-	call Reinicio
+	call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+;	call Reinicio
 
 ;	Homos generado todos los movimientos.
 
-	ld a,(Ctrl_3)
-	set 1,a
-	ld (Ctrl_3),a
+;	ld a,(Ctrl_3)
+;	set 1,a
+;	ld (Ctrl_3),a
 
-	jr 2F
+;	jr 2F
 ;				
 
 

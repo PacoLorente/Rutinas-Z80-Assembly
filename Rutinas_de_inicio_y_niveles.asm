@@ -202,12 +202,10 @@ Determina_posicion_de_inicio
 
 Construye_movimientos_masticados_entidad
 
-	jr $	
-
 	ld hl,(Puntero_indice_de_almacenes)
 	call Extrae_address
 
-	ld (Puntero_de_almacen_de_mov_masticados),hl
+	ld (Puntero_de_almacen_de_mov_masticados),hl 					; $c1e6. Dirección de comienzo 1er almacén
 
 	push hl
 
@@ -221,6 +219,10 @@ Construye_movimientos_masticados_entidad
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
+
+	jr $
+
+	ld hl,(Posicion_actual)
 
 	call Movimiento
 
@@ -663,6 +665,7 @@ Prepara_Cajas_de_Entidades
 	ld hl,(Puntero_de_entidades)											; Clase de la 1ª entidad del Nivel.
 
 ; En este punto:
+
 ;
 ; HL está situado en el 1er .db del Nivel que indica la `Clase´ de entidad a volcar en la 1ª caja de entidades.
 ; B contiene (Numero_parcial_de_entidades).

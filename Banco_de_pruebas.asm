@@ -1775,7 +1775,7 @@ Extrae_address ld e,(hl)
 
 ; *************************************************************************************************************************************************************
 ;
-;	20/1/24
+;	19/5/25
 ;
 ;	Iniciamos (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq). 
 ;	Sitúa (Puntero_objeto) en el Sprite correspondiente en función de su (Posicion_inicio).
@@ -1791,19 +1791,6 @@ Inicia_Puntero_objeto
 	and $1f
 	cp $10
 	jr c,Inicia_puntero_objeto_der
-	jr Inicia_puntero_objeto_izq
-
-; Arrancamos desde la parte izquierda de la pantalla.
-; Iniciamos (Indice_Sprite_der).  
-
-Inicia_puntero_objeto_der ld hl,(Indice_Sprite_der)			
-	ld (Puntero_DESPLZ_der),hl
-	call Extrae_address
-	ld (Puntero_objeto),hl
-
-	ld hl,(Indice_Sprite_izq)							; Cuando "Iniciamos el Sprite a derecha",_					
-	ld (Puntero_DESPLZ_izq),hl
-	ret
 
 ; Arrancamos desde la parte derecha de la pantalla.
 ; Iniciamos (Indice_Sprite_izq).  
@@ -1815,6 +1802,18 @@ Inicia_puntero_objeto_izq ld hl,(Indice_Sprite_izq)
 
 	ld hl,(Indice_Sprite_der)							; Cuando "Iniciamos el Sprite a izquierda",_					
 	ld (Puntero_DESPLZ_der),hl							; _situamos (Puntero_DESPLZ_der) en el último defw_
+	ret
+
+; Arrancamos desde la parte izquierda de la pantalla.
+; Iniciamos (Indice_Sprite_der).  
+
+Inicia_puntero_objeto_der ld hl,(Indice_Sprite_der)			
+	ld (Puntero_DESPLZ_der),hl
+	call Extrae_address
+	ld (Puntero_objeto),hl
+
+	ld hl,(Indice_Sprite_izq)							; Cuando "Iniciamos el Sprite a derecha",_					
+	ld (Puntero_DESPLZ_izq),hl
 	ret
 
 ; **************************************************************************************************
