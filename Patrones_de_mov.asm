@@ -76,14 +76,10 @@ Indice_mov_Baile_de_Badplate
 Left_Ini82 defw Bajo_decelerando
     defw F_1
     defw F_2
-    defw Desplaza_derecha
+    defw Tira_pa_la_derecha
     defw 0
 
-Right_Ini82 
-
-    jr $
-
-    defw Bajo_decelerando
+Right_Ini82 defw Bajo_decelerando
     defw F_1
     defw F_2
 

@@ -56,7 +56,7 @@ Inicia_desplazamiento.
     dec hl
 
     ld hl,Ctrl_2
-    set 2,(hl)
+    set 2,(hl)                                                  ; Bit2 (Ctrl_2) indica que hemos iniciado un desplazamiento.
 
 ; Hemos ajustado la velocidad del desplazamiento con los 2 primeros bytes del desplazamiento.
 ; El 3er byte indica la dirección del desplz., (nibble alto) y las veces que lo ejecutamos, (nibble bajo).

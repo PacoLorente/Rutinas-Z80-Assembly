@@ -292,7 +292,19 @@ DESPLZ_DER call Desplaza_derecha
 
 Desplaza_derecha ld a,(Vel_right)
 	ld b,a
-	ld hl,(Puntero_DESPLZ_der)
+
+;	Si se trata de una entidad tipo $82, (Badplate), multiplicaremos (Vel_left)x2 pues este tipo de entidades se mueven 2px. 
+
+;	jr $
+
+	ld a,(Tipo)
+	and $0f
+	sub 2
+	jr nz,9F
+
+	sla b
+
+9 ld hl,(Puntero_DESPLZ_der)
 1 inc hl
 	inc hl
 	djnz 1B 														; (Vel_right) indica cuantas posiciones desplazaremos el (Puntero_DESPLZ)_
@@ -529,7 +541,19 @@ Desplaza_izquierda
 
 	ld a,(Vel_left)
 	ld b,a
-	ld hl,(Puntero_DESPLZ_izq)
+
+;	Si se trata de una entidad tipo $82, (Badplate), multiplicaremos (Vel_left)x2 pues este tipo de entidades se mueven 2px. 
+
+;	jr $
+
+	ld a,(Tipo)
+	and $0f
+	sub 2
+	jr nz,9F
+
+	sla b
+
+9 ld hl,(Puntero_DESPLZ_izq)
 1 inc hl
 	inc hl
 	djnz 1B 														; Seleccionamos FRAME en función de la velocidad del Sprite.
