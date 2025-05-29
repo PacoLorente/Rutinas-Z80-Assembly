@@ -539,7 +539,7 @@ INICIALIZACION
 ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
 
 	call Inicializa_Nivel								 	; Inicializa el 1er nivel del juego.
-	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master" para ir_
+	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
 	call Prepara_Cajas_de_Entidades
 
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------

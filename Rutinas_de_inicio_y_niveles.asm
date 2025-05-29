@@ -215,11 +215,11 @@ Construye_movimientos_masticados_entidad
 	call Inicia_Puntero_objeto															; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
 ;																										; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
 
-	jr $
-
 	call Recompone_posicion_inicio
 
 1 call Draw
+
+;	jr $
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado

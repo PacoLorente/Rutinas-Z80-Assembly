@@ -1,4 +1,4 @@
-; ******************************************************************************************************************************************************************************************
+; **********************************************************************************************************************************************************
 ;
 ;   19/5/25
 ;
@@ -17,8 +17,13 @@ Recompone_posicion_inicio
 	inc l
 	ld (hl),a
 
-	ld hl,Ctrl_2
-	set 0,(hl)
+;	ld hl,Ctrl_2
+;	set 0,(hl)
+
+; debugggggggg
+	ld hl,$401F
+	ld (Posicion_inicio),hl
+; ------------
 
 	ld hl,(Puntero_objeto)
 	ld (Repone_puntero_objeto),hl
@@ -30,10 +35,14 @@ Recompone_posicion_inicio
 	and $1f
 	jr z,1F
 
-; No estamos apareciendo por la parte izquierda. Lo estamos haciendo por la parte derecha?
-
 	cp $1f
 	jr nz,2F
+
+;	Vamos a aparecer por la parte izquierda de la pantalla.
+
+;	jr $
+
+;	(Puntero_objeto) $8e44
 
 	call Mov_left
 
