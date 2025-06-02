@@ -168,13 +168,13 @@ Avanza_siguiente_entidad_del_nivel
 
 Determina_posicion_de_inicio
 
-	ld hl,Numeros_aleatorios_baile+3								
+	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
 	and $1f																; Define el nº de columna por el que va a aparecer la entidad.
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 
-	ld d,a 												
+	ld d,a
 	ld a,(Tipo)											; (Tipo) $81 Badsat, $82 Badplate.
 	and 2
 	ld a,d
@@ -185,6 +185,7 @@ Determina_posicion_de_inicio
 
 	cp $0f
 	jr c,2F
+
 	ld a,$1f
 	jr 1F
 

@@ -11,19 +11,17 @@
 
 Recompone_posicion_inicio 
 
-	ld a,1										; Para poder llamar a [Mov_left]/[Mov_right] necesitamos tener definidos (Vel_left), (Vel_right) y (Posicion_actual).
+	jr $
+
+	ld a,1
+
 	ld hl,Vel_left
 	ld (hl),a
 	inc l
 	ld (hl),a
 
-;	ld hl,Ctrl_2
-;	set 0,(hl)
-
-; debugggggggg
-	ld hl,$401F
-	ld (Posicion_inicio),hl
-; ------------
+	ld hl,Ctrl_2
+	set 0,(hl)
 
 	ld hl,(Puntero_objeto)
 	ld (Repone_puntero_objeto),hl
@@ -39,10 +37,6 @@ Recompone_posicion_inicio
 	jr nz,2F
 
 ;	Vamos a aparecer por la parte izquierda de la pantalla.
-
-;	jr $
-
-;	(Puntero_objeto) $8e44
 
 	call Mov_left
 
@@ -73,6 +67,7 @@ Recompone_posicion_inicio
 ; 	Mueve el Sprite X px hacia abajo.
 ;
 ;
+
 Mov_down 
 
 	call Reponne_punntero_objeto									; Si la entidad no se inició en la 1ª o última columna de pantalla,_
