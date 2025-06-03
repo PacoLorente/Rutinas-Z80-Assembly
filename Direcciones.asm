@@ -11,7 +11,7 @@
 
 Recompone_posicion_inicio 
 
-	jr $
+;	jr $
 
 	ld a,1
 
@@ -36,7 +36,7 @@ Recompone_posicion_inicio
 	cp $1f
 	jr nz,2F
 
-;	Vamos a aparecer por la parte izquierda de la pantalla.
+;	Vamos a aparecer por la parte derecha de la pantalla.
 
 	call Mov_left
 
@@ -297,18 +297,7 @@ DESPLZ_DER call Desplaza_derecha
 Desplaza_derecha ld a,(Vel_right)
 	ld b,a
 
-;	Si se trata de una entidad tipo $82, (Badplate), multiplicaremos (Vel_left)x2 pues este tipo de entidades se mueven 2px. 
-
-;	jr $
-
-	ld a,(Tipo)
-	and $0f
-	sub 2
-	jr nz,9F
-
-	sla b
-
-9 ld hl,(Puntero_DESPLZ_der)
+	ld hl,(Puntero_DESPLZ_der)
 1 inc hl
 	inc hl
 	djnz 1B 														; (Vel_right) indica cuantas posiciones desplazaremos el (Puntero_DESPLZ)_
@@ -546,18 +535,7 @@ Desplaza_izquierda
 	ld a,(Vel_left)
 	ld b,a
 
-;	Si se trata de una entidad tipo $82, (Badplate), multiplicaremos (Vel_left)x2 pues este tipo de entidades se mueven 2px. 
-
-;	jr $
-
-	ld a,(Tipo)
-	and $0f
-	sub 2
-	jr nz,9F
-
-	sla b
-
-9 ld hl,(Puntero_DESPLZ_izq)
+	ld hl,(Puntero_DESPLZ_izq)
 1 inc hl
 	inc hl
 	djnz 1B 														; Seleccionamos FRAME en función de la velocidad del Sprite.

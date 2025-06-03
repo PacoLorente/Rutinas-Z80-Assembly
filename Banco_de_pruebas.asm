@@ -1299,7 +1299,7 @@ Entidad_a_Tabla_de_pintado
 	ld (hl),e   
 	inc l
 	ld (hl),d 		 
-	inc l 			 										; (Album_de_pintado
+	inc l 			 										; (Album_de_pintado).
 
 	ld (India_SP),hl
 

@@ -220,15 +220,36 @@ Construye_movimientos_masticados_entidad
 
 1 call Draw
 
+
+; Debugggggggggg..... Quiero visualizar cada movimiento.
+
+;	$8e36 (Puntero_de_impresion).
+
+
+	push ix
+	push iy
+	push af
+	push hl
+	push bc
+	push de
+
 ;	jr $
+
+;	ld ix,Clase
+;	call Entidad_a_Tabla_de_pintado
+
+
+	pop de
+	pop bc
+	pop hl
+	pop af
+	pop iy
+	pop ix
+
+; ---------------------------------------------------------------------------------------------------------------- end debuggggggggggggg
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
-
-;	$8E4F                   Posicion_de_inicio
-;	$8E42					Posicion_actual 							
-;	$8E44 			        Puntero_objeto 								
-
 	call Movimiento
 
 	ld a,(Ctrl_3)																					; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
