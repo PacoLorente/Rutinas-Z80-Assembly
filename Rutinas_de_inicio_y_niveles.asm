@@ -47,13 +47,13 @@ Inicia_albumes_de_disparos
 ;	Prepara las CAJAS MASTER y genera los movimientos masticados de todos los (Tipo)s de entidades de los que consta el nivel.
 ;
 ;	INPUTS:		B contiene (Numero_de_entidades).
-;						C contiene la (Clase) de la 1ª entidad del nivel.
-; 					 	HL contiene (Puntero_de_entidades).
+;				C contiene la (Clase) de la 1ª entidad del nivel.
+; 				HL contiene (Puntero_de_entidades).
 
 Prepara_Cajas_Master 
 
 	push hl															; Push (Puntero_de_entidades).
-	push bc														; Push (Numero_de_entidades)/(Clase).
+	push bc															; Push (Numero_de_entidades)/(Clase).
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
@@ -61,9 +61,9 @@ Prepara_Cajas_Master
 	ex af,af
 	ld a,c 															; (Clase) de la entidad en A y A´.
 
-	call Situa_en_Caja_Master							; A=Z indica que hemos de generar los movimientos masticados de esta (Clase) de entidad.
-; 																		; A=NZ indica que esta (Clase) de entidad ya tiene generados los mov_masticados. 
-; 																		; Saltaremos a la siguiente entidad del nivel.
+	call Situa_en_Caja_Master										; A=Z indica que hemos de generar los movimientos masticados de esta (Clase) de entidad.
+; 																	; A=NZ indica que esta (Clase) de entidad ya tiene generados los mov_masticados.
+; 																	; Saltaremos a la siguiente entidad del nivel.
 	and a
 	jr nz, Avanza_siguiente_entidad_del_nivel 
 
@@ -71,9 +71,9 @@ Prepara_Cajas_Master
 
 ;	En 1er lugar cargaremos la bandeja DRAW con la definición de esta (Clase) de entidad para poder generar todos los movimientos masticados.
 
-	ld a,c 																	; (A) = (Clase).										
-	call Definicion_segun_tipo									; HL apunta al 1er .db que define la entidad.
-	call Definicion_de_entidad_a_bandeja_DRAW		; Vuelca los datos de la definición de entidad en DRAW.
+	ld a,c 															; (A) = (Clase).
+	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
+	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
 
 ;	ld (Puntero_de_almacen_de_mov_masticados),hl 			
 
@@ -83,24 +83,24 @@ Prepara_Cajas_Master
 
 	ld b,7   											 						
 	ld hl,Numeros_aleatorios_baile 							
-	call Derivando_RND 										 	; Generamos 7 nº RND para construir los mov. masticados.
+	call Derivando_RND 										 		; Generamos 7 nº RND para construir los mov. masticados.
 
 ;	ld a,(Tipo)
-;	call Situa_en_Tabla_Random 								; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+;	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
 ;	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
 
-	push hl																	; Push (Puntero_de_entidades).
-	push bc																; Push (Numero_de_entidades)/(Tipo).
+	push hl															; Push (Puntero_de_entidades).
+	push bc															; Push (Numero_de_entidades)/(Tipo).
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
 	call Determina_posicion_de_inicio
 
 	ld a,(Tipo)
-	call Situa_Puntero_indice_mov			 	 			; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
+	call Situa_Puntero_indice_mov			 	 					; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
 
 ;	Ya disponemos de una (Posicion_inicio) aleatoria y la definición de la entidad en la "Bandeja DRAW". 
 ;	Generamos "Movimientos masticados" de la entidad.
@@ -115,7 +115,7 @@ Movimientos_masticados_construidos
 	ld e,l
 	ld d,h
 
-	call Parametros_de_bandeja_DRAW_a_Caja_Master	 	; Caja de entidades Master completa.
+	call Parametros_de_bandeja_DRAW_a_Caja_Master	 				; Caja de entidades Master completa.
 
 ;	Limpiamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
 ;	_de otro (Tipo) de entidad.
@@ -123,8 +123,8 @@ Movimientos_masticados_construidos
 ;	Limpiamos bandeja y variables.
 
 	xor a
-	ld (Ctrl_3),a 																		; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
-;																							; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados. 
+	ld (Ctrl_3),a 													; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
+;																	; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados.
 
 	ld hl,Clase
 	ld bc,37
@@ -141,8 +141,8 @@ Movimientos_masticados_construidos
 
 Avanza_siguiente_entidad_del_nivel 
 
-	pop bc																				; Pop (Numero_de_entidades)/(Tipo).
-	pop hl																				; Pop (Puntero_de_entidades).
+	pop bc															; Pop (Numero_de_entidades)/(Tipo).
+	pop hl															; Pop (Puntero_de_entidades).
 
 	inc l																					; Puntero_de_entidades +1 en HL.
 	ld (Puntero_de_entidades),hl 											; Actualizamos (Puntero_de_entidades).
@@ -221,35 +221,85 @@ Construye_movimientos_masticados_entidad
 1 call Draw
 
 
-; Debugggggggggg..... Quiero visualizar cada movimiento.
+; Debugggggggggg..... Quiero visualizar cada movimiento. ------------------------------------------------------------------------------
 
 ;	$8e36 (Puntero_de_impresion).
 
+	Push_regs	;	--- macro ---
 
-	push ix
-	push iy
-	push af
-	push hl
+	ld hl,(Album_de_pintado)
+	ld (Scanlines_album_SP),hl
+
+	ld ix,(Puntero_de_impresion)
+	ld de,(Puntero_objeto)
+
+	call Genera_datos_de_impresion
+
+	ld a,(Attr)
+	ld c,a
+	ld a,(Columnas)
+
+; Pinta -------------------------------------------------------------------
+
+	ld hl,(Album_de_pintado)
+	ld (Scanlines_album_SP),hl
+	ld de,(Puntero_objeto)
+	ex de,hl
+	call Pinta_Sprites
+
+	call Pulsa_ENTER
+
 	push bc
-	push de
-
-;	jr $
-
-;	ld ix,Clase
-;	call Entidad_a_Tabla_de_pintado
-
-
-	pop de
+	Delay	;	--- macro ---
 	pop bc
-	pop hl
-	pop af
-	pop iy
-	pop ix
+
+; Borra -------------------------------------------------------------------
+
+	ld hl,(Album_de_pintado)
+	ld (Scanlines_album_SP),hl
+	ld de,(Puntero_objeto)
+	ex de,hl
+
+	call Pinta_Sprites
+
+	Pop_regs	;	--- macro ---
 
 ; ---------------------------------------------------------------------------------------------------------------- end debuggggggggggggg
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
+
+
+
+
+
+;3 call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
+;															; (Puntero_objeto) en DE;
+;		    												; (Puntero_de_impresion) codificado en BC.
+;	call Decodifica_Puntero_de_impresion
+
+;	IX apunta al 1er .db de la caja.
+;	DE (Puntero_objeto).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	call Movimiento
 
 	ld a,(Ctrl_3)																					; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_

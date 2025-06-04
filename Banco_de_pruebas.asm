@@ -8,6 +8,42 @@
 ;
 ;	
 
+;	Macros sjasmplus.
+
+	macro Push_regs
+
+	push ix
+	push iy
+	push af
+	push hl
+	push bc
+	push de
+
+	endm
+
+	macro Pop_regs
+
+	pop de
+	pop bc
+	pop hl
+	pop af
+	pop iy
+	pop ix
+
+	endm
+
+	macro Delay
+
+	ld bc,$1fff
+wait dec bc
+	ld a,b
+	and a
+	jr nz,wait
+
+	endm
+
+; --------------------------------------------------------------------------------------------
+
 	org $fcff															; (Debajo de la pila).
 
 	defw $8310															; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
@@ -2229,7 +2265,7 @@ Teclado
 1 ld a,$f7		  											; Rutina de TECLADO. Detecta cuando se pulsan las teclas "1" y "2"  y llama a las rutinas de "Mov_izq" y "Mov_der". $f7  detecta fila de teclas: (5,4,3,2,1).
 	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
 	and $01													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $01 resulta "0"  llama a la rutina "Mov_izq".
-    call z,Amadeus_a_izquierda							
+    call z,Amadeus_a_izquierda
 
 	ld a,$f7
 	in a,($fe)
