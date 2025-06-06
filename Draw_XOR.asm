@@ -6,7 +6,7 @@
 
 Draw 
 
-	call Prepara_draw 
+	call Prepara_draw
 
 	ld a,h 						 					
 	or l 											

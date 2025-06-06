@@ -220,86 +220,10 @@ Construye_movimientos_masticados_entidad
 
 1 call Draw
 
-
-; Debugggggggggg..... Quiero visualizar cada movimiento. ------------------------------------------------------------------------------
-
-;	$8e36 (Puntero_de_impresion).
-
-	Push_regs	;	--- macro ---
-
-	ld hl,(Album_de_pintado)
-	ld (Scanlines_album_SP),hl
-
-	ld ix,(Puntero_de_impresion)
-	ld de,(Puntero_objeto)
-
-	call Genera_datos_de_impresion
-
-	ld a,(Attr)
-	ld c,a
-	ld a,(Columnas)
-
-; Pinta -------------------------------------------------------------------
-
-	ld hl,(Album_de_pintado)
-	ld (Scanlines_album_SP),hl
-	ld de,(Puntero_objeto)
-	ex de,hl
-	call Pinta_Sprites
-
-	call Pulsa_ENTER
-
-	push bc
-	Delay	;	--- macro ---
-	pop bc
-
-; Borra -------------------------------------------------------------------
-
-	ld hl,(Album_de_pintado)
-	ld (Scanlines_album_SP),hl
-	ld de,(Puntero_objeto)
-	ex de,hl
-
-	call Pinta_Sprites
-
-	Pop_regs	;	--- macro ---
-
-; ---------------------------------------------------------------------------------------------------------------- end debuggggggggggggg
+;	Depurador_de_danzas_v01	;	--- macro ---
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
-
-
-
-
-
-;3 call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
-;															; (Puntero_objeto) en DE;
-;		    												; (Puntero_de_impresion) codificado en BC.
-;	call Decodifica_Puntero_de_impresion
-
-;	IX apunta al 1er .db de la caja.
-;	DE (Puntero_objeto).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	call Movimiento
 
 	ld a,(Ctrl_3)																					; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_

@@ -11,8 +11,6 @@
 
 Recompone_posicion_inicio 
 
-;	jr $
-
 	ld a,1
 
 	ld hl,Vel_left

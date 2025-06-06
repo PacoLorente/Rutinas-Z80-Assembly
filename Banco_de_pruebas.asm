@@ -1,4 +1,12 @@
-;	9/1/24
+
+	include
+
+
+
+
+
+
+
 
 	DEVICE ZXSPECTRUM48
 
@@ -7,42 +15,6 @@
 ;	13/08/24
 ;
 ;	
-
-;	Macros sjasmplus.
-
-	macro Push_regs
-
-	push ix
-	push iy
-	push af
-	push hl
-	push bc
-	push de
-
-	endm
-
-	macro Pop_regs
-
-	pop de
-	pop bc
-	pop hl
-	pop af
-	pop iy
-	pop ix
-
-	endm
-
-	macro Delay
-
-	ld bc,$1fff
-wait dec bc
-	ld a,b
-	and a
-	jr nz,wait
-
-	endm
-
-; --------------------------------------------------------------------------------------------
 
 	org $fcff															; (Debajo de la pila).
 
