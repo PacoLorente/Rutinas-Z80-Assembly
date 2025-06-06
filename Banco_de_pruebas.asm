@@ -1,12 +1,5 @@
 
-	include
-
-
-
-
-
-
-
+	include "Macros_y_herramientas.asm"
 
 	DEVICE ZXSPECTRUM48
 

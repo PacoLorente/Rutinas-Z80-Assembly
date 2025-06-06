@@ -144,11 +144,11 @@ Avanza_siguiente_entidad_del_nivel
 	pop bc															; Pop (Numero_de_entidades)/(Tipo).
 	pop hl															; Pop (Puntero_de_entidades).
 
-	inc l																					; Puntero_de_entidades +1 en HL.
-	ld (Puntero_de_entidades),hl 											; Actualizamos (Puntero_de_entidades).
+	inc l															; Puntero_de_entidades +1 en HL.
+	ld (Puntero_de_entidades),hl 									; Actualizamos (Puntero_de_entidades).
 
-	ld c,(hl)																			; (Tipo) de la siguiente entidad en C.
-	djnz Prepara_Cajas_Master 												; dec (Numero_de_entidades).
+	ld c,(hl)														; (Tipo) de la siguiente entidad en C.
+	djnz Prepara_Cajas_Master 										; dec (Numero_de_entidades).
 
 ; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades, 
 ; _ inicializamos el puntero (Puntero_de_entidades), situándolo en la 1ª entidad.
@@ -170,12 +170,12 @@ Determina_posicion_de_inicio
 
 	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
-	and $1f																; Define el nº de columna por el que va a aparecer la entidad.
+	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 
 	ld d,a
-	ld a,(Tipo)											; (Tipo) $81 Badsat, $82 Badplate.
+	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
 	and 2
 	ld a,d
 	jr z,1F
@@ -211,34 +211,34 @@ Construye_movimientos_masticados_entidad
 	push hl
 
 	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-;																										; _ el (Contador_de_mov_masticados).    
+;																	; _ el (Contador_de_mov_masticados).
 
-	call Inicia_Puntero_objeto															; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
-;																										; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
+	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
 
 	call Recompone_posicion_inicio
 
 1 call Draw
 
-;	Depurador_de_danzas_v01	;	--- macro ---
+	Depurador_de_danzas_v01	;	--- macro ---
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
 	call Movimiento
 
-	ld a,(Ctrl_3)																					; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
-	bit 1,a 																							; _ que corresponde a esta entidad.
+	ld a,(Ctrl_3)													; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
+	bit 1,a 														; _ que corresponde a esta entidad.
 	jr z,1B
 
 ; Hemos completado un ^ Almacén_de_mov_masticados ^.
 ; Vamos a asignar una dirección de comienzo al almacén siguiente.
 
-	call Prepara_nuevo_almacen 														; DE contiene (Puntero_de_almacen_de_mov_masticados).
+	call Prepara_nuevo_almacen 										; DE contiene (Puntero_de_almacen_de_mov_masticados).
 
 ;	Hemos completado el almacén de movimientos masticados de la entidad. 
 ;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
 
-	pop hl 																							; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
+	pop hl 															; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
 
 	ld (Puntero_de_almacen_de_mov_masticados),hl
 
@@ -267,10 +267,10 @@ Construye_movimientos_masticados_entidad
 Guarda_movimiento_masticado	
 
 	ld (Stack),sp
-	ld sp,(Puntero_de_almacen_de_mov_masticados)			; Guardamos el movimiento masticado en el almacén.
+	ld sp,(Puntero_de_almacen_de_mov_masticados)					; Guardamos el movimiento masticado en el almacén.
 
-    push ix 																			; Pushea el Puntero_de_impresión, (1er scanline).
-    push iy 																			; Pushea Puntero_objeto.
+    push ix 														; Pushea el Puntero_de_impresión, (1er scanline).
+    push iy 														; Pushea Puntero_objeto.
  
     ld sp,(Stack)
 
@@ -278,8 +278,8 @@ Guarda_movimiento_masticado
 	inc hl
 	ld (Contador_de_mov_masticados),hl
 
-    call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-;																								; _ el (Contador_de_mov_masticados).    
+    call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+;																	; _ el (Contador_de_mov_masticados).
     ret
 
 ; ---------------------------------------------------------------------
@@ -361,8 +361,8 @@ Aplica_rnd_al_baile
 
 	xor a
 
-2 ex af,af 										; A' contiene el .db que acompaña al byte de control, ($00).
-;														; Inicializamos a $00, (no existe).
+2 ex af,af 															; A' contiene el .db que acompaña al byte de control, ($00).
+;																	; Inicializamos a $00, (no existe).
 
 ; 	digit ctrl ??
 ;   Yes if "$00".
@@ -370,7 +370,7 @@ Aplica_rnd_al_baile
 
 	ld a,(hl)
 	and a
-	jr nz,Load_limits							; A es NZ. El nº RND sólo se aplica a una única dirección de mem.
+	jr nz,Load_limits												; A es NZ. El nº RND sólo se aplica a una única dirección de mem.
 
 ; Almacenamos en A' el nº de direcciones que compartiran nº RND y sitúamos HL en el .defw que indica los límites.
 
@@ -392,13 +392,13 @@ Load_limits
 	inc l
 
 	call Extrae_address_y_avanza
-	ret z  												; Z Indica: FIN de la Tabla_Random.
+	ret z  															; Z Indica: FIN de la Tabla_Random.
 
 ;	HL apunta a la dirección donde hemos de alojar el nº rnd.
 ;	DE está situado en la siguiente línea de la Tabla.
 ;	Obtenemos el nº RND.
 
-1 call Get_RND    								; Nº RND , (sin filtrar) en A.
+1 call Get_RND    													; Nº RND , (sin filtrar) en A.
 	call Filtra_RND
 
 ;	Introducimos nº rnd filtrado.
@@ -458,23 +458,23 @@ Get_RND
 
 ; ----- ----- -----
 
-Filtra_RND and %00111100		; Convertimos el byte, (RND), en Nibble, valores comprendidos entre (0-15).
+Filtra_RND and %00111100											; Convertimos el byte, (RND), en Nibble, valores comprendidos entre (0-15).
 	srl a	 					
-	srl a  						; % 00001111, nº RND (0-15).
+	srl a  															; % 00001111, nº RND (0-15).
 
 	cp b
-	ret z 						; RET, nº rnd = Límite sup.	
+	ret z 															; RET, nº rnd = Límite sup.
 	jr c,1F
 
-	ld a,b 						; RET, nº rnd = Límite sup.
+	ld a,b 															; RET, nº rnd = Límite sup.
 	ret
 
 ;	Comprobamos el límite inferior.
 
 1 cp c
-	ret z 						; RET, nº rnd = Límite inf. 
-	ret nc 						; RET, nº rnd dentro de los límites.
-	ld a,c 						; RET, nº rnd = Límite inf. 
+	ret z 															; RET, nº rnd = Límite inf.
+	ret nc 															; RET, nº rnd dentro de los límites.
+	ld a,c 															; RET, nº rnd = Límite inf.
 	ret
 
 ; ----- ----- -----
@@ -483,11 +483,11 @@ Extrae_address_y_avanza call Extrae_address
 
 	ld a,h 						
 	or l
-	ret z 						; Detecta FIN de Tabla_Random.
+	ret z 															; Detecta FIN de Tabla_Random.
 				
 	inc de
-	inc de 						; DE será el puntero que se irá desplazando por las distintas líneas de la Tabla_Random.
-	;								; Lo situamos en la siguiente línea de la tabla.
+	inc de 															; DE será el puntero que se irá desplazando por las distintas líneas de la Tabla_Random.
+	;																; Lo situamos en la siguiente línea de la tabla.
 
 	ret
 
@@ -517,18 +517,18 @@ Inicializa_Nivel
 ; Inicializa (Puntero_indice_NIVELES).
 
 	ld hl,Indice_de_niveles
-	call Extrae_address   						 									; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
-	ld (Puntero_indice_NIVELES),de											; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
+	call Extrae_address   						 					; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
+	ld (Puntero_indice_NIVELES),de									; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
 
 ; Inicializa (Puntero_de_entidades).
 ; Nº de entidades del 1er nivel en A y B.
 
 	ld a,(hl)
-	ld (Numero_de_entidades),a					 							; Inicializa (Numero_de_entidades).
+	ld (Numero_de_entidades),a					 					; Inicializa (Numero_de_entidades).
 	ld b,a
 
 	inc l
-	ld (Puntero_de_entidades),hl															; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1	 
+	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
 	ld c,(hl)													
 
 	ret 										 
@@ -549,13 +549,13 @@ Situa_en_Caja_Master
 
 1 call Extrae_address
 	cp (hl) 																							
-	ret z 																							; RET. Flag Z y A contiene (Clase), (NZ). Indica que esta Caja_Master está iniciada y contiene_
-; 																										; _una entidad de esta (Clase).
+	ret z 															; RET. Flag Z y A contiene (Clase), (NZ). Indica que esta Caja_Master está iniciada y contiene_
+; 																	; _una entidad de esta (Clase).
 	xor a
 	inc (hl)
 	dec (hl)
-	ret z 																							; RET. Flag Z y A="$00". Indica que esta Caja_Master está vacía. Hay que generar los movimientos_
-; 																										; _masticados de esta (Clase) de entidad.
+	ret z 															; RET. Flag Z y A="$00". Indica que esta Caja_Master está vacía. Hay que generar los movimientos_
+; 																	; _masticados de esta (Clase) de entidad.
 ; Caja_Master iniciada con otra (Clase) de entidad.
 ; Saltamos a la siguiente:
 
@@ -566,7 +566,7 @@ Situa_en_Caja_Master
 
 	ld (Puntero_indice_master),de
 
-	ex de,hl 																						; Esta caja está iniciada con otra (Clase) de entidad.
+	ex de,hl 														; Esta caja está iniciada con otra (Clase) de entidad.
  																										
 	jr 1B
 
@@ -586,7 +586,7 @@ Obtiene_datos_de_Caja_Master
 
 1 call Extrae_address
 	cp (hl) 																							
-	ret z 																							; RET pues esta Caja_Master es de la (Clase) que necesitamos.																						
+	ret z 															; RET pues esta Caja_Master es de la (Clase) que necesitamos.
 
 	inc e
 	inc e
@@ -658,11 +658,11 @@ Prepara_Cajas_de_Entidades
 
 ; Preparamos los punteros de las cajas de entidades:
 
-	call Inicia_punteros_de_cajas											; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
-;																							; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
-	call Inicializa_Numero_parcial_de_entidades					; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
+	call Inicia_punteros_de_cajas									; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
+;																	; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
+	call Inicializa_Numero_parcial_de_entidades						; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
 
-	ld hl,(Puntero_de_entidades)											; Clase de la 1ª entidad del Nivel.
+	ld hl,(Puntero_de_entidades)									; Clase de la 1ª entidad del Nivel.
 
 ; En este punto:
 
@@ -670,21 +670,21 @@ Prepara_Cajas_de_Entidades
 ; HL está situado en el 1er .db del Nivel que indica la `Clase´ de entidad a volcar en la 1ª caja de entidades.
 ; B contiene (Numero_parcial_de_entidades).
 
-1 push bc 																			; Push (Numero_parcial_de_entidades).
+1 push bc 															; Push (Numero_parcial_de_entidades).
 
 	ld a,(hl)
 
 	call Obtiene_datos_de_Caja_Master								; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
 
-	ld de,(Puntero_store_caja)												; DE apunta al 1er .db de la "Caja de entidades" en curso. 								
+	ld de,(Puntero_store_caja)										; DE apunta al 1er .db de la "Caja de entidades" en curso.
 
 	push de
-	pop ix 																				; ! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+	pop ix 															; ! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 
 	ld bc,14
-	ldir																					; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
+	ldir															; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
 
-;																							; DE apunta ahora al 1er .db de la siguiente caja de entidades.
+;																	; DE apunta ahora al 1er .db de la siguiente caja de entidades.
 
 ; En este punto debemos generar coordenadas y puntero de impresión.:
 ;
@@ -704,7 +704,7 @@ Prepara_Cajas_de_Entidades
 	ld l,c
 	ld h,b															; (Puntero_de_impresion) en HL.
 
-	push de														; Push (Puntero_objeto). 
+	push de															; Push (Puntero_objeto).
 	push hl															; Push (Puntero_de_impresion).
 
 	call Genera_coordenadas
@@ -712,9 +712,9 @@ Prepara_Cajas_de_Entidades
 	ld bc,(Coordenada_X)
 
 	ld (ix+2),c
-	ld (ix+3),b													; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+	ld (ix+3),b														; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
 
-	call Entidad_a_Tabla_de_pintado					; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
+	call Entidad_a_Tabla_de_pintado									; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
 
  	pop ix															; Pop (Puntero_de_impresion) en IX.
 	pop de															; Pop (Puntero_objeto) en DE.
@@ -746,7 +746,7 @@ Prepara_Cajas_de_Entidades
 
 ; Siguiente entidad del Nivel.
 
-	ld hl,(Puntero_de_entidades)						; (Clase) de la siguiente entidad del nivel.
+	ld hl,(Puntero_de_entidades)									; (Clase) de la siguiente entidad del nivel.
 	inc l 																
 	ld (Puntero_de_entidades),hl
 
@@ -769,27 +769,27 @@ Prepara_Cajas_de_Entidades
 Inicia_Amadeus 
 
 	ld hl,Definicion_Amadeus
-	call Definicion_de_entidad_a_bandeja_DRAW				; Vuelca los datos de la definición de Amadeus en DRAW.
+	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
 
 	
 Construye_movimientos_masticados_Amadeus
 
-	ld hl,(Puntero_de_almacen_de_mov_masticados)			; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
-	call Actualiza_Puntero_de_almacen_de_mov_masticados 	; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-;															; _ el (Contador_de_mov_masticados).    
-	call Inicia_Puntero_objeto								; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
-;															; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.	
+	ld hl,(Puntero_de_almacen_de_mov_masticados)					; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
+	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+;																	; _ el (Contador_de_mov_masticados).
+	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
 
 ; Generamos movimientos masticados de Amadeus.
 
-	ld b,121												; $0079, 121d.
+	ld b,121														; $0079, 121d.
 
 1 push bc
 	call Draw
 	call Guarda_movimiento_masticado
 
 	call Mov_right
-	call Mov_right											; Amadeus se mueve x2 pixel.
+	call Mov_right													; Amadeus se mueve x2 pixel.
 
 	pop bc
 	djnz 1B
@@ -817,9 +817,9 @@ Construye_movimientos_masticados_Amadeus
 
 Definicion_segun_tipo 											
 
-	call Calcula_salto_en_BC									; Calcula el salto para situarnos en la definición de entidad correcta de indice de [Indice_de_definiciones_de_entidades].
+	call Calcula_salto_en_BC										; Calcula el salto para situarnos en la definición de entidad correcta de indice de [Indice_de_definiciones_de_entidades].
 	ld hl,Indice_de_definiciones_de_entidades
-	call Situa_en_datos_de_definicion							; Sitúa HL en el 1er .db de la definición de entidad tipo que tenemos que volcar en DRAW.
+	call Situa_en_datos_de_definicion								; Sitúa HL en el 1er .db de la definición de entidad tipo que tenemos que volcar en DRAW.
 	ret
 
 ; ---------------------------------------------------------------------
@@ -898,19 +898,19 @@ Reinicia_entidad_maliciosa
 ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
 ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".   
 
-	sla (ix+4)																						; sla x2 (Contador_de_vueltas). Inicialmente es "1".
+	sla (ix+4)														; sla x2 (Contador_de_vueltas). Inicialmente es "1".
 
-	ld a,(ix+4)   																					; ld a,(Contador_de_vueltas)	
+	ld a,(ix+4)   													; ld a,(Contador_de_vueltas)
 	sra a
 	sra a
 
-	ld (ix+12),a 																					; ld (Velocidad),a
+	ld (ix+12),a 													; ld (Velocidad),a
 
 ; Attr. 
 
 ; A contiene (Velocidad).
 
-	call nz, Define_attr 																		; No modificamos attr. si no hay cambio de velocidad.
+	call nz, Define_attr 											; No modificamos attr. si no hay cambio de velocidad.
 
 ; Límitador. 
 
@@ -970,7 +970,7 @@ Amarillo ld a,%01000110
 Calcula_salto_en_BC and a
 	jr z,1F
 	sla a										
-	sub 2										; ("Tipo_de_entidad")*2-2.
+	sub 2															; ("Tipo_de_entidad")*2-2.
 1 ld c,a
 	ld b,0 										
 	ret
@@ -1002,25 +1002,25 @@ Situa_en_datos_de_definicion and a
 
 Definicion_de_entidad_a_bandeja_DRAW 	
 
-	ld de,Bandeja_DRAW   	 						; DE apunta al 1er .db de la bandeja_DRAW, (Clase).
+	ld de,Bandeja_DRAW   	 										; DE apunta al 1er .db de la bandeja_DRAW, (Clase).
 	ld bc,2
 	ldir 															; Volcamos (Clase) y (Tipo).
 
-	ld de,Filas												; Volcamos (Filas) y (Columns).
+	ld de,Filas														; Volcamos (Filas) y (Columns).
 	ld bc,2
 	ldir															; Hemos volcado (Contador_de_vueltas), (Indice_Sprite_der) y (Indice_Sprite_izq).
 ;																	; HL, (origen), apunta ahora al .db (Posicion_inicio), hay que situar DE.
 	ld de,Contador_de_vueltas 
 	ld a,(hl)
 	ld (de),a
-	inc hl														; Hemos volcado (Posicion_inicio) y (Cuad_objeto).
+	inc hl															; Hemos volcado (Posicion_inicio) y (Cuad_objeto).
 
 	ld de,Indice_Sprite_der
 	ld bc,4
 	ldir 															; Hemos volcado (Puntero_de_almacen_de_mov_masticados).
 
 	ld de,Posicion_inicio
-	ld bc,3														; 3 FRAMES de explosión.!!!!!!!!!!!!!!
+	ld bc,3															; 3 FRAMES de explosión.!!!!!!!!!!!!!!
 	ldir 															; Vuelco (Frames_explosion).
 
 	ld de,Puntero_de_almacen_de_mov_masticados
@@ -1028,7 +1028,7 @@ Definicion_de_entidad_a_bandeja_DRAW
 	ldir
 
 	ld de,Attr
-	ld a,(hl) 													; Volcamos (Attr).
+	ld a,(hl) 														; Volcamos (Attr).
 	ld (de),a
 
 	ret
@@ -1062,8 +1062,8 @@ Parametros_de_bandeja_DRAW_a_Caja_Master
 
 Inicializa_Numero_parcial_de_entidades 
 
-	ld a,(Numero_de_entidades)							 ; Nº TOTAL de las entidades del NIVEL.
-	cp 5												 					 ; "5" es el nº total de cajas de entidades de las que disponemos.
+	ld a,(Numero_de_entidades)										; Nº TOTAL de las entidades del NIVEL.
+	cp 5												 			; "5" es el nº total de cajas de entidades de las que disponemos.
 	jr c,1F
 	jr z,1F
 

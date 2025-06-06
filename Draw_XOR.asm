@@ -221,7 +221,7 @@ Comprueba_limite_vertical
 ;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
 ;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
 
-	dec c											 				; (Columns-1) en C.
+	dec c											; (Columns-1) en C.
 	ld a,l
 	sub c
 	ld (Posicion_actual),a
@@ -239,12 +239,12 @@ Comprueba_limite_vertical
 	ld (Limite_vertical),a
 
 	call Comprobacion
-	jr c,Comprueba_centro_vertical_derecho 							; No hemos superado (Limite_vertical). Estamos nébulus???.
+	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
 
 ;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
 ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
 
-	dec c											 				; (Columns-1) en C.
+	dec c											; (Columns-1) en C.
 	ld a,l
 	add c
 	ld (Posicion_actual),a
@@ -356,19 +356,19 @@ Salida_nebulosamente_por_la_derecha
 
 	ld a,(Cuad_objeto)
 	and 1
-	ret z 							; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+	ret z 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
 
 	ld a,(Cuad_objeto)
 	inc a
-	ld (Cuad_objeto),a 				; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
 
-	dec c							; (Columns-1) en C.
+	dec c											; (Columns-1) en C.
 	ld a,l
 	sub c
 	ld (Posicion_actual),a
 
 	dec e
-	dec e 							; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
+	dec e 											; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
 
 	ret
 
@@ -387,11 +387,11 @@ Salida_nebulosamente_por_la_izquierda
 
 	ld a,(Cuad_objeto)
 	and 1
-	ret nz 							; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+	ret nz 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
 
 	ld a,(Cuad_objeto)
 	dec a 
-	ld (Cuad_objeto),a 				; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
 
 	dec c											 				; (Columns-1) en C.
 	ld a,l
@@ -464,7 +464,7 @@ Lado_izquierdo
 
 ; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
 
-	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
+	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
 
 	ld a,l
 	and $1f
@@ -482,7 +482,7 @@ Cuadrante_cuatro
 
 Cuadrante_uno
 
-	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
+	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
 
 	ld a,l
 	and $1f
@@ -499,7 +499,7 @@ Cuadrante_uno
 
 Cuadrante_dos
 
-	call Operandos					; (Posicion_actual) en HL y (Columnas)-1 en B.
+	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
 	ld b,15
 5 call PreviousScan
 	djnz 5B
@@ -551,9 +551,9 @@ Operandos ld hl,(Posicion_actual)
 ;
 ;	MODIFY: HL y BC.
 
-Prepara_draw ld hl,Filas 		 					 					 ; Prepara los registros BC, E y HL. 
-	ld b,(hl) 														     ; Carga Filas/Columns del objeto a pintar o inicializar en BC. 
-	inc hl 												 				 ; Carga (Posicion_actual) en HL.
+Prepara_draw ld hl,Filas 		 					; Prepara los registros BC, E y HL.
+	ld b,(hl) 										; Carga Filas/Columns del objeto a pintar o inicializar en BC.
+	inc hl 											; Carga (Posicion_actual) en HL.
 	ld c,(hl) 											
 	ld hl,(Posicion_actual)
 	ret
@@ -575,18 +575,18 @@ Prepara_draw ld hl,Filas 		 					 					 ; Prepara los registros BC, E y HL.
 ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
 ;
 
-NextScan inc h          ; Incrementamos el scanline.
+NextScan inc h          							; Incrementamos el scanline.
     ld a,h
     and 7
-    ret nz              ; Salimos de la rutina si el scanline se encuentra entre (1-7).
+    ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
 
-	ld a,l              ; Scanlines a "0", cambiamos de tercio. (Siempre que estemos en la última línea, LLL).
-    add a,$20           ; Vamos a comprobarlo...
+	ld a,l              							; Scanlines a "0", cambiamos de tercio. (Siempre que estemos en la última línea, LLL).
+    add a,$20           							; Vamos a comprobarlo...
     ld l,a
-    ret c               ; Salimos si se produce el cambio de tercio.
+    ret c               							; Salimos si se produce el cambio de tercio.
 
-    ld a,h              ; No estamos en la última línea del tercio, por lo que inicializamos H restando una_
-    sub 8               ; _unidad a los bits que definen el tercio TT, (sub $08).
+    ld a,h              							; No estamos en la última línea del tercio, por lo que inicializamos H restando una_
+    sub 8               							; _unidad a los bits que definen el tercio TT, (sub $08).
     ld h,a
     ret
 
@@ -608,17 +608,17 @@ NextScan inc h          ; Incrementamos el scanline.
 ;
 
 PreviousScan ld a,h         
-    dec h               ; Dec H.
+    dec h               							; Dec H.
     and 7
-    ret nz              ; Salimos de la rutina si el scanline se encuentra entre (1-7).
+    ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
 
-    ld a,l              ; Estabamos en el scanline "0" y al decrementar nos situamos en el "7" y cambiamos de tercio.
-    sub $20             ; Vamos a comprobarlo...
+    ld a,l              							; Estabamos en el scanline "0" y al decrementar nos situamos en el "7" y cambiamos de tercio.
+    sub $20             							; Vamos a comprobarlo...
     ld l,a
-    ret c               ; Salimos si estábamos en la primera línea y se produce el cambio de tercio.
+    ret c               							; Salimos si estábamos en la primera línea y se produce el cambio de tercio.
 
-    ld a,h              ; No estamos en la primera línea del tercio, por lo que inicializamos H sumando una_
-    add a,8             ; _unidad a los bits que definen el tercio TT, (add a,$08).
+    ld a,h              							; No estamos en la primera línea del tercio, por lo que inicializamos H sumando una_
+    add a,8             							; _unidad a los bits que definen el tercio TT, (add a,$08).
     ld h,a
     ret
 
