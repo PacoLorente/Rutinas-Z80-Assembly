@@ -75,7 +75,7 @@ Prepara_Cajas_Master
 	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
 
-;	ld (Puntero_de_almacen_de_mov_masticados),hl 			
+;	ld (Puntero_de_almacen_de_mov_masticados),hl
 
 ;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
 ;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
@@ -168,28 +168,32 @@ Avanza_siguiente_entidad_del_nivel
 
 Determina_posicion_de_inicio
 
-	ld hl,Numeros_aleatorios_baile+3
-	ld a,(hl)
-	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
+	ld a,$0b
+
+
+
+;	ld hl,Numeros_aleatorios_baile+3
+;	ld a,(hl)
+;	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 
-	ld d,a
-	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
-	and 2
-	ld a,d
-	jr z,1F
+;	ld d,a
+;	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
+;	and 2
+;	ld a,d
+;	jr z,1F
 
 ; Entidad tipo Badplate. Si nuestro nº RND es "<= $0f" aparecerá por la izquierda.
 ; ">" you see it by the right side.  
 
-	cp $0f
-	jr c,2F
+;	cp $0f
+;	jr c,2F
 
-	ld a,$1f
-	jr 1F
+;	ld a,$1f
+;	jr 1F
 
-2 xor a
+;2 xor a
 1 ld hl,Posicion_inicio
 	ld (hl),a
 
@@ -216,7 +220,7 @@ Construye_movimientos_masticados_entidad
 	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
 ;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
 
-	call Recompone_posicion_inicio
+;	call Recompone_posicion_inicio
 
 1 call Draw
 
@@ -624,14 +628,7 @@ Situa_Puntero_indice_mov
     adc hl,bc
     call Extrae_address
 
-; La entidad que estamos iniciando es de Tipo 1, (BadSat)??
-; Si es así, hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde_
-; _el que se inicia la entidad.
-
-;	ld a,(Tipo)
-;	and %01111111
-;	dec a
-;	jr nz,1F
+; Hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde el que se inicia la entidad.
 
 ; Seleccionamos Danza.
 

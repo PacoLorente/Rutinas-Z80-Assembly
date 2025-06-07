@@ -194,7 +194,7 @@ Mov_right ld a,(Ctrl_0)
 
 	jr 8F
 
-4 ld a,(Posicion_actual)	 	  									; Estamos en el char. 31?								
+4 ld a,(Posicion_actual)	 	  									; Estamos en el char. 31?
 	and $1f
 	cp $1f															; Si no es así, saltamos a [3] para seguir con el desplazamiento progrmado.
 	jr nz,8F
@@ -236,25 +236,19 @@ Mov_right ld a,(Ctrl_0)
 
 3 
 
-	call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+;	jr $
+
+;	call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
 ;	call Reinicio
 
 ;	Homos generado todos los movimientos.
 
-;	ld a,(Ctrl_3)
-;	set 1,a
-;	ld (Ctrl_3),a
+	ld a,(Ctrl_3)
+	set 1,a
+	ld (Ctrl_3),a
 
-;	jr 2F
+	jr 2F
 ;				
-
-
-
-
-
-
-
-
 
 ; ---------- ---------- ----------
 ;
@@ -281,7 +275,9 @@ Mov_right ld a,(Ctrl_0)
 ;	22/9/22
 ;
 
-DESPLZ_DER call Desplaza_derecha
+DESPLZ_DER
+
+	call Desplaza_derecha
     call modifica_parametros_1er_DESPLZ_2
     call Ciclo_completo
 	ld hl,Ctrl_0 													; Indica que nos hemos desplazado a la derecha.
@@ -292,10 +288,19 @@ DESPLZ_DER call Desplaza_derecha
 ;	15/02/23
 ;
 
-Desplaza_derecha ld a,(Vel_right)
+Desplaza_derecha
+
+	ld a,(Vel_right)
 	ld b,a
 
-	ld hl,(Puntero_DESPLZ_der)
+;	Si la entidad es de (Clase) 4, Badplate, multiplicamos *2 el desplazamiento a la derecha.
+
+;	ld a,(Clase) ;'
+;	cp 4 ;'
+;	jr nz,9F ;'
+;	rl b ;'
+
+9 ld hl,(Puntero_DESPLZ_der)
 1 inc hl
 	inc hl
 	djnz 1B 														; (Vel_right) indica cuantas posiciones desplazaremos el (Puntero_DESPLZ)_
@@ -356,7 +361,7 @@ Desplaza_derecha ld a,(Vel_right)
 
 ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	24/7/22
+;	7/6/25
 ;
 ;	modifica_parametros_1er_DESPLZ_2
 ;
@@ -364,14 +369,18 @@ Desplaza_derecha ld a,(Vel_right)
 ; 	También incrementa el byte de control de desplazamiento, (desplz. a derecha) y modifica la posición de (Puntero_datas) en función del cuadrante de pantalla en el que nos encontremos.
 ; 	Si el desplazamiento se produce en el 2º o 4º cuadrante, la rutina decrementará (Posicion_actual).
 
-modifica_parametros_1er_DESPLZ_2 ld a,(CTRL_DESPLZ)		 		  ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
+modifica_parametros_1er_DESPLZ_2
+
+	ld a,(CTRL_DESPLZ)		 		  ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
 	and a
 	jr nz,1F
-    sub 9                							              ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento. 
+
+	sub 9                							              ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento.
     ld (CTRL_DESPLZ),a
 
 	ld hl,Columns 												  
 	inc (hl)
+
 	ld a,(Cuad_objeto)
 	and 1
 	jr z,1F
@@ -380,10 +389,10 @@ modifica_parametros_1er_DESPLZ_2 ld a,(CTRL_DESPLZ)		 		  ; Incrementamos el nª
 	inc (hl) 													  ; _ cuadrantes 1 y 3 de pantalla.
 
 	call Genera_coordenadas
-	call Inc_CTRL_DESPLZ
-	jr 2F
+
 1 call Inc_CTRL_DESPLZ
-2 ret
+
+	ret
 
 ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
@@ -399,9 +408,12 @@ modifica_parametros_1er_DESPLZ_2 ld a,(CTRL_DESPLZ)		 		  ; Incrementamos el nª
 ;	Borramos la caja de desplazamientos, call Limpia_caja_de_DESPLZ.		 
 
 
-Ciclo_completo ld a,(CTRL_DESPLZ)
+Ciclo_completo
+
+	ld a,(CTRL_DESPLZ)
 	cp $ff
 	jr z,1F 												     ; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
+
 	and $f0
 	ret nz
 
@@ -412,6 +424,7 @@ Ciclo_completo ld a,(CTRL_DESPLZ)
 	ld a,$f8
 	add b
 	ld (CTRL_DESPLZ),a 
+
 	ret
 
 1 ld hl,Columns													 ; Tras 8 desplazamientos el objeto desplazado es igual al original.
@@ -422,7 +435,7 @@ Ciclo_completo ld a,(CTRL_DESPLZ)
 
 	ld a,(Cuad_objeto) 											 ; Si estamos situados en el cuadrante 1º o 3º de la pantalla no modificamos_
 	and 1 														 ; _(Posicion_actual). Limpiamos la (Caja_de_DESPLZ) y salimos.
-	jr nz,2F
+	jr nz,3F
 
 	ld hl,Posicion_actual                                        ; Incrementamos (Posicion_actual) en los cuadrantes 2º y 4º.
 	inc (hl)
@@ -431,7 +444,13 @@ Ciclo_completo ld a,(CTRL_DESPLZ)
 
 ; Inicia el puntero de Sprite.
 
-2 call Inicia_puntero_objeto_der
+;2 ld a,(Clase)
+;	cp 4
+;	jr nz,3F
+
+;	ret
+
+3 call Inicia_puntero_objeto_der
 
 	ret
 
@@ -594,29 +613,38 @@ Desplaza_izquierda
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
+;	7/6/25
+;
 ;	modifica_parametros_1er_DESPLZ
 ;
 ;	La rutina modifica el nº de columnas del objeto en el 1er desplazamiento.
 ; 	También decrementa el byte de control de desplazamiento, (desplz. a izq) y modifica la posición de (Puntero_datas) en función del cuadrante de pantalla en el que nos encontremos.
 ; 	Si el desplazamiento se produce en el 2º o 4º cuadrante, la rutina decrementará (Posicion_actual).
 
-modifica_parametros_1er_DESPLZ ld a,(CTRL_DESPLZ) 				    ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
+modifica_parametros_1er_DESPLZ
+
+	ld a,(CTRL_DESPLZ) 				    ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
 	and a
 	jr nz,1F
-    dec a              							            	    ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento. 
+
+	dec a              							            	    ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento.
     ld (CTRL_DESPLZ),a
-	ld hl,Columns 												  
+
+    ld hl,Columns
 	inc (hl)
+
 	ld a,(Cuad_objeto)
 	and 1
 	jr nz,1F
-	ld hl,Posicion_actual 									    ; Decrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _	
+
+	ld hl,Posicion_actual 									    ; Decrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _
 	dec (hl) 														    ; _ cuadrantes 2 y 4 de pantalla.
+
 	call Genera_coordenadas
-	call Dec_CTRL_DESPLZ
-	jr 2F
+
 1 call Dec_CTRL_DESPLZ
-2 ret
+
+	ret
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -684,23 +712,35 @@ Stop_Amadeus_left ld a,(Coordenada_X)	 	  										 ; Posición horizontal de A
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
 ;
-;	24/7/22
+;	7/6/25
 ;
 ;	Inc_CTRL_DESPLZ
 ;
 ;
 ;   Incrementa el valor del byte de control, (CTRL_DESPLZ) en función del nº de veces que hayamos desplazado el objeto, (Vel_right).	
 
-Inc_CTRL_DESPLZ ld hl,CTRL_DESPLZ 													
+Inc_CTRL_DESPLZ
+
+	ld hl,CTRL_DESPLZ
 	ld a,(Vel_right)
 	and a
 	jr z,1F
+
 	ld b,a
-3 inc (hl)	 								 						 
+
+; 	Badplate (*2 px).
+
+;	ld a,(Clase)
+;	cp 4
+;	jr nz,3F
+;	rl b
+
+3 inc (hl)
 	djnz 3B
-	jr 2F
+	ret
+
 1 inc (hl)
-2 ret
+	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
 ;
