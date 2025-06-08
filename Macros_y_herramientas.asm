@@ -73,7 +73,7 @@ wait dec bc
 ; Pinta ------
 
 	Pinta_frame_danza	;	--- macro ---
-;	call Pulsa_ENTER
+	call Pulsa_ENTER
 	push bc
 	Delay	;	--- macro ---
 	pop bc
