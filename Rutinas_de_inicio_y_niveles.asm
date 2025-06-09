@@ -168,9 +168,7 @@ Avanza_siguiente_entidad_del_nivel
 
 Determina_posicion_de_inicio
 
-	ld a,$00
-
-
+	ld a,0
 
 ;	ld hl,Numeros_aleatorios_baile+3
 ;	ld a,(hl)

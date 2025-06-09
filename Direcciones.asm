@@ -234,21 +234,8 @@ Mov_right ld a,(Ctrl_0)
 
 ; ---------- ---------- ----------
 
-3 
-
-;	jr $
-
-;	call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+3 call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
 ;	call Reinicio
-
-;	Homos generado todos los movimientos.
-
-	ld a,(Ctrl_3)
-	set 1,a
-	ld (Ctrl_3),a
-
-	jr 2F
-;				
 
 ; ---------- ---------- ----------
 ;
@@ -292,13 +279,6 @@ Desplaza_derecha
 
 	ld a,(Vel_right)
 	ld b,a
-
-;	Si la entidad es de (Clase) 4, Badplate, multiplicamos *2 el desplazamiento a la derecha.
-
-;	ld a,(Clase) ;'
-;	cp 4 ;'
-;	jr nz,9F ;'
-;	rl b ;'
 
 9 ld hl,(Puntero_DESPLZ_der)
 1 inc hl

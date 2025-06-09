@@ -73,11 +73,24 @@ Indice_mov_Baile_de_Badplate
     defw Left_Ini82
     defw Right_Ini82
 
+;   Baile de Badplate cuando aparece por la izquierda.
+
 Left_Ini82 defw Bajo_decelerando
     defw F_1
     defw F_2
     defw Tira_pa_la_derecha
+    defw F_7
+    defw F_8
+    defw Diagonal_bajando_izq
+    defw Tira_pa_la_derecha
+    defw F_7
+    defw F_8
+    defw Bajo_decelerando
+    defw F_1
+    defw F_2
     defw 0
+
+;   Baile de Badplate cuando aparece por la derecha.
 
 Right_Ini82 defw Bajo_decelerando
     defw F_1
@@ -162,8 +175,11 @@ Right_Ini defw Bajo_decelerando
 ; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)               
 ;                               Izquierda_y_subiendo+8 (7)  
 
-Tira_pa_la_derecha db $11,$12,$1f,$ff
+Tira_pa_la_derecha db $11,$12,$13,$14,0
 
+Diagonal_bajando_izq db $12,$21,$68,3,0
+
+; ----- ----- -----
 
 Bajo_decelerando db $12,$11,$42             ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)
 ;                                           ; %0100 1111 ... ($42), Abajo 2x2 Pixels.
@@ -174,8 +190,9 @@ Random_1_1_10 db 10                         ; (1-10).
     db $11,$11,$42,0                        ; Up, (vel.1) - Down, (vel.1) - Left, (vel.1) - Right, (vel.1)
 ;                                           ; %0100 0010 ... ($42), Abajo 2 Pixels.
 ;                                           ; NEXT MOV.
+; ----- ----- -----
 
-; Desaceleración.
+; Desaceleración bajando.
 
 F_1 db $11,$11,$41,1                        
     db $11,$11,$01,253,8,0                  ; Abajo - Pausa1. 8rep.
@@ -183,7 +200,19 @@ F_1 db $11,$11,$41,1
 F_2 db $11,$11,$41,1                            
     db $11,$11,$02,253,15,254               ; Abajo - Pausa2. 15rep --- Fija puntero de bucle. 
 
-Codo_abajo_derecha db $11,$11,$51,1         
+; ----- ----- -----
+
+; Desaceleración derecha.
+
+F_7 db $11,$11,$11,1
+    db $11,$11,$01,253,8,0                  ; Derecha - Pausa1. 8rep.
+
+F_8 db $11,$11,$11,1
+    db $11,$11,$02,253,15,0                   ; Derecha - Pausa2. 15rep --- Fija puntero de bucle.
+
+; ----- ----- -----
+
+Codo_abajo_derecha db $11,$11,$51,1
     db $11,$11,$43,1                        
     db $11,$11,$52,1                        
     db $11,$11,$41,1                        
@@ -197,21 +226,26 @@ Codo_abajo_derecha db $11,$11,$51,1
     db $11,$12,$12,1                        
     db $11,$11,$92,0                        
 
+; ----- ----- -----
+
 Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
     db $11,$11,$91,253                      ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
-
 Random_2_1_15 db 8
-
     db 0
+
+; ----- ----- -----
 
 Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
     db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
 
+; Deceleración subiendo.
+
 F_3 db $11,$11,$11,1
     db $11,$11,$01,253,4,0
-
 F_4 db $11,$11,$11,1
     db $11,$11,$02,253,8,0
+
+; ----- ----- -----
 
 Derecha_y_bajando db $11,$11,$16,1          
     db $11,$11,$51,253,2,0                  
@@ -219,19 +253,20 @@ Derecha_y_bajando db $11,$11,$16,1
 Derecha_y_bajando_1 db $11,$12,$13,1        
     db $11,$11,$51,253
 
+
 ;   Random_3_1_15 y Random_4_1_15 han de ser iguales !!!!!!!!!.
 ;   -----------------------------------------------------------
 
 Random_3_1_15 db 6
-
     db 0   
 
 Derecha_y_bajando_2 db $11,$11,$16,1        
     db $11,$11,$51,253
 
 Random_4_1_15 db 6
-
     db 0   
+
+; ----- ----- -----
 
 ; Medio círculo bajando. Entra de izq. a derecha y sale de derecha a izq.
 
@@ -248,6 +283,8 @@ Codo_derecha_abajo db $11,$11,$51,1
     db $11,$11,$51,1                        
     db $11,$11,$43,0                        
 
+; ----- ----- -----
+
 Codo_abajo_izq db $11,$11,$61,1            
     db $11,$11,$43,1                        
     db $11,$11,$62,1                        
@@ -262,43 +299,44 @@ Codo_abajo_izq db $11,$11,$61,1
     db $11,$21,$22,1                        
     db $11,$11,$a2,0                        
 
+; ----- ----- -----
+
 Izquierda_y_subiendo db $11,$21,$23,1       
     db $11,$11,$a1,253
 
 Random_5_1_15 db 15
-
     db 0                     
+
+; ----- ----- -----
 
 Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
     db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
 
 F_5 db $11,$11,$21,1
     db $11,$11,$01,253,4,0
-
 F_6 db $11,$11,$21,1
     db $11,$11,$02,253,8,0
 
+; ----- ----- -----
+
 Izquierda_y_bajando db $11,$11,$26,1          ; Derecha. 4rep. vel.2
     db $11,$11,$61,253,2,0
-
 Izquierda_y_bajando_1 db $11,$21,$23,1        ; Derecha. 4rep. vel.2
     db $11,$11,$61,253
-
 
 ;   Random_6_1_15 y Random_7_1_15 han de ser iguales !!!!!!!!!.
 ;   -----------------------------------------------------------
 
-
 Random_6_1_15 db 6
-
     db 0  
 
 Izquierda_y_bajando_2 db $11,$11,$26,1        ; Derecha. 4rep. vel.2
     db $11,$11,$61,253
 
 Random_7_1_15 db 6
-
     db 0  
+
+; ----- ----- -----
 
 Codo_izquierda_abajo db $11,$11,$a1,1          ; Arriba/Izq. 1rep.
     db $11,$11,$23,1                           ; Izq. 3rep.
