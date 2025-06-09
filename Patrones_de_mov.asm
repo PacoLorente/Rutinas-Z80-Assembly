@@ -162,7 +162,7 @@ Right_Ini defw Bajo_decelerando
 ; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)               
 ;                               Izquierda_y_subiendo+8 (7)  
 
-Tira_pa_la_derecha db $11,$11,$1f,$ff
+Tira_pa_la_derecha db $11,$12,$1f,$ff
 
 
 Bajo_decelerando db $12,$11,$42             ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)

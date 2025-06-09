@@ -168,7 +168,7 @@ Avanza_siguiente_entidad_del_nivel
 
 Determina_posicion_de_inicio
 
-	ld a,$0b
+	ld a,$00
 
 
 
@@ -220,11 +220,11 @@ Construye_movimientos_masticados_entidad
 	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
 ;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
 
-;	call Recompone_posicion_inicio
+	call Recompone_posicion_inicio
 
 1 call Draw
 
-	Depurador_de_danzas_v01	;	--- macro ---
+;	Depurador_de_danzas_v01	;	--- macro ---
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
@@ -768,7 +768,13 @@ Inicia_Amadeus
 	ld hl,Definicion_Amadeus
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
 
-	
+;	Inicializamos los perfiles de velocidad antes de crear la danza de Amadeus.
+;	(Vel_left), (Vel_right), (Vel_up) y (Vel_down) a "1".
+
+	ld hl,257
+	ld (Vel_left),hl
+	ld (Vel_up),hl
+
 Construye_movimientos_masticados_Amadeus
 
 	ld hl,(Puntero_de_almacen_de_mov_masticados)					; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
