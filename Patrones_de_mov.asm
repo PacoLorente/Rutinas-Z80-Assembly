@@ -68,6 +68,8 @@
 ;                                           ;               _ esta dirección y no se situará al comienzo del índice del patrón de movimiento.         
 
 ; ----- ----- ----- ----- -----
+;
+;   Factor RANDOM --- BadSat.
 
 ; Random_1_1_10 (1-10) Bajo_decelerando
 ; Random_2_1_15 (1-15) Derecha_y_subiendo

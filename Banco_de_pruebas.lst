@@ -1268,352 +1268,352 @@
   68+ 8C09              ;                                           ;               _ esta dirección y no se situará al comienzo del índice del patrón de movimiento.
   69+ 8C09
   70+ 8C09              ; ----- ----- ----- ----- -----
-  71+ 8C09
-  72+ 8C09              ; Random_1_1_10 (1-10) Bajo_decelerando
-  73+ 8C09              ; Random_2_1_15 (1-15) Derecha_y_subiendo
-  74+ 8C09
-  75+ 8C09              ; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
-  76+ 8C09              ; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
-  77+ 8C09
-  78+ 8C09              ; Random_5_1_15 (1-5) Izquierda_y_subiendo
+  71+ 8C09              ;
+  72+ 8C09              ;   Factor RANDOM --- BadSat.
+  73+ 8C09
+  74+ 8C09              ; Random_1_1_10 (1-10) Bajo_decelerando
+  75+ 8C09              ; Random_2_1_15 (1-15) Derecha_y_subiendo
+  76+ 8C09
+  77+ 8C09              ; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
+  78+ 8C09              ; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
   79+ 8C09
-  80+ 8C09              ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
-  81+ 8C09              ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
-  82+ 8C09
-  83+ 8C09              ; ----- ----- ----- ----- -----
+  80+ 8C09              ; Random_5_1_15 (1-5) Izquierda_y_subiendo
+  81+ 8C09
+  82+ 8C09              ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
+  83+ 8C09              ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
   84+ 8C09
-  85+ 8C09              Indice_mov_Baile_de_Badplate
+  85+ 8C09              ; ----- ----- ----- ----- -----
   86+ 8C09
-  87+ 8C09 0D 8C            defw Left_Ini82
-  88+ 8C0B 37 8C            defw Right_Ini82
-  89+ 8C0D
-  90+ 8C0D              ;   Baile de Badplate cuando aparece por la izquierda.
+  87+ 8C09              Indice_mov_Baile_de_Badplate
+  88+ 8C09
+  89+ 8C09 0D 8C            defw Left_Ini82
+  90+ 8C0B 37 8C            defw Right_Ini82
   91+ 8C0D
-  92+ 8C0D AF 8C        Left_Ini82 defw Bajo_decelerando
-  93+ 8C0F B7 8C            defw F_1
-  94+ 8C11 C1 8C            defw F_2
-  95+ 8C13 9B 8C            defw Tira_pa_la_derecha
-  96+ 8C15 CB 8C            defw F_7
-  97+ 8C17 D5 8C            defw F_8
-  98+ 8C19 A5 8C            defw Diagonal_bajando_izq
-  99+ 8C1B 9B 8C            defw Tira_pa_la_derecha
- 100+ 8C1D CB 8C            defw F_7
- 101+ 8C1F D5 8C            defw F_8
- 102+ 8C21 AF 8C            defw Bajo_decelerando
- 103+ 8C23 B7 8C            defw F_1
- 104+ 8C25 C1 8C            defw F_2
- 105+ 8C27 A0 8C            defw Tira_pa_la_izq
- 106+ 8C29 DF 8C            defw F_9
- 107+ 8C2B E9 8C            defw F_A
- 108+ 8C2D AA 8C            defw Diagonal_bajando_derecha
- 109+ 8C2F AF 8C            defw Bajo_decelerando
- 110+ 8C31 B7 8C            defw F_1
- 111+ 8C33 C1 8C            defw F_2
- 112+ 8C35 00 00            defw 0
- 113+ 8C37
- 114+ 8C37              ;   Baile de Badplate cuando aparece por la derecha.
+  92+ 8C0D              ;   Baile de Badplate cuando aparece por la izquierda.
+  93+ 8C0D
+  94+ 8C0D AF 8C        Left_Ini82 defw Bajo_decelerando
+  95+ 8C0F B7 8C            defw F_1
+  96+ 8C11 C1 8C            defw F_2
+  97+ 8C13 9B 8C            defw Tira_pa_la_derecha
+  98+ 8C15 CB 8C            defw F_7
+  99+ 8C17 D5 8C            defw F_8
+ 100+ 8C19 A5 8C            defw Diagonal_bajando_izq
+ 101+ 8C1B 9B 8C            defw Tira_pa_la_derecha
+ 102+ 8C1D CB 8C            defw F_7
+ 103+ 8C1F D5 8C            defw F_8
+ 104+ 8C21 AF 8C            defw Bajo_decelerando
+ 105+ 8C23 B7 8C            defw F_1
+ 106+ 8C25 C1 8C            defw F_2
+ 107+ 8C27 A0 8C            defw Tira_pa_la_izq
+ 108+ 8C29 DF 8C            defw F_9
+ 109+ 8C2B E9 8C            defw F_A
+ 110+ 8C2D AA 8C            defw Diagonal_bajando_derecha
+ 111+ 8C2F AF 8C            defw Bajo_decelerando
+ 112+ 8C31 B7 8C            defw F_1
+ 113+ 8C33 C1 8C            defw F_2
+ 114+ 8C35 00 00            defw 0
  115+ 8C37
- 116+ 8C37 AF 8C        Right_Ini82 defw Bajo_decelerando
- 117+ 8C39 B7 8C            defw F_1
- 118+ 8C3B C1 8C            defw F_2
- 119+ 8C3D
- 120+ 8C3D 00 00            defw 0
- 121+ 8C3F
- 122+ 8C3F              Indice_mov_Baile_de_BadSat
+ 116+ 8C37              ;   Baile de Badplate cuando aparece por la derecha.
+ 117+ 8C37
+ 118+ 8C37 AF 8C        Right_Ini82 defw Bajo_decelerando
+ 119+ 8C39 B7 8C            defw F_1
+ 120+ 8C3B C1 8C            defw F_2
+ 121+ 8C3D
+ 122+ 8C3D 00 00            defw 0
  123+ 8C3F
- 124+ 8C3F 43 8C            defw Left_Ini
- 125+ 8C41 6F 8C            defw Right_Ini
- 126+ 8C43
- 127+ 8C43 AF 8C        Left_Ini defw Bajo_decelerando
- 128+ 8C45 B7 8C            defw F_1
- 129+ 8C47 C1 8C            defw F_2
- 130+ 8C49 F3 8C            defw Codo_abajo_derecha
- 131+ 8C4B 27 8D            defw Derecha_y_subiendo
- 132+ 8C4D 31 8D            defw Derecha_y_subiendo_1
- 133+ 8C4F 3B 8D            defw F_3
- 134+ 8C51 45 8D            defw F_4
- 135+ 8C53 4F 8D            defw Derecha_y_bajando
- 136+ 8C55 59 8D            defw Derecha_y_bajando_1
- 137+ 8C57 63 8D            defw Derecha_y_bajando_2
- 138+ 8C59 6D 8D            defw Codo_derecha_abajo
- 139+ 8C5B 9D 8D            defw Codo_abajo_izq
- 140+ 8C5D D1 8D            defw Izquierda_y_subiendo
- 141+ 8C5F DB 8D            defw Izquierda_y_subiendo_1
- 142+ 8C61 E5 8D            defw F_5
- 143+ 8C63 EF 8D            defw F_6
- 144+ 8C65 F9 8D            defw Izquierda_y_bajando
- 145+ 8C67 03 8E            defw Izquierda_y_bajando_1
- 146+ 8C69 0D 8E            defw Izquierda_y_bajando_2
- 147+ 8C6B 17 8E            defw Codo_izquierda_abajo
- 148+ 8C6D 00 00            defw 0                                  ; Fin de patrón de movimiento.
- 149+ 8C6F
- 150+ 8C6F AF 8C        Right_Ini defw Bajo_decelerando
- 151+ 8C71 B7 8C            defw F_1
- 152+ 8C73 C1 8C            defw F_2
- 153+ 8C75
- 154+ 8C75 9D 8D            defw Codo_abajo_izq
- 155+ 8C77 D1 8D            defw Izquierda_y_subiendo
- 156+ 8C79 DB 8D            defw Izquierda_y_subiendo_1
- 157+ 8C7B E5 8D            defw F_5
- 158+ 8C7D EF 8D            defw F_6
- 159+ 8C7F F9 8D            defw Izquierda_y_bajando
- 160+ 8C81 03 8E            defw Izquierda_y_bajando_1
- 161+ 8C83 0D 8E            defw Izquierda_y_bajando_2
- 162+ 8C85 17 8E            defw Codo_izquierda_abajo
- 163+ 8C87
- 164+ 8C87 F3 8C            defw Codo_abajo_derecha
- 165+ 8C89 27 8D            defw Derecha_y_subiendo
- 166+ 8C8B 31 8D            defw Derecha_y_subiendo_1
- 167+ 8C8D 3B 8D            defw F_3
- 168+ 8C8F 45 8D            defw F_4
- 169+ 8C91 4F 8D            defw Derecha_y_bajando
- 170+ 8C93 59 8D            defw Derecha_y_bajando_1
- 171+ 8C95 63 8D            defw Derecha_y_bajando_2
- 172+ 8C97 6D 8D            defw Codo_derecha_abajo
- 173+ 8C99
- 174+ 8C99 00 00            defw 0
- 175+ 8C9B
- 176+ 8C9B
- 177+ 8C9B              ;! En que parte del movimiento estamos??? Cabe el movimiento completo?
+ 124+ 8C3F              Indice_mov_Baile_de_BadSat
+ 125+ 8C3F
+ 126+ 8C3F 43 8C            defw Left_Ini
+ 127+ 8C41 6F 8C            defw Right_Ini
+ 128+ 8C43
+ 129+ 8C43 AF 8C        Left_Ini defw Bajo_decelerando
+ 130+ 8C45 B7 8C            defw F_1
+ 131+ 8C47 C1 8C            defw F_2
+ 132+ 8C49 F3 8C            defw Codo_abajo_derecha
+ 133+ 8C4B 27 8D            defw Derecha_y_subiendo
+ 134+ 8C4D 31 8D            defw Derecha_y_subiendo_1
+ 135+ 8C4F 3B 8D            defw F_3
+ 136+ 8C51 45 8D            defw F_4
+ 137+ 8C53 4F 8D            defw Derecha_y_bajando
+ 138+ 8C55 59 8D            defw Derecha_y_bajando_1
+ 139+ 8C57 63 8D            defw Derecha_y_bajando_2
+ 140+ 8C59 6D 8D            defw Codo_derecha_abajo
+ 141+ 8C5B 9D 8D            defw Codo_abajo_izq
+ 142+ 8C5D D1 8D            defw Izquierda_y_subiendo
+ 143+ 8C5F DB 8D            defw Izquierda_y_subiendo_1
+ 144+ 8C61 E5 8D            defw F_5
+ 145+ 8C63 EF 8D            defw F_6
+ 146+ 8C65 F9 8D            defw Izquierda_y_bajando
+ 147+ 8C67 03 8E            defw Izquierda_y_bajando_1
+ 148+ 8C69 0D 8E            defw Izquierda_y_bajando_2
+ 149+ 8C6B 17 8E            defw Codo_izquierda_abajo
+ 150+ 8C6D 00 00            defw 0                                  ; Fin de patrón de movimiento.
+ 151+ 8C6F
+ 152+ 8C6F AF 8C        Right_Ini defw Bajo_decelerando
+ 153+ 8C71 B7 8C            defw F_1
+ 154+ 8C73 C1 8C            defw F_2
+ 155+ 8C75
+ 156+ 8C75 9D 8D            defw Codo_abajo_izq
+ 157+ 8C77 D1 8D            defw Izquierda_y_subiendo
+ 158+ 8C79 DB 8D            defw Izquierda_y_subiendo_1
+ 159+ 8C7B E5 8D            defw F_5
+ 160+ 8C7D EF 8D            defw F_6
+ 161+ 8C7F F9 8D            defw Izquierda_y_bajando
+ 162+ 8C81 03 8E            defw Izquierda_y_bajando_1
+ 163+ 8C83 0D 8E            defw Izquierda_y_bajando_2
+ 164+ 8C85 17 8E            defw Codo_izquierda_abajo
+ 165+ 8C87
+ 166+ 8C87 F3 8C            defw Codo_abajo_derecha
+ 167+ 8C89 27 8D            defw Derecha_y_subiendo
+ 168+ 8C8B 31 8D            defw Derecha_y_subiendo_1
+ 169+ 8C8D 3B 8D            defw F_3
+ 170+ 8C8F 45 8D            defw F_4
+ 171+ 8C91 4F 8D            defw Derecha_y_bajando
+ 172+ 8C93 59 8D            defw Derecha_y_bajando_1
+ 173+ 8C95 63 8D            defw Derecha_y_bajando_2
+ 174+ 8C97 6D 8D            defw Codo_derecha_abajo
+ 175+ 8C99
+ 176+ 8C99 00 00            defw 0
+ 177+ 8C9B
  178+ 8C9B
- 179+ 8C9B              ; Después del codo abajo-derecha (Coordenada_X) de la entidad contendrá "4" cuando (Posicion_inicio) sea $4001.
+ 179+ 8C9B              ;! En que parte del movimiento estamos??? Cabe el movimiento completo?
  180+ 8C9B
- 181+ 8C9B              ; Cuando (Coordenada_X)="4" ;   Derecha_y_subiendo+8 (11)
- 182+ 8C9B              ;                               Izquierda_y_subiendo+8 (11)
- 183+ 8C9B              ; Cuando (Coordenada_X)="5" ;   Derecha_y_subiendo+8 (8)
- 184+ 8C9B              ;                               Izquierda_y_subiendo+8 (8)
- 185+ 8C9B              ; Cuando (Coordenada_X)="6" ;   Derecha_y_subiendo+8 (8)
+ 181+ 8C9B              ; Después del codo abajo-derecha (Coordenada_X) de la entidad contendrá "4" cuando (Posicion_inicio) sea $4001.
+ 182+ 8C9B
+ 183+ 8C9B              ; Cuando (Coordenada_X)="4" ;   Derecha_y_subiendo+8 (11)
+ 184+ 8C9B              ;                               Izquierda_y_subiendo+8 (11)
+ 185+ 8C9B              ; Cuando (Coordenada_X)="5" ;   Derecha_y_subiendo+8 (8)
  186+ 8C9B              ;                               Izquierda_y_subiendo+8 (8)
- 187+ 8C9B              ; Cuando (Coordenada_X)="7" ;   Derecha_y_subiendo+8 (7)
+ 187+ 8C9B              ; Cuando (Coordenada_X)="6" ;   Derecha_y_subiendo+8 (8)
  188+ 8C9B              ;                               Izquierda_y_subiendo+8 (8)
- 189+ 8C9B              ; Cuando (Coordenada_X)="8" ;   Derecha_y_subiendo+8 (6)
+ 189+ 8C9B              ; Cuando (Coordenada_X)="7" ;   Derecha_y_subiendo+8 (7)
  190+ 8C9B              ;                               Izquierda_y_subiendo+8 (8)
- 191+ 8C9B              ; Cuando (Coordenada_X)="9" ;   Derecha_y_subiendo+8 (5)
- 192+ 8C9B              ;                               Izquierda_y_subiendo+8 (7)
- 193+ 8C9B              ; Cuando (Coordenada_X)="a" ;   Derecha_y_subiendo+8 (4)
+ 191+ 8C9B              ; Cuando (Coordenada_X)="8" ;   Derecha_y_subiendo+8 (6)
+ 192+ 8C9B              ;                               Izquierda_y_subiendo+8 (8)
+ 193+ 8C9B              ; Cuando (Coordenada_X)="9" ;   Derecha_y_subiendo+8 (5)
  194+ 8C9B              ;                               Izquierda_y_subiendo+8 (7)
- 195+ 8C9B              ; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)
+ 195+ 8C9B              ; Cuando (Coordenada_X)="a" ;   Derecha_y_subiendo+8 (4)
  196+ 8C9B              ;                               Izquierda_y_subiendo+8 (7)
- 197+ 8C9B
- 198+ 8C9B 11 12 15     Tira_pa_la_derecha db $11,$12,$15
- 199+ 8C9E 0D           Random_8_1_15 db 13
- 200+ 8C9F 00               db 0
- 201+ 8CA0
- 202+ 8CA0              ; ----- ----- -----
+ 197+ 8C9B              ; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)
+ 198+ 8C9B              ;                               Izquierda_y_subiendo+8 (7)
+ 199+ 8C9B
+ 200+ 8C9B 11 12 15     Tira_pa_la_derecha db $11,$12,$15
+ 201+ 8C9E 0D           Random_8_1_15 db 13
+ 202+ 8C9F 00               db 0
  203+ 8CA0
- 204+ 8CA0 11 21 25     Tira_pa_la_izq db $11,$21,$25
- 205+ 8CA3 0D           Random_9_1_15 db 13
- 206+ 8CA4 00               db 0
- 207+ 8CA5
- 208+ 8CA5              ; ----- ----- -----
+ 204+ 8CA0              ; ----- ----- -----
+ 205+ 8CA0
+ 206+ 8CA0 11 21 25     Tira_pa_la_izq db $11,$21,$25
+ 207+ 8CA3 0D           Random_9_1_15 db 13
+ 208+ 8CA4 00               db 0
  209+ 8CA5
- 210+ 8CA5 12 21 68     Diagonal_bajando_izq db $12,$21,$68
- 211+ 8CA8 03           Random_A_1_15 db 3
- 212+ 8CA9 00               db 0
- 213+ 8CAA
- 214+ 8CAA                  ; ----- ----- -----
+ 210+ 8CA5              ; ----- ----- -----
+ 211+ 8CA5
+ 212+ 8CA5 12 21 68     Diagonal_bajando_izq db $12,$21,$68
+ 213+ 8CA8 03           Random_A_1_15 db 3
+ 214+ 8CA9 00               db 0
  215+ 8CAA
- 216+ 8CAA 12 12 58 03  Diagonal_bajando_derecha db $12,$12,$58,3,0
- 216+ 8CAE 00
- 217+ 8CAF
- 218+ 8CAF              ; ----- ----- -----
+ 216+ 8CAA                  ; ----- ----- -----
+ 217+ 8CAA
+ 218+ 8CAA 12 12 58 03  Diagonal_bajando_derecha db $12,$12,$58,3,0
+ 218+ 8CAE 00
  219+ 8CAF
- 220+ 8CAF 12 11 42     Bajo_decelerando db $12,$11,$42             ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)
- 221+ 8CB2              ;                                           ; %0100 1111 ... ($42), Abajo 2x2 Pixels.
- 222+ 8CB2
- 223+ 8CB2              ;                                           ; Random_1 (1-10) Repeticiones.
- 224+ 8CB2 0A           Random_1_1_10 db 10                         ; (1-10).
- 225+ 8CB3 11 11 42 00      db $11,$11,$42,0                        ; Up, (vel.1) - Down, (vel.1) - Left, (vel.1) - Right, (vel.1)
- 226+ 8CB7              ;                                           ; %0100 0010 ... ($42), Abajo 2 Pixels.
- 227+ 8CB7              ;                                           ; NEXT MOV.
- 228+ 8CB7              ; ----- ----- -----
- 229+ 8CB7
- 230+ 8CB7              ; Desaceleración bajando.
+ 220+ 8CAF              ; ----- ----- -----
+ 221+ 8CAF
+ 222+ 8CAF 12 11 42     Bajo_decelerando db $12,$11,$42             ; Up, (vel.1) - Down, (vel.2) - Left, (vel.1) - Right, (vel.1)
+ 223+ 8CB2              ;                                           ; %0100 1111 ... ($42), Abajo 2x2 Pixels.
+ 224+ 8CB2
+ 225+ 8CB2              ;                                           ; Random_1 (1-10) Repeticiones.
+ 226+ 8CB2 0A           Random_1_1_10 db 10                         ; (1-10).
+ 227+ 8CB3 11 11 42 00      db $11,$11,$42,0                        ; Up, (vel.1) - Down, (vel.1) - Left, (vel.1) - Right, (vel.1)
+ 228+ 8CB7              ;                                           ; %0100 0010 ... ($42), Abajo 2 Pixels.
+ 229+ 8CB7              ;                                           ; NEXT MOV.
+ 230+ 8CB7              ; ----- ----- -----
  231+ 8CB7
- 232+ 8CB7 11 11 41 01  F_1 db $11,$11,$41,1
- 233+ 8CBB 11 11 01 FD      db $11,$11,$01,253,8,0                  ; Abajo - Pausa1. 8rep.
- 233+ 8CBF 08 00
- 234+ 8CC1
- 235+ 8CC1 11 11 41 01  F_2 db $11,$11,$41,1
- 236+ 8CC5 11 11 02 FD      db $11,$11,$02,253,15,254               ; Abajo - Pausa2. 15rep --- Fija puntero de bucle.
- 236+ 8CC9 0F FE
- 237+ 8CCB
- 238+ 8CCB              ; ----- ----- -----
+ 232+ 8CB7              ; Desaceleración bajando.
+ 233+ 8CB7
+ 234+ 8CB7 11 11 41 01  F_1 db $11,$11,$41,1
+ 235+ 8CBB 11 11 01 FD      db $11,$11,$01,253,8,0                  ; Abajo - Pausa1. 8rep.
+ 235+ 8CBF 08 00
+ 236+ 8CC1
+ 237+ 8CC1 11 11 41 01  F_2 db $11,$11,$41,1
+ 238+ 8CC5 11 11 02 FD      db $11,$11,$02,253,15,254               ; Abajo - Pausa2. 15rep --- Fija puntero de bucle.
+ 238+ 8CC9 0F FE
  239+ 8CCB
- 240+ 8CCB              ; Desaceleración derecha.
+ 240+ 8CCB              ; ----- ----- -----
  241+ 8CCB
- 242+ 8CCB 11 11 11 01  F_7 db $11,$11,$11,1
- 243+ 8CCF 11 11 01 FD      db $11,$11,$01,253,18,0                  ; Derecha - Pausa1. 8rep.
- 243+ 8CD3 12 00
- 244+ 8CD5
- 245+ 8CD5 11 11 11 01  F_8 db $11,$11,$11,1
- 246+ 8CD9 11 11 02 FD      db $11,$11,$02,253,25,0                   ; Derecha - Pausa2. 15rep --- Fija puntero de bucle.
- 246+ 8CDD 19 00
- 247+ 8CDF
- 248+ 8CDF              ; ----- ----- -----
+ 242+ 8CCB              ; Desaceleración derecha.
+ 243+ 8CCB
+ 244+ 8CCB 11 11 11 01  F_7 db $11,$11,$11,1
+ 245+ 8CCF 11 11 01 FD      db $11,$11,$01,253,18,0                  ; Derecha - Pausa1. 8rep.
+ 245+ 8CD3 12 00
+ 246+ 8CD5
+ 247+ 8CD5 11 11 11 01  F_8 db $11,$11,$11,1
+ 248+ 8CD9 11 11 02 FD      db $11,$11,$02,253,25,0                   ; Derecha - Pausa2. 15rep --- Fija puntero de bucle.
+ 248+ 8CDD 19 00
  249+ 8CDF
- 250+ 8CDF              ; Desaceleración izquierda.
+ 250+ 8CDF              ; ----- ----- -----
  251+ 8CDF
- 252+ 8CDF 11 11 21 01  F_9 db $11,$11,$21,1
- 253+ 8CE3 11 11 01 FD      db $11,$11,$01,253,18,0                  ; Derecha - Pausa1. 8rep.
- 253+ 8CE7 12 00
- 254+ 8CE9
- 255+ 8CE9 11 11 21 01  F_A db $11,$11,$21,1
- 256+ 8CED 11 11 02 FD      db $11,$11,$02,253,25,0                   ; Derecha - Pausa2. 15rep --- Fija puntero de bucle.
- 256+ 8CF1 19 00
- 257+ 8CF3
- 258+ 8CF3              ; ----- ----- -----
+ 252+ 8CDF              ; Desaceleración izquierda.
+ 253+ 8CDF
+ 254+ 8CDF 11 11 21 01  F_9 db $11,$11,$21,1
+ 255+ 8CE3 11 11 01 FD      db $11,$11,$01,253,18,0                  ; Derecha - Pausa1. 8rep.
+ 255+ 8CE7 12 00
+ 256+ 8CE9
+ 257+ 8CE9 11 11 21 01  F_A db $11,$11,$21,1
+ 258+ 8CED 11 11 02 FD      db $11,$11,$02,253,25,0                   ; Derecha - Pausa2. 15rep --- Fija puntero de bucle.
+ 258+ 8CF1 19 00
  259+ 8CF3
- 260+ 8CF3 11 11 51 01  Codo_abajo_derecha db $11,$11,$51,1
- 261+ 8CF7 11 11 43 01      db $11,$11,$43,1
- 262+ 8CFB 11 11 52 01      db $11,$11,$52,1
- 263+ 8CFF 11 11 41 01      db $11,$11,$41,1
- 264+ 8D03 11 11 52 01      db $11,$11,$52,1
- 265+ 8D07 11 11 11 01      db $11,$11,$11,1
- 266+ 8D0B 11 11 52 01      db $11,$11,$52,1
- 267+ 8D0F 11 11 13 01      db $11,$11,$13,1
- 268+ 8D13 11 11 51 01      db $11,$11,$51,1
- 269+ 8D17 11 12 12 01      db $11,$12,$12,1
- 270+ 8D1B 11 11 91 01      db $11,$11,$91,1
- 271+ 8D1F 11 12 12 01      db $11,$12,$12,1
- 272+ 8D23 11 11 92 00      db $11,$11,$92,0
- 273+ 8D27
- 274+ 8D27              ; ----- ----- -----
+ 260+ 8CF3              ; ----- ----- -----
+ 261+ 8CF3
+ 262+ 8CF3 11 11 51 01  Codo_abajo_derecha db $11,$11,$51,1
+ 263+ 8CF7 11 11 43 01      db $11,$11,$43,1
+ 264+ 8CFB 11 11 52 01      db $11,$11,$52,1
+ 265+ 8CFF 11 11 41 01      db $11,$11,$41,1
+ 266+ 8D03 11 11 52 01      db $11,$11,$52,1
+ 267+ 8D07 11 11 11 01      db $11,$11,$11,1
+ 268+ 8D0B 11 11 52 01      db $11,$11,$52,1
+ 269+ 8D0F 11 11 13 01      db $11,$11,$13,1
+ 270+ 8D13 11 11 51 01      db $11,$11,$51,1
+ 271+ 8D17 11 12 12 01      db $11,$12,$12,1
+ 272+ 8D1B 11 11 91 01      db $11,$11,$91,1
+ 273+ 8D1F 11 12 12 01      db $11,$12,$12,1
+ 274+ 8D23 11 11 92 00      db $11,$11,$92,0
  275+ 8D27
- 276+ 8D27 11 12 13 01  Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
- 277+ 8D2B 11 11 91 FD      db $11,$11,$91,253                      ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 278+ 8D2F 08           Random_2_1_15 db 8
- 279+ 8D30 00               db 0
- 280+ 8D31
- 281+ 8D31              ; ----- ----- -----
+ 276+ 8D27              ; ----- ----- -----
+ 277+ 8D27
+ 278+ 8D27 11 12 13 01  Derecha_y_subiendo db $11,$12,$13,1         ; Derecha. 4rep. vel.2
+ 279+ 8D2B 11 11 91 FD      db $11,$11,$91,253                      ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 280+ 8D2F 08           Random_2_1_15 db 8
+ 281+ 8D30 00               db 0
  282+ 8D31
- 283+ 8D31 11 11 16 01  Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
- 284+ 8D35 11 11 91 FD      db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 284+ 8D39 02 00
- 285+ 8D3B
- 286+ 8D3B              ; ----- ----- -----
+ 283+ 8D31              ; ----- ----- -----
+ 284+ 8D31
+ 285+ 8D31 11 11 16 01  Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
+ 286+ 8D35 11 11 91 FD      db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 286+ 8D39 02 00
  287+ 8D3B
- 288+ 8D3B              ; Deceleración subiendo.
+ 288+ 8D3B              ; ----- ----- -----
  289+ 8D3B
- 290+ 8D3B 11 11 11 01  F_3 db $11,$11,$11,1
- 291+ 8D3F 11 11 01 FD      db $11,$11,$01,253,4,0
- 291+ 8D43 04 00
- 292+ 8D45 11 11 11 01  F_4 db $11,$11,$11,1
- 293+ 8D49 11 11 02 FD      db $11,$11,$02,253,8,0
- 293+ 8D4D 08 00
- 294+ 8D4F
- 295+ 8D4F              ; ----- ----- -----
+ 290+ 8D3B              ; Deceleración subiendo.
+ 291+ 8D3B
+ 292+ 8D3B 11 11 11 01  F_3 db $11,$11,$11,1
+ 293+ 8D3F 11 11 01 FD      db $11,$11,$01,253,4,0
+ 293+ 8D43 04 00
+ 294+ 8D45 11 11 11 01  F_4 db $11,$11,$11,1
+ 295+ 8D49 11 11 02 FD      db $11,$11,$02,253,8,0
+ 295+ 8D4D 08 00
  296+ 8D4F
- 297+ 8D4F 11 11 16 01  Derecha_y_bajando db $11,$11,$16,1
- 298+ 8D53 11 11 51 FD      db $11,$11,$51,253,2,0
- 298+ 8D57 02 00
- 299+ 8D59
- 300+ 8D59 11 12 13 01  Derecha_y_bajando_1 db $11,$12,$13,1
- 301+ 8D5D 11 11 51 FD      db $11,$11,$51,253
- 302+ 8D61
- 303+ 8D61
- 304+ 8D61              ;   Random_3_1_15 y Random_4_1_15 han de ser iguales !!!!!!!!!.
- 305+ 8D61              ;   -----------------------------------------------------------
- 306+ 8D61
- 307+ 8D61 06           Random_3_1_15 db 6
- 308+ 8D62 00               db 0
- 309+ 8D63
- 310+ 8D63 11 11 16 01  Derecha_y_bajando_2 db $11,$11,$16,1
- 311+ 8D67 11 11 51 FD      db $11,$11,$51,253
- 312+ 8D6B
- 313+ 8D6B 06           Random_4_1_15 db 6
- 314+ 8D6C 00               db 0
- 315+ 8D6D
- 316+ 8D6D              ; ----- ----- -----
+ 297+ 8D4F              ; ----- ----- -----
+ 298+ 8D4F
+ 299+ 8D4F 11 11 16 01  Derecha_y_bajando db $11,$11,$16,1
+ 300+ 8D53 11 11 51 FD      db $11,$11,$51,253,2,0
+ 300+ 8D57 02 00
+ 301+ 8D59
+ 302+ 8D59 11 12 13 01  Derecha_y_bajando_1 db $11,$12,$13,1
+ 303+ 8D5D 11 11 51 FD      db $11,$11,$51,253
+ 304+ 8D61
+ 305+ 8D61
+ 306+ 8D61              ;   Random_3_1_15 y Random_4_1_15 han de ser iguales !!!!!!!!!.
+ 307+ 8D61              ;   -----------------------------------------------------------
+ 308+ 8D61
+ 309+ 8D61 06           Random_3_1_15 db 6
+ 310+ 8D62 00               db 0
+ 311+ 8D63
+ 312+ 8D63 11 11 16 01  Derecha_y_bajando_2 db $11,$11,$16,1
+ 313+ 8D67 11 11 51 FD      db $11,$11,$51,253
+ 314+ 8D6B
+ 315+ 8D6B 06           Random_4_1_15 db 6
+ 316+ 8D6C 00               db 0
  317+ 8D6D
- 318+ 8D6D              ; Medio círculo bajando. Entra de izq. a derecha y sale de derecha a izq.
+ 318+ 8D6D              ; ----- ----- -----
  319+ 8D6D
- 320+ 8D6D 11 11 51 01  Codo_derecha_abajo db $11,$11,$51,1
- 321+ 8D71 11 11 13 01      db $11,$11,$13,1
- 322+ 8D75 11 11 51 01      db $11,$11,$51,1
- 323+ 8D79 11 11 13 01      db $11,$11,$13,1
- 324+ 8D7D 11 11 52 01      db $11,$11,$52,1
- 325+ 8D81 11 11 11 01      db $11,$11,$11,1
- 326+ 8D85 11 11 52 01      db $11,$11,$52,1
- 327+ 8D89 11 11 41 01      db $11,$11,$41,1
- 328+ 8D8D 11 11 52 01      db $11,$11,$52,1
- 329+ 8D91 11 11 43 01      db $11,$11,$43,1
- 330+ 8D95 11 11 51 01      db $11,$11,$51,1
- 331+ 8D99 11 11 43 00      db $11,$11,$43,0
- 332+ 8D9D
- 333+ 8D9D              ; ----- ----- -----
+ 320+ 8D6D              ; Medio círculo bajando. Entra de izq. a derecha y sale de derecha a izq.
+ 321+ 8D6D
+ 322+ 8D6D 11 11 51 01  Codo_derecha_abajo db $11,$11,$51,1
+ 323+ 8D71 11 11 13 01      db $11,$11,$13,1
+ 324+ 8D75 11 11 51 01      db $11,$11,$51,1
+ 325+ 8D79 11 11 13 01      db $11,$11,$13,1
+ 326+ 8D7D 11 11 52 01      db $11,$11,$52,1
+ 327+ 8D81 11 11 11 01      db $11,$11,$11,1
+ 328+ 8D85 11 11 52 01      db $11,$11,$52,1
+ 329+ 8D89 11 11 41 01      db $11,$11,$41,1
+ 330+ 8D8D 11 11 52 01      db $11,$11,$52,1
+ 331+ 8D91 11 11 43 01      db $11,$11,$43,1
+ 332+ 8D95 11 11 51 01      db $11,$11,$51,1
+ 333+ 8D99 11 11 43 00      db $11,$11,$43,0
  334+ 8D9D
- 335+ 8D9D 11 11 61 01  Codo_abajo_izq db $11,$11,$61,1
- 336+ 8DA1 11 11 43 01      db $11,$11,$43,1
- 337+ 8DA5 11 11 62 01      db $11,$11,$62,1
- 338+ 8DA9 11 11 41 01      db $11,$11,$41,1
- 339+ 8DAD 11 11 62 01      db $11,$11,$62,1
- 340+ 8DB1 11 11 21 01      db $11,$11,$21,1
- 341+ 8DB5 11 11 62 01      db $11,$11,$62,1
- 342+ 8DB9 11 11 23 01      db $11,$11,$23,1
- 343+ 8DBD 11 11 61 01      db $11,$11,$61,1
- 344+ 8DC1 11 21 22 01      db $11,$21,$22,1
- 345+ 8DC5 11 11 A1 01      db $11,$11,$a1,1
- 346+ 8DC9 11 21 22 01      db $11,$21,$22,1
- 347+ 8DCD 11 11 A2 00      db $11,$11,$a2,0
- 348+ 8DD1
- 349+ 8DD1              ; ----- ----- -----
+ 335+ 8D9D              ; ----- ----- -----
+ 336+ 8D9D
+ 337+ 8D9D 11 11 61 01  Codo_abajo_izq db $11,$11,$61,1
+ 338+ 8DA1 11 11 43 01      db $11,$11,$43,1
+ 339+ 8DA5 11 11 62 01      db $11,$11,$62,1
+ 340+ 8DA9 11 11 41 01      db $11,$11,$41,1
+ 341+ 8DAD 11 11 62 01      db $11,$11,$62,1
+ 342+ 8DB1 11 11 21 01      db $11,$11,$21,1
+ 343+ 8DB5 11 11 62 01      db $11,$11,$62,1
+ 344+ 8DB9 11 11 23 01      db $11,$11,$23,1
+ 345+ 8DBD 11 11 61 01      db $11,$11,$61,1
+ 346+ 8DC1 11 21 22 01      db $11,$21,$22,1
+ 347+ 8DC5 11 11 A1 01      db $11,$11,$a1,1
+ 348+ 8DC9 11 21 22 01      db $11,$21,$22,1
+ 349+ 8DCD 11 11 A2 00      db $11,$11,$a2,0
  350+ 8DD1
- 351+ 8DD1 11 21 23 01  Izquierda_y_subiendo db $11,$21,$23,1
- 352+ 8DD5 11 11 A1 FD      db $11,$11,$a1,253
- 353+ 8DD9
- 354+ 8DD9 0F           Random_5_1_15 db 15
- 355+ 8DDA 00               db 0
- 356+ 8DDB
- 357+ 8DDB              ; ----- ----- -----
+ 351+ 8DD1              ; ----- ----- -----
+ 352+ 8DD1
+ 353+ 8DD1 11 21 23 01  Izquierda_y_subiendo db $11,$21,$23,1
+ 354+ 8DD5 11 11 A1 FD      db $11,$11,$a1,253
+ 355+ 8DD9
+ 356+ 8DD9 0F           Random_5_1_15 db 15
+ 357+ 8DDA 00               db 0
  358+ 8DDB
- 359+ 8DDB 11 11 26 01  Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
- 360+ 8DDF 11 11 A1 FD      db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
- 360+ 8DE3 02 00
- 361+ 8DE5
- 362+ 8DE5 11 11 21 01  F_5 db $11,$11,$21,1
- 363+ 8DE9 11 11 01 FD      db $11,$11,$01,253,4,0
- 363+ 8DED 04 00
- 364+ 8DEF 11 11 21 01  F_6 db $11,$11,$21,1
- 365+ 8DF3 11 11 02 FD      db $11,$11,$02,253,8,0
- 365+ 8DF7 08 00
- 366+ 8DF9
- 367+ 8DF9              ; ----- ----- -----
+ 359+ 8DDB              ; ----- ----- -----
+ 360+ 8DDB
+ 361+ 8DDB 11 11 26 01  Izquierda_y_subiendo_1 db $11,$11,$26,1     ; Derecha. 4rep. vel.2
+ 362+ 8DDF 11 11 A1 FD      db $11,$11,$a1,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+ 362+ 8DE3 02 00
+ 363+ 8DE5
+ 364+ 8DE5 11 11 21 01  F_5 db $11,$11,$21,1
+ 365+ 8DE9 11 11 01 FD      db $11,$11,$01,253,4,0
+ 365+ 8DED 04 00
+ 366+ 8DEF 11 11 21 01  F_6 db $11,$11,$21,1
+ 367+ 8DF3 11 11 02 FD      db $11,$11,$02,253,8,0
+ 367+ 8DF7 08 00
  368+ 8DF9
- 369+ 8DF9 11 11 26 01  Izquierda_y_bajando db $11,$11,$26,1          ; Derecha. 4rep. vel.2
- 370+ 8DFD 11 11 61 FD      db $11,$11,$61,253,2,0
- 370+ 8E01 02 00
- 371+ 8E03 11 21 23 01  Izquierda_y_bajando_1 db $11,$21,$23,1        ; Derecha. 4rep. vel.2
- 372+ 8E07 11 11 61 FD      db $11,$11,$61,253
- 373+ 8E0B
- 374+ 8E0B              ;   Random_6_1_15 y Random_7_1_15 han de ser iguales !!!!!!!!!.
- 375+ 8E0B              ;   -----------------------------------------------------------
- 376+ 8E0B
- 377+ 8E0B 06           Random_6_1_15 db 6
- 378+ 8E0C 00               db 0
- 379+ 8E0D
- 380+ 8E0D 11 11 26 01  Izquierda_y_bajando_2 db $11,$11,$26,1        ; Derecha. 4rep. vel.2
- 381+ 8E11 11 11 61 FD      db $11,$11,$61,253
- 382+ 8E15
- 383+ 8E15 06           Random_7_1_15 db 6
- 384+ 8E16 00               db 0
- 385+ 8E17
- 386+ 8E17              ; ----- ----- -----
+ 369+ 8DF9              ; ----- ----- -----
+ 370+ 8DF9
+ 371+ 8DF9 11 11 26 01  Izquierda_y_bajando db $11,$11,$26,1          ; Derecha. 4rep. vel.2
+ 372+ 8DFD 11 11 61 FD      db $11,$11,$61,253,2,0
+ 372+ 8E01 02 00
+ 373+ 8E03 11 21 23 01  Izquierda_y_bajando_1 db $11,$21,$23,1        ; Derecha. 4rep. vel.2
+ 374+ 8E07 11 11 61 FD      db $11,$11,$61,253
+ 375+ 8E0B
+ 376+ 8E0B              ;   Random_6_1_15 y Random_7_1_15 han de ser iguales !!!!!!!!!.
+ 377+ 8E0B              ;   -----------------------------------------------------------
+ 378+ 8E0B
+ 379+ 8E0B 06           Random_6_1_15 db 6
+ 380+ 8E0C 00               db 0
+ 381+ 8E0D
+ 382+ 8E0D 11 11 26 01  Izquierda_y_bajando_2 db $11,$11,$26,1        ; Derecha. 4rep. vel.2
+ 383+ 8E11 11 11 61 FD      db $11,$11,$61,253
+ 384+ 8E15
+ 385+ 8E15 06           Random_7_1_15 db 6
+ 386+ 8E16 00               db 0
  387+ 8E17
- 388+ 8E17 11 11 A1 01  Codo_izquierda_abajo db $11,$11,$a1,1          ; Arriba/Izq. 1rep.
- 389+ 8E1B 11 11 23 01      db $11,$11,$23,1                           ; Izq. 3rep.
- 390+ 8E1F 11 11 61 01      db $11,$11,$61,1                           ; Abajo/Izq. 1rep.
- 391+ 8E23 11 11 23 01      db $11,$11,$23,1                           ; Izq. 3rep.
- 392+ 8E27 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
- 393+ 8E2B 11 11 21 01      db $11,$11,$21,1                           ; Izq. 1rep.
- 394+ 8E2F 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
- 395+ 8E33 11 11 41 01      db $11,$11,$41,1                           ; Abajo. 1rep.
- 396+ 8E37 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
- 397+ 8E3B 11 11 43 01      db $11,$11,$43,1                           ; Abajo. 3rep.
- 398+ 8E3F 11 11 61 01      db $11,$11,$61,1                           ; Abajo/Izq. 1rep.
- 399+ 8E43 11 11 43 00      db $11,$11,$43,0                           ; Abajo. 3rep.
- 400+ 8E47
- 401+ 8E47
+ 388+ 8E17              ; ----- ----- -----
+ 389+ 8E17
+ 390+ 8E17 11 11 A1 01  Codo_izquierda_abajo db $11,$11,$a1,1          ; Arriba/Izq. 1rep.
+ 391+ 8E1B 11 11 23 01      db $11,$11,$23,1                           ; Izq. 3rep.
+ 392+ 8E1F 11 11 61 01      db $11,$11,$61,1                           ; Abajo/Izq. 1rep.
+ 393+ 8E23 11 11 23 01      db $11,$11,$23,1                           ; Izq. 3rep.
+ 394+ 8E27 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
+ 395+ 8E2B 11 11 21 01      db $11,$11,$21,1                           ; Izq. 1rep.
+ 396+ 8E2F 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
+ 397+ 8E33 11 11 41 01      db $11,$11,$41,1                           ; Abajo. 1rep.
+ 398+ 8E37 11 11 62 01      db $11,$11,$62,1                           ; Abajo/Izq. 2rep.
+ 399+ 8E3B 11 11 43 01      db $11,$11,$43,1                           ; Abajo. 3rep.
+ 400+ 8E3F 11 11 61 01      db $11,$11,$61,1                           ; Abajo/Izq. 1rep.
+ 401+ 8E43 11 11 43 00      db $11,$11,$43,0                           ; Abajo. 3rep.
  402+ 8E47
  403+ 8E47
  404+ 8E47
@@ -1623,6 +1623,8 @@
  408+ 8E47
  409+ 8E47
  410+ 8E47
+ 411+ 8E47
+ 412+ 8E47
 # file closed: Patrones_de_mov.asm
  140  8E47              	include "Niveles.asm"
 # file opened: Niveles.asm
