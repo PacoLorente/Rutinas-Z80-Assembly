@@ -68,6 +68,20 @@
 ;                                           ;               _ esta dirección y no se situará al comienzo del índice del patrón de movimiento.         
 
 ; ----- ----- ----- ----- -----
+
+; Random_1_1_10 (1-10) Bajo_decelerando
+; Random_2_1_15 (1-15) Derecha_y_subiendo
+
+; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
+; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
+
+; Random_5_1_15 (1-5) Izquierda_y_subiendo
+
+; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
+; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
+
+; ----- ----- ----- ----- -----
+
 Indice_mov_Baile_de_Badplate
 
     defw Left_Ini82
@@ -88,6 +102,13 @@ Left_Ini82 defw Bajo_decelerando
     defw Bajo_decelerando
     defw F_1
     defw F_2
+    defw Tira_pa_la_izq
+    defw F_9
+    defw F_A
+    defw Diagonal_bajando_derecha
+    defw Bajo_decelerando
+    defw F_1
+    defw F_2
     defw 0
 
 ;   Baile de Badplate cuando aparece por la derecha.
@@ -102,7 +123,6 @@ Indice_mov_Baile_de_BadSat
 
     defw Left_Ini
     defw Right_Ini
-
 
 Left_Ini defw Bajo_decelerando
     defw F_1
@@ -175,9 +195,25 @@ Right_Ini defw Bajo_decelerando
 ; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)               
 ;                               Izquierda_y_subiendo+8 (7)  
 
-Tira_pa_la_derecha db $11,$12,$13,$14,0
+Tira_pa_la_derecha db $11,$12,$15
+Random_8_1_15 db 13
+    db 0
 
-Diagonal_bajando_izq db $12,$21,$68,3,0
+; ----- ----- -----
+
+Tira_pa_la_izq db $11,$21,$25
+Random_9_1_15 db 13
+    db 0
+
+; ----- ----- -----
+
+Diagonal_bajando_izq db $12,$21,$68
+Random_A_1_15 db 3
+    db 0
+
+    ; ----- ----- -----
+
+Diagonal_bajando_derecha db $12,$12,$58,3,0
 
 ; ----- ----- -----
 
@@ -186,7 +222,6 @@ Bajo_decelerando db $12,$11,$42             ; Up, (vel.1) - Down, (vel.2) - Left
 
 ;                                           ; Random_1 (1-10) Repeticiones.
 Random_1_1_10 db 10                         ; (1-10).              
-
     db $11,$11,$42,0                        ; Up, (vel.1) - Down, (vel.1) - Left, (vel.1) - Right, (vel.1)
 ;                                           ; %0100 0010 ... ($42), Abajo 2 Pixels.
 ;                                           ; NEXT MOV.
@@ -205,10 +240,20 @@ F_2 db $11,$11,$41,1
 ; Desaceleración derecha.
 
 F_7 db $11,$11,$11,1
-    db $11,$11,$01,253,8,0                  ; Derecha - Pausa1. 8rep.
+    db $11,$11,$01,253,18,0                  ; Derecha - Pausa1. 8rep.
 
 F_8 db $11,$11,$11,1
-    db $11,$11,$02,253,15,0                   ; Derecha - Pausa2. 15rep --- Fija puntero de bucle.
+    db $11,$11,$02,253,25,0                   ; Derecha - Pausa2. 15rep --- Fija puntero de bucle.
+
+; ----- ----- -----
+
+; Desaceleración izquierda.
+
+F_9 db $11,$11,$21,1
+    db $11,$11,$01,253,18,0                  ; Derecha - Pausa1. 8rep.
+
+F_A db $11,$11,$21,1
+    db $11,$11,$02,253,25,0                   ; Derecha - Pausa2. 15rep --- Fija puntero de bucle.
 
 ; ----- ----- -----
 
@@ -237,6 +282,8 @@ Random_2_1_15 db 8
 
 Derecha_y_subiendo_1 db $11,$11,$16,1       ; Derecha. 4rep. vel.2
     db $11,$11,$91,253,2,0                  ; Arriba/Derecha. 1rep. --- Repite Mov 12rep. --- Termina movimiento.
+
+; ----- ----- -----
 
 ; Deceleración subiendo.
 

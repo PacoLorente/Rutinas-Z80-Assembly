@@ -86,8 +86,10 @@ Prepara_Cajas_Master
 	call Derivando_RND 										 		; Generamos 7 nº RND para construir los mov. masticados.
 
 ;	ld a,(Tipo)
-;	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
-;	call Aplica_rnd_al_baile
+
+	ld a,1
+	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+	call Aplica_rnd_al_baile
 
 	pop bc
 	pop hl
