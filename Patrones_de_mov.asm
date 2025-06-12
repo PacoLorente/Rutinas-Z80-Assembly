@@ -81,7 +81,18 @@
 
 ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
 ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
+;
+; ----- ----- ----- ----- -----
+;
+;   Factor RANDOM --- BadPlate.
 
+; Random_1_1_10 (1-10) Bajo_decelerando
+; Random_8_1_15 (1-15) Tira_pa_la_derecha
+
+; Random_9_1_15 (1-15) Tira_pa_la_izq
+; Random_A_1_15 (1-15) Diagonal_bajando_izq
+; Random_B_1_15 (1-15) Diagonal_bajando_derecha
+;
 ; ----- ----- ----- ----- -----
 
 Indice_mov_Baile_de_Badplate
@@ -118,7 +129,23 @@ Left_Ini82 defw Bajo_decelerando
 Right_Ini82 defw Bajo_decelerando
     defw F_1
     defw F_2
-
+    defw Tira_pa_la_izq
+    defw F_9
+    defw F_A
+    defw Diagonal_bajando_derecha
+    defw Tira_pa_la_izq
+    defw F_9
+    defw F_A
+    defw Bajo_decelerando
+    defw F_1
+    defw F_2
+    defw Tira_pa_la_derecha
+    defw F_7
+    defw F_8
+    defw Diagonal_bajando_izq
+    defw Bajo_decelerando
+    defw F_1
+    defw F_2
     defw 0
 
 Indice_mov_Baile_de_BadSat 
@@ -215,7 +242,9 @@ Random_A_1_15 db 3
 
     ; ----- ----- -----
 
-Diagonal_bajando_derecha db $12,$12,$58,3,0
+Diagonal_bajando_derecha db $12,$12,$58
+Random_B_1_15 db 3
+    db 0
 
 ; ----- ----- -----
 

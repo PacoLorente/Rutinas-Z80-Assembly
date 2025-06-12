@@ -21,8 +21,8 @@ Recompone_posicion_inicio
 	ld hl,Ctrl_2
 	set 0,(hl)
 
-	ld hl,(Puntero_objeto)
-	ld (Repone_puntero_objeto),hl
+;	ld hl,(Puntero_objeto)
+;	ld (Repone_puntero_objeto),hl
 
 	ld hl,(Posicion_inicio) 
 	ld (Posicion_actual),hl
@@ -41,7 +41,10 @@ Recompone_posicion_inicio
 ; No vamos a aparecer por ningún extremo. Cargamos Sprite vacío pues vamos a ir apareciendo por la_
 ; _parte alta de la pantalla.
 
-2 ld hl,Sprite_vacio
+2 ld hl,(Puntero_objeto)
+	ld (Repone_puntero_objeto),hl
+
+	ld hl,Sprite_vacio
 	ld (Puntero_objeto),hl
 
 ; Colocamos (Posicion_actual) a "$00" para que la rutina DRAW inicialice esta entidad.
