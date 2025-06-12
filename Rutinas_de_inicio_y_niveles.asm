@@ -170,7 +170,7 @@ Avanza_siguiente_entidad_del_nivel
 
 Determina_posicion_de_inicio
 
-	ld a,$1f
+	ld a,$09
 
 ;	ld hl,Numeros_aleatorios_baile+3
 ;	ld a,(hl)

@@ -18,9 +18,6 @@ Recompone_posicion_inicio
 	inc l
 	ld (hl),a
 
-	ld hl,Ctrl_2
-	set 0,(hl)
-
 ;	ld hl,(Puntero_objeto)
 ;	ld (Repone_puntero_objeto),hl
 
@@ -37,6 +34,9 @@ Recompone_posicion_inicio
 ;	Vamos a aparecer por la parte derecha de la pantalla.
 
 	call Mov_left
+
+3 ld hl,Ctrl_2
+	set 0,(hl)
 
 ; No vamos a aparecer por ningún extremo. Cargamos Sprite vacío pues vamos a ir apareciendo por la_
 ; _parte alta de la pantalla.
@@ -57,7 +57,7 @@ Recompone_posicion_inicio
 ; Vamos a aparecer por la parte izquierda de la pantalla.
 
 1 call Mov_right
-	jr 2B
+	jr 3B
 
 ; ******************************************************************************************************************************************************************************************
 ;
@@ -70,8 +70,6 @@ Recompone_posicion_inicio
 ;
 
 Mov_down 
-
-	call Reponne_punntero_objeto									; Si la entidad no se inició en la 1ª o última columna de pantalla,_
 
 	ld a,(Vel_down)
 	ld b,a
@@ -126,8 +124,6 @@ Mov_down
 ;
 Mov_up 
 
-	call Reponne_punntero_objeto										; Si la entidad no se inició en la 1ª o última columna de pantalla,_
-
 	ld a,(Vel_up)
 	ld b,a
 	ld hl,(Posicion_actual)	
@@ -160,23 +156,18 @@ Mov_up
 
 ; -----------------------------
 ;
-;	27/5/23
+;	12/6/25
 ;
 ;	Si la rutina [Recompone_posicion_inicio] no inició la entidad en la 1ª o última columna de pantalla,_
 ;	_restaurará (Puntero_objeto) con el contenido de (Repone_puntero_objeto).
-;
-;	Esta rutina sólo será llamada desde las rutinas de movimiento vertical, [Mov_down] y [Mov_up].
-;	Las rutinas [Mov_left] y [Mov_right] modifican (Puntero_objeto) cada vez que se ejecutan.
-;
-;	Modifica: A y (Puntero_objeto).
 
-Reponne_punntero_objeto	ld a,(Ctrl_2) 													
-	bit 0,a
-	ret z
-	res 0,a
-	ld (Ctrl_2),a
+Reponne_punntero_objeto
+
+	ld hl,Ctrl_2
+	res 0,(hl)
 	ld hl,(Repone_puntero_objeto)
 	ld (Puntero_objeto),hl
+
 	ret
 
 ; ******************************************************************************************************************************************************************************************
