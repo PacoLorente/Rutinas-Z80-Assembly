@@ -85,9 +85,7 @@ Prepara_Cajas_Master
 	ld hl,Numeros_aleatorios_baile 							
 	call Derivando_RND 										 		; Generamos 7 nº RND para construir los mov. masticados.
 
-;	ld a,(Tipo)
-
-	ld a,1
+	ld a,(Tipo)
 	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
 	call Aplica_rnd_al_baile
 
@@ -164,36 +162,36 @@ Avanza_siguiente_entidad_del_nivel
 
 ; -----------------------------------------------------------------------------------
 ;
-;	16/5/25
+;	13/6/25
 ;
-
 
 Determina_posicion_de_inicio
 
-	ld a,$09
-
-;	ld hl,Numeros_aleatorios_baile+3
-;	ld a,(hl)
-;	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
+	ld hl,Numeros_aleatorios_baile+3
+	ld a,(hl)
+	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 
-;	ld d,a
-;	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
-;	and 2
-;	ld a,d
-;	jr z,1F
+	ld d,a
 
-; Entidad tipo Badplate. Si nuestro nº RND es "<= $0f" aparecerá por la izquierda.
-; ">" you see it by the right side.  
+	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
+	and 2
+	ld a,d
+	jr z,1F
 
-;	cp $0f
-;	jr c,2F
+; 	Entidad tipo Badplate. Si nuestro nº RND es "<= $0f" aparecerá por la izquierda. Si es superior iniciará por la derecha.
 
-;	ld a,$1f
-;	jr 1F
+	cp $0f
+	jr c,2F
 
-;2 xor a
+	ld a,$1f
+	jr 1F
+
+2 xor a
+
+;	Entidad (Tipo)="$81", BadSat. Puede iniciar su baile desde cualquier columna.
+
 1 ld hl,Posicion_inicio
 	ld (hl),a
 

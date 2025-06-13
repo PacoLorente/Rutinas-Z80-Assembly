@@ -14,8 +14,16 @@ Indice_de_niveles
 
 ; NIVEL_1. Tres tipos de BadSat. 
 
-Nivel_1 db 1
-	db 4
+Nivel_1 db 18
+
+	db 4,5,4,4,4,5
+	db 4,5,4,5,5,5
+	db 4,4,5,4,4,5
+
+;	db 1,2,3,1,2,3
+;	db 3,3,2,2,1,3
+;	db 3,2,1,2,2,1
+;	db 3,3
 
 Nivel_2 db 12									; Nº de entidades.
 	db 2,1,1,1,1,2								; Tipo de entidad que vamos a introducir en las 7 cajas de DRAW.			
@@ -54,6 +62,33 @@ Indice_de_tablas_Random
 ;
 ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
 ;	
+; ----- ----- ----- ----- -----
+;
+;   Factor RANDOM --- BadSat.
+
+; Random_1_1_10 (1-10) Bajo_decelerando
+; Random_2_1_15 (1-15) Derecha_y_subiendo
+
+; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
+; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
+
+; Random_5_1_15 (1-5) Izquierda_y_subiendo
+
+; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
+; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
+;
+; ----- ----- ----- ----- -----
+;
+;   Factor RANDOM --- BadPlate.
+
+; Random_1_1_10 (1-10) Bajo_decelerando
+; Random_8_1_15 (1-15) Tira_pa_la_derecha
+
+; Random_9_1_15 (1-15) Tira_pa_la_izq
+; Random_A_1_15 (1-15) Diagonal_bajando_izq
+; Random_B_1_15 (1-15) Diagonal_bajando_derecha
+;
+; ----- ----- ----- ----- -----
 
 Tabla_Random_BadSat
 
@@ -79,3 +114,37 @@ Tabla_Random_BadSat
 	defw 0
 
 Tabla_Random_Badplate
+
+	defw $0a01
+	defw Random_1_1_10
+
+	defw $0f01
+	defw Random_8_1_15
+
+	defw $0f01
+	defw Random_9_1_15
+
+	defw $0301
+	defw Random_A_1_3
+
+	defw $0301
+	defw Random_B_1_3
+
+	defw 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

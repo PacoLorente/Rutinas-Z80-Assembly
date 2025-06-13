@@ -202,27 +202,7 @@ Right_Ini defw Bajo_decelerando
 
     defw 0           
 
-
-;! En que parte del movimiento estamos??? Cabe el movimiento completo?
-
-; Después del codo abajo-derecha (Coordenada_X) de la entidad contendrá "4" cuando (Posicion_inicio) sea $4001.
-
-; Cuando (Coordenada_X)="4" ;   Derecha_y_subiendo+8 (11)               
-;                               Izquierda_y_subiendo+8 (11)            
-; Cuando (Coordenada_X)="5" ;   Derecha_y_subiendo+8 (8)               
-;                               Izquierda_y_subiendo+8 (8)            
-; Cuando (Coordenada_X)="6" ;   Derecha_y_subiendo+8 (8)               
-;                               Izquierda_y_subiendo+8 (8)            
-; Cuando (Coordenada_X)="7" ;   Derecha_y_subiendo+8 (7)               
-;                               Izquierda_y_subiendo+8 (8)            
-; Cuando (Coordenada_X)="8" ;   Derecha_y_subiendo+8 (6)               
-;                               Izquierda_y_subiendo+8 (8)            
-; Cuando (Coordenada_X)="9" ;   Derecha_y_subiendo+8 (5)               
-;                               Izquierda_y_subiendo+8 (7)  
-; Cuando (Coordenada_X)="a" ;   Derecha_y_subiendo+8 (4)               
-;                               Izquierda_y_subiendo+8 (7)  
-; Cuando (Coordenada_X)="b" ;   Derecha_y_subiendo+8 (3)               
-;                               Izquierda_y_subiendo+8 (7)  
+; -------------------------------------------------------------------------------------------------------------------------------
 
 Tira_pa_la_derecha db $11,$12,$15
 Random_8_1_15 db 13
@@ -237,13 +217,13 @@ Random_9_1_15 db 13
 ; ----- ----- -----
 
 Diagonal_bajando_izq db $12,$21,$68
-Random_A_1_15 db 3
+Random_A_1_3 db 3
     db 0
 
     ; ----- ----- -----
 
 Diagonal_bajando_derecha db $12,$12,$58
-Random_B_1_15 db 3
+Random_B_1_3 db 3
     db 0
 
 ; ----- ----- -----

@@ -16,7 +16,7 @@
 Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
 
-Tabla_de_pintado ds 30								 ; No puede haber cambio de byte alto en la Tabla_de_pintado, ese es el motivo del "org".
+Tabla_de_pintado ds 30								; No puede haber cambio de byte alto en la Tabla_de_pintado, ese es el motivo del "org".
 Tabla_de_borrado ds 24
 
 ;	db 0, defw 0, db 0
@@ -41,7 +41,7 @@ Indice_de_mov_segun_tipo_de_entidad defw Indice_mov_Baile_de_BadSat
 
 ;* Caja del disparo de Amadeus y cajas de disparos de entidades.
 
-Disparo_Amad defw 0							; Puntero objeto.
+Disparo_Amad defw 0									; Puntero objeto.
 	defw 0									; Puntero de impresión.
 
 Indice_de_disparos_entidades defw Disparo_1
@@ -52,33 +52,33 @@ Indice_de_disparos_entidades defw Disparo_1
 	defw Disparo_6
 	defw Disparo_7
 
-	db 0,0,0								; Puntero objeto.
-	defw 0									; Puntero de impresión.
-Disparo_7 db 0	     					; Control.
+	db 0,0,0										; Puntero objeto.
+	defw 0											; Puntero de impresión.
+Disparo_7 db 0	     								; Control.
 						
-	db 0,0,0								; Puntero objeto.
-	defw 0									; Puntero de impresión.
-Disparo_6 db 0		    				; Control.
+	db 0,0,0										; Puntero objeto.
+	defw 0											; Puntero de impresión.
+Disparo_6 db 0		    							; Control.
 
-	db 0,0,0								; Puntero objeto.
-	defw 0									; Puntero de impresión.
-Disparo_5 db 0			    			; Control.
+	db 0,0,0										; Puntero objeto.
+	defw 0											; Puntero de impresión.
+Disparo_5 db 0			    						; Control.
 						
-	db 0,0,0								; Puntero objeto.
-	defw 0									; Puntero de impresión.
-Disparo_4 db 0				     		; Control.
+	db 0,0,0										; Puntero objeto.
+	defw 0											; Puntero de impresión.
+Disparo_4 db 0				     					; Control.
 
-	db 0,0,0								; Puntero objeto.
-	defw 0									; Puntero de impresión.
-Disparo_3 db 0					    	; Control.
+	db 0,0,0										; Puntero objeto.
+	defw 0											; Puntero de impresión.
+Disparo_3 db 0					    				; Control.
 						
-	db 0,0,0								; Puntero objeto.
-	defw 0									; Puntero de impresión.
-Disparo_2 db 0						    ; Control.
+	db 0,0,0										; Puntero objeto.
+	defw 0											; Puntero de impresión.
+Disparo_2 db 0						    			; Control.
 
-	db 0,0,0								; Puntero objeto.
-	defw 0									; Puntero de impresión.
-Disparo_1 db 0							; Control.
+	db 0,0,0										; Puntero objeto.
+	defw 0											; Puntero de impresión.
+Disparo_1 db 0										; Control.
 		
 ; -------------------------------------------------------------------------------------
 ;
@@ -100,12 +100,12 @@ Caja_master_1
 	db 0 											; (Tipo).
 	db 0 											; (Coordenada_X).
 	db 0 											; (Coordenada_Y).
-	db 0												; (Contador_de_vueltas).
-	db 0												; (Impacto).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
 	defw 0											; (Puntero_de_impresion).
 	defw 0											; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------	
@@ -116,12 +116,12 @@ Caja_master_2
 	db 0 											; (Tipo).
 	db 0 											; (Coordenada_X).
 	db 0 											; (Coordenada_Y).
-	db 0												; (Contador_de_vueltas).
-	db 0												; (Impacto).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
 	defw 0											; (Puntero_de_impresion).
 	defw 0											; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------	
@@ -132,12 +132,12 @@ Caja_master_3
 	db 0 											; (Tipo).
 	db 0 											; (Coordenada_X).
 	db 0 											; (Coordenada_Y).
-	db 0												; (Contador_de_vueltas).
-	db 0												; (Impacto).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
 	defw 0											; (Puntero_de_impresion).
 	defw 0											; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+	db 0											; (Velocidad).
 	db 0 											; Atributos.
 	
 ; -------------------------------------------------------------------------------------
@@ -166,14 +166,14 @@ Indice_de_cajas_de_entidades
 ;	17/4/25
 ;
 
-Amadeus_BOX db 0,0								; (Clase), (Tipo).
-CX_Amadeus db 0,$15                            ; (Coordenada_X), (Coordenada_Y).
-	db 0														; (Contador_de_vueltas).
-Impacto_Amadeus	db 0							; (Impacto).
-p.imp.amadeus defw 0							; (Puntero_de_impresion).
-Pamm_Amadeus defw 0							; (Puntero_de_almacen_de_mov_masticados).
-Comm_Amadeus defw 0 							; (Contador_de_mov_masticados).
-	db 0														; (Velocidad). 					
+Amadeus_BOX db 0,0									; (Clase), (Tipo).
+CX_Amadeus db 0,$15                            		; (Coordenada_X), (Coordenada_Y).
+	db 0											; (Contador_de_vueltas).
+Impacto_Amadeus	db 0								; (Impacto).
+p.imp.amadeus defw 0								; (Puntero_de_impresion).
+Pamm_Amadeus defw 0									; (Puntero_de_almacen_de_mov_masticados).
+Comm_Amadeus defw 0 								; (Contador_de_mov_masticados).
+	db 0											; (Velocidad).
 Attr_Amadeus db 0 									; (Attr).
 
 ; ---------- ---------- ---------- ---------- ----------
@@ -190,12 +190,12 @@ Caja_1
 	db 0 											; (Tipo).
 	db 0 											; (Coordenada_X).
 	db 0 											; (Coordenada_Y).
-	db 0												; (Contador_de_vueltas).
-	db 0												; (Impacto).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
 	defw 0											; (Puntero_de_impresion).
 	defw 0											; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------	
@@ -206,12 +206,12 @@ Caja_2
 	db 0 											; (Tipo).
 	db 0 											; (Coordenada_X).
 	db 0 											; (Coordenada_Y).
-	db 0												; (Contador_de_vueltas).
-	db 0												; (Impacto).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
 	defw 0											; (Puntero_de_impresion).
 	defw 0											; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------	
@@ -222,12 +222,12 @@ Caja_3
 	db 0 											; (Tipo).
 	db 0 											; (Coordenada_X).
 	db 0 											; (Coordenada_Y).
-	db 0												; (Contador_de_vueltas).
-	db 0												; (Impacto).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
 	defw 0											; (Puntero_de_impresion).
 	defw 0											; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------
@@ -238,12 +238,12 @@ Caja_4
 	db 0 											; (Tipo).
 	db 0 											; (Coordenada_X).
 	db 0 											; (Coordenada_Y).
-	db 0												; (Contador_de_vueltas).
-	db 0												; (Impacto).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
 	defw 0											; (Puntero_de_impresion).
 	defw 0											; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
 ; ---------- ---------- ---------- ---------- ----------
@@ -254,12 +254,12 @@ Caja_5
 	db 0 											; (Tipo).
 	db 0 											; (Coordenada_X).
 	db 0 											; (Coordenada_Y).
-	db 0												; (Contador_de_vueltas).
-	db 0												; (Impacto).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
 	defw 0											; (Puntero_de_impresion).
 	defw 0											; (Puntero_de_almacen_de_mov_masticados).
 	defw 0 											; (Contador_de_mov_masticados).
-	db 0												; (Velocidad). 					
+	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
 ; -------------------------------------------------------------------------------------
@@ -278,52 +278,75 @@ Indice_de_definiciones_de_entidades
 	defw Entidad_Clase_2
 	defw Entidad_Clase_3
 	defw Entidad_Clase_4
+	defw Entidad_Clase_5
 
 ; Entidades (Tipo) BADSAT. (Satélites poseidos). 
+; (Clase): 1,2 y 3
 
-Entidad_Clase_1 db 1,$81,2,2		                     		; (Clase) /(Tipo) / (Filas) / (Columns).
-	db 1																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
-	defw Indice_Badsat_der										; (Indice_Sprite_der).
-	defw Indice_Badsat_izq										; (Indice_Sprite_izq).
-	defw $4000	                										; (Posicion_inicio).
-	db 0																		; (Cuad_objeto).
-	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000100 													; (Attr).
-
-; ----- . ----- . ----- . ----- . -----
-
-Entidad_Clase_2 db 2,$81,2,2		                     		; (Clase) /(Tipo) / (Filas) / (Columns).
-	db 2																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
-	defw Indice_Badsat_der										; (Indice_Sprite_der).
-	defw Indice_Badsat_izq										; (Indice_Sprite_izq).
-	defw $4000	                										; (Posicion_inicio).
-	db 0																		; (Cuad_objeto).
-	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000100 													; (Attr).
+Entidad_Clase_1 db 1,$81,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
+	db 1											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+	defw Indice_Badsat_der							; (Indice_Sprite_der).
+	defw Indice_Badsat_izq							; (Indice_Sprite_izq).
+	defw $4000	                					; (Posicion_inicio).
+	db 0											; (Cuad_objeto).
+	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
+	db %01000100 									; (Attr).
 
 ; ----- . ----- . ----- . ----- . -----
 
-Entidad_Clase_3 db 3,$81,2,2		                     		; (Clase) /(Tipo) / (Filas) / (Columns).
-	db 2																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
-	defw Indice_Badsat_der										; (Indice_Sprite_der).
-	defw Indice_Badsat_izq										; (Indice_Sprite_izq).
-	defw $4000	                										; (Posicion_inicio).
-	db 0																		; (Cuad_objeto).
-	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000100 													; (Attr).
+Entidad_Clase_2 db 2,$81,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
+	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+	defw Indice_Badsat_der							; (Indice_Sprite_der).
+	defw Indice_Badsat_izq							; (Indice_Sprite_izq).
+	defw $4000	                					; (Posicion_inicio).
+	db 0											; (Cuad_objeto).
+	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
+	db %01000100 									; (Attr).
 
 ; ----- . ----- . ----- . ----- . -----
-;
-;	Badplate.
 
-Entidad_Clase_4 db 4,$82,2,2		                     		; (Clase) /(Tipo) / (Filas) / (Columns).
-	db 1																		; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas. 
-	defw Indice_Badplate_der										; (Indice_Sprite_der).
-	defw Indice_Badplate_izq										; (Indice_Sprite_izq).
-	defw $4000	                										; (Posicion_inicio).
-	db 0																		; (Cuad_objeto).
-	defw 0 																	; (Puntero_de_almacen_de_mov_masticados)
-	db %01000110 													; (Attr).
+Entidad_Clase_3 db 3,$81,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
+	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+	defw Indice_Badsat_der							; (Indice_Sprite_der).
+	defw Indice_Badsat_izq							; (Indice_Sprite_izq).
+	defw $4000	                					; (Posicion_inicio).
+	db 0											; (Cuad_objeto).
+	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
+	db %01000100 									; (Attr).
+
+; Entidades (Tipo) BADPLATE. (Platillos volantes).
+; (Clase): 4 y 5
+
+Entidad_Clase_4 db 4,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
+	db 1											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+	defw Indice_Badplate_der						; (Indice_Sprite_der).
+	defw Indice_Badplate_izq						; (Indice_Sprite_izq).
+	defw $4000	                					; (Posicion_inicio).
+	db 0											; (Cuad_objeto).
+	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
+	db %01000110 									; (Attr).
+
+
+Entidad_Clase_5 db 5,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
+	db 1											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+	defw Indice_Badplate_der						; (Indice_Sprite_der).
+	defw Indice_Badplate_izq						; (Indice_Sprite_izq).
+	defw $4000	                					; (Posicion_inicio).
+	db 0											; (Cuad_objeto).
+	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
+	db %01000110 									; (Attr).
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;

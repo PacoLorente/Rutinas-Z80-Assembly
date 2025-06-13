@@ -1,6 +1,6 @@
 ; **********************************************************************************************************************************************************
 ;
-;   19/5/25
+;   13/6/25
 ;
 ;	Recompone_posicion_inicio
 ;
@@ -18,10 +18,13 @@ Recompone_posicion_inicio
 	inc l
 	ld (hl),a
 
-;	ld hl,(Puntero_objeto)
-;	ld (Repone_puntero_objeto),hl
+;	El primer Sprite que se imprime en pantalla en cualquier patrón de movimientos será un "sprite vacío".
+;	El objeto "SIEMPRE" ha de aparecer `oculto'. Tanto si aparece de arriba a abajo como si lo hace por los extremos de la pantalla.
 
-	ld hl,(Posicion_inicio) 
+	ld hl,Ctrl_2
+	set 0,(hl)														; Indica que fijamos un "sprite vacío" en (Puntero_objeto).
+
+	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl
 
 	ld a,l
@@ -34,9 +37,6 @@ Recompone_posicion_inicio
 ;	Vamos a aparecer por la parte derecha de la pantalla.
 
 	call Mov_left
-
-3 ld hl,Ctrl_2
-	set 0,(hl)
 
 ; No vamos a aparecer por ningún extremo. Cargamos Sprite vacío pues vamos a ir apareciendo por la_
 ; _parte alta de la pantalla.
@@ -57,7 +57,7 @@ Recompone_posicion_inicio
 ; Vamos a aparecer por la parte izquierda de la pantalla.
 
 1 call Mov_right
-	jr 3B
+	jr 2B
 
 ; ******************************************************************************************************************************************************************************************
 ;
@@ -70,6 +70,8 @@ Recompone_posicion_inicio
 ;
 
 Mov_down 
+
+	call Reponne_punntero_objeto
 
 	ld a,(Vel_down)
 	ld b,a
@@ -103,8 +105,8 @@ Mov_down
 	ld (Ctrl_3),a
 
 	jr 3F
-;															; El bit2 de (Ctrl_3) evita que la rutina [Main], (cuando gestione entidades), coloque_
-;															; _a la siguiente entidad como "Entidad_guía".
+;																	; El bit2 de (Ctrl_3) evita que la rutina [Main], (cuando gestione entidades), coloque_
+;																	; _a la siguiente entidad como "Entidad_guía".
 ; ------------------------------
 
 1 call NextScan
@@ -123,6 +125,8 @@ Mov_down
 ;
 ;
 Mov_up 
+
+	call Reponne_punntero_objeto
 
 	ld a,(Vel_up)
 	ld b,a
@@ -164,7 +168,17 @@ Mov_up
 Reponne_punntero_objeto
 
 	ld hl,Ctrl_2
+	bit 0,(hl)
+	ret z
+
+	ld a,(Posicion_inicio)
+	and $1f
+	ret z
+	cp $1f
+	ret z
+
 	res 0,(hl)
+
 	ld hl,(Repone_puntero_objeto)
 	ld (Puntero_objeto),hl
 
