@@ -22,7 +22,7 @@
 FRAMES equ $5c78														; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
-Sprite_vacio equ $82d0													; 48 Bytes de "0".
+Sprite_vacio equ $82f0													; 48 Bytes de "0".
 
 Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
@@ -35,12 +35,12 @@ Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 
 ; El nº de scanlines será menor cuando estemos `desapareciendo? por la parte baja de la pantalla.					 	
 ; 3. 32 Bytes, (como máximo). Screen mem. address de cada uno de los scanlines que forman el sprite.
 
-Scanlines_album equ $8000	;						($8000 - $8118) 	; Inicialmente 280 bytes, $118.
-Scanlines_album_2 equ $811a	;    					($811a - $8232)
-Amadeus_scanlines_album equ $8234	;				($8234 - $8256) 	; Inicialmente 34 bytes, $22.
-Amadeus_scanlines_album_2 equ $8258	;				($8258 - $827a)
+Scanlines_album equ $8000	                    ;	($8000 - $8118) 	; Inicialmente 280 bytes, $118.
+Scanlines_album_2 equ $811a	                    ;   ($811a - $8232)
+Amadeus_scanlines_album equ $8234	            ;	($8234 - $8256) 	; Inicialmente 34 bytes, $22.
+Amadeus_scanlines_album_2 equ $8258	            ;	($8258 - $827a)
 
-Amadeus_disparos_scanlines_album equ $827c	;		($827c - $8281) 	; 6 Bytes, (1 único disparo).
+Amadeus_disparos_scanlines_album equ $827c	    ;	($827c - $8281) 	; 6 Bytes, (1 único disparo).
 Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 
 Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 

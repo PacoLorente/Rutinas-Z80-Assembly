@@ -279,6 +279,7 @@ Indice_de_definiciones_de_entidades
 	defw Entidad_Clase_3
 	defw Entidad_Clase_4
 	defw Entidad_Clase_5
+	defw Entidad_Clase_6
 
 ; Entidades (Tipo) BADSAT. (Satélites poseidos). 
 ; (Clase): 1,2 y 3
@@ -326,7 +327,6 @@ Entidad_Clase_4 db 4,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000110 									; (Attr).
 
-
 Entidad_Clase_5 db 5,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
 	db 1											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badplate_der						; (Indice_Sprite_der).
@@ -336,8 +336,14 @@ Entidad_Clase_5 db 5,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000110 									; (Attr).
 
-
-
+Entidad_Clase_6 db 6,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
+	db 1											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+	defw Indice_Badplate_der						; (Indice_Sprite_der).
+	defw Indice_Badplate_izq						; (Indice_Sprite_izq).
+	defw $4000	                					; (Posicion_inicio).
+	db 0											; (Cuad_objeto).
+	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
+	db %01000110 									; (Attr).
 
 
 
