@@ -173,7 +173,9 @@ Coincidencia
     ld c,a
     and (hl)
     cp c
-    jr nz,Amadeus_impactado
+
+;*** Comentando la siguiente linea no nos afectan los disparos enemigos.
+;    jr nz,Amadeus_impactado
 
     inc l
     inc e
@@ -1205,23 +1207,23 @@ Colision_Entidad_Amadeus
 
     ld a,(Shield)
     and a
-    ret nz                                                 ; No comprobamos contacto si existe Shield.
+    ret nz                                                  ; No comprobamos contacto si existe Shield.
 
     ld hl,Ctrl_3
     bit 6,(hl)
-    ret nz                                                 ; Salimos si Amadeus ha sido destruido y estamos esperando nueva nave o mensaje final.
+    ret nz                                                  ; Salimos si Amadeus ha sido destruido y estamos esperando nueva nave o mensaje final.
 
-    ld hl,Impacto2                                         ; Salimos si tenemos una posible colisión de una entidad anterior. Tenemos almacenadas las coordenadas X de otra entidad.
+    ld hl,Impacto2
     bit 2,(hl)
-    ret nz
+    ret nz                                                  ; Salimos si tenemos una posible colisión de una entidad anterior. Tenemos almacenadas las coordenadas X de otra entidad.
 
-	ld a,(ix+3)                                            ; ld a,(coordenada_y) 
+	ld a,(ix+3)                                             ; ld a,(coordenada_y)
 	cp $14
-	ret c                                                  ; Salimos si la entidad no está en zona de Amadeus.
+	ret c                                                   ; Salimos si la entidad no está en zona de Amadeus.
 
-    ld a,(Impacto_Amadeus)                                 ; Evita que se produzca colisión con dos entidades a la vez. 
+    ld a,(Impacto_Amadeus)
     and a
-    ret nz
+    ret nz                                                  ; Evita que se produzca colisión con dos entidades a la vez.
 
 Genera_coordenadas_X
 
@@ -1246,6 +1248,9 @@ Genera_coordenadas_X
     push ix
     call Compara_coordenadas_X
     pop ix
+
+;*** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
+    ret
 
     ret nz
 
@@ -1298,6 +1303,7 @@ Compara_coordenadas_X
 
     inc a
     call Comparando_1
+
     ret
 
 ; ----- ----- ----- ----- -----
