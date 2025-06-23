@@ -42,9 +42,9 @@ Inicia_albumes_de_disparos
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   17/4/25
+;   23/6/25
 ;
-;	Prepara las CAJAS MASTER y genera los movimientos masticados de todos los (Tipo)s de entidades de los que consta el nivel.
+;	Prepara las CAJAS MASTER y genera los movimientos masticados de todos los (Tipo)s de entidades que conforman el nivel.
 ;
 ;	INPUTS:		B contiene (Numero_de_entidades).
 ;				C contiene la (Clase) de la 1ª entidad del nivel.
@@ -93,7 +93,7 @@ Prepara_Cajas_Master
 	pop hl
 
 	push hl															; Push (Puntero_de_entidades).
-	push bc															; Push (Numero_de_entidades)/(Tipo).
+	push bc															; Push (Numero_de_entidades)/(Clase).
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
@@ -107,7 +107,7 @@ Prepara_Cajas_Master
 
 	call Construye_movimientos_masticados_entidad
 
-Movimientos_masticados_construidos 
+Movimientos_masticados_construidos
 
 	ld hl,(Puntero_indice_master)
 	call Extrae_address
@@ -509,12 +509,12 @@ Extrae_address_y_avanza call Extrae_address
 ;
 ;	MODIFY: A,HL,BC y DE.
 
-Inicializa_Nivel 
+Inicializa_1er_Nivel
 
 ; Inicializa puntero de Cajas_Master.
 
-	ld hl,Indice_de_cajas_master
-	ld (Puntero_indice_master),hl
+;	ld hl,Indice_de_cajas_master
+;	ld (Puntero_indice_master),hl									; defw Caja_master_1.
 
 ; Inicializa (Puntero_indice_NIVELES).
 
@@ -551,13 +551,16 @@ Situa_en_Caja_Master
 
 1 call Extrae_address
 	cp (hl) 																							
-	ret z 															; RET. Flag Z y A contiene (Clase), (NZ). Indica que esta Caja_Master está iniciada y contiene_
-; 																	; _una entidad de esta (Clase).
+	ret z 															; RET Z. Indica que esta Caja_Master está iniciada y contiene una entidad de esta (Clase).
+
+; 	Esta Caja_Master no contiene una entidad de esta (Clase). RET si está vacía.
+
 	xor a
 	inc (hl)
 	dec (hl)
 	ret z 															; RET. Flag Z y A="$00". Indica que esta Caja_Master está vacía. Hay que generar los movimientos_
 ; 																	; _masticados de esta (Clase) de entidad.
+
 ; Caja_Master iniciada con otra (Clase) de entidad.
 ; Saltamos a la siguiente:
 
@@ -644,7 +647,7 @@ Situa_Puntero_indice_mov
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   6/4/25
+;   23/6/25
 ;
 ;	Esta rutina se encarga de prepara todas las cajas de entidades. Cuando comienza un nivel han de estar todas completas.
 
@@ -653,11 +656,13 @@ Prepara_Cajas_de_Entidades
 
 ; Preparamos los punteros de las cajas de entidades:
 
+
+
 	call Inicia_punteros_de_cajas									; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
 ;																	; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
 	call Inicializa_Numero_parcial_de_entidades						; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
 
-	ld hl,(Puntero_de_entidades)									; Clase de la 1ª entidad del Nivel.
+	ld hl,(Puntero_de_entidades)									; (Puntero_de_entidades) contiene la dirección de mem. donde se encuentra la (Clase) de la 1ª entidad del nivel.
 
 ; En este punto:
 
@@ -871,10 +876,6 @@ Reinicia_entidad_maliciosa
 	ld (ix+9),a
 
 ;	(Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados) de la entidad inicializados.
-
-;	di
-;	jr $
-;	ei
 
 	call Obtenemos_puntero_de_impresion
 

@@ -539,7 +539,7 @@ INICIALIZACION
 
 ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
 
-	call Inicializa_Nivel								 	; Inicializa el 1er nivel del juego.
+	call Inicializa_1er_Nivel								; Inicializa el 1er nivel del juego.
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
 	call Prepara_Cajas_de_Entidades
 
@@ -808,9 +808,10 @@ Gestiona_siguiente_entidad
 	call Incrementa_punteros_de_cajas
 
 	pop bc
-	
+
 	dec b
-	jp nz,Bucle_de_entidades 
+
+	jp nz,Bucle_de_entidades
 
 	ld hl,Impacto2 											; Inicializamos el FLAG de impacto.
 	res 3,(hl)
@@ -1059,12 +1060,14 @@ Ajusta_velocidad_entidad
 ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".   
 
 
+
 	sla a 													; Multiplica x2 (Velocidad) en cada FRAME.
 	ld (ix+12),a											; ld (Velocidad),a
 	and $10
 	ret z
-	
-; Restaura (Velocidad) a razón del nº de vueltas. Se ha superado (Velocidad)x8. 	
+
+
+; Restaura (Velocidad) a razón del nº de vueltas. Se ha superado (Velocidad)x8.
 
 	ld a,(ix+4)												; ld a,(Contador_de_vueltas)
 	sra a
@@ -1074,12 +1077,10 @@ Ajusta_velocidad_entidad
 	ld l,(ix+8)
 	ld h,(ix+9)												; HL contiene (Puntero_de_almacen_de_mov_masticados)
 
-;	ld hl,(Puntero_de_almacen_de_mov_masticados)
 	inc hl
 	inc hl
 	inc hl
 	inc hl
-;	ld (Puntero_de_almacen_de_mov_masticados),hl
 
 	ld (ix+8),l
 	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) actualizado.
