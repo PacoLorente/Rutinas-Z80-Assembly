@@ -2745,7 +2745,7 @@
 1063  91CC
 1064  91CC CB 27        	sla a 													; Multiplica x2 (Velocidad) en cada FRAME.
 1065  91CE DD 77 0C     	ld (ix+12),a											; ld (Velocidad),a
-1066  91D1 E6 10        	and $10
+1066  91D1 E6 20        	and $20
 1067  91D3 C8           	ret z
 1068  91D4
 1069  91D4

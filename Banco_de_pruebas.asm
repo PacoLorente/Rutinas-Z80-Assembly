@@ -1063,7 +1063,7 @@ Ajusta_velocidad_entidad
 
 	sla a 													; Multiplica x2 (Velocidad) en cada FRAME.
 	ld (ix+12),a											; ld (Velocidad),a
-	and $10
+	and $20
 	ret z
 
 
