@@ -285,7 +285,7 @@ Indice_de_definiciones_de_entidades
 ; (Clase): 1,2 y 3
 
 Entidad_Clase_1 db 1,$81,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
-	db 1											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badsat_der							; (Indice_Sprite_der).
 	defw Indice_Badsat_izq							; (Indice_Sprite_izq).
 	defw $4000	                					; (Posicion_inicio).
@@ -319,7 +319,7 @@ Entidad_Clase_3 db 3,$81,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 ; (Clase): 4 y 5
 
 Entidad_Clase_4 db 4,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Columns).
-	db 1											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badplate_der						; (Indice_Sprite_der).
 	defw Indice_Badplate_izq						; (Indice_Sprite_izq).
 	defw $4000	                					; (Posicion_inicio).

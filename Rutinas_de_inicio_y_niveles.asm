@@ -877,7 +877,7 @@ Reinicia_entidad_maliciosa
 
 ;	(Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados) de la entidad inicializados.
 
-	call Obtenemos_puntero_de_impresion
+;	call Obtenemos_puntero_de_impresion
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;
@@ -918,13 +918,18 @@ Reinicia_entidad_maliciosa
 
 	ld a,$40
 	cp (ix+4)
-	ret nz
+	jr z,1F
 
-;	Limita el valor de (Contador_de_vueltas) a "$20" y de (Velocidad) a "$04". 
+	xor a															; Siempre salimos de esta rutina con un "Z".
+	ret
 
-	sra (ix+4)
+
+;	Limita el valor de (Contador_de_vueltas) a "$40" y de (Velocidad) a "$08".
+
+1 sra (ix+4)
 	sra (ix+12)
 
+	xor a															; Siempre salimos de esta rutina con un "Z".
 	ret
 
 ; ----- ----- ----- ----- -----

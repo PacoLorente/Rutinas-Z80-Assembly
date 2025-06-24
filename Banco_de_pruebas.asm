@@ -761,7 +761,10 @@ Bucle_de_entidades
  
 ; Movement !!!
 
-3 call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
+3
+
+	call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
+	call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
 ;															; (Puntero_objeto) en DE;
 ;		    												; (Puntero_de_impresion) codificado en BC.
 	call Decodifica_Puntero_de_impresion
@@ -770,10 +773,8 @@ Bucle_de_entidades
 ;	DE (Puntero_objeto).
 
 	push de 												; (Puntero_objeto).
-
 	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
-	call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
-
+;	call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
 	pop de
 
 	push ix													; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
@@ -810,7 +811,6 @@ Gestiona_siguiente_entidad
 	pop bc
 
 	dec b
-
 	jp nz,Bucle_de_entidades
 
 	ld hl,Impacto2 											; Inicializamos el FLAG de impacto.
@@ -1063,7 +1063,7 @@ Ajusta_velocidad_entidad
 
 	sla a 													; Multiplica x2 (Velocidad) en cada FRAME.
 	ld (ix+12),a											; ld (Velocidad),a
-	and $20
+	and $10
 	ret z
 
 
@@ -1582,6 +1582,7 @@ Obtenemos_puntero_de_impresion
 	or b													; Comprueba si ya no hay datos en el almacén.
 
 	call z,Reinicia_entidad_maliciosa
+	jr z,Obtenemos_puntero_de_impresion
 
 	ld (Stack),sp
 	ld sp,hl
