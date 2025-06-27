@@ -28,4 +28,7 @@ Cls LD HL,$4000											; HL => Comienzo de pantalla.
 	LD BC,767
 	LD (HL),a						 					; Atributos de pantalla, % 00 xxx xxx en [A].
 	LDIR
+
+	xor a
+
 	ret

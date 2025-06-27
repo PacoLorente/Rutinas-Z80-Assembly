@@ -510,13 +510,16 @@ START
 
 	ld sp,0													; Situamos el inicio de Stack.
 	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
-	ld i,a 													; Byte alto de la dirección donde se encuentra nuestro vector de interrupciones en el registro I. ($a9). El byte bajo será siempre $ff.
+	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
 	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
 	DI 					
 
 ; Limpiamos pantalla.
 
-	ld a,%00000111 											; Fondo NEGRO, tinta BLANCA.
+	xor a
+	out ($fe),a 											; BORDER NEGRO.
+
+	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
 	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
 
@@ -558,7 +561,7 @@ INICIALIZACION
 	ld bc,37
 	call Clean_mem
 
-; 	Situamos a Amadeus en el centro de la pantalla y pintamos.
+; 	Situamos a Amadeus en el centro de la pantalla.
 
 	ld b,60
 2 call Amadeus_a_izquierda
@@ -593,9 +596,13 @@ INICIALIZACION
 	set 2,(hl)
 	set 5,(hl)												; Imprimimos Amadeus.
 
-	ei 														; Ha de apuntar a $5c3a.
+;	Transición de entrada.
 
-	halt 
+	call Transicion_de_entrada
+
+	ei
+
+	halt
 
 ; ------------------------------------
 
@@ -761,9 +768,7 @@ Bucle_de_entidades
  
 ; Movement !!!
 
-3
-
-	call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
+3 call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
 	call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
 ;															; (Puntero_objeto) en DE;
 ;		    												; (Puntero_de_impresion) codificado en BC.
@@ -924,7 +929,118 @@ End_frame
 ; ------------------------------------------------------------------------
 ; ------------------------------------------------------------------------
 
-;------------------------------------------
+; ------------------------------------------------------------------------
+;
+;	25/06/25
+
+Transicion_de_entrada
+
+	ld hl,(p.imp.amadeus)
+	inc l
+	inc l
+
+	ld d,l													; (p.imp.amadeus) + 2 en A' y D.
+
+	dec l
+	dec l
+
+	ld e,2
+
+; Nos situamos en la primera columna del scanline.
+
+3 ld a,l
+	and $f0
+	ld l,a
+
+; Estamos en la columna donde hemos iniciado Amadeus ???
+
+1 cp d
+	jr z,2F
+
+; Temporización de scan.
+
+	call DELAY
+
+	ld a,(hl)
+	xor $ff
+	ld (hl),a
+	inc l
+	ld a,l
+	jr 1B
+
+; Decrece scan.
+
+2 dec l
+	dec l
+
+	ld d,l
+	dec e
+
+	jr nz,3B
+
+	inc l
+	inc l
+
+; Borra scan.
+
+	call Borra_pinta_scan
+
+; HL e IX contienen (p.imp.amadeus).
+; IY contiene (Puntero_objeto) de Amadeus.
+
+	push iy
+	pop de
+
+	ld b,16
+
+4 push bc
+	push hl
+	ld b,2
+
+5 ld a,(de)
+	ld (hl),a
+
+	inc l
+	inc e
+
+	djnz 5B
+
+	inc e
+	pop hl
+	call NextScan
+
+	ld a,$58
+	cp h
+	jr z,$
+
+; Pinta scan.
+
+	call Borra_pinta_scan
+	call DELAY
+	call Borra_pinta_scan
+
+	pop bc
+	djnz 4B
+
+	jr $
+
+	ret
+
+Borra_pinta_scan ld b,2
+
+1 ld a,$ff
+	xor (hl)
+	ld (hl),a
+
+	inc l
+	djnz 1B
+
+	dec l
+	dec l
+
+	ret
+
+	;------------------------------------------
 ;
 ;	07/11/24
 
@@ -1889,12 +2005,12 @@ Pulsa_ENTER ld a,$bf 										; Esperamos la pulsación de la tecla "ENTER".
 
 ;	!!!!!!!! DESTRUYE BC !!!!!!!!!!!
 
-;DELAY LD BC,$0900											;$0320 ..... Delay mínimo
-;wait DEC BC  												;Sumaremos $0045 por FILA a esta cantidad inicial. Ejempl: si el Sprite ocupa la 1ª y 2ª_
-;	LD A,B 										
-;	AND A
-;	JR NZ,wait
-;	RET
+DELAY LD BC,$0c00 											;$0320 ..... Delay mínimo
+wait DEC BC  												;Sumaremos $0045 por FILA a esta cantidad inicial. Ejempl: si el Sprite ocupa la 1ª y 2ª_
+	LD A,B
+	AND A
+	JR NZ,wait
+	RET
 
 ; ---------------------------------------------------------------------------------------------------------------
 ;
