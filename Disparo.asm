@@ -1,3 +1,61 @@
+;------------------------------------------
+;
+;	07/11/24
+
+Autoriza_disparo_de_entidades
+
+	ld a,1
+	ld (Permiso_de_disparo_Entidades),a
+
+	ld a,(Repone_CLOCK_disparos)
+	cp 25													; 25 fps. Es el tiempo mínimo que habrá entre disparo y disparo de entidad.
+	jr c,1F
+
+;	Este valor marca la frecuencia con la que se generan los disparos de las entidades.
+;	Un valor alto hace que en muy poco tiempo las entidades generen muchos disparos.
+;	Un valor bajo hace que la curva de generación de disparos sea más lenta.
+
+	sub 4													; Aumenta la cadencia del disparo.
+
+1 ld (Repone_CLOCK_disparos),a
+	ld (CLOCK_disparos_de_entidades),a
+
+	ret
+
+;------------------------------------------
+;
+;	14/09/24
+;
+;	Nota: en la bandeja DRAW se encuentran los datos de la entidad que va a disparar.
+
+Entidad_genera_disparo_si_procede
+
+	ld hl,(Puntero_num_aleatorios_disparos)
+	rlc (hl)
+
+	call c,Genera_disparo_de_entidad_maldosa
+
+	ret
+
+; ----- ----- ----- ----- ----- ----- ----- ----- -----
+;
+;	30/09/24
+
+Actuaiza_sp_de_disparos_de_entidades
+
+	ld hl,(Puntero_num_aleatorios_disparos)
+	inc hl
+	ld (Puntero_num_aleatorios_disparos),hl
+
+	ld de,Numeros_aleatorios+7
+	ld a,e
+	sub l
+	ret nz
+
+1 ld hl,Numeros_aleatorios
+2 ld (Puntero_num_aleatorios_disparos),hl
+	ret
+
 ; --------------------------------------------------------------------------------------
 ;
 ;   2/12/24
