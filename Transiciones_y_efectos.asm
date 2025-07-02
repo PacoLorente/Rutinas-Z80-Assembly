@@ -162,7 +162,7 @@ Borra_pinta_scan ld b,2
 Pinta_rayo cp d
 	ret z
 
-	ld bc,$0d00
+	ld bc,$0b00
 	call DELAY
 
 	ld a,(hl)

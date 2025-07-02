@@ -5575,7 +5575,7 @@
  162+ 9B6F BA           Pinta_rayo cp d
  163+ 9B70 C8           	ret z
  164+ 9B71
- 165+ 9B71 01 00 0D     	ld bc,$0d00
+ 165+ 9B71 01 00 0B     	ld bc,$0b00
  166+ 9B74 CD A3 94     	call DELAY
  167+ 9B77
  168+ 9B77 7E           	ld a,(hl)
