@@ -661,10 +661,7 @@ Main
 ; Debugggg !!!!!! -----------------------------------------
 
 	ld hl,(Clock_next_entity)
-
-	di
-	jr z,$													; ! Nivel superado !!!!!
-	ei
+	call z,Transicion_de_salida								; ! Nivel superado !!!!!
 
 ; ----------------------------------------------------------------
 
@@ -882,12 +879,14 @@ Amadeus_vivo
 ;	Tras la gestión de Amadeus hacemos la lectura del teclado.
 
 	call Teclado
-	ld hl,Ctrl_3
 
+	ld hl,Ctrl_3
 	bit 5,(hl)
 	jr z,End_frame
 
-; Existe movimiento de Amadeus, Cambiamos álbum borrado-pintado y generamos los datos de impresión.
+; 	Existe movimiento de Amadeus, Cambiamos álbum borrado-pintado y generamos los datos de impresión.
+
+Vivo_y_coleando
 
 	call Change_Amadeus
 	call Genera_datos_de_impresion_Amadeus					; Genera los datos de impresión de la nave.
@@ -1654,6 +1653,43 @@ Cargamos_registros_con_mov_masticado_Amadeus
 	pop ix 													; IX contiene Puntero_de_impresion
 	ld (p.imp.amadeus),ix									; (Puntero_de_impresion_Amadeus) en su correspondiente caja.
 	ld sp,(Stack)
+
+;	Estamos desapareciendo ???
+
+	ld a,(Ctrl_2)
+	bit 6,a
+	ret z
+
+; 	Nota: Cuando se inicia el proceso de desaparición de Amadeus, se imprimirá nuestra nave en pantalla en cada FRAME, (aunque no haya movimiento).
+;	Bit 5 (Ctrl_3) a "1".
+
+
+;	Se ha iniciado el proceso de Transición de salida de Amadeus ???.
+
+	ld hl,(Posicion_inicio)
+	ld a,h
+	or l
+	jr z,Inicia_transicion_de_salida
+
+	di
+	jr $
+	ei
+
+;	Proceso de salida de Amadeus iniciado.
+
+
+Inicia_transicion_de_salida
+
+	push ix
+	pop hl
+
+	call NextScan
+
+	ld (Posicion_inicio),hl
+
+	push hl
+	pop ix
+
 	ret
 
 ; ---------------------------------------------------------------------------------------------------------------------
@@ -2069,15 +2105,22 @@ Pintando_Amadeus
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
-1 ld hl,Ctrl_3
-	res 0,(hl)												; Reinicia el flag de FRAME completo.
-	res 2,(hl)												; Reinicia el flag DETECTA MOVIMIENTO.
-	res 5,(hl)
-
-	ld a,1													; Borde azul.
+1 ld a,1													; Borde azul.
 	out ($fe),a
 
-	ret									 
+	ld hl,Ctrl_3
+	res 0,(hl)												; Reinicia el flag de FRAME completo.
+	res 2,(hl)												; Reinicia el flag DETECTA MOVIMIENTO.
+
+; 	Si Amadeus está desapareciendo no restauramos el FLAG de mov. de Amadeus.
+
+	ld a,(Ctrl_2)
+	bit 6,a
+	ret nz
+
+	res 5,(hl)
+
+	ret
 
 ;	Ejecuta Shield. 
 
