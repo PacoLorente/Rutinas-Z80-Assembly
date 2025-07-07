@@ -1,14 +1,14 @@
 ; ------------------------------------------------------------------------
 ;
-;	5/7/25
+;	7/7/25
 ;
 
 Transicion_de_salida
 
 	ld hl,Ctrl_2
-	set 6,(hl)
+	set 6,(hl)														; Bit 6 de Ctrl_2 indica que hemos iniciado la "Transicion_de_salida" de Amadeus.
 
-	ld hl,Ctrl_3
+	ld hl,Ctrl_3													; Bit 5 de Ctrl_3 indica que existe movimiento en Amadeus.
 	set 5,(hl)
 
 	ret

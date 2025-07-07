@@ -605,10 +605,17 @@ INICIALIZACION
 	halt
 
 ; ------------------------------------
+;
+;	07/07/25
 
 Main 
 
-; 07/11/24.
+	ld hl,Ctrl_4
+	bit 5,(hl)
+
+	di
+	jr nz,$ 												; Nivel Superado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	ei
 
 ; Gestión de disparos.
 
@@ -1658,34 +1665,59 @@ Cargamos_registros_con_mov_masticado_Amadeus
 
 	ld a,(Ctrl_2)
 	bit 6,a
-	ret z
+	ret z													; RET, Amadeus no hemos terminado el NIVEL.
 
 ; 	Nota: Cuando se inicia el proceso de desaparición de Amadeus, se imprimirá nuestra nave en pantalla en cada FRAME, (aunque no haya movimiento).
 ;	Bit 5 (Ctrl_3) a "1".
 
-
 ;	Se ha iniciado el proceso de Transición de salida de Amadeus ???.
 
-	ld hl,(Posicion_inicio)
-	ld a,h
-	or l
+	ld b,1
+	ld c,1
+
+	ld a,(CTRL_DESPLZ)
+	and a
 	jr z,Inicia_transicion_de_salida
 
-	di
-	jr $
-	ei
+	cp $10
+	jr nz,2F
 
-;	Proceso de salida de Amadeus iniciado.
+;	Hay que borrar el último Scan de Amadeus.
 
+	ld hl,Ctrl_4
+	set 5,(hl)
+
+	dec a
+
+	ld hl,Sprite_vacio
+
+	push hl
+	pop de
+
+2 ld b,a
+	ld c,b
 
 Inicia_transicion_de_salida
 
 	push ix
 	pop hl
 
-	call NextScan
+1 call NextScan
+	djnz 1B
 
-	ld (Posicion_inicio),hl
+;	Comprobamos fin de la Transición. Comprobamos que no hemos llegado a la zona de attr.
+
+;	ld a,h
+;	cp $58
+
+;	di
+;	jr z,$
+;	ei
+
+	inc c													;	Contador de avances en C.
+	ld a,c
+
+	ld (CTRL_DESPLZ),a
 
 	push hl
 	pop ix
