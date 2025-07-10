@@ -67,9 +67,16 @@ Inicia_transicion_de_salida
 
 Dispara_salida_de_amadeus
 
-;																	;	Temporizador. Hace que la animación de la salida de Amadeus sea más rápida o más lenta.
+	ld hl,Cuad_objeto
 
-	ld hl,Ctrl_2
+	inc (hl)
+	dec (hl)
+
+	jr nz,1F
+
+	ld (hl),20
+
+1 ld hl,Ctrl_2
 	set 6,(hl)														;	Bit 6 de Ctrl_2 indica que hemos iniciado la "Transicion_de_salida" de Amadeus.
 
 	ld hl,Ctrl_3													;	Bit 5 de Ctrl_3 indica que existe movimiento en Amadeus.

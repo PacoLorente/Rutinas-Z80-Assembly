@@ -894,9 +894,17 @@ Amadeus_vivo
 
 	ld hl,Ctrl_3
 	bit 5,(hl)
-	jr z,End_frame
+	jr z,End_frame											; NO hemos pulsado tecla, NO hay transición.
 
-; 	Existe movimiento de Amadeus, Cambiamos álbum borrado-pintado y generamos los datos de impresión.
+;	Existe Movimiento.
+
+	ld hl,Ctrl_2
+	bit 6,(hl)
+	jr z,Vivo_y_coleando
+
+	di
+	jr $
+	ei
 
 Vivo_y_coleando
 
