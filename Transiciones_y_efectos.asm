@@ -1,14 +1,78 @@
 ; ------------------------------------------------------------------------
 ;
-;	7/7/25
+;	11/07/25
 ;
+;	Nivel superado.
+;
+;	Descripción de la animación:
+;
+;	Amadeus va desapareciendo scan a scan por la parte baja de la pantalla.
+
+
+; 	Nota: Cuando se inicia el proceso de desaparición de Amadeus, se imprimirá nuestra nave en pantalla en cada FRAME, (aunque no haya movimiento).
+;	Bit 5 (Ctrl_3) a "1".
+
+;	Se ha iniciado el proceso de Transición de salida de Amadeus ???.
 
 Transicion_de_salida
 
-	ld hl,Ctrl_2
-	set 6,(hl)														; Bit 6 de Ctrl_2 indica que hemos iniciado la "Transicion_de_salida" de Amadeus.
+	ld bc,$0101
 
-	ld hl,Ctrl_3													; Bit 5 de Ctrl_3 indica que existe movimiento en Amadeus.
+	ld a,(CTRL_DESPLZ)
+	and a
+	jr z,Inicia_transicion_de_salida
+
+;	Proceso de transición de salida iniciado.
+
+	cp $10
+	jr nz,2F
+
+;	Hay que borrar el último Scan de Amadeus.
+
+	ld hl,Ctrl_4
+	set 5,(hl)														;	Indica FIN de la transición.
+
+	dec a
+
+	ld hl,Sprite_vacio
+
+	push hl
+	pop de
+
+2 ld b,a
+	ld c,b
+
+Inicia_transicion_de_salida
+
+	push ix
+	pop hl 															;	(Puntero_de_impresion) en HL.
+
+1 call NextScan
+	djnz 1B															;	Inc. scan.
+
+	inc c
+	ld a,c
+
+	ld (CTRL_DESPLZ),a												;	Inc. contador. (Incrementos de scanlines).
+
+	push hl
+	pop ix															;	Nuevo (Puntero_de_impresion) en IX para generar datos de impresión.
+
+	ret
+
+; ------------------------------------------------------------------------
+;
+;	10/7/25
+;
+
+Dispara_salida_de_amadeus
+
+;																	;	Temporizador. Hace que la animación de la salida de Amadeus sea más rápida o más lenta.
+
+	ld hl,Ctrl_2
+	set 6,(hl)														;	Bit 6 de Ctrl_2 indica que hemos iniciado la "Transicion_de_salida" de Amadeus.
+
+	ld hl,Ctrl_3													;	Bit 5 de Ctrl_3 indica que existe movimiento en Amadeus.
 	set 5,(hl)
 
 	ret
@@ -28,7 +92,7 @@ Transicion_de_entrada
 	inc l
 	inc l
 
-	ld d,l															; (p.imp.amadeus) + 2 en D.
+	ld d,l															;	(p.imp.amadeus) + 2 en D.
 
 	dec l
 	dec l

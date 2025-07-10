@@ -217,6 +217,8 @@ Ctrl_2 db 0
 ;															_ el último MOVIMIENTO que hayamos ejecutado.
 ;															BIT 4, ???
 ;															BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
+;															BIT 6, "1" Indica que hemos iniciado la "-Transicion_de_salida-" de Amadeus.
+
 
 Ctrl_0 db 0 												; Byte de control. A través de este byte de control. Las rutinas de desplazamiento: [Mov_right], [Mov_left], [Mov_up] y [Mov_down],_
 ;															; _indican a las subrutinas de recolocación del objeto de la rutina [DRAW]: [Comprueba_limite_horizontal] y [Comprueba_limite_vertical],_
@@ -252,8 +254,9 @@ Puntero_objeto defw 0										; Donde están los datos para pintar el Sprite.
 ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ---------- 
 
 CTRL_DESPLZ db 0											; Este byte nos indica la posición que tiene el Sprite dentro del mapa de desplazamientos.
-; 															; El hecho de que este byte sea distinto de "0", indica que se ha modificado el nº de columnas del objeto.
-; 															; Cuando vamos a imprimir un Sprite en pantalla, la rutina de pintado consultará este byte para situar (Puntero_objeto). [Mov_left].
+;															; Una vez construidos los movimientos masticados del nivel esta variable:
+;
+;															; Almacena un contador de scanlines que se utiliza para hacer desaparecer Amadeus por la parte baja de la pantalla.
 
 ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ---------- 
 
@@ -272,13 +275,12 @@ Indice_Sprite_der defw 0
 Indice_Sprite_izq defw 0
 Puntero_DESPLZ_der defw 0
 Puntero_DESPLZ_izq defw 0
-
-Posicion_inicio defw 0										; Dirección de pantalla donde aparece el objeto. [DRAW].
+Posicion_inicio defw 0										; Dirección de pantalla donde aparece el objeto. [DRAW]. /
 Cuad_objeto db 0											; Almacena el cuadrante de pantalla donde se encuentra el objeto, (1,2,3,4). [DRAW]
 Columnas db 0
 Limite_vertical db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
 
-; variables de control general.
+; Variables de control general.
 
 Frames_explosion db 0 										; Nº de Frames que tiene la explosión.
 
@@ -430,6 +432,9 @@ Ctrl_4 db 0													; 4º Byte de Ctrl. general, (no específico) a una úni
 ;															BIT 3, "1" Indica que se ha asignado un color RND a la entidad. 
 ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta?.
 ; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
+;															BIT 5, "1" Indica que ha terminado la transición de salida de Amadeus por la parte baja de la pantalla.
+
+
 
 Ctrl_5 db 0
 
@@ -650,14 +655,14 @@ Main
 	call Extrae_numero_aleatorio_y_avanza 					; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
 	call Define_Clock_next_entity
 
-; GESTIÓN DE ENTIDADES.
+; 	GESTIÓN DE ENTIDADES.
 
-; Si aún quedan entidades por aparecer del bloque de entidades, (7 cajas), incrementaremos (Entidades_en_curso) y calcularemos_ 
-; _ (Clock_next_entity) para la siguiente entidad.
+;	Si aún quedan entidades por aparecer del bloque de entidades, (7 cajas), incrementaremos (Entidades_en_curso) y calcularemos_
+;	_ (Clock_next_entity) para la siguiente entidad.
 
-; --- Numero_de_entidades db 0								; Nº total de entidades maliciosas que contiene el nivel.
-; --- Numero_parcial_de_entidades db 5						; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
-; --- Entidades_en_curso db 0								; Entidades en pantalla.
+;	--- Numero_de_entidades db 0								; Nº total de entidades maliciosas que contiene el nivel.
+; 	--- Numero_parcial_de_entidades db 5						; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
+; 	--- Entidades_en_curso db 0									; Entidades en pantalla.
 
 	ld hl,Numero_parcial_de_entidades
 	ld b,(hl)
@@ -665,10 +670,10 @@ Main
 	inc b
 	dec b
 
-; Debugggg !!!!!! -----------------------------------------
+;
 
 	ld hl,(Clock_next_entity)
-	call z,Transicion_de_salida								; ! Nivel superado !!!!!
+	call z,Dispara_salida_de_amadeus						; Nivel superado !!!!!
 
 ; ----------------------------------------------------------------
 
@@ -712,7 +717,7 @@ Bucle_de_entidades
 ;	En primer lugar vamos a crear un puntero para ir almacenando las columnas de las distintas unidades.
 ;	Utilizamos (Puntero_indice_mov) como puntero e Indice_Sprite_der como primer .db de almacenamiento.
 
-6 ld ix,(Puntero_store_caja)								;! A partir de ahora IX apunta al 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+6 ld ix,(Puntero_store_caja)								; A partir de ahora IX apunta al 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 	call Salta_caja_de_entidades_vacia
 
 ; Esta caja contiene datos. Es una entidad "dormida"???. Si no es así gestionamos esta entidad, (jr 5F).
@@ -764,15 +769,15 @@ Bucle_de_entidades
 	call nz,Genera_explosion
 	jr nz,Gestiona_siguiente_entidad
 
-; Falsa colisión !!!	
+; 	Falsa colisión !!!
 	
 	ld (Impacto),a											; Colocamos el .db (Impacto) de la entidad en curso a "0".
 
 ; -------------------------------------------
  
-; Movement !!!
+; 	Movement !!!
 
-3 call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
+3 call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
 	call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
 ;															; (Puntero_objeto) en DE;
 ;		    												; (Puntero_de_impresion) codificado en BC.
@@ -825,8 +830,8 @@ Gestiona_siguiente_entidad
 	ld hl,Impacto2 											; Inicializamos el FLAG de impacto.
 	res 3,(hl)
 
-; Hemos gestionado todas las entidades. 
-; ----- ----- -----
+; 	Hemos gestionado todas las entidades.
+; 	----- ----- -----
 
 	call Inicializa_India_y_limpia_Tabla_de_impresion 		; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
 	call Ordena_tabla_de_impresion
@@ -843,7 +848,7 @@ Gestiona_siguiente_entidad
 	inc l
 	ld (hl),b												; Nuevo techo, mayor que el anterior.
 
-;! GESTIONA AMADEUS !!!!!!!!!!
+;	! GESTIONA AMADEUS !!!!!!!!!!
 
 Gestion_de_Amadeus
  
@@ -851,30 +856,30 @@ Gestion_de_Amadeus
 	bit 6,(hl)
 	jr z,Amadeus_vivo
 
-; Amadeus ha sido destruido.
-; Decrementa (Temp_new_live).
+; 	Amadeus ha sido destruido.
+; 	Decrementa (Temp_new_live).
 
 	ld hl,Temp_new_live
 	dec (hl)
 	jr nz,End_frame
 
-; Una vida menos. Reinicia Amadeus, reinicia Shield. (aparece nueva nave).
+; 	Una vida menos. Reinicia Amadeus, reinicia Shield. (aparece nueva nave).
 
 	ld hl,Lives
 	dec (hl)
 
-;! Fin del juego
+;	! Fin del juego
 
 	di
 	jr z,$													;! GAME OVER !!!!!
 	ei
 
-; Nueva nave.
+; 	Nueva nave.
 
 	call Reinicia_Amadeus
 	jr End_frame
 
-; Hay Impacto???, Existe movimiento???, Disparamos???, Pausamos el juego???
+; 	Hay Impacto???, Existe movimiento???, Disparamos???, Pausamos el juego???
 
 Amadeus_vivo
 
@@ -900,8 +905,8 @@ Vivo_y_coleando
 
 End_frame 
 
-; 23/08/24 Llegados a este punto: NO HAY POSIBILIDAD DE GENERAR MÁS DISPAROS.
-; Generamos los datos de impresión en el álbum_de_pintado y limpiamos el sobrante de datos del anterior FRAME si toca.
+; 	23/08/24 Llegados a este punto: NO HAY POSIBILIDAD DE GENERAR MÁS DISPAROS.
+; 	Generamos los datos de impresión en el álbum_de_pintado y limpiamos el sobrante de datos del anterior FRAME si toca.
 
 	call Genera_datos_de_impresion_disparos_Entidades
 	call Genera_datos_de_impresion_disparos_Amadeus			; Genera los datos de impresión de los disparos de Amadeus y entidades.
@@ -931,11 +936,11 @@ End_frame
 
 	jp Main
 
-; ------------------------------------------------------------------------
-; ------------------------------------------------------------------------
-; ------------------------------------------------------------------------
+; 	------------------------------------------------------------------------
+; 	------------------------------------------------------------------------
+; 	------------------------------------------------------------------------
 
-; ----- ----- ----- ----- ----- ----- ----- ----- -----
+; 	----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
 ;	24/07/24
 
@@ -1667,60 +1672,7 @@ Cargamos_registros_con_mov_masticado_Amadeus
 	bit 6,a
 	ret z													; RET, Amadeus no hemos terminado el NIVEL.
 
-; 	Nota: Cuando se inicia el proceso de desaparición de Amadeus, se imprimirá nuestra nave en pantalla en cada FRAME, (aunque no haya movimiento).
-;	Bit 5 (Ctrl_3) a "1".
-
-;	Se ha iniciado el proceso de Transición de salida de Amadeus ???.
-
-	ld b,1
-	ld c,1
-
-	ld a,(CTRL_DESPLZ)
-	and a
-	jr z,Inicia_transicion_de_salida
-
-	cp $10
-	jr nz,2F
-
-;	Hay que borrar el último Scan de Amadeus.
-
-	ld hl,Ctrl_4
-	set 5,(hl)
-
-	dec a
-
-	ld hl,Sprite_vacio
-
-	push hl
-	pop de
-
-2 ld b,a
-	ld c,b
-
-Inicia_transicion_de_salida
-
-	push ix
-	pop hl
-
-1 call NextScan
-	djnz 1B
-
-;	Comprobamos fin de la Transición. Comprobamos que no hemos llegado a la zona de attr.
-
-;	ld a,h
-;	cp $58
-
-;	di
-;	jr z,$
-;	ei
-
-	inc c													;	Contador de avances en C.
-	ld a,c
-
-	ld (CTRL_DESPLZ),a
-
-	push hl
-	pop ix
+	call Transicion_de_salida
 
 	ret
 
