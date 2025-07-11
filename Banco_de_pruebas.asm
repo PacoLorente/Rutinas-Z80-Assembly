@@ -509,7 +509,7 @@ Shield_3 db 0
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
-;	3/4/25
+;	11/7/25
 
 START 
 
@@ -519,13 +519,25 @@ START
 	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
 	DI 					
 
-; Limpiamos pantalla.
+;	--------------------------------------------------------------------------------------------------------
+;
+;	11/7/25
+;
+;	Menú Principal
+;
 
 	xor a
 	out ($fe),a 											; BORDER NEGRO.
 
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
+
+;	Construimos LOGO.
+
+
+
+
+
 	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
 
 INICIALIZACION
@@ -605,13 +617,16 @@ INICIALIZACION
 
 	call Transicion_de_entrada
 
+	ld a,3
+	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
+
 	ei
 
 	halt
 
 ; ------------------------------------
 ;
-;	07/07/25
+;	11/07/25
 
 Main 
 
@@ -660,9 +675,9 @@ Main
 ;	Si aún quedan entidades por aparecer del bloque de entidades, (7 cajas), incrementaremos (Entidades_en_curso) y calcularemos_
 ;	_ (Clock_next_entity) para la siguiente entidad.
 
-;	--- Numero_de_entidades db 0								; Nº total de entidades maliciosas que contiene el nivel.
-; 	--- Numero_parcial_de_entidades db 5						; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
-; 	--- Entidades_en_curso db 0									; Entidades en pantalla.
+;	--- Numero_de_entidades db 0							; Nº total de entidades maliciosas que contiene el nivel.
+; 	--- Numero_parcial_de_entidades db 5					; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
+; 	--- Entidades_en_curso db 0								; Entidades en pantalla.
 
 	ld hl,Numero_parcial_de_entidades
 	ld b,(hl)
@@ -871,7 +886,7 @@ Gestion_de_Amadeus
 ;	! Fin del juego
 
 	di
-	jr z,$													;! GAME OVER !!!!!
+	jr z,$													; ! GAME OVER !!!!!
 	ei
 
 ; 	Nueva nave.
@@ -888,23 +903,29 @@ Amadeus_vivo
 	call nz, Genera_explosion_Amadeus
 	jr nz, End_frame
 
-;	Tras la gestión de Amadeus hacemos la lectura del teclado.
-
 	call Teclado
-
-	ld hl,Ctrl_3
-	bit 5,(hl)
-	jr z,End_frame											; NO hemos pulsado tecla, NO hay transición.
-
-;	Existe Movimiento.
 
 	ld hl,Ctrl_2
 	bit 6,(hl)
-	jr z,Vivo_y_coleando
+	jr z,2F
 
-	di
-	jr $
-	ei
+;	Se ha iniciado la salida de Amadeus por la parte baja de la pantalla, NIVEL SUPERADO.
+
+	ld hl,Cuad_objeto
+	dec (hl)												; DEC temporizador, (FRAME rate) de la transición de salida.
+	jr nz,2F												; No forzamos la impresión de Amadeus si no ha habido pulsación de teclas.
+
+;	Forzamos la impresión de Amadeus e inicializamos el temporizador.
+
+	ld a,3
+	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
+
+	ld hl,Ctrl_3
+	set 5,(hl)
+
+2 ld hl,Ctrl_3
+	bit 5,(hl)
+	jr z,End_frame											; NO hemos pulsado tecla, NO hay transición.
 
 Vivo_y_coleando
 
@@ -2102,15 +2123,16 @@ Pintando_Amadeus
 
 	ld hl,Ctrl_3
 	res 0,(hl)												; Reinicia el flag de FRAME completo.
-	res 2,(hl)												; Reinicia el flag DETECTA MOVIMIENTO.
+	res 2,(hl)												; Reinicia el flag DETECTA MOVIMIENTO, (entidades).
+	res 5,(hl)												; Reinicia el flag MOVIMIENTO DE AMADEUS.
 
 ; 	Si Amadeus está desapareciendo no restauramos el FLAG de mov. de Amadeus.
 
-	ld a,(Ctrl_2)
-	bit 6,a
-	ret nz
+;	ld a,(Ctrl_2)
+;	bit 6,a
+;	ret nz
 
-	res 5,(hl)
+;	res 5,(hl)
 
 	ret
 
@@ -2179,7 +2201,7 @@ Borra_Pinta_Amadeus_shield
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	1/5/25
+;	11/7/25
 ;
 	
 Teclado
@@ -2188,17 +2210,17 @@ Teclado
 
 	ld a,(Shields)
 	and a
-	jr z,2F 												; NO leemos SHIELD, no quedan escudos.
+	jr z,1F 												; NO leemos SHIELD, no quedan escudos.
 
 	ld a,(Shield)
 	and a
-	jr nz,2F 												; No leemos SHIELD, estamos ejecutando escudo.
+	jr nz,1F 												; No leemos SHIELD, estamos ejecutando escudo.
 
 	ld a,$7f
 	in a,($fe)
 	and $01
 	call z,Inicia_Shield      								; "SPACE" para SHIELD.
-	jr nz,2F
+	jr nz,1F
 
 	ld a,90
 	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
@@ -2206,16 +2228,20 @@ Teclado
 	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
 	dec (hl)	
 
-; Disparo.
+; 	Disparo.
 
-2 ld a,$f7													; "5" para disparar.
+1 ld a,$f7													; "5" para disparar.
 	in a,($fe)
 	and $10
 	call z,Genera_disparo_Amadeus
 
-; Movement.
+;	Movement.
 
-1 ld a,$f7		  											; Rutina de TECLADO. Detecta cuando se pulsan las teclas "1" y "2"  y llama a las rutinas de "Mov_izq" y "Mov_der". $f7  detecta fila de teclas: (5,4,3,2,1).
+	ld hl,Ctrl_2
+	bit 6,(hl)
+	ret nz													; NIVEL SUPERADO. Amadeus está desapareciendo, no leemos teclado.
+
+	ld a,$f7		  										; Detecta cuando se pulsan las teclas "1" y "2"  y llama a las rutinas de "Mov_izq" y "Mov_der". $f7  detecta fila de teclas (5,4,3,2,1).
 	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
 	and $01													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $01 resulta "0"  llama a la rutina "Mov_izq".
     call z,Amadeus_a_izquierda
