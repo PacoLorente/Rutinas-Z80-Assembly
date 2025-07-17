@@ -132,6 +132,8 @@ Incrementa_FRAMES
 
 	ret
 
+;	Free mem. $835c - $835f .....$03 / 3d Bytes.
+
 ; --------------------------------------------------------------------------------
 
 	include "Sprites_e_indices.asm"
@@ -2518,6 +2520,8 @@ Siguiente_frame_explosion_Amadeus
 
 ; ---------------------------------------------------------------
 
+;	Rutinas consecutivas, no hay bytes libres entre ellas.
+
 	include "RND_Derivando.asm"
 	include "Rutinas_de_inicio_y_niveles.asm"
 	include "calcula_tercio.asm"
@@ -2530,6 +2534,9 @@ Siguiente_frame_explosion_Amadeus
 	include "Direcciones.asm"
 	include "Movimiento.asm"
 	include "Disparo.asm"
+
+;	End $ae8f Último byte.
+;		$ae90 1er byte libre.
 
 	SAVESNA "Pruebas.sna", START
 
