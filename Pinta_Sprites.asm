@@ -1,3 +1,50 @@
+; ------------------------------------------------------------------------
+;
+;	19/7/25
+;
+;	Pinta_imagen.
+;
+;	Pinta cualquier imagen en pantalla sin máscara. Esta rutina se utiliza para imágenes estáticas, (NO SPRITES).
+;
+;	INPUTS: HL contiene la dirección de memoria depantalla donde queremos imprimir la imagen, (esquina superior izquierda).
+;			DE contiene la dirección del 1er .db que conforman los datos de la imagen.
+;			 C contiene el nº de scanlines que tiene la imagen.
+;			 B contiene el nº de columnas que forma la imagen.
+;
+;	MODIFICA: AF,HL,DE y BC.
+
+Pinta_imagen
+
+	ex af,af														; Copia de respaldo de las Columnas en A'.
+
+	push hl															; PUSH dirección de mem. de pantalla.
+
+1 ld a,(de)
+	ld (hl),a
+
+	inc e
+	inc l
+
+	djnz 1B
+
+	dec c
+	jr z,salida
+
+;	Sitúa HL en el siguiente scan.
+
+	pop hl
+	call NextScan
+
+;	Recuperamos el nº de columnas.
+
+	ex af,af
+	ld b,a
+
+	jr Pinta_imagen
+
+salida pop hl
+    ret
+
 ; --------------------------------------------------------------------------------------
 ;
 ;   2/4/25

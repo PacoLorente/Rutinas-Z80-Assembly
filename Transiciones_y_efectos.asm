@@ -1,5 +1,113 @@
 ; ------------------------------------------------------------------------
 ;
+;	19/7/25
+;
+;	Imprime en pantalla la imagen del logo principal.
+
+Imprime_Logo_principal
+
+;	Datos.
+
+	ld hl,Direccion_Logo_principal
+	ld de,Logo_nave													; (3x24)
+
+	ld c,24															; Nº de scans en C.
+	ld b,3															; Nº de Columnas en A y B.
+	ld a,b
+
+	push hl
+	call Pinta_imagen												; Pinta la nave.
+	pop hl
+
+;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""ma"".
+
+	ld a,l
+	add $20
+	ld l,a															; Sitúa en Fila inferior.
+
+	inc l															; Sitúa en la columna correspondiente.
+	inc l
+	inc l
+
+;	Datos.
+
+	ld de,Logo_ma													; (3x16)
+
+	ld c,16															; Nº de scans en C.
+	ld b,3															; Nº de Columnas en A y B.
+	ld a,b
+
+	push hl
+	call Pinta_imagen												; Pinta "ma".
+	pop hl
+
+;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""ad"".
+
+	ld a,l
+	sub $20
+	ld l,a															; Sitúa en Fila superior.
+
+	inc l															; Sitúa en la columna correspondiente.
+	inc l
+	inc l
+
+;	Datos.
+
+	ld de,logo_ad													; (3x24)
+
+	ld c,24															; Nº de scans en C.
+	ld b,3															; Nº de Columnas en A y B.
+	ld a,b
+
+	push hl
+	call Pinta_imagen												; Pinta "ad".
+	pop hl
+
+
+;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""eu"".
+
+	ld a,l
+	add $20
+	ld l,a															; Sitúa en Fila inferior.
+
+	inc l															; Sitúa en la columna correspondiente.
+	inc l
+	inc l
+
+;	Datos.
+
+	ld de,logo_eu													; (3x16)
+
+	ld c,16															; Nº de scans en C.
+	ld b,3															; Nº de Columnas en A y B.
+	ld a,b
+
+	push hl
+	call Pinta_imagen												; Pinta "eu".
+	pop hl
+
+;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""us"".
+
+	inc l															; Sitúa en la columna correspondiente.
+	inc l
+	inc l
+
+;	Datos.
+
+	ld de,logo_us													; (3x16)
+
+	ld c,16															; Nº de scans en C.
+	ld b,3															; Nº de Columnas en A y B.
+	ld a,b
+
+	push hl
+	call Pinta_imagen												; Pinta "us".
+	pop hl
+
+	ret
+
+; ------------------------------------------------------------------------
+;
 ;	11/07/25
 ;
 ;	Nivel superado.

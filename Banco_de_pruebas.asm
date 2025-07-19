@@ -22,6 +22,7 @@
 FRAMES equ $5c78														; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
+Direccion_Logo_principal equ $4048
 Sprite_vacio equ $82f0													; 48 Bytes de "0".
 
 Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
@@ -536,13 +537,27 @@ START
 
 ;	Construimos LOGO.
 
-
-
-
+	call Imprime_Logo_principal
 
 	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
 
+	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
+	call Cls
+
+;	Marcadores.
+
+
+
+
+
+
 INICIALIZACION
+
+;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
+
+	call Inicia_albumes_de_lineas
+	call Inicia_albumes_de_lineas_Amadeus
+	call Inicia_albumes_de_disparos
 
 	ld b,7   											 	; Generamos 7 nº aleatorios.
 	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
@@ -552,12 +567,6 @@ INICIALIZACION
 	ld l,a
 	ld h,0
 	ld (Clock_next_entity),hl 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
-
-;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
-
-	call Inicia_albumes_de_lineas						 
-	call Inicia_albumes_de_lineas_Amadeus
-	call Inicia_albumes_de_disparos
 
 ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
 
