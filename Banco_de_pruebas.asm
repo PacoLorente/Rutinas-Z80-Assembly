@@ -512,22 +512,13 @@ Shield_3 db 0
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
-;	11/7/25
+;	19/7/25
 
 START 
 
-	ld sp,0													; Situamos el inicio de Stack.
-	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
-	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
-	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
-	DI 					
-
-;	--------------------------------------------------------------------------------------------------------
-;
-;	11/7/25
-;
 ;	Menú Principal
-;
+
+	di
 
 	xor a
 	out ($fe),a 											; BORDER NEGRO.
@@ -546,10 +537,10 @@ START
 
 ;	Marcadores.
 
-
-
-
-
+	ld sp,0													; Situamos el inicio de Stack.
+	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
+	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
+	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
 
 INICIALIZACION
 

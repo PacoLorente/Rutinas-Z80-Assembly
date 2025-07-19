@@ -2340,2026 +2340,2017 @@
  512  9102
  513  9102              ; 	INICIO  *************************************************************************************************************************************************************************
  514  9102              ;
- 515  9102              ;	11/7/25
+ 515  9102              ;	19/7/25
  516  9102
  517  9102              START
  518  9102
- 519  9102 31 00 00     	ld sp,0													; Situamos el inicio de Stack.
- 520  9105 3E FC        	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
- 521  9107 ED 47        	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
- 522  9109 ED 5E        	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
- 523  910B F3           	DI
- 524  910C
- 525  910C              ;	--------------------------------------------------------------------------------------------------------
- 526  910C              ;
- 527  910C              ;	11/7/25
- 528  910C              ;
- 529  910C              ;	Menú Principal
- 530  910C              ;
- 531  910C
- 532  910C AF           	xor a
- 533  910D D3 FE        	out ($fe),a 											; BORDER NEGRO.
- 534  910F
- 535  910F 3E 45        	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
- 536  9111 CD 5C 9C     	call Cls
- 537  9114
- 538  9114              ;	Construimos LOGO.
- 539  9114
- 540  9114 CD 9D 9C     	call Imprime_Logo_principal
- 541  9117
- 542  9117 CD 30 96     	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
- 543  911A
- 544  911A 3E 45        	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
- 545  911C CD 5C 9C     	call Cls
+ 519  9102              ;	Menú Principal
+ 520  9102
+ 521  9102 F3           	di
+ 522  9103
+ 523  9103 AF           	xor a
+ 524  9104 D3 FE        	out ($fe),a 											; BORDER NEGRO.
+ 525  9106
+ 526  9106 3E 45        	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
+ 527  9108 CD 5C 9C     	call Cls
+ 528  910B
+ 529  910B              ;	Construimos LOGO.
+ 530  910B
+ 531  910B CD 9D 9C     	call Imprime_Logo_principal
+ 532  910E
+ 533  910E CD 30 96     	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
+ 534  9111
+ 535  9111 3E 45        	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
+ 536  9113 CD 5C 9C     	call Cls
+ 537  9116
+ 538  9116              ;	Marcadores.
+ 539  9116
+ 540  9116 31 00 00     	ld sp,0													; Situamos el inicio de Stack.
+ 541  9119 3E FC        	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
+ 542  911B ED 47        	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
+ 543  911D ED 5E        	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
+ 544  911F
+ 545  911F              INICIALIZACION
  546  911F
- 547  911F              ;	Marcadores.
+ 547  911F              ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
  548  911F
- 549  911F
- 550  911F
- 551  911F
- 552  911F
- 553  911F
- 554  911F              INICIALIZACION
- 555  911F
- 556  911F              ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
- 557  911F
- 558  911F CD E6 98     	call Inicia_albumes_de_lineas
- 559  9122 CD F6 98     	call Inicia_albumes_de_lineas_Amadeus
- 560  9125 CD 03 99     	call Inicia_albumes_de_disparos
- 561  9128
- 562  9128 06 07        	ld b,7   											 	; Generamos 7 nº aleatorios.
- 563  912A 21 F9 8B     	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
- 564  912D CD B9 98     	call Derivando_RND 										; Rutina de generación de nº aleatorios.
- 565  9130
- 566  9130 CD BF 93     	call Extrae_numero_aleatorio_y_avanza
- 567  9133 6F           	ld l,a
- 568  9134 26 00        	ld h,0
- 569  9136 22 EC 90     	ld (Clock_next_entity),hl 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
- 570  9139
- 571  9139              ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
- 572  9139
- 573  9139 CD 6D 9A     	call Inicializa_1er_Nivel								; Inicializa el 1er nivel del juego.
- 574  913C CD 1F 99     	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
- 575  913F CD DB 9A     	call Prepara_Cajas_de_Entidades
- 576  9142
- 577  9142              ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
- 578  9142
- 579  9142 CD 3C 9B     	call Inicia_Amadeus
- 580  9145              ;														 	; La rutina [Genera_datos_de_impresion] habilita las interrupciones antes del RET.
- 581  9145              ;														 	; DI nos asegura que no vamos a ejecutar FRAME hasta que no tengamos todas las entidades iniciadas.
- 582  9145              ;														 	; La rutina [Genera_datos_de_impresion] activa las interrupciones antes del RET.
- 583  9145 11 CB 8C     	ld de,Amadeus_BOX
- 584  9148 CD 2B 9C     	call Parametros_de_bandeja_DRAW_a_Caja_Master	 		; Volcamos Amadeus en (Amadeus_BOX).
- 585  914B
- 586  914B              ;	Limpiamos la bandeja DRAW.
- 587  914B
- 588  914B 21 5F 90     	ld hl,Clase
- 589  914E 01 25 00     	ld bc,37
- 590  9151 CD 30 A5     	call Clean_mem
- 591  9154
- 592  9154              ; 	Situamos a Amadeus en el centro de la pantalla.
- 593  9154
- 594  9154 06 3C        	ld b,60
- 595  9156 CD B7 A8     2 call Amadeus_a_izquierda
- 596  9159 10 FB        	djnz 2B
- 597  915B
- 598  915B CD 9F 95     	call Genera_datos_de_impresion_Amadeus
- 599  915E
- 600  915E              ;	Inicializa techo y suelo de (Clock_next_entity).
- 601  915E              ;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
- 602  915E              ;	Este valor irá decreciendo conforme van apareciendo entidades.
- 603  915E
- 604  915E 3E FF        	ld a,$ff
- 605  9160 32 84 90     	ld (Vel_left),a
- 606  9163
- 607  9163              ;! ---------------------------------------------------------------------------------------------------------------------------------------------------------
- 608  9163
- 609  9163 CD C1 95     	call Inicia_punteros_de_cajas						 	; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
- 610  9166
- 611  9166 CD 41 96     	call Inicia_Shield
- 612  9169
- 613  9169 2A CA 90     6 ld hl,(Scanlines_album_SP)
- 614  916C 22 C3 90     	ld (Techo_Scanlines_album),hl
- 615  916F
- 616  916F 2A AE 90     	ld hl,(Album_de_borrado)
- 617  9172 22 CA 90     	ld (Scanlines_album_SP),hl
- 618  9175
- 619  9175 21 07 8C     	ld hl,Tabla_de_pintado
- 620  9178 22 CC 90     	ld (India_SP),hl
- 621  917B
- 622  917B 21 D2 90     	ld hl,Ctrl_3
- 623  917E CB C6        	set 0,(hl) 												; Indica Frame completo.
- 624  9180 CB D6        	set 2,(hl)
- 625  9182 CB EE        	set 5,(hl)												; Imprimimos Amadeus.
- 626  9184
- 627  9184              ;	Transición de entrada.
- 628  9184
- 629  9184 CD 2B 9D     	call Transicion_de_entrada
- 630  9187
- 631  9187 3E 03        	ld a,3
- 632  9189 32 80 90     	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
- 633  918C
- 634  918C FB           	ei
- 635  918D
- 636  918D 76           	halt
- 637  918E
- 638  918E              ; ------------------------------------
- 639  918E              ;
- 640  918E              ;	11/07/25
- 641  918E
- 642  918E              Main
- 643  918E
- 644  918E 21 D3 90     	ld hl,Ctrl_4
- 645  9191 CB 6E        	bit 5,(hl)
- 646  9193
- 647  9193 F3           	di
- 648  9194 20 FE        	jr nz,$ 												; Nivel Superado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
- 649  9196 FB           	ei
- 650  9197
- 651  9197              ; Gestión de disparos.
- 652  9197
- 653  9197 CD 94 93     	call Change_Disparos									; Intercambiamos los álbumes de disparos.
- 654  919A CD 8E AA     	call Motor_de_disparos_entidades
- 655  919D CD 41 AD     	call Motor_Disparos_Amadeus								; Mueve y detecta colisión de los disparos de Amadeus.
- 656  91A0
- 657  91A0              ; En el FRAME que acabamos de pintar puede existir una posible colisión entre alguna entidad y Amadeus.
- 658  91A0              ; Si alguna de las coordenadas_X de alguna entidad que esté en zona de Amadeus coincide con alguna de las coordenadas_X de Amadeus, habrá que comprobar si existe colisión.
- 659  91A0              ; Este hecho lo indica el bit2 de (Impacto2).
- 660  91A0
- 661  91A0 CD AC AE     	call Detecta_colision_nave_entidad 						; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
- 662  91A3
- 663  91A3              ; TEMPORIZACIONES !!!!!!!!!!!!!!!!
- 664  91A3
- 665  91A3              ;! ON/OF disparo de entidades:
- 666  91A3
- 667  91A3 21 EF 90     	ld hl,CLOCK_disparos_de_entidades
- 668  91A6 35           	dec (hl)
- 669  91A7 CC 5C AA     	call z,Autoriza_disparo_de_entidades
- 670  91AA
- 671  91AA              ;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
- 672  91AA
- 673  91AA 2A EC 90     	ld hl,(Clock_next_entity)
- 674  91AD ED 4B 78 5C  	ld bc,(FRAMES)
- 675  91B1 A7           	and a
- 676  91B2 ED 42        	sbc hl,bc
- 677  91B4 20 23        	jr nz,1F
- 678  91B6
- 679  91B6              ; - Define el tiempo que ha de transcurrir para que aparezca la siguiente entidad. ----------------------------
- 680  91B6
- 681  91B6 CD BF 93     	call Extrae_numero_aleatorio_y_avanza 					; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
- 682  91B9 CD D6 93     	call Define_Clock_next_entity
+ 549  911F CD E6 98     	call Inicia_albumes_de_lineas
+ 550  9122 CD F6 98     	call Inicia_albumes_de_lineas_Amadeus
+ 551  9125 CD 03 99     	call Inicia_albumes_de_disparos
+ 552  9128
+ 553  9128 06 07        	ld b,7   											 	; Generamos 7 nº aleatorios.
+ 554  912A 21 F9 8B     	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
+ 555  912D CD B9 98     	call Derivando_RND 										; Rutina de generación de nº aleatorios.
+ 556  9130
+ 557  9130 CD BF 93     	call Extrae_numero_aleatorio_y_avanza
+ 558  9133 6F           	ld l,a
+ 559  9134 26 00        	ld h,0
+ 560  9136 22 EC 90     	ld (Clock_next_entity),hl 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
+ 561  9139
+ 562  9139              ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
+ 563  9139
+ 564  9139 CD 6D 9A     	call Inicializa_1er_Nivel								; Inicializa el 1er nivel del juego.
+ 565  913C CD 1F 99     	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
+ 566  913F CD DB 9A     	call Prepara_Cajas_de_Entidades
+ 567  9142
+ 568  9142              ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
+ 569  9142
+ 570  9142 CD 3C 9B     	call Inicia_Amadeus
+ 571  9145              ;														 	; La rutina [Genera_datos_de_impresion] habilita las interrupciones antes del RET.
+ 572  9145              ;														 	; DI nos asegura que no vamos a ejecutar FRAME hasta que no tengamos todas las entidades iniciadas.
+ 573  9145              ;														 	; La rutina [Genera_datos_de_impresion] activa las interrupciones antes del RET.
+ 574  9145 11 CB 8C     	ld de,Amadeus_BOX
+ 575  9148 CD 2B 9C     	call Parametros_de_bandeja_DRAW_a_Caja_Master	 		; Volcamos Amadeus en (Amadeus_BOX).
+ 576  914B
+ 577  914B              ;	Limpiamos la bandeja DRAW.
+ 578  914B
+ 579  914B 21 5F 90     	ld hl,Clase
+ 580  914E 01 25 00     	ld bc,37
+ 581  9151 CD 30 A5     	call Clean_mem
+ 582  9154
+ 583  9154              ; 	Situamos a Amadeus en el centro de la pantalla.
+ 584  9154
+ 585  9154 06 3C        	ld b,60
+ 586  9156 CD B7 A8     2 call Amadeus_a_izquierda
+ 587  9159 10 FB        	djnz 2B
+ 588  915B
+ 589  915B CD 9F 95     	call Genera_datos_de_impresion_Amadeus
+ 590  915E
+ 591  915E              ;	Inicializa techo y suelo de (Clock_next_entity).
+ 592  915E              ;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
+ 593  915E              ;	Este valor irá decreciendo conforme van apareciendo entidades.
+ 594  915E
+ 595  915E 3E FF        	ld a,$ff
+ 596  9160 32 84 90     	ld (Vel_left),a
+ 597  9163
+ 598  9163              ;! ---------------------------------------------------------------------------------------------------------------------------------------------------------
+ 599  9163
+ 600  9163 CD C1 95     	call Inicia_punteros_de_cajas						 	; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
+ 601  9166
+ 602  9166 CD 41 96     	call Inicia_Shield
+ 603  9169
+ 604  9169 2A CA 90     6 ld hl,(Scanlines_album_SP)
+ 605  916C 22 C3 90     	ld (Techo_Scanlines_album),hl
+ 606  916F
+ 607  916F 2A AE 90     	ld hl,(Album_de_borrado)
+ 608  9172 22 CA 90     	ld (Scanlines_album_SP),hl
+ 609  9175
+ 610  9175 21 07 8C     	ld hl,Tabla_de_pintado
+ 611  9178 22 CC 90     	ld (India_SP),hl
+ 612  917B
+ 613  917B 21 D2 90     	ld hl,Ctrl_3
+ 614  917E CB C6        	set 0,(hl) 												; Indica Frame completo.
+ 615  9180 CB D6        	set 2,(hl)
+ 616  9182 CB EE        	set 5,(hl)												; Imprimimos Amadeus.
+ 617  9184
+ 618  9184              ;	Transición de entrada.
+ 619  9184
+ 620  9184 CD 2B 9D     	call Transicion_de_entrada
+ 621  9187
+ 622  9187 3E 03        	ld a,3
+ 623  9189 32 80 90     	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
+ 624  918C
+ 625  918C FB           	ei
+ 626  918D
+ 627  918D 76           	halt
+ 628  918E
+ 629  918E              ; ------------------------------------
+ 630  918E              ;
+ 631  918E              ;	11/07/25
+ 632  918E
+ 633  918E              Main
+ 634  918E
+ 635  918E 21 D3 90     	ld hl,Ctrl_4
+ 636  9191 CB 6E        	bit 5,(hl)
+ 637  9193
+ 638  9193 F3           	di
+ 639  9194 20 FE        	jr nz,$ 												; Nivel Superado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+ 640  9196 FB           	ei
+ 641  9197
+ 642  9197              ; Gestión de disparos.
+ 643  9197
+ 644  9197 CD 94 93     	call Change_Disparos									; Intercambiamos los álbumes de disparos.
+ 645  919A CD 8E AA     	call Motor_de_disparos_entidades
+ 646  919D CD 41 AD     	call Motor_Disparos_Amadeus								; Mueve y detecta colisión de los disparos de Amadeus.
+ 647  91A0
+ 648  91A0              ; En el FRAME que acabamos de pintar puede existir una posible colisión entre alguna entidad y Amadeus.
+ 649  91A0              ; Si alguna de las coordenadas_X de alguna entidad que esté en zona de Amadeus coincide con alguna de las coordenadas_X de Amadeus, habrá que comprobar si existe colisión.
+ 650  91A0              ; Este hecho lo indica el bit2 de (Impacto2).
+ 651  91A0
+ 652  91A0 CD AC AE     	call Detecta_colision_nave_entidad 						; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
+ 653  91A3
+ 654  91A3              ; TEMPORIZACIONES !!!!!!!!!!!!!!!!
+ 655  91A3
+ 656  91A3              ;! ON/OF disparo de entidades:
+ 657  91A3
+ 658  91A3 21 EF 90     	ld hl,CLOCK_disparos_de_entidades
+ 659  91A6 35           	dec (hl)
+ 660  91A7 CC 5C AA     	call z,Autoriza_disparo_de_entidades
+ 661  91AA
+ 662  91AA              ;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
+ 663  91AA
+ 664  91AA 2A EC 90     	ld hl,(Clock_next_entity)
+ 665  91AD ED 4B 78 5C  	ld bc,(FRAMES)
+ 666  91B1 A7           	and a
+ 667  91B2 ED 42        	sbc hl,bc
+ 668  91B4 20 23        	jr nz,1F
+ 669  91B6
+ 670  91B6              ; - Define el tiempo que ha de transcurrir para que aparezca la siguiente entidad. ----------------------------
+ 671  91B6
+ 672  91B6 CD BF 93     	call Extrae_numero_aleatorio_y_avanza 					; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
+ 673  91B9 CD D6 93     	call Define_Clock_next_entity
+ 674  91BC
+ 675  91BC              ; 	GESTIÓN DE ENTIDADES.
+ 676  91BC
+ 677  91BC              ;	Si aún quedan entidades por aparecer del bloque de entidades, (7 cajas), incrementaremos (Entidades_en_curso) y calcularemos_
+ 678  91BC              ;	_ (Clock_next_entity) para la siguiente entidad.
+ 679  91BC
+ 680  91BC              ;	--- Numero_de_entidades db 0							; Nº total de entidades maliciosas que contiene el nivel.
+ 681  91BC              ; 	--- Numero_parcial_de_entidades db 5					; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
+ 682  91BC              ; 	--- Entidades_en_curso db 0								; Entidades en pantalla.
  683  91BC
- 684  91BC              ; 	GESTIÓN DE ENTIDADES.
- 685  91BC
- 686  91BC              ;	Si aún quedan entidades por aparecer del bloque de entidades, (7 cajas), incrementaremos (Entidades_en_curso) y calcularemos_
- 687  91BC              ;	_ (Clock_next_entity) para la siguiente entidad.
- 688  91BC
- 689  91BC              ;	--- Numero_de_entidades db 0							; Nº total de entidades maliciosas que contiene el nivel.
- 690  91BC              ; 	--- Numero_parcial_de_entidades db 5					; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
- 691  91BC              ; 	--- Entidades_en_curso db 0								; Entidades en pantalla.
- 692  91BC
- 693  91BC 21 A2 90     	ld hl,Numero_parcial_de_entidades
- 694  91BF 46           	ld b,(hl)
- 695  91C0
- 696  91C0 04           	inc b
- 697  91C1 05           	dec b
- 698  91C2
- 699  91C2              ;
- 700  91C2
- 701  91C2 2A EC 90     	ld hl,(Clock_next_entity)
- 702  91C5 CC 25 9D     	call z,Dispara_salida_de_amadeus						; Nivel superado !!!!!
- 703  91C8
- 704  91C8              ; ----------------------------------------------------------------
- 705  91C8
- 706  91C8 3A A3 90     	ld a,(Entidades_en_curso)								; Entidades que hay en pantalla.
- 707  91CB B8           	cp b
- 708  91CC 28 0B        	jr z,1F
- 709  91CE 30 09        	jr nc,1F
- 710  91D0
- 711  91D0              ;	Incrementamos (Entidades_en_curso) y DEC (Numero_parcial_de_entidades) y (Numero_de_entidades).
- 712  91D0
- 713  91D0 3C           	inc a
- 714  91D1 32 A3 90     	ld (Entidades_en_curso),a
- 715  91D4
- 716  91D4 21 D3 90     	ld hl,Ctrl_4
- 717  91D7 CB C6        	set 0,(hl)												; Permiso para activar a una entidad "dormida".
- 718  91D9
- 719  91D9 3A A3 90     1 ld a,(Entidades_en_curso)
- 720  91DC A7           	and a
- 721  91DD CA 8D 92     	jp z,Gestion_de_Amadeus									; Si no hay entidades en curso saltamos a [Avanza_puntero_de_Scanlines_album_de_entidades].
- 722  91E0
- 723  91E0 47           	ld b,a													; No hay entidades que gestionar.
- 724  91E1
- 725  91E1              ; ( Código que ejecutamos con cada entidad: ).
- 726  91E1
- 727  91E1              ; --------------------------------------- GESTIÓN DE ENTIDADES. !!!!!!!!!!
- 728  91E1
- 729  91E1 21 07 8C     	ld hl,Tabla_de_pintado 									; Inicializa `Tabla_de_pintado?.
- 730  91E4 22 CC 90     	ld (India_SP),hl
- 731  91E7
- 732  91E7 21 D2 90     	ld hl,Ctrl_3 											; Indica que se produce movimiento.
- 733  91EA CB D6        	set 2,(hl)
- 734  91EC
- 735  91EC CD 69 93     	call Change 											; Intercambio `Album_de_pintado - Album_de_borrado?.
- 736  91EF              ;															; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
- 737  91EF              ;	 														; _viceversa.
- 738  91EF
- 739  91EF              Bucle_de_entidades
- 740  91EF
- 741  91EF C5           	push bc 												; Nº de entidades en curso.
- 742  91F0
- 743  91F0              ;	En primer lugar vamos a crear un puntero para ir almacenando las columnas de las distintas unidades.
- 744  91F0              ;	Utilizamos (Puntero_indice_mov) como puntero e Indice_Sprite_der como primer .db de almacenamiento.
- 745  91F0
- 746  91F0 DD 2A 99 90  6 ld ix,(Puntero_store_caja)								; A partir de ahora IX apunta al 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
- 747  91F4 CD 0C 96     	call Salta_caja_de_entidades_vacia
- 748  91F7
- 749  91F7              ; Esta caja contiene datos. Es una entidad "dormida"???. Si no es así gestionamos esta entidad, (jr 5F).
- 750  91F7
- 751  91F7 DD 7E 01     	ld a,(ix+1)
- 752  91FA CB 7F        	bit 7,a
- 753  91FC 28 11        	jr z,5F
- 754  91FE
- 755  91FE              ; Esta entidad esta "dormida", tenemos permiso para despertarla. ???
- 756  91FE
- 757  91FE 21 D3 90     	ld hl,Ctrl_4
- 758  9201 CB 46        	bit 0,(hl)
- 759  9203 CC 1B 96     	call z,Incrementa_punteros_de_cajas 					; Si no tenemos permiso para despertarla saltaremos a la siguiente entidad activa.
- 760  9206
- 761  9206 28 E8        	jr z,6B
- 762  9208
- 763  9208 CB 86        	res 0,(hl)												; Restaura bit "despertador".
- 764  920A CB BF        	res 7,a
- 765  920C DD 77 01     	ld (ix+1),a												; Convierte esta entidad dormilona en una entidad ACTIVA.
- 766  920F
- 767  920F              ; En 1er lugar, ... existe (Impacto) de un disparo de Amadeus en esta entidad ???
- 768  920F              ; Si es así, comprobamos si es la entidad en curso la alcanzada por nuestro disparo.
- 769  920F
- 770  920F 3A D9 90     5 ld a,(Impacto2)
- 771  9212 CB 5F        	bit 3,a
- 772  9214 C4 D0 AC     	call nz,Compara_con_coordenadas_de_disparo
- 773  9217
- 774  9217              ; Existe colisión en esta entidad por un disparo de Amadeus ???
- 775  9217
- 776  9217 DD 7E 05     	ld a,(ix+5)												; (ix+5) - (Impacto)
- 777  921A CB 4F        	bit 1,a
- 778  921C C4 9F 97     	call nz,Genera_explosion
- 779  921F 20 48        	jr nz,Gestiona_siguiente_entidad
- 780  9221
- 781  9221 DD 7E 05     	ld a,(ix+5)												; ld a,(Impacto)
- 782  9224 A7           	and a
- 783  9225 28 0C        	jr z,3F
- 784  9227
- 785  9227              ; IMPACTO en entidad por colisión con Amadeus.
- 786  9227
- 787  9227              ; 5/7/24
- 788  9227              ; Nota importante:
- 789  9227              ; Dos entidades pueden chocar entre ellas en zona de Amadeus. La rutina [Detecta_colision_nave_entidad] comprobará si existe colisión con la última entidad gestionada, (colisionada) y _
- 790  9227              ;	_en caso de no existir colisión pondrá su .db (Impacto) a "0" pero esa 1ª entidad "colisionada" seguirá manteniendo su .db (Impacto) a "1" por lo que para considerarse "colisión",_
- 791  9227              ;	_es requisito imprescindible que Amadeus tenga su .db (Impacto) también a "1"; en caso contrario colocaremos el .db (Impacto) de la entidad a "0" para que se vuelva a gestionar.
- 792  9227
- 793  9227 3A D0 8C     	ld a,(Impacto_Amadeus)
- 794  922A A7           	and a
- 795  922B C4 9F 97     	call nz,Genera_explosion
- 796  922E 20 39        	jr nz,Gestiona_siguiente_entidad
- 797  9230
- 798  9230              ; 	Falsa colisión !!!
- 799  9230
- 800  9230 32 64 90     	ld (Impacto),a											; Colocamos el .db (Impacto) de la entidad en curso a "0".
- 801  9233
- 802  9233              ; -------------------------------------------
- 803  9233
- 804  9233              ; 	Movement !!!
- 805  9233
- 806  9233 CD 41 93     3 call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
- 807  9236 CD 02 95     	call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
- 808  9239              ;															; (Puntero_objeto) en DE;
- 809  9239              ;		    												; (Puntero_de_impresion) codificado en BC.
- 810  9239 CD 29 95     	call Decodifica_Puntero_de_impresion
- 811  923C
- 812  923C              ;	IX apunta al 1er .db de la caja.
- 813  923C              ;	DE (Puntero_objeto).
- 814  923C
- 815  923C D5           	push de 												; (Puntero_objeto).
- 816  923D CD 1F 94     	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
- 817  9240              ;	call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
- 818  9240 D1           	pop de
- 819  9241
- 820  9241 DD E5        	push ix													; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
- 821  9243 DD 2A 65 90  	ld ix,(Puntero_de_impresion)
- 822  9247 CD AB 9D     	call Genera_datos_de_impresion
- 823  924A DD E1        	pop ix													; Pop .db (Tipo) de la entidad, (caja de entidades correspondiente) en IX.
- 824  924C
- 825  924C CD 7D 9B     	call Decrementa_Contador_de_mov_masticados
- 826  924F
- 827  924F              ; -------------------------------------------
- 828  924F
- 829  924F              ;	Generamos las coordenadas de la entidad que hemos iniciado o desplazado.
- 830  924F
- 831  924F 2A 65 90     	ld hl,(Puntero_de_impresion)
- 832  9252 CD 71 9C     	call Genera_coordenadas
- 833  9255
- 834  9255 ED 4B 61 90  	ld bc,(Coordenada_X)
- 835  9259
- 836  9259 DD 71 02     	ld (ix+2),c												; Actualiza las coordenadas de la entidad.
- 837  925C DD 70 03     	ld (ix+3),b
- 838  925F
- 839  925F              ;	TODO: Generamos disparo ???
- 840  925F
- 841  925F 3A C2 90     	ld a,(Permiso_de_disparo_Entidades)
- 842  9262 A7           	and a
- 843  9263 C4 71 AA     	call nz,Entidad_genera_disparo_si_procede
- 844  9266
- 845  9266 CD 26 AE     4 call Colision_Entidad_Amadeus								; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
- 846  9269
- 847  9269              Gestiona_siguiente_entidad
- 848  9269
- 849  9269 CD 1B 96     	call Incrementa_punteros_de_cajas
- 850  926C
- 851  926C C1           	pop bc
- 852  926D
- 853  926D 05           	dec b
- 854  926E C2 EF 91     	jp nz,Bucle_de_entidades
- 855  9271
- 856  9271 21 D9 90     	ld hl,Impacto2 											; Inicializamos el FLAG de impacto.
- 857  9274 CB 9E        	res 3,(hl)
- 858  9276
- 859  9276              ; 	Hemos gestionado todas las entidades.
- 860  9276              ; 	----- ----- -----
- 861  9276
- 862  9276 CD 3D 94     	call Inicializa_India_y_limpia_Tabla_de_impresion 		; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
- 863  9279 CD 54 94     	call Ordena_tabla_de_impresion
- 864  927C CD C1 95     	call Inicia_punteros_de_cajas 							; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
- 865  927F
- 866  927F CD F0 93     	call Borra_diferencia
- 867  9282
- 868  9282 3A D2 90     	ld a,(Ctrl_3)
- 869  9285 CB 5F        	bit 3,a
- 870  9287 20 04        	jr nz,Gestion_de_Amadeus
- 871  9289
- 872  9289 EB           	ex de,hl
- 873  928A 71           	ld (hl),c
- 874  928B 2C           	inc l
- 875  928C 70           	ld (hl),b												; Nuevo techo, mayor que el anterior.
- 876  928D
- 877  928D              ;	! GESTIONA AMADEUS !!!!!!!!!!
- 878  928D
- 879  928D              Gestion_de_Amadeus
- 880  928D
- 881  928D 21 D2 90     	ld hl,Ctrl_3
- 882  9290 CB 76        	bit 6,(hl)
- 883  9292 28 13        	jr z,Amadeus_vivo
- 884  9294
- 885  9294              ; 	Amadeus ha sido destruido.
- 886  9294              ; 	Decrementa (Temp_new_live).
- 887  9294
- 888  9294 21 E6 90     	ld hl,Temp_new_live
- 889  9297 35           	dec (hl)
- 890  9298 20 3B        	jr nz,End_frame
- 891  929A
- 892  929A              ; 	Una vida menos. Reinicia Amadeus, reinicia Shield. (aparece nueva nave).
- 893  929A
- 894  929A 21 F7 90     	ld hl,Lives
- 895  929D 35           	dec (hl)
- 896  929E
- 897  929E              ;	! Fin del juego
- 898  929E
- 899  929E F3           	di
- 900  929F 28 FE        	jr z,$													; ! GAME OVER !!!!!
- 901  92A1 FB           	ei
- 902  92A2
- 903  92A2              ; 	Nueva nave.
- 904  92A2
- 905  92A2 CD 02 93     	call Reinicia_Amadeus
- 906  92A5 18 2E        	jr End_frame
- 907  92A7
- 908  92A7              ; 	Hay Impacto???, Existe movimiento???, Disparamos???, Pausamos el juego???
- 909  92A7
- 910  92A7              Amadeus_vivo
- 911  92A7
- 912  92A7 3A D0 8C     	ld a,(Impacto_Amadeus)
- 913  92AA A7           	and a
- 914  92AB C4 62 98     	call nz, Genera_explosion_Amadeus
- 915  92AE 20 25        	jr nz, End_frame
- 916  92B0
- 917  92B0 CD 56 97     	call Teclado
- 918  92B3
- 919  92B3 21 6D 90     	ld hl,Ctrl_2
- 920  92B6 CB 76        	bit 6,(hl)
- 921  92B8 28 0E        	jr z,2F
- 922  92BA
- 923  92BA              ;	Se ha iniciado la salida de Amadeus por la parte baja de la pantalla, NIVEL SUPERADO.
- 924  92BA
- 925  92BA 21 80 90     	ld hl,Cuad_objeto
- 926  92BD 35           	dec (hl)												; DEC temporizador, (FRAME rate) de la transición de salida.
- 927  92BE 20 08        	jr nz,2F												; No forzamos la impresión de Amadeus si no ha habido pulsación de teclas.
- 928  92C0
- 929  92C0              ;	Forzamos la impresión de Amadeus e inicializamos el temporizador.
- 930  92C0
- 931  92C0 3E 03        	ld a,3
- 932  92C2 77           	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
- 933  92C3
- 934  92C3 21 D2 90     	ld hl,Ctrl_3
- 935  92C6 CB EE        	set 5,(hl)
- 936  92C8
- 937  92C8 21 D2 90     2 ld hl,Ctrl_3
- 938  92CB CB 6E        	bit 5,(hl)
- 939  92CD 28 06        	jr z,End_frame											; NO hemos pulsado tecla, NO hay transición.
- 940  92CF
- 941  92CF              Vivo_y_coleando
- 942  92CF
- 943  92CF CD 84 93     	call Change_Amadeus
- 944  92D2 CD 9F 95     	call Genera_datos_de_impresion_Amadeus					; Genera los datos de impresión de la nave.
- 945  92D5
- 946  92D5              End_frame
- 947  92D5
- 948  92D5              ; 	23/08/24 Llegados a este punto: NO HAY POSIBILIDAD DE GENERAR MÁS DISPAROS.
- 949  92D5              ; 	Generamos los datos de impresión en el álbum_de_pintado y limpiamos el sobrante de datos del anterior FRAME si toca.
- 950  92D5
- 951  92D5 CD EB AB     	call Genera_datos_de_impresion_disparos_Entidades
- 952  92D8 CD 91 AD     	call Genera_datos_de_impresion_disparos_Amadeus			; Genera los datos de impresión de los disparos de Amadeus y entidades.
- 953  92DB CD 1D AD     	call Calcula_bytes_pintado_disparos
- 954  92DE CD 2A AD     	call Limpia_album_de_pintado_disparos_entidades
- 955  92E1
- 956  92E1              ; ------------ ------------- --------------
- 957  92E1
- 958  92E1 2A AE 90     	ld hl,(Album_de_borrado)
- 959  92E4 22 CA 90     	ld (Scanlines_album_SP),hl
- 960  92E7
- 961  92E7 21 25 8C     	ld hl,Tabla_de_borrado
- 962  92EA 22 D0 90     	ld (India_3_SP),hl
- 963  92ED
- 964  92ED 21 D2 90     	ld hl,Ctrl_3
- 965  92F0 CB C6        	set 0,(hl) 												; Indica Frame completo.
- 966  92F2 CB 9E        	res 3,(hl)
- 967  92F4 CB A6        	res 4,(hl)
- 968  92F6
- 969  92F6 21 D3 90     	ld hl,Ctrl_4
- 970  92F9 CB 86        	res 0,(hl)
- 971  92FB
- 972  92FB AF           	xor a
- 973  92FC D3 FE        	out ($fe),a
- 974  92FE
- 975  92FE 76           	halt
- 976  92FF
- 977  92FF C3 8E 91     	jp Main
- 978  9302
- 979  9302              ; 	------------------------------------------------------------------------
- 980  9302              ; 	------------------------------------------------------------------------
- 981  9302              ; 	------------------------------------------------------------------------
- 982  9302
- 983  9302              ; 	----- ----- ----- ----- ----- ----- ----- ----- -----
- 984  9302              ;
- 985  9302              ;	24/07/24
- 986  9302
- 987  9302              Reinicia_Amadeus
- 988  9302
- 989  9302              ;	Reinicia posición y estado.
- 990  9302
- 991  9302 21 DE 50     	ld hl,$50de
- 992  9305 22 D1 8C     	ld (p.imp.amadeus),hl									; Inicializa el puntero de impresión.
- 993  9308 21 F0 C0     	ld hl,$c0f0
- 994  930B 22 D3 8C     	ld (Pamm_Amadeus),hl									; Inicializa el puntero de almacén de movimientos masticados.
- 995  930E 21 3D 00     	ld hl,$003d
- 996  9311 22 D5 8C     	ld (Comm_Amadeus),hl									; Inicializa el contador de movimientos masticados.
- 997  9314 3E 45        	ld a,%01000101
- 998  9316 32 D8 8C     	ld (Attr_Amadeus),a 									; Tras la explosión volvemos a ser azules.
- 999  9319
-1000  9319              ;	limpiamos el álbum de borrado.
-1001  9319
-1002  9319 2A B2 90     	ld hl,(Album_de_borrado_Amadeus)
-1003  931C
-1004  931C AF           	xor a
-1005  931D 77           	ld (hl),a
-1006  931E
-1007  931E E5           	push hl
-1008  931F D1           	pop de
-1009  9320 13           	inc de
-1010  9321
-1011  9321 01 23 00     	ld bc,35
-1012  9324 ED B0        	ldir
-1013  9326
-1014  9326 CD 9F 95     	call Genera_datos_de_impresion_Amadeus
-1015  9329
-1016  9329              ;	Reinicia temporizaciones.
-1017  9329
-1018  9329 CD 41 96     	call Inicia_Shield
-1019  932C
-1020  932C 3E 5A        	ld a,90
-1021  932E 32 FF 90     	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
-1022  9331
-1023  9331 3E 64        	ld a,100
-1024  9333 32 E6 90     	ld (Temp_new_live),a
-1025  9336
-1026  9336              ; 	Restauramos el FLAG: Amadeus vivo.
-1027  9336
-1028  9336 21 D2 90     	ld hl,Ctrl_3
-1029  9339 CB B6        	res 6,(hl)
-1030  933B
-1031  933B              ;	Fuerza la impresión de la nave en el siguiente frame.
-1032  933B
-1033  933B 21 D2 90      	ld hl,Ctrl_3
-1034  933E CB EE        	set 5,(hl)
-1035  9340
-1036  9340 C9           	ret
-1037  9341
-1038  9341              ; --------------------------------------------------------------------------------------------------------------
-1039  9341              ;
-1040  9341              ;	23/11/24
-1041  9341
-1042  9341              Ajusta_velocidad_entidad
-1043  9341
-1044  9341 DD 7E 0C     	ld a,(ix+12)											; ld a,(Velocidad)
-1045  9344 A7           	and a
-1046  9345 C8           	ret z 													; En la 1ª vuelta (Contador_de_vueltas) será "1" o "2", dependiendo de si queremos_
-1047  9346              	;									  					_ una o dos vueltas "lentas" iniciales. En ambos casos, (Velocidad)="0", pues:
-1048  9346              	;									  					_ (Velocidad)=(Contador_de_vueltas)/4.
-1049  9346
+ 684  91BC 21 A2 90     	ld hl,Numero_parcial_de_entidades
+ 685  91BF 46           	ld b,(hl)
+ 686  91C0
+ 687  91C0 04           	inc b
+ 688  91C1 05           	dec b
+ 689  91C2
+ 690  91C2              ;
+ 691  91C2
+ 692  91C2 2A EC 90     	ld hl,(Clock_next_entity)
+ 693  91C5 CC 25 9D     	call z,Dispara_salida_de_amadeus						; Nivel superado !!!!!
+ 694  91C8
+ 695  91C8              ; ----------------------------------------------------------------
+ 696  91C8
+ 697  91C8 3A A3 90     	ld a,(Entidades_en_curso)								; Entidades que hay en pantalla.
+ 698  91CB B8           	cp b
+ 699  91CC 28 0B        	jr z,1F
+ 700  91CE 30 09        	jr nc,1F
+ 701  91D0
+ 702  91D0              ;	Incrementamos (Entidades_en_curso) y DEC (Numero_parcial_de_entidades) y (Numero_de_entidades).
+ 703  91D0
+ 704  91D0 3C           	inc a
+ 705  91D1 32 A3 90     	ld (Entidades_en_curso),a
+ 706  91D4
+ 707  91D4 21 D3 90     	ld hl,Ctrl_4
+ 708  91D7 CB C6        	set 0,(hl)												; Permiso para activar a una entidad "dormida".
+ 709  91D9
+ 710  91D9 3A A3 90     1 ld a,(Entidades_en_curso)
+ 711  91DC A7           	and a
+ 712  91DD CA 8D 92     	jp z,Gestion_de_Amadeus									; Si no hay entidades en curso saltamos a [Avanza_puntero_de_Scanlines_album_de_entidades].
+ 713  91E0
+ 714  91E0 47           	ld b,a													; No hay entidades que gestionar.
+ 715  91E1
+ 716  91E1              ; ( Código que ejecutamos con cada entidad: ).
+ 717  91E1
+ 718  91E1              ; --------------------------------------- GESTIÓN DE ENTIDADES. !!!!!!!!!!
+ 719  91E1
+ 720  91E1 21 07 8C     	ld hl,Tabla_de_pintado 									; Inicializa `Tabla_de_pintado?.
+ 721  91E4 22 CC 90     	ld (India_SP),hl
+ 722  91E7
+ 723  91E7 21 D2 90     	ld hl,Ctrl_3 											; Indica que se produce movimiento.
+ 724  91EA CB D6        	set 2,(hl)
+ 725  91EC
+ 726  91EC CD 69 93     	call Change 											; Intercambio `Album_de_pintado - Album_de_borrado?.
+ 727  91EF              ;															; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
+ 728  91EF              ;	 														; _viceversa.
+ 729  91EF
+ 730  91EF              Bucle_de_entidades
+ 731  91EF
+ 732  91EF C5           	push bc 												; Nº de entidades en curso.
+ 733  91F0
+ 734  91F0              ;	En primer lugar vamos a crear un puntero para ir almacenando las columnas de las distintas unidades.
+ 735  91F0              ;	Utilizamos (Puntero_indice_mov) como puntero e Indice_Sprite_der como primer .db de almacenamiento.
+ 736  91F0
+ 737  91F0 DD 2A 99 90  6 ld ix,(Puntero_store_caja)								; A partir de ahora IX apunta al 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+ 738  91F4 CD 0C 96     	call Salta_caja_de_entidades_vacia
+ 739  91F7
+ 740  91F7              ; Esta caja contiene datos. Es una entidad "dormida"???. Si no es así gestionamos esta entidad, (jr 5F).
+ 741  91F7
+ 742  91F7 DD 7E 01     	ld a,(ix+1)
+ 743  91FA CB 7F        	bit 7,a
+ 744  91FC 28 11        	jr z,5F
+ 745  91FE
+ 746  91FE              ; Esta entidad esta "dormida", tenemos permiso para despertarla. ???
+ 747  91FE
+ 748  91FE 21 D3 90     	ld hl,Ctrl_4
+ 749  9201 CB 46        	bit 0,(hl)
+ 750  9203 CC 1B 96     	call z,Incrementa_punteros_de_cajas 					; Si no tenemos permiso para despertarla saltaremos a la siguiente entidad activa.
+ 751  9206
+ 752  9206 28 E8        	jr z,6B
+ 753  9208
+ 754  9208 CB 86        	res 0,(hl)												; Restaura bit "despertador".
+ 755  920A CB BF        	res 7,a
+ 756  920C DD 77 01     	ld (ix+1),a												; Convierte esta entidad dormilona en una entidad ACTIVA.
+ 757  920F
+ 758  920F              ; En 1er lugar, ... existe (Impacto) de un disparo de Amadeus en esta entidad ???
+ 759  920F              ; Si es así, comprobamos si es la entidad en curso la alcanzada por nuestro disparo.
+ 760  920F
+ 761  920F 3A D9 90     5 ld a,(Impacto2)
+ 762  9212 CB 5F        	bit 3,a
+ 763  9214 C4 D0 AC     	call nz,Compara_con_coordenadas_de_disparo
+ 764  9217
+ 765  9217              ; Existe colisión en esta entidad por un disparo de Amadeus ???
+ 766  9217
+ 767  9217 DD 7E 05     	ld a,(ix+5)												; (ix+5) - (Impacto)
+ 768  921A CB 4F        	bit 1,a
+ 769  921C C4 9F 97     	call nz,Genera_explosion
+ 770  921F 20 48        	jr nz,Gestiona_siguiente_entidad
+ 771  9221
+ 772  9221 DD 7E 05     	ld a,(ix+5)												; ld a,(Impacto)
+ 773  9224 A7           	and a
+ 774  9225 28 0C        	jr z,3F
+ 775  9227
+ 776  9227              ; IMPACTO en entidad por colisión con Amadeus.
+ 777  9227
+ 778  9227              ; 5/7/24
+ 779  9227              ; Nota importante:
+ 780  9227              ; Dos entidades pueden chocar entre ellas en zona de Amadeus. La rutina [Detecta_colision_nave_entidad] comprobará si existe colisión con la última entidad gestionada, (colisionada) y _
+ 781  9227              ;	_en caso de no existir colisión pondrá su .db (Impacto) a "0" pero esa 1ª entidad "colisionada" seguirá manteniendo su .db (Impacto) a "1" por lo que para considerarse "colisión",_
+ 782  9227              ;	_es requisito imprescindible que Amadeus tenga su .db (Impacto) también a "1"; en caso contrario colocaremos el .db (Impacto) de la entidad a "0" para que se vuelva a gestionar.
+ 783  9227
+ 784  9227 3A D0 8C     	ld a,(Impacto_Amadeus)
+ 785  922A A7           	and a
+ 786  922B C4 9F 97     	call nz,Genera_explosion
+ 787  922E 20 39        	jr nz,Gestiona_siguiente_entidad
+ 788  9230
+ 789  9230              ; 	Falsa colisión !!!
+ 790  9230
+ 791  9230 32 64 90     	ld (Impacto),a											; Colocamos el .db (Impacto) de la entidad en curso a "0".
+ 792  9233
+ 793  9233              ; -------------------------------------------
+ 794  9233
+ 795  9233              ; 	Movement !!!
+ 796  9233
+ 797  9233 CD 41 93     3 call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
+ 798  9236 CD 02 95     	call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
+ 799  9239              ;															; (Puntero_objeto) en DE;
+ 800  9239              ;		    												; (Puntero_de_impresion) codificado en BC.
+ 801  9239 CD 29 95     	call Decodifica_Puntero_de_impresion
+ 802  923C
+ 803  923C              ;	IX apunta al 1er .db de la caja.
+ 804  923C              ;	DE (Puntero_objeto).
+ 805  923C
+ 806  923C D5           	push de 												; (Puntero_objeto).
+ 807  923D CD 1F 94     	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
+ 808  9240              ;	call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
+ 809  9240 D1           	pop de
+ 810  9241
+ 811  9241 DD E5        	push ix													; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
+ 812  9243 DD 2A 65 90  	ld ix,(Puntero_de_impresion)
+ 813  9247 CD AB 9D     	call Genera_datos_de_impresion
+ 814  924A DD E1        	pop ix													; Pop .db (Tipo) de la entidad, (caja de entidades correspondiente) en IX.
+ 815  924C
+ 816  924C CD 7D 9B     	call Decrementa_Contador_de_mov_masticados
+ 817  924F
+ 818  924F              ; -------------------------------------------
+ 819  924F
+ 820  924F              ;	Generamos las coordenadas de la entidad que hemos iniciado o desplazado.
+ 821  924F
+ 822  924F 2A 65 90     	ld hl,(Puntero_de_impresion)
+ 823  9252 CD 71 9C     	call Genera_coordenadas
+ 824  9255
+ 825  9255 ED 4B 61 90  	ld bc,(Coordenada_X)
+ 826  9259
+ 827  9259 DD 71 02     	ld (ix+2),c												; Actualiza las coordenadas de la entidad.
+ 828  925C DD 70 03     	ld (ix+3),b
+ 829  925F
+ 830  925F              ;	TODO: Generamos disparo ???
+ 831  925F
+ 832  925F 3A C2 90     	ld a,(Permiso_de_disparo_Entidades)
+ 833  9262 A7           	and a
+ 834  9263 C4 71 AA     	call nz,Entidad_genera_disparo_si_procede
+ 835  9266
+ 836  9266 CD 26 AE     4 call Colision_Entidad_Amadeus								; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
+ 837  9269
+ 838  9269              Gestiona_siguiente_entidad
+ 839  9269
+ 840  9269 CD 1B 96     	call Incrementa_punteros_de_cajas
+ 841  926C
+ 842  926C C1           	pop bc
+ 843  926D
+ 844  926D 05           	dec b
+ 845  926E C2 EF 91     	jp nz,Bucle_de_entidades
+ 846  9271
+ 847  9271 21 D9 90     	ld hl,Impacto2 											; Inicializamos el FLAG de impacto.
+ 848  9274 CB 9E        	res 3,(hl)
+ 849  9276
+ 850  9276              ; 	Hemos gestionado todas las entidades.
+ 851  9276              ; 	----- ----- -----
+ 852  9276
+ 853  9276 CD 3D 94     	call Inicializa_India_y_limpia_Tabla_de_impresion 		; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
+ 854  9279 CD 54 94     	call Ordena_tabla_de_impresion
+ 855  927C CD C1 95     	call Inicia_punteros_de_cajas 							; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
+ 856  927F
+ 857  927F CD F0 93     	call Borra_diferencia
+ 858  9282
+ 859  9282 3A D2 90     	ld a,(Ctrl_3)
+ 860  9285 CB 5F        	bit 3,a
+ 861  9287 20 04        	jr nz,Gestion_de_Amadeus
+ 862  9289
+ 863  9289 EB           	ex de,hl
+ 864  928A 71           	ld (hl),c
+ 865  928B 2C           	inc l
+ 866  928C 70           	ld (hl),b												; Nuevo techo, mayor que el anterior.
+ 867  928D
+ 868  928D              ;	! GESTIONA AMADEUS !!!!!!!!!!
+ 869  928D
+ 870  928D              Gestion_de_Amadeus
+ 871  928D
+ 872  928D 21 D2 90     	ld hl,Ctrl_3
+ 873  9290 CB 76        	bit 6,(hl)
+ 874  9292 28 13        	jr z,Amadeus_vivo
+ 875  9294
+ 876  9294              ; 	Amadeus ha sido destruido.
+ 877  9294              ; 	Decrementa (Temp_new_live).
+ 878  9294
+ 879  9294 21 E6 90     	ld hl,Temp_new_live
+ 880  9297 35           	dec (hl)
+ 881  9298 20 3B        	jr nz,End_frame
+ 882  929A
+ 883  929A              ; 	Una vida menos. Reinicia Amadeus, reinicia Shield. (aparece nueva nave).
+ 884  929A
+ 885  929A 21 F7 90     	ld hl,Lives
+ 886  929D 35           	dec (hl)
+ 887  929E
+ 888  929E              ;	! Fin del juego
+ 889  929E
+ 890  929E F3           	di
+ 891  929F 28 FE        	jr z,$													; ! GAME OVER !!!!!
+ 892  92A1 FB           	ei
+ 893  92A2
+ 894  92A2              ; 	Nueva nave.
+ 895  92A2
+ 896  92A2 CD 02 93     	call Reinicia_Amadeus
+ 897  92A5 18 2E        	jr End_frame
+ 898  92A7
+ 899  92A7              ; 	Hay Impacto???, Existe movimiento???, Disparamos???, Pausamos el juego???
+ 900  92A7
+ 901  92A7              Amadeus_vivo
+ 902  92A7
+ 903  92A7 3A D0 8C     	ld a,(Impacto_Amadeus)
+ 904  92AA A7           	and a
+ 905  92AB C4 62 98     	call nz, Genera_explosion_Amadeus
+ 906  92AE 20 25        	jr nz, End_frame
+ 907  92B0
+ 908  92B0 CD 56 97     	call Teclado
+ 909  92B3
+ 910  92B3 21 6D 90     	ld hl,Ctrl_2
+ 911  92B6 CB 76        	bit 6,(hl)
+ 912  92B8 28 0E        	jr z,2F
+ 913  92BA
+ 914  92BA              ;	Se ha iniciado la salida de Amadeus por la parte baja de la pantalla, NIVEL SUPERADO.
+ 915  92BA
+ 916  92BA 21 80 90     	ld hl,Cuad_objeto
+ 917  92BD 35           	dec (hl)												; DEC temporizador, (FRAME rate) de la transición de salida.
+ 918  92BE 20 08        	jr nz,2F												; No forzamos la impresión de Amadeus si no ha habido pulsación de teclas.
+ 919  92C0
+ 920  92C0              ;	Forzamos la impresión de Amadeus e inicializamos el temporizador.
+ 921  92C0
+ 922  92C0 3E 03        	ld a,3
+ 923  92C2 77           	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
+ 924  92C3
+ 925  92C3 21 D2 90     	ld hl,Ctrl_3
+ 926  92C6 CB EE        	set 5,(hl)
+ 927  92C8
+ 928  92C8 21 D2 90     2 ld hl,Ctrl_3
+ 929  92CB CB 6E        	bit 5,(hl)
+ 930  92CD 28 06        	jr z,End_frame											; NO hemos pulsado tecla, NO hay transición.
+ 931  92CF
+ 932  92CF              Vivo_y_coleando
+ 933  92CF
+ 934  92CF CD 84 93     	call Change_Amadeus
+ 935  92D2 CD 9F 95     	call Genera_datos_de_impresion_Amadeus					; Genera los datos de impresión de la nave.
+ 936  92D5
+ 937  92D5              End_frame
+ 938  92D5
+ 939  92D5              ; 	23/08/24 Llegados a este punto: NO HAY POSIBILIDAD DE GENERAR MÁS DISPAROS.
+ 940  92D5              ; 	Generamos los datos de impresión en el álbum_de_pintado y limpiamos el sobrante de datos del anterior FRAME si toca.
+ 941  92D5
+ 942  92D5 CD EB AB     	call Genera_datos_de_impresion_disparos_Entidades
+ 943  92D8 CD 91 AD     	call Genera_datos_de_impresion_disparos_Amadeus			; Genera los datos de impresión de los disparos de Amadeus y entidades.
+ 944  92DB CD 1D AD     	call Calcula_bytes_pintado_disparos
+ 945  92DE CD 2A AD     	call Limpia_album_de_pintado_disparos_entidades
+ 946  92E1
+ 947  92E1              ; ------------ ------------- --------------
+ 948  92E1
+ 949  92E1 2A AE 90     	ld hl,(Album_de_borrado)
+ 950  92E4 22 CA 90     	ld (Scanlines_album_SP),hl
+ 951  92E7
+ 952  92E7 21 25 8C     	ld hl,Tabla_de_borrado
+ 953  92EA 22 D0 90     	ld (India_3_SP),hl
+ 954  92ED
+ 955  92ED 21 D2 90     	ld hl,Ctrl_3
+ 956  92F0 CB C6        	set 0,(hl) 												; Indica Frame completo.
+ 957  92F2 CB 9E        	res 3,(hl)
+ 958  92F4 CB A6        	res 4,(hl)
+ 959  92F6
+ 960  92F6 21 D3 90     	ld hl,Ctrl_4
+ 961  92F9 CB 86        	res 0,(hl)
+ 962  92FB
+ 963  92FB AF           	xor a
+ 964  92FC D3 FE        	out ($fe),a
+ 965  92FE
+ 966  92FE 76           	halt
+ 967  92FF
+ 968  92FF C3 8E 91     	jp Main
+ 969  9302
+ 970  9302              ; 	------------------------------------------------------------------------
+ 971  9302              ; 	------------------------------------------------------------------------
+ 972  9302              ; 	------------------------------------------------------------------------
+ 973  9302
+ 974  9302              ; 	----- ----- ----- ----- ----- ----- ----- ----- -----
+ 975  9302              ;
+ 976  9302              ;	24/07/24
+ 977  9302
+ 978  9302              Reinicia_Amadeus
+ 979  9302
+ 980  9302              ;	Reinicia posición y estado.
+ 981  9302
+ 982  9302 21 DE 50     	ld hl,$50de
+ 983  9305 22 D1 8C     	ld (p.imp.amadeus),hl									; Inicializa el puntero de impresión.
+ 984  9308 21 F0 C0     	ld hl,$c0f0
+ 985  930B 22 D3 8C     	ld (Pamm_Amadeus),hl									; Inicializa el puntero de almacén de movimientos masticados.
+ 986  930E 21 3D 00     	ld hl,$003d
+ 987  9311 22 D5 8C     	ld (Comm_Amadeus),hl									; Inicializa el contador de movimientos masticados.
+ 988  9314 3E 45        	ld a,%01000101
+ 989  9316 32 D8 8C     	ld (Attr_Amadeus),a 									; Tras la explosión volvemos a ser azules.
+ 990  9319
+ 991  9319              ;	limpiamos el álbum de borrado.
+ 992  9319
+ 993  9319 2A B2 90     	ld hl,(Album_de_borrado_Amadeus)
+ 994  931C
+ 995  931C AF           	xor a
+ 996  931D 77           	ld (hl),a
+ 997  931E
+ 998  931E E5           	push hl
+ 999  931F D1           	pop de
+1000  9320 13           	inc de
+1001  9321
+1002  9321 01 23 00     	ld bc,35
+1003  9324 ED B0        	ldir
+1004  9326
+1005  9326 CD 9F 95     	call Genera_datos_de_impresion_Amadeus
+1006  9329
+1007  9329              ;	Reinicia temporizaciones.
+1008  9329
+1009  9329 CD 41 96     	call Inicia_Shield
+1010  932C
+1011  932C 3E 5A        	ld a,90
+1012  932E 32 FF 90     	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
+1013  9331
+1014  9331 3E 64        	ld a,100
+1015  9333 32 E6 90     	ld (Temp_new_live),a
+1016  9336
+1017  9336              ; 	Restauramos el FLAG: Amadeus vivo.
+1018  9336
+1019  9336 21 D2 90     	ld hl,Ctrl_3
+1020  9339 CB B6        	res 6,(hl)
+1021  933B
+1022  933B              ;	Fuerza la impresión de la nave en el siguiente frame.
+1023  933B
+1024  933B 21 D2 90      	ld hl,Ctrl_3
+1025  933E CB EE        	set 5,(hl)
+1026  9340
+1027  9340 C9           	ret
+1028  9341
+1029  9341              ; --------------------------------------------------------------------------------------------------------------
+1030  9341              ;
+1031  9341              ;	23/11/24
+1032  9341
+1033  9341              Ajusta_velocidad_entidad
+1034  9341
+1035  9341 DD 7E 0C     	ld a,(ix+12)											; ld a,(Velocidad)
+1036  9344 A7           	and a
+1037  9345 C8           	ret z 													; En la 1ª vuelta (Contador_de_vueltas) será "1" o "2", dependiendo de si queremos_
+1038  9346              	;									  					_ una o dos vueltas "lentas" iniciales. En ambos casos, (Velocidad)="0", pues:
+1039  9346              	;									  					_ (Velocidad)=(Contador_de_vueltas)/4.
+1040  9346
+1041  9346
+1042  9346              ; Incrementa (Contador_de_vueltas)x2.
+1043  9346              ; (Velocidad) de la entidad será: (Contador_de_vueltas)/4.
+1044  9346
+1045  9346              ;	1ª vuelta: (Contador_de_vueltas)="$02" --- (Velocidad)="0".
+1046  9346              ;	2ª vuelta: 	""	""	""	""	""  ="$04" ---   ""	 ""	  ="1".
+1047  9346              ;	3ª vuelta: 	""	""	""	""	""  ="$08" ---   ""	 ""	  ="2".
+1048  9346              ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
+1049  9346              ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".
 1050  9346
-1051  9346              ; Incrementa (Contador_de_vueltas)x2.
-1052  9346              ; (Velocidad) de la entidad será: (Contador_de_vueltas)/4.
-1053  9346
-1054  9346              ;	1ª vuelta: (Contador_de_vueltas)="$02" --- (Velocidad)="0".
-1055  9346              ;	2ª vuelta: 	""	""	""	""	""  ="$04" ---   ""	 ""	  ="1".
-1056  9346              ;	3ª vuelta: 	""	""	""	""	""  ="$08" ---   ""	 ""	  ="2".
-1057  9346              ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
-1058  9346              ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".
-1059  9346
-1060  9346
-1061  9346
-1062  9346 CB 27        	sla a 													; Multiplica x2 (Velocidad) en cada FRAME.
-1063  9348 DD 77 0C     	ld (ix+12),a											; ld (Velocidad),a
-1064  934B E6 10        	and $10
-1065  934D C8           	ret z
-1066  934E
-1067  934E
-1068  934E              ; Restaura (Velocidad) a razón del nº de vueltas. Se ha superado (Velocidad)x8.
-1069  934E
-1070  934E DD 7E 04     	ld a,(ix+4)												; ld a,(Contador_de_vueltas)
-1071  9351 CB 2F        	sra a
-1072  9353 CB 2F        	sra a
-1073  9355 DD 77 0C     	ld (ix+12),a
-1074  9358
-1075  9358 DD 6E 08     	ld l,(ix+8)
-1076  935B DD 66 09     	ld h,(ix+9)												; HL contiene (Puntero_de_almacen_de_mov_masticados)
-1077  935E
-1078  935E 23           	inc hl
-1079  935F 23           	inc hl
-1080  9360 23           	inc hl
-1081  9361 23           	inc hl
-1082  9362
-1083  9362 DD 75 08     	ld (ix+8),l
-1084  9365 DD 74 09     	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) actualizado.
-1085  9368
-1086  9368 C9           	ret
-1087  9369
-1088  9369              ; --------------------------------------------------------------------------------------------------------------
-1089  9369              ;
-1090  9369              ;	25/08/24
-1091  9369
-1092  9369              Change
-1093  9369
-1094  9369 3A C7 90     	ld a,(Switch)
-1095  936C EE 01        	xor 1
-1096  936E 32 C7 90     	ld (Switch),a
-1097  9371 2A AC 90     	ld hl,(Album_de_pintado)
-1098  9374 ED 5B AE 90  	ld de,(Album_de_borrado)
-1099  9378 EB           	ex de,hl
-1100  9379 22 AC 90     	ld (Album_de_pintado),hl
-1101  937C 22 CA 90     	ld (Scanlines_album_SP),hl
-1102  937F ED 53 AE 90  	ld (Album_de_borrado),de
-1103  9383 C9           	ret
-1104  9384
-1105  9384              Change_Amadeus
-1106  9384
-1107  9384 2A B0 90     	ld hl,(Album_de_pintado_Amadeus)
-1108  9387 ED 5B B2 90  	ld de,(Album_de_borrado_Amadeus)
-1109  938B EB           	ex de,hl
-1110  938C 22 B0 90     	ld (Album_de_pintado_Amadeus),hl
-1111  938F ED 53 B2 90  	ld (Album_de_borrado_Amadeus),de
-1112  9393 C9           	ret
-1113  9394
-1114  9394              Change_Disparos
-1115  9394
-1116  9394              ; Álbumes de Amadeus.
-1117  9394
-1118  9394 2A B4 90     1 ld hl,(Album_de_pintado_disparos_Amadeus)
-1119  9397 ED 5B B6 90  	ld de,(Album_de_borrado_disparos_Amadeus)
-1120  939B EB           	ex de,hl
-1121  939C 22 B4 90     	ld (Album_de_pintado_disparos_Amadeus),hl
-1122  939F ED 53 B6 90  	ld (Album_de_borrado_disparos_Amadeus),de
-1123  93A3 CD 12 AD     	call Limpia_album_de_pintado_disparos_Amadeus
-1124  93A6
-1125  93A6              ; Álbumes de entidades.
-1126  93A6
-1127  93A6 2A B8 90     	ld hl,(Album_de_pintado_disparos_Entidades)
-1128  93A9 ED 5B BA 90  	ld de,(Album_de_borrado_disparos_Entidades)
-1129  93AD EB           	ex de,hl
-1130  93AE 22 B8 90     	ld (Album_de_pintado_disparos_Entidades),hl
-1131  93B1 ED 53 BA 90  	ld (Album_de_borrado_disparos_Entidades),de
-1132  93B5 22 BC 90     	ld (Nivel_scan_disparos_album_de_pintado),hl
-1133  93B8
-1134  93B8 3A BE 90     	ld a,(Num_de_bytes_album_de_disparos)
-1135  93BB 32 BF 90     	ld (Num_de_bytes_album_de_disparos_borrado),a
-1136  93BE
-1137  93BE C9           	ret
-1138  93BF
-1139  93BF              ; ------------------------------------
-1140  93BF              ;
-1141  93BF              ; 	22/04/25
-1142  93BF
-1143  93BF              ; 	Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
-1144  93BF              ; 	Si el puntero está situado en el último nº, lo volvemos a situar al principio.
-1145  93BF
-1146  93BF              ;	DESTRUYE: HL,DE,A
-1147  93BF              ;	OUTPUTS: A contiene un Nº aleatorio. Actualiza el puntero de nº aleatorios (RND_SP).
-1148  93BF
-1149  93BF              ;	Variables implicadas: (RND_SP).
-1150  93BF
-1151  93BF              Extrae_numero_aleatorio_y_avanza
-1152  93BF
-1153  93BF 21 00 8C     	ld hl,Numeros_aleatorios+7
-1154  93C2 EB           	ex de,hl
-1155  93C3 2A E7 90     	ld hl,(RND_SP)
-1156  93C6
-1157  93C6 7B           	ld a,e
-1158  93C7 95           	sub l
-1159  93C8 20 06        	jr nz,1F
-1160  93CA
-1161  93CA              ; Sitúa HL al principio de la tabla de nº aleatorios.
-1162  93CA
-1163  93CA 21 F9 8B     	ld hl,Numeros_aleatorios
-1164  93CD 22 E7 90     	ld (RND_SP),HL
-1165  93D0
-1166  93D0              ; Coloca el nº aleatorio en A y mueve el puntero al siguiente nº.
-1167  93D0
-1168  93D0 7E           1 ld a,(hl)
-1169  93D1 2C           	inc l
-1170  93D2 22 E7 90     	ld (RND_SP),hl
-1171  93D5
-1172  93D5 C9           	ret
-1173  93D6
-1174  93D6              ; ------------------------------------
-1175  93D6              ;
-1176  93D6              ; 	23/04/25
-1177  93D6
-1178  93D6              ; 	$32 1 seg.
-1179  93D6              ; 	$64 2 seg.
-1180  93D6              ; 	$96 3 seg.
-1181  93D6              ; 	$c8 4 seg.
-1182  93D6              ; 	$fa 5 seg.
+1051  9346
+1052  9346
+1053  9346 CB 27        	sla a 													; Multiplica x2 (Velocidad) en cada FRAME.
+1054  9348 DD 77 0C     	ld (ix+12),a											; ld (Velocidad),a
+1055  934B E6 10        	and $10
+1056  934D C8           	ret z
+1057  934E
+1058  934E
+1059  934E              ; Restaura (Velocidad) a razón del nº de vueltas. Se ha superado (Velocidad)x8.
+1060  934E
+1061  934E DD 7E 04     	ld a,(ix+4)												; ld a,(Contador_de_vueltas)
+1062  9351 CB 2F        	sra a
+1063  9353 CB 2F        	sra a
+1064  9355 DD 77 0C     	ld (ix+12),a
+1065  9358
+1066  9358 DD 6E 08     	ld l,(ix+8)
+1067  935B DD 66 09     	ld h,(ix+9)												; HL contiene (Puntero_de_almacen_de_mov_masticados)
+1068  935E
+1069  935E 23           	inc hl
+1070  935F 23           	inc hl
+1071  9360 23           	inc hl
+1072  9361 23           	inc hl
+1073  9362
+1074  9362 DD 75 08     	ld (ix+8),l
+1075  9365 DD 74 09     	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) actualizado.
+1076  9368
+1077  9368 C9           	ret
+1078  9369
+1079  9369              ; --------------------------------------------------------------------------------------------------------------
+1080  9369              ;
+1081  9369              ;	25/08/24
+1082  9369
+1083  9369              Change
+1084  9369
+1085  9369 3A C7 90     	ld a,(Switch)
+1086  936C EE 01        	xor 1
+1087  936E 32 C7 90     	ld (Switch),a
+1088  9371 2A AC 90     	ld hl,(Album_de_pintado)
+1089  9374 ED 5B AE 90  	ld de,(Album_de_borrado)
+1090  9378 EB           	ex de,hl
+1091  9379 22 AC 90     	ld (Album_de_pintado),hl
+1092  937C 22 CA 90     	ld (Scanlines_album_SP),hl
+1093  937F ED 53 AE 90  	ld (Album_de_borrado),de
+1094  9383 C9           	ret
+1095  9384
+1096  9384              Change_Amadeus
+1097  9384
+1098  9384 2A B0 90     	ld hl,(Album_de_pintado_Amadeus)
+1099  9387 ED 5B B2 90  	ld de,(Album_de_borrado_Amadeus)
+1100  938B EB           	ex de,hl
+1101  938C 22 B0 90     	ld (Album_de_pintado_Amadeus),hl
+1102  938F ED 53 B2 90  	ld (Album_de_borrado_Amadeus),de
+1103  9393 C9           	ret
+1104  9394
+1105  9394              Change_Disparos
+1106  9394
+1107  9394              ; Álbumes de Amadeus.
+1108  9394
+1109  9394 2A B4 90     1 ld hl,(Album_de_pintado_disparos_Amadeus)
+1110  9397 ED 5B B6 90  	ld de,(Album_de_borrado_disparos_Amadeus)
+1111  939B EB           	ex de,hl
+1112  939C 22 B4 90     	ld (Album_de_pintado_disparos_Amadeus),hl
+1113  939F ED 53 B6 90  	ld (Album_de_borrado_disparos_Amadeus),de
+1114  93A3 CD 12 AD     	call Limpia_album_de_pintado_disparos_Amadeus
+1115  93A6
+1116  93A6              ; Álbumes de entidades.
+1117  93A6
+1118  93A6 2A B8 90     	ld hl,(Album_de_pintado_disparos_Entidades)
+1119  93A9 ED 5B BA 90  	ld de,(Album_de_borrado_disparos_Entidades)
+1120  93AD EB           	ex de,hl
+1121  93AE 22 B8 90     	ld (Album_de_pintado_disparos_Entidades),hl
+1122  93B1 ED 53 BA 90  	ld (Album_de_borrado_disparos_Entidades),de
+1123  93B5 22 BC 90     	ld (Nivel_scan_disparos_album_de_pintado),hl
+1124  93B8
+1125  93B8 3A BE 90     	ld a,(Num_de_bytes_album_de_disparos)
+1126  93BB 32 BF 90     	ld (Num_de_bytes_album_de_disparos_borrado),a
+1127  93BE
+1128  93BE C9           	ret
+1129  93BF
+1130  93BF              ; ------------------------------------
+1131  93BF              ;
+1132  93BF              ; 	22/04/25
+1133  93BF
+1134  93BF              ; 	Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
+1135  93BF              ; 	Si el puntero está situado en el último nº, lo volvemos a situar al principio.
+1136  93BF
+1137  93BF              ;	DESTRUYE: HL,DE,A
+1138  93BF              ;	OUTPUTS: A contiene un Nº aleatorio. Actualiza el puntero de nº aleatorios (RND_SP).
+1139  93BF
+1140  93BF              ;	Variables implicadas: (RND_SP).
+1141  93BF
+1142  93BF              Extrae_numero_aleatorio_y_avanza
+1143  93BF
+1144  93BF 21 00 8C     	ld hl,Numeros_aleatorios+7
+1145  93C2 EB           	ex de,hl
+1146  93C3 2A E7 90     	ld hl,(RND_SP)
+1147  93C6
+1148  93C6 7B           	ld a,e
+1149  93C7 95           	sub l
+1150  93C8 20 06        	jr nz,1F
+1151  93CA
+1152  93CA              ; Sitúa HL al principio de la tabla de nº aleatorios.
+1153  93CA
+1154  93CA 21 F9 8B     	ld hl,Numeros_aleatorios
+1155  93CD 22 E7 90     	ld (RND_SP),HL
+1156  93D0
+1157  93D0              ; Coloca el nº aleatorio en A y mueve el puntero al siguiente nº.
+1158  93D0
+1159  93D0 7E           1 ld a,(hl)
+1160  93D1 2C           	inc l
+1161  93D2 22 E7 90     	ld (RND_SP),hl
+1162  93D5
+1163  93D5 C9           	ret
+1164  93D6
+1165  93D6              ; ------------------------------------
+1166  93D6              ;
+1167  93D6              ; 	23/04/25
+1168  93D6
+1169  93D6              ; 	$32 1 seg.
+1170  93D6              ; 	$64 2 seg.
+1171  93D6              ; 	$96 3 seg.
+1172  93D6              ; 	$c8 4 seg.
+1173  93D6              ; 	$fa 5 seg.
+1174  93D6
+1175  93D6              ; 	$ffff 1310,7 seg, 22 minutos.
+1176  93D6
+1177  93D6              ;	$0100  5 seg. aproximadamente.
+1178  93D6              ;	$0200 10 seg. aproximadamente.
+1179  93D6              ;	$0300 15 seg. aproximadamente.
+1180  93D6              ;	$0400 20 seg. aproximadamente.
+1181  93D6              ;	$0500 25 seg. aproximadamente.
+1182  93D6              ;	$0600 30 seg. aproximadamente.
 1183  93D6
-1184  93D6              ; 	$ffff 1310,7 seg, 22 minutos.
+1184  93D6              Define_Clock_next_entity
 1185  93D6
-1186  93D6              ;	$0100  5 seg. aproximadamente.
-1187  93D6              ;	$0200 10 seg. aproximadamente.
-1188  93D6              ;	$0300 15 seg. aproximadamente.
-1189  93D6              ;	$0400 20 seg. aproximadamente.
-1190  93D6              ;	$0500 25 seg. aproximadamente.
-1191  93D6              ;	$0600 30 seg. aproximadamente.
-1192  93D6
-1193  93D6              Define_Clock_next_entity
-1194  93D6
-1195  93D6 21 84 90     	ld hl,Vel_left
-1196  93D9 BE           	cp (hl)
-1197  93DA 4F           	ld c,a
-1198  93DB 30 07        	jr nc,1F
-1199  93DD
-1200  93DD              ;	Por debajo del límite inferior.
-1201  93DD
-1202  93DD 4E           	ld c,(hl)
-1203  93DE 79           	ld a,c
-1204  93DF D6 0A        	sub 10
-1205  93E1 77           	ld (hl),a
-1206  93E2
-1207  93E2 18 00        	jr 1F
-1208  93E4
-1209  93E4              ;	Actualiza (Clock_next_entity).
-1210  93E4
-1211  93E4 06 00        1 ld b,0
-1212  93E6
-1213  93E6 2A 78 5C     	ld hl,(FRAMES)
-1214  93E9 A7           	and a
-1215  93EA ED 4A        	adc hl,bc
-1216  93EC 22 EC 90     	ld (Clock_next_entity),hl  								; Actualizamos variable.
-1217  93EF
-1218  93EF C9           	ret
-1219  93F0
-1220  93F0              ; ------------------------------------
-1221  93F0              ;
-1222  93F0              ; 	18/03/24
-1223  93F0
-1224  93F0              Borra_diferencia
-1225  93F0
-1226  93F0 ED 4B CA 90  	ld bc,(Scanlines_album_SP)
-1227  93F4
-1228  93F4 3A C7 90     	ld a,(Switch)
-1229  93F7 A7           	and a
-1230  93F8 28 08        	jr z,2F
-1231  93FA
-1232  93FA 2A C5 90     	ld hl,(Techo_Scanlines_album_2)
-1233  93FD 11 C5 90     	ld de,Techo_Scanlines_album_2
-1234  9400 18 06        	jr 3F
-1235  9402
-1236  9402 2A C3 90     2 ld hl,(Techo_Scanlines_album)
-1237  9405 11 C3 90     	ld de,Techo_Scanlines_album
-1238  9408
-1239  9408              ; Diferencia.
-1240  9408
-1241  9408 ED 42        3 sbc hl,bc
-1242  940A
-1243  940A C8           	ret z
-1244  940B D8           	ret c
-1245  940C
-1246  940C              ; Nuevo techo, (más bajo que el anterior).
-1247  940C              ; Fijamos nuevo techo y borramos bytes sobrantes.
-1248  940C
-1249  940C EB           	ex de,hl
-1250  940D
-1251  940D 71           	ld (hl),c
-1252  940E 2C           	inc l
-1253  940F 70           	ld (hl),b
-1254  9410
-1255  9410 AF           	xor a
-1256  9411 43           	ld b,e
-1257  9412
-1258  9412 2A CA 90     	ld hl,(Scanlines_album_SP)
-1259  9415
-1260  9415 77           1 ld (hl),a
-1261  9416 23           	inc hl
-1262  9417 10 FC        	djnz 1B
-1263  9419
-1264  9419              ; Indicamos que tenemos nuevo techo más bajo con el FLAG:
-1265  9419
-1266  9419 21 D2 90     	ld hl,Ctrl_3
-1267  941C CB DE        	set 3,(hl)
-1268  941E
-1269  941E C9           	ret
-1270  941F
-1271  941F              ; --------------------------------------------------------------------------------------------------------------
-1272  941F              ;
-1273  941F              ;	28/3/25
-1274  941F              ;
-1275  941F              ;	INPUT: IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
-1276  941F              ;
-1277  941F              ;	Estructura de cada línea en la (Tabla_de_pintado):
-1278  941F              ;
-1279  941F              ;	(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
-1280  941F              ;	.db, .db, .db, .defw
-1281  941F
-1282  941F              Entidad_a_Tabla_de_pintado
-1283  941F
-1284  941F 2A CC 90     	ld hl,(India_SP)
-1285  9422
-1286  9422 DD 5E 03     	ld e,(ix+3)
-1287  9425 DD 56 0D     	ld d,(ix+13)
-1288  9428 3A 81 90     	ld a,(Columnas)
-1289  942B
-1290  942B 73           	ld (hl),e        										; (Columna_Y).
-1291  942C 2C           	inc l
-1292  942D 72           	ld (hl),d 		 										; (Attr).
-1293  942E 2C           	inc l
-1294  942F 77           	ld (hl),a 		 										; (Columnas).
-1295  9430 2C           	inc l
-1296  9431
-1297  9431 ED 5B CA 90  	ld de,(Scanlines_album_SP)
-1298  9435
-1299  9435 73           	ld (hl),e
-1300  9436 2C           	inc l
-1301  9437 72           	ld (hl),d
-1302  9438 2C           	inc l 			 										; (Album_de_pintado).
-1303  9439
-1304  9439 22 CC 90     	ld (India_SP),hl
-1305  943C
-1306  943C C9           	ret
-1307  943D
-1308  943D              ; --------------------------------------------------------------------------------------------------------------
-1309  943D              ;
-1310  943D              ;	27/03/24
-1311  943D              ;
-1312  943D              ;	Limpia el `resto de la tabla de impresión? y sitúa el puntero de la tabla, (India_SP) al_
-1313  943D              ;	_comienzo de la misma.
-1314  943D
-1315  943D
-1316  943D              Inicializa_India_y_limpia_Tabla_de_impresion
-1317  943D
-1318  943D 2A CC 90     	ld hl,(India_SP)
-1319  9440 01 24 8C     	ld bc,Tabla_de_borrado-1								; Bytes de (Tabla_de_pintado)-1.
-1320  9443
-1321  9443 79           	ld a,c
-1322  9444 95           	sub l
-1323  9445 28 06        	jr z,2F
-1324  9447 47           	ld b,a													; Nº de bytes a limpiar de la tabla. Si la Tabla está completa, omitimos limpiar_
-1325  9448              ;															; _ y pasamos a inicializar (India_SP).
-1326  9448 AF           	xor a
-1327  9449
-1328  9449 77           1 ld (hl),a
-1329  944A 2C           	inc l
-1330  944B 10 FC        	djnz 1B													; Limpia Tabla.
-1331  944D
-1332  944D 21 07 8C     2 ld hl,Tabla_de_pintado									; Inicializa (India_SP).
-1333  9450 22 CC 90     	ld (India_SP),hl
-1334  9453
-1335  9453 C9           	ret
-1336  9454
-1337  9454              ; --------------------------------------------------------------------------------------------------------------
-1338  9454              ;
-1339  9454              ;	28/3/25
-1340  9454
-1341  9454              Ordena_tabla_de_impresion
-1342  9454
-1343  9454              ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
-1344  9454
-1345  9454 3A A3 90     	ld a,(Entidades_en_curso)
-1346  9457 FE 04        	cp 4
-1347  9459 D8           	ret c 													; < 4 entidades, no ordenamos la Tabla.
-1348  945A
-1349  945A 3D           	dec a
-1350  945B 4F           	ld c,a 													; (Entidades_en_curso)-1 en C.
-1351  945C 51           	ld d,c 													; Copia de respaldo.
-1352  945D
-1353  945D 7E           	ld a,(hl)												; Nº de Fila de la 1ª entidad, (1er byte de la tabla).
-1354  945E 21 0C 8C     	ld hl,Tabla_de_pintado+5
-1355  9461 46           	ld b,(hl)
-1356  9462
-1357  9462 22 CE 90     	ld (India_2_SP),hl
-1358  9465
-1359  9465              ; --- --- --- --- --- --- ---
-1360  9465              ;
-1361  9465              ;	Comparador.
-1362  9465
-1363  9465 B8           1 cp b
-1364  9466 38 08        	jr c, Avanza_India_2_SP
-1365  9468 28 06        	jr z, Avanza_India_2_SP
-1366  946A              ;
-1367  946A              ; --- --- --- --- --- --- ---
-1368  946A
-1369  946A CD 80 94     	call Trueque
-1370  946D 18 01        	jr Avanza_India_2_SP
-1371  946F
-1372  946F C9           	ret
-1373  9470
-1374  9470              Avanza_India_2_SP
-1375  9470
-1376  9470 0D           	dec c
-1377  9471 CC 99 94     	call z,Avanza_punteros_indios
-1378  9474 C8           	ret z 													; Tabla_de_pintado ordenada !!!
-1379  9475
-1380  9475 2C           	inc l
-1381  9476 2C           	inc l
-1382  9477 2C           	inc l
-1383  9478 2C           	inc l
-1384  9479 2C           	inc l
-1385  947A
-1386  947A 46           	ld b,(hl)
-1387  947B 22 CE 90     	ld (India_2_SP),hl 										; Siguiente entidad en la Tabla.
-1388  947E
-1389  947E 18 E5        	jr 1B 													; Salta al comparador.
-1390  9480
-1391  9480              Trueque
-1392  9480
-1393  9480 D5           	push de 												; Preservo DE pues D contiene (Entidades_en_curso)-1.
-1394  9481 E5           	push hl													; Preservo (India_2_SP).
-1395  9482
-1396  9482              ;	Intercambia (Fila).
-1397  9482
-1398  9482 ED 5B CC 90  	ld de,(India_SP)
-1399  9486 EB           	ex de,hl
-1400  9487 70           	ld (hl),b
-1401  9488 12           	ld (de),a
-1402  9489
-1403  9489              ;	Intercambia .defw (Album_de_pintado).
-1404  9489
-1405  9489 CD B2 94     	call Intercambia_1_byte
-1406  948C CD B2 94     	call Intercambia_1_byte
-1407  948F
-1408  948F              ;	Intercambiamos (Columnas).
-1409  948F
-1410  948F CD B2 94     	call Intercambia_1_byte
-1411  9492
-1412  9492              ; Volvemos a iniciar A. Vuelve a contener `el nuevo contenido, (Fila), de (India_SP).
-1413  9492              ; Recuperamos (India_2_SP) en HL.
-1414  9492
-1415  9492 2A CC 90     	ld hl,(India_SP)
-1416  9495 7E           	ld a,(hl)
-1417  9496
-1418  9496 E1           	pop hl
-1419  9497 D1           	pop de
-1420  9498
-1421  9498 C9           	ret
-1422  9499
-1423  9499              ; --------------------------------------------------------------------------------------------------------------
-1424  9499
-1425  9499              Avanza_punteros_indios
-1426  9499
-1427  9499 15           	dec d
-1428  949A 28 0E        	jr z,Prepara_salida
-1429  949C
-1430  949C 4A           	ld c,d
-1431  949D
-1432  949D 2A CC 90     	ld hl,(India_SP)
-1433  94A0
-1434  94A0 2C           	inc l
-1435  94A1 2C           	inc l
-1436  94A2 2C           	inc l
-1437  94A3 2C           	inc l
-1438  94A4 2C           	inc l
-1439  94A5
-1440  94A5 7E           	ld a,(hl)
-1441  94A6 22 CC 90     	ld (India_SP),hl
-1442  94A9
-1443  94A9 C9           	ret
-1444  94AA
-1445  94AA              Prepara_salida
-1446  94AA
-1447  94AA 21 07 8C     	ld hl,Tabla_de_pintado
-1448  94AD 22 CC 90     	ld (India_SP),hl
-1449  94B0 AF           	xor a
-1450  94B1
-1451  94B1 C9           	ret
-1452  94B2
-1453  94B2              ;	----- ----- ----- ----- -----
-1454  94B2
-1455  94B2              Intercambia_1_byte
-1456  94B2
-1457  94B2 2C           	inc l
-1458  94B3 1C           	inc e
-1459  94B4
-1460  94B4 46           	ld b,(hl)
-1461  94B5 1A           	ld a,(de)
-1462  94B6 EB           	ex de,hl
-1463  94B7 70           	ld (hl),b
-1464  94B8 12           	ld (de),a												; Byte de menor peso de las dos direcciones de memoria, ----- INTERCAMBIADAS -----.
-1465  94B9
-1466  94B9 C9           	ret
+1186  93D6 21 84 90     	ld hl,Vel_left
+1187  93D9 BE           	cp (hl)
+1188  93DA 4F           	ld c,a
+1189  93DB 30 07        	jr nc,1F
+1190  93DD
+1191  93DD              ;	Por debajo del límite inferior.
+1192  93DD
+1193  93DD 4E           	ld c,(hl)
+1194  93DE 79           	ld a,c
+1195  93DF D6 0A        	sub 10
+1196  93E1 77           	ld (hl),a
+1197  93E2
+1198  93E2 18 00        	jr 1F
+1199  93E4
+1200  93E4              ;	Actualiza (Clock_next_entity).
+1201  93E4
+1202  93E4 06 00        1 ld b,0
+1203  93E6
+1204  93E6 2A 78 5C     	ld hl,(FRAMES)
+1205  93E9 A7           	and a
+1206  93EA ED 4A        	adc hl,bc
+1207  93EC 22 EC 90     	ld (Clock_next_entity),hl  								; Actualizamos variable.
+1208  93EF
+1209  93EF C9           	ret
+1210  93F0
+1211  93F0              ; ------------------------------------
+1212  93F0              ;
+1213  93F0              ; 	18/03/24
+1214  93F0
+1215  93F0              Borra_diferencia
+1216  93F0
+1217  93F0 ED 4B CA 90  	ld bc,(Scanlines_album_SP)
+1218  93F4
+1219  93F4 3A C7 90     	ld a,(Switch)
+1220  93F7 A7           	and a
+1221  93F8 28 08        	jr z,2F
+1222  93FA
+1223  93FA 2A C5 90     	ld hl,(Techo_Scanlines_album_2)
+1224  93FD 11 C5 90     	ld de,Techo_Scanlines_album_2
+1225  9400 18 06        	jr 3F
+1226  9402
+1227  9402 2A C3 90     2 ld hl,(Techo_Scanlines_album)
+1228  9405 11 C3 90     	ld de,Techo_Scanlines_album
+1229  9408
+1230  9408              ; Diferencia.
+1231  9408
+1232  9408 ED 42        3 sbc hl,bc
+1233  940A
+1234  940A C8           	ret z
+1235  940B D8           	ret c
+1236  940C
+1237  940C              ; Nuevo techo, (más bajo que el anterior).
+1238  940C              ; Fijamos nuevo techo y borramos bytes sobrantes.
+1239  940C
+1240  940C EB           	ex de,hl
+1241  940D
+1242  940D 71           	ld (hl),c
+1243  940E 2C           	inc l
+1244  940F 70           	ld (hl),b
+1245  9410
+1246  9410 AF           	xor a
+1247  9411 43           	ld b,e
+1248  9412
+1249  9412 2A CA 90     	ld hl,(Scanlines_album_SP)
+1250  9415
+1251  9415 77           1 ld (hl),a
+1252  9416 23           	inc hl
+1253  9417 10 FC        	djnz 1B
+1254  9419
+1255  9419              ; Indicamos que tenemos nuevo techo más bajo con el FLAG:
+1256  9419
+1257  9419 21 D2 90     	ld hl,Ctrl_3
+1258  941C CB DE        	set 3,(hl)
+1259  941E
+1260  941E C9           	ret
+1261  941F
+1262  941F              ; --------------------------------------------------------------------------------------------------------------
+1263  941F              ;
+1264  941F              ;	28/3/25
+1265  941F              ;
+1266  941F              ;	INPUT: IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+1267  941F              ;
+1268  941F              ;	Estructura de cada línea en la (Tabla_de_pintado):
+1269  941F              ;
+1270  941F              ;	(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
+1271  941F              ;	.db, .db, .db, .defw
+1272  941F
+1273  941F              Entidad_a_Tabla_de_pintado
+1274  941F
+1275  941F 2A CC 90     	ld hl,(India_SP)
+1276  9422
+1277  9422 DD 5E 03     	ld e,(ix+3)
+1278  9425 DD 56 0D     	ld d,(ix+13)
+1279  9428 3A 81 90     	ld a,(Columnas)
+1280  942B
+1281  942B 73           	ld (hl),e        										; (Columna_Y).
+1282  942C 2C           	inc l
+1283  942D 72           	ld (hl),d 		 										; (Attr).
+1284  942E 2C           	inc l
+1285  942F 77           	ld (hl),a 		 										; (Columnas).
+1286  9430 2C           	inc l
+1287  9431
+1288  9431 ED 5B CA 90  	ld de,(Scanlines_album_SP)
+1289  9435
+1290  9435 73           	ld (hl),e
+1291  9436 2C           	inc l
+1292  9437 72           	ld (hl),d
+1293  9438 2C           	inc l 			 										; (Album_de_pintado).
+1294  9439
+1295  9439 22 CC 90     	ld (India_SP),hl
+1296  943C
+1297  943C C9           	ret
+1298  943D
+1299  943D              ; --------------------------------------------------------------------------------------------------------------
+1300  943D              ;
+1301  943D              ;	27/03/24
+1302  943D              ;
+1303  943D              ;	Limpia el `resto de la tabla de impresión? y sitúa el puntero de la tabla, (India_SP) al_
+1304  943D              ;	_comienzo de la misma.
+1305  943D
+1306  943D
+1307  943D              Inicializa_India_y_limpia_Tabla_de_impresion
+1308  943D
+1309  943D 2A CC 90     	ld hl,(India_SP)
+1310  9440 01 24 8C     	ld bc,Tabla_de_borrado-1								; Bytes de (Tabla_de_pintado)-1.
+1311  9443
+1312  9443 79           	ld a,c
+1313  9444 95           	sub l
+1314  9445 28 06        	jr z,2F
+1315  9447 47           	ld b,a													; Nº de bytes a limpiar de la tabla. Si la Tabla está completa, omitimos limpiar_
+1316  9448              ;															; _ y pasamos a inicializar (India_SP).
+1317  9448 AF           	xor a
+1318  9449
+1319  9449 77           1 ld (hl),a
+1320  944A 2C           	inc l
+1321  944B 10 FC        	djnz 1B													; Limpia Tabla.
+1322  944D
+1323  944D 21 07 8C     2 ld hl,Tabla_de_pintado									; Inicializa (India_SP).
+1324  9450 22 CC 90     	ld (India_SP),hl
+1325  9453
+1326  9453 C9           	ret
+1327  9454
+1328  9454              ; --------------------------------------------------------------------------------------------------------------
+1329  9454              ;
+1330  9454              ;	28/3/25
+1331  9454
+1332  9454              Ordena_tabla_de_impresion
+1333  9454
+1334  9454              ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
+1335  9454
+1336  9454 3A A3 90     	ld a,(Entidades_en_curso)
+1337  9457 FE 04        	cp 4
+1338  9459 D8           	ret c 													; < 4 entidades, no ordenamos la Tabla.
+1339  945A
+1340  945A 3D           	dec a
+1341  945B 4F           	ld c,a 													; (Entidades_en_curso)-1 en C.
+1342  945C 51           	ld d,c 													; Copia de respaldo.
+1343  945D
+1344  945D 7E           	ld a,(hl)												; Nº de Fila de la 1ª entidad, (1er byte de la tabla).
+1345  945E 21 0C 8C     	ld hl,Tabla_de_pintado+5
+1346  9461 46           	ld b,(hl)
+1347  9462
+1348  9462 22 CE 90     	ld (India_2_SP),hl
+1349  9465
+1350  9465              ; --- --- --- --- --- --- ---
+1351  9465              ;
+1352  9465              ;	Comparador.
+1353  9465
+1354  9465 B8           1 cp b
+1355  9466 38 08        	jr c, Avanza_India_2_SP
+1356  9468 28 06        	jr z, Avanza_India_2_SP
+1357  946A              ;
+1358  946A              ; --- --- --- --- --- --- ---
+1359  946A
+1360  946A CD 80 94     	call Trueque
+1361  946D 18 01        	jr Avanza_India_2_SP
+1362  946F
+1363  946F C9           	ret
+1364  9470
+1365  9470              Avanza_India_2_SP
+1366  9470
+1367  9470 0D           	dec c
+1368  9471 CC 99 94     	call z,Avanza_punteros_indios
+1369  9474 C8           	ret z 													; Tabla_de_pintado ordenada !!!
+1370  9475
+1371  9475 2C           	inc l
+1372  9476 2C           	inc l
+1373  9477 2C           	inc l
+1374  9478 2C           	inc l
+1375  9479 2C           	inc l
+1376  947A
+1377  947A 46           	ld b,(hl)
+1378  947B 22 CE 90     	ld (India_2_SP),hl 										; Siguiente entidad en la Tabla.
+1379  947E
+1380  947E 18 E5        	jr 1B 													; Salta al comparador.
+1381  9480
+1382  9480              Trueque
+1383  9480
+1384  9480 D5           	push de 												; Preservo DE pues D contiene (Entidades_en_curso)-1.
+1385  9481 E5           	push hl													; Preservo (India_2_SP).
+1386  9482
+1387  9482              ;	Intercambia (Fila).
+1388  9482
+1389  9482 ED 5B CC 90  	ld de,(India_SP)
+1390  9486 EB           	ex de,hl
+1391  9487 70           	ld (hl),b
+1392  9488 12           	ld (de),a
+1393  9489
+1394  9489              ;	Intercambia .defw (Album_de_pintado).
+1395  9489
+1396  9489 CD B2 94     	call Intercambia_1_byte
+1397  948C CD B2 94     	call Intercambia_1_byte
+1398  948F
+1399  948F              ;	Intercambiamos (Columnas).
+1400  948F
+1401  948F CD B2 94     	call Intercambia_1_byte
+1402  9492
+1403  9492              ; Volvemos a iniciar A. Vuelve a contener `el nuevo contenido, (Fila), de (India_SP).
+1404  9492              ; Recuperamos (India_2_SP) en HL.
+1405  9492
+1406  9492 2A CC 90     	ld hl,(India_SP)
+1407  9495 7E           	ld a,(hl)
+1408  9496
+1409  9496 E1           	pop hl
+1410  9497 D1           	pop de
+1411  9498
+1412  9498 C9           	ret
+1413  9499
+1414  9499              ; --------------------------------------------------------------------------------------------------------------
+1415  9499
+1416  9499              Avanza_punteros_indios
+1417  9499
+1418  9499 15           	dec d
+1419  949A 28 0E        	jr z,Prepara_salida
+1420  949C
+1421  949C 4A           	ld c,d
+1422  949D
+1423  949D 2A CC 90     	ld hl,(India_SP)
+1424  94A0
+1425  94A0 2C           	inc l
+1426  94A1 2C           	inc l
+1427  94A2 2C           	inc l
+1428  94A3 2C           	inc l
+1429  94A4 2C           	inc l
+1430  94A5
+1431  94A5 7E           	ld a,(hl)
+1432  94A6 22 CC 90     	ld (India_SP),hl
+1433  94A9
+1434  94A9 C9           	ret
+1435  94AA
+1436  94AA              Prepara_salida
+1437  94AA
+1438  94AA 21 07 8C     	ld hl,Tabla_de_pintado
+1439  94AD 22 CC 90     	ld (India_SP),hl
+1440  94B0 AF           	xor a
+1441  94B1
+1442  94B1 C9           	ret
+1443  94B2
+1444  94B2              ;	----- ----- ----- ----- -----
+1445  94B2
+1446  94B2              Intercambia_1_byte
+1447  94B2
+1448  94B2 2C           	inc l
+1449  94B3 1C           	inc e
+1450  94B4
+1451  94B4 46           	ld b,(hl)
+1452  94B5 1A           	ld a,(de)
+1453  94B6 EB           	ex de,hl
+1454  94B7 70           	ld (hl),b
+1455  94B8 12           	ld (de),a												; Byte de menor peso de las dos direcciones de memoria, ----- INTERCAMBIADAS -----.
+1456  94B9
+1457  94B9 C9           	ret
+1458  94BA
+1459  94BA              ; --------------------------------------------------------------------------------------------------------------
+1460  94BA              ;
+1461  94BA              ;	17/02/25
+1462  94BA              ;
+1463  94BA              ;	INPUTS: IX contiene (Puntero_de_impresion)
+1464  94BA              ;			IY contiene (Puntero_objeto)
+1465  94BA
+1466  94BA              Codifica_Puntero_de_impresion
 1467  94BA
-1468  94BA              ; --------------------------------------------------------------------------------------------------------------
-1469  94BA              ;
-1470  94BA              ;	17/02/25
-1471  94BA              ;
-1472  94BA              ;	INPUTS: IX contiene (Puntero_de_impresion)
-1473  94BA              ;			IY contiene (Puntero_objeto)
-1474  94BA
-1475  94BA              Codifica_Puntero_de_impresion
-1476  94BA
-1477  94BA 3A 81 90     	ld a,(Columnas)
-1478  94BD 3D           	dec a
-1479  94BE 28 14        	jr z,Una_Columna
-1480  94C0 3D           	dec a
-1481  94C1 28 01        	jr z,Dos_Columnas
-1482  94C3 C9           	ret
-1483  94C4
-1484  94C4              Dos_Columnas
-1485  94C4
-1486  94C4 DD 7C        	ld a,ixh
-1487  94C6 CB FF        	set 7,a
-1488  94C8 DD 67        	ld ixh,a
-1489  94CA
-1490  94CA              ;	Si nos encontramos en el lado derecho de la pantalla no modificamos (Puntero_objeto).
-1491  94CA
-1492  94CA 3A 80 90     1 ld a,(Cuad_objeto)
-1493  94CD E6 01        	and 1
-1494  94CF C8           	ret z
-1495  94D0
-1496  94D0 CD E6 94     	call Ajusta_Puntero_objeto
-1497  94D3
-1498  94D3 C9           	ret
-1499  94D4
-1500  94D4              Una_Columna
-1501  94D4
-1502  94D4              ; (Puntero_objeto) en ROM ????
-1503  94D4
-1504  94D4 DD 7C        	ld a,ixh
-1505  94D6 CB 77        	bit 6,a
-1506  94D8 20 06        	jr nz,2F
-1507  94DA
-1508  94DA              ; Cuando estamos apareciendo por la izquierda y el objeto está en ROM, IXH ="$f_".
-1509  94DA
-1510  94DA CB FF        	set 7,a
-1511  94DC CB F7        	set 6,a
-1512  94DE CB E7        	set 4,a
-1513  94E0
-1514  94E0 CB EF        2 set 5,a
-1515  94E2 DD 67        	ld ixh,a
-1516  94E4
-1517  94E4 18 E4        	jr 1B
-1518  94E6
-1519  94E6              ; ----- ----- ----- ----- -----
-1520  94E6
-1521  94E6              Ajusta_Puntero_objeto
-1522  94E6
-1523  94E6 3A 81 90     	ld a,(Columnas)
-1524  94E9 47           	ld b,a
-1525  94EA 3A 70 90     	ld a,(Columns)
-1526  94ED 90           	sub b
-1527  94EE C8           	ret z
-1528  94EF 47           	ld b,a
-1529  94F0
-1530  94F0 FD 2C        1 inc iyl
-1531  94F2 10 FC        	djnz 1B
-1532  94F4
-1533  94F4 C9           	ret
-1534  94F5
-1535  94F5              ; --------------------------------------------------------------------------------------------------------------
-1536  94F5              ;
-1537  94F5              ;	12/1/24
-1538  94F5              ;
-1539  94F5              ;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
-1540  94F5
-1541  94F5              Actualiza_Puntero_de_almacen_de_mov_masticados
-1542  94F5
-1543  94F5 2A 67 90     	ld hl,(Puntero_de_almacen_de_mov_masticados)
-1544  94F8 01 04 00     	ld bc,4
-1545  94FB A7           	and a
-1546  94FC ED 4A        	adc hl,bc
-1547  94FE 22 67 90     	ld (Puntero_de_almacen_de_mov_masticados),hl
-1548  9501 C9           	ret
-1549  9502
-1550  9502              ; ------------------------------------------
-1551  9502              ;
-1552  9502              ;	8/3/25
+1468  94BA 3A 81 90     	ld a,(Columnas)
+1469  94BD 3D           	dec a
+1470  94BE 28 14        	jr z,Una_Columna
+1471  94C0 3D           	dec a
+1472  94C1 28 01        	jr z,Dos_Columnas
+1473  94C3 C9           	ret
+1474  94C4
+1475  94C4              Dos_Columnas
+1476  94C4
+1477  94C4 DD 7C        	ld a,ixh
+1478  94C6 CB FF        	set 7,a
+1479  94C8 DD 67        	ld ixh,a
+1480  94CA
+1481  94CA              ;	Si nos encontramos en el lado derecho de la pantalla no modificamos (Puntero_objeto).
+1482  94CA
+1483  94CA 3A 80 90     1 ld a,(Cuad_objeto)
+1484  94CD E6 01        	and 1
+1485  94CF C8           	ret z
+1486  94D0
+1487  94D0 CD E6 94     	call Ajusta_Puntero_objeto
+1488  94D3
+1489  94D3 C9           	ret
+1490  94D4
+1491  94D4              Una_Columna
+1492  94D4
+1493  94D4              ; (Puntero_objeto) en ROM ????
+1494  94D4
+1495  94D4 DD 7C        	ld a,ixh
+1496  94D6 CB 77        	bit 6,a
+1497  94D8 20 06        	jr nz,2F
+1498  94DA
+1499  94DA              ; Cuando estamos apareciendo por la izquierda y el objeto está en ROM, IXH ="$f_".
+1500  94DA
+1501  94DA CB FF        	set 7,a
+1502  94DC CB F7        	set 6,a
+1503  94DE CB E7        	set 4,a
+1504  94E0
+1505  94E0 CB EF        2 set 5,a
+1506  94E2 DD 67        	ld ixh,a
+1507  94E4
+1508  94E4 18 E4        	jr 1B
+1509  94E6
+1510  94E6              ; ----- ----- ----- ----- -----
+1511  94E6
+1512  94E6              Ajusta_Puntero_objeto
+1513  94E6
+1514  94E6 3A 81 90     	ld a,(Columnas)
+1515  94E9 47           	ld b,a
+1516  94EA 3A 70 90     	ld a,(Columns)
+1517  94ED 90           	sub b
+1518  94EE C8           	ret z
+1519  94EF 47           	ld b,a
+1520  94F0
+1521  94F0 FD 2C        1 inc iyl
+1522  94F2 10 FC        	djnz 1B
+1523  94F4
+1524  94F4 C9           	ret
+1525  94F5
+1526  94F5              ; --------------------------------------------------------------------------------------------------------------
+1527  94F5              ;
+1528  94F5              ;	12/1/24
+1529  94F5              ;
+1530  94F5              ;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
+1531  94F5
+1532  94F5              Actualiza_Puntero_de_almacen_de_mov_masticados
+1533  94F5
+1534  94F5 2A 67 90     	ld hl,(Puntero_de_almacen_de_mov_masticados)
+1535  94F8 01 04 00     	ld bc,4
+1536  94FB A7           	and a
+1537  94FC ED 4A        	adc hl,bc
+1538  94FE 22 67 90     	ld (Puntero_de_almacen_de_mov_masticados),hl
+1539  9501 C9           	ret
+1540  9502
+1541  9502              ; ------------------------------------------
+1542  9502              ;
+1543  9502              ;	8/3/25
+1544  9502              ;
+1545  9502              ;	Extraemos del Almacen_de_mov_masticados:
+1546  9502              ;
+1547  9502              ;	INPUTS: IX,(Puntero_store_caja).
+1548  9502              ;		    (1er .db de la caja de la entidad en curso, (Tipo).)
+1549  9502              ;
+1550  9502              ;	OUTPUTS: (Puntero_objeto) en DE.
+1551  9502              ;	         (Puntero_de_impresion) codificado en BC.
+1552  9502              ;			 (Puntero_de_almacen_de_mov_masticados) actualizado.
 1553  9502              ;
-1554  9502              ;	Extraemos del Almacen_de_mov_masticados:
-1555  9502              ;
-1556  9502              ;	INPUTS: IX,(Puntero_store_caja).
-1557  9502              ;		    (1er .db de la caja de la entidad en curso, (Tipo).)
-1558  9502              ;
-1559  9502              ;	OUTPUTS: (Puntero_objeto) en DE.
-1560  9502              ;	         (Puntero_de_impresion) codificado en BC.
-1561  9502              ;			 (Puntero_de_almacen_de_mov_masticados) actualizado.
-1562  9502              ;
-1563  9502              ;	MODIFY: A,BC,DE y HL.
-1564  9502
-1565  9502
-1566  9502              Obtenemos_puntero_de_impresion
-1567  9502
-1568  9502 DD 6E 08     	ld l,(ix+8)
-1569  9505 DD 66 09     	ld h,(ix+9)
-1570  9508
-1571  9508              ;	hl apunta al .defw (Puntero_de_almacen_de_mov_masticados).
-1572  9508              ;	Comprueba si hemos finalizado todos los mov. masticados de la entidad.
-1573  9508
-1574  9508 4E           	ld c,(hl)
-1575  9509 23           	inc hl
-1576  950A 46           	ld b,(hl)
-1577  950B 2B           	dec hl
-1578  950C
-1579  950C 79           	ld a,c
-1580  950D B0           	or b													; Comprueba si ya no hay datos en el almacén.
-1581  950E
-1582  950E CC 8B 9B     	call z,Reinicia_entidad_maliciosa
-1583  9511 28 EF        	jr z,Obtenemos_puntero_de_impresion
-1584  9513
-1585  9513 ED 73 A8 90  	ld (Stack),sp
-1586  9517 F9           	ld sp,hl
-1587  9518
-1588  9518 AF           	xor a
-1589  9519 67           	ld h,a
-1590  951A 6C           	ld l,h													; ld hl,"0"
-1591  951B
-1592  951B D1           	pop de													; (Puntero_objeto) en DE.
-1593  951C C1           	pop bc													; (Puntero_de_impresion) codificado en BC.
-1594  951D
-1595  951D 39           	add hl,sp
-1596  951E
-1597  951E DD 75 08     	ld (ix+8),l
-1598  9521 DD 74 09     	ld (ix+9),h
-1599  9524
-1600  9524 ED 7B A8 90  	ld sp,(Stack)
-1601  9528
-1602  9528 C9           	ret
-1603  9529
-1604  9529              ; Decodificamos (Puntero_de_impresion) para almacenarlo correctamente.
-1605  9529
-1606  9529              ; ----- ----- ----- ----- -----
-1607  9529
-1608  9529              Decodifica_Puntero_de_impresion
-1609  9529
-1610  9529              ;	Inicialmente suponemos que la entidad está apareciendo por el lado izquierdo de la pantalla, (1 Columna) y (Puntero_objeto) se encuentra en ROM, (por debajo de $4000).
-1611  9529
-1612  9529 3E 01        	ld a,1
-1613  952B 32 81 90     	ld (Columnas),a
-1614  952E
-1615  952E 78           	ld a,b
-1616  952F E6 F0        	and $f0
-1617  9531 FE F0        	cp $f0
-1618  9533 20 06        	jr nz,1F
-1619  9535
-1620  9535 CB B8        	res 7,b
-1621  9537 CB B0        	res 6,b
-1622  9539 18 1B        	jr 2F
-1623  953B
-1624  953B CB 70        1 bit 6,b
-1625  953D 28 08        	jr z,3F
-1626  953F
-1627  953F CB 68        	bit 5,b
-1628  9541 28 04        	jr z,3F
-1629  9543 CB A8        	res 5,b
-1630  9545 18 0F        	jr 2F
-1631  9547
-1632  9547              ;	Dos Columnas ???
-1633  9547
-1634  9547 3E 03        3 ld a,3
-1635  9549 32 81 90     	ld (Columnas),a
-1636  954C
-1637  954C CB 78        	bit 7,b
-1638  954E 28 06        	jr z,2F
-1639  9550
-1640  9550 CB B8        	res 7,b
-1641  9552 3D           	dec a
-1642  9553 32 81 90     	ld (Columnas),a
-1643  9556
-1644  9556 DD 71 06     2 ld (ix+6),c
-1645  9559 DD 70 07     	ld (ix+7),b
-1646  955C
-1647  955C ED 43 65 90  	ld (Puntero_de_impresion),bc
-1648  9560
-1649  9560 C9           	ret
+1554  9502              ;	MODIFY: A,BC,DE y HL.
+1555  9502
+1556  9502
+1557  9502              Obtenemos_puntero_de_impresion
+1558  9502
+1559  9502 DD 6E 08     	ld l,(ix+8)
+1560  9505 DD 66 09     	ld h,(ix+9)
+1561  9508
+1562  9508              ;	hl apunta al .defw (Puntero_de_almacen_de_mov_masticados).
+1563  9508              ;	Comprueba si hemos finalizado todos los mov. masticados de la entidad.
+1564  9508
+1565  9508 4E           	ld c,(hl)
+1566  9509 23           	inc hl
+1567  950A 46           	ld b,(hl)
+1568  950B 2B           	dec hl
+1569  950C
+1570  950C 79           	ld a,c
+1571  950D B0           	or b													; Comprueba si ya no hay datos en el almacén.
+1572  950E
+1573  950E CC 8B 9B     	call z,Reinicia_entidad_maliciosa
+1574  9511 28 EF        	jr z,Obtenemos_puntero_de_impresion
+1575  9513
+1576  9513 ED 73 A8 90  	ld (Stack),sp
+1577  9517 F9           	ld sp,hl
+1578  9518
+1579  9518 AF           	xor a
+1580  9519 67           	ld h,a
+1581  951A 6C           	ld l,h													; ld hl,"0"
+1582  951B
+1583  951B D1           	pop de													; (Puntero_objeto) en DE.
+1584  951C C1           	pop bc													; (Puntero_de_impresion) codificado en BC.
+1585  951D
+1586  951D 39           	add hl,sp
+1587  951E
+1588  951E DD 75 08     	ld (ix+8),l
+1589  9521 DD 74 09     	ld (ix+9),h
+1590  9524
+1591  9524 ED 7B A8 90  	ld sp,(Stack)
+1592  9528
+1593  9528 C9           	ret
+1594  9529
+1595  9529              ; Decodificamos (Puntero_de_impresion) para almacenarlo correctamente.
+1596  9529
+1597  9529              ; ----- ----- ----- ----- -----
+1598  9529
+1599  9529              Decodifica_Puntero_de_impresion
+1600  9529
+1601  9529              ;	Inicialmente suponemos que la entidad está apareciendo por el lado izquierdo de la pantalla, (1 Columna) y (Puntero_objeto) se encuentra en ROM, (por debajo de $4000).
+1602  9529
+1603  9529 3E 01        	ld a,1
+1604  952B 32 81 90     	ld (Columnas),a
+1605  952E
+1606  952E 78           	ld a,b
+1607  952F E6 F0        	and $f0
+1608  9531 FE F0        	cp $f0
+1609  9533 20 06        	jr nz,1F
+1610  9535
+1611  9535 CB B8        	res 7,b
+1612  9537 CB B0        	res 6,b
+1613  9539 18 1B        	jr 2F
+1614  953B
+1615  953B CB 70        1 bit 6,b
+1616  953D 28 08        	jr z,3F
+1617  953F
+1618  953F CB 68        	bit 5,b
+1619  9541 28 04        	jr z,3F
+1620  9543 CB A8        	res 5,b
+1621  9545 18 0F        	jr 2F
+1622  9547
+1623  9547              ;	Dos Columnas ???
+1624  9547
+1625  9547 3E 03        3 ld a,3
+1626  9549 32 81 90     	ld (Columnas),a
+1627  954C
+1628  954C CB 78        	bit 7,b
+1629  954E 28 06        	jr z,2F
+1630  9550
+1631  9550 CB B8        	res 7,b
+1632  9552 3D           	dec a
+1633  9553 32 81 90     	ld (Columnas),a
+1634  9556
+1635  9556 DD 71 06     2 ld (ix+6),c
+1636  9559 DD 70 07     	ld (ix+7),b
+1637  955C
+1638  955C ED 43 65 90  	ld (Puntero_de_impresion),bc
+1639  9560
+1640  9560 C9           	ret
+1641  9561
+1642  9561              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1643  9561              ;
+1644  9561              ;	1/4/25
+1645  9561              ;
+1646  9561              ;	Tras ejecutar esta rutina tendremos:
+1647  9561              ;
+1648  9561              ;	DE ..... (Puntero_objeto) de la explosión.
+1649  9561              ;	IX ..... (Puntero_de_impresion) de la explosión.
 1650  9561
-1651  9561              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1652  9561              ;
-1653  9561              ;	1/4/25
-1654  9561              ;
-1655  9561              ;	Tras ejecutar esta rutina tendremos:
-1656  9561              ;
-1657  9561              ;	DE ..... (Puntero_objeto) de la explosión.
-1658  9561              ;	IX ..... (Puntero_de_impresion) de la explosión.
-1659  9561
-1660  9561              Cargamos_registros_con_explosion
-1661  9561
-1662  9561 DD 6E 08     	ld l,(ix+8)
-1663  9564 DD 66 09     	ld h,(ix+9)
-1664  9567
-1665  9567              ; (Puntero_de_almacen_de_mov_masticados) en HL.
-1666  9567
-1667  9567 CD D7 95     	call Extrae_address
-1668  956A EB           	ex de,hl												; Puntero objeto de la (Explosión), en DE.
-1669  956B
-1670  956B DD 6E 06     	ld l,(ix+6)
-1671  956E DD 66 07     	ld h,(ix+7)
-1672  9571
-1673  9571 E5           	push hl
-1674  9572 DD E1        	pop ix													; (Puntero_de_impresion) en IX.
-1675  9574
-1676  9574 C9           	ret
-1677  9575
-1678  9575              Cargamos_registros_con_explosion_Amadeus
-1679  9575
-1680  9575 2A D3 8C     	ld hl,(Pamm_Amadeus)
-1681  9578 CD D7 95     	call Extrae_address
-1682  957B
-1683  957B 5D           	ld e,l
-1684  957C 54           	ld d,h
-1685  957D
-1686  957D DD 2A D1 8C  	ld ix,(p.imp.amadeus)
-1687  9581
-1688  9581 C9           	ret
+1651  9561              Cargamos_registros_con_explosion
+1652  9561
+1653  9561 DD 6E 08     	ld l,(ix+8)
+1654  9564 DD 66 09     	ld h,(ix+9)
+1655  9567
+1656  9567              ; (Puntero_de_almacen_de_mov_masticados) en HL.
+1657  9567
+1658  9567 CD D7 95     	call Extrae_address
+1659  956A EB           	ex de,hl												; Puntero objeto de la (Explosión), en DE.
+1660  956B
+1661  956B DD 6E 06     	ld l,(ix+6)
+1662  956E DD 66 07     	ld h,(ix+7)
+1663  9571
+1664  9571 E5           	push hl
+1665  9572 DD E1        	pop ix													; (Puntero_de_impresion) en IX.
+1666  9574
+1667  9574 C9           	ret
+1668  9575
+1669  9575              Cargamos_registros_con_explosion_Amadeus
+1670  9575
+1671  9575 2A D3 8C     	ld hl,(Pamm_Amadeus)
+1672  9578 CD D7 95     	call Extrae_address
+1673  957B
+1674  957B 5D           	ld e,l
+1675  957C 54           	ld d,h
+1676  957D
+1677  957D DD 2A D1 8C  	ld ix,(p.imp.amadeus)
+1678  9581
+1679  9581 C9           	ret
+1680  9582
+1681  9582              ; --------------------------------------------------------------------------------------------------------------
+1682  9582              ;
+1683  9582              ;	17/06/24
+1684  9582              ;
+1685  9582              ;	Cargamos los registros DE e IX, (Puntero_de_almacen_de_mov_masticados) de Amadeus.
+1686  9582              ;
+1687  9582              ;	IX contiene el puntero de impresión.
+1688  9582              ;	DE contiene (Puntero_objeto).
 1689  9582
-1690  9582              ; --------------------------------------------------------------------------------------------------------------
-1691  9582              ;
-1692  9582              ;	17/06/24
-1693  9582              ;
-1694  9582              ;	Cargamos los registros DE e IX, (Puntero_de_almacen_de_mov_masticados) de Amadeus.
-1695  9582              ;
-1696  9582              ;	IX contiene el puntero de impresión.
-1697  9582              ;	DE contiene (Puntero_objeto).
-1698  9582
-1699  9582
-1700  9582              Cargamos_registros_con_mov_masticado_Amadeus
-1701  9582
-1702  9582 ED 73 A8 90  	ld (Stack),sp
-1703  9586 ED 7B D3 8C  	ld sp,(Pamm_Amadeus)									; (Puntero_de_almacen_de_mov_masticados_Amadeus) en su correspondiente caja.
-1704  958A D1           	pop de 													; DE contiene Puntero_objeto
-1705  958B DD E1        	pop ix 													; IX contiene Puntero_de_impresion
-1706  958D DD 22 D1 8C  	ld (p.imp.amadeus),ix									; (Puntero_de_impresion_Amadeus) en su correspondiente caja.
-1707  9591 ED 7B A8 90  	ld sp,(Stack)
-1708  9595
-1709  9595              ;	Estamos desapareciendo ???
-1710  9595
-1711  9595 3A 6D 90     	ld a,(Ctrl_2)
-1712  9598 CB 77        	bit 6,a
-1713  959A C8           	ret z													; RET, Amadeus no hemos terminado el NIVEL.
-1714  959B
-1715  959B CD FA 9C     	call Transicion_de_salida
-1716  959E
-1717  959E C9           	ret
-1718  959F
-1719  959F              ; ---------------------------------------------------------------------------------------------------------------------
-1720  959F              ;
-1721  959F              ;	18/6/24
-1722  959F              ;
-1723  959F              ;	Genera la coordenada X de Amadeus y los datos de impresión de la nave en su (Album_de_pintado_Amadeus).
-1724  959F
-1725  959F              Genera_datos_de_impresion_Amadeus
-1726  959F
-1727  959F 3A D0 8C     	ld a,(Impacto_Amadeus)
-1728  95A2 A7           	and a
-1729  95A3 20 03        	jr nz,1F
-1730  95A5
-1731  95A5              ; Si existe impacto en Amadeus ya tendremos modificados los registros DE con (Puntero_objeto)_
-1732  95A5              ; _apuntando a la correspondiente explosión.
-1733  95A5
-1734  95A5 CD 82 95     	call Cargamos_registros_con_mov_masticado_Amadeus
-1735  95A8
-1736  95A8 DD 7D        1 ld a,ixl
-1737  95AA E6 1F        	and $1f
-1738  95AC 32 CD 8C     	ld (CX_Amadeus),a 										; Coordenada X del Amadeus, (0-$1f). Columnas.
-1739  95AF
-1740  95AF 2A CA 90     	ld hl,(Scanlines_album_SP)
-1741  95B2 E5           	push hl
-1742  95B3
-1743  95B3 2A B0 90     	ld hl,(Album_de_pintado_Amadeus)
-1744  95B6 22 CA 90     	ld (Scanlines_album_SP),hl
-1745  95B9
-1746  95B9 CD AB 9D     	call Genera_datos_de_impresion
-1747  95BC
-1748  95BC E1           	pop hl
-1749  95BD 22 CA 90     	ld (Scanlines_album_SP),hl
-1750  95C0
-1751  95C0 C9           	ret
-1752  95C1
-1753  95C1              ; ---------------------------------------------------------------------------------------------------------------------
-1754  95C1              ;
-1755  95C1              ; 8/1/23
-1756  95C1              ;
-1757  95C1              ; (Puntero_store_caja) contendrá la dirección donde se encuentran los parámetros de la 1ª entidad del índice.
-1758  95C1              ; (Indice_restore_caja) se sitúa en la 2ª entidad del índice.
-1759  95C1              ; (Puntero_restore_caja) contendrá la dirección donde se encuentran los parámetros de la 2ª entidad del índice.
-1760  95C1
-1761  95C1              ; Destruye HL y DE !!!!!
-1762  95C1
-1763  95C1              Inicia_punteros_de_cajas
-1764  95C1
-1765  95C1 21 BD 8C     	ld hl,Indice_de_cajas_de_entidades
-1766  95C4 CD D7 95         call Extrae_address
-1767  95C7 22 99 90         ld (Puntero_store_caja),hl
-1768  95CA 21 BF 8C     	ld hl,Indice_de_cajas_de_entidades+2
-1769  95CD 22 9D 90     	ld (Indice_restore_caja),hl
-1770  95D0 CD D7 95     	call Extrae_address
-1771  95D3 22 9B 90     	ld (Puntero_restore_caja),hl
-1772  95D6 C9               ret
+1690  9582
+1691  9582              Cargamos_registros_con_mov_masticado_Amadeus
+1692  9582
+1693  9582 ED 73 A8 90  	ld (Stack),sp
+1694  9586 ED 7B D3 8C  	ld sp,(Pamm_Amadeus)									; (Puntero_de_almacen_de_mov_masticados_Amadeus) en su correspondiente caja.
+1695  958A D1           	pop de 													; DE contiene Puntero_objeto
+1696  958B DD E1        	pop ix 													; IX contiene Puntero_de_impresion
+1697  958D DD 22 D1 8C  	ld (p.imp.amadeus),ix									; (Puntero_de_impresion_Amadeus) en su correspondiente caja.
+1698  9591 ED 7B A8 90  	ld sp,(Stack)
+1699  9595
+1700  9595              ;	Estamos desapareciendo ???
+1701  9595
+1702  9595 3A 6D 90     	ld a,(Ctrl_2)
+1703  9598 CB 77        	bit 6,a
+1704  959A C8           	ret z													; RET, Amadeus no hemos terminado el NIVEL.
+1705  959B
+1706  959B CD FA 9C     	call Transicion_de_salida
+1707  959E
+1708  959E C9           	ret
+1709  959F
+1710  959F              ; ---------------------------------------------------------------------------------------------------------------------
+1711  959F              ;
+1712  959F              ;	18/6/24
+1713  959F              ;
+1714  959F              ;	Genera la coordenada X de Amadeus y los datos de impresión de la nave en su (Album_de_pintado_Amadeus).
+1715  959F
+1716  959F              Genera_datos_de_impresion_Amadeus
+1717  959F
+1718  959F 3A D0 8C     	ld a,(Impacto_Amadeus)
+1719  95A2 A7           	and a
+1720  95A3 20 03        	jr nz,1F
+1721  95A5
+1722  95A5              ; Si existe impacto en Amadeus ya tendremos modificados los registros DE con (Puntero_objeto)_
+1723  95A5              ; _apuntando a la correspondiente explosión.
+1724  95A5
+1725  95A5 CD 82 95     	call Cargamos_registros_con_mov_masticado_Amadeus
+1726  95A8
+1727  95A8 DD 7D        1 ld a,ixl
+1728  95AA E6 1F        	and $1f
+1729  95AC 32 CD 8C     	ld (CX_Amadeus),a 										; Coordenada X del Amadeus, (0-$1f). Columnas.
+1730  95AF
+1731  95AF 2A CA 90     	ld hl,(Scanlines_album_SP)
+1732  95B2 E5           	push hl
+1733  95B3
+1734  95B3 2A B0 90     	ld hl,(Album_de_pintado_Amadeus)
+1735  95B6 22 CA 90     	ld (Scanlines_album_SP),hl
+1736  95B9
+1737  95B9 CD AB 9D     	call Genera_datos_de_impresion
+1738  95BC
+1739  95BC E1           	pop hl
+1740  95BD 22 CA 90     	ld (Scanlines_album_SP),hl
+1741  95C0
+1742  95C0 C9           	ret
+1743  95C1
+1744  95C1              ; ---------------------------------------------------------------------------------------------------------------------
+1745  95C1              ;
+1746  95C1              ; 8/1/23
+1747  95C1              ;
+1748  95C1              ; (Puntero_store_caja) contendrá la dirección donde se encuentran los parámetros de la 1ª entidad del índice.
+1749  95C1              ; (Indice_restore_caja) se sitúa en la 2ª entidad del índice.
+1750  95C1              ; (Puntero_restore_caja) contendrá la dirección donde se encuentran los parámetros de la 2ª entidad del índice.
+1751  95C1
+1752  95C1              ; Destruye HL y DE !!!!!
+1753  95C1
+1754  95C1              Inicia_punteros_de_cajas
+1755  95C1
+1756  95C1 21 BD 8C     	ld hl,Indice_de_cajas_de_entidades
+1757  95C4 CD D7 95         call Extrae_address
+1758  95C7 22 99 90         ld (Puntero_store_caja),hl
+1759  95CA 21 BF 8C     	ld hl,Indice_de_cajas_de_entidades+2
+1760  95CD 22 9D 90     	ld (Indice_restore_caja),hl
+1761  95D0 CD D7 95     	call Extrae_address
+1762  95D3 22 9B 90     	ld (Puntero_restore_caja),hl
+1763  95D6 C9               ret
+1764  95D7
+1765  95D7              ; *************************************************************************************************************************************************************
+1766  95D7
+1767  95D7              ;
+1768  95D7              ; 20/10/22
+1769  95D7              ;
+1770  95D7              ; Extrae la direccio? que contiene un puntero, (HL), también en HL.
+1771  95D7              ;
+1772  95D7              ; Destruye el puntero y DE !!!!!
 1773  95D7
-1774  95D7              ; *************************************************************************************************************************************************************
-1775  95D7
-1776  95D7              ;
-1777  95D7              ; 20/10/22
-1778  95D7              ;
-1779  95D7              ; Extrae la direccio? que contiene un puntero, (HL), también en HL.
-1780  95D7              ;
-1781  95D7              ; Destruye el puntero y DE !!!!!
-1782  95D7
-1783  95D7 5E           Extrae_address ld e,(hl)
-1784  95D8 23           	inc hl
-1785  95D9 56           	ld d,(hl)
-1786  95DA 2B           	dec hl
-1787  95DB EB           	ex de,hl
-1788  95DC C9           	ret
-1789  95DD
-1790  95DD              ; *************************************************************************************************************************************************************
-1791  95DD              ;
-1792  95DD              ;	19/5/25
-1793  95DD              ;
-1794  95DD              ;	Iniciamos (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
-1795  95DD              ;	Sitúa (Puntero_objeto) en el Sprite correspondiente en función de su (Posicion_inicio).
-1796  95DD              ;
-1797  95DD              ;   Destruye HL y BC !!!!!,
-1798  95DD              ;
-1799  95DD              ;	BIT 7 (Ctrl_0). "1" ..... Derecha.
-1800  95DD              ;					"0" ..... Izquierda.
-1801  95DD
-1802  95DD              Inicia_Puntero_objeto
-1803  95DD
-1804  95DD 3A 7E 90     	ld a,(Posicion_inicio)
-1805  95E0 E6 1F        	and $1f
-1806  95E2 FE 10        	cp $10
-1807  95E4 38 13        	jr c,Inicia_puntero_objeto_der
-1808  95E6
-1809  95E6              ; Arrancamos desde la parte derecha de la pantalla.
-1810  95E6              ; Iniciamos (Indice_Sprite_izq).
-1811  95E6
-1812  95E6 2A 78 90     Inicia_puntero_objeto_izq ld hl,(Indice_Sprite_izq)
-1813  95E9 22 7C 90     	ld (Puntero_DESPLZ_izq),hl
-1814  95EC CD D7 95     	call Extrae_address
-1815  95EF 22 73 90     	ld (Puntero_objeto),hl
-1816  95F2
-1817  95F2 2A 76 90     	ld hl,(Indice_Sprite_der)								; Cuando "Iniciamos el Sprite a izquierda",_
-1818  95F5 22 7A 90     	ld (Puntero_DESPLZ_der),hl								; _situamos (Puntero_DESPLZ_der) en el último defw_
-1819  95F8 C9           	ret
-1820  95F9
-1821  95F9              ; Arrancamos desde la parte izquierda de la pantalla.
-1822  95F9              ; Iniciamos (Indice_Sprite_der).
-1823  95F9
-1824  95F9 2A 76 90     Inicia_puntero_objeto_der ld hl,(Indice_Sprite_der)
-1825  95FC 22 7A 90     	ld (Puntero_DESPLZ_der),hl
-1826  95FF CD D7 95     	call Extrae_address
-1827  9602 22 73 90     	ld (Puntero_objeto),hl
-1828  9605
-1829  9605 2A 78 90     	ld hl,(Indice_Sprite_izq)								; Cuando "Iniciamos el Sprite a derecha",_
-1830  9608 22 7C 90     	ld (Puntero_DESPLZ_izq),hl
-1831  960B C9           	ret
-1832  960C
-1833  960C              ; **************************************************************************************************
-1834  960C              ;
-1835  960C              ;	27/11/24
-1836  960C              ;
-1837  960C              ;	INPUT: IX contiene (Puntero_store_caja).
-1838  960C              ;
-1839  960C              ;	No situamos en la siguiente caja de entidades si esta está vacía.
-1840  960C
-1841  960C              Salta_caja_de_entidades_vacia
-1842  960C
-1843  960C DD 7E 01     	ld a,(ix+1)
-1844  960F A7           	and a
-1845  9610 C0           	ret nz
-1846  9611
-1847  9611 CD 1B 96     	call Incrementa_punteros_de_cajas
-1848  9614 DD 2A 99 90  	ld ix,(Puntero_store_caja)
-1849  9618 18 F2        	jr Salta_caja_de_entidades_vacia
-1850  961A
-1851  961A C9           	ret
-1852  961B
-1853  961B              ; **************************************************************************************************
-1854  961B              ;
-1855  961B              ;	08/05/23
-1856  961B              ;
-1857  961B              ;	Incrementamos los dos punteros de entidades. (+1).
-1858  961B
-1859  961B              Incrementa_punteros_de_cajas
-1860  961B
-1861  961B 2A 9B 90     	ld hl,(Puntero_restore_caja)
-1862  961E 22 99 90     	ld (Puntero_store_caja),hl
-1863  9621 2A 9D 90     	ld hl,(Indice_restore_caja)
-1864  9624 23           	inc hl
-1865  9625 23           	inc hl
-1866  9626 22 9D 90     	ld (Indice_restore_caja),hl
-1867  9629 CD D7 95         call Extrae_address
-1868  962C 22 9B 90         ld (Puntero_restore_caja),hl
-1869  962F C9               ret
-1870  9630
-1871  9630              ; -----------------------------------------------------------
-1872  9630
-1873  9630              ; Teclado.
-1874  9630
-1875  9630 3E BF        Pulsa_ENTER ld a,$bf 										; Esperamos la pulsación de la tecla "ENTER".
-1876  9632 DB FE        	in a,($fe)
-1877  9634 E6 01        	and $01
-1878  9636 28 02        	jr z,1f
-1879  9638 18 F6        	jr Pulsa_ENTER
-1880  963A C9           1 ret
+1774  95D7 5E           Extrae_address ld e,(hl)
+1775  95D8 23           	inc hl
+1776  95D9 56           	ld d,(hl)
+1777  95DA 2B           	dec hl
+1778  95DB EB           	ex de,hl
+1779  95DC C9           	ret
+1780  95DD
+1781  95DD              ; *************************************************************************************************************************************************************
+1782  95DD              ;
+1783  95DD              ;	19/5/25
+1784  95DD              ;
+1785  95DD              ;	Iniciamos (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+1786  95DD              ;	Sitúa (Puntero_objeto) en el Sprite correspondiente en función de su (Posicion_inicio).
+1787  95DD              ;
+1788  95DD              ;   Destruye HL y BC !!!!!,
+1789  95DD              ;
+1790  95DD              ;	BIT 7 (Ctrl_0). "1" ..... Derecha.
+1791  95DD              ;					"0" ..... Izquierda.
+1792  95DD
+1793  95DD              Inicia_Puntero_objeto
+1794  95DD
+1795  95DD 3A 7E 90     	ld a,(Posicion_inicio)
+1796  95E0 E6 1F        	and $1f
+1797  95E2 FE 10        	cp $10
+1798  95E4 38 13        	jr c,Inicia_puntero_objeto_der
+1799  95E6
+1800  95E6              ; Arrancamos desde la parte derecha de la pantalla.
+1801  95E6              ; Iniciamos (Indice_Sprite_izq).
+1802  95E6
+1803  95E6 2A 78 90     Inicia_puntero_objeto_izq ld hl,(Indice_Sprite_izq)
+1804  95E9 22 7C 90     	ld (Puntero_DESPLZ_izq),hl
+1805  95EC CD D7 95     	call Extrae_address
+1806  95EF 22 73 90     	ld (Puntero_objeto),hl
+1807  95F2
+1808  95F2 2A 76 90     	ld hl,(Indice_Sprite_der)								; Cuando "Iniciamos el Sprite a izquierda",_
+1809  95F5 22 7A 90     	ld (Puntero_DESPLZ_der),hl								; _situamos (Puntero_DESPLZ_der) en el último defw_
+1810  95F8 C9           	ret
+1811  95F9
+1812  95F9              ; Arrancamos desde la parte izquierda de la pantalla.
+1813  95F9              ; Iniciamos (Indice_Sprite_der).
+1814  95F9
+1815  95F9 2A 76 90     Inicia_puntero_objeto_der ld hl,(Indice_Sprite_der)
+1816  95FC 22 7A 90     	ld (Puntero_DESPLZ_der),hl
+1817  95FF CD D7 95     	call Extrae_address
+1818  9602 22 73 90     	ld (Puntero_objeto),hl
+1819  9605
+1820  9605 2A 78 90     	ld hl,(Indice_Sprite_izq)								; Cuando "Iniciamos el Sprite a derecha",_
+1821  9608 22 7C 90     	ld (Puntero_DESPLZ_izq),hl
+1822  960B C9           	ret
+1823  960C
+1824  960C              ; **************************************************************************************************
+1825  960C              ;
+1826  960C              ;	27/11/24
+1827  960C              ;
+1828  960C              ;	INPUT: IX contiene (Puntero_store_caja).
+1829  960C              ;
+1830  960C              ;	No situamos en la siguiente caja de entidades si esta está vacía.
+1831  960C
+1832  960C              Salta_caja_de_entidades_vacia
+1833  960C
+1834  960C DD 7E 01     	ld a,(ix+1)
+1835  960F A7           	and a
+1836  9610 C0           	ret nz
+1837  9611
+1838  9611 CD 1B 96     	call Incrementa_punteros_de_cajas
+1839  9614 DD 2A 99 90  	ld ix,(Puntero_store_caja)
+1840  9618 18 F2        	jr Salta_caja_de_entidades_vacia
+1841  961A
+1842  961A C9           	ret
+1843  961B
+1844  961B              ; **************************************************************************************************
+1845  961B              ;
+1846  961B              ;	08/05/23
+1847  961B              ;
+1848  961B              ;	Incrementamos los dos punteros de entidades. (+1).
+1849  961B
+1850  961B              Incrementa_punteros_de_cajas
+1851  961B
+1852  961B 2A 9B 90     	ld hl,(Puntero_restore_caja)
+1853  961E 22 99 90     	ld (Puntero_store_caja),hl
+1854  9621 2A 9D 90     	ld hl,(Indice_restore_caja)
+1855  9624 23           	inc hl
+1856  9625 23           	inc hl
+1857  9626 22 9D 90     	ld (Indice_restore_caja),hl
+1858  9629 CD D7 95         call Extrae_address
+1859  962C 22 9B 90         ld (Puntero_restore_caja),hl
+1860  962F C9               ret
+1861  9630
+1862  9630              ; -----------------------------------------------------------
+1863  9630
+1864  9630              ; Teclado.
+1865  9630
+1866  9630 3E BF        Pulsa_ENTER ld a,$bf 										; Esperamos la pulsación de la tecla "ENTER".
+1867  9632 DB FE        	in a,($fe)
+1868  9634 E6 01        	and $01
+1869  9636 28 02        	jr z,1f
+1870  9638 18 F6        	jr Pulsa_ENTER
+1871  963A C9           1 ret
+1872  963B
+1873  963B              ; **************************************************************************************************
+1874  963B              ;
+1875  963B              ; Temporización.
+1876  963B
+1877  963B              ; $0320 ..... El RASTER va a empezar a pintar el 1er scanline de la primera FILA de la pantalla.
+1878  963B              ;       ..... (14175 T/States) + 71 es lo que tarda el RASTER en llegar al 1er SCANLINE de la 1ª FILA.
+1879  963B              ; $00ff ..... Es lo que tarda el RASTER en pintar 1 SCANLINE. (31 T/States) + 71. ..... 102 T/States aprox.
+1880  963B              ;		..... 224 T/States es lo que tarda el raster en pintar 1 scanline.
 1881  963B
-1882  963B              ; **************************************************************************************************
-1883  963B              ;
-1884  963B              ; Temporización.
+1882  963B              ; $0045 ..... Es lo que tardamos en pintar 1 FILA completa, (8 Scanlines). (1794 T/States) + 71 ..... 1 FILA.
+1883  963B              ;       ..... (14920 T/States) + 71  ..... Es lo que tarda el RASTER en pintar 1 TERCIO.
+1884  963B              ; $0365 ..... Llegamos al final de la 1ª FILA, (8 Scanlines).
 1885  963B
-1886  963B              ; $0320 ..... El RASTER va a empezar a pintar el 1er scanline de la primera FILA de la pantalla.
-1887  963B              ;       ..... (14175 T/States) + 71 es lo que tarda el RASTER en llegar al 1er SCANLINE de la 1ª FILA.
-1888  963B              ; $00ff ..... Es lo que tarda el RASTER en pintar 1 SCANLINE. (31 T/States) + 71. ..... 102 T/States aprox.
-1889  963B              ;		..... 224 T/States es lo que tarda el raster en pintar 1 scanline.
-1890  963B
-1891  963B              ; $0045 ..... Es lo que tardamos en pintar 1 FILA completa, (8 Scanlines). (1794 T/States) + 71 ..... 1 FILA.
-1892  963B              ;       ..... (14920 T/States) + 71  ..... Es lo que tarda el RASTER en pintar 1 TERCIO.
-1893  963B              ; $0365 ..... Llegamos al final de la 1ª FILA, (8 Scanlines).
-1894  963B
-1895  963B              ; A partir de $4f61 no hace falta DELAY.
-1896  963B              ;
-1897  963B              ;	INPUT: BC, ($0000).
-1898  963B              ;
-1899  963B              ;	!!!!!!!! DESTRUYE BC !!!!!!!!!!!
-1900  963B
-1901  963B              DELAY
-1902  963B              															;$0320 ..... Delay mínimo
-1903  963B 0B           	dec bc  												;Sumaremos $0045 por FILA a esta cantidad inicial. Ejempl: si el Sprite ocupa la 1ª y 2ª_
-1904  963C 78           	LD a,b
-1905  963D A7           	AND a
-1906  963E 20 FB        	JR nz,DELAY
-1907  9640
-1908  9640 C9           	ret
-1909  9641
-1910  9641              ; ---------------------------------------------------------------------------------------------------------------
-1911  9641              ;
-1912  9641              ;	13/07/24
-1913  9641              ;
-1914  9641
-1915  9641              ; Variables Shield.
-1916  9641
-1917  9641              ; Datos_Shield db 4,1,4,1									; Tiempos. (Frecuencia del parpadeo de Amadeus).
-1918  9641              ; Puntero_datos_shield defw 0								; Señala distintos tiempos para introducirlos en (Shield_2).
-1919  9641              ; Shield db 90												; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".
-1920  9641              ; Shield_2 db 0 											; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
-1921  9641              ; Shield_3 db 0
-1922  9641
-1923  9641              Inicia_Shield
-1924  9641
-1925  9641 21 F9 90     	ld hl,Datos_Shield
-1926  9644 22 FD 90     	ld (Puntero_datos_shield),hl 							; Inicia el puntero (Puntero_datos_shield), lo situamos en la 1ª temporización.
-1927  9647
-1928  9647 7E           	ld a,(hl)
-1929  9648 32 00 91     	ld (Shield_2),a											; (Shield_2) contiene la primera temporización.
-1930  964B
-1931  964B 3E 01        	ld a,1
-1932  964D 32 01 91     	ld (Shield_3),a											; (Shield_3) se inicia con "1".
-1933  9650
-1934  9650 C9           	ret
+1886  963B              ; A partir de $4f61 no hace falta DELAY.
+1887  963B              ;
+1888  963B              ;	INPUT: BC, ($0000).
+1889  963B              ;
+1890  963B              ;	!!!!!!!! DESTRUYE BC !!!!!!!!!!!
+1891  963B
+1892  963B              DELAY
+1893  963B              															;$0320 ..... Delay mínimo
+1894  963B 0B           	dec bc  												;Sumaremos $0045 por FILA a esta cantidad inicial. Ejempl: si el Sprite ocupa la 1ª y 2ª_
+1895  963C 78           	LD a,b
+1896  963D A7           	AND a
+1897  963E 20 FB        	JR nz,DELAY
+1898  9640
+1899  9640 C9           	ret
+1900  9641
+1901  9641              ; ---------------------------------------------------------------------------------------------------------------
+1902  9641              ;
+1903  9641              ;	13/07/24
+1904  9641              ;
+1905  9641
+1906  9641              ; Variables Shield.
+1907  9641
+1908  9641              ; Datos_Shield db 4,1,4,1									; Tiempos. (Frecuencia del parpadeo de Amadeus).
+1909  9641              ; Puntero_datos_shield defw 0								; Señala distintos tiempos para introducirlos en (Shield_2).
+1910  9641              ; Shield db 90												; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".
+1911  9641              ; Shield_2 db 0 											; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
+1912  9641              ; Shield_3 db 0
+1913  9641
+1914  9641              Inicia_Shield
+1915  9641
+1916  9641 21 F9 90     	ld hl,Datos_Shield
+1917  9644 22 FD 90     	ld (Puntero_datos_shield),hl 							; Inicia el puntero (Puntero_datos_shield), lo situamos en la 1ª temporización.
+1918  9647
+1919  9647 7E           	ld a,(hl)
+1920  9648 32 00 91     	ld (Shield_2),a											; (Shield_2) contiene la primera temporización.
+1921  964B
+1922  964B 3E 01        	ld a,1
+1923  964D 32 01 91     	ld (Shield_3),a											; (Shield_3) se inicia con "1".
+1924  9650
+1925  9650 C9           	ret
+1926  9651
+1927  9651              ; ---------- ---------- ---------- ---------- ----------
+1928  9651              ;
+1929  9651              ;	30/11/24
+1930  9651              ;
+1931  9651              ;	Limpia la caja de entidades de una entidad eliminada.
+1932  9651              ;
+1933  9651              ;	INPUT: IX contiene el 1er .db de la entidad en curso.
+1934  9651              ;	MODIFY: A,BC,DE y HL.
 1935  9651
-1936  9651              ; ---------- ---------- ---------- ---------- ----------
-1937  9651              ;
-1938  9651              ;	30/11/24
-1939  9651              ;
-1940  9651              ;	Limpia la caja de entidades de una entidad eliminada.
-1941  9651              ;
-1942  9651              ;	INPUT: IX contiene el 1er .db de la entidad en curso.
-1943  9651              ;	MODIFY: A,BC,DE y HL.
-1944  9651
-1945  9651              Limpia_caja_de_entidades
-1946  9651
-1947  9651 DD E5        	push ix
-1948  9653 E1           	pop hl
-1949  9654 AF           	xor a
-1950  9655 77           	ld (hl),a
-1951  9656 5D           	ld e,l
-1952  9657 54           	ld d,h
-1953  9658 1C           	inc e
-1954  9659 01 0D 00     	ld bc,13
-1955  965C ED B0        	ldir
-1956  965E C9           	ret
+1936  9651              Limpia_caja_de_entidades
+1937  9651
+1938  9651 DD E5        	push ix
+1939  9653 E1           	pop hl
+1940  9654 AF           	xor a
+1941  9655 77           	ld (hl),a
+1942  9656 5D           	ld e,l
+1943  9657 54           	ld d,h
+1944  9658 1C           	inc e
+1945  9659 01 0D 00     	ld bc,13
+1946  965C ED B0        	ldir
+1947  965E C9           	ret
+1948  965F
+1949  965F              ; ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+1950  965F              ;
+1951  965F              ;	26/01/25
+1952  965F              ;
+1953  965F              ;	Es la 1ª rutina que se ejcuta tras la rutina de interrupciones.
+1954  965F              ;
+1955  965F              ;	ACTUALIZA LA PANTALLA siempre que se haya producido algún movimiento, (entidades, Amadeus).
+1956  965F              ;
 1957  965F
-1958  965F              ; ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
-1959  965F              ;
-1960  965F              ;	26/01/25
-1961  965F              ;
-1962  965F              ;	Es la 1ª rutina que se ejcuta tras la rutina de interrupciones.
-1963  965F              ;
-1964  965F              ;	ACTUALIZA LA PANTALLA siempre que se haya producido algún movimiento, (entidades, Amadeus).
-1965  965F              ;
-1966  965F
-1967  965F              Actualiza_pantalla
-1968  965F
-1969  965F 3E 02        	ld a,2
-1970  9661 D3 FE        	out ($fe),a
-1971  9663
-1972  9663 3A D2 90     	ld a,(Ctrl_3)
-1973  9666 CB 57        	bit 2,a
-1974  9668 28 68        	jr z,Ejecuta_escudo                                     ; No hay movimiento de entidades. Saltamos a Amadeus.
-1975  966A
-1976  966A              ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
-1977  966A
-1978  966A 2A CA 90     	ld hl,(Scanlines_album_SP)
-1979  966D CD D7 95     	call Extrae_address
-1980  9670 24           	inc h
-1981  9671 25           	dec h
-1982  9672 28 25        	jr z,Pintando_entidades
-1983  9674
-1984  9674              Borrando_entidades
-1985  9674
-1986  9674 2A D0 90     	ld hl,(India_3_SP) 										; (Attr), (Columnas) y (.defw).
-1987  9677
-1988  9677 7E           	ld a,(hl)
-1989  9678 A7           	and a
-1990  9679 28 1E        	jr z,Pintando_entidades
-1991  967B
-1992  967B 4F           	ld c,a 													; (Attr) en C.
-1993  967C
-1994  967C              ;	Limpiamos (Attr) de (India_3_SP).
-1995  967C
-1996  967C AF           	xor a
-1997  967D 77           	ld (hl),a
-1998  967E
-1999  967E 2C           	inc l
-2000  967F
-2001  967F 7E           	ld a,(hl) 												; (Columnas) en A.
-2002  9680 32 81 90     	ld (Columnas),a
-2003  9683
-2004  9683              ;	Limpiamos (Columnas) de (India_3_SP).
-2005  9683
-2006  9683 AF           	xor a
-2007  9684 77           	ld (hl),a
-2008  9685
-2009  9685              ;	Adquirimos dirección de Scanlies_album.
-2010  9685
-2011  9685 2C           	inc l
-2012  9686
-2013  9686 CD D7 95     	call Extrae_address
-2014  9689
-2015  9689 12           	ld (de),a
-2016  968A 1C           	inc e
-2017  968B 12           	ld (de),a
-2018  968C 1C           	inc e
-2019  968D ED 53 D0 90  	ld (India_3_SP),de
-2020  9691
-2021  9691 CD D7 95     	call Extrae_address
-2022  9694 CD 4E 9F     	call Pinta_Sprites
-2023  9697
-2024  9697 18 DB        	jr Borrando_entidades
-2025  9699
-2026  9699              Pintando_entidades
-2027  9699
-2028  9699              ;	(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
-2029  9699              ;	.db, .db, .db, .defw
-2030  9699
-2031  9699 21 25 8C     	ld hl,Tabla_de_borrado
-2032  969C 22 D0 90     	ld (India_3_SP),hl 										; Inicializa el puntero de la (Tabla_de_borrado).
-2033  969F
-2034  969F              ;	Recabamos los datos de la (Tabla_de_pintado).
-2035  969F
-2036  969F 2A CC 90     3 ld hl,(India_SP)
-2037  96A2
-2038  96A2 2C           	inc l
-2039  96A3
-2040  96A3 7E           	ld a,(hl)
-2041  96A4 A7           	and a
-2042  96A5 28 2B        	jr z,Ejecuta_escudo 									; (Tabla_de_pintado) vacía. Saltamos a Amadeus.
-2043  96A7
-2044  96A7 32 6C 90     	ld (Attr),a
-2045  96AA 4F           	ld c,a 	 												; (Attr) en C.
-2046  96AB
-2047  96AB 2C           	inc l
-2048  96AC
-2049  96AC 7E           	ld a,(hl)
-2050  96AD 32 81 90     	ld (Columnas),a
-2051  96B0 2C           	inc l
-2052  96B1
-2053  96B1 CD D7 95     	call Extrae_address 									; .defw (Album_de_pintado) en HL.
-2054  96B4
-2055  96B4 1C           	inc e
-2056  96B5 1C           	inc e
-2057  96B6
-2058  96B6 ED 53 CC 90  	ld (India_SP),de 										; Puntero (India_SP) situado en la siguiente línea de la tabla.
-2059  96BA              ;
-2060  96BA              ;															; Tenemos: C, (Columna_Y).
-2061  96BA              ; 												  			 B, (Attr).
-2062  96BA              ; 												  			 A, (Columnas).
-2063  96BA
-2064  96BA              ; Datos a Tabla_de_borrado.
-2065  96BA
-2066  96BA EB           	ex de,hl
-2067  96BB 2A D0 90     	ld hl,(India_3_SP)
-2068  96BE
-2069  96BE 71           	ld (hl),c 												; (Attr).
-2070  96BF 2C           	inc l
-2071  96C0 77           	ld (hl),a 												; (Columnas).
-2072  96C1 2C           	inc l
-2073  96C2 73           	ld (hl),e 												; (.defw) dentro del (Album_de_pintado).
-2074  96C3 2C           	inc l
-2075  96C4 72           	ld (hl),d
-2076  96C5 2C           	inc l
-2077  96C6
-2078  96C6 22 D0 90     	ld (India_3_SP),hl
-2079  96C9
-2080  96C9 EB           	ex de,hl
-2081  96CA
-2082  96CA              ; ----- ----- ----- -----
-2083  96CA
-2084  96CA CD D7 95     	call Extrae_address
-2085  96CD CD 4E 9F     	call Pinta_Sprites
-2086  96D0
-2087  96D0 18 CD        	jr 3B
-2088  96D2
-2089  96D2              ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
-2090  96D2
-2091  96D2              Ejecuta_escudo
-2092  96D2
-2093  96D2 3E 03        	ld a,3
-2094  96D4 32 81 90     	ld (Columnas),a
-2095  96D7
-2096  96D7 3A D8 8C     	ld a,(Attr_Amadeus)
-2097  96DA 4F           	ld c,a
-2098  96DB
-2099  96DB 3A FF 90     	ld a,(Shield)
-2100  96DE A7           	and a
-2101  96DF 20 33        	jr nz,Aplica_Shield
-2102  96E1
-2103  96E1              ; -------------------------- debugggggg
-2104  96E1
-2105  96E1 3A D8 8C     	ld a,(Attr_Amadeus)
-2106  96E4 4F           	ld c,a
-2107  96E5
-2108  96E5              Borrando_Amadeus
-2109  96E5
-2110  96E5 21 D2 90     	ld hl,Ctrl_3
-2111  96E8 CB 6E        	bit 5,(hl)
-2112  96EA 28 1A        	jr z,1F													; No borramos. No ha habido movimiento.
-2113  96EC
-2114  96EC 2A B2 90     	ld hl,(Album_de_borrado_Amadeus)
-2115  96EF CD D7 95     	call Extrae_address
-2116  96F2 24           	inc h
-2117  96F3 25           	dec h
-2118  96F4 28 03        	jr z,Pintando_Amadeus
-2119  96F6 CD 4E 9F     	call Pinta_Sprites
-2120  96F9
-2121  96F9              Pintando_Amadeus
-2122  96F9
-2123  96F9 2A B0 90     	ld hl,(Album_de_pintado_Amadeus)
-2124  96FC CD D7 95     	call Extrae_address
-2125  96FF 24           	inc h
-2126  9700 25           	dec h
-2127  9701 28 03        	jr z,1F
-2128  9703 CD 4E 9F     	call Pinta_Sprites
-2129  9706
-2130  9706              ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
-2131  9706
-2132  9706 3E 01        1 ld a,1													; Borde azul.
-2133  9708 D3 FE        	out ($fe),a
-2134  970A
-2135  970A 21 D2 90     	ld hl,Ctrl_3
-2136  970D CB 86        	res 0,(hl)												; Reinicia el flag de FRAME completo.
-2137  970F CB 96        	res 2,(hl)												; Reinicia el flag DETECTA MOVIMIENTO, (entidades).
-2138  9711 CB AE        	res 5,(hl)												; Reinicia el flag MOVIMIENTO DE AMADEUS.
-2139  9713
-2140  9713              ; 	Si Amadeus está desapareciendo no restauramos el FLAG de mov. de Amadeus.
-2141  9713
-2142  9713              ;	ld a,(Ctrl_2)
-2143  9713              ;	bit 6,a
-2144  9713              ;	ret nz
-2145  9713
-2146  9713              ;	res 5,(hl)
-2147  9713
-2148  9713 C9           	ret
-2149  9714
-2150  9714              ;	Ejecuta Shield.
-2151  9714
-2152  9714              Aplica_Shield
-2153  9714
-2154  9714              ;	Bit 1 "1" (Shield_3) Sólo borra.
-2155  9714              ;		  "0"     ""     Borra/Pinta.
-2156  9714              ;	Bit 2    ""  RET.	 No borra, no pinta.
-2157  9714
-2158  9714 21 01 91     	ld hl,Shield_3
-2159  9717
-2160  9717 CB 5E        	bit 3,(hl)
-2161  9719
-2162  9719 20 DE        	jr nz,Pintando_Amadeus
-2163  971B
-2164  971B CB 56        	bit 2,(hl)
-2165  971D 20 E7        	jr nz,1B
-2166  971F
-2167  971F CB 4E        	bit 1,(hl)
-2168  9721 C4 28 97     	call nz,Borra_Amadeus_shield
-2169  9724
-2170  9724 28 BF        	jr z,Borrando_Amadeus
-2171  9726 18 DE        	jr 1B
-2172  9728
-2173  9728              ; ----- ----- ----- ----- ----- ----- ----- ----- -----
-2174  9728
-2175  9728              Borra_Amadeus_shield
-2176  9728
-2177  9728 3A D2 90     	ld a,(Ctrl_3)
-2178  972B CB 6F        	bit 5,a
-2179  972D 28 08        	jr z,1F
-2180  972F
-2181  972F 2A B2 90     	ld hl,(Album_de_borrado_Amadeus)
-2182  9732 CD D7 95     	call Extrae_address
-2183  9735 18 06        	jr 2F
-2184  9737
-2185  9737 2A B0 90     1 ld hl,(Album_de_pintado_Amadeus)
-2186  973A CD D7 95     	call Extrae_address
-2187  973D
-2188  973D CD 4E 9F     2 call Pinta_Sprites
-2189  9740
-2190  9740 AF           	xor a
-2191  9741 3C           	inc a													; Asegura NZ en la salida de la rutina.
-2192  9742
-2193  9742 C9           	ret
-2194  9743
-2195  9743              Pinta_Amadeus_shield
-2196  9743
-2197  9743 2A B0 90     	ld hl,(Album_de_pintado_Amadeus)
-2198  9746 CD D7 95     	call Extrae_address
-2199  9749 CD 4E 9F     	call Pinta_Sprites
-2200  974C
-2201  974C AF           	xor a
-2202  974D 3C           	inc a													; Asegura NZ en la salida de la rutina.
-2203  974E
-2204  974E C9           	ret
-2205  974F
-2206  974F              Borra_Pinta_Amadeus_shield
-2207  974F
-2208  974F CD 28 97     	call Borra_Amadeus_shield
-2209  9752 CD 43 97     	call Pinta_Amadeus_shield
-2210  9755
-2211  9755 C9           	ret
+1958  965F              Actualiza_pantalla
+1959  965F
+1960  965F 3E 02        	ld a,2
+1961  9661 D3 FE        	out ($fe),a
+1962  9663
+1963  9663 3A D2 90     	ld a,(Ctrl_3)
+1964  9666 CB 57        	bit 2,a
+1965  9668 28 68        	jr z,Ejecuta_escudo                                     ; No hay movimiento de entidades. Saltamos a Amadeus.
+1966  966A
+1967  966A              ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
+1968  966A
+1969  966A 2A CA 90     	ld hl,(Scanlines_album_SP)
+1970  966D CD D7 95     	call Extrae_address
+1971  9670 24           	inc h
+1972  9671 25           	dec h
+1973  9672 28 25        	jr z,Pintando_entidades
+1974  9674
+1975  9674              Borrando_entidades
+1976  9674
+1977  9674 2A D0 90     	ld hl,(India_3_SP) 										; (Attr), (Columnas) y (.defw).
+1978  9677
+1979  9677 7E           	ld a,(hl)
+1980  9678 A7           	and a
+1981  9679 28 1E        	jr z,Pintando_entidades
+1982  967B
+1983  967B 4F           	ld c,a 													; (Attr) en C.
+1984  967C
+1985  967C              ;	Limpiamos (Attr) de (India_3_SP).
+1986  967C
+1987  967C AF           	xor a
+1988  967D 77           	ld (hl),a
+1989  967E
+1990  967E 2C           	inc l
+1991  967F
+1992  967F 7E           	ld a,(hl) 												; (Columnas) en A.
+1993  9680 32 81 90     	ld (Columnas),a
+1994  9683
+1995  9683              ;	Limpiamos (Columnas) de (India_3_SP).
+1996  9683
+1997  9683 AF           	xor a
+1998  9684 77           	ld (hl),a
+1999  9685
+2000  9685              ;	Adquirimos dirección de Scanlies_album.
+2001  9685
+2002  9685 2C           	inc l
+2003  9686
+2004  9686 CD D7 95     	call Extrae_address
+2005  9689
+2006  9689 12           	ld (de),a
+2007  968A 1C           	inc e
+2008  968B 12           	ld (de),a
+2009  968C 1C           	inc e
+2010  968D ED 53 D0 90  	ld (India_3_SP),de
+2011  9691
+2012  9691 CD D7 95     	call Extrae_address
+2013  9694 CD 4E 9F     	call Pinta_Sprites
+2014  9697
+2015  9697 18 DB        	jr Borrando_entidades
+2016  9699
+2017  9699              Pintando_entidades
+2018  9699
+2019  9699              ;	(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
+2020  9699              ;	.db, .db, .db, .defw
+2021  9699
+2022  9699 21 25 8C     	ld hl,Tabla_de_borrado
+2023  969C 22 D0 90     	ld (India_3_SP),hl 										; Inicializa el puntero de la (Tabla_de_borrado).
+2024  969F
+2025  969F              ;	Recabamos los datos de la (Tabla_de_pintado).
+2026  969F
+2027  969F 2A CC 90     3 ld hl,(India_SP)
+2028  96A2
+2029  96A2 2C           	inc l
+2030  96A3
+2031  96A3 7E           	ld a,(hl)
+2032  96A4 A7           	and a
+2033  96A5 28 2B        	jr z,Ejecuta_escudo 									; (Tabla_de_pintado) vacía. Saltamos a Amadeus.
+2034  96A7
+2035  96A7 32 6C 90     	ld (Attr),a
+2036  96AA 4F           	ld c,a 	 												; (Attr) en C.
+2037  96AB
+2038  96AB 2C           	inc l
+2039  96AC
+2040  96AC 7E           	ld a,(hl)
+2041  96AD 32 81 90     	ld (Columnas),a
+2042  96B0 2C           	inc l
+2043  96B1
+2044  96B1 CD D7 95     	call Extrae_address 									; .defw (Album_de_pintado) en HL.
+2045  96B4
+2046  96B4 1C           	inc e
+2047  96B5 1C           	inc e
+2048  96B6
+2049  96B6 ED 53 CC 90  	ld (India_SP),de 										; Puntero (India_SP) situado en la siguiente línea de la tabla.
+2050  96BA              ;
+2051  96BA              ;															; Tenemos: C, (Columna_Y).
+2052  96BA              ; 												  			 B, (Attr).
+2053  96BA              ; 												  			 A, (Columnas).
+2054  96BA
+2055  96BA              ; Datos a Tabla_de_borrado.
+2056  96BA
+2057  96BA EB           	ex de,hl
+2058  96BB 2A D0 90     	ld hl,(India_3_SP)
+2059  96BE
+2060  96BE 71           	ld (hl),c 												; (Attr).
+2061  96BF 2C           	inc l
+2062  96C0 77           	ld (hl),a 												; (Columnas).
+2063  96C1 2C           	inc l
+2064  96C2 73           	ld (hl),e 												; (.defw) dentro del (Album_de_pintado).
+2065  96C3 2C           	inc l
+2066  96C4 72           	ld (hl),d
+2067  96C5 2C           	inc l
+2068  96C6
+2069  96C6 22 D0 90     	ld (India_3_SP),hl
+2070  96C9
+2071  96C9 EB           	ex de,hl
+2072  96CA
+2073  96CA              ; ----- ----- ----- -----
+2074  96CA
+2075  96CA CD D7 95     	call Extrae_address
+2076  96CD CD 4E 9F     	call Pinta_Sprites
+2077  96D0
+2078  96D0 18 CD        	jr 3B
+2079  96D2
+2080  96D2              ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
+2081  96D2
+2082  96D2              Ejecuta_escudo
+2083  96D2
+2084  96D2 3E 03        	ld a,3
+2085  96D4 32 81 90     	ld (Columnas),a
+2086  96D7
+2087  96D7 3A D8 8C     	ld a,(Attr_Amadeus)
+2088  96DA 4F           	ld c,a
+2089  96DB
+2090  96DB 3A FF 90     	ld a,(Shield)
+2091  96DE A7           	and a
+2092  96DF 20 33        	jr nz,Aplica_Shield
+2093  96E1
+2094  96E1              ; -------------------------- debugggggg
+2095  96E1
+2096  96E1 3A D8 8C     	ld a,(Attr_Amadeus)
+2097  96E4 4F           	ld c,a
+2098  96E5
+2099  96E5              Borrando_Amadeus
+2100  96E5
+2101  96E5 21 D2 90     	ld hl,Ctrl_3
+2102  96E8 CB 6E        	bit 5,(hl)
+2103  96EA 28 1A        	jr z,1F													; No borramos. No ha habido movimiento.
+2104  96EC
+2105  96EC 2A B2 90     	ld hl,(Album_de_borrado_Amadeus)
+2106  96EF CD D7 95     	call Extrae_address
+2107  96F2 24           	inc h
+2108  96F3 25           	dec h
+2109  96F4 28 03        	jr z,Pintando_Amadeus
+2110  96F6 CD 4E 9F     	call Pinta_Sprites
+2111  96F9
+2112  96F9              Pintando_Amadeus
+2113  96F9
+2114  96F9 2A B0 90     	ld hl,(Album_de_pintado_Amadeus)
+2115  96FC CD D7 95     	call Extrae_address
+2116  96FF 24           	inc h
+2117  9700 25           	dec h
+2118  9701 28 03        	jr z,1F
+2119  9703 CD 4E 9F     	call Pinta_Sprites
+2120  9706
+2121  9706              ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
+2122  9706
+2123  9706 3E 01        1 ld a,1													; Borde azul.
+2124  9708 D3 FE        	out ($fe),a
+2125  970A
+2126  970A 21 D2 90     	ld hl,Ctrl_3
+2127  970D CB 86        	res 0,(hl)												; Reinicia el flag de FRAME completo.
+2128  970F CB 96        	res 2,(hl)												; Reinicia el flag DETECTA MOVIMIENTO, (entidades).
+2129  9711 CB AE        	res 5,(hl)												; Reinicia el flag MOVIMIENTO DE AMADEUS.
+2130  9713
+2131  9713              ; 	Si Amadeus está desapareciendo no restauramos el FLAG de mov. de Amadeus.
+2132  9713
+2133  9713              ;	ld a,(Ctrl_2)
+2134  9713              ;	bit 6,a
+2135  9713              ;	ret nz
+2136  9713
+2137  9713              ;	res 5,(hl)
+2138  9713
+2139  9713 C9           	ret
+2140  9714
+2141  9714              ;	Ejecuta Shield.
+2142  9714
+2143  9714              Aplica_Shield
+2144  9714
+2145  9714              ;	Bit 1 "1" (Shield_3) Sólo borra.
+2146  9714              ;		  "0"     ""     Borra/Pinta.
+2147  9714              ;	Bit 2    ""  RET.	 No borra, no pinta.
+2148  9714
+2149  9714 21 01 91     	ld hl,Shield_3
+2150  9717
+2151  9717 CB 5E        	bit 3,(hl)
+2152  9719
+2153  9719 20 DE        	jr nz,Pintando_Amadeus
+2154  971B
+2155  971B CB 56        	bit 2,(hl)
+2156  971D 20 E7        	jr nz,1B
+2157  971F
+2158  971F CB 4E        	bit 1,(hl)
+2159  9721 C4 28 97     	call nz,Borra_Amadeus_shield
+2160  9724
+2161  9724 28 BF        	jr z,Borrando_Amadeus
+2162  9726 18 DE        	jr 1B
+2163  9728
+2164  9728              ; ----- ----- ----- ----- ----- ----- ----- ----- -----
+2165  9728
+2166  9728              Borra_Amadeus_shield
+2167  9728
+2168  9728 3A D2 90     	ld a,(Ctrl_3)
+2169  972B CB 6F        	bit 5,a
+2170  972D 28 08        	jr z,1F
+2171  972F
+2172  972F 2A B2 90     	ld hl,(Album_de_borrado_Amadeus)
+2173  9732 CD D7 95     	call Extrae_address
+2174  9735 18 06        	jr 2F
+2175  9737
+2176  9737 2A B0 90     1 ld hl,(Album_de_pintado_Amadeus)
+2177  973A CD D7 95     	call Extrae_address
+2178  973D
+2179  973D CD 4E 9F     2 call Pinta_Sprites
+2180  9740
+2181  9740 AF           	xor a
+2182  9741 3C           	inc a													; Asegura NZ en la salida de la rutina.
+2183  9742
+2184  9742 C9           	ret
+2185  9743
+2186  9743              Pinta_Amadeus_shield
+2187  9743
+2188  9743 2A B0 90     	ld hl,(Album_de_pintado_Amadeus)
+2189  9746 CD D7 95     	call Extrae_address
+2190  9749 CD 4E 9F     	call Pinta_Sprites
+2191  974C
+2192  974C AF           	xor a
+2193  974D 3C           	inc a													; Asegura NZ en la salida de la rutina.
+2194  974E
+2195  974E C9           	ret
+2196  974F
+2197  974F              Borra_Pinta_Amadeus_shield
+2198  974F
+2199  974F CD 28 97     	call Borra_Amadeus_shield
+2200  9752 CD 43 97     	call Pinta_Amadeus_shield
+2201  9755
+2202  9755 C9           	ret
+2203  9756
+2204  9756              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+2205  9756              ;
+2206  9756              ;	11/7/25
+2207  9756              ;
+2208  9756
+2209  9756              Teclado
+2210  9756
+2211  9756              ; Shield.
 2212  9756
-2213  9756              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-2214  9756              ;
-2215  9756              ;	11/7/25
-2216  9756              ;
-2217  9756
-2218  9756              Teclado
-2219  9756
-2220  9756              ; Shield.
-2221  9756
-2222  9756 3A F8 90     	ld a,(Shields)
-2223  9759 A7           	and a
-2224  975A 28 1A        	jr z,1F 												; NO leemos SHIELD, no quedan escudos.
-2225  975C
-2226  975C 3A FF 90     	ld a,(Shield)
-2227  975F A7           	and a
-2228  9760 20 14        	jr nz,1F 												; No leemos SHIELD, estamos ejecutando escudo.
-2229  9762
-2230  9762 3E 7F        	ld a,$7f
-2231  9764 DB FE        	in a,($fe)
-2232  9766 E6 01        	and $01
-2233  9768 CC 41 96     	call z,Inicia_Shield      								; "SPACE" para SHIELD.
-2234  976B 20 09        	jr nz,1F
-2235  976D
-2236  976D 3E 5A        	ld a,90
-2237  976F 32 FF 90     	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
-2238  9772
-2239  9772 21 F8 90     	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
-2240  9775 35           	dec (hl)
-2241  9776
-2242  9776              ; 	Disparo.
-2243  9776
-2244  9776 3E F7        1 ld a,$f7													; "5" para disparar.
-2245  9778 DB FE        	in a,($fe)
-2246  977A E6 10        	and $10
-2247  977C CC B0 AD     	call z,Genera_disparo_Amadeus
-2248  977F
-2249  977F              ;	Movement.
-2250  977F
-2251  977F 21 6D 90     	ld hl,Ctrl_2
-2252  9782 CB 76        	bit 6,(hl)
-2253  9784 C0           	ret nz													; NIVEL SUPERADO. Amadeus está desapareciendo, no leemos teclado.
-2254  9785
-2255  9785 3E F7        	ld a,$f7		  										; Detecta cuando se pulsan las teclas "1" y "2"  y llama a las rutinas de "Mov_izq" y "Mov_der". $f7  detecta fila de teclas (5,4,3,2,1).
-2256  9787 DB FE        	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
-2257  9789 E6 01        	and $01													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $01 resulta "0"  llama a la rutina "Mov_izq".
-2258  978B CC B7 A8         call z,Amadeus_a_izquierda
-2259  978E
-2260  978E 3E F7        	ld a,$f7
-2261  9790 DB FE        	in a,($fe)
-2262  9792 E6 01        	and $01
-2263  9794 C8           	ret z
-2264  9795
-2265  9795 3E F7        	ld a,$f7
-2266  9797 DB FE        	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
-2267  9799 E6 02        	and $02													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $02 resulta "0"  llama a la rutina "Mov_der".
-2268  979B CC CF A8     	call z,Amadeus_a_derecha
-2269  979E
-2270  979E C9           	ret
-2271  979F
-2272  979F              ; ------------------------------------------------------------------------------------------------------------------------
-2273  979F              ;
-2274  979F              ;	10/3/25
-2275  979F              ;
-2276  979F
-2277  979F              Genera_explosion
-2278  979F
-2279  979F 21 E4 90     	ld hl,Clock_explosion
-2280  97A2 35           	dec (hl)
-2281  97A3 28 28        	jr z,Siguiente_frame_explosion							; Gestionamos la siguiente entidad.
-2282  97A5
-2283  97A5              Borra_entidad_colisionada
-2284  97A5
-2285  97A5 3A 6F 90     	ld a,(Filas)
-2286  97A8 A7           	and a
-2287  97A9 20 05        	jr nz,1F
-2288  97AB
-2289  97AB 3E 46        	ld a,%01000110 											; Amarillo.
-2290  97AD DD 77 0D     	ld (ix+13),a
-2291  97B0
-2292  97B0 CD 61 95     1 call Cargamos_registros_con_explosion
-2293  97B3 CD 3E 98     	call calcula_CColumnass_Explosion_entidad
-2294  97B6
-2295  97B6 DD E5        	push ix 												; (Puntero_de_impresion).
-2296  97B8 D5           	push de 												; (Puntero_objeto).
-2297  97B9
-2298  97B9 DD 2A 99 90  	ld ix,(Puntero_store_caja)
-2299  97BD CD 1F 94     	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
-2300  97C0
-2301  97C0 D1           	pop de
-2302  97C1 DD E1        	pop ix
-2303  97C3
-2304  97C3 CD AB 9D     	call Genera_datos_de_impresion
-2305  97C6
-2306  97C6 DD 2A 99 90  	ld ix,(Puntero_store_caja)
-2307  97CA
-2308  97CA AF           	xor a
-2309  97CB 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
-2310  97CC
-2311  97CC C9           	ret
-2312  97CD
-2313  97CD              Siguiente_frame_explosion
-2314  97CD
-2315  97CD 3E 42        	ld a,%01000010  										; Rojo.
-2316  97CF DD 77 0D     	ld (ix+13),a
-2317  97D2
-2318  97D2 3A 6F 90     	ld a,(Filas)
-2319  97D5 EE 01        	xor 1
-2320  97D7 32 6F 90     	ld (Filas),a
-2321  97DA
-2322  97DA 36 04        	ld (hl),4 												; Inicializamos (Clock_explosion), (velocidad de la explosión).
-2323  97DC
-2324  97DC              ; Avanza Frame de explosión.
-2325  97DC
-2326  97DC DD 6E 08     	ld l,(ix+8)
-2327  97DF DD 66 09     	ld h,(ix+9)												; ld hl,(Puntero_de_almacen_de_mov_masticados).
-2328  97E2
-2329  97E2 01 C4 8A     	ld bc,Indice_Explosion_entidades+4
-2330  97E5
-2331  97E5 79           	ld a,c
-2332  97E6 95           	sub l
-2333  97E7 20 4A        	jr nz,1F
-2334  97E9
+2213  9756 3A F8 90     	ld a,(Shields)
+2214  9759 A7           	and a
+2215  975A 28 1A        	jr z,1F 												; NO leemos SHIELD, no quedan escudos.
+2216  975C
+2217  975C 3A FF 90     	ld a,(Shield)
+2218  975F A7           	and a
+2219  9760 20 14        	jr nz,1F 												; No leemos SHIELD, estamos ejecutando escudo.
+2220  9762
+2221  9762 3E 7F        	ld a,$7f
+2222  9764 DB FE        	in a,($fe)
+2223  9766 E6 01        	and $01
+2224  9768 CC 41 96     	call z,Inicia_Shield      								; "SPACE" para SHIELD.
+2225  976B 20 09        	jr nz,1F
+2226  976D
+2227  976D 3E 5A        	ld a,90
+2228  976F 32 FF 90     	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
+2229  9772
+2230  9772 21 F8 90     	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
+2231  9775 35           	dec (hl)
+2232  9776
+2233  9776              ; 	Disparo.
+2234  9776
+2235  9776 3E F7        1 ld a,$f7													; "5" para disparar.
+2236  9778 DB FE        	in a,($fe)
+2237  977A E6 10        	and $10
+2238  977C CC B0 AD     	call z,Genera_disparo_Amadeus
+2239  977F
+2240  977F              ;	Movement.
+2241  977F
+2242  977F 21 6D 90     	ld hl,Ctrl_2
+2243  9782 CB 76        	bit 6,(hl)
+2244  9784 C0           	ret nz													; NIVEL SUPERADO. Amadeus está desapareciendo, no leemos teclado.
+2245  9785
+2246  9785 3E F7        	ld a,$f7		  										; Detecta cuando se pulsan las teclas "1" y "2"  y llama a las rutinas de "Mov_izq" y "Mov_der". $f7  detecta fila de teclas (5,4,3,2,1).
+2247  9787 DB FE        	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
+2248  9789 E6 01        	and $01													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $01 resulta "0"  llama a la rutina "Mov_izq".
+2249  978B CC B7 A8         call z,Amadeus_a_izquierda
+2250  978E
+2251  978E 3E F7        	ld a,$f7
+2252  9790 DB FE        	in a,($fe)
+2253  9792 E6 01        	and $01
+2254  9794 C8           	ret z
+2255  9795
+2256  9795 3E F7        	ld a,$f7
+2257  9797 DB FE        	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
+2258  9799 E6 02        	and $02													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $02 resulta "0"  llama a la rutina "Mov_der".
+2259  979B CC CF A8     	call z,Amadeus_a_derecha
+2260  979E
+2261  979E C9           	ret
+2262  979F
+2263  979F              ; ------------------------------------------------------------------------------------------------------------------------
+2264  979F              ;
+2265  979F              ;	10/3/25
+2266  979F              ;
+2267  979F
+2268  979F              Genera_explosion
+2269  979F
+2270  979F 21 E4 90     	ld hl,Clock_explosion
+2271  97A2 35           	dec (hl)
+2272  97A3 28 28        	jr z,Siguiente_frame_explosion							; Gestionamos la siguiente entidad.
+2273  97A5
+2274  97A5              Borra_entidad_colisionada
+2275  97A5
+2276  97A5 3A 6F 90     	ld a,(Filas)
+2277  97A8 A7           	and a
+2278  97A9 20 05        	jr nz,1F
+2279  97AB
+2280  97AB 3E 46        	ld a,%01000110 											; Amarillo.
+2281  97AD DD 77 0D     	ld (ix+13),a
+2282  97B0
+2283  97B0 CD 61 95     1 call Cargamos_registros_con_explosion
+2284  97B3 CD 3E 98     	call calcula_CColumnass_Explosion_entidad
+2285  97B6
+2286  97B6 DD E5        	push ix 												; (Puntero_de_impresion).
+2287  97B8 D5           	push de 												; (Puntero_objeto).
+2288  97B9
+2289  97B9 DD 2A 99 90  	ld ix,(Puntero_store_caja)
+2290  97BD CD 1F 94     	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
+2291  97C0
+2292  97C0 D1           	pop de
+2293  97C1 DD E1        	pop ix
+2294  97C3
+2295  97C3 CD AB 9D     	call Genera_datos_de_impresion
+2296  97C6
+2297  97C6 DD 2A 99 90  	ld ix,(Puntero_store_caja)
+2298  97CA
+2299  97CA AF           	xor a
+2300  97CB 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
+2301  97CC
+2302  97CC C9           	ret
+2303  97CD
+2304  97CD              Siguiente_frame_explosion
+2305  97CD
+2306  97CD 3E 42        	ld a,%01000010  										; Rojo.
+2307  97CF DD 77 0D     	ld (ix+13),a
+2308  97D2
+2309  97D2 3A 6F 90     	ld a,(Filas)
+2310  97D5 EE 01        	xor 1
+2311  97D7 32 6F 90     	ld (Filas),a
+2312  97DA
+2313  97DA 36 04        	ld (hl),4 												; Inicializamos (Clock_explosion), (velocidad de la explosión).
+2314  97DC
+2315  97DC              ; Avanza Frame de explosión.
+2316  97DC
+2317  97DC DD 6E 08     	ld l,(ix+8)
+2318  97DF DD 66 09     	ld h,(ix+9)												; ld hl,(Puntero_de_almacen_de_mov_masticados).
+2319  97E2
+2320  97E2 01 C4 8A     	ld bc,Indice_Explosion_entidades+4
+2321  97E5
+2322  97E5 79           	ld a,c
+2323  97E6 95           	sub l
+2324  97E7 20 4A        	jr nz,1F
+2325  97E9
+2326  97E9
+2327  97E9              ; Fín de la entidad !!!!!!!!!!!!!
+2328  97E9              ; Gestionamos entidades !!!!!!!!!!!!!!!!!!!!!!!!!!
+2329  97E9
+2330  97E9              ; Numero_de_entidades db 0									; Nº total de entidades maliciosas que contiene el nivel.
+2331  97E9              ; Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de entidades. (6 Cajas).
+2332  97E9              ; Entidades_en_curso db 0									; Entidades en pantalla.
+2333  97E9
+2334  97E9              ; La entidad eliminada, es la última del nivel ?
 2335  97E9
-2336  97E9              ; Fín de la entidad !!!!!!!!!!!!!
-2337  97E9              ; Gestionamos entidades !!!!!!!!!!!!!!!!!!!!!!!!!!
-2338  97E9
-2339  97E9              ; Numero_de_entidades db 0									; Nº total de entidades maliciosas que contiene el nivel.
-2340  97E9              ; Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de entidades. (6 Cajas).
-2341  97E9              ; Entidades_en_curso db 0									; Entidades en pantalla.
-2342  97E9
-2343  97E9              ; La entidad eliminada, es la última del nivel ?
-2344  97E9
-2345  97E9 3A A1 90     	ld a,(Numero_de_entidades)
-2346  97EC A7           	and a
-2347  97ED 28 38        	jr z,2F
-2348  97EF
-2349  97EF              ; Decrementa (Numero_de_entidades)
-2350  97EF
-2351  97EF 3D           	dec a
-2352  97F0 32 A1 90     	ld (Numero_de_entidades),a
-2353  97F3
-2354  97F3 21 A3 90     	ld hl,Entidades_en_curso
-2355  97F6 35           	dec (hl)
-2356  97F7
-2357  97F7              ; Restauramos una nueva entidad de la caja "Master" correspondiente.
-2358  97F7              ; IX apunta al 1er .db de la entidad eliminada.
-2359  97F7
-2360  97F7 2A F5 90     	ld hl,(Puntero_de_entidades)
-2361  97FA 7E           	ld a,(hl) 												; Clase de la siguiente entidad que hay que reponer en la caja.
-2362  97FB 2C           	inc l
-2363  97FC 22 F5 90     	ld (Puntero_de_entidades),hl
-2364  97FF
-2365  97FF CD 9B 9A     	call Obtiene_datos_de_Caja_Master						; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
-2366  9802
-2367  9802 DD E5        	push ix
-2368  9804 D1           	pop de
-2369  9805
-2370  9805 01 0E 00     	ld bc,14
-2371  9808 ED B0        	ldir
-2372  980A
-2373  980A              ; Generamos (Puntero_de_impresion) y coordenadas de la nueva entidad restaurada.
-2374  980A
-2375  980A CD 02 95     	call Obtenemos_puntero_de_impresion
-2376  980D CD 29 95     	call Decodifica_Puntero_de_impresion
-2377  9810
-2378  9810 DD 6E 06     	ld l,(ix+6)
-2379  9813 2C           	inc l
-2380  9814 DD 66 07     	ld h,(ix+7)												; (Puntero_de_impresion) en HL.
-2381  9817
-2382  9817 CD 71 9C     	call Genera_coordenadas
-2383  981A
-2384  981A ED 4B 61 90  	ld bc,(Coordenada_X)
-2385  981E
-2386  981E DD 71 02     	ld (ix+2),c
-2387  9821 DD 70 03     	ld (ix+3),b												; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
-2388  9824
-2389  9824 AF           	xor a
-2390  9825 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
-2391  9826
-2392  9826 C9           	ret
-2393  9827
-2394  9827              ; Decrementa (Numero_parcial_de_entidades) y (Entidades_en_curso).
-2395  9827
-2396  9827 21 A2 90     2 ld hl,Numero_parcial_de_entidades
-2397  982A 35           	dec (hl)
-2398  982B 23           	inc hl
-2399  982C 35           	dec (hl)
-2400  982D
-2401  982D CD 51 96     	call Limpia_caja_de_entidades
-2402  9830 C3 A5 97     	jp Borra_entidad_colisionada
-2403  9833
-2404  9833 23           1 inc hl
-2405  9834 23           	inc hl
-2406  9835
-2407  9835 DD 75 08     	ld (ix+8),l
-2408  9838 DD 74 09     	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
-2409  983B
-2410  983B C3 A5 97     	jp Borra_entidad_colisionada
-2411  983E
-2412  983E              ; ----- ----- ----- ----- -----
-2413  983E              ;
-2414  983E              ;	10/3/25
-2415  983E
-2416  983E              calcula_CColumnass_Explosion_entidad
-2417  983E
-2418  983E 7D           	ld a,l
-2419  983F E6 1F        	and $1f
-2420  9841 28 18        	jr z,Aparece_izquierda
-2421  9843
-2422  9843 08           	ex af,af
-2423  9844 3E 03        	ld a,3
-2424  9846 32 81 90     	ld (Columnas),a
-2425  9849 08           	ex af,af
-2426  984A
-2427  984A FE 1E        	cp $1e
-2428  984C D8           	ret c
-2429  984D
-2430  984D 28 06        	jr z,Dos_columnas_derecha
-2431  984F
-2432  984F              Aparece_derecha
-2433  984F
-2434  984F 3E 01        	ld a,1
-2435  9851 32 81 90     	ld (Columnas),a
-2436  9854 C9           	ret
-2437  9855
-2438  9855              Dos_columnas_derecha
-2439  9855
-2440  9855 3E 02        	ld a,2
-2441  9857 32 81 90     	ld (Columnas),a
-2442  985A C9           	ret
-2443  985B
-2444  985B 3C           Aparece_izquierda inc a
-2445  985C 3C           	inc a
-2446  985D 32 81 90     	ld (Columnas),a
-2447  9860 1C           	inc e
-2448  9861
-2449  9861 C9           	ret
-2450  9862
-2451  9862              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-2452  9862
-2453  9862              Genera_explosion_Amadeus
-2454  9862
-2455  9862 21 E5 90     	ld hl,Clock_explosion_Amadeus
-2456  9865 35           	dec (hl)
-2457  9866 28 26        	jr z,Siguiente_frame_explosion_Amadeus					; Gestionamos la siguiente entidad.
-2458  9868
-2459  9868              Borra_Amadeus_impactado
-2460  9868
-2461  9868 3A 70 90     	ld a,(Columns)
-2462  986B A7           	and a
-2463  986C 20 05        	jr nz,3F
-2464  986E
-2465  986E 3E 46        	ld a,%01000110 											; Amarillo.
-2466  9870 32 D8 8C     	ld (Attr_Amadeus),a
-2467  9873
-2468  9873 CD 84 93     3 call Change_Amadeus
-2469  9876 CD 75 95     	call Cargamos_registros_con_explosion_Amadeus
-2470  9879
-2471  9879              ;	Detecta si Amadeus esta pegado al extremo derecho de la pantalla.
-2472  9879              ;	IX contiene (Puntero_de_impresion) de Amadeus.
-2473  9879
-2474  9879 DD 7D        	ld a,ixl
-2475  987B E6 1F        	and $1f
-2476  987D FE 1E        	cp $1e
-2477  987F 20 02        	jr nz,2F
-2478  9881
-2479  9881              ;	La explosión de Amadeus ocupa tres columnas por lo que corregiremos su (Puntero_de_impresion) para_
-2480  9881              ;	_que no aparezca parte de la explosión en la 1ª columna de pantalla.
-2481  9881
-2482  9881 DD 2D        	dec ixl 												; ($1d).
-2483  9883
-2484  9883 CD 9F 95     2 call Genera_datos_de_impresion_Amadeus
-2485  9886
-2486  9886 21 D2 90     	ld hl,Ctrl_3
-2487  9889 CB EE        	set 5,(hl)												; Indicamos que hay movimiento, (se modifica el Sprite debido a la explosión).
-2488  988B
-2489  988B AF           	xor a
-2490  988C 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
-2491  988D
-2492  988D C9           	ret
-2493  988E
-2494  988E              Siguiente_frame_explosion_Amadeus
-2495  988E
-2496  988E 36 05        	ld (hl),5 												; Inicializamos (Clock_explosion_Amadeus), (velocidad de la explosión).
-2497  9890
-2498  9890 3E 42        	ld a,%01000010  										; Rojo.
-2499  9892 32 D8 8C     	ld (Attr_Amadeus),a
-2500  9895
-2501  9895 3A 70 90     	ld a,(Columns)
-2502  9898 EE 01        	xor 1
-2503  989A 32 70 90     	ld (Columns),a
-2504  989D
-2505  989D              ; Avanza Frame de explosión.
-2506  989D
-2507  989D 2A D3 8C     	ld hl,(Pamm_Amadeus)
-2508  98A0 01 64 8B     	ld bc,Indice_Explosion_Amadeus+4
-2509  98A3
-2510  98A3 79           	ld a,c
-2511  98A4 95           	sub l
-2512  98A5 20 0B        	jr nz,1F
-2513  98A7
-2514  98A7              ; Fín de Amadeus !!!!!!!!!!!!!
-2515  98A7              ; Activamos el FLAG de Amadeus destruido, ( bit_6 Ctrl_3 ).
-2516  98A7
-2517  98A7 AF           	xor a
-2518  98A8 32 D0 8C     	ld (Impacto_Amadeus),a
-2519  98AB
-2520  98AB 21 D2 90     	ld hl,Ctrl_3
-2521  98AE CB F6        	set 6,(hl)
-2522  98B0
-2523  98B0 18 B6        	jr Borra_Amadeus_impactado
-2524  98B2
-2525  98B2 23           1 inc hl
-2526  98B3 23           	inc hl
-2527  98B4 22 D3 8C     	ld (Pamm_Amadeus),hl
-2528  98B7 18 AF        	jr Borra_Amadeus_impactado
-2529  98B9
-2530  98B9              ; ---------------------------------------------------------------
-2531  98B9
-2532  98B9              ;	Rutinas consecutivas, no hay bytes libres entre ellas.
-2533  98B9
-2534  98B9              	include "RND_Derivando.asm"
+2336  97E9 3A A1 90     	ld a,(Numero_de_entidades)
+2337  97EC A7           	and a
+2338  97ED 28 38        	jr z,2F
+2339  97EF
+2340  97EF              ; Decrementa (Numero_de_entidades)
+2341  97EF
+2342  97EF 3D           	dec a
+2343  97F0 32 A1 90     	ld (Numero_de_entidades),a
+2344  97F3
+2345  97F3 21 A3 90     	ld hl,Entidades_en_curso
+2346  97F6 35           	dec (hl)
+2347  97F7
+2348  97F7              ; Restauramos una nueva entidad de la caja "Master" correspondiente.
+2349  97F7              ; IX apunta al 1er .db de la entidad eliminada.
+2350  97F7
+2351  97F7 2A F5 90     	ld hl,(Puntero_de_entidades)
+2352  97FA 7E           	ld a,(hl) 												; Clase de la siguiente entidad que hay que reponer en la caja.
+2353  97FB 2C           	inc l
+2354  97FC 22 F5 90     	ld (Puntero_de_entidades),hl
+2355  97FF
+2356  97FF CD 9B 9A     	call Obtiene_datos_de_Caja_Master						; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
+2357  9802
+2358  9802 DD E5        	push ix
+2359  9804 D1           	pop de
+2360  9805
+2361  9805 01 0E 00     	ld bc,14
+2362  9808 ED B0        	ldir
+2363  980A
+2364  980A              ; Generamos (Puntero_de_impresion) y coordenadas de la nueva entidad restaurada.
+2365  980A
+2366  980A CD 02 95     	call Obtenemos_puntero_de_impresion
+2367  980D CD 29 95     	call Decodifica_Puntero_de_impresion
+2368  9810
+2369  9810 DD 6E 06     	ld l,(ix+6)
+2370  9813 2C           	inc l
+2371  9814 DD 66 07     	ld h,(ix+7)												; (Puntero_de_impresion) en HL.
+2372  9817
+2373  9817 CD 71 9C     	call Genera_coordenadas
+2374  981A
+2375  981A ED 4B 61 90  	ld bc,(Coordenada_X)
+2376  981E
+2377  981E DD 71 02     	ld (ix+2),c
+2378  9821 DD 70 03     	ld (ix+3),b												; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+2379  9824
+2380  9824 AF           	xor a
+2381  9825 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
+2382  9826
+2383  9826 C9           	ret
+2384  9827
+2385  9827              ; Decrementa (Numero_parcial_de_entidades) y (Entidades_en_curso).
+2386  9827
+2387  9827 21 A2 90     2 ld hl,Numero_parcial_de_entidades
+2388  982A 35           	dec (hl)
+2389  982B 23           	inc hl
+2390  982C 35           	dec (hl)
+2391  982D
+2392  982D CD 51 96     	call Limpia_caja_de_entidades
+2393  9830 C3 A5 97     	jp Borra_entidad_colisionada
+2394  9833
+2395  9833 23           1 inc hl
+2396  9834 23           	inc hl
+2397  9835
+2398  9835 DD 75 08     	ld (ix+8),l
+2399  9838 DD 74 09     	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
+2400  983B
+2401  983B C3 A5 97     	jp Borra_entidad_colisionada
+2402  983E
+2403  983E              ; ----- ----- ----- ----- -----
+2404  983E              ;
+2405  983E              ;	10/3/25
+2406  983E
+2407  983E              calcula_CColumnass_Explosion_entidad
+2408  983E
+2409  983E 7D           	ld a,l
+2410  983F E6 1F        	and $1f
+2411  9841 28 18        	jr z,Aparece_izquierda
+2412  9843
+2413  9843 08           	ex af,af
+2414  9844 3E 03        	ld a,3
+2415  9846 32 81 90     	ld (Columnas),a
+2416  9849 08           	ex af,af
+2417  984A
+2418  984A FE 1E        	cp $1e
+2419  984C D8           	ret c
+2420  984D
+2421  984D 28 06        	jr z,Dos_columnas_derecha
+2422  984F
+2423  984F              Aparece_derecha
+2424  984F
+2425  984F 3E 01        	ld a,1
+2426  9851 32 81 90     	ld (Columnas),a
+2427  9854 C9           	ret
+2428  9855
+2429  9855              Dos_columnas_derecha
+2430  9855
+2431  9855 3E 02        	ld a,2
+2432  9857 32 81 90     	ld (Columnas),a
+2433  985A C9           	ret
+2434  985B
+2435  985B 3C           Aparece_izquierda inc a
+2436  985C 3C           	inc a
+2437  985D 32 81 90     	ld (Columnas),a
+2438  9860 1C           	inc e
+2439  9861
+2440  9861 C9           	ret
+2441  9862
+2442  9862              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+2443  9862
+2444  9862              Genera_explosion_Amadeus
+2445  9862
+2446  9862 21 E5 90     	ld hl,Clock_explosion_Amadeus
+2447  9865 35           	dec (hl)
+2448  9866 28 26        	jr z,Siguiente_frame_explosion_Amadeus					; Gestionamos la siguiente entidad.
+2449  9868
+2450  9868              Borra_Amadeus_impactado
+2451  9868
+2452  9868 3A 70 90     	ld a,(Columns)
+2453  986B A7           	and a
+2454  986C 20 05        	jr nz,3F
+2455  986E
+2456  986E 3E 46        	ld a,%01000110 											; Amarillo.
+2457  9870 32 D8 8C     	ld (Attr_Amadeus),a
+2458  9873
+2459  9873 CD 84 93     3 call Change_Amadeus
+2460  9876 CD 75 95     	call Cargamos_registros_con_explosion_Amadeus
+2461  9879
+2462  9879              ;	Detecta si Amadeus esta pegado al extremo derecho de la pantalla.
+2463  9879              ;	IX contiene (Puntero_de_impresion) de Amadeus.
+2464  9879
+2465  9879 DD 7D        	ld a,ixl
+2466  987B E6 1F        	and $1f
+2467  987D FE 1E        	cp $1e
+2468  987F 20 02        	jr nz,2F
+2469  9881
+2470  9881              ;	La explosión de Amadeus ocupa tres columnas por lo que corregiremos su (Puntero_de_impresion) para_
+2471  9881              ;	_que no aparezca parte de la explosión en la 1ª columna de pantalla.
+2472  9881
+2473  9881 DD 2D        	dec ixl 												; ($1d).
+2474  9883
+2475  9883 CD 9F 95     2 call Genera_datos_de_impresion_Amadeus
+2476  9886
+2477  9886 21 D2 90     	ld hl,Ctrl_3
+2478  9889 CB EE        	set 5,(hl)												; Indicamos que hay movimiento, (se modifica el Sprite debido a la explosión).
+2479  988B
+2480  988B AF           	xor a
+2481  988C 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
+2482  988D
+2483  988D C9           	ret
+2484  988E
+2485  988E              Siguiente_frame_explosion_Amadeus
+2486  988E
+2487  988E 36 05        	ld (hl),5 												; Inicializamos (Clock_explosion_Amadeus), (velocidad de la explosión).
+2488  9890
+2489  9890 3E 42        	ld a,%01000010  										; Rojo.
+2490  9892 32 D8 8C     	ld (Attr_Amadeus),a
+2491  9895
+2492  9895 3A 70 90     	ld a,(Columns)
+2493  9898 EE 01        	xor 1
+2494  989A 32 70 90     	ld (Columns),a
+2495  989D
+2496  989D              ; Avanza Frame de explosión.
+2497  989D
+2498  989D 2A D3 8C     	ld hl,(Pamm_Amadeus)
+2499  98A0 01 64 8B     	ld bc,Indice_Explosion_Amadeus+4
+2500  98A3
+2501  98A3 79           	ld a,c
+2502  98A4 95           	sub l
+2503  98A5 20 0B        	jr nz,1F
+2504  98A7
+2505  98A7              ; Fín de Amadeus !!!!!!!!!!!!!
+2506  98A7              ; Activamos el FLAG de Amadeus destruido, ( bit_6 Ctrl_3 ).
+2507  98A7
+2508  98A7 AF           	xor a
+2509  98A8 32 D0 8C     	ld (Impacto_Amadeus),a
+2510  98AB
+2511  98AB 21 D2 90     	ld hl,Ctrl_3
+2512  98AE CB F6        	set 6,(hl)
+2513  98B0
+2514  98B0 18 B6        	jr Borra_Amadeus_impactado
+2515  98B2
+2516  98B2 23           1 inc hl
+2517  98B3 23           	inc hl
+2518  98B4 22 D3 8C     	ld (Pamm_Amadeus),hl
+2519  98B7 18 AF        	jr Borra_Amadeus_impactado
+2520  98B9
+2521  98B9              ; ---------------------------------------------------------------
+2522  98B9
+2523  98B9              ;	Rutinas consecutivas, no hay bytes libres entre ellas.
+2524  98B9
+2525  98B9              	include "RND_Derivando.asm"
 # file opened: RND_Derivando.asm
    1+ 98B9              ; ******************************************************************************************************************************************************************************************
    2+ 98B9              ;
@@ -4420,7 +4411,7 @@
   57+ 98E6
   58+ 98E6
 # file closed: RND_Derivando.asm
-2535  98E6              	include "Rutinas_de_inicio_y_niveles.asm"
+2526  98E6              	include "Rutinas_de_inicio_y_niveles.asm"
 # file opened: Rutinas_de_inicio_y_niveles.asm
    1+ 98E6              ; ---------------------------------------------------------------------------------------------------------------------
    2+ 98E6              ;
@@ -5518,7 +5509,7 @@
 1094+ 9C51 C9           	ret
 1095+ 9C52
 # file closed: Rutinas_de_inicio_y_niveles.asm
-2536  9C52              	include "calcula_tercio.asm"
+2527  9C52              	include "calcula_tercio.asm"
 # file opened: calcula_tercio.asm
    1+ 9C52              ; ******************************************* Indica el tercio de pantalla en el que nos encontramos según el valor del registro H ********************************************************
    2+ 9C52              ;
@@ -5535,7 +5526,7 @@
   13+ 9C5B C9           	ret
   14+ 9C5C
 # file closed: calcula_tercio.asm
-2537  9C5C              	include "Cls.asm"
+2528  9C5C              	include "Cls.asm"
 # file opened: Cls.asm
    1+ 9C5C              ; *********************************** Limpia la pantalla, CLEAR SCREEN ****************************************************************
    2+ 9C5C              ;
@@ -5573,7 +5564,7 @@
   34+ 9C70 C9           	ret
   35+ 9C71
 # file closed: Cls.asm
-2538  9C71              	include "Genera_coordenadas.asm"
+2529  9C71              	include "Genera_coordenadas.asm"
 # file opened: Genera_coordenadas.asm
    1+ 9C71              ; ------------------------------------------------------------------------
    2+ 9C71              ;
@@ -5624,7 +5615,7 @@
   47+ 9C9C C9           	ret
   48+ 9C9D
 # file closed: Genera_coordenadas.asm
-2539  9C9D              	include "Transiciones_y_efectos.asm"
+2530  9C9D              	include "Transiciones_y_efectos.asm"
 # file opened: Transiciones_y_efectos.asm
    1+ 9C9D              ; ------------------------------------------------------------------------
    2+ 9C9D              ;
@@ -5988,7 +5979,7 @@
  360+ 9DA9 18 F0        	jr Pinta_rayo
  361+ 9DAB
 # file closed: Transiciones_y_efectos.asm
-2540  9DAB              	include "Genera_datos_de_impresion.asm"
+2531  9DAB              	include "Genera_datos_de_impresion.asm"
 # file opened: Genera_datos_de_impresion.asm
    1+ 9DAB              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
    2+ 9DAB              ;
@@ -6283,7 +6274,7 @@
  291+ 9E9E C9               ret
  292+ 9E9F
 # file closed: Genera_datos_de_impresion.asm
-2541  9E9F              	include "Pinta_Sprites.asm"
+2532  9E9F              	include "Pinta_Sprites.asm"
 # file opened: Pinta_Sprites.asm
    1+ 9E9F              ; ------------------------------------------------------------------------
    2+ 9E9F              ;
@@ -7593,7 +7584,7 @@
 1306+ A311 C9               ret
 1307+ A312
 # file closed: Pinta_Sprites.asm
-2542  A312              	include "Draw_XOR.asm"
+2533  A312              	include "Draw_XOR.asm"
 # file opened: Draw_XOR.asm
    1+ A312              ; ******************************************************************************************************************************************************************************************
    2+ A312              ;
@@ -8249,7 +8240,7 @@
  652+ A538
  653+ A538
 # file closed: Draw_XOR.asm
-2543  A538              	include "Direcciones.asm"
+2534  A538              	include "Direcciones.asm"
 # file opened: Direcciones.asm
    1+ A538              ; **********************************************************************************************************************************************************
    2+ A538              ;
@@ -9160,7 +9151,7 @@
  907+ A8E9 C9           	ret
  908+ A8EA
 # file closed: Direcciones.asm
-2544  A8EA              	include "Movimiento.asm"
+2535  A8EA              	include "Movimiento.asm"
 # file opened: Movimiento.asm
    1+ A8EA              ; ----- ----- ----- ----- -----
    2+ A8EA              ;
@@ -9566,7 +9557,7 @@
  402+ AA5B C9               ret
  403+ AA5C
 # file closed: Movimiento.asm
-2545  AA5C              	include "Disparo.asm"
+2536  AA5C              	include "Disparo.asm"
 # file opened: Disparo.asm
    1+ AA5C              ;------------------------------------------
    2+ AA5C              ;
@@ -11085,13 +11076,13 @@
 1515+ AF19
 1516+ AF19
 # file closed: Disparo.asm
-2546  AF19
-2547  AF19              ;	End $ae8f Último byte.
-2548  AF19              ;		$ae90 1er byte libre.
-2549  AF19
-2550  AF19              	SAVESNA "Pruebas.sna", START
-2551  AF19
-2552  AF19
-2553  AF19
-2554  AF19
+2537  AF19
+2538  AF19              ;	End $ae8f Último byte.
+2539  AF19              ;		$ae90 1er byte libre.
+2540  AF19
+2541  AF19              	SAVESNA "Pruebas.sna", START
+2542  AF19
+2543  AF19
+2544  AF19
+2545  AF19
 # file closed: Banco_de_pruebas.asm
