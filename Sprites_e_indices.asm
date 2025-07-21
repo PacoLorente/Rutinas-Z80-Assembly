@@ -92,6 +92,24 @@ logo_us:
 
 ;	---------- + ----------
 
+;	Icono de las Vidas + Shield.
+
+;	Pixel Size:      ( 24,  24)
+;
+;	(Puntero_de_impresion) ..... $4066
+
+Vidas:
+
+	DEFB	$00,$7E,$00,$01,$FF,$00,$03,$FF
+	DEFB	$00,$07,$FF,$00,$06,$1F,$40,$0C
+	DEFB	$0E,$20,$08,$00,$20,$10,$00,$10
+	DEFB	$10,$18,$10,$10,$18,$08,$10,$3C
+	DEFB	$08,$10,$3C,$08,$10,$7E,$08,$10
+	DEFB	$7E,$08,$10,$FF,$08,$08,$E7,$08
+	DEFB	$08,$00,$08,$0C,$00,$10,$04,$70
+	DEFB	$30,$02,$F8,$60,$00,$FF,$E0,$00
+	DEFB	$FF,$C0,$00,$FF,$80,$00,$7E,$00
+
 ;	Disparo.
 
 Disparo_de_entidad_derecho DEFB $18,$00,$00
@@ -146,8 +164,6 @@ Indice_Badplate_izq defw Badplate
 
 ;	Free mem. $84e6 - $84ff .....$19 / 25d Bytes.
 
-	org $8500
-
 Badplate
 
 	DEFB	$03,$00,$00,$00,$80,$00,$00,$80
@@ -184,6 +200,8 @@ Badplate_fa
 	DEFB	$C0,$19,$86,$60,$19,$FE,$60,$0F
 	DEFB	$87,$C0,$07,$87,$80,$01,$FE,$00
 
+	org $8600
+
 Badplate_fb
 
 	DEFB	$00,$30,$00,$00,$08,$00,$00,$08
@@ -194,8 +212,6 @@ Badplate_fb
 	DEFB	$3C,$60,$03,$BD,$C0,$00,$FF,$00
 
 ;	Free mem. $85f0 - $85ff .....$0f / 15d Bytes.
-
-	org $8600
 
 Badplate_fc
 
@@ -287,14 +303,14 @@ Badsat_izq_fc DEFB $00,$00,$40,$00,$10,$A0,$00,$11
 	DEFB	$40,$02,$A2,$00,$05,$53,$00,$02
 	DEFB	$A0,$00,$01,$40,$00,$00,$80,$00 	; $Fc (3er DESPLZ a izquierda).
 
+	org $8800
+
 Badsat_izq_fd DEFB $00,$00,$20,$00,$08,$50,$00,$08
 	DEFB	$A8,$00,$09,$54,$00,$0A,$A8,$00
 	DEFB	$09,$50,$01,$FF,$A0,$00,$0D,$80
 	DEFB	$00,$2B,$80,$00,$5F,$F8,$00,$AF
 	DEFB	$80,$01,$51,$00,$02,$A9,$00,$01
 	DEFB	$51,$00,$00,$A0,$00,$00,$40,$00 	; $Fd (2º DESPLZ a izquierda).
-
-	org $8800
 
 ;	Free mem. $87f0 - $87ff .....$0f / 15d Bytes.
 
@@ -403,8 +419,6 @@ Indice_Amadeus_izq defw Amadeus
 	defw Amadeus_F9								; [$FD] right - [$FE] left
 	defw 0	 									; (Fín de índice).
 
-	org $8a00
-
 ;	Free mem. $89e0 - $89ff .....$1f / 31d Bytes.
 
 Amadeus DEFB $01,$80,0
@@ -451,6 +465,8 @@ Indice_Explosion_entidades defw Explosion_entidades_1
 	defw Explosion_entidades_2
 	defw Explosion_entidades_3
 
+	org $8b00
+
 Explosion_entidades_1 DEFB $00,$10,$00
 	DEFB 	$08,$10,$00
 	DEFB	$04,$38,$40
@@ -467,8 +483,6 @@ Explosion_entidades_1 DEFB $00,$10,$00
 	DEFB	$03,$00,$40
 	DEFB	$04,$00,$00
 	DEFB	$08,$00,$00
-
-	org $8b00
 
 ;	Free mem. $8af6 - $8aff .....$09 / 9d Bytes.
 
@@ -526,6 +540,8 @@ Explosion_Amadeus_2	DEFB $00,$18,$02
 	DEFB	$08,$BA,$4C
 	DEFB	$07,$19,$80
 
+	org $8c00
+	
 Explosion_Amadeus_3	DEFB $00,$00,$00
 	DEFB	$00,$00,$00
 	DEFB	$00,$00,$00

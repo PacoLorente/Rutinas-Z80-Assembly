@@ -13,7 +13,7 @@
 
 ;	Free mem. $8bf6 - $8bf8 .....$03 / 3d Bytes.
 
-	org $8bf9
+	org $8c30
 
 Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
@@ -218,8 +218,6 @@ Caja_2
 ; ---------- ---------- ---------- ---------- ----------	
 
 ;	Free mem. $8cf5 - $8cff .....$0a / 10d Bytes.
-
-	org $8d00
 
 Caja_3
 
