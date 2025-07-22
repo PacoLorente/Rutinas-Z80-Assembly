@@ -11,9 +11,9 @@ Imprime_Logo_principal
 	ld hl,Direccion_Logo_principal
 	ld de,Logo_nave													; (3x24)
 
-	ld c,24															; Nº de scans en C.
-	ld b,3															; Nº de Columnas en A y B.
-	ld a,b
+	ld a,%01000111 													; Attr. en A.
+	ld b,3															; Nº de Columnas en B.
+	ld c,3															; Nº de Filas en C.
 
 	push hl
 	call Pinta_imagen												; Pinta la nave.
@@ -35,7 +35,7 @@ Imprime_Logo_principal
 
 	ld c,16															; Nº de scans en C.
 	ld b,3															; Nº de Columnas en A y B.
-	ld a,b
+	ld a,b	
 
 	push hl
 	call Pinta_imagen												; Pinta "ma".
@@ -57,7 +57,7 @@ Imprime_Logo_principal
 
 	ld c,24															; Nº de scans en C.
 	ld b,3															; Nº de Columnas en A y B.
-	ld a,b
+	ld a,b	
 
 	push hl
 	call Pinta_imagen												; Pinta "ad".
@@ -80,7 +80,7 @@ Imprime_Logo_principal
 
 	ld c,16															; Nº de scans en C.
 	ld b,3															; Nº de Columnas en A y B.
-	ld a,b
+	ld a,b	
 
 	push hl
 	call Pinta_imagen												; Pinta "eu".
@@ -98,7 +98,7 @@ Imprime_Logo_principal
 
 	ld c,16															; Nº de scans en C.
 	ld b,3															; Nº de Columnas en A y B.
-	ld a,b
+	ld a,b	
 
 	push hl
 	call Pinta_imagen												; Pinta "us".

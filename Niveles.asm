@@ -1,4 +1,14 @@
-; 19/1/24
+;	22/07/25	
+
+Indice_de_vidas	defw Vida_1
+	defw Vida_2
+	defw Vida_3
+
+Indice_de_escudos defw Escudo_1
+	defw Escudo_2
+	defw Escudo_3
+
+;	19/1/24
 
 Indice_de_niveles
 

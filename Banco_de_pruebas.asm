@@ -25,6 +25,18 @@ FRAMES_3 equ $5c7a
 Direccion_Logo_principal equ $4048
 Sprite_vacio equ $82f0													; 48 Bytes de "0".
 
+;	Vidas y escudos:
+
+Escudo_1 equ $4000														; Dirección de pantalla donde se pintan los escudos.
+Escudo_2 equ $4003
+Escudo_3 equ $4006
+
+Vida_1 equ $4021														; Dirección de pantalla donde se pintan las vidas.
+Vida_2 equ $4024
+Vida_3 equ $4027															
+
+;	-----
+
 Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
 ; Scanlines_album. 
@@ -352,6 +364,9 @@ Repone_puntero_objeto defw 0								; Almacena (Puntero_objeto). Cuando el Sprit
 ; 															; _ Cuando hemos terminado de iniciarlo y guardado su foto, hemos de recuperar su (Puntero_objeto).
 ;															; (Repone_puntero_objeto) es una copia de respaldo de (Puntero_objeto) y su función es restaurarlo.
 
+Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
+Puntero_de_vidas defw Indice_de_vidas
+
 ; Gestión de ENTIDADES y CAJAS.
 
 Puntero_store_caja defw 0
@@ -534,6 +549,12 @@ START
 
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
+
+;	Imprime escudos.
+
+	call Imprime_escudo
+	call Imprime_escudo
+	call Imprime_escudo
 
 ;	Marcadores.
 

@@ -1,5 +1,27 @@
 ; ------------------------------------------------------------------------
 ;
+;   22/7/25
+;
+;   Imprime_escudo
+
+Imprime_escudo ld hl,(Puntero_de_escudos)
+    call Extrae_address
+
+    inc de
+    inc de
+
+    ld (Puntero_de_escudos),de
+
+    ld de,Escudo
+    ld bc,$0318
+    ld a,b
+
+    call Pinta_imagen
+
+    ret
+
+; ------------------------------------------------------------------------
+;
 ;	19/7/25
 ;
 ;	Pinta_imagen.
@@ -8,19 +30,25 @@
 ;
 ;	INPUTS: HL contiene la dirección de memoria depantalla donde queremos imprimir la imagen, (esquina superior izquierda).
 ;			DE contiene la dirección del 1er .db que conforman los datos de la imagen.
-;			 C contiene el nº de scanlines que tiene la imagen.
-;			 B contiene el nº de columnas que forma la imagen.
+;            A contiene los Attr.
+;            B contiene el nº de Columnas.
+;			 C contiene el nº de Filas.
 ;
 ;	MODIFICA: AF,HL,DE y BC.
 
 Pinta_imagen
 
-	ex af,af														; Copia de respaldo de las Columnas en A'.
+    jr $
 
+	ex af,af														; Copia de respaldo de las Columnas en A'.
 	push hl															; PUSH dirección de mem. de pantalla.
 
 1 ld a,(de)
 	ld (hl),a
+
+    jr $
+    call Calcula_direccion_atributos
+
 
 	inc e
 	inc l
@@ -28,7 +56,7 @@ Pinta_imagen
 	djnz 1B
 
 	dec c
-	jr z,salida
+	jr z,2F
 
 ;	Sitúa HL en el siguiente scan.
 
@@ -42,7 +70,7 @@ Pinta_imagen
 
 	jr Pinta_imagen
 
-salida pop hl
+2 pop hl
     ret
 
 ; --------------------------------------------------------------------------------------

@@ -98,22 +98,28 @@ logo_us:
 ;
 ;	(Puntero_de_impresion) ..... $4066
 
-Vidas:
+Escudo:
 
-	DEFB	$00,$7E,$00,$01,$FF,$00,$03,$FF
-	DEFB	$00,$07,$FF,$00,$06,$1F,$40,$0C
-	DEFB	$0E,$20,$08,$00,$20,$10,$00,$10
-	DEFB	$10,$18,$10,$10,$18,$08,$10,$3C
-	DEFB	$08,$10,$3C,$08,$10,$7E,$08,$10
-	DEFB	$7E,$08,$10,$FF,$08,$08,$E7,$08
-	DEFB	$08,$00,$08,$0C,$00,$10,$04,$70
-	DEFB	$30,$02,$F8,$60,$00,$FF,$E0,$00
-	DEFB	$FF,$C0,$00,$FF,$80,$00,$7E,$00
+	DEFB	$00,$7e,$00,$01,$ff,$00,$03,$ff
+	DEFB	$00,$07,$ff,$00,$06,$1f,$40,$0c
+	DEFB	$0e,$20,$08,$00,$20,$10,$00,$10
+	DEFB	$10,$00,$10,$10,$00,$08,$10,$00
+	DEFB	$08,$10,$00,$08,$10,$00,$08,$10
+	DEFB	$00,$08,$10,$00,$08,$08,$00,$08
+	DEFB	$08,$00,$08,$0c,$00,$10,$04,$70
+	DEFB	$30,$02,$f8,$60,$00,$ff,$e0,$00
+	DEFB	$ff,$c0,$00,$ff,$80,$00,$7e,$00
+
+Vida:
+
+	DEFB 	$18,$18,$3c,$3c,$7e,$7e,$ff,$e7
 
 ;	Disparo.
 
 Disparo_de_entidad_derecho DEFB $18,$00,$00
 Disparo_de_entidad_izquierdo DEFB $00,$00,$18
+
+	org $8500
 
 Indice_disparo_Amadeus defw Disparo_0
 	defw Disparo_f9
