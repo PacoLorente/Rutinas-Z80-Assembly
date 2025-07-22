@@ -13,8 +13,24 @@ Imprime_escudo ld hl,(Puntero_de_escudos)
     ld (Puntero_de_escudos),de
 
     ld de,Escudo
-    ld bc,$0318
-    ld a,b
+    ld bc,$0303
+    ld a,%01000010
+
+    call Pinta_imagen
+
+    ret
+
+Imprime_vida ld hl,(Puntero_de_vidas)
+    call Extrae_address
+
+    inc de
+    inc de
+
+    ld (Puntero_de_vidas),de
+
+    ld de,Vida
+    ld bc,$0101
+    ld a,%01000101
 
     call Pinta_imagen
 
@@ -38,40 +54,74 @@ Imprime_escudo ld hl,(Puntero_de_escudos)
 
 Pinta_imagen
 
-    jr $
+    push bc
+    push hl                                                         ; Guardamos datos para pintar más adelante.
 
-	ex af,af														; Copia de respaldo de las Columnas en A'.
-	push hl															; PUSH dirección de mem. de pantalla.
+;   Attrs.
 
-1 ld a,(de)
-	ld (hl),a
+2 push bc
+    push hl
 
-    jr $
+    ex af,af                                                        ; Salvo Attrs. [Calcula_direccion_atributos] destruye A.
     call Calcula_direccion_atributos
+    ex af,af
 
+1 ld (hl),a
+    inc l
+    djnz 1B
 
-	inc e
-	inc l
+    pop hl
+    ex af,af
 
-	djnz 1B
+;   Siguiente Fila de Attrs.
 
-	dec c
-	jr z,2F
+    ld a,l
+    add $20
+    ld l,a
 
-;	Sitúa HL en el siguiente scan.
+    ex af,af
 
-	pop hl
-	call NextScan
+    pop bc
+    dec c
+    jr nz,2B
 
-;	Recuperamos el nº de columnas.
+;   Imagen.
 
-	ex af,af
-	ld b,a
+    pop hl
+    pop bc
 
-	jr Pinta_imagen
+;   Generamos scanlines
 
-2 pop hl
-    ret
+    dec c
+
+    ld a,8
+
+4 add 8
+    dec c
+    jr nz,4B
+
+    ld c,a                                                          ; Scanlines en C.
+
+5 push bc
+    push hl
+
+3 ld a,(de)
+    ld (hl),a
+
+    inc l
+    inc e
+
+    djnz 3B
+
+    pop hl
+    pop bc
+
+    dec c
+    ret z
+
+    call NextScan
+
+    jr 5B
 
 ; --------------------------------------------------------------------------------------
 ;

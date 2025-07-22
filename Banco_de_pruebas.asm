@@ -556,6 +556,12 @@ START
 	call Imprime_escudo
 	call Imprime_escudo
 
+	call Imprime_vida
+	call Imprime_vida
+	call Imprime_vida
+
+;	jr $
+
 ;	Marcadores.
 
 	ld sp,0													; Situamos el inicio de Stack.
