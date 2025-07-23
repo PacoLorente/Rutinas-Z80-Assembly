@@ -1,14 +1,46 @@
 ; ------------------------------------------------------------------------
 ;
-;   22/7/25
+;   23/7/25
 ;
 ;   Imprime_escudo
 
 Imprime_escudo ld hl,(Puntero_de_escudos)
     call Extrae_address
 
+    ld bc,Ultimo_escudo                                             ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
+
+    ld a,c
+    sub e
+    jr z,1F
+
     inc de
     inc de
+
+1 call Pinta_escudo
+
+    ret
+
+Borra_escudo 
+
+    ld hl,(Puntero_de_escudos)
+    call Extrae_address
+
+    ld bc,Indice_de_escudos                                         ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
+
+    ld a,e
+    sub c
+    jr z,1F
+
+    dec de
+    dec de
+
+1 call Pinta_escudo
+
+    ret
+
+; ----- ----- ----- ----- -----
+
+Pinta_escudo 
 
     ld (Puntero_de_escudos),de
 
@@ -20,11 +52,41 @@ Imprime_escudo ld hl,(Puntero_de_escudos)
 
     ret
 
+; --------------------------------------------------
+
 Imprime_vida ld hl,(Puntero_de_vidas)
     call Extrae_address
 
+    ld bc,Ultima_vida                                               ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
+
+    ld a,c
+    sub e
+    jr z,1F
+
     inc de
     inc de
+
+1 call Pinta_vida
+
+    ret
+
+Borra_vida ld hl,(Puntero_de_vidas)
+    call Extrae_address
+
+    ld bc,Indice_de_vidas                                           ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
+
+    ld a,e
+    sub c
+    jr z,1F
+
+    dec de
+    dec de
+
+1 call Pinta_vida
+
+    ret
+
+Pinta_vida
 
     ld (Puntero_de_vidas),de
 
@@ -106,6 +168,7 @@ Pinta_imagen
     push hl
 
 3 ld a,(de)
+    xor (hl)
     ld (hl),a
 
     inc l

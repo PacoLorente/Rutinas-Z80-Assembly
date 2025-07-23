@@ -66,6 +66,8 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
 	org $8310
 
+	di
+
 	push af
 	push hl
 
@@ -550,7 +552,9 @@ START
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
 
-;	Imprime escudos.
+;	Marcadores. -------------------------------------
+
+;	Imprime escudos y vidas.
 
 	call Imprime_escudo
 	call Imprime_escudo
@@ -559,10 +563,6 @@ START
 	call Imprime_vida
 	call Imprime_vida
 	call Imprime_vida
-
-;	jr $
-
-;	Marcadores.
 
 	ld sp,0													; Situamos el inicio de Stack.
 	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
@@ -658,6 +658,12 @@ INICIALIZACION
 ;	11/07/25
 
 Main 
+
+	ld hl,Ctrl_2
+	bit 7,(hl)
+	di
+	jr nz,$
+	ei
 
 	ld hl,Ctrl_4
 	bit 5,(hl)
@@ -2251,11 +2257,17 @@ Teclado
 	call z,Inicia_Shield      								; "SPACE" para SHIELD.
 	jr nz,1F
 
+; ----- Shield iniciado
+
 	ld a,90
 	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
 
 	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
 	dec (hl)	
+
+; Debugggggggggggg
+	ld hl,Ctrl_2
+	set 7,(hl)
 
 ; 	Disparo.
 
