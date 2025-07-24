@@ -23,10 +23,12 @@ Imprime_escudo ld hl,(Puntero_de_escudos)
 Borra_escudo 
 
     ld hl,Ctrl_2
-    res 7,(hl)
+    res 7,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando escudos.
 
     ld hl,(Puntero_de_escudos)
     call Extrae_address
+
+    push hl
 
     ld bc,Indice_de_escudos                                         ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
 
@@ -38,6 +40,10 @@ Borra_escudo
     dec de
 
 1 call Pinta_escudo
+
+    pop hl
+
+    call Restaura_attr_vida
 
     ret
 
@@ -76,7 +82,7 @@ Imprime_vida ld hl,(Puntero_de_vidas)
 Borra_vida 
 
     ld hl,Ctrl_4
-    res 6,(hl)
+    res 6,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando vidas.
 
     ld hl,(Puntero_de_vidas)
     call Extrae_address
@@ -103,6 +109,31 @@ Pinta_vida
     ld a,%01000101
 
     call Pinta_imagen
+
+    ret
+
+; ------------------------------------------------------------------------
+;
+;	24/7/25
+;
+;	Restaura_attr_vida
+;
+;   Esta función evita que cambie el color del icono de vida que hay en el interior del escudo cuando lo eliminamos.
+;
+;   MODIFICA: A.
+
+Restaura_attr_vida:
+
+    call Calcula_direccion_atributos
+
+    inc l
+
+    ld a,l
+    add $20
+    ld l,a                                                          ; Dirección de attr de pantalla, (centro del escudo) donde se encuentra el icono de VIDA.
+
+    ld a,%01000101                                                  ; Attr. de la vida.
+    ld (hl),a
 
     ret
 

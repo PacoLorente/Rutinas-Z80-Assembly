@@ -2,7 +2,7 @@
 ;
 ;	07/11/24
 
-Autoriza_disparo_de_entidades
+Autoriza_disparo_de_entidades:
 
 	ld a,1
 	ld (Permiso_de_disparo_Entidades),a
@@ -28,7 +28,7 @@ Autoriza_disparo_de_entidades
 ;
 ;	Nota: en la bandeja DRAW se encuentran los datos de la entidad que va a disparar.
 
-Entidad_genera_disparo_si_procede
+Entidad_genera_disparo_si_procede:
 
 	ld hl,(Puntero_num_aleatorios_disparos)
 	rlc (hl)
@@ -41,7 +41,7 @@ Entidad_genera_disparo_si_procede
 ;
 ;	30/09/24
 
-Actuaiza_sp_de_disparos_de_entidades
+Actuaiza_sp_de_disparos_de_entidades:
 
 	ld hl,(Puntero_num_aleatorios_disparos)
 	inc hl
@@ -61,7 +61,7 @@ Actuaiza_sp_de_disparos_de_entidades
 ;   2/12/24
 ;
 
-Motor_de_disparos_entidades
+Motor_de_disparos_entidades:
 
     ld a,(Numero_de_disparos_de_entidades)
     cp 7
@@ -159,7 +159,7 @@ Motor_de_disparos_entidades
 ;
 ;   1/11/24
 
-Comprueba_impacto_con_Amadeus
+Comprueba_impacto_con_Amadeus:
 
 ;   El disparo se encuentra en zona de Amadeus.
 ;   Comparten coordenadas ?, hay riesgo de colisión ??
@@ -295,7 +295,7 @@ Amadeus_impactado
 ;
 ;   31/10/24
 
-Fin_de_disparo_de_entidad
+Fin_de_disparo_de_entidad:
 
 ; Estamos en zona de Amadeus ??
 
@@ -365,7 +365,7 @@ Fin_de_disparo_de_entidad
 ;                        01xx ..... Derecha.
 ;                        00xx ..... Recto.
 
-Rota_disparo_si_procede 
+Rota_disparo_si_procede:
 
 ;   Nos situamos en el byte alto de (Control).
 

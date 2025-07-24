@@ -243,7 +243,8 @@ Ctrl_2 db 0
 ;															BIT 4, ???
 ;															BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
 ;															BIT 6, "1" Indica que hemos iniciado la "-Transicion_de_salida-" de Amadeus.
-
+;															BIT 7, "1" Detecta que hemos pulsado "SHIELD". ; "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
+;															- La rutina [Borra_escudo], inicializará el FLAG.
 
 Ctrl_0 db 0 												; Byte de control. A través de este byte de control. Las rutinas de desplazamiento: [Mov_right], [Mov_left], [Mov_up] y [Mov_down],_
 ;															; _indican a las subrutinas de recolocación del objeto de la rutina [DRAW]: [Comprueba_limite_horizontal] y [Comprueba_limite_vertical],_
@@ -540,7 +541,7 @@ Puntero_de_vidas defw Indice_de_vidas
 ;
 ;	19/7/25
 
-START 
+START:
 
 ;	Menú Principal
 
@@ -921,9 +922,6 @@ Gestion_de_Amadeus
 	ld hl,Lives
 	dec (hl)
 
-	ld hl,Ctrl_4
-	set 6,(hl)
-
 ;	! Fin del juego
 
 	di
@@ -941,8 +939,8 @@ Amadeus_vivo
 
 	ld a,(Impacto_Amadeus)
 	and a
-	call nz, Genera_explosion_Amadeus
-	jr nz, End_frame
+	call nz,Genera_explosion_Amadeus
+	jr nz,End_frame
 
 	call Teclado
 
@@ -2271,9 +2269,8 @@ Teclado
 	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
 	dec (hl)	
 
-; Debugggggggggggg
-	ld hl,Ctrl_2
-	set 7,(hl)
+	ld hl,Ctrl_2                                            ; Indica que hemos pulsado "SHIELD". "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
+	set 7,(hl)												; La rutina [Borra_escudo], inicializará el FLAG.
 
 ; 	Disparo.
 
@@ -2485,8 +2482,11 @@ Aparece_izquierda inc a
 	ret
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+;
+;	24/07/25
+;
 
-Genera_explosion_Amadeus
+Genera_explosion_Amadeus:
 
 	ld hl,Clock_explosion_Amadeus								
 	dec (hl)
@@ -2554,7 +2554,10 @@ Siguiente_frame_explosion_Amadeus
 	ld (Impacto_Amadeus),a
 
 	ld hl,Ctrl_3
-	set 6,(hl)
+	set 6,(hl)												; Indica que Amadeus ha sido destruido. Ya se imprimió en pantalla la última explosión.
+
+	ld hl,Ctrl_4
+	set 6,(hl)												; Indica al reloj que ha de borrar una vida de la pantalla.
 
 	jr Borra_Amadeus_impactado
 
