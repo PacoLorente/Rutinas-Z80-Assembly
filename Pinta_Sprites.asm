@@ -22,6 +22,9 @@ Imprime_escudo ld hl,(Puntero_de_escudos)
 
 Borra_escudo 
 
+    ld hl,Ctrl_2
+    res 7,(hl)
+
     ld hl,(Puntero_de_escudos)
     call Extrae_address
 
@@ -46,7 +49,7 @@ Pinta_escudo
 
     ld de,Escudo
     ld bc,$0303
-    ld a,%01000010
+    ld a,%01000110
 
     call Pinta_imagen
 
@@ -70,7 +73,12 @@ Imprime_vida ld hl,(Puntero_de_vidas)
 
     ret
 
-Borra_vida ld hl,(Puntero_de_vidas)
+Borra_vida 
+
+    ld hl,Ctrl_4
+    res 6,(hl)
+
+    ld hl,(Puntero_de_vidas)
     call Extrae_address
 
     ld bc,Indice_de_vidas                                           ; No incrementamos el Puntero_de_escudos si estamos al final del índice.

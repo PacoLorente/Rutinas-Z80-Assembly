@@ -66,8 +66,6 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
 	org $8310
 
-	di
-
 	push af
 	push hl
 
@@ -76,6 +74,16 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 	bit 0,(hl)
 	jr z,$
 ;! -------------------
+
+; Actualiza marcadores.
+
+	ld hl,Ctrl_2
+	bit 7,(hl)
+	call nz,Borra_escudo
+
+	ld hl,Ctrl_4
+	bit 6,(hl)
+	call nz,Borra_vida
 
 ; Disparos.
 
@@ -366,9 +374,6 @@ Repone_puntero_objeto defw 0								; Almacena (Puntero_objeto). Cuando el Sprit
 ; 															; _ Cuando hemos terminado de iniciarlo y guardado su foto, hemos de recuperar su (Puntero_objeto).
 ;															; (Repone_puntero_objeto) es una copia de respaldo de (Puntero_objeto) y su función es restaurarlo.
 
-Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
-Puntero_de_vidas defw Indice_de_vidas
-
 ; Gestión de ENTIDADES y CAJAS.
 
 Puntero_store_caja defw 0
@@ -527,6 +532,10 @@ Shield db 100												; Temporización principal. Indica el tiempo que el esc
 Shield_2 db 0 												; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
 Shield_3 db 0
 
+Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
+Puntero_de_vidas defw Indice_de_vidas
+
+
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
 ;	19/7/25
@@ -658,12 +667,6 @@ INICIALIZACION
 ;	11/07/25
 
 Main 
-
-	ld hl,Ctrl_2
-	bit 7,(hl)
-	di
-	jr nz,$
-	ei
 
 	ld hl,Ctrl_4
 	bit 5,(hl)
@@ -917,6 +920,9 @@ Gestion_de_Amadeus
 
 	ld hl,Lives
 	dec (hl)
+
+	ld hl,Ctrl_4
+	set 6,(hl)
 
 ;	! Fin del juego
 

@@ -4,7 +4,7 @@
 ;
 ;	Sprites e índices.
 
-	org $8360
+	org $8400
 
 ;	LOGO del menú principal.
 
@@ -45,8 +45,6 @@ Logo_ma:
 
 ;	Free mem. $83d8 - $83ff .....$27 / 39d Bytes.
 
-	org $8400
-
 ;	Pixel Size:      ( 24,  24)
 ;
 ;	(Puntero_de_impresion) ..... $4066
@@ -80,6 +78,7 @@ logo_eu:
 ;
 ;	(Puntero_de_impresion) ..... $408c
 
+	org $8500
 
 logo_us:
 
@@ -118,8 +117,6 @@ Vida:
 
 Disparo_de_entidad_derecho DEFB $18,$00,$00
 Disparo_de_entidad_izquierdo DEFB $00,$00,$18
-
-	org $8500
 
 Indice_disparo_Amadeus defw Disparo_0
 	defw Disparo_f9
@@ -179,6 +176,8 @@ Badplate
 	DEFB	$00,$CC,$33,$00,$CF,$F3,$00,$7C
 	DEFB	$3E,$00,$3C,$3C,$00,$0F,$F0,$00
 
+	org $8600
+
 Badplate_f8
 
 	DEFB	$01,$80,$00,$00,$40,$00,$00,$40
@@ -206,8 +205,6 @@ Badplate_fa
 	DEFB	$C0,$19,$86,$60,$19,$FE,$60,$0F
 	DEFB	$87,$C0,$07,$87,$80,$01,$FE,$00
 
-	org $8600
-
 Badplate_fb
 
 	DEFB	$00,$30,$00,$00,$08,$00,$00,$08
@@ -227,6 +224,8 @@ Badplate_fc
 	DEFB	$00,$40,$80,$00,$C0,$C0,$03,$C0
 	DEFB	$F0,$06,$E1,$D8,$06,$3F,$18,$03
 	DEFB	$1E,$30,$01,$DE,$E0,$00,$7F,$80
+
+	org $8700
 
 Badplate_fd
 
@@ -309,8 +308,6 @@ Badsat_izq_fc DEFB $00,$00,$40,$00,$10,$A0,$00,$11
 	DEFB	$40,$02,$A2,$00,$05,$53,$00,$02
 	DEFB	$A0,$00,$01,$40,$00,$00,$80,$00 	; $Fc (3er DESPLZ a izquierda).
 
-	org $8800
-
 Badsat_izq_fd DEFB $00,$00,$20,$00,$08,$50,$00,$08
 	DEFB	$A8,$00,$09,$54,$00,$0A,$A8,$00
 	DEFB	$09,$50,$01,$FF,$A0,$00,$0D,$80
@@ -382,6 +379,8 @@ Badsat_der_fb DEFB $01,$00,$00,$02,$84,$00,$05,$44
 	DEFB	$40,$00,$22,$A0,$00,$65,$50,$00
 	DEFB	$02,$A0,$00,$01,$40,$00,$00,$80 	; $Fb (4º DESPLZ a derecha).
 
+	org $8a00
+
 Badsat_der_fc DEFB $00,$80,$00,$01,$42,$00,$02,$A2
 	DEFB	$00,$05,$52,$00,$02,$AA,$00,$01
 	DEFB	$52,$00,$00,$BF,$F0,$00,$36,$00
@@ -444,6 +443,8 @@ Amadeus DEFB $01,$80,0
 	DEFB	$8B,$D1,0
 	DEFB	$71,$8E,0 							; Sprite principal, (sin desplazar).
 
+	org $8b00
+
 Amadeus_F9 DEFB	$00,$60,$00,$08,$F1,$00,$09,$99
 	DEFB	$00,$09,$09,$00,$0B,$0D,$00,$1B
 	DEFB	$6D,$80,$1B,$FD,$80,$19,$F9,$80
@@ -471,8 +472,6 @@ Indice_Explosion_entidades defw Explosion_entidades_1
 	defw Explosion_entidades_2
 	defw Explosion_entidades_3
 
-	org $8b00
-
 Explosion_entidades_1 DEFB $00,$10,$00
 	DEFB 	$08,$10,$00
 	DEFB	$04,$38,$40
@@ -498,6 +497,8 @@ Explosion_entidades_2 DEFB $08,$00,$00,$05,$38,$10,$03,$BC
 	DEFB	$03,$FE,$00,$03,$3A,$70,$01,$9C
 	DEFB	$60,$01,$F6,$40,$04,$F8,$80,$06
 	DEFB	$00,$00,$08,$00,$00,$00,$00,$00
+
+	org $8c00
 
 Explosion_entidades_3 DEFB $03,$18,$10,$04,$00,$20,$08,$00
 	DEFB	$40,$00,$00,$C0,$00,$06,$00,$00
@@ -546,8 +547,6 @@ Explosion_Amadeus_2	DEFB $00,$18,$02
 	DEFB	$08,$BA,$4C
 	DEFB	$07,$19,$80
 
-	org $8c00
-	
 Explosion_Amadeus_3	DEFB $00,$00,$00
 	DEFB	$00,$00,$00
 	DEFB	$00,$00,$00
