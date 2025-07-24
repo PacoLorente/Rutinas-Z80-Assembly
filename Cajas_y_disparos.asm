@@ -11,9 +11,9 @@
 ;	
 ;	Los 6 últimos bytes contienen el borrado/pintado de Amadeus, (Amadeus_scanlines_album).
 
-;	Free mem. $8bf6 - $8bf8 .....$03 / 3d Bytes.
+;	Free mem. $8cc6 - $8cff .....$39 / 57d Bytes.
 
-	org $8c30
+	org $8d00
 
 Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
@@ -217,7 +217,9 @@ Caja_2
 
 ; ---------- ---------- ---------- ---------- ----------	
 
-;	Free mem. $8cf5 - $8cff .....$0a / 10d Bytes.
+;	Free mem. $8dfc - $8dff .....$04 / 4d Bytes.
+
+	org $8e00
 
 Caja_3
 

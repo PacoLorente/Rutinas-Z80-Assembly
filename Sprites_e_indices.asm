@@ -43,8 +43,6 @@ Logo_ma:
 	DEFB	$07,$03,$00,$02,$00,$00,$00,$00
 
 
-;	Free mem. $83d8 - $83ff .....$27 / 39d Bytes.
-
 ;	Pixel Size:      ( 24,  24)
 ;
 ;	(Puntero_de_impresion) ..... $4066
@@ -77,6 +75,8 @@ logo_eu:
 ;	Pixel Size:      ( 24,  16)
 ;
 ;	(Puntero_de_impresion) ..... $408c
+
+;	Free mem. $84f0 - $84ff .....$0f / 15d Bytes.
 
 	org $8500
 
@@ -165,8 +165,6 @@ Indice_Badplate_izq defw Badplate
 	defw Badplate_f9							 
 	defw Badplate_f8	 									
 
-;	Free mem. $84e6 - $84ff .....$19 / 25d Bytes.
-
 Badplate
 
 	DEFB	$03,$00,$00,$00,$80,$00,$00,$80
@@ -175,6 +173,8 @@ Badplate
 	DEFB	$09,$90,$00,$19,$98,$00,$78,$9E
 	DEFB	$00,$CC,$33,$00,$CF,$F3,$00,$7C
 	DEFB	$3E,$00,$3C,$3C,$00,$0F,$F0,$00
+
+;	Free mem. $85ee - $85ff .....$11 / 17d Bytes.
 
 	org $8600
 
@@ -214,8 +214,6 @@ Badplate_fb
 	DEFB	$E0,$0D,$C3,$B0,$0C,$7E,$30,$06
 	DEFB	$3C,$60,$03,$BD,$C0,$00,$FF,$00
 
-;	Free mem. $85f0 - $85ff .....$0f / 15d Bytes.
-
 Badplate_fc
 
 	DEFB	$00,$18,$00,$00,$04,$00,$00,$04
@@ -224,6 +222,8 @@ Badplate_fc
 	DEFB	$00,$40,$80,$00,$C0,$C0,$03,$C0
 	DEFB	$F0,$06,$E1,$D8,$06,$3F,$18,$03
 	DEFB	$1E,$30,$01,$DE,$E0,$00,$7F,$80
+
+;	Free mem. $86f0 - $86ff .....$0f / 15d Bytes.
 
 	org $8700
 
@@ -315,8 +315,6 @@ Badsat_izq_fd DEFB $00,$00,$20,$00,$08,$50,$00,$08
 	DEFB	$80,$01,$51,$00,$02,$A9,$00,$01
 	DEFB	$51,$00,$00,$A0,$00,$00,$40,$00 	; $Fd (2º DESPLZ a izquierda).
 
-;	Free mem. $87f0 - $87ff .....$0f / 15d Bytes.
-
 Badsat_izq_fe DEFB $00,$00,$10,$00,$04,$28,$00,$04
 	DEFB	$54,$00,$04,$AA,$00,$05,$54,$00
 	DEFB	$04,$A8,$00,$FF,$D0,$00,$06,$C0
@@ -379,6 +377,8 @@ Badsat_der_fb DEFB $01,$00,$00,$02,$84,$00,$05,$44
 	DEFB	$40,$00,$22,$A0,$00,$65,$50,$00
 	DEFB	$02,$A0,$00,$01,$40,$00,$00,$80 	; $Fb (4º DESPLZ a derecha).
 
+;	Free mem. $89f0 - $89ff .....$0f / 15d Bytes.
+
 	org $8a00
 
 Badsat_der_fc DEFB $00,$80,$00,$01,$42,$00,$02,$A2
@@ -424,8 +424,6 @@ Indice_Amadeus_izq defw Amadeus
 	defw Amadeus_F9								; [$FD] right - [$FE] left
 	defw 0	 									; (Fín de índice).
 
-;	Free mem. $89e0 - $89ff .....$1f / 31d Bytes.
-
 Amadeus DEFB $01,$80,0
 	DEFB	$23,$C4,0
 	DEFB	$26,$64,0
@@ -442,6 +440,8 @@ Amadeus DEFB $01,$80,0
 	DEFB	$FB,$DF,0
 	DEFB	$8B,$D1,0
 	DEFB	$71,$8E,0 							; Sprite principal, (sin desplazar).
+
+;	Free mem. $8ae0 - $8aff .....$1f / 31d Bytes.
 
 	org $8b00
 
@@ -489,14 +489,14 @@ Explosion_entidades_1 DEFB $00,$10,$00
 	DEFB	$04,$00,$00
 	DEFB	$08,$00,$00
 
-;	Free mem. $8af6 - $8aff .....$09 / 9d Bytes.
-
 Explosion_entidades_2 DEFB $08,$00,$00,$05,$38,$10,$03,$BC
 	DEFB	$20,$06,$00,$C0,$04,$06,$C0,$00
 	DEFB	$37,$00,$00,$7F,$00,$03,$DD,$80
 	DEFB	$03,$FE,$00,$03,$3A,$70,$01,$9C
 	DEFB	$60,$01,$F6,$40,$04,$F8,$80,$06
 	DEFB	$00,$00,$08,$00,$00,$00,$00,$00
+
+;	Free mem. $8bf6 - $8bff .....$09 / 9d Bytes.
 
 	org $8c00
 
