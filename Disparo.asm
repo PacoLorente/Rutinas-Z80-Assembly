@@ -987,8 +987,18 @@ Mueve_disparo_Amadeus
 ; Después de mover el disparo comprobamos si ha salido de la parte alta de la pantalla.
 
     ld a,h
-    sub $40
-    ex de,hl
+
+; debuggggg -----------
+    cp $48
+    jr nc,1F
+ 
+; El disparo se encuentra en la parte alta de la pantalla.
+; Comprobamos si ha llegado al area del marcador del juego.
+
+    ld a,l
+    cp $60
+
+1 ex de,hl
     jr c,Elimina_disparo_Amadeus
 
  ; Introduce nuevo puntero_de_impresión en la caja.

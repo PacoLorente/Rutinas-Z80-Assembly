@@ -338,9 +338,9 @@ Pinta_disparos_Entidades
 
 Pinta_disparos_Amadeus
 
-    ld b,2
+    ld b,2                                                        ; 2 Albumes, (borrado y pintado).
 
-    ld c,%01000111                                      ; Blanco.                    
+    ld c,%01000111                                                 ; Attr del disparo Blanco.                    
 
     ld (Stack),sp 
     ld sp,(Album_de_borrado_disparos_Amadeus)
@@ -349,9 +349,11 @@ Pinta_disparos_Amadeus
 
     inc d
     dec d
-    jr z,1F                                                      ; Álbum vacío salta a 1F.
+    jr z,1F                                                       ; Álbum vacío salta a 1F.
 
-    pop hl
+; Existen disparos en alguno de los 2 albumes.
+
+    pop hl                                                      ; (Puntero de impresion) del disparo en HL.
     push hl
 
 ; Atributos.
@@ -408,8 +410,11 @@ Imprime_scanlines_en_pantalla
 
 2 ld sp,(Album_de_pintado_disparos_Amadeus) 
     jr 3B
+
 1 djnz 2B
+
     ld sp,(Stack)
+
     ret    
 
 ; -----------------------------------------------------------------------------

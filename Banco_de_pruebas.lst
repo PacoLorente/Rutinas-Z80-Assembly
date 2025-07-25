@@ -2556,7 +2556,7 @@
  686  92CC              ; Si alguna de las coordenadas_X de alguna entidad que esté en zona de Amadeus coincide con alguna de las coordenadas_X de Amadeus, habrá que comprobar si existe colisión.
  687  92CC              ; Este hecho lo indica el bit2 de (Impacto2).
  688  92CC
- 689  92CC CD 96 B0     	call Detecta_colision_nave_entidad 						; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
+ 689  92CC CD 9B B0     	call Detecta_colision_nave_entidad 						; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
  690  92CF
  691  92CF              ; TEMPORIZACIONES !!!!!!!!!!!!!!!!
  692  92CF
@@ -2740,7 +2740,7 @@
  870  938E A7           	and a
  871  938F C4 5B AC     	call nz,Entidad_genera_disparo_si_procede
  872  9392
- 873  9392 CD 10 B0     4 call Colision_Entidad_Amadeus								; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
+ 873  9392 CD 15 B0     4 call Colision_Entidad_Amadeus								; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
  874  9395
  875  9395              Gestiona_siguiente_entidad
  876  9395
@@ -2847,7 +2847,7 @@
  977  9401              ; 	Generamos los datos de impresión en el álbum_de_pintado y limpiamos el sobrante de datos del anterior FRAME si toca.
  978  9401
  979  9401 CD D5 AD     	call Genera_datos_de_impresion_disparos_Entidades
- 980  9404 CD 7B AF     	call Genera_datos_de_impresion_disparos_Amadeus			; Genera los datos de impresión de los disparos de Amadeus y entidades.
+ 980  9404 CD 80 AF     	call Genera_datos_de_impresion_disparos_Amadeus			; Genera los datos de impresión de los disparos de Amadeus y entidades.
  981  9407 CD 07 AF     	call Calcula_bytes_pintado_disparos
  982  940A CD 14 AF     	call Limpia_album_de_pintado_disparos_entidades
  983  940D
@@ -4147,7 +4147,7 @@
 2277  98A7 3E F7        1 ld a,$f7													; "5" para disparar.
 2278  98A9 DB FE        	in a,($fe)
 2279  98AB E6 10        	and $10
-2280  98AD CC 9A AF     	call z,Genera_disparo_Amadeus
+2280  98AD CC 9F AF     	call z,Genera_disparo_Amadeus
 2281  98B0
 2282  98B0              ;	Movement.
 2283  98B0
@@ -6722,9 +6722,9 @@
  338+ A0F5
  339+ A0F5              Pinta_disparos_Amadeus
  340+ A0F5
- 341+ A0F5 06 02            ld b,2
+ 341+ A0F5 06 02            ld b,2                                                        ; 2 Albumes, (borrado y pintado).
  342+ A0F7
- 343+ A0F7 0E 47            ld c,%01000111                                      ; Blanco.
+ 343+ A0F7 0E 47            ld c,%01000111                                                 ; Attr del disparo Blanco.
  344+ A0F9
  345+ A0F9 ED 73 BE 91      ld (Stack),sp
  346+ A0FD ED 7B CC 91      ld sp,(Album_de_borrado_disparos_Amadeus)
@@ -6733,1142 +6733,1147 @@
  349+ A102
  350+ A102 14               inc d
  351+ A103 15               dec d
- 352+ A104 28 2B            jr z,1F                                                      ; Álbum vacío salta a 1F.
+ 352+ A104 28 2B            jr z,1F                                                       ; Álbum vacío salta a 1F.
  353+ A106
- 354+ A106 E1               pop hl
- 355+ A107 E5               push hl
- 356+ A108
- 357+ A108              ; Atributos.
+ 354+ A106              ; Existen disparos en alguno de los 2 albumes.
+ 355+ A106
+ 356+ A106 E1               pop hl                                                      ; (Puntero de impresion) del disparo en HL.
+ 357+ A107 E5               push hl
  358+ A108
- 359+ A108 7C               ld a,h
- 360+ A109 E6 18            and $18
- 361+ A10B CB 2F            sra a
- 362+ A10D CB 2F            sra a
- 363+ A10F CB 2F            sra a
- 364+ A111 C6 58            add $58
- 365+ A113 67               ld h,a
- 366+ A114
- 367+ A114 71               ld (hl),c
- 368+ A115
- 369+ A115              Imprime_scanlines_en_pantalla
+ 359+ A108              ; Atributos.
+ 360+ A108
+ 361+ A108 7C               ld a,h
+ 362+ A109 E6 18            and $18
+ 363+ A10B CB 2F            sra a
+ 364+ A10D CB 2F            sra a
+ 365+ A10F CB 2F            sra a
+ 366+ A111 C6 58            add $58
+ 367+ A113 67               ld h,a
+ 368+ A114
+ 369+ A114 71               ld (hl),c
  370+ A115
- 371+ A115              ; (Puntero_objeto) del disparo en DE.
- 372+ A115              ; (Puntero_de_impresion) en HL.
- 373+ A115
- 374+ A115              ; 1er scanline
+ 371+ A115              Imprime_scanlines_en_pantalla
+ 372+ A115
+ 373+ A115              ; (Puntero_objeto) del disparo en DE.
+ 374+ A115              ; (Puntero_de_impresion) en HL.
  375+ A115
- 376+ A115 E1               pop hl
- 377+ A116
- 378+ A116 1A               ld a,(de)
- 379+ A117 AE               xor (hl)
- 380+ A118 77               ld (hl),a
- 381+ A119
- 382+ A119 1C               inc e
- 383+ A11A 2C               inc l
- 384+ A11B
- 385+ A11B 1A               ld a,(de)
- 386+ A11C AE               xor (hl)
- 387+ A11D 77               ld (hl),a
- 388+ A11E
- 389+ A11E 1D               dec e
- 390+ A11F E1               pop hl
- 391+ A120
- 392+ A120              ; 2º scanline
+ 376+ A115              ; 1er scanline
+ 377+ A115
+ 378+ A115 E1               pop hl
+ 379+ A116
+ 380+ A116 1A               ld a,(de)
+ 381+ A117 AE               xor (hl)
+ 382+ A118 77               ld (hl),a
+ 383+ A119
+ 384+ A119 1C               inc e
+ 385+ A11A 2C               inc l
+ 386+ A11B
+ 387+ A11B 1A               ld a,(de)
+ 388+ A11C AE               xor (hl)
+ 389+ A11D 77               ld (hl),a
+ 390+ A11E
+ 391+ A11E 1D               dec e
+ 392+ A11F E1               pop hl
  393+ A120
- 394+ A120 1A               ld a,(de)
- 395+ A121 AE               xor (hl)
- 396+ A122 77               ld (hl),a
- 397+ A123
- 398+ A123 1C               inc e
- 399+ A124 2C               inc l
- 400+ A125
- 401+ A125 1A               ld a,(de)
- 402+ A126 AE               xor (hl)
- 403+ A127 77               ld (hl),a
- 404+ A128
- 405+ A128 1D               dec e
- 406+ A129
- 407+ A129 18 06            jr 1F
- 408+ A12B
- 409+ A12B ED 7B CA 91  2 ld sp,(Album_de_pintado_disparos_Amadeus)
- 410+ A12F 18 D0            jr 3B
- 411+ A131 10 F8        1 djnz 2B
- 412+ A133 ED 7B BE 91      ld sp,(Stack)
- 413+ A137 C9               ret
- 414+ A138
- 415+ A138              ; -----------------------------------------------------------------------------
- 416+ A138              ;
- 417+ A138              ;   1/4/25
- 418+ A138              ;
- 419+ A138              ;   INPUT: A contiene (Columnas).
- 420+ A138              ;          C contiene (Attr).
- 421+ A138
- 422+ A138              Pinta_Sprites
- 423+ A138
- 424+ A138 ED 73 BE 91      ld (Stack),sp
- 425+ A13C
- 426+ A13C EB               ex de,hl                            ; HL se encuentra en el álbum de líneas.
- 427+ A13D              ;                                       ; DE se encuentra en los datos del sprite.
- 428+ A13D 2C               inc l
- 429+ A13E 2C               inc l
- 430+ A13F
- 431+ A13F 46               ld b,(hl)                           ; B contiene el nº de scanlines a imprimir.
- 432+ A140
- 433+ A140 2C               inc l
- 434+ A141 F9               ld sp,hl                            ; El SP irá extrayendo scanlines en HL.
- 435+ A142
- 436+ A142              ;   Seleccionamos rutina de impresión:
- 437+ A142
- 438+ A142 08               ex af,af                            ; (Columnas) en AF´.
- 439+ A143
- 440+ A143 3E 10            ld a,16
- 441+ A145 B8               cp b
- 442+ A146 C2 5A A4         jp nz,Pinta_lento                   ; Si el sprite no se imprime completo utilizamos la 2ª rutina de pintado.
- 443+ A149
- 444+ A149              ;   Rutinas:
- 445+ A149
- 446+ A149              Pinta_rapido                            ;   1520 t/states.
- 447+ A149
- 448+ A149 3A 97 91         ld a,(Columnas)
- 449+ A14C 3D               dec a
- 450+ A14D CA 9D A3         jp z,Pinta_rapido_1_Columna
- 451+ A150 3D               dec a
- 452+ A151 CA 9B A2         jp z,Pinta_rapido_2_Columnas
- 453+ A154
- 454+ A154              Pinta_rapido_3_Columnas
- 455+ A154
- 456+ A154              ; Attr. 3 (Columnas).
- 457+ A154
- 458+ A154 E1               pop hl
- 459+ A155 E5               push hl
- 460+ A156
- 461+ A156              ; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
- 462+ A156
- 463+ A156 7C               ld a,h
- 464+ A157 FE 48            cp $48
- 465+ A159 28 0C            jr z,4F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs.
- 466+ A15B
- 467+ A15B E6 0F            and $0f
- 468+ A15D 28 08            jr z,4F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs.
- 469+ A15F
- 470+ A15F              ; Indica 3 Filas de attr.
- 471+ A15F
- 472+ A15F 3A E9 91         ld a,(Ctrl_4)
- 473+ A162 CB E7            set 4,a
- 474+ A164 32 E9 91         ld (Ctrl_4),a
- 475+ A167
- 476+ A167 7C           4 ld a,h
- 477+ A168 E6 18            and $18
- 478+ A16A CB 2F            sra a
- 479+ A16C CB 2F            sra a
- 480+ A16E CB 2F            sra a
- 481+ A170 C6 58            add $58
- 482+ A172 67               ld h,a
- 483+ A173
- 484+ A173 71               ld (hl),c
- 485+ A174 2C               inc l
- 486+ A175 71               ld (hl),c
- 487+ A176 2C               inc l
- 488+ A177 71               ld (hl),c
- 489+ A178
- 490+ A178              ; ----- ----- -----
- 491+ A178
- 492+ A178 E1               pop hl
- 493+ A179
- 494+ A179 1A               ld a,(de)
- 495+ A17A AE               xor (hl)
- 496+ A17B 77               ld (hl),a
- 497+ A17C 2C               inc l
- 498+ A17D 1C               inc e
- 499+ A17E 1A               ld a,(de)
- 500+ A17F AE               xor (hl)
- 501+ A180 77               ld (hl),a
- 502+ A181 2C               inc l
- 503+ A182 1C               inc e
- 504+ A183 1A               ld a,(de)
- 505+ A184 AE               xor (hl)
- 506+ A185 77               ld (hl),a
- 507+ A186 1C               inc e
- 508+ A187
- 509+ A187 E1               pop hl
- 510+ A188
- 511+ A188 1A               ld a,(de)
- 512+ A189 AE               xor (hl)
- 513+ A18A 77               ld (hl),a
- 514+ A18B 2C               inc l
- 515+ A18C 1C               inc e
- 516+ A18D 1A               ld a,(de)
- 517+ A18E AE               xor (hl)
- 518+ A18F 77               ld (hl),a
- 519+ A190 2C               inc l
- 520+ A191 1C               inc e
- 521+ A192 1A               ld a,(de)
- 522+ A193 AE               xor (hl)
- 523+ A194 77               ld (hl),a
- 524+ A195 1C               inc e
- 525+ A196
- 526+ A196 E1               pop hl
- 527+ A197
- 528+ A197 1A               ld a,(de)
- 529+ A198 AE               xor (hl)
- 530+ A199 77               ld (hl),a
- 531+ A19A 2C               inc l
- 532+ A19B 1C               inc e
- 533+ A19C 1A               ld a,(de)
- 534+ A19D AE               xor (hl)
- 535+ A19E 77               ld (hl),a
- 536+ A19F 2C               inc l
- 537+ A1A0 1C               inc e
- 538+ A1A1 1A               ld a,(de)
- 539+ A1A2 AE               xor (hl)
- 540+ A1A3 77               ld (hl),a
- 541+ A1A4 1C               inc e
- 542+ A1A5
- 543+ A1A5 E1               pop hl
- 544+ A1A6
- 545+ A1A6 1A               ld a,(de)
- 546+ A1A7 AE               xor (hl)
- 547+ A1A8 77               ld (hl),a
- 548+ A1A9 2C               inc l
- 549+ A1AA 1C               inc e
- 550+ A1AB 1A               ld a,(de)
- 551+ A1AC AE               xor (hl)
- 552+ A1AD 77               ld (hl),a
- 553+ A1AE 2C               inc l
- 554+ A1AF 1C               inc e
- 555+ A1B0 1A               ld a,(de)
- 556+ A1B1 AE               xor (hl)
- 557+ A1B2 77               ld (hl),a
- 558+ A1B3 1C               inc e
- 559+ A1B4
- 560+ A1B4 E1               pop hl
- 561+ A1B5
- 562+ A1B5 1A               ld a,(de)
- 563+ A1B6 AE               xor (hl)
- 564+ A1B7 77               ld (hl),a
- 565+ A1B8 2C               inc l
- 566+ A1B9 1C               inc e
- 567+ A1BA 1A               ld a,(de)
- 568+ A1BB AE               xor (hl)
- 569+ A1BC 77               ld (hl),a
- 570+ A1BD 2C               inc l
- 571+ A1BE 1C               inc e
- 572+ A1BF 1A               ld a,(de)
- 573+ A1C0 AE               xor (hl)
- 574+ A1C1 77               ld (hl),a
- 575+ A1C2 1C               inc e
- 576+ A1C3
- 577+ A1C3 E1               pop hl
- 578+ A1C4
- 579+ A1C4 1A               ld a,(de)
- 580+ A1C5 AE               xor (hl)
- 581+ A1C6 77               ld (hl),a
- 582+ A1C7 2C               inc l
- 583+ A1C8 1C               inc e
- 584+ A1C9 1A               ld a,(de)
- 585+ A1CA AE               xor (hl)
- 586+ A1CB 77               ld (hl),a
- 587+ A1CC 2C               inc l
- 588+ A1CD 1C               inc e
- 589+ A1CE 1A               ld a,(de)
- 590+ A1CF AE               xor (hl)
- 591+ A1D0 77               ld (hl),a
- 592+ A1D1 1C               inc e
- 593+ A1D2
- 594+ A1D2 E1               pop hl
- 595+ A1D3
- 596+ A1D3 1A               ld a,(de)
- 597+ A1D4 AE               xor (hl)
- 598+ A1D5 77               ld (hl),a
- 599+ A1D6 2C               inc l
- 600+ A1D7 1C               inc e
- 601+ A1D8 1A               ld a,(de)
- 602+ A1D9 AE               xor (hl)
- 603+ A1DA 77               ld (hl),a
- 604+ A1DB 2C               inc l
- 605+ A1DC 1C               inc e
- 606+ A1DD 1A               ld a,(de)
- 607+ A1DE AE               xor (hl)
- 608+ A1DF 77               ld (hl),a
- 609+ A1E0 1C               inc e
- 610+ A1E1
- 611+ A1E1 E1               pop hl
- 612+ A1E2
- 613+ A1E2 1A               ld a,(de)
- 614+ A1E3 AE               xor (hl)
- 615+ A1E4 77               ld (hl),a
- 616+ A1E5 2C               inc l
- 617+ A1E6 1C               inc e
- 618+ A1E7 1A               ld a,(de)
- 619+ A1E8 AE               xor (hl)
- 620+ A1E9 77               ld (hl),a
- 621+ A1EA 2C               inc l
- 622+ A1EB 1C               inc e
- 623+ A1EC 1A               ld a,(de)
- 624+ A1ED AE               xor (hl)
- 625+ A1EE 77               ld (hl),a
- 626+ A1EF 1C               inc e
- 627+ A1F0
- 628+ A1F0              ; Attr. 3 (Columnas).
- 629+ A1F0
- 630+ A1F0 E1               pop hl
- 631+ A1F1 E5               push hl
- 632+ A1F2
- 633+ A1F2 7C               ld a,h
- 634+ A1F3 E6 18            and $18
- 635+ A1F5 CB 2F            sra a
- 636+ A1F7 CB 2F            sra a
- 637+ A1F9 CB 2F            sra a
- 638+ A1FB C6 58            add $58
- 639+ A1FD 67               ld h,a
- 640+ A1FE
- 641+ A1FE 71           6 ld (hl),c
- 642+ A1FF 2C               inc l
- 643+ A200 71               ld (hl),c
- 644+ A201 2C               inc l
- 645+ A202 71               ld (hl),c
- 646+ A203
- 647+ A203 3A E9 91         ld a,(Ctrl_4)
- 648+ A206 CB 67            bit 4,a
- 649+ A208 28 10            jr z,5F
- 650+ A20A
- 651+ A20A              ; 3ª Fila de Atributos.
- 652+ A20A
- 653+ A20A CB A7            res 4,a
- 654+ A20C 32 E9 91         ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
- 655+ A20F
- 656+ A20F 2D               dec l
- 657+ A210 2D               dec l
- 658+ A211
- 659+ A211 7D               ld a,l
- 660+ A212 C6 20            add 32
- 661+ A214 6F               ld l,a
- 662+ A215
- 663+ A215 30 E7            jr nc,6B
- 664+ A217
- 665+ A217 24               inc h
- 666+ A218 18 E4            jr 6B
- 667+ A21A
- 668+ A21A              ; ----- ----- -----
- 669+ A21A
- 670+ A21A E1           5 pop hl
- 671+ A21B
- 672+ A21B 1A               ld a,(de)
- 673+ A21C AE               xor (hl)
- 674+ A21D 77               ld (hl),a
- 675+ A21E 2C               inc l
- 676+ A21F 1C               inc e
- 677+ A220 1A               ld a,(de)
- 678+ A221 AE               xor (hl)
- 679+ A222 77               ld (hl),a
- 680+ A223 2C               inc l
- 681+ A224 1C               inc e
- 682+ A225 1A               ld a,(de)
- 683+ A226 AE               xor (hl)
- 684+ A227 77               ld (hl),a
- 685+ A228 1C               inc e
- 686+ A229
- 687+ A229 E1               pop hl
- 688+ A22A
- 689+ A22A 1A               ld a,(de)
- 690+ A22B AE               xor (hl)
- 691+ A22C 77               ld (hl),a
- 692+ A22D 2C               inc l
- 693+ A22E 1C               inc e
- 694+ A22F 1A               ld a,(de)
- 695+ A230 AE               xor (hl)
- 696+ A231 77               ld (hl),a
- 697+ A232 2C               inc l
- 698+ A233 1C               inc e
- 699+ A234 1A               ld a,(de)
- 700+ A235 AE               xor (hl)
- 701+ A236 77               ld (hl),a
- 702+ A237 1C               inc e
- 703+ A238
- 704+ A238 E1               pop hl
- 705+ A239
- 706+ A239 1A               ld a,(de)
- 707+ A23A AE               xor (hl)
- 708+ A23B 77               ld (hl),a
- 709+ A23C 2C               inc l
- 710+ A23D 1C               inc e
- 711+ A23E 1A               ld a,(de)
- 712+ A23F AE               xor (hl)
- 713+ A240 77               ld (hl),a
- 714+ A241 2C               inc l
- 715+ A242 1C               inc e
- 716+ A243 1A               ld a,(de)
- 717+ A244 AE               xor (hl)
- 718+ A245 77               ld (hl),a
- 719+ A246 1C               inc e
- 720+ A247
- 721+ A247 E1               pop hl
- 722+ A248
- 723+ A248 1A               ld a,(de)
- 724+ A249 AE               xor (hl)
- 725+ A24A 77               ld (hl),a
- 726+ A24B 2C               inc l
- 727+ A24C 1C               inc e
- 728+ A24D 1A               ld a,(de)
- 729+ A24E AE               xor (hl)
- 730+ A24F 77               ld (hl),a
- 731+ A250 2C               inc l
- 732+ A251 1C               inc e
- 733+ A252 1A               ld a,(de)
- 734+ A253 AE               xor (hl)
- 735+ A254 77               ld (hl),a
- 736+ A255 1C               inc e
- 737+ A256
- 738+ A256 E1               pop hl
- 739+ A257
- 740+ A257 1A               ld a,(de)
- 741+ A258 AE               xor (hl)
- 742+ A259 77               ld (hl),a
- 743+ A25A 2C               inc l
- 744+ A25B 1C               inc e
- 745+ A25C 1A               ld a,(de)
- 746+ A25D AE               xor (hl)
- 747+ A25E 77               ld (hl),a
- 748+ A25F 2C               inc l
- 749+ A260 1C               inc e
- 750+ A261 1A               ld a,(de)
- 751+ A262 AE               xor (hl)
- 752+ A263 77               ld (hl),a
- 753+ A264 1C               inc e
- 754+ A265
- 755+ A265 E1               pop hl
- 756+ A266
- 757+ A266 1A               ld a,(de)
- 758+ A267 AE               xor (hl)
- 759+ A268 77               ld (hl),a
- 760+ A269 2C               inc l
- 761+ A26A 1C               inc e
- 762+ A26B 1A               ld a,(de)
- 763+ A26C AE               xor (hl)
- 764+ A26D 77               ld (hl),a
- 765+ A26E 2C               inc l
- 766+ A26F 1C               inc e
- 767+ A270 1A               ld a,(de)
- 768+ A271 AE               xor (hl)
- 769+ A272 77               ld (hl),a
- 770+ A273 1C               inc e
- 771+ A274
- 772+ A274 E1               pop hl
- 773+ A275
- 774+ A275 1A               ld a,(de)
- 775+ A276 AE               xor (hl)
- 776+ A277 77               ld (hl),a
- 777+ A278 2C               inc l
- 778+ A279 1C               inc e
- 779+ A27A 1A               ld a,(de)
- 780+ A27B AE               xor (hl)
- 781+ A27C 77               ld (hl),a
- 782+ A27D 2C               inc l
- 783+ A27E 1C               inc e
- 784+ A27F 1A               ld a,(de)
- 785+ A280 AE               xor (hl)
- 786+ A281 77               ld (hl),a
- 787+ A282 1C               inc e
- 788+ A283
- 789+ A283 E1               pop hl
- 790+ A284
- 791+ A284 1A               ld a,(de)
- 792+ A285 AE               xor (hl)
- 793+ A286 77               ld (hl),a
- 794+ A287 2C               inc l
- 795+ A288 1C               inc e
- 796+ A289 1A               ld a,(de)
- 797+ A28A AE               xor (hl)
- 798+ A28B 77               ld (hl),a
- 799+ A28C 2C               inc l
- 800+ A28D 1C               inc e
- 801+ A28E 1A               ld a,(de)
- 802+ A28F AE               xor (hl)
- 803+ A290 77               ld (hl),a
- 804+ A291 1C               inc e
- 805+ A292
- 806+ A292 ED 73 E0 91      ld (Scanlines_album_SP),sp
- 807+ A296 ED 7B BE 91      ld sp,(Stack)
- 808+ A29A
- 809+ A29A C9               ret
- 810+ A29B
- 811+ A29B              Pinta_rapido_2_Columnas
- 812+ A29B
- 813+ A29B              ; Attr. 2 (Columnas).
- 814+ A29B
- 815+ A29B E1               pop hl
- 816+ A29C E5               push hl
- 817+ A29D
- 818+ A29D              ; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
- 819+ A29D
- 820+ A29D 7C               ld a,h
- 821+ A29E FE 48            cp $48
- 822+ A2A0 28 0C            jr z,7F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs.
- 823+ A2A2
- 824+ A2A2 E6 0F            and $0f
- 825+ A2A4 28 08            jr z,7F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs.
- 826+ A2A6
- 827+ A2A6              ; Indica 3 Filas de attr.
- 828+ A2A6
- 829+ A2A6 3A E9 91         ld a,(Ctrl_4)
- 830+ A2A9 CB E7            set 4,a
- 831+ A2AB 32 E9 91         ld (Ctrl_4),a
- 832+ A2AE
- 833+ A2AE 7C           7 ld a,h
- 834+ A2AF E6 18            and $18
- 835+ A2B1 CB 2F            sra a
- 836+ A2B3 CB 2F            sra a
- 837+ A2B5 CB 2F            sra a
- 838+ A2B7 C6 58            add $58
- 839+ A2B9 67               ld h,a
- 840+ A2BA
- 841+ A2BA 71               ld (hl),c
- 842+ A2BB 2C               inc l
- 843+ A2BC 71               ld (hl),c
- 844+ A2BD
- 845+ A2BD              ; ----- ----- -----
- 846+ A2BD
- 847+ A2BD E1               pop hl
- 848+ A2BE
- 849+ A2BE 1A               ld a,(de)
- 850+ A2BF AE               xor (hl)
- 851+ A2C0 77               ld (hl),a
- 852+ A2C1 2C               inc l
- 853+ A2C2 1C               inc e
- 854+ A2C3 1A               ld a,(de)
- 855+ A2C4 AE               xor (hl)
- 856+ A2C5 77               ld (hl),a
- 857+ A2C6 1C               inc e
- 858+ A2C7 1C               inc e
- 859+ A2C8
- 860+ A2C8 E1               pop hl
- 861+ A2C9
- 862+ A2C9 1A               ld a,(de)
- 863+ A2CA AE               xor (hl)
- 864+ A2CB 77               ld (hl),a
- 865+ A2CC 2C               inc l
- 866+ A2CD 1C               inc e
- 867+ A2CE 1A               ld a,(de)
- 868+ A2CF AE               xor (hl)
- 869+ A2D0 77               ld (hl),a
- 870+ A2D1 1C               inc e
- 871+ A2D2 1C               inc e
- 872+ A2D3
- 873+ A2D3 E1               pop hl
- 874+ A2D4
- 875+ A2D4 1A               ld a,(de)
- 876+ A2D5 AE               xor (hl)
- 877+ A2D6 77               ld (hl),a
- 878+ A2D7 2C               inc l
- 879+ A2D8 1C               inc e
- 880+ A2D9 1A               ld a,(de)
- 881+ A2DA AE               xor (hl)
- 882+ A2DB 77               ld (hl),a
- 883+ A2DC 1C               inc e
- 884+ A2DD 1C               inc e
- 885+ A2DE
- 886+ A2DE E1               pop hl
- 887+ A2DF
- 888+ A2DF 1A               ld a,(de)
- 889+ A2E0 AE               xor (hl)
- 890+ A2E1 77               ld (hl),a
- 891+ A2E2 2C               inc l
- 892+ A2E3 1C               inc e
- 893+ A2E4 1A               ld a,(de)
- 894+ A2E5 AE               xor (hl)
- 895+ A2E6 77               ld (hl),a
- 896+ A2E7 1C               inc e
- 897+ A2E8 1C               inc e
- 898+ A2E9
- 899+ A2E9 E1               pop hl
- 900+ A2EA
- 901+ A2EA 1A               ld a,(de)
- 902+ A2EB AE               xor (hl)
- 903+ A2EC 77               ld (hl),a
- 904+ A2ED 2C               inc l
- 905+ A2EE 1C               inc e
- 906+ A2EF 1A               ld a,(de)
- 907+ A2F0 AE               xor (hl)
- 908+ A2F1 77               ld (hl),a
- 909+ A2F2 1C               inc e
- 910+ A2F3 1C               inc e
- 911+ A2F4
- 912+ A2F4 E1               pop hl
- 913+ A2F5
- 914+ A2F5 1A               ld a,(de)
- 915+ A2F6 AE               xor (hl)
- 916+ A2F7 77               ld (hl),a
- 917+ A2F8 2C               inc l
- 918+ A2F9 1C               inc e
- 919+ A2FA 1A               ld a,(de)
- 920+ A2FB AE               xor (hl)
- 921+ A2FC 77               ld (hl),a
- 922+ A2FD 1C               inc e
- 923+ A2FE 1C               inc e
- 924+ A2FF
- 925+ A2FF E1               pop hl
- 926+ A300
- 927+ A300 1A               ld a,(de)
- 928+ A301 AE               xor (hl)
- 929+ A302 77               ld (hl),a
- 930+ A303 2C               inc l
- 931+ A304 1C               inc e
- 932+ A305 1A               ld a,(de)
- 933+ A306 AE               xor (hl)
- 934+ A307 77               ld (hl),a
- 935+ A308 1C               inc e
- 936+ A309 1C               inc e
- 937+ A30A
- 938+ A30A E1               pop hl
- 939+ A30B
- 940+ A30B 1A               ld a,(de)
- 941+ A30C AE               xor (hl)
- 942+ A30D 77               ld (hl),a
- 943+ A30E 2C               inc l
- 944+ A30F 1C               inc e
- 945+ A310 1A               ld a,(de)
- 946+ A311 AE               xor (hl)
- 947+ A312 77               ld (hl),a
- 948+ A313 1C               inc e
- 949+ A314 1C               inc e
- 950+ A315
- 951+ A315              ; Attr. 2 (Columnas).
- 952+ A315
- 953+ A315 E1               pop hl
- 954+ A316 E5               push hl
- 955+ A317
- 956+ A317 7C               ld a,h
- 957+ A318 E6 18            and $18
- 958+ A31A CB 2F            sra a
- 959+ A31C CB 2F            sra a
- 960+ A31E CB 2F            sra a
- 961+ A320 C6 58            add $58
- 962+ A322 67               ld h,a
- 963+ A323
- 964+ A323 71           8 ld (hl),c
- 965+ A324 2C               inc l
- 966+ A325 71               ld (hl),c
- 967+ A326
- 968+ A326 3A E9 91         ld a,(Ctrl_4)
- 969+ A329 CB 67            bit 4,a
- 970+ A32B 28 0F            jr z,9F
- 971+ A32D
- 972+ A32D              ; 3ª Fila de Atributos.
- 973+ A32D
- 974+ A32D CB A7            res 4,a
- 975+ A32F 32 E9 91         ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
- 976+ A332
- 977+ A332 2D               dec l
- 978+ A333
- 979+ A333 7D               ld a,l
- 980+ A334 C6 20            add 32
- 981+ A336 6F               ld l,a
- 982+ A337
- 983+ A337 30 EA            jr nc,8B
- 984+ A339
- 985+ A339 24               inc h
- 986+ A33A 18 E7            jr 8B
- 987+ A33C
- 988+ A33C              ; ----- ----- -----
- 989+ A33C
- 990+ A33C E1           9 pop hl
- 991+ A33D
- 992+ A33D 1A               ld a,(de)
- 993+ A33E AE               xor (hl)
- 994+ A33F 77               ld (hl),a
- 995+ A340 2C               inc l
- 996+ A341 1C               inc e
- 997+ A342 1A               ld a,(de)
- 998+ A343 AE               xor (hl)
- 999+ A344 77               ld (hl),a
-1000+ A345 1C               inc e
-1001+ A346 1C               inc e
-1002+ A347
-1003+ A347 E1               pop hl
-1004+ A348
-1005+ A348 1A               ld a,(de)
-1006+ A349 AE               xor (hl)
-1007+ A34A 77               ld (hl),a
-1008+ A34B 2C               inc l
-1009+ A34C 1C               inc e
-1010+ A34D 1A               ld a,(de)
-1011+ A34E AE               xor (hl)
-1012+ A34F 77               ld (hl),a
-1013+ A350 1C               inc e
-1014+ A351 1C               inc e
-1015+ A352
-1016+ A352 E1               pop hl
-1017+ A353
-1018+ A353 1A               ld a,(de)
-1019+ A354 AE               xor (hl)
-1020+ A355 77               ld (hl),a
-1021+ A356 2C               inc l
-1022+ A357 1C               inc e
-1023+ A358 1A               ld a,(de)
-1024+ A359 AE               xor (hl)
-1025+ A35A 77               ld (hl),a
-1026+ A35B 1C               inc e
-1027+ A35C 1C               inc e
-1028+ A35D
-1029+ A35D E1               pop hl
-1030+ A35E
-1031+ A35E 1A               ld a,(de)
-1032+ A35F AE               xor (hl)
-1033+ A360 77               ld (hl),a
-1034+ A361 2C               inc l
-1035+ A362 1C               inc e
-1036+ A363 1A               ld a,(de)
-1037+ A364 AE               xor (hl)
-1038+ A365 77               ld (hl),a
-1039+ A366 1C               inc e
-1040+ A367 1C               inc e
-1041+ A368
-1042+ A368 E1               pop hl
-1043+ A369
-1044+ A369 1A               ld a,(de)
-1045+ A36A AE               xor (hl)
-1046+ A36B 77               ld (hl),a
-1047+ A36C 2C               inc l
-1048+ A36D 1C               inc e
-1049+ A36E 1A               ld a,(de)
-1050+ A36F AE               xor (hl)
-1051+ A370 77               ld (hl),a
-1052+ A371 1C               inc e
-1053+ A372 1C               inc e
-1054+ A373
-1055+ A373 E1               pop hl
-1056+ A374
-1057+ A374 1A               ld a,(de)
-1058+ A375 AE               xor (hl)
-1059+ A376 77               ld (hl),a
-1060+ A377 2C               inc l
-1061+ A378 1C               inc e
-1062+ A379 1A               ld a,(de)
-1063+ A37A AE               xor (hl)
-1064+ A37B 77               ld (hl),a
-1065+ A37C 1C               inc e
-1066+ A37D 1C               inc e
-1067+ A37E
-1068+ A37E E1               pop hl
-1069+ A37F
-1070+ A37F 1A               ld a,(de)
-1071+ A380 AE               xor (hl)
-1072+ A381 77               ld (hl),a
-1073+ A382 2C               inc l
-1074+ A383 1C               inc e
-1075+ A384 1A               ld a,(de)
-1076+ A385 AE               xor (hl)
-1077+ A386 77               ld (hl),a
-1078+ A387 1C               inc e
-1079+ A388 1C               inc e
-1080+ A389
-1081+ A389 E1               pop hl
-1082+ A38A
-1083+ A38A 1A               ld a,(de)
-1084+ A38B AE               xor (hl)
-1085+ A38C 77               ld (hl),a
-1086+ A38D 2C               inc l
-1087+ A38E 1C               inc e
-1088+ A38F 1A               ld a,(de)
-1089+ A390 AE               xor (hl)
-1090+ A391 77               ld (hl),a
-1091+ A392 1C               inc e
-1092+ A393 1C               inc e
-1093+ A394
-1094+ A394 ED 73 E0 91      ld (Scanlines_album_SP),sp
-1095+ A398 ED 7B BE 91      ld sp,(Stack)
-1096+ A39C
-1097+ A39C C9               ret
-1098+ A39D
-1099+ A39D              Pinta_rapido_1_Columna
-1100+ A39D
-1101+ A39D              ; Attr. 1 (Columnas).
-1102+ A39D
-1103+ A39D E1               pop hl
-1104+ A39E E5               push hl
-1105+ A39F
-1106+ A39F              ; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
-1107+ A39F
-1108+ A39F 7C               ld a,h
-1109+ A3A0 FE 48            cp $48
-1110+ A3A2 28 0C            jr z,10F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs.
-1111+ A3A4
-1112+ A3A4 E6 0F            and $0f
-1113+ A3A6 28 08            jr z,10F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs.
-1114+ A3A8
-1115+ A3A8              ; Indica 3 Filas de attr.
-1116+ A3A8
-1117+ A3A8 3A E9 91         ld a,(Ctrl_4)
-1118+ A3AB CB E7            set 4,a
-1119+ A3AD 32 E9 91         ld (Ctrl_4),a
-1120+ A3B0
-1121+ A3B0 7C           10 ld a,h
-1122+ A3B1 E6 18            and $18
-1123+ A3B3 CB 2F            sra a
-1124+ A3B5 CB 2F            sra a
-1125+ A3B7 CB 2F            sra a
-1126+ A3B9 C6 58            add $58
-1127+ A3BB 67               ld h,a
-1128+ A3BC
-1129+ A3BC 71               ld (hl),c
-1130+ A3BD
-1131+ A3BD              ; ----- ----- -----
-1132+ A3BD
-1133+ A3BD E1               pop hl
-1134+ A3BE
-1135+ A3BE 1A               ld a,(de)
-1136+ A3BF AE               xor (hl)
-1137+ A3C0 77               ld (hl),a
-1138+ A3C1 1C               inc e
-1139+ A3C2 1C               inc e
-1140+ A3C3 1C               inc e
-1141+ A3C4
-1142+ A3C4 E1               pop hl
-1143+ A3C5
-1144+ A3C5 1A               ld a,(de)
-1145+ A3C6 AE               xor (hl)
-1146+ A3C7 77               ld (hl),a
-1147+ A3C8 1C               inc e
-1148+ A3C9 1C               inc e
-1149+ A3CA 1C               inc e
-1150+ A3CB
-1151+ A3CB E1               pop hl
-1152+ A3CC
-1153+ A3CC 1A               ld a,(de)
-1154+ A3CD AE               xor (hl)
-1155+ A3CE 77               ld (hl),a
-1156+ A3CF 1C               inc e
-1157+ A3D0 1C               inc e
-1158+ A3D1 1C               inc e
-1159+ A3D2
-1160+ A3D2 E1               pop hl
-1161+ A3D3
-1162+ A3D3 1A               ld a,(de)
-1163+ A3D4 AE               xor (hl)
-1164+ A3D5 77               ld (hl),a
-1165+ A3D6 1C               inc e
-1166+ A3D7 1C               inc e
-1167+ A3D8 1C               inc e
-1168+ A3D9
-1169+ A3D9 E1               pop hl
-1170+ A3DA
-1171+ A3DA 1A               ld a,(de)
-1172+ A3DB AE               xor (hl)
-1173+ A3DC 77               ld (hl),a
-1174+ A3DD 1C               inc e
-1175+ A3DE 1C               inc e
-1176+ A3DF 1C               inc e
-1177+ A3E0
-1178+ A3E0 E1               pop hl
-1179+ A3E1
-1180+ A3E1 1A               ld a,(de)
-1181+ A3E2 AE               xor (hl)
-1182+ A3E3 77               ld (hl),a
-1183+ A3E4 1C               inc e
-1184+ A3E5 1C               inc e
-1185+ A3E6 1C               inc e
-1186+ A3E7
-1187+ A3E7 E1               pop hl
-1188+ A3E8
-1189+ A3E8 1A               ld a,(de)
-1190+ A3E9 AE               xor (hl)
-1191+ A3EA 77               ld (hl),a
-1192+ A3EB 1C               inc e
-1193+ A3EC 1C               inc e
-1194+ A3ED 1C               inc e
-1195+ A3EE
-1196+ A3EE E1               pop hl
-1197+ A3EF
-1198+ A3EF 1A               ld a,(de)
-1199+ A3F0 AE               xor (hl)
-1200+ A3F1 77               ld (hl),a
-1201+ A3F2 1C               inc e
-1202+ A3F3 1C               inc e
-1203+ A3F4 1C               inc e
-1204+ A3F5
-1205+ A3F5              ; Attr. 1 (Columnas).
-1206+ A3F5
-1207+ A3F5 E1               pop hl
-1208+ A3F6 E5               push hl
-1209+ A3F7
-1210+ A3F7 7C               ld a,h
-1211+ A3F8 E6 18            and $18
-1212+ A3FA CB 2F            sra a
-1213+ A3FC CB 2F            sra a
-1214+ A3FE CB 2F            sra a
-1215+ A400 C6 58            add $58
-1216+ A402 67               ld h,a
-1217+ A403
-1218+ A403 71           11 ld (hl),c
-1219+ A404
-1220+ A404 3A E9 91         ld a,(Ctrl_4)
-1221+ A407 CB 67            bit 4,a
-1222+ A409 28 0E            jr z,12F
-1223+ A40B
-1224+ A40B              ; 3ª Fila de Atributos.
-1225+ A40B
-1226+ A40B CB A7            res 4,a
-1227+ A40D 32 E9 91         ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
-1228+ A410
-1229+ A410 7D               ld a,l
-1230+ A411 C6 20            add 32
-1231+ A413 6F               ld l,a
-1232+ A414
-1233+ A414 30 ED            jr nc,11B
-1234+ A416 24               inc h
-1235+ A417
-1236+ A417 18 EA            jr 11B
-1237+ A419
-1238+ A419              ; ----- ----- -----
-1239+ A419
-1240+ A419 E1           12 pop hl
-1241+ A41A
-1242+ A41A 1A               ld a,(de)
-1243+ A41B AE               xor (hl)
-1244+ A41C 77               ld (hl),a
-1245+ A41D 1C               inc e
-1246+ A41E 1C               inc e
-1247+ A41F 1C               inc e
-1248+ A420
-1249+ A420 E1               pop hl
-1250+ A421
-1251+ A421 1A               ld a,(de)
-1252+ A422 AE               xor (hl)
-1253+ A423 77               ld (hl),a
-1254+ A424 1C               inc e
-1255+ A425 1C               inc e
-1256+ A426 1C               inc e
-1257+ A427
-1258+ A427 E1               pop hl
-1259+ A428
-1260+ A428 1A               ld a,(de)
-1261+ A429 AE               xor (hl)
-1262+ A42A 77               ld (hl),a
-1263+ A42B 1C               inc e
-1264+ A42C 1C               inc e
-1265+ A42D 1C               inc e
-1266+ A42E
-1267+ A42E E1               pop hl
-1268+ A42F
-1269+ A42F 1A               ld a,(de)
-1270+ A430 AE               xor (hl)
-1271+ A431 77               ld (hl),a
-1272+ A432 1C               inc e
-1273+ A433 1C               inc e
-1274+ A434 1C               inc e
-1275+ A435
-1276+ A435 E1               pop hl
-1277+ A436
-1278+ A436 1A               ld a,(de)
-1279+ A437 AE               xor (hl)
-1280+ A438 77               ld (hl),a
-1281+ A439 1C               inc e
-1282+ A43A 1C               inc e
-1283+ A43B 1C               inc e
-1284+ A43C E1               pop hl
-1285+ A43D
-1286+ A43D 1A               ld a,(de)
-1287+ A43E AE               xor (hl)
-1288+ A43F 77               ld (hl),a
-1289+ A440 1C               inc e
-1290+ A441 1C               inc e
-1291+ A442 1C               inc e
-1292+ A443
-1293+ A443 E1               pop hl
-1294+ A444
-1295+ A444 1A               ld a,(de)
-1296+ A445 AE               xor (hl)
-1297+ A446 77               ld (hl),a
-1298+ A447 1C               inc e
-1299+ A448 1C               inc e
-1300+ A449 1C               inc e
-1301+ A44A
-1302+ A44A E1               pop hl
-1303+ A44B
-1304+ A44B 1A               ld a,(de)
-1305+ A44C AE               xor (hl)
-1306+ A44D 77               ld (hl),a
-1307+ A44E 1C               inc e
-1308+ A44F 1C               inc e
-1309+ A450 1C               inc e
-1310+ A451
-1311+ A451 ED 73 E0 91      ld (Scanlines_album_SP),sp
-1312+ A455 ED 7B BE 91      ld sp,(Stack)
-1313+ A459
-1314+ A459 C9               ret
-1315+ A45A
-1316+ A45A              Pinta_lento
-1317+ A45A
-1318+ A45A 3A 97 91         ld a,(Columnas)
-1319+ A45D 3D               dec a
-1320+ A45E 28 72            jr z,Pinta_lento_1_Columna
-1321+ A460 3D               dec a
-1322+ A461 28 3C            jr z,Pinta_lento_2_Columnas
-1323+ A463
-1324+ A463              Pinta_lento_3_Columnas
-1325+ A463
-1326+ A463              ; La entidad está desapareciendo por la parte baja de la pantalla. 1 o 2 Filas de Attrs.
-1327+ A463              ; Attr. 3 (Columnas).
+ 394+ A120              ; 2º scanline
+ 395+ A120
+ 396+ A120 1A               ld a,(de)
+ 397+ A121 AE               xor (hl)
+ 398+ A122 77               ld (hl),a
+ 399+ A123
+ 400+ A123 1C               inc e
+ 401+ A124 2C               inc l
+ 402+ A125
+ 403+ A125 1A               ld a,(de)
+ 404+ A126 AE               xor (hl)
+ 405+ A127 77               ld (hl),a
+ 406+ A128
+ 407+ A128 1D               dec e
+ 408+ A129
+ 409+ A129 18 06            jr 1F
+ 410+ A12B
+ 411+ A12B ED 7B CA 91  2 ld sp,(Album_de_pintado_disparos_Amadeus)
+ 412+ A12F 18 D0            jr 3B
+ 413+ A131
+ 414+ A131 10 F8        1 djnz 2B
+ 415+ A133
+ 416+ A133 ED 7B BE 91      ld sp,(Stack)
+ 417+ A137
+ 418+ A137 C9               ret
+ 419+ A138
+ 420+ A138              ; -----------------------------------------------------------------------------
+ 421+ A138              ;
+ 422+ A138              ;   1/4/25
+ 423+ A138              ;
+ 424+ A138              ;   INPUT: A contiene (Columnas).
+ 425+ A138              ;          C contiene (Attr).
+ 426+ A138
+ 427+ A138              Pinta_Sprites
+ 428+ A138
+ 429+ A138 ED 73 BE 91      ld (Stack),sp
+ 430+ A13C
+ 431+ A13C EB               ex de,hl                            ; HL se encuentra en el álbum de líneas.
+ 432+ A13D              ;                                       ; DE se encuentra en los datos del sprite.
+ 433+ A13D 2C               inc l
+ 434+ A13E 2C               inc l
+ 435+ A13F
+ 436+ A13F 46               ld b,(hl)                           ; B contiene el nº de scanlines a imprimir.
+ 437+ A140
+ 438+ A140 2C               inc l
+ 439+ A141 F9               ld sp,hl                            ; El SP irá extrayendo scanlines en HL.
+ 440+ A142
+ 441+ A142              ;   Seleccionamos rutina de impresión:
+ 442+ A142
+ 443+ A142 08               ex af,af                            ; (Columnas) en AF´.
+ 444+ A143
+ 445+ A143 3E 10            ld a,16
+ 446+ A145 B8               cp b
+ 447+ A146 C2 5A A4         jp nz,Pinta_lento                   ; Si el sprite no se imprime completo utilizamos la 2ª rutina de pintado.
+ 448+ A149
+ 449+ A149              ;   Rutinas:
+ 450+ A149
+ 451+ A149              Pinta_rapido                            ;   1520 t/states.
+ 452+ A149
+ 453+ A149 3A 97 91         ld a,(Columnas)
+ 454+ A14C 3D               dec a
+ 455+ A14D CA 9D A3         jp z,Pinta_rapido_1_Columna
+ 456+ A150 3D               dec a
+ 457+ A151 CA 9B A2         jp z,Pinta_rapido_2_Columnas
+ 458+ A154
+ 459+ A154              Pinta_rapido_3_Columnas
+ 460+ A154
+ 461+ A154              ; Attr. 3 (Columnas).
+ 462+ A154
+ 463+ A154 E1               pop hl
+ 464+ A155 E5               push hl
+ 465+ A156
+ 466+ A156              ; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
+ 467+ A156
+ 468+ A156 7C               ld a,h
+ 469+ A157 FE 48            cp $48
+ 470+ A159 28 0C            jr z,4F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs.
+ 471+ A15B
+ 472+ A15B E6 0F            and $0f
+ 473+ A15D 28 08            jr z,4F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs.
+ 474+ A15F
+ 475+ A15F              ; Indica 3 Filas de attr.
+ 476+ A15F
+ 477+ A15F 3A E9 91         ld a,(Ctrl_4)
+ 478+ A162 CB E7            set 4,a
+ 479+ A164 32 E9 91         ld (Ctrl_4),a
+ 480+ A167
+ 481+ A167 7C           4 ld a,h
+ 482+ A168 E6 18            and $18
+ 483+ A16A CB 2F            sra a
+ 484+ A16C CB 2F            sra a
+ 485+ A16E CB 2F            sra a
+ 486+ A170 C6 58            add $58
+ 487+ A172 67               ld h,a
+ 488+ A173
+ 489+ A173 71               ld (hl),c
+ 490+ A174 2C               inc l
+ 491+ A175 71               ld (hl),c
+ 492+ A176 2C               inc l
+ 493+ A177 71               ld (hl),c
+ 494+ A178
+ 495+ A178              ; ----- ----- -----
+ 496+ A178
+ 497+ A178 E1               pop hl
+ 498+ A179
+ 499+ A179 1A               ld a,(de)
+ 500+ A17A AE               xor (hl)
+ 501+ A17B 77               ld (hl),a
+ 502+ A17C 2C               inc l
+ 503+ A17D 1C               inc e
+ 504+ A17E 1A               ld a,(de)
+ 505+ A17F AE               xor (hl)
+ 506+ A180 77               ld (hl),a
+ 507+ A181 2C               inc l
+ 508+ A182 1C               inc e
+ 509+ A183 1A               ld a,(de)
+ 510+ A184 AE               xor (hl)
+ 511+ A185 77               ld (hl),a
+ 512+ A186 1C               inc e
+ 513+ A187
+ 514+ A187 E1               pop hl
+ 515+ A188
+ 516+ A188 1A               ld a,(de)
+ 517+ A189 AE               xor (hl)
+ 518+ A18A 77               ld (hl),a
+ 519+ A18B 2C               inc l
+ 520+ A18C 1C               inc e
+ 521+ A18D 1A               ld a,(de)
+ 522+ A18E AE               xor (hl)
+ 523+ A18F 77               ld (hl),a
+ 524+ A190 2C               inc l
+ 525+ A191 1C               inc e
+ 526+ A192 1A               ld a,(de)
+ 527+ A193 AE               xor (hl)
+ 528+ A194 77               ld (hl),a
+ 529+ A195 1C               inc e
+ 530+ A196
+ 531+ A196 E1               pop hl
+ 532+ A197
+ 533+ A197 1A               ld a,(de)
+ 534+ A198 AE               xor (hl)
+ 535+ A199 77               ld (hl),a
+ 536+ A19A 2C               inc l
+ 537+ A19B 1C               inc e
+ 538+ A19C 1A               ld a,(de)
+ 539+ A19D AE               xor (hl)
+ 540+ A19E 77               ld (hl),a
+ 541+ A19F 2C               inc l
+ 542+ A1A0 1C               inc e
+ 543+ A1A1 1A               ld a,(de)
+ 544+ A1A2 AE               xor (hl)
+ 545+ A1A3 77               ld (hl),a
+ 546+ A1A4 1C               inc e
+ 547+ A1A5
+ 548+ A1A5 E1               pop hl
+ 549+ A1A6
+ 550+ A1A6 1A               ld a,(de)
+ 551+ A1A7 AE               xor (hl)
+ 552+ A1A8 77               ld (hl),a
+ 553+ A1A9 2C               inc l
+ 554+ A1AA 1C               inc e
+ 555+ A1AB 1A               ld a,(de)
+ 556+ A1AC AE               xor (hl)
+ 557+ A1AD 77               ld (hl),a
+ 558+ A1AE 2C               inc l
+ 559+ A1AF 1C               inc e
+ 560+ A1B0 1A               ld a,(de)
+ 561+ A1B1 AE               xor (hl)
+ 562+ A1B2 77               ld (hl),a
+ 563+ A1B3 1C               inc e
+ 564+ A1B4
+ 565+ A1B4 E1               pop hl
+ 566+ A1B5
+ 567+ A1B5 1A               ld a,(de)
+ 568+ A1B6 AE               xor (hl)
+ 569+ A1B7 77               ld (hl),a
+ 570+ A1B8 2C               inc l
+ 571+ A1B9 1C               inc e
+ 572+ A1BA 1A               ld a,(de)
+ 573+ A1BB AE               xor (hl)
+ 574+ A1BC 77               ld (hl),a
+ 575+ A1BD 2C               inc l
+ 576+ A1BE 1C               inc e
+ 577+ A1BF 1A               ld a,(de)
+ 578+ A1C0 AE               xor (hl)
+ 579+ A1C1 77               ld (hl),a
+ 580+ A1C2 1C               inc e
+ 581+ A1C3
+ 582+ A1C3 E1               pop hl
+ 583+ A1C4
+ 584+ A1C4 1A               ld a,(de)
+ 585+ A1C5 AE               xor (hl)
+ 586+ A1C6 77               ld (hl),a
+ 587+ A1C7 2C               inc l
+ 588+ A1C8 1C               inc e
+ 589+ A1C9 1A               ld a,(de)
+ 590+ A1CA AE               xor (hl)
+ 591+ A1CB 77               ld (hl),a
+ 592+ A1CC 2C               inc l
+ 593+ A1CD 1C               inc e
+ 594+ A1CE 1A               ld a,(de)
+ 595+ A1CF AE               xor (hl)
+ 596+ A1D0 77               ld (hl),a
+ 597+ A1D1 1C               inc e
+ 598+ A1D2
+ 599+ A1D2 E1               pop hl
+ 600+ A1D3
+ 601+ A1D3 1A               ld a,(de)
+ 602+ A1D4 AE               xor (hl)
+ 603+ A1D5 77               ld (hl),a
+ 604+ A1D6 2C               inc l
+ 605+ A1D7 1C               inc e
+ 606+ A1D8 1A               ld a,(de)
+ 607+ A1D9 AE               xor (hl)
+ 608+ A1DA 77               ld (hl),a
+ 609+ A1DB 2C               inc l
+ 610+ A1DC 1C               inc e
+ 611+ A1DD 1A               ld a,(de)
+ 612+ A1DE AE               xor (hl)
+ 613+ A1DF 77               ld (hl),a
+ 614+ A1E0 1C               inc e
+ 615+ A1E1
+ 616+ A1E1 E1               pop hl
+ 617+ A1E2
+ 618+ A1E2 1A               ld a,(de)
+ 619+ A1E3 AE               xor (hl)
+ 620+ A1E4 77               ld (hl),a
+ 621+ A1E5 2C               inc l
+ 622+ A1E6 1C               inc e
+ 623+ A1E7 1A               ld a,(de)
+ 624+ A1E8 AE               xor (hl)
+ 625+ A1E9 77               ld (hl),a
+ 626+ A1EA 2C               inc l
+ 627+ A1EB 1C               inc e
+ 628+ A1EC 1A               ld a,(de)
+ 629+ A1ED AE               xor (hl)
+ 630+ A1EE 77               ld (hl),a
+ 631+ A1EF 1C               inc e
+ 632+ A1F0
+ 633+ A1F0              ; Attr. 3 (Columnas).
+ 634+ A1F0
+ 635+ A1F0 E1               pop hl
+ 636+ A1F1 E5               push hl
+ 637+ A1F2
+ 638+ A1F2 7C               ld a,h
+ 639+ A1F3 E6 18            and $18
+ 640+ A1F5 CB 2F            sra a
+ 641+ A1F7 CB 2F            sra a
+ 642+ A1F9 CB 2F            sra a
+ 643+ A1FB C6 58            add $58
+ 644+ A1FD 67               ld h,a
+ 645+ A1FE
+ 646+ A1FE 71           6 ld (hl),c
+ 647+ A1FF 2C               inc l
+ 648+ A200 71               ld (hl),c
+ 649+ A201 2C               inc l
+ 650+ A202 71               ld (hl),c
+ 651+ A203
+ 652+ A203 3A E9 91         ld a,(Ctrl_4)
+ 653+ A206 CB 67            bit 4,a
+ 654+ A208 28 10            jr z,5F
+ 655+ A20A
+ 656+ A20A              ; 3ª Fila de Atributos.
+ 657+ A20A
+ 658+ A20A CB A7            res 4,a
+ 659+ A20C 32 E9 91         ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
+ 660+ A20F
+ 661+ A20F 2D               dec l
+ 662+ A210 2D               dec l
+ 663+ A211
+ 664+ A211 7D               ld a,l
+ 665+ A212 C6 20            add 32
+ 666+ A214 6F               ld l,a
+ 667+ A215
+ 668+ A215 30 E7            jr nc,6B
+ 669+ A217
+ 670+ A217 24               inc h
+ 671+ A218 18 E4            jr 6B
+ 672+ A21A
+ 673+ A21A              ; ----- ----- -----
+ 674+ A21A
+ 675+ A21A E1           5 pop hl
+ 676+ A21B
+ 677+ A21B 1A               ld a,(de)
+ 678+ A21C AE               xor (hl)
+ 679+ A21D 77               ld (hl),a
+ 680+ A21E 2C               inc l
+ 681+ A21F 1C               inc e
+ 682+ A220 1A               ld a,(de)
+ 683+ A221 AE               xor (hl)
+ 684+ A222 77               ld (hl),a
+ 685+ A223 2C               inc l
+ 686+ A224 1C               inc e
+ 687+ A225 1A               ld a,(de)
+ 688+ A226 AE               xor (hl)
+ 689+ A227 77               ld (hl),a
+ 690+ A228 1C               inc e
+ 691+ A229
+ 692+ A229 E1               pop hl
+ 693+ A22A
+ 694+ A22A 1A               ld a,(de)
+ 695+ A22B AE               xor (hl)
+ 696+ A22C 77               ld (hl),a
+ 697+ A22D 2C               inc l
+ 698+ A22E 1C               inc e
+ 699+ A22F 1A               ld a,(de)
+ 700+ A230 AE               xor (hl)
+ 701+ A231 77               ld (hl),a
+ 702+ A232 2C               inc l
+ 703+ A233 1C               inc e
+ 704+ A234 1A               ld a,(de)
+ 705+ A235 AE               xor (hl)
+ 706+ A236 77               ld (hl),a
+ 707+ A237 1C               inc e
+ 708+ A238
+ 709+ A238 E1               pop hl
+ 710+ A239
+ 711+ A239 1A               ld a,(de)
+ 712+ A23A AE               xor (hl)
+ 713+ A23B 77               ld (hl),a
+ 714+ A23C 2C               inc l
+ 715+ A23D 1C               inc e
+ 716+ A23E 1A               ld a,(de)
+ 717+ A23F AE               xor (hl)
+ 718+ A240 77               ld (hl),a
+ 719+ A241 2C               inc l
+ 720+ A242 1C               inc e
+ 721+ A243 1A               ld a,(de)
+ 722+ A244 AE               xor (hl)
+ 723+ A245 77               ld (hl),a
+ 724+ A246 1C               inc e
+ 725+ A247
+ 726+ A247 E1               pop hl
+ 727+ A248
+ 728+ A248 1A               ld a,(de)
+ 729+ A249 AE               xor (hl)
+ 730+ A24A 77               ld (hl),a
+ 731+ A24B 2C               inc l
+ 732+ A24C 1C               inc e
+ 733+ A24D 1A               ld a,(de)
+ 734+ A24E AE               xor (hl)
+ 735+ A24F 77               ld (hl),a
+ 736+ A250 2C               inc l
+ 737+ A251 1C               inc e
+ 738+ A252 1A               ld a,(de)
+ 739+ A253 AE               xor (hl)
+ 740+ A254 77               ld (hl),a
+ 741+ A255 1C               inc e
+ 742+ A256
+ 743+ A256 E1               pop hl
+ 744+ A257
+ 745+ A257 1A               ld a,(de)
+ 746+ A258 AE               xor (hl)
+ 747+ A259 77               ld (hl),a
+ 748+ A25A 2C               inc l
+ 749+ A25B 1C               inc e
+ 750+ A25C 1A               ld a,(de)
+ 751+ A25D AE               xor (hl)
+ 752+ A25E 77               ld (hl),a
+ 753+ A25F 2C               inc l
+ 754+ A260 1C               inc e
+ 755+ A261 1A               ld a,(de)
+ 756+ A262 AE               xor (hl)
+ 757+ A263 77               ld (hl),a
+ 758+ A264 1C               inc e
+ 759+ A265
+ 760+ A265 E1               pop hl
+ 761+ A266
+ 762+ A266 1A               ld a,(de)
+ 763+ A267 AE               xor (hl)
+ 764+ A268 77               ld (hl),a
+ 765+ A269 2C               inc l
+ 766+ A26A 1C               inc e
+ 767+ A26B 1A               ld a,(de)
+ 768+ A26C AE               xor (hl)
+ 769+ A26D 77               ld (hl),a
+ 770+ A26E 2C               inc l
+ 771+ A26F 1C               inc e
+ 772+ A270 1A               ld a,(de)
+ 773+ A271 AE               xor (hl)
+ 774+ A272 77               ld (hl),a
+ 775+ A273 1C               inc e
+ 776+ A274
+ 777+ A274 E1               pop hl
+ 778+ A275
+ 779+ A275 1A               ld a,(de)
+ 780+ A276 AE               xor (hl)
+ 781+ A277 77               ld (hl),a
+ 782+ A278 2C               inc l
+ 783+ A279 1C               inc e
+ 784+ A27A 1A               ld a,(de)
+ 785+ A27B AE               xor (hl)
+ 786+ A27C 77               ld (hl),a
+ 787+ A27D 2C               inc l
+ 788+ A27E 1C               inc e
+ 789+ A27F 1A               ld a,(de)
+ 790+ A280 AE               xor (hl)
+ 791+ A281 77               ld (hl),a
+ 792+ A282 1C               inc e
+ 793+ A283
+ 794+ A283 E1               pop hl
+ 795+ A284
+ 796+ A284 1A               ld a,(de)
+ 797+ A285 AE               xor (hl)
+ 798+ A286 77               ld (hl),a
+ 799+ A287 2C               inc l
+ 800+ A288 1C               inc e
+ 801+ A289 1A               ld a,(de)
+ 802+ A28A AE               xor (hl)
+ 803+ A28B 77               ld (hl),a
+ 804+ A28C 2C               inc l
+ 805+ A28D 1C               inc e
+ 806+ A28E 1A               ld a,(de)
+ 807+ A28F AE               xor (hl)
+ 808+ A290 77               ld (hl),a
+ 809+ A291 1C               inc e
+ 810+ A292
+ 811+ A292 ED 73 E0 91      ld (Scanlines_album_SP),sp
+ 812+ A296 ED 7B BE 91      ld sp,(Stack)
+ 813+ A29A
+ 814+ A29A C9               ret
+ 815+ A29B
+ 816+ A29B              Pinta_rapido_2_Columnas
+ 817+ A29B
+ 818+ A29B              ; Attr. 2 (Columnas).
+ 819+ A29B
+ 820+ A29B E1               pop hl
+ 821+ A29C E5               push hl
+ 822+ A29D
+ 823+ A29D              ; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
+ 824+ A29D
+ 825+ A29D 7C               ld a,h
+ 826+ A29E FE 48            cp $48
+ 827+ A2A0 28 0C            jr z,7F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs.
+ 828+ A2A2
+ 829+ A2A2 E6 0F            and $0f
+ 830+ A2A4 28 08            jr z,7F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs.
+ 831+ A2A6
+ 832+ A2A6              ; Indica 3 Filas de attr.
+ 833+ A2A6
+ 834+ A2A6 3A E9 91         ld a,(Ctrl_4)
+ 835+ A2A9 CB E7            set 4,a
+ 836+ A2AB 32 E9 91         ld (Ctrl_4),a
+ 837+ A2AE
+ 838+ A2AE 7C           7 ld a,h
+ 839+ A2AF E6 18            and $18
+ 840+ A2B1 CB 2F            sra a
+ 841+ A2B3 CB 2F            sra a
+ 842+ A2B5 CB 2F            sra a
+ 843+ A2B7 C6 58            add $58
+ 844+ A2B9 67               ld h,a
+ 845+ A2BA
+ 846+ A2BA 71               ld (hl),c
+ 847+ A2BB 2C               inc l
+ 848+ A2BC 71               ld (hl),c
+ 849+ A2BD
+ 850+ A2BD              ; ----- ----- -----
+ 851+ A2BD
+ 852+ A2BD E1               pop hl
+ 853+ A2BE
+ 854+ A2BE 1A               ld a,(de)
+ 855+ A2BF AE               xor (hl)
+ 856+ A2C0 77               ld (hl),a
+ 857+ A2C1 2C               inc l
+ 858+ A2C2 1C               inc e
+ 859+ A2C3 1A               ld a,(de)
+ 860+ A2C4 AE               xor (hl)
+ 861+ A2C5 77               ld (hl),a
+ 862+ A2C6 1C               inc e
+ 863+ A2C7 1C               inc e
+ 864+ A2C8
+ 865+ A2C8 E1               pop hl
+ 866+ A2C9
+ 867+ A2C9 1A               ld a,(de)
+ 868+ A2CA AE               xor (hl)
+ 869+ A2CB 77               ld (hl),a
+ 870+ A2CC 2C               inc l
+ 871+ A2CD 1C               inc e
+ 872+ A2CE 1A               ld a,(de)
+ 873+ A2CF AE               xor (hl)
+ 874+ A2D0 77               ld (hl),a
+ 875+ A2D1 1C               inc e
+ 876+ A2D2 1C               inc e
+ 877+ A2D3
+ 878+ A2D3 E1               pop hl
+ 879+ A2D4
+ 880+ A2D4 1A               ld a,(de)
+ 881+ A2D5 AE               xor (hl)
+ 882+ A2D6 77               ld (hl),a
+ 883+ A2D7 2C               inc l
+ 884+ A2D8 1C               inc e
+ 885+ A2D9 1A               ld a,(de)
+ 886+ A2DA AE               xor (hl)
+ 887+ A2DB 77               ld (hl),a
+ 888+ A2DC 1C               inc e
+ 889+ A2DD 1C               inc e
+ 890+ A2DE
+ 891+ A2DE E1               pop hl
+ 892+ A2DF
+ 893+ A2DF 1A               ld a,(de)
+ 894+ A2E0 AE               xor (hl)
+ 895+ A2E1 77               ld (hl),a
+ 896+ A2E2 2C               inc l
+ 897+ A2E3 1C               inc e
+ 898+ A2E4 1A               ld a,(de)
+ 899+ A2E5 AE               xor (hl)
+ 900+ A2E6 77               ld (hl),a
+ 901+ A2E7 1C               inc e
+ 902+ A2E8 1C               inc e
+ 903+ A2E9
+ 904+ A2E9 E1               pop hl
+ 905+ A2EA
+ 906+ A2EA 1A               ld a,(de)
+ 907+ A2EB AE               xor (hl)
+ 908+ A2EC 77               ld (hl),a
+ 909+ A2ED 2C               inc l
+ 910+ A2EE 1C               inc e
+ 911+ A2EF 1A               ld a,(de)
+ 912+ A2F0 AE               xor (hl)
+ 913+ A2F1 77               ld (hl),a
+ 914+ A2F2 1C               inc e
+ 915+ A2F3 1C               inc e
+ 916+ A2F4
+ 917+ A2F4 E1               pop hl
+ 918+ A2F5
+ 919+ A2F5 1A               ld a,(de)
+ 920+ A2F6 AE               xor (hl)
+ 921+ A2F7 77               ld (hl),a
+ 922+ A2F8 2C               inc l
+ 923+ A2F9 1C               inc e
+ 924+ A2FA 1A               ld a,(de)
+ 925+ A2FB AE               xor (hl)
+ 926+ A2FC 77               ld (hl),a
+ 927+ A2FD 1C               inc e
+ 928+ A2FE 1C               inc e
+ 929+ A2FF
+ 930+ A2FF E1               pop hl
+ 931+ A300
+ 932+ A300 1A               ld a,(de)
+ 933+ A301 AE               xor (hl)
+ 934+ A302 77               ld (hl),a
+ 935+ A303 2C               inc l
+ 936+ A304 1C               inc e
+ 937+ A305 1A               ld a,(de)
+ 938+ A306 AE               xor (hl)
+ 939+ A307 77               ld (hl),a
+ 940+ A308 1C               inc e
+ 941+ A309 1C               inc e
+ 942+ A30A
+ 943+ A30A E1               pop hl
+ 944+ A30B
+ 945+ A30B 1A               ld a,(de)
+ 946+ A30C AE               xor (hl)
+ 947+ A30D 77               ld (hl),a
+ 948+ A30E 2C               inc l
+ 949+ A30F 1C               inc e
+ 950+ A310 1A               ld a,(de)
+ 951+ A311 AE               xor (hl)
+ 952+ A312 77               ld (hl),a
+ 953+ A313 1C               inc e
+ 954+ A314 1C               inc e
+ 955+ A315
+ 956+ A315              ; Attr. 2 (Columnas).
+ 957+ A315
+ 958+ A315 E1               pop hl
+ 959+ A316 E5               push hl
+ 960+ A317
+ 961+ A317 7C               ld a,h
+ 962+ A318 E6 18            and $18
+ 963+ A31A CB 2F            sra a
+ 964+ A31C CB 2F            sra a
+ 965+ A31E CB 2F            sra a
+ 966+ A320 C6 58            add $58
+ 967+ A322 67               ld h,a
+ 968+ A323
+ 969+ A323 71           8 ld (hl),c
+ 970+ A324 2C               inc l
+ 971+ A325 71               ld (hl),c
+ 972+ A326
+ 973+ A326 3A E9 91         ld a,(Ctrl_4)
+ 974+ A329 CB 67            bit 4,a
+ 975+ A32B 28 0F            jr z,9F
+ 976+ A32D
+ 977+ A32D              ; 3ª Fila de Atributos.
+ 978+ A32D
+ 979+ A32D CB A7            res 4,a
+ 980+ A32F 32 E9 91         ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
+ 981+ A332
+ 982+ A332 2D               dec l
+ 983+ A333
+ 984+ A333 7D               ld a,l
+ 985+ A334 C6 20            add 32
+ 986+ A336 6F               ld l,a
+ 987+ A337
+ 988+ A337 30 EA            jr nc,8B
+ 989+ A339
+ 990+ A339 24               inc h
+ 991+ A33A 18 E7            jr 8B
+ 992+ A33C
+ 993+ A33C              ; ----- ----- -----
+ 994+ A33C
+ 995+ A33C E1           9 pop hl
+ 996+ A33D
+ 997+ A33D 1A               ld a,(de)
+ 998+ A33E AE               xor (hl)
+ 999+ A33F 77               ld (hl),a
+1000+ A340 2C               inc l
+1001+ A341 1C               inc e
+1002+ A342 1A               ld a,(de)
+1003+ A343 AE               xor (hl)
+1004+ A344 77               ld (hl),a
+1005+ A345 1C               inc e
+1006+ A346 1C               inc e
+1007+ A347
+1008+ A347 E1               pop hl
+1009+ A348
+1010+ A348 1A               ld a,(de)
+1011+ A349 AE               xor (hl)
+1012+ A34A 77               ld (hl),a
+1013+ A34B 2C               inc l
+1014+ A34C 1C               inc e
+1015+ A34D 1A               ld a,(de)
+1016+ A34E AE               xor (hl)
+1017+ A34F 77               ld (hl),a
+1018+ A350 1C               inc e
+1019+ A351 1C               inc e
+1020+ A352
+1021+ A352 E1               pop hl
+1022+ A353
+1023+ A353 1A               ld a,(de)
+1024+ A354 AE               xor (hl)
+1025+ A355 77               ld (hl),a
+1026+ A356 2C               inc l
+1027+ A357 1C               inc e
+1028+ A358 1A               ld a,(de)
+1029+ A359 AE               xor (hl)
+1030+ A35A 77               ld (hl),a
+1031+ A35B 1C               inc e
+1032+ A35C 1C               inc e
+1033+ A35D
+1034+ A35D E1               pop hl
+1035+ A35E
+1036+ A35E 1A               ld a,(de)
+1037+ A35F AE               xor (hl)
+1038+ A360 77               ld (hl),a
+1039+ A361 2C               inc l
+1040+ A362 1C               inc e
+1041+ A363 1A               ld a,(de)
+1042+ A364 AE               xor (hl)
+1043+ A365 77               ld (hl),a
+1044+ A366 1C               inc e
+1045+ A367 1C               inc e
+1046+ A368
+1047+ A368 E1               pop hl
+1048+ A369
+1049+ A369 1A               ld a,(de)
+1050+ A36A AE               xor (hl)
+1051+ A36B 77               ld (hl),a
+1052+ A36C 2C               inc l
+1053+ A36D 1C               inc e
+1054+ A36E 1A               ld a,(de)
+1055+ A36F AE               xor (hl)
+1056+ A370 77               ld (hl),a
+1057+ A371 1C               inc e
+1058+ A372 1C               inc e
+1059+ A373
+1060+ A373 E1               pop hl
+1061+ A374
+1062+ A374 1A               ld a,(de)
+1063+ A375 AE               xor (hl)
+1064+ A376 77               ld (hl),a
+1065+ A377 2C               inc l
+1066+ A378 1C               inc e
+1067+ A379 1A               ld a,(de)
+1068+ A37A AE               xor (hl)
+1069+ A37B 77               ld (hl),a
+1070+ A37C 1C               inc e
+1071+ A37D 1C               inc e
+1072+ A37E
+1073+ A37E E1               pop hl
+1074+ A37F
+1075+ A37F 1A               ld a,(de)
+1076+ A380 AE               xor (hl)
+1077+ A381 77               ld (hl),a
+1078+ A382 2C               inc l
+1079+ A383 1C               inc e
+1080+ A384 1A               ld a,(de)
+1081+ A385 AE               xor (hl)
+1082+ A386 77               ld (hl),a
+1083+ A387 1C               inc e
+1084+ A388 1C               inc e
+1085+ A389
+1086+ A389 E1               pop hl
+1087+ A38A
+1088+ A38A 1A               ld a,(de)
+1089+ A38B AE               xor (hl)
+1090+ A38C 77               ld (hl),a
+1091+ A38D 2C               inc l
+1092+ A38E 1C               inc e
+1093+ A38F 1A               ld a,(de)
+1094+ A390 AE               xor (hl)
+1095+ A391 77               ld (hl),a
+1096+ A392 1C               inc e
+1097+ A393 1C               inc e
+1098+ A394
+1099+ A394 ED 73 E0 91      ld (Scanlines_album_SP),sp
+1100+ A398 ED 7B BE 91      ld sp,(Stack)
+1101+ A39C
+1102+ A39C C9               ret
+1103+ A39D
+1104+ A39D              Pinta_rapido_1_Columna
+1105+ A39D
+1106+ A39D              ; Attr. 1 (Columnas).
+1107+ A39D
+1108+ A39D E1               pop hl
+1109+ A39E E5               push hl
+1110+ A39F
+1111+ A39F              ; Comprobamos si necesitamos 3 o 2 (Filas) de Attrs.
+1112+ A39F
+1113+ A39F 7C               ld a,h
+1114+ A3A0 FE 48            cp $48
+1115+ A3A2 28 0C            jr z,10F              ; Si H = "$48" sólo se aplican 2 Filas de Attrs.
+1116+ A3A4
+1117+ A3A4 E6 0F            and $0f
+1118+ A3A6 28 08            jr z,10F              ; Si H = "$40" o "$50" sólo se aplican 2 Filas de Attrs.
+1119+ A3A8
+1120+ A3A8              ; Indica 3 Filas de attr.
+1121+ A3A8
+1122+ A3A8 3A E9 91         ld a,(Ctrl_4)
+1123+ A3AB CB E7            set 4,a
+1124+ A3AD 32 E9 91         ld (Ctrl_4),a
+1125+ A3B0
+1126+ A3B0 7C           10 ld a,h
+1127+ A3B1 E6 18            and $18
+1128+ A3B3 CB 2F            sra a
+1129+ A3B5 CB 2F            sra a
+1130+ A3B7 CB 2F            sra a
+1131+ A3B9 C6 58            add $58
+1132+ A3BB 67               ld h,a
+1133+ A3BC
+1134+ A3BC 71               ld (hl),c
+1135+ A3BD
+1136+ A3BD              ; ----- ----- -----
+1137+ A3BD
+1138+ A3BD E1               pop hl
+1139+ A3BE
+1140+ A3BE 1A               ld a,(de)
+1141+ A3BF AE               xor (hl)
+1142+ A3C0 77               ld (hl),a
+1143+ A3C1 1C               inc e
+1144+ A3C2 1C               inc e
+1145+ A3C3 1C               inc e
+1146+ A3C4
+1147+ A3C4 E1               pop hl
+1148+ A3C5
+1149+ A3C5 1A               ld a,(de)
+1150+ A3C6 AE               xor (hl)
+1151+ A3C7 77               ld (hl),a
+1152+ A3C8 1C               inc e
+1153+ A3C9 1C               inc e
+1154+ A3CA 1C               inc e
+1155+ A3CB
+1156+ A3CB E1               pop hl
+1157+ A3CC
+1158+ A3CC 1A               ld a,(de)
+1159+ A3CD AE               xor (hl)
+1160+ A3CE 77               ld (hl),a
+1161+ A3CF 1C               inc e
+1162+ A3D0 1C               inc e
+1163+ A3D1 1C               inc e
+1164+ A3D2
+1165+ A3D2 E1               pop hl
+1166+ A3D3
+1167+ A3D3 1A               ld a,(de)
+1168+ A3D4 AE               xor (hl)
+1169+ A3D5 77               ld (hl),a
+1170+ A3D6 1C               inc e
+1171+ A3D7 1C               inc e
+1172+ A3D8 1C               inc e
+1173+ A3D9
+1174+ A3D9 E1               pop hl
+1175+ A3DA
+1176+ A3DA 1A               ld a,(de)
+1177+ A3DB AE               xor (hl)
+1178+ A3DC 77               ld (hl),a
+1179+ A3DD 1C               inc e
+1180+ A3DE 1C               inc e
+1181+ A3DF 1C               inc e
+1182+ A3E0
+1183+ A3E0 E1               pop hl
+1184+ A3E1
+1185+ A3E1 1A               ld a,(de)
+1186+ A3E2 AE               xor (hl)
+1187+ A3E3 77               ld (hl),a
+1188+ A3E4 1C               inc e
+1189+ A3E5 1C               inc e
+1190+ A3E6 1C               inc e
+1191+ A3E7
+1192+ A3E7 E1               pop hl
+1193+ A3E8
+1194+ A3E8 1A               ld a,(de)
+1195+ A3E9 AE               xor (hl)
+1196+ A3EA 77               ld (hl),a
+1197+ A3EB 1C               inc e
+1198+ A3EC 1C               inc e
+1199+ A3ED 1C               inc e
+1200+ A3EE
+1201+ A3EE E1               pop hl
+1202+ A3EF
+1203+ A3EF 1A               ld a,(de)
+1204+ A3F0 AE               xor (hl)
+1205+ A3F1 77               ld (hl),a
+1206+ A3F2 1C               inc e
+1207+ A3F3 1C               inc e
+1208+ A3F4 1C               inc e
+1209+ A3F5
+1210+ A3F5              ; Attr. 1 (Columnas).
+1211+ A3F5
+1212+ A3F5 E1               pop hl
+1213+ A3F6 E5               push hl
+1214+ A3F7
+1215+ A3F7 7C               ld a,h
+1216+ A3F8 E6 18            and $18
+1217+ A3FA CB 2F            sra a
+1218+ A3FC CB 2F            sra a
+1219+ A3FE CB 2F            sra a
+1220+ A400 C6 58            add $58
+1221+ A402 67               ld h,a
+1222+ A403
+1223+ A403 71           11 ld (hl),c
+1224+ A404
+1225+ A404 3A E9 91         ld a,(Ctrl_4)
+1226+ A407 CB 67            bit 4,a
+1227+ A409 28 0E            jr z,12F
+1228+ A40B
+1229+ A40B              ; 3ª Fila de Atributos.
+1230+ A40B
+1231+ A40B CB A7            res 4,a
+1232+ A40D 32 E9 91         ld (Ctrl_4),a           ; Inicializa FLAG, (indica 3 Filas de attrs.).
+1233+ A410
+1234+ A410 7D               ld a,l
+1235+ A411 C6 20            add 32
+1236+ A413 6F               ld l,a
+1237+ A414
+1238+ A414 30 ED            jr nc,11B
+1239+ A416 24               inc h
+1240+ A417
+1241+ A417 18 EA            jr 11B
+1242+ A419
+1243+ A419              ; ----- ----- -----
+1244+ A419
+1245+ A419 E1           12 pop hl
+1246+ A41A
+1247+ A41A 1A               ld a,(de)
+1248+ A41B AE               xor (hl)
+1249+ A41C 77               ld (hl),a
+1250+ A41D 1C               inc e
+1251+ A41E 1C               inc e
+1252+ A41F 1C               inc e
+1253+ A420
+1254+ A420 E1               pop hl
+1255+ A421
+1256+ A421 1A               ld a,(de)
+1257+ A422 AE               xor (hl)
+1258+ A423 77               ld (hl),a
+1259+ A424 1C               inc e
+1260+ A425 1C               inc e
+1261+ A426 1C               inc e
+1262+ A427
+1263+ A427 E1               pop hl
+1264+ A428
+1265+ A428 1A               ld a,(de)
+1266+ A429 AE               xor (hl)
+1267+ A42A 77               ld (hl),a
+1268+ A42B 1C               inc e
+1269+ A42C 1C               inc e
+1270+ A42D 1C               inc e
+1271+ A42E
+1272+ A42E E1               pop hl
+1273+ A42F
+1274+ A42F 1A               ld a,(de)
+1275+ A430 AE               xor (hl)
+1276+ A431 77               ld (hl),a
+1277+ A432 1C               inc e
+1278+ A433 1C               inc e
+1279+ A434 1C               inc e
+1280+ A435
+1281+ A435 E1               pop hl
+1282+ A436
+1283+ A436 1A               ld a,(de)
+1284+ A437 AE               xor (hl)
+1285+ A438 77               ld (hl),a
+1286+ A439 1C               inc e
+1287+ A43A 1C               inc e
+1288+ A43B 1C               inc e
+1289+ A43C E1               pop hl
+1290+ A43D
+1291+ A43D 1A               ld a,(de)
+1292+ A43E AE               xor (hl)
+1293+ A43F 77               ld (hl),a
+1294+ A440 1C               inc e
+1295+ A441 1C               inc e
+1296+ A442 1C               inc e
+1297+ A443
+1298+ A443 E1               pop hl
+1299+ A444
+1300+ A444 1A               ld a,(de)
+1301+ A445 AE               xor (hl)
+1302+ A446 77               ld (hl),a
+1303+ A447 1C               inc e
+1304+ A448 1C               inc e
+1305+ A449 1C               inc e
+1306+ A44A
+1307+ A44A E1               pop hl
+1308+ A44B
+1309+ A44B 1A               ld a,(de)
+1310+ A44C AE               xor (hl)
+1311+ A44D 77               ld (hl),a
+1312+ A44E 1C               inc e
+1313+ A44F 1C               inc e
+1314+ A450 1C               inc e
+1315+ A451
+1316+ A451 ED 73 E0 91      ld (Scanlines_album_SP),sp
+1317+ A455 ED 7B BE 91      ld sp,(Stack)
+1318+ A459
+1319+ A459 C9               ret
+1320+ A45A
+1321+ A45A              Pinta_lento
+1322+ A45A
+1323+ A45A 3A 97 91         ld a,(Columnas)
+1324+ A45D 3D               dec a
+1325+ A45E 28 72            jr z,Pinta_lento_1_Columna
+1326+ A460 3D               dec a
+1327+ A461 28 3C            jr z,Pinta_lento_2_Columnas
 1328+ A463
-1329+ A463 E1               pop hl
-1330+ A464 E5               push hl
-1331+ A465
-1332+ A465 7C               ld a,h
-1333+ A466 E6 18            and $18
-1334+ A468 CB 2F            sra a
-1335+ A46A CB 2F            sra a
-1336+ A46C CB 2F            sra a
-1337+ A46E C6 58            add $58
-1338+ A470 67               ld h,a
-1339+ A471
-1340+ A471 71               ld (hl),c
-1341+ A472 2C               inc l
-1342+ A473 71               ld (hl),c
-1343+ A474 2C               inc l
-1344+ A475 71               ld (hl),c
-1345+ A476
-1346+ A476 2D               dec l
-1347+ A477 2D               dec l
-1348+ A478
-1349+ A478              ; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
-1350+ A478
-1351+ A478 7D               ld a,l
-1352+ A479 FE E0            cp $e0
-1353+ A47B 30 08            jr nc,1F
-1354+ A47D
-1355+ A47D C6 20            add 32
-1356+ A47F 6F               ld l,a
-1357+ A480
-1358+ A480 71               ld (hl),c
-1359+ A481 2C               inc l
-1360+ A482 71               ld (hl),c
-1361+ A483 2C               inc l
-1362+ A484 71               ld (hl),c
-1363+ A485
-1364+ A485              ; ----- ----- -----
-1365+ A485
-1366+ A485 E1           1 pop hl
-1367+ A486
-1368+ A486 1A               ld a,(de)
-1369+ A487 AE               xor (hl)
-1370+ A488 77               ld (hl),a
-1371+ A489 2C               inc l
-1372+ A48A 1C               inc e
-1373+ A48B 1A               ld a,(de)
-1374+ A48C AE               xor (hl)
-1375+ A48D 77               ld (hl),a
-1376+ A48E 2C               inc l
-1377+ A48F 1C               inc e
-1378+ A490 1A               ld a,(de)
-1379+ A491 AE               xor (hl)
-1380+ A492 77               ld (hl),a
-1381+ A493 13               inc de
-1382+ A494
-1383+ A494 10 EF            djnz 1B
-1384+ A496
-1385+ A496 ED 73 E0 91      ld (Scanlines_album_SP),sp
-1386+ A49A ED 7B BE 91      ld sp,(Stack)
-1387+ A49E C9               ret
-1388+ A49F
-1389+ A49F              Pinta_lento_2_Columnas
-1390+ A49F
-1391+ A49F              ; La entidad está desapareciendo por la parte baja de la pantalla. Sólo 1 Fila de Attr.
-1392+ A49F              ; Attr. 2 (Columnas).
+1329+ A463              Pinta_lento_3_Columnas
+1330+ A463
+1331+ A463              ; La entidad está desapareciendo por la parte baja de la pantalla. 1 o 2 Filas de Attrs.
+1332+ A463              ; Attr. 3 (Columnas).
+1333+ A463
+1334+ A463 E1               pop hl
+1335+ A464 E5               push hl
+1336+ A465
+1337+ A465 7C               ld a,h
+1338+ A466 E6 18            and $18
+1339+ A468 CB 2F            sra a
+1340+ A46A CB 2F            sra a
+1341+ A46C CB 2F            sra a
+1342+ A46E C6 58            add $58
+1343+ A470 67               ld h,a
+1344+ A471
+1345+ A471 71               ld (hl),c
+1346+ A472 2C               inc l
+1347+ A473 71               ld (hl),c
+1348+ A474 2C               inc l
+1349+ A475 71               ld (hl),c
+1350+ A476
+1351+ A476 2D               dec l
+1352+ A477 2D               dec l
+1353+ A478
+1354+ A478              ; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
+1355+ A478
+1356+ A478 7D               ld a,l
+1357+ A479 FE E0            cp $e0
+1358+ A47B 30 08            jr nc,1F
+1359+ A47D
+1360+ A47D C6 20            add 32
+1361+ A47F 6F               ld l,a
+1362+ A480
+1363+ A480 71               ld (hl),c
+1364+ A481 2C               inc l
+1365+ A482 71               ld (hl),c
+1366+ A483 2C               inc l
+1367+ A484 71               ld (hl),c
+1368+ A485
+1369+ A485              ; ----- ----- -----
+1370+ A485
+1371+ A485 E1           1 pop hl
+1372+ A486
+1373+ A486 1A               ld a,(de)
+1374+ A487 AE               xor (hl)
+1375+ A488 77               ld (hl),a
+1376+ A489 2C               inc l
+1377+ A48A 1C               inc e
+1378+ A48B 1A               ld a,(de)
+1379+ A48C AE               xor (hl)
+1380+ A48D 77               ld (hl),a
+1381+ A48E 2C               inc l
+1382+ A48F 1C               inc e
+1383+ A490 1A               ld a,(de)
+1384+ A491 AE               xor (hl)
+1385+ A492 77               ld (hl),a
+1386+ A493 13               inc de
+1387+ A494
+1388+ A494 10 EF            djnz 1B
+1389+ A496
+1390+ A496 ED 73 E0 91      ld (Scanlines_album_SP),sp
+1391+ A49A ED 7B BE 91      ld sp,(Stack)
+1392+ A49E C9               ret
 1393+ A49F
-1394+ A49F E1               pop hl
-1395+ A4A0 E5               push hl
-1396+ A4A1
-1397+ A4A1 7C               ld a,h
-1398+ A4A2 E6 18            and $18
-1399+ A4A4 CB 2F            sra a
-1400+ A4A6 CB 2F            sra a
-1401+ A4A8 CB 2F            sra a
-1402+ A4AA C6 58            add $58
-1403+ A4AC 67               ld h,a
-1404+ A4AD
-1405+ A4AD 71               ld (hl),c
-1406+ A4AE 2C               inc l
-1407+ A4AF 71               ld (hl),c
-1408+ A4B0
-1409+ A4B0 2D               dec l
-1410+ A4B1
-1411+ A4B1              ; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
-1412+ A4B1
-1413+ A4B1 7D               ld a,l
-1414+ A4B2 FE E0            cp $e0
-1415+ A4B4 30 06            jr nc,2F
-1416+ A4B6
-1417+ A4B6 C6 20            add 32
-1418+ A4B8 6F               ld l,a
-1419+ A4B9
-1420+ A4B9 71               ld (hl),c
-1421+ A4BA 2C               inc l
-1422+ A4BB 71               ld (hl),c
-1423+ A4BC
-1424+ A4BC E1           2 pop hl
-1425+ A4BD
-1426+ A4BD 1A               ld a,(de)
-1427+ A4BE AE               xor (hl)
-1428+ A4BF 77               ld (hl),a
-1429+ A4C0 2C               inc l
-1430+ A4C1 1C               inc e
-1431+ A4C2 1A               ld a,(de)
-1432+ A4C3 AE               xor (hl)
-1433+ A4C4 77               ld (hl),a
-1434+ A4C5 1C               inc e
-1435+ A4C6 1C               inc e
-1436+ A4C7
-1437+ A4C7 10 F3            djnz 2B
-1438+ A4C9
-1439+ A4C9 ED 73 E0 91      ld (Scanlines_album_SP),sp
-1440+ A4CD ED 7B BE 91      ld sp,(Stack)
-1441+ A4D1 C9               ret
-1442+ A4D2
-1443+ A4D2              Pinta_lento_1_Columna
-1444+ A4D2
-1445+ A4D2
-1446+ A4D2              ; La entidad está desapareciendo por la parte baja de la pantalla. Sólo 1 Fila de Attr.
-1447+ A4D2              ; Attr. 1 (Columnas).
-1448+ A4D2
-1449+ A4D2 E1               pop hl
-1450+ A4D3 E5               push hl
-1451+ A4D4
-1452+ A4D4 7C               ld a,h
-1453+ A4D5 E6 18            and $18
-1454+ A4D7 CB 2F            sra a
-1455+ A4D9 CB 2F            sra a
-1456+ A4DB CB 2F            sra a
-1457+ A4DD C6 58            add $58
-1458+ A4DF 67               ld h,a
-1459+ A4E0
-1460+ A4E0 71               ld (hl),c
-1461+ A4E1
-1462+ A4E1               ; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
-1463+ A4E1
-1464+ A4E1 7D               ld a,l
-1465+ A4E2 FE E0            cp $e0
-1466+ A4E4 30 04            jr nc,3F
-1467+ A4E6
-1468+ A4E6 C6 20            add 32
-1469+ A4E8 6F               ld l,a
-1470+ A4E9
-1471+ A4E9 71               ld (hl),c
-1472+ A4EA
-1473+ A4EA E1           3 pop hl
-1474+ A4EB
-1475+ A4EB 1A               ld a,(de)
-1476+ A4EC AE               xor (hl)
-1477+ A4ED 77               ld (hl),a
-1478+ A4EE 1C               inc e
-1479+ A4EF 1C               inc e
-1480+ A4F0 1C               inc e
-1481+ A4F1
-1482+ A4F1 10 F7            djnz 3B
-1483+ A4F3
-1484+ A4F3 ED 73 E0 91      ld (Scanlines_album_SP),sp
-1485+ A4F7 ED 7B BE 91      ld sp,(Stack)
-1486+ A4FB C9               ret
-1487+ A4FC
+1394+ A49F              Pinta_lento_2_Columnas
+1395+ A49F
+1396+ A49F              ; La entidad está desapareciendo por la parte baja de la pantalla. Sólo 1 Fila de Attr.
+1397+ A49F              ; Attr. 2 (Columnas).
+1398+ A49F
+1399+ A49F E1               pop hl
+1400+ A4A0 E5               push hl
+1401+ A4A1
+1402+ A4A1 7C               ld a,h
+1403+ A4A2 E6 18            and $18
+1404+ A4A4 CB 2F            sra a
+1405+ A4A6 CB 2F            sra a
+1406+ A4A8 CB 2F            sra a
+1407+ A4AA C6 58            add $58
+1408+ A4AC 67               ld h,a
+1409+ A4AD
+1410+ A4AD 71               ld (hl),c
+1411+ A4AE 2C               inc l
+1412+ A4AF 71               ld (hl),c
+1413+ A4B0
+1414+ A4B0 2D               dec l
+1415+ A4B1
+1416+ A4B1              ; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
+1417+ A4B1
+1418+ A4B1 7D               ld a,l
+1419+ A4B2 FE E0            cp $e0
+1420+ A4B4 30 06            jr nc,2F
+1421+ A4B6
+1422+ A4B6 C6 20            add 32
+1423+ A4B8 6F               ld l,a
+1424+ A4B9
+1425+ A4B9 71               ld (hl),c
+1426+ A4BA 2C               inc l
+1427+ A4BB 71               ld (hl),c
+1428+ A4BC
+1429+ A4BC E1           2 pop hl
+1430+ A4BD
+1431+ A4BD 1A               ld a,(de)
+1432+ A4BE AE               xor (hl)
+1433+ A4BF 77               ld (hl),a
+1434+ A4C0 2C               inc l
+1435+ A4C1 1C               inc e
+1436+ A4C2 1A               ld a,(de)
+1437+ A4C3 AE               xor (hl)
+1438+ A4C4 77               ld (hl),a
+1439+ A4C5 1C               inc e
+1440+ A4C6 1C               inc e
+1441+ A4C7
+1442+ A4C7 10 F3            djnz 2B
+1443+ A4C9
+1444+ A4C9 ED 73 E0 91      ld (Scanlines_album_SP),sp
+1445+ A4CD ED 7B BE 91      ld sp,(Stack)
+1446+ A4D1 C9               ret
+1447+ A4D2
+1448+ A4D2              Pinta_lento_1_Columna
+1449+ A4D2
+1450+ A4D2
+1451+ A4D2              ; La entidad está desapareciendo por la parte baja de la pantalla. Sólo 1 Fila de Attr.
+1452+ A4D2              ; Attr. 1 (Columnas).
+1453+ A4D2
+1454+ A4D2 E1               pop hl
+1455+ A4D3 E5               push hl
+1456+ A4D4
+1457+ A4D4 7C               ld a,h
+1458+ A4D5 E6 18            and $18
+1459+ A4D7 CB 2F            sra a
+1460+ A4D9 CB 2F            sra a
+1461+ A4DB CB 2F            sra a
+1462+ A4DD C6 58            add $58
+1463+ A4DF 67               ld h,a
+1464+ A4E0
+1465+ A4E0 71               ld (hl),c
+1466+ A4E1
+1467+ A4E1               ; Averiguamos si la entidad ocupa 1 o 2 Filas en pantalla.
+1468+ A4E1
+1469+ A4E1 7D               ld a,l
+1470+ A4E2 FE E0            cp $e0
+1471+ A4E4 30 04            jr nc,3F
+1472+ A4E6
+1473+ A4E6 C6 20            add 32
+1474+ A4E8 6F               ld l,a
+1475+ A4E9
+1476+ A4E9 71               ld (hl),c
+1477+ A4EA
+1478+ A4EA E1           3 pop hl
+1479+ A4EB
+1480+ A4EB 1A               ld a,(de)
+1481+ A4EC AE               xor (hl)
+1482+ A4ED 77               ld (hl),a
+1483+ A4EE 1C               inc e
+1484+ A4EF 1C               inc e
+1485+ A4F0 1C               inc e
+1486+ A4F1
+1487+ A4F1 10 F7            djnz 3B
+1488+ A4F3
+1489+ A4F3 ED 73 E0 91      ld (Scanlines_album_SP),sp
+1490+ A4F7 ED 7B BE 91      ld sp,(Stack)
+1491+ A4FB C9               ret
+1492+ A4FC
 # file closed: Pinta_Sprites.asm
 2581  A4FC              	include "Draw_XOR.asm"
 # file opened: Draw_XOR.asm
@@ -10660,7 +10665,7 @@
  813+ AEE3 2C               inc l
  814+ AEE4 2C               inc l
  815+ AEE5
- 816+ AEE5 CD 67 AF         call Elimina_disparo_Amadeus
+ 816+ AEE5 CD 6C AF         call Elimina_disparo_Amadeus
  817+ AEE8
  818+ AEE8              ;   Indica Impacto en la entidad por disparo de Amadeus, "2".
  819+ AEE8
@@ -10796,7 +10801,7 @@
  949+ AF39
  950+ AF39 2B               dec hl
  951+ AF3A
- 952+ AF3A CD F7 AF         call Detecta_impacto_en_disparo_de_Amadeus                          ; Nos situamos en el 1er .db de la caja y comprobamos Impacto.
+ 952+ AF3A CD FC AF         call Detecta_impacto_en_disparo_de_Amadeus                          ; Nos situamos en el 1er .db de la caja y comprobamos Impacto.
  953+ AF3D
  954+ AF3D E1               pop hl
  955+ AF3E
@@ -10812,7 +10817,7 @@
  965+ AF45 32 EF 91         ld (Impacto2),a
  966+ AF48
  967+ AF48 E5               push hl                                                                                         ; PUSH Puntero_de_impresion del disparo.
- 968+ AF49 CD E4 AF         call Genera_coordenadas_de_disparo_Amadeus
+ 968+ AF49 CD E9 AF         call Genera_coordenadas_de_disparo_Amadeus
  969+ AF4C E1               pop hl                                                                                           ; POP Puntero_de_impresion del disparo.
  970+ AF4D
  971+ AF4D C9               ret
@@ -10834,541 +10839,551 @@
  987+ AF5D              ; Después de mover el disparo comprobamos si ha salido de la parte alta de la pantalla.
  988+ AF5D
  989+ AF5D 7C               ld a,h
- 990+ AF5E D6 40            sub $40
- 991+ AF60 EB               ex de,hl
- 992+ AF61 38 04            jr c,Elimina_disparo_Amadeus
- 993+ AF63
- 994+ AF63               ; Introduce nuevo puntero_de_impresión en la caja.
- 995+ AF63
- 996+ AF63 73               ld (hl),e
- 997+ AF64 23               inc hl
- 998+ AF65 72               ld (hl),d
- 999+ AF66
-1000+ AF66 C9               ret
-1001+ AF67
-1002+ AF67              ; ----------------------
-1003+ AF67              ;
-1004+ AF67              ;   29/9/24
-1005+ AF67
-1006+ AF67              Elimina_disparo_Amadeus
-1007+ AF67
-1008+ AF67              ; HL apunta al .db (Puntero_de_impresion) del disparo.
-1009+ AF67              ; Recordemos la estructura de datos de una caja de disparos de Amadeus:
-1010+ AF67
-1011+ AF67              ;   Disparo_1A defw 0							; Puntero objeto.
-1012+ AF67              ;   	defw 0											; Puntero de impresión.
-1013+ AF67
-1014+ AF67 2C               inc l
-1015+ AF68
-1016+ AF68 AF               xor a
-1017+ AF69
-1018+ AF69 77               ld (hl),a
-1019+ AF6A 2D               dec l
-1020+ AF6B 77               ld (hl),a
-1021+ AF6C 2D               dec l
-1022+ AF6D 77               ld (hl),a
-1023+ AF6E 2D               dec l
-1024+ AF6F 77               ld (hl),a                                           ; Disparo de Amadeus borrado.
-1025+ AF70
-1026+ AF70 CD FC AE         call Limpia_album_de_pintado_disparos_Amadeus
-1027+ AF73
-1028+ AF73 3E 01            ld a,1
-1029+ AF75 32 D7 91         ld (Permiso_de_disparo_Amadeus),a
-1030+ AF78
-1031+ AF78 AF               xor a
-1032+ AF79 3C               inc a                                               ;? Siempre que eliminamos un disparo tenemos: "NZ".
-1033+ AF7A
-1034+ AF7A C9               ret
-1035+ AF7B
-1036+ AF7B              ; --------------------------------------------------------------------------------------
-1037+ AF7B              ;
-1038+ AF7B              ;   13/10/24
-1039+ AF7B              ;
-1040+ AF7B              ;   Modifica: HL,BC y DE.
-1041+ AF7B
-1042+ AF7B
-1043+ AF7B              Genera_datos_de_impresion_disparos_Amadeus
-1044+ AF7B
-1045+ AF7B ED 73 BE 91      ld (Stack),sp
-1046+ AF7F 31 58 8D         ld sp,Disparo_Amad                                        ;? SP se sitúa en el .db (Puntero objeto) de la caja de disparos de Amadeus.
-1047+ AF82 D1               pop de                                                    ;? Puntero_objeto del disparo en DE.
-1048+ AF83
-1049+ AF83 14               inc d                                                     ;? Salimos si no hay disparo.
-1050+ AF84 15               dec d
-1051+ AF85
-1052+ AF85 28 0E            jr z,Salida
-1053+ AF87
-1054+ AF87              Genera_scanlines_de_disparo_Amadeus
-1055+ AF87
-1056+ AF87 E1               pop hl                                                    ;? Puntero_objeto del disparo en DE.
-1057+ AF88              ;                                                             ;? Puntero_de_impresión del disparo en HL.
-1058+ AF88 ED 7B CA 91      ld sp,(Album_de_pintado_disparos_Amadeus)
-1059+ AF8C
-1060+ AF8C C1               pop bc
-1061+ AF8D C1               pop bc
-1062+ AF8E C1               pop bc
-1063+ AF8F
-1064+ AF8F E5               push hl                                                   ;? Sube 2º scanline al álbum.
-1065+ AF90 CD 0B A7         call PreviousScan
-1066+ AF93 E5               push hl                                                   ;? Sube 1er scanline al álbum.
-1067+ AF94 D5               push de                                                   ;? Sube Puntero_objeto del disparo al álbum.
-1068+ AF95
-1069+ AF95              Salida
-1070+ AF95
-1071+ AF95 ED 7B BE 91      ld sp,(Stack)
-1072+ AF99
-1073+ AF99 C9               ret
-1074+ AF9A
-1075+ AF9A              ; --------------------------------------------------------------------------------------
-1076+ AF9A              ;
-1077+ AF9A              ;   12/09/24
-1078+ AF9A              ;
-1079+ AF9A
-1080+ AF9A              Genera_disparo_Amadeus
-1081+ AF9A
-1082+ AF9A              ;*  Exclusiones.
-1083+ AF9A
-1084+ AF9A 3A D7 91         ld a,(Permiso_de_disparo_Amadeus)
-1085+ AF9D A7               and a
-1086+ AF9E C8               ret z                                                    ;? Salimos si no hay permiso de disparo.
-1087+ AF9F
-1088+ AF9F 3D               dec a
-1089+ AFA0 32 D7 91         ld (Permiso_de_disparo_Amadeus),a                        ;? No volveremos a tener permiso de disparo hasta que desaparezaca este disparo.
-1090+ AFA3
-1091+ AFA3              Define_puntero_objeto_disparo
-1092+ AFA3
-1093+ AFA3              ;   Inicializamos contador.
-1094+ AFA3
-1095+ AFA3 06 00            ld b,0
-1096+ AFA5
-1097+ AFA5 2A D8 8D         ld hl,(p.imp.amadeus)
-1098+ AFA8 2C               inc l
-1099+ AFA9
-1100+ AFA9 3E 80            ld a,$80
-1101+ AFAB BE               cp (hl)
-1102+ AFAC 28 0D            jr z,1F
-1103+ AFAE
-1104+ AFAE 04               inc b
-1105+ AFAF
-1106+ AFAF 3E 60            ld a,$60
-1107+ AFB1 BE               cp (hl)
-1108+ AFB2 28 07            jr z,1F
-1109+ AFB4
-1110+ AFB4
-1111+ AFB4 04               inc b
-1112+ AFB5
-1113+ AFB5 3E 18            ld a,$18
-1114+ AFB7 BE               cp (hl)
-1115+ AFB8 28 01            jr z,1F
-1116+ AFBA
-1117+ AFBA 04               inc b
-1118+ AFBB
-1119+ AFBB              ;   Calcula el Puntero_de_impresión del disparo.
-1120+ AFBB
-1121+ AFBB              ;   El Puntero_de_impresión del disparo apunta al último scanline de los tres que componen el disparo, (el de abajo).
-1122+ AFBB
-1123+ AFBB CD 0B A7     1 call PreviousScan
-1124+ AFBE
-1125+ AFBE 78               ld a,b
-1126+ AFBF CB 3F            srl a
-1127+ AFC1 28 03            jr z,4F
-1128+ AFC3
-1129+ AFC3              ; --- Guarda el puntero_de_impresión del disparo en la pila.
-1130+ AFC3 E5               push hl
-1131+ AFC4 18 02            jr 5F
-1132+ AFC6 2D           4 dec l
-1133+ AFC7 E5               push hl
-1134+ AFC8              ; ---
-1135+ AFC8
-1136+ AFC8              ;   Calcula el Puntero_objeto del disparo.
-1137+ AFC8
-1138+ AFC8 21 86 85     5 ld hl,Indice_disparo_Amadeus
-1139+ AFCB 04               inc b
-1140+ AFCC 05               dec b
-1141+ AFCD 28 04            jr z,2F
-1142+ AFCF
-1143+ AFCF              ;   Nos desplazamos por el índice de disparos.
-1144+ AFCF
-1145+ AFCF 2C           3 inc l
-1146+ AFD0 2C               inc l
-1147+ AFD1 10 FC            djnz 3B
-1148+ AFD3
-1149+ AFD3              ; --- Guarda el Puntero_objeto del disparo en la pila.
-1150+ AFD3 CD 03 97     2 call Extrae_address
-1151+ AFD6 E5               push hl
-1152+ AFD7              ; ---
-1153+ AFD7
-1154+ AFD7              ; Almacenamos (Puntero_objeto) y (Puntero_de_impresion) en su correspondiente caja.
-1155+ AFD7              ; HL en el 1er .db de la caja.
-1156+ AFD7
-1157+ AFD7 21 58 8D         ld hl,Disparo_Amad
-1158+ AFDA
-1159+ AFDA 06 02            ld b,2
-1160+ AFDC
-1161+ AFDC D1           6 pop de
-1162+ AFDD 73               ld (hl),e
-1163+ AFDE 23               inc hl
-1164+ AFDF 72               ld (hl),d
-1165+ AFE0 23               inc hl
-1166+ AFE1
-1167+ AFE1 10 F9            djnz 6B
-1168+ AFE3
-1169+ AFE3 C9               ret
-1170+ AFE4
-1171+ AFE4              Genera_coordenadas_de_disparo_Amadeus
-1172+ AFE4
-1173+ AFE4              ;   HL apunta al .db (Puntero_de_impresion) del disparo de Amadeus.
-1174+ AFE4              ;   Esta parte de la rutina sólo aplica cuando un disparo nuestro alcanza algún objeto.
-1175+ AFE4              ;   Genera las coordenadas de nuestro disparo.
-1176+ AFE4
-1177+ AFE4 CD 03 97         call Extrae_address
-1178+ AFE7 CD AF 9D         call Genera_coordenadas
-1179+ AFEA
-1180+ AFEA 3D               dec a
-1181+ AFEB
-1182+ AFEB 21 F2 91         ld hl,Coordenadas_disparo_certero
-1183+ AFEE 77               ld (hl),a                                           ;   Almacenamos la Coordenada_Y, (Fila) del disparo.
-1184+ AFEF 23               inc hl
-1185+ AFF0 3A 77 91         ld a,(Coordenada_X)
-1186+ AFF3 77               ld (hl),a                                           ;   Almacenamos la Coordenada_X, (Columna) del disparo.
-1187+ AFF4
-1188+ AFF4 AF               xor a
-1189+ AFF5 3C               inc a                                               ;   Fuerza "NZ" a la salida.
-1190+ AFF6
-1191+ AFF6 C9               ret
-1192+ AFF7
-1193+ AFF7              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1194+ AFF7              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1195+ AFF7              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1196+ AFF7
-1197+ AFF7              ; ----------------------------------------------
-1198+ AFF7              ;
-1199+ AFF7              ;   22/03/25
-1200+ AFF7              ;
-1201+ AFF7              ;   INPUTS: HL contiene el .defw (Puntero_objeto) de la caja de disparo de Amadeus.
-1202+ AFF7              ;   OUTPUT: FLAG Z indica NO IMPACTO, NZ indica IMPACTO.
-1203+ AFF7
-1204+ AFF7              Detecta_impacto_en_disparo_de_Amadeus
-1205+ AFF7
-1206+ AFF7              Extraccion_de_datos
-1207+ AFF7
-1208+ AFF7              ; Album_de_pintado_disparos_Amadeus $8cac
-1209+ AFF7              ; Album_de_borrado_disparos_Amadeus $8cae
-1210+ AFF7              ; Amadeus_disparos_scanlines_album equ $827c
-1211+ AFF7              ; Amadeus_disparos_scanlines_album_2 equ $8282
-1212+ AFF7
-1213+ AFF7 5E               ld e,(hl)
-1214+ AFF8 2C               inc l
-1215+ AFF9 56               ld d,(hl)
-1216+ AFFA
-1217+ AFFA 1C               inc e
-1218+ AFFB 1C               inc e                                                   ; DE contiene Puntero_objeto `aumentado' del_
-1219+ AFFC              ;                                                                _disparo de Amadeus.
-1220+ AFFC 2C               inc l
-1221+ AFFD
-1222+ AFFD 4E               ld c,(hl)
-1223+ AFFE 2C               inc l
-1224+ AFFF 46               ld b,(hl)
-1225+ B000
-1226+ B000 C5               push bc
-1227+ B001 E1               pop hl                                                 ; Puntero_de_impresión del disparo en HL.
-1228+ B002
-1229+ B002              ;   La detección de colisión se efectúa con el disparo impreso en pantalla.
-1230+ B002
-1231+ B002 CD 0B A7         call PreviousScan
-1232+ B005 CD 0B A7         call PreviousScan
-1233+ B008
-1234+ B008              Detecta_impacto_
-1235+ B008
-1236+ B008 1A               ld a,(de)
-1237+ B009 A6               and (hl)
-1238+ B00A C0               ret nz
-1239+ B00B
-1240+ B00B 1C               inc e
-1241+ B00C 2C               inc l
-1242+ B00D
-1243+ B00D 1A               ld a,(de)
-1244+ B00E A6               and (hl)
-1245+ B00F
-1246+ B00F C9               ret
-1247+ B010
-1248+ B010              ; -------------------------------------------------------------------------------------------------------------
-1249+ B010              ;
-1250+ B010              ;   25/11//24
-1251+ B010              ;
-1252+ B010              ;   La entidad se encuentra en la fila $14,$15 o $16 de pantalla.
-1253+ B010              ;   Vamos a comprobar si la entidad ocupa alguna de las columnas ocupadas por Amadeus y por lo_
-1254+ B010              ;   _ tanto, existe riesgo alto de colisión entre ambas.
-1255+ B010              ;
-1256+ B010              ;   MODIFICA: HL,DE,BC y A.
-1257+ B010              ;   OUTPUTS: (Coordenadas_X_Entidad) y (Coordenadas_X_Amadeus) contienen el nº de las columnas que ocupan en pantalla.
-1258+ B010              ;            (Impacto) se coloca a "1" si coincide alguna de las columnas. Alto riesgo de colisión.
-1259+ B010
-1260+ B010              Colision_Entidad_Amadeus
-1261+ B010
-1262+ B010              ; Posible contacto de entidad con Amadeus. ?????
-1263+ B010
-1264+ B010              ; Exclusiones:
-1265+ B010
-1266+ B010 3A 15 92         ld a,(Shield)
-1267+ B013 A7               and a
-1268+ B014 C0               ret nz                                                  ; No comprobamos contacto si existe Shield.
+ 990+ AF5E
+ 991+ AF5E              ; debuggggg -----------
+ 992+ AF5E FE 48            cp $48
+ 993+ AF60 30 03            jr nc,1F
+ 994+ AF62
+ 995+ AF62              ; El disparo se encuentra en la parte alta de la pantalla.
+ 996+ AF62              ; Comprobamos si ha llegado al area del marcador del juego.
+ 997+ AF62
+ 998+ AF62 7D               ld a,l
+ 999+ AF63 FE 60            cp $60
+1000+ AF65
+1001+ AF65 EB           1 ex de,hl
+1002+ AF66 38 04            jr c,Elimina_disparo_Amadeus
+1003+ AF68
+1004+ AF68               ; Introduce nuevo puntero_de_impresión en la caja.
+1005+ AF68
+1006+ AF68 73               ld (hl),e
+1007+ AF69 23               inc hl
+1008+ AF6A 72               ld (hl),d
+1009+ AF6B
+1010+ AF6B C9               ret
+1011+ AF6C
+1012+ AF6C              ; ----------------------
+1013+ AF6C              ;
+1014+ AF6C              ;   29/9/24
+1015+ AF6C
+1016+ AF6C              Elimina_disparo_Amadeus
+1017+ AF6C
+1018+ AF6C              ; HL apunta al .db (Puntero_de_impresion) del disparo.
+1019+ AF6C              ; Recordemos la estructura de datos de una caja de disparos de Amadeus:
+1020+ AF6C
+1021+ AF6C              ;   Disparo_1A defw 0							; Puntero objeto.
+1022+ AF6C              ;   	defw 0											; Puntero de impresión.
+1023+ AF6C
+1024+ AF6C 2C               inc l
+1025+ AF6D
+1026+ AF6D AF               xor a
+1027+ AF6E
+1028+ AF6E 77               ld (hl),a
+1029+ AF6F 2D               dec l
+1030+ AF70 77               ld (hl),a
+1031+ AF71 2D               dec l
+1032+ AF72 77               ld (hl),a
+1033+ AF73 2D               dec l
+1034+ AF74 77               ld (hl),a                                           ; Disparo de Amadeus borrado.
+1035+ AF75
+1036+ AF75 CD FC AE         call Limpia_album_de_pintado_disparos_Amadeus
+1037+ AF78
+1038+ AF78 3E 01            ld a,1
+1039+ AF7A 32 D7 91         ld (Permiso_de_disparo_Amadeus),a
+1040+ AF7D
+1041+ AF7D AF               xor a
+1042+ AF7E 3C               inc a                                               ;? Siempre que eliminamos un disparo tenemos: "NZ".
+1043+ AF7F
+1044+ AF7F C9               ret
+1045+ AF80
+1046+ AF80              ; --------------------------------------------------------------------------------------
+1047+ AF80              ;
+1048+ AF80              ;   13/10/24
+1049+ AF80              ;
+1050+ AF80              ;   Modifica: HL,BC y DE.
+1051+ AF80
+1052+ AF80
+1053+ AF80              Genera_datos_de_impresion_disparos_Amadeus
+1054+ AF80
+1055+ AF80 ED 73 BE 91      ld (Stack),sp
+1056+ AF84 31 58 8D         ld sp,Disparo_Amad                                        ;? SP se sitúa en el .db (Puntero objeto) de la caja de disparos de Amadeus.
+1057+ AF87 D1               pop de                                                    ;? Puntero_objeto del disparo en DE.
+1058+ AF88
+1059+ AF88 14               inc d                                                     ;? Salimos si no hay disparo.
+1060+ AF89 15               dec d
+1061+ AF8A
+1062+ AF8A 28 0E            jr z,Salida
+1063+ AF8C
+1064+ AF8C              Genera_scanlines_de_disparo_Amadeus
+1065+ AF8C
+1066+ AF8C E1               pop hl                                                    ;? Puntero_objeto del disparo en DE.
+1067+ AF8D              ;                                                             ;? Puntero_de_impresión del disparo en HL.
+1068+ AF8D ED 7B CA 91      ld sp,(Album_de_pintado_disparos_Amadeus)
+1069+ AF91
+1070+ AF91 C1               pop bc
+1071+ AF92 C1               pop bc
+1072+ AF93 C1               pop bc
+1073+ AF94
+1074+ AF94 E5               push hl                                                   ;? Sube 2º scanline al álbum.
+1075+ AF95 CD 0B A7         call PreviousScan
+1076+ AF98 E5               push hl                                                   ;? Sube 1er scanline al álbum.
+1077+ AF99 D5               push de                                                   ;? Sube Puntero_objeto del disparo al álbum.
+1078+ AF9A
+1079+ AF9A              Salida
+1080+ AF9A
+1081+ AF9A ED 7B BE 91      ld sp,(Stack)
+1082+ AF9E
+1083+ AF9E C9               ret
+1084+ AF9F
+1085+ AF9F              ; --------------------------------------------------------------------------------------
+1086+ AF9F              ;
+1087+ AF9F              ;   12/09/24
+1088+ AF9F              ;
+1089+ AF9F
+1090+ AF9F              Genera_disparo_Amadeus
+1091+ AF9F
+1092+ AF9F              ;*  Exclusiones.
+1093+ AF9F
+1094+ AF9F 3A D7 91         ld a,(Permiso_de_disparo_Amadeus)
+1095+ AFA2 A7               and a
+1096+ AFA3 C8               ret z                                                    ;? Salimos si no hay permiso de disparo.
+1097+ AFA4
+1098+ AFA4 3D               dec a
+1099+ AFA5 32 D7 91         ld (Permiso_de_disparo_Amadeus),a                        ;? No volveremos a tener permiso de disparo hasta que desaparezaca este disparo.
+1100+ AFA8
+1101+ AFA8              Define_puntero_objeto_disparo
+1102+ AFA8
+1103+ AFA8              ;   Inicializamos contador.
+1104+ AFA8
+1105+ AFA8 06 00            ld b,0
+1106+ AFAA
+1107+ AFAA 2A D8 8D         ld hl,(p.imp.amadeus)
+1108+ AFAD 2C               inc l
+1109+ AFAE
+1110+ AFAE 3E 80            ld a,$80
+1111+ AFB0 BE               cp (hl)
+1112+ AFB1 28 0D            jr z,1F
+1113+ AFB3
+1114+ AFB3 04               inc b
+1115+ AFB4
+1116+ AFB4 3E 60            ld a,$60
+1117+ AFB6 BE               cp (hl)
+1118+ AFB7 28 07            jr z,1F
+1119+ AFB9
+1120+ AFB9
+1121+ AFB9 04               inc b
+1122+ AFBA
+1123+ AFBA 3E 18            ld a,$18
+1124+ AFBC BE               cp (hl)
+1125+ AFBD 28 01            jr z,1F
+1126+ AFBF
+1127+ AFBF 04               inc b
+1128+ AFC0
+1129+ AFC0              ;   Calcula el Puntero_de_impresión del disparo.
+1130+ AFC0
+1131+ AFC0              ;   El Puntero_de_impresión del disparo apunta al último scanline de los tres que componen el disparo, (el de abajo).
+1132+ AFC0
+1133+ AFC0 CD 0B A7     1 call PreviousScan
+1134+ AFC3
+1135+ AFC3 78               ld a,b
+1136+ AFC4 CB 3F            srl a
+1137+ AFC6 28 03            jr z,4F
+1138+ AFC8
+1139+ AFC8              ; --- Guarda el puntero_de_impresión del disparo en la pila.
+1140+ AFC8 E5               push hl
+1141+ AFC9 18 02            jr 5F
+1142+ AFCB 2D           4 dec l
+1143+ AFCC E5               push hl
+1144+ AFCD              ; ---
+1145+ AFCD
+1146+ AFCD              ;   Calcula el Puntero_objeto del disparo.
+1147+ AFCD
+1148+ AFCD 21 86 85     5 ld hl,Indice_disparo_Amadeus
+1149+ AFD0 04               inc b
+1150+ AFD1 05               dec b
+1151+ AFD2 28 04            jr z,2F
+1152+ AFD4
+1153+ AFD4              ;   Nos desplazamos por el índice de disparos.
+1154+ AFD4
+1155+ AFD4 2C           3 inc l
+1156+ AFD5 2C               inc l
+1157+ AFD6 10 FC            djnz 3B
+1158+ AFD8
+1159+ AFD8              ; --- Guarda el Puntero_objeto del disparo en la pila.
+1160+ AFD8 CD 03 97     2 call Extrae_address
+1161+ AFDB E5               push hl
+1162+ AFDC              ; ---
+1163+ AFDC
+1164+ AFDC              ; Almacenamos (Puntero_objeto) y (Puntero_de_impresion) en su correspondiente caja.
+1165+ AFDC              ; HL en el 1er .db de la caja.
+1166+ AFDC
+1167+ AFDC 21 58 8D         ld hl,Disparo_Amad
+1168+ AFDF
+1169+ AFDF 06 02            ld b,2
+1170+ AFE1
+1171+ AFE1 D1           6 pop de
+1172+ AFE2 73               ld (hl),e
+1173+ AFE3 23               inc hl
+1174+ AFE4 72               ld (hl),d
+1175+ AFE5 23               inc hl
+1176+ AFE6
+1177+ AFE6 10 F9            djnz 6B
+1178+ AFE8
+1179+ AFE8 C9               ret
+1180+ AFE9
+1181+ AFE9              Genera_coordenadas_de_disparo_Amadeus
+1182+ AFE9
+1183+ AFE9              ;   HL apunta al .db (Puntero_de_impresion) del disparo de Amadeus.
+1184+ AFE9              ;   Esta parte de la rutina sólo aplica cuando un disparo nuestro alcanza algún objeto.
+1185+ AFE9              ;   Genera las coordenadas de nuestro disparo.
+1186+ AFE9
+1187+ AFE9 CD 03 97         call Extrae_address
+1188+ AFEC CD AF 9D         call Genera_coordenadas
+1189+ AFEF
+1190+ AFEF 3D               dec a
+1191+ AFF0
+1192+ AFF0 21 F2 91         ld hl,Coordenadas_disparo_certero
+1193+ AFF3 77               ld (hl),a                                           ;   Almacenamos la Coordenada_Y, (Fila) del disparo.
+1194+ AFF4 23               inc hl
+1195+ AFF5 3A 77 91         ld a,(Coordenada_X)
+1196+ AFF8 77               ld (hl),a                                           ;   Almacenamos la Coordenada_X, (Columna) del disparo.
+1197+ AFF9
+1198+ AFF9 AF               xor a
+1199+ AFFA 3C               inc a                                               ;   Fuerza "NZ" a la salida.
+1200+ AFFB
+1201+ AFFB C9               ret
+1202+ AFFC
+1203+ AFFC              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1204+ AFFC              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1205+ AFFC              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1206+ AFFC
+1207+ AFFC              ; ----------------------------------------------
+1208+ AFFC              ;
+1209+ AFFC              ;   22/03/25
+1210+ AFFC              ;
+1211+ AFFC              ;   INPUTS: HL contiene el .defw (Puntero_objeto) de la caja de disparo de Amadeus.
+1212+ AFFC              ;   OUTPUT: FLAG Z indica NO IMPACTO, NZ indica IMPACTO.
+1213+ AFFC
+1214+ AFFC              Detecta_impacto_en_disparo_de_Amadeus
+1215+ AFFC
+1216+ AFFC              Extraccion_de_datos
+1217+ AFFC
+1218+ AFFC              ; Album_de_pintado_disparos_Amadeus $8cac
+1219+ AFFC              ; Album_de_borrado_disparos_Amadeus $8cae
+1220+ AFFC              ; Amadeus_disparos_scanlines_album equ $827c
+1221+ AFFC              ; Amadeus_disparos_scanlines_album_2 equ $8282
+1222+ AFFC
+1223+ AFFC 5E               ld e,(hl)
+1224+ AFFD 2C               inc l
+1225+ AFFE 56               ld d,(hl)
+1226+ AFFF
+1227+ AFFF 1C               inc e
+1228+ B000 1C               inc e                                                   ; DE contiene Puntero_objeto `aumentado' del_
+1229+ B001              ;                                                                _disparo de Amadeus.
+1230+ B001 2C               inc l
+1231+ B002
+1232+ B002 4E               ld c,(hl)
+1233+ B003 2C               inc l
+1234+ B004 46               ld b,(hl)
+1235+ B005
+1236+ B005 C5               push bc
+1237+ B006 E1               pop hl                                                 ; Puntero_de_impresión del disparo en HL.
+1238+ B007
+1239+ B007              ;   La detección de colisión se efectúa con el disparo impreso en pantalla.
+1240+ B007
+1241+ B007 CD 0B A7         call PreviousScan
+1242+ B00A CD 0B A7         call PreviousScan
+1243+ B00D
+1244+ B00D              Detecta_impacto_
+1245+ B00D
+1246+ B00D 1A               ld a,(de)
+1247+ B00E A6               and (hl)
+1248+ B00F C0               ret nz
+1249+ B010
+1250+ B010 1C               inc e
+1251+ B011 2C               inc l
+1252+ B012
+1253+ B012 1A               ld a,(de)
+1254+ B013 A6               and (hl)
+1255+ B014
+1256+ B014 C9               ret
+1257+ B015
+1258+ B015              ; -------------------------------------------------------------------------------------------------------------
+1259+ B015              ;
+1260+ B015              ;   25/11//24
+1261+ B015              ;
+1262+ B015              ;   La entidad se encuentra en la fila $14,$15 o $16 de pantalla.
+1263+ B015              ;   Vamos a comprobar si la entidad ocupa alguna de las columnas ocupadas por Amadeus y por lo_
+1264+ B015              ;   _ tanto, existe riesgo alto de colisión entre ambas.
+1265+ B015              ;
+1266+ B015              ;   MODIFICA: HL,DE,BC y A.
+1267+ B015              ;   OUTPUTS: (Coordenadas_X_Entidad) y (Coordenadas_X_Amadeus) contienen el nº de las columnas que ocupan en pantalla.
+1268+ B015              ;            (Impacto) se coloca a "1" si coincide alguna de las columnas. Alto riesgo de colisión.
 1269+ B015
-1270+ B015 21 E8 91         ld hl,Ctrl_3
-1271+ B018 CB 76            bit 6,(hl)
-1272+ B01A C0               ret nz                                                  ; Salimos si Amadeus ha sido destruido y estamos esperando nueva nave o mensaje final.
-1273+ B01B
-1274+ B01B 21 EF 91         ld hl,Impacto2
-1275+ B01E CB 56            bit 2,(hl)
-1276+ B020 C0               ret nz                                                  ; Salimos si tenemos una posible colisión de una entidad anterior. Tenemos almacenadas las coordenadas X de otra entidad.
-1277+ B021
-1278+ B021 DD 7E 03     	ld a,(ix+3)                                             ; ld a,(coordenada_y)
-1279+ B024 FE 14        	cp $14
-1280+ B026 D8           	ret c                                                   ; Salimos si la entidad no está en zona de Amadeus.
-1281+ B027
-1282+ B027 3A D7 8D         ld a,(Impacto_Amadeus)
-1283+ B02A A7               and a
-1284+ B02B C0               ret nz                                                  ; Evita que se produzca colisión con dos entidades a la vez.
-1285+ B02C
-1286+ B02C              Genera_coordenadas_X
-1287+ B02C
-1288+ B02C              ;   Guardamos las coordenadas_X de la entidad y Amadeus en sus correspondientes almacenes.
-1289+ B02C              ;   DRAW tiene almacenados, en este momento, los datos de la última ENTIDAD que hemos desplazado.
-1290+ B02C
-1291+ B02C              ;   Limpiamos almacenes.
-1292+ B02C
-1293+ B02C              ;    call Limpia_Coordenadas_X
-1294+ B02C
-1295+ B02C              ;   Almacenamos las coordenadas X de la entidad peligrosa, (en curso).
-1296+ B02C
-1297+ B02C 21 F4 91         ld hl,Coordenadas_X_Entidad
-1298+ B02F DD 7E 02         ld a,(ix+2)                                             ; ld a,(Coordenada_X)
-1299+ B032 CD 58 B0         call Guarda_coordenadas_X
-1300+ B035
-1301+ B035              ;   Almacenamos las coordenadas X de Amadeus.
-1302+ B035
-1303+ B035 3A D4 8D         ld a,(CX_Amadeus)
-1304+ B038 CD 58 B0         call Guarda_coordenadas_X
-1305+ B03B
-1306+ B03B DD E5            push ix
-1307+ B03D CD 6C B0         call Compara_coordenadas_X
-1308+ B040 DD E1            pop ix
-1309+ B042
-1310+ B042              ;*** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
-1311+ B042              ;    ret
-1312+ B042
-1313+ B042 C0               ret nz
-1314+ B043
-1315+ B043 3E 01            ld a,1                                               ; El .db (Impacto)="1" indica que es altamente probable que esta_
-1316+ B045 DD 77 05         ld (ix+5),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y
-1317+ B048
-1318+ B048 DD 7D            ld a,ixl
-1319+ B04A C6 05            add 5
-1320+ B04C DD 6F            ld ixl,a
-1321+ B04E
-1322+ B04E DD 22 F0 91      ld (Entidad_sospechosa_de_colision),ix               ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.
-1323+ B052
-1324+ B052 21 EF 91         ld hl,Impacto2                                       ; _ alguna de las columnas_X que ocupa coinciden con las de Amadeus.
-1325+ B055 CB D6            set 2,(hl)
-1326+ B057
-1327+ B057 C9               ret
-1328+ B058
-1329+ B058               ; ----- ----- ----- ----- -----
-1330+ B058
-1331+ B058 77           Guarda_coordenadas_X ld (hl),a
-1332+ B059 3C               inc a
-1333+ B05A 2C               inc l
-1334+ B05B 77               ld (hl),a
-1335+ B05C 3C               inc a
-1336+ B05D 2C               inc l
-1337+ B05E 77               ld (hl),a
-1338+ B05F 2C               inc l
-1339+ B060 C9               ret
-1340+ B061
-1341+ B061 AF           Limpia_Coordenadas_X xor a
-1342+ B062 06 06            ld b,6
-1343+ B064 21 F7 91         ld hl,Coordenadas_X_Amadeus
-1344+ B067 77           1 ld (hl),a
-1345+ B068 23               inc hl
-1346+ B069 10 FC            djnz 1B
-1347+ B06B C9               ret
-1348+ B06C
-1349+ B06C              ; ----- ----- ----- ----- -----
-1350+ B06C
-1351+ B06C              Compara_coordenadas_X
-1352+ B06C
-1353+ B06C DD 21 F4 91      ld ix,Coordenadas_X_Entidad
-1354+ B070 DD 7E 00         ld a,(ix+0)
-1355+ B073 CD 81 B0         call Comparando
-1356+ B076 C8               ret z
-1357+ B077
-1358+ B077 3C               inc a
-1359+ B078 CD 90 B0         call Comparando_1
-1360+ B07B C8               ret z
-1361+ B07C
-1362+ B07C 3C               inc a
-1363+ B07D CD 90 B0         call Comparando_1
-1364+ B080
-1365+ B080 C9               ret
-1366+ B081
-1367+ B081              ; ----- ----- ----- ----- -----
-1368+ B081              ;
-1369+ B081              ;   4/12/23
-1370+ B081              ;
-1371+ B081              ;   Sub. de [Compara_coordenadas_X]. Deja de comparar cuando encuentra coincidencia.
-1372+ B081
-1373+ B081              Comparando
-1374+ B081
-1375+ B081 DD 2C            inc ixl
-1376+ B083 DD 2C            inc ixl
-1377+ B085 DD 2C            inc ixl
-1378+ B087
-1379+ B087 DD 46 00         ld b,(ix+0)
-1380+ B08A DD 4E 01         ld c,(ix+1)
-1381+ B08D DD 56 02         ld d,(ix+2)
-1382+ B090
-1383+ B090 B8           Comparando_1 cp b
-1384+ B091 C8               ret z
-1385+ B092 B9               cp c
-1386+ B093 C8               ret z
-1387+ B094 BA               cp d
-1388+ B095 C9               ret
-1389+ B096
-1390+ B096              ; -----------------------------------------------------------------------
-1391+ B096              ;
-1392+ B096              ;   04/7/24
-1393+ B096              ;
-1394+ B096
-1395+ B096              Detecta_colision_nave_entidad
-1396+ B096
-1397+ B096              ; Exclusiones:
-1398+ B096
-1399+ B096              ; Salimos de la rutina si no hay advertencia de posible colisión.
-1400+ B096
-1401+ B096 21 EF 91     	ld hl,Impacto2
-1402+ B099 CB 56        	bit 2,(hl)
-1403+ B09B C8           	ret z
-1404+ B09C
-1405+ B09C              ; Detección byte a byte de colisión ENTIDAD-NAVE.
-1406+ B09C
-1407+ B09C 2A DA 8D         ld hl,(Pamm_Amadeus)
-1408+ B09F CD 03 97         call Extrae_address
-1409+ B0A2 54               ld d,h
-1410+ B0A3 5D               ld e,l                                         ; (Puntero_objeto) en DE.
-1411+ B0A4
-1412+ B0A4 2A D8 8D         ld hl,(p.imp.amadeus)                          ; (Puntero_de_impresion) en HL.
-1413+ B0A7 06 10            ld b,16                                        ; Contador de scanlines en B.
-1414+ B0A9 FD 2E 03         ld iyl,3                                       ; Contador de impacto. Si su valor es "0" se considera "Colisión". Esto me permitirá ajustar la sensibilidad de la colisión en Amadeus.
-1415+ B0AC
-1416+ B0AC C5           1 push bc
-1417+ B0AD 06 03            ld b,3
-1418+ B0AF E5               push hl
-1419+ B0B0
-1420+ B0B0              ; .db
-1421+ B0B0
-1422+ B0B0 1A           3 ld a,(de)
-1423+ B0B1 A7               and a
-1424+ B0B2 20 03            jr nz,4F
-1425+ B0B4
-1426+ B0B4 2C               inc l
-1427+ B0B5 18 08            jr 2F                                         ; No aplica CPI, no hay píxels en este .db.
-1428+ B0B7
-1429+ B0B7 ED A1        4 cpi                                             ; Comparamos el 1er .db de los tres de ancho que tiene el sprite de Amadeus.
-1430+ B0B9 28 04            jr z,2F
-1431+ B0BB
-1432+ B0BB              ; Impacto.
-1433+ B0BB FD 2D            dec iyl
-1434+ B0BD 28 22            jr z,5F
-1435+ B0BF
-1436+ B0BF 1C           2 inc e
-1437+ B0C0 10 EE            djnz 3B
-1438+ B0C2
-1439+ B0C2 E1               pop hl
-1440+ B0C3
-1441+ B0C3              ; Hay salto de línea en el puntero de impresión ???
-1442+ B0C3
-1443+ B0C3 7C               ld a,h
-1444+ B0C4 D6 57            sub $57
-1445+ B0C6 20 0A            jr nz,6F
-1446+ B0C8
-1447+ B0C8              ; Comprobamos la parte baja de Amadeus. Modifico manualmente el salto de línea en HL para no haver llamadas a [NextScan].
-1448+ B0C8
-1449+ B0C8 2A D8 8D         ld hl,(p.imp.amadeus)
-1450+ B0CB 3E 20            ld a,$20
-1451+ B0CD A7               and a
-1452+ B0CE 85               add l
-1453+ B0CF 6F               ld l,a
-1454+ B0D0 18 01            jr 7F
-1455+ B0D2
-1456+ B0D2 24           6 inc h
-1457+ B0D3
-1458+ B0D3 C1           7 pop bc
-1459+ B0D4 10 D6            djnz 1B
-1460+ B0D6
-1461+ B0D6              ;   Fin de la comparativa.
-1462+ B0D6
-1463+ B0D6              ;   NO HAY COLISIÓN !!!!!.
-1464+ B0D6              ;
-1465+ B0D6              ;   .db (Impacto) de Amadeus a "0".
-1466+ B0D6              ;   RES el bit2 de (Impacto2).
-1467+ B0D6              ;
-1468+ B0D6              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
-1469+ B0D6              ;   Lo colocamos a "0".
-1470+ B0D6
-1471+ B0D6 21 EF 91         ld hl,Impacto2
-1472+ B0D9 CB 96            res 2,(hl)
-1473+ B0DB 2A F0 91         ld hl,(Entidad_sospechosa_de_colision)
-1474+ B0DE 36 00            ld (hl),0                                       ; Coloca a "0" el .db (Impacto) de la (Entidad_sospechosa_de_colision).
-1475+ B0E0 C9               ret
-1476+ B0E1
-1477+ B0E1              ;   COLISIÓN !!!!!.
-1478+ B0E1              ;
-1479+ B0E1              ;   .db (Impacto) de Amadeus a "1".
-1480+ B0E1              ;   SET el bit3 de (Impacto2).
-1481+ B0E1              ;
-1482+ B0E1              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
-1483+ B0E1
-1484+ B0E1 E1           5 pop hl
-1485+ B0E2 C1               pop bc
-1486+ B0E3
-1487+ B0E3 21 D7 8D         ld hl,Impacto_Amadeus
-1488+ B0E6 36 01            ld (hl),1
-1489+ B0E8 21 EF 91         ld hl,Impacto2                                 ; Cuando se produce Colisión, RES el bit2 de (Impacto2) y_
-1490+ B0EB CB 96            res 2,(hl)                                     ; _ SET el bit3. El bit3 de (Impacto2) indica que hay contacto_
-1491+ B0ED
-1492+ B0ED 11 90 8B         ld de,Indice_Explosion_entidades
-1493+ B0F0 2A F0 91         ld hl,(Entidad_sospechosa_de_colision)         ; Situamos el (Puntero_de_almacen_de_mov_masticados) de la entidad impactada en la primera palabra del índice de explosiones.
-1494+ B0F3
-1495+ B0F3 23               inc hl
-1496+ B0F4 23               inc hl
-1497+ B0F5 23               inc hl
-1498+ B0F6
-1499+ B0F6 73               ld (hl),e
-1500+ B0F7 23               inc hl
-1501+ B0F8 72               ld (hl),d
-1502+ B0F9
-1503+ B0F9              ; Situamos también el (Puntero_de_almacen_de_mov_masticados) de Amadeus en la primero explosión.
-1504+ B0F9
-1505+ B0F9 11 30 8C         ld de,Indice_Explosion_Amadeus
-1506+ B0FC 21 DA 8D         ld hl,Pamm_Amadeus
-1507+ B0FF
-1508+ B0FF 73               ld (hl),e
-1509+ B100 23               inc hl
-1510+ B101 72               ld (hl),d
-1511+ B102
-1512+ B102 C9               ret
-1513+ B103
-1514+ B103
-1515+ B103
-1516+ B103
+1270+ B015              Colision_Entidad_Amadeus
+1271+ B015
+1272+ B015              ; Posible contacto de entidad con Amadeus. ?????
+1273+ B015
+1274+ B015              ; Exclusiones:
+1275+ B015
+1276+ B015 3A 15 92         ld a,(Shield)
+1277+ B018 A7               and a
+1278+ B019 C0               ret nz                                                  ; No comprobamos contacto si existe Shield.
+1279+ B01A
+1280+ B01A 21 E8 91         ld hl,Ctrl_3
+1281+ B01D CB 76            bit 6,(hl)
+1282+ B01F C0               ret nz                                                  ; Salimos si Amadeus ha sido destruido y estamos esperando nueva nave o mensaje final.
+1283+ B020
+1284+ B020 21 EF 91         ld hl,Impacto2
+1285+ B023 CB 56            bit 2,(hl)
+1286+ B025 C0               ret nz                                                  ; Salimos si tenemos una posible colisión de una entidad anterior. Tenemos almacenadas las coordenadas X de otra entidad.
+1287+ B026
+1288+ B026 DD 7E 03     	ld a,(ix+3)                                             ; ld a,(coordenada_y)
+1289+ B029 FE 14        	cp $14
+1290+ B02B D8           	ret c                                                   ; Salimos si la entidad no está en zona de Amadeus.
+1291+ B02C
+1292+ B02C 3A D7 8D         ld a,(Impacto_Amadeus)
+1293+ B02F A7               and a
+1294+ B030 C0               ret nz                                                  ; Evita que se produzca colisión con dos entidades a la vez.
+1295+ B031
+1296+ B031              Genera_coordenadas_X
+1297+ B031
+1298+ B031              ;   Guardamos las coordenadas_X de la entidad y Amadeus en sus correspondientes almacenes.
+1299+ B031              ;   DRAW tiene almacenados, en este momento, los datos de la última ENTIDAD que hemos desplazado.
+1300+ B031
+1301+ B031              ;   Limpiamos almacenes.
+1302+ B031
+1303+ B031              ;    call Limpia_Coordenadas_X
+1304+ B031
+1305+ B031              ;   Almacenamos las coordenadas X de la entidad peligrosa, (en curso).
+1306+ B031
+1307+ B031 21 F4 91         ld hl,Coordenadas_X_Entidad
+1308+ B034 DD 7E 02         ld a,(ix+2)                                             ; ld a,(Coordenada_X)
+1309+ B037 CD 5D B0         call Guarda_coordenadas_X
+1310+ B03A
+1311+ B03A              ;   Almacenamos las coordenadas X de Amadeus.
+1312+ B03A
+1313+ B03A 3A D4 8D         ld a,(CX_Amadeus)
+1314+ B03D CD 5D B0         call Guarda_coordenadas_X
+1315+ B040
+1316+ B040 DD E5            push ix
+1317+ B042 CD 71 B0         call Compara_coordenadas_X
+1318+ B045 DD E1            pop ix
+1319+ B047
+1320+ B047              ;*** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
+1321+ B047              ;    ret
+1322+ B047
+1323+ B047 C0               ret nz
+1324+ B048
+1325+ B048 3E 01            ld a,1                                               ; El .db (Impacto)="1" indica que es altamente probable que esta_
+1326+ B04A DD 77 05         ld (ix+5),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y
+1327+ B04D
+1328+ B04D DD 7D            ld a,ixl
+1329+ B04F C6 05            add 5
+1330+ B051 DD 6F            ld ixl,a
+1331+ B053
+1332+ B053 DD 22 F0 91      ld (Entidad_sospechosa_de_colision),ix               ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.
+1333+ B057
+1334+ B057 21 EF 91         ld hl,Impacto2                                       ; _ alguna de las columnas_X que ocupa coinciden con las de Amadeus.
+1335+ B05A CB D6            set 2,(hl)
+1336+ B05C
+1337+ B05C C9               ret
+1338+ B05D
+1339+ B05D               ; ----- ----- ----- ----- -----
+1340+ B05D
+1341+ B05D 77           Guarda_coordenadas_X ld (hl),a
+1342+ B05E 3C               inc a
+1343+ B05F 2C               inc l
+1344+ B060 77               ld (hl),a
+1345+ B061 3C               inc a
+1346+ B062 2C               inc l
+1347+ B063 77               ld (hl),a
+1348+ B064 2C               inc l
+1349+ B065 C9               ret
+1350+ B066
+1351+ B066 AF           Limpia_Coordenadas_X xor a
+1352+ B067 06 06            ld b,6
+1353+ B069 21 F7 91         ld hl,Coordenadas_X_Amadeus
+1354+ B06C 77           1 ld (hl),a
+1355+ B06D 23               inc hl
+1356+ B06E 10 FC            djnz 1B
+1357+ B070 C9               ret
+1358+ B071
+1359+ B071              ; ----- ----- ----- ----- -----
+1360+ B071
+1361+ B071              Compara_coordenadas_X
+1362+ B071
+1363+ B071 DD 21 F4 91      ld ix,Coordenadas_X_Entidad
+1364+ B075 DD 7E 00         ld a,(ix+0)
+1365+ B078 CD 86 B0         call Comparando
+1366+ B07B C8               ret z
+1367+ B07C
+1368+ B07C 3C               inc a
+1369+ B07D CD 95 B0         call Comparando_1
+1370+ B080 C8               ret z
+1371+ B081
+1372+ B081 3C               inc a
+1373+ B082 CD 95 B0         call Comparando_1
+1374+ B085
+1375+ B085 C9               ret
+1376+ B086
+1377+ B086              ; ----- ----- ----- ----- -----
+1378+ B086              ;
+1379+ B086              ;   4/12/23
+1380+ B086              ;
+1381+ B086              ;   Sub. de [Compara_coordenadas_X]. Deja de comparar cuando encuentra coincidencia.
+1382+ B086
+1383+ B086              Comparando
+1384+ B086
+1385+ B086 DD 2C            inc ixl
+1386+ B088 DD 2C            inc ixl
+1387+ B08A DD 2C            inc ixl
+1388+ B08C
+1389+ B08C DD 46 00         ld b,(ix+0)
+1390+ B08F DD 4E 01         ld c,(ix+1)
+1391+ B092 DD 56 02         ld d,(ix+2)
+1392+ B095
+1393+ B095 B8           Comparando_1 cp b
+1394+ B096 C8               ret z
+1395+ B097 B9               cp c
+1396+ B098 C8               ret z
+1397+ B099 BA               cp d
+1398+ B09A C9               ret
+1399+ B09B
+1400+ B09B              ; -----------------------------------------------------------------------
+1401+ B09B              ;
+1402+ B09B              ;   04/7/24
+1403+ B09B              ;
+1404+ B09B
+1405+ B09B              Detecta_colision_nave_entidad
+1406+ B09B
+1407+ B09B              ; Exclusiones:
+1408+ B09B
+1409+ B09B              ; Salimos de la rutina si no hay advertencia de posible colisión.
+1410+ B09B
+1411+ B09B 21 EF 91     	ld hl,Impacto2
+1412+ B09E CB 56        	bit 2,(hl)
+1413+ B0A0 C8           	ret z
+1414+ B0A1
+1415+ B0A1              ; Detección byte a byte de colisión ENTIDAD-NAVE.
+1416+ B0A1
+1417+ B0A1 2A DA 8D         ld hl,(Pamm_Amadeus)
+1418+ B0A4 CD 03 97         call Extrae_address
+1419+ B0A7 54               ld d,h
+1420+ B0A8 5D               ld e,l                                         ; (Puntero_objeto) en DE.
+1421+ B0A9
+1422+ B0A9 2A D8 8D         ld hl,(p.imp.amadeus)                          ; (Puntero_de_impresion) en HL.
+1423+ B0AC 06 10            ld b,16                                        ; Contador de scanlines en B.
+1424+ B0AE FD 2E 03         ld iyl,3                                       ; Contador de impacto. Si su valor es "0" se considera "Colisión". Esto me permitirá ajustar la sensibilidad de la colisión en Amadeus.
+1425+ B0B1
+1426+ B0B1 C5           1 push bc
+1427+ B0B2 06 03            ld b,3
+1428+ B0B4 E5               push hl
+1429+ B0B5
+1430+ B0B5              ; .db
+1431+ B0B5
+1432+ B0B5 1A           3 ld a,(de)
+1433+ B0B6 A7               and a
+1434+ B0B7 20 03            jr nz,4F
+1435+ B0B9
+1436+ B0B9 2C               inc l
+1437+ B0BA 18 08            jr 2F                                         ; No aplica CPI, no hay píxels en este .db.
+1438+ B0BC
+1439+ B0BC ED A1        4 cpi                                             ; Comparamos el 1er .db de los tres de ancho que tiene el sprite de Amadeus.
+1440+ B0BE 28 04            jr z,2F
+1441+ B0C0
+1442+ B0C0              ; Impacto.
+1443+ B0C0 FD 2D            dec iyl
+1444+ B0C2 28 22            jr z,5F
+1445+ B0C4
+1446+ B0C4 1C           2 inc e
+1447+ B0C5 10 EE            djnz 3B
+1448+ B0C7
+1449+ B0C7 E1               pop hl
+1450+ B0C8
+1451+ B0C8              ; Hay salto de línea en el puntero de impresión ???
+1452+ B0C8
+1453+ B0C8 7C               ld a,h
+1454+ B0C9 D6 57            sub $57
+1455+ B0CB 20 0A            jr nz,6F
+1456+ B0CD
+1457+ B0CD              ; Comprobamos la parte baja de Amadeus. Modifico manualmente el salto de línea en HL para no haver llamadas a [NextScan].
+1458+ B0CD
+1459+ B0CD 2A D8 8D         ld hl,(p.imp.amadeus)
+1460+ B0D0 3E 20            ld a,$20
+1461+ B0D2 A7               and a
+1462+ B0D3 85               add l
+1463+ B0D4 6F               ld l,a
+1464+ B0D5 18 01            jr 7F
+1465+ B0D7
+1466+ B0D7 24           6 inc h
+1467+ B0D8
+1468+ B0D8 C1           7 pop bc
+1469+ B0D9 10 D6            djnz 1B
+1470+ B0DB
+1471+ B0DB              ;   Fin de la comparativa.
+1472+ B0DB
+1473+ B0DB              ;   NO HAY COLISIÓN !!!!!.
+1474+ B0DB              ;
+1475+ B0DB              ;   .db (Impacto) de Amadeus a "0".
+1476+ B0DB              ;   RES el bit2 de (Impacto2).
+1477+ B0DB              ;
+1478+ B0DB              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
+1479+ B0DB              ;   Lo colocamos a "0".
+1480+ B0DB
+1481+ B0DB 21 EF 91         ld hl,Impacto2
+1482+ B0DE CB 96            res 2,(hl)
+1483+ B0E0 2A F0 91         ld hl,(Entidad_sospechosa_de_colision)
+1484+ B0E3 36 00            ld (hl),0                                       ; Coloca a "0" el .db (Impacto) de la (Entidad_sospechosa_de_colision).
+1485+ B0E5 C9               ret
+1486+ B0E6
+1487+ B0E6              ;   COLISIÓN !!!!!.
+1488+ B0E6              ;
+1489+ B0E6              ;   .db (Impacto) de Amadeus a "1".
+1490+ B0E6              ;   SET el bit3 de (Impacto2).
+1491+ B0E6              ;
+1492+ B0E6              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
+1493+ B0E6
+1494+ B0E6 E1           5 pop hl
+1495+ B0E7 C1               pop bc
+1496+ B0E8
+1497+ B0E8 21 D7 8D         ld hl,Impacto_Amadeus
+1498+ B0EB 36 01            ld (hl),1
+1499+ B0ED 21 EF 91         ld hl,Impacto2                                 ; Cuando se produce Colisión, RES el bit2 de (Impacto2) y_
+1500+ B0F0 CB 96            res 2,(hl)                                     ; _ SET el bit3. El bit3 de (Impacto2) indica que hay contacto_
+1501+ B0F2
+1502+ B0F2 11 90 8B         ld de,Indice_Explosion_entidades
+1503+ B0F5 2A F0 91         ld hl,(Entidad_sospechosa_de_colision)         ; Situamos el (Puntero_de_almacen_de_mov_masticados) de la entidad impactada en la primera palabra del índice de explosiones.
+1504+ B0F8
+1505+ B0F8 23               inc hl
+1506+ B0F9 23               inc hl
+1507+ B0FA 23               inc hl
+1508+ B0FB
+1509+ B0FB 73               ld (hl),e
+1510+ B0FC 23               inc hl
+1511+ B0FD 72               ld (hl),d
+1512+ B0FE
+1513+ B0FE              ; Situamos también el (Puntero_de_almacen_de_mov_masticados) de Amadeus en la primero explosión.
+1514+ B0FE
+1515+ B0FE 11 30 8C         ld de,Indice_Explosion_Amadeus
+1516+ B101 21 DA 8D         ld hl,Pamm_Amadeus
+1517+ B104
+1518+ B104 73               ld (hl),e
+1519+ B105 23               inc hl
+1520+ B106 72               ld (hl),d
+1521+ B107
+1522+ B107 C9               ret
+1523+ B108
+1524+ B108
+1525+ B108
+1526+ B108
 # file closed: Disparo.asm
-2585  B103
-2586  B103              ;	End $ae8f Último byte.
-2587  B103              ;		$ae90 1er byte libre.
-2588  B103
-2589  B103              	SAVESNA "Pruebas.sna", START
-2590  B103
-2591  B103
-2592  B103
-2593  B103
+2585  B108
+2586  B108              ;	End $ae8f Último byte.
+2587  B108              ;		$ae90 1er byte libre.
+2588  B108
+2589  B108              	SAVESNA "Pruebas.sna", START
+2590  B108
+2591  B108
+2592  B108
+2593  B108
 # file closed: Banco_de_pruebas.asm
