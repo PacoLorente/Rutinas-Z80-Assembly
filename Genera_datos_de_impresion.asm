@@ -8,7 +8,7 @@
 
 Genera_datos_de_impresion 
 
-    ld (Stack),sp                                 ; Guardo SP en (Stack).
+    ld (Stack),sp                                   ; Guardo SP en (Stack).
 
     ld hl,(Scanlines_album_SP)
 
@@ -17,13 +17,14 @@ Genera_datos_de_impresion
     ld l,a
 
     ld sp,hl
-    ld (Scanlines_album_SP),hl
+    ld (Scanlines_album_SP),hl                      ; Actualiza el puntero del álbum de líneas y lo situa en el siguiente movimiento.
 
     ld hl,0
 
-    push ix                                         ; (Puntero_de_impresion).
+    push ix                                         ; (Puntero_de_impresion) al álbum de líneas.
 
     dec sp
+
     adc hl,sp
 
     push de
@@ -34,18 +35,37 @@ Genera_datos_de_impresion
 
     push hl
     pop af
-    ex af,af'                                       ; AF´ almacena la casilla donde vamos a almacenar el nº de scanlines que vamos a generar a continuación. 
+
+    ex af,af'                                       ; AF´ almacena la casilla donde vamos a almacenar el nº de scanlines que vamos a generar a continuación.
     
 ; Tenemos el encabezado listo.
 ; Preparamos registros para generar los scanlines.
 
     push ix
-    pop hl                                          ; 1er scanline en HL.
+    pop hl                                          ; 1er scanline en H   jr $L.
 
     ld de,(Scanlines_album_SP)
 
 ; Voy a utilizar 2 rutinas para generar las líneas. Una será rápida y otra lenta. La lenta sólo se empleará cuando el sprite esté desapareciendo o apareciendo_
 ; _por la parte baja de la pantalla, en este caso no se podrán imprimir las 16 líneas pues entramos en attr. mem. 
+
+    ld a,h
+    cp $40
+    jr nc,4F
+
+; (Puntero_de_impresion) en ROM. Guardamos "0" scans en el álbum y salimos de la rutina.
+
+    ex af,af
+
+    push af
+    pop hl
+
+    ld (hl),0
+
+    ret
+
+
+4 ld bc,Primer_scan_de_pantalla
 
     ld a,h
     cp $50

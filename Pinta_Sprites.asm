@@ -153,7 +153,7 @@ Restaura_attr_vida:
 ;
 ;	MODIFICA: AF,HL,DE y BC.
 
-Pinta_imagen
+Pinta_imagen:
 
     push bc
     push hl                                                         ; Guardamos datos para pintar más adelante.
@@ -230,7 +230,7 @@ Pinta_imagen
 ;   2/4/25
 ;
 
-Pinta_disparos_Entidades
+Pinta_disparos_Entidades:
 
     ld (Stack),sp 
     ld sp,(Album_de_borrado_disparos_Entidades)
@@ -336,7 +336,7 @@ Pinta_disparos_Entidades
 ;
 ;   Pinta los dos scanlines y char. de atributos del disparo de Amadeus.
 
-Pinta_disparos_Amadeus
+Pinta_disparos_Amadeus:
 
     ld b,2                                                        ; 2 Albumes, (borrado y pintado).
 
@@ -424,7 +424,10 @@ Imprime_scanlines_en_pantalla
 ;   INPUT: A contiene (Columnas).
 ;          C contiene (Attr).
 
-Pinta_Sprites
+Pinta_Sprites:
+
+
+ ;   jr $
 
     ld (Stack),sp
  
@@ -435,7 +438,14 @@ Pinta_Sprites
 
     ld b,(hl)                           ; B contiene el nº de scanlines a imprimir.
 
-    inc l
+    inc b
+    dec b
+    jr nz,13F
+
+    ld sp,(Stack)
+    ret
+
+13 inc l
     ld sp,hl                            ; El SP irá extrayendo scanlines en HL.
 
 ;   Seleccionamos rutina de impresión:
