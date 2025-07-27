@@ -567,13 +567,23 @@ START:
 
 ;	Imprime escudos y vidas.
 
-	call Imprime_escudo
-	call Imprime_escudo
-	call Imprime_escudo
+;	call Imprime_escudo
+;	call Imprime_escudo
+;	call Imprime_escudo
 
-	call Imprime_vida
-	call Imprime_vida
-	call Imprime_vida
+;	call Imprime_vida
+;	call Imprime_vida
+;	call Imprime_vida
+
+
+;	Voy a cambiar los attr de la zona del marcador de pantalla.
+
+	ld a,%00110110
+	ld b,96
+	ld hl,$5800
+1 ld (hl),a
+	inc l
+	djnz 1B
 
 	ld sp,0													; Situamos el inicio de Stack.
 	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).

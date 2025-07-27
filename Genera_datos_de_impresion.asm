@@ -6,7 +6,7 @@
 ;   DE contiene Puntero_objeto.
 ;   IX contiene el Puntero de impresión.
 
-Genera_datos_de_impresion 
+Genera_datos_de_impresion:
 
     ld (Stack),sp                                   ; Guardo SP en (Stack).
 
@@ -55,19 +55,66 @@ Genera_datos_de_impresion
 
 ; (Puntero_de_impresion) en ROM. Guardamos "0" scans en el álbum y salimos de la rutina.
 
-    ex af,af
-
+Cero_scans ex af,af
     push af
     pop hl
-
     ld (hl),0
-
     ret
 
+4 call calcula_tercio
+    and a
+    jr nz,7F
 
-4 ld bc,Primer_scan_de_pantalla
+; La entidad se va a imprimir en el 1er tercio de la pantalla.
+
+    ld a,l
+    cp $20
+    jr c,Cero_scans                                ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
+
+    ld a,l
+    cp $60
+    jr nc,7F
+
+; La entidad no se imprimirá entera. Va a ir apareciendo por la parte baja del marcador.
+; Calculamos el nº de scanlines que vamos a imprimir.
 
     ld a,h
+    sub $40
+    ld b,a                                         ; Nº de scanlines en B.
+
+    ld a,l
+    add $40
+    ld l,a
+
+    cp $80
+    jr c,Modifica_puntero_objeto
+
+    ld a,8
+    add b
+    ld b,a
+
+Modifica_puntero_objeto
+
+; Salimos si no hay scanlines que imprimir.
+
+    inc b
+    dec b
+    jr z,Cero_scans
+
+    ld h,$40                                       ; (Puntero_de_impresion) en HL.
+
+    di
+    jr $
+    ei
+
+
+
+
+
+
+; La entidad se imprimirá entera cuando el (Puntero_de_impresion) se encuentre a partir de la 4ª línea de pantalla.
+
+7 ld a,h
     cp $50
     jr c,Genera_scanlines_rapidos                   ; No hemos llegado a la parte baja de la pantalla. 
 
