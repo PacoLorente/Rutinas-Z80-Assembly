@@ -1,6 +1,6 @@
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	20/09/24
+;	28/7/25
 ;
 ;   (Scanlines_album_SP) se sitúa inicialmente al comienzo de Scanlines_album.
 ;   DE contiene Puntero_objeto.
@@ -8,79 +8,41 @@
 
 Genera_datos_de_impresion:
 
-    ld (Stack),sp                                   ; Guardo SP en (Stack).
-
-    ld hl,(Scanlines_album_SP)
-
-    ld a,5
-    add l
-    ld l,a
-
-    ld sp,hl
-    ld (Scanlines_album_SP),hl                      ; Actualiza el puntero del álbum de líneas y lo situa en el siguiente movimiento.
-
-    ld hl,0
-
-    push ix                                         ; (Puntero_de_impresion) al álbum de líneas.
-
-    dec sp
-
-    adc hl,sp
-
-    push de
-
-; Recuperamos SP.
-
-    ld sp,(Stack)
-
-    push hl
-    pop af
-
-    ex af,af'                                       ; AF´ almacena la casilla donde vamos a almacenar el nº de scanlines que vamos a generar a continuación.
-    
-; Tenemos el encabezado listo.
-; Preparamos registros para generar los scanlines.
+;   En 1er lugar analizamos la posición del (Puntero_de_impresion).
+;   No se han de generar scanlines cuando la entidad se imprima en zona de ROM o completamente en zona de MARCADOR de pantalla, (3 primeras líneas).
+;   Cuando el (Puntero_de_impresion) se genera en la 2ª o 3ª línea de pantalla hay que calcular el nº de scanlines que pintamos del Sprite. Como el Sprite está apareciendo_
+;   _ por la parte alta de la pantalla hay que sitúar (Puntero_objeto) en la línea de datos correspondiente.
 
     push ix
-    pop hl                                          ; 1er scanline en H   jr $L.
-
-    ld de,(Scanlines_album_SP)
-
-; Voy a utilizar 2 rutinas para generar las líneas. Una será rápida y otra lenta. La lenta sólo se empleará cuando el sprite esté desapareciendo o apareciendo_
-; _por la parte baja de la pantalla, en este caso no se podrán imprimir las 16 líneas pues entramos en attr. mem. 
+    pop hl                                          ; (Puntero_de_impresion) en HL.
 
     ld a,h
     cp $40
-    jr nc,4F
+    jr c,Zona_ROM                                   ; La entidad se comienza a pintar en la ROM. No se generarán scanlines.
 
-; (Puntero_de_impresion) en ROM. Guardamos "0" scans en el álbum y salimos de la rutina.
+;   El objeto se imprime dentro de la pantalla, (NO ROM).
 
-Cero_scans ex af,af
-    push af
-    pop hl
-    ld (hl),0
-    ret
-
-4 call calcula_tercio
+    call calcula_tercio                             ; HL contiene (Puntero_de_impresion).
     and a
-    jr nz,7F
+    jr nz,Posiblemente_completo
 
-; La entidad se va a imprimir en el 1er tercio de la pantalla.
+;   La entidad se imprime en el 1er tercio de la pantalla. "0" scans. si (Puntero_de_impresion) se encuentra en la 1ª Fila de la pantalla.
 
     ld a,l
     cp $20
-    jr c,Cero_scans                                ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
+    jr c,Zona_ROM                                   ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
 
     ld a,l
     cp $60
-    jr nc,7F
+    jr nc,Posiblemente_completo
 
 ; La entidad no se imprimirá entera. Va a ir apareciendo por la parte baja del marcador.
 ; Calculamos el nº de scanlines que vamos a imprimir.
+; (Puntero_de_impresion) se encuentra en la 2ª o 3ª Fila de la pantalla.
 
     ld a,h
     sub $40
-    ld b,a                                         ; Nº de scanlines en B.
+    ld b,a                                          ; Nº de scanlines en B.
 
     ld a,l
     add $40
@@ -93,40 +55,41 @@ Cero_scans ex af,af
     add b
     ld b,a
 
-Modifica_puntero_objeto
+Modifica_puntero_objeto jr $
 
 ; Salimos si no hay scanlines que imprimir.
 
-    inc b
-    dec b
-    jr z,Cero_scans
+;    inc b
+;    dec b
+;    jr z,Cero_scans
 
-    ld h,$40                                       ; (Puntero_de_impresion) en HL.
+;    ld h,$40                                       ; (Puntero_de_impresion) en HL.
 
-    di
+;    di
+;    jr $
+;    ei
+
+; -------------------------------------------------------------------
+
+Zona_ROM
+
+;   No se generarán scanlines. B="0", generamos cabecera, actualizamos (Scanlines_album_SP) y RET.
+
+    ld b,0
+    ld c,b                                          ; Cuando no se generan scans., BC siempre será "0".
+
+    call Genera_cabecera
+    ret
+
+
+;   IX y HL contienen (Puntero_de_impresion). DE contiene (Puntero_objeto).
+
+Posiblemente_completo
+
+    call Calcula_numero_de_scans
+    call Genera_cabecera
+
     jr $
-    ei
-
-
-
-
-
-
-; La entidad se imprimirá entera cuando el (Puntero_de_impresion) se encuentre a partir de la 4ª línea de pantalla.
-
-7 ld a,h
-    cp $50
-    jr c,Genera_scanlines_rapidos                   ; No hemos llegado a la parte baja de la pantalla. 
-
-    jr nz,2F
-
-    ld a,l
-    cp $e0
-    jr c,Genera_scanlines_rapidos                   ; El 1er scanline está en una dirección $50xx. Si estamos en la FILA $C0-$DF, podemos imprimir todos los scanlines del sprite.
-
-2 ld a,l
-    cp $c0
-    jp nc,Genera_scanlines_lentos                   ; En las 2 últimas líneas el Sprite sólo se imprime completo cuando el primer scanline está en una dirección $50xx.
 
 Genera_scanlines_rapidos ; -------------------------------------------------------------------------------------------------------------------------------------
 
@@ -297,15 +260,6 @@ Genera_scanlines_rapidos ; -----------------------------------------------------
 
     ld (Puntero_de_impresion_disparo_de_entidad),hl
 
-; Completamos la casilla pendiente, (define el nº total de scanlines). 
-
-    ex af,af
-
-    push af
-    pop hl
-
-    ld (hl),16
-
     ret
 
 Genera_scanlines_lentos ; -------------------------------------------------------------------------------------------------------------------------------------
@@ -357,3 +311,87 @@ Genera_scanlines_lentos ; ------------------------------------------------------
 
     ret
 
+; ------------------------------------------------------------------------------------
+;
+;   28/7/25
+;
+
+Genera_cabecera:
+
+;   Genera cabecera, y actualiza (Scanlines_album_SP) situándolo en el movimiento de la siguiente entidad.
+;   BC contendrá el nº de scanlines que vamos a imprimir.
+
+    ld (Stack),sp                                   ; Guardo SP en (Stack).
+
+    ld hl,(Scanlines_album_SP)
+
+    ld a,l
+    add 5
+    ld l,a
+
+    ld sp,hl
+    ld (Scanlines_album_SP),hl                      ; Actualiza (Scanlines_album_SP). Lo sitúa en el siguiente movimiento.
+
+    ld hl,0
+    adc hl,sp                                       ; HL posicionado para ir generando líneas tras la CABECERA.
+
+    push ix                                         ; (Puntero_de_impresion) al álbum de líneas.
+    push bc                                         ; Nº de scanlines al álbum de líneas.
+    inc sp
+    push de                                         ; (Puntero_objeto) al álbum de líneas.
+
+; Recuperamos SP.
+
+    ld sp,(Stack)
+
+    ret
+
+; ------------------------------------------------------------------------------------
+;
+;   28/7/25
+;
+;   Calcula el nº de scanlines que vamos a generar, (cuando la entidad no está apareciendo).
+;
+;   INPUTS: IX y HL contienen (Puntero_de_impresion).
+;           DE contiene (Puntero_objeto).
+;
+;   OUTPUTS: BC contiene nº de scanlines a generar.
+;
+;   MODIFICA: A,HL y BC.
+
+Calcula_numero_de_scans
+
+    ld a,h
+    cp $50
+    jr c,1F                                         ; No hemos llegado a la parte baja de la pantalla. Nos encontramos en el 1er o 2º tercio de la pantalla.
+
+    jr nz,2F
+
+    ld a,l
+    cp $e0
+    jr c,1F                                         ; El 1er scanline está en una dirección $50xx. Si estamos en la FILA $C0-$DF, podemos imprimir todos los scanlines del sprite.
+
+2 ld a,l
+    cp $c0
+    jr nc,Calcula_scans_lentos                      ; En las 2 últimas líneas el Sprite sólo se imprime completo cuando el primer scanline está en una dirección $50xx.
+
+1 ld b,16
+    ld c,0
+    ret
+
+Calcula_scans_lentos
+
+    ld a,$57
+    sub h
+    ld b,a
+
+    ld a,$df
+    cp l
+    ret c
+
+    ld a,b
+    add 8
+    ld b,a
+    ld c,0
+
+    ret
