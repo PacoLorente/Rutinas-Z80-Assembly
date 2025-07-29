@@ -55,7 +55,7 @@ Genera_datos_de_impresion:
     add b
     ld b,a
 
-Modifica_puntero_objeto jr $
+Modifica_puntero_objeto jr Posiblemente_completo
 
 ; Salimos si no hay scanlines que imprimir.
 
@@ -97,13 +97,13 @@ Posiblemente_completo
     push ix
     pop hl                                          ; (Puntero_de_impresion) en HL.
 
-    ld c,b                                          ; Copia de respaldo del nº de scanlines en C.
+    dec b
 
 Genera_scanlines:
 
 ;   HL contiene el 1er scanline, (Puntero_de_impresion).
 ;   DE contiene (Scanlines_album_SP).
-;   B contiene el nº de scanlines a generar.
+;   B contiene el nº de scanlines (-1) a generar.
 
 1 call NextScan
 
@@ -118,75 +118,10 @@ Genera_scanlines:
     
     djnz 1B
 
-    jr $
-
-;   Vamos a guardar esta dirección de VRAM por si hay que generar un disparo, así no habra que hacer_
-;   _ 16 o 17 llamadas a Nextscan. Una entidad con "permiso de disparo" siempre utiliza esta rutina para_
-;   _ generar sus scanlines.
-
-;    ld (Puntero_de_impresion_disparo),de
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
 ; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
 
-    ld (Scanlines_album_SP),hl
-
-    ex de,hl
-
+    ld (Scanlines_album_SP),de
     ld (Puntero_de_impresion_disparo_de_entidad),hl
-
-    ret
-
-Genera_scanlines_lentos ; -------------------------------------------------------------------------------------------------------------------------------------
-
-; En 1er lugar calculamos el nº de scanlines que podemos imprimir.
-
-    ld a,$57
-    sub h
-    ld b,a
-
-    ld a,$df
-    cp l 
-    jr c,1F 
-
-    ld a,8
-    add b
-    ld b,a
-
-; Tenemos en el registro B el nº de scanlines que podemos imprimir del sprite. 
-; Generamos scanlines de objeto que desaparece por la parte baja de la pantalla.
-
-1 ld c,b
-    inc c
-
-    inc b
-    dec b
-    jr nz,3F
-
-    jr 6F
-
-3 call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-    djnz 3B
-
-6 ld (Scanlines_album_SP),de
-
-5 ex af,af
-    push af
-    pop hl    
-
-    ld (hl),c
 
     ret
 
@@ -254,7 +189,7 @@ Calcula_numero_de_scans
     cp $c0
     jr nc,Calcula_scans_desapareciendo              ; En las 2 últimas líneas el Sprite sólo se imprime completo cuando el primer scanline está en una dirección $50xx.
 
-1 ld b,15
+1 ld b,16
     ld c,0
     ret
 
