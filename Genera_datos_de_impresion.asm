@@ -79,8 +79,9 @@ Zona_ROM
     ld c,b                                          ; Cuando no se generan scans., BC siempre será "0".
 
     call Genera_cabecera
-    ret
 
+    ret
+; -------------------------------------------------------------------
 
 ;   IX y HL contienen (Puntero_de_impresion). DE contiene (Puntero_objeto).
 
@@ -89,152 +90,35 @@ Posiblemente_completo
     call Calcula_numero_de_scans
     call Genera_cabecera
 
+;   En este punto HL contiene (Scanlines_album_SP) y DE (Puntero_objeto).
+
+    ex de,hl
+
+    push ix
+    pop hl                                          ; (Puntero_de_impresion) en HL.
+
+    ld c,b                                          ; Copia de respaldo del nº de scanlines en C.
+
+Genera_scanlines:
+
+;   HL contiene el 1er scanline, (Puntero_de_impresion).
+;   DE contiene (Scanlines_album_SP).
+;   B contiene el nº de scanlines a generar.
+
+1 call NextScan
+
+    ex de,hl
+
+    ld (hl),e
+    inc hl
+    ld (hl),d
+    inc hl
+
+    ex de,hl
+    
+    djnz 1B
+
     jr $
-
-Genera_scanlines_rapidos ; -------------------------------------------------------------------------------------------------------------------------------------
-
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-    
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-    
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-    
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-    
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-    
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-    
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-    
-    call NextScan
-    ex de,hl
-
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
-
-    ex de,hl
-
-    call NextScan
-    ex de,hl
 
 ;   Vamos a guardar esta dirección de VRAM por si hay que generar un disparo, así no habra que hacer_
 ;   _ 16 o 17 llamadas a Nextscan. Una entidad con "permiso de disparo" siempre utiliza esta rutina para_
@@ -252,11 +136,6 @@ Genera_scanlines_rapidos ; -----------------------------------------------------
     ld (Scanlines_album_SP),hl
 
     ex de,hl
-
-; El disparo aparecerá dos líneas por debajo de la entidad.
-
-;    call NextScan
-;    call NextScan
 
     ld (Puntero_de_impresion_disparo_de_entidad),hl
 
@@ -373,13 +252,13 @@ Calcula_numero_de_scans
 
 2 ld a,l
     cp $c0
-    jr nc,Calcula_scans_lentos                      ; En las 2 últimas líneas el Sprite sólo se imprime completo cuando el primer scanline está en una dirección $50xx.
+    jr nc,Calcula_scans_desapareciendo              ; En las 2 últimas líneas el Sprite sólo se imprime completo cuando el primer scanline está en una dirección $50xx.
 
-1 ld b,16
+1 ld b,15
     ld c,0
     ret
 
-Calcula_scans_lentos
+Calcula_scans_desapareciendo
 
     ld a,$57
     sub h
