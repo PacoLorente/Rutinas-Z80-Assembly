@@ -26,8 +26,6 @@ Indice_de_niveles
 
 Nivel_1 db 20
 
-;	db 1,2,3
-
 	db 3,2,1,2,3
 	db 3,3,1,1,2
 	db 3,3,2,1,2

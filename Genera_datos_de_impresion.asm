@@ -98,6 +98,9 @@ Posiblemente_completo
     pop hl                                          ; (Puntero_de_impresion) en HL.
 
     dec b
+    jr nz,Genera_scanlines
+
+    inc b                                           ; El nº de scanlines no puede ser "0".
 
 Genera_scanlines:
 
@@ -162,7 +165,7 @@ Genera_cabecera:
 
 ; ------------------------------------------------------------------------------------
 ;
-;   28/7/25
+;   30/7/25
 ;
 ;   Calcula el nº de scanlines que vamos a generar, (cuando la entidad no está apareciendo).
 ;
@@ -175,22 +178,33 @@ Genera_cabecera:
 
 Calcula_numero_de_scans
 
+    ld c,0
+
     ld a,h
     cp $50
     jr c,1F                                         ; No hemos llegado a la parte baja de la pantalla. Nos encontramos en el 1er o 2º tercio de la pantalla.
 
+;   En el último tercio de pantalla...
+
     jr nz,2F
+
+;   Situación: Último tercio de pantalla y 1er scan de la Fila.
 
     ld a,l
     cp $e0
-    jr c,1F                                         ; El 1er scanline está en una dirección $50xx. Si estamos en la FILA $C0-$DF, podemos imprimir todos los scanlines del sprite.
+    jr c,1F                                         ; Siempre que no estemos en la última Fila de pantalla se generarán 16 scanlines, (entidad completa).
+
+;   Situación: Último tercio de pantalla, (del 2º scan. en adelante de la Fila).
 
 2 ld a,l
     cp $c0
     jr nc,Calcula_scans_desapareciendo              ; En las 2 últimas líneas el Sprite sólo se imprime completo cuando el primer scanline está en una dirección $50xx.
 
+
+;   Entidad completa. Se generan 16 scanlines para imprimir.
+
 1 ld b,16
-    ld c,0
+
     ret
 
 Calcula_scans_desapareciendo
@@ -199,13 +213,15 @@ Calcula_scans_desapareciendo
     sub h
     ld b,a
 
-    ld a,$df
+    inc b
+
+    ld a,$e0
     cp l
+
     ret c
 
     ld a,b
     add 8
     ld b,a
-    ld c,0
 
     ret
