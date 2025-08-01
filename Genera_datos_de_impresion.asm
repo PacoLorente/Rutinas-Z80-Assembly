@@ -18,23 +18,23 @@ Genera_datos_de_impresion:
 
     ld a,h
     cp $40
-    jr c,Zona_ROM                                   ; La entidad se comienza a pintar en la ROM. No se generarán scanlines.
+    jr c,No_scanlines                               ; La entidad se comienza a pintar en la ROM. No se generarán scanlines.
 
 ;   El objeto se imprime dentro de la pantalla, (NO ROM).
 
     call calcula_tercio                             ; HL contiene (Puntero_de_impresion).
     and a
-    jr nz,Posiblemente_completo
+    jr nz,Completo_o_desapareciendo
 
 ;   La entidad se imprime en el 1er tercio de la pantalla. "0" scans. si (Puntero_de_impresion) se encuentra en la 1ª Fila de la pantalla.
 
     ld a,l
     cp $20
-    jr c,Zona_ROM                                   ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
+    jr c,No_scanlines                               ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
 
     ld a,l
     cp $60
-    jr nc,Posiblemente_completo
+    jr nc,Completo_o_desapareciendo
 
 ; La entidad no se imprimirá entera. Va a ir apareciendo por la parte baja del marcador.
 ; Calculamos el nº de scanlines que vamos a imprimir.
@@ -42,9 +42,14 @@ Genera_datos_de_impresion:
 
     ld a,h
     sub $40
-    ld b,a                                          ; Nº de scanlines en B.
+    ld b,a                                          ; Nº de scanlines en B. Si el 1er scanline es $40XX, siendo XX la segunda fila de pantalla: [No_scanlines].
+    jr nz,2F
 
     ld a,l
+    cp $40
+    jr c,No_scanlines
+
+2 ld a,l
     add $40
     ld l,a
 
@@ -55,23 +60,15 @@ Genera_datos_de_impresion:
     add b
     ld b,a
 
-Modifica_puntero_objeto jr Posiblemente_completo
+Modifica_puntero_objeto
 
-; Salimos si no hay scanlines que imprimir.
-
-;    inc b
-;    dec b
-;    jr z,Cero_scans
-
-;    ld h,$40                                       ; (Puntero_de_impresion) en HL.
-
-;    di
-;    jr $
-;    ei
+    ld h,$40
+    ld c,0
+    jr Completo_o_desapareciendo
 
 ; -------------------------------------------------------------------
 
-Zona_ROM
+No_scanlines
 
 ;   No se generarán scanlines. B="0", generamos cabecera, actualizamos (Scanlines_album_SP) y RET.
 
@@ -85,7 +82,7 @@ Zona_ROM
 
 ;   IX y HL contienen (Puntero_de_impresion). DE contiene (Puntero_objeto).
 
-Posiblemente_completo
+Completo_o_desapareciendo
 
     call Calcula_numero_de_scans
     call Genera_cabecera
@@ -102,7 +99,7 @@ Posiblemente_completo
 
     inc b                                           ; El nº de scanlines no puede ser "0".
 
-Genera_scanlines:
+Genera_scanlines
 
 ;   HL contiene el 1er scanline, (Puntero_de_impresion).
 ;   DE contiene (Scanlines_album_SP).
@@ -130,13 +127,34 @@ Genera_scanlines:
 
 ; ------------------------------------------------------------------------------------
 ;
-;   28/7/25
+;   1/8/25
 ;
 
 Genera_cabecera:
 
 ;   Genera cabecera, y actualiza (Scanlines_album_SP) situándolo en el movimiento de la siguiente entidad.
 ;   BC contendrá el nº de scanlines que vamos a imprimir.
+
+    ld a,b
+    and a
+    jr nz,Generando_scans
+
+No_se_generan_scans
+
+    ld hl,(Scanlines_album_SP)
+
+    inc hl
+    inc hl
+
+    ld (hl),a                                       ; "0" scans.
+
+    inc hl
+
+    ld (Scanlines_album_SP),hl                      ; Actualiza (Scanlines_album_SP). Lo sitúa en el siguiente movimiento.
+
+    ret
+
+Generando_scans
 
     ld (Stack),sp                                   ; Guardo SP en (Stack).
 
