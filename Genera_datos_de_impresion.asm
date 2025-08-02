@@ -26,7 +26,7 @@ Genera_datos_de_impresion:
     and a
     jr nz,Completo_o_desapareciendo
 
-;   La entidad se imprime en el 1er tercio de la pantalla. "0" scans. si (Puntero_de_impresion) se encuentra en la 1ª Fila de la pantalla.
+;   1er Tercio de pantalla !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
     ld a,l
     cp $20
@@ -56,6 +56,10 @@ Genera_datos_de_impresion:
     cp $80
     jr c,Modifica_puntero_objeto
 
+    ld a,l
+    sub $20
+    ld l,a
+
     ld a,8
     add b
     ld b,a
@@ -63,8 +67,36 @@ Genera_datos_de_impresion:
 Modifica_puntero_objeto
 
     ld h,$40
+
+    push hl
+    pop ix
+
+    ld c,b                                          ; Posiciona HL en el 1er scan.
+
+;   Modificamos ahora (Puntero_objeto).
+
+    ld a,16
+    sub b
+    ld b,a
+
+    ld a,e
+
+    add b
+    add b
+    add b
+
+    ld e,a
+
+    ld b,c
     ld c,0
-    jr Completo_o_desapareciendo
+
+;   En este punto DE contiene (Puntero_objeto)
+;   HL y IX contienen (Puntero_de_impresion)
+;   BC contiene Nº de scanlines a generar.
+
+    call Genera_cabecera
+    call Genera_scanlines
+    ret
 
 ; -------------------------------------------------------------------
 
@@ -74,10 +106,9 @@ No_scanlines
 
     ld b,0
     ld c,b                                          ; Cuando no se generan scans., BC siempre será "0".
-
     call Genera_cabecera
-
     ret
+
 ; -------------------------------------------------------------------
 
 ;   IX y HL contienen (Puntero_de_impresion). DE contiene (Puntero_objeto).
@@ -86,8 +117,18 @@ Completo_o_desapareciendo
 
     call Calcula_numero_de_scans
     call Genera_cabecera
+    call Genera_scanlines
+    ret
 
-;   En este punto HL contiene (Scanlines_album_SP) y DE (Puntero_objeto).
+; ------------------------------------------------------------------------------------
+;
+;   2/8/25
+;
+;   INPUTS: HL (Scanlines_album).
+;           DE (Puntero_objeto).
+;           BC (Nº de scanlines).
+
+Genera_scanlines:
 
     ex de,hl
 
@@ -95,11 +136,7 @@ Completo_o_desapareciendo
     pop hl                                          ; (Puntero_de_impresion) en HL.
 
     dec b
-    jr nz,Genera_scanlines
-
-    inc b                                           ; El nº de scanlines no puede ser "0".
-
-Genera_scanlines
+    ret z
 
 ;   HL contiene el 1er scanline, (Puntero_de_impresion).
 ;   DE contiene (Scanlines_album_SP).
@@ -115,7 +152,7 @@ Genera_scanlines
     inc hl
 
     ex de,hl
-    
+
     djnz 1B
 
 ; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
@@ -194,7 +231,7 @@ Generando_scans
 ;
 ;   MODIFICA: A,HL y BC.
 
-Calcula_numero_de_scans
+Calcula_numero_de_scans:
 
     ld c,0
 
@@ -212,6 +249,11 @@ Calcula_numero_de_scans
     cp $e0
     jr c,1F                                         ; Siempre que no estemos en la última Fila de pantalla se generarán 16 scanlines, (entidad completa).
 
+    ld b,8
+    ret
+
+
+
 ;   Situación: Último tercio de pantalla, (del 2º scan. en adelante de la Fila).
 
 2 ld a,l
@@ -227,11 +269,11 @@ Calcula_numero_de_scans
 
 Calcula_scans_desapareciendo
 
-    ld a,$57
+    ld a,$58
     sub h
     ld b,a
 
-    inc b
+;    inc b
 
     ld a,$e0
     cp l
