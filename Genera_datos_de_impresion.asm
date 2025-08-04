@@ -36,18 +36,20 @@ Genera_datos_de_impresion:
     cp $60
     jr nc,Completo_o_desapareciendo
 
-; La entidad no se imprimirá entera. Va a ir apareciendo por la parte baja del marcador.
-; Calculamos el nº de scanlines que vamos a imprimir.
-; (Puntero_de_impresion) se encuentra en la 2ª o 3ª Fila de la pantalla.
+;   La entidad no se imprimirá entera. Va a ir apareciendo por la parte baja del marcador.
+;   Calculamos el nº de scanlines que vamos a imprimir.
+;   (Puntero_de_impresion) se encuentra en la 2ª o 3ª Fila de la pantalla.
 
     ld a,h
     sub $40
     ld b,a                                          ; Nº de scanlines en B. Si el 1er scanline es $40XX, siendo XX la segunda fila de pantalla: [No_scanlines].
     jr nz,2F
 
+;   Estamos en una línea $40 y apareciendo.
+
     ld a,l
     cp $40
-    jr c,No_scanlines
+    jr c,No_scanlines                               ; Si estamos en la 2ª Fila la entidad quedaría oculta, jr [No_scanlines].
 
 2 ld a,l
     add $40
@@ -250,9 +252,8 @@ Calcula_numero_de_scans:
     jr c,1F                                         ; Siempre que no estemos en la última Fila de pantalla se generarán 16 scanlines, (entidad completa).
 
     ld b,8
+
     ret
-
-
 
 ;   Situación: Último tercio de pantalla, (del 2º scan. en adelante de la Fila).
 
@@ -273,12 +274,14 @@ Calcula_scans_desapareciendo
     sub h
     ld b,a
 
-;    inc b
+;    di
+;    jr $
+;    ei
 
-    ld a,$e0
-    cp l
+    ld a,l
+    cp $e0
 
-    ret c
+    ret nc
 
     ld a,b
     add 8
