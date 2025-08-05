@@ -426,9 +426,6 @@ Imprime_scanlines_en_pantalla
 
 Pinta_Sprites:
 
-
- ;   jr $
-
     ld (Stack),sp
  
     ex de,hl                            ; HL se encuentra en el álbum de líneas.

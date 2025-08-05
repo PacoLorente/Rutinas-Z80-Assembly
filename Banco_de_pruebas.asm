@@ -70,13 +70,13 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 	push af
 	push hl
 
-;! ------------------- STOP si no hemos terminado de construir el FRAME.
+;	! ------------------- STOP si no hemos terminado de construir el FRAME.
 	ld hl,Ctrl_3				
 	bit 0,(hl)
 	jr z,$
-;! -------------------
+;	! -------------------
 
-; Actualiza marcadores.
+; 	Actualiza marcadores.
 
 	ld hl,Ctrl_2
 	bit 7,(hl)
@@ -86,9 +86,9 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 	bit 6,(hl)
 	call nz,Borra_vida
 
-; Disparos.
+; 	Disparos.
 
-	call Pinta_disparos_Amadeus 
+	call Pinta_disparos_Amadeus
 	call Pinta_disparos_Entidades
 
 ; Actualiza variables Shield ----------------------- ----------------------- ------------------------  
@@ -665,7 +665,7 @@ INICIALIZACION
 
 ;	Transición de entrada.
 
-	call Transicion_de_entrada
+;	call Transicion_de_entrada
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
@@ -687,25 +687,27 @@ Main
 	jr nz,$ 												; Nivel Superado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	ei
 
-; Gestión de disparos.
+; 	Gestión de disparos.
 
 	call Change_Disparos									; Intercambiamos los álbumes de disparos.
 	call Motor_de_disparos_entidades
 	call Motor_Disparos_Amadeus								; Mueve y detecta colisión de los disparos de Amadeus.
 
-; En el FRAME que acabamos de pintar puede existir una posible colisión entre alguna entidad y Amadeus. 
-; Si alguna de las coordenadas_X de alguna entidad que esté en zona de Amadeus coincide con alguna de las coordenadas_X de Amadeus, habrá que comprobar si existe colisión.
-; Este hecho lo indica el bit2 de (Impacto2).
+; 	En el FRAME que acabamos de pintar puede existir una posible colisión entre alguna entidad y Amadeus.
+; 	Si alguna de las coordenadas_X de alguna entidad que esté en zona de Amadeus coincide con alguna de las coordenadas_X de Amadeus, habrá que comprobar si existe colisión.
+; 	Este hecho lo indica el bit2 de (Impacto2).
 
 	call Detecta_colision_nave_entidad 						; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
 
-; TEMPORIZACIONES !!!!!!!!!!!!!!!!
-
-;! ON/OF disparo de entidades:
+; 	TEMPORIZACIONES !!!!!!!!!!!!!!!!
 
 	ld hl,CLOCK_disparos_de_entidades
 	dec (hl)
-	call z,Autoriza_disparo_de_entidades
+
+;	*****************************************************************************
+;	*****************************************************************************
+;	***** Comentando la siguiente línea eliminamos los disparos de las entidades.
+;	call z,Autoriza_disparo_de_entidades
 
 ;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
 
@@ -2072,9 +2074,9 @@ Pintando_entidades
 
 ;	Recabamos los datos de la (Tabla_de_pintado).
 
-3 ld hl,(India_SP) 						
+3 ld hl,(India_SP) 											; (India_SP) se encuentra al comienzo de la TABLA_DE_PINTADO.
 
-	inc l
+	inc l													; Nota: No cambia el byte alto en las tablas de pintado y borrado.
 
 	ld a,(hl) 							
 	and a
@@ -2096,9 +2098,9 @@ Pintando_entidades
 
 	ld (India_SP),de 										; Puntero (India_SP) situado en la siguiente línea de la tabla.
 ;
-;															; Tenemos: C, (Columna_Y).
-; 												  			 B, (Attr).
-; 												  			 A, (Columnas).
+;															; Tenemos: 	C, (Attr).
+; 												  			 			A, (Columnas).
+;																	   HL, (Datos_en_album_de_pintado).
 
 ; Datos a Tabla_de_borrado.
 
