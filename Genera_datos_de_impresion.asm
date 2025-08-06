@@ -1,10 +1,13 @@
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	28/7/25
+;	6/8/25
 ;
-;   (Scanlines_album_SP) se sitúa inicialmente al comienzo de Scanlines_album.
+;   INPUTS:
+;
 ;   DE contiene Puntero_objeto.
-;   IX contiene el Puntero de impresión.
+;   HL contiene el Puntero de impresión.
+;
+;   MODIFY: A,IX,HL,BC y DE.
 
 Genera_datos_de_impresion:
 
@@ -13,8 +16,8 @@ Genera_datos_de_impresion:
 ;   Cuando el (Puntero_de_impresion) se genera en la 2ª o 3ª línea de pantalla hay que calcular el nº de scanlines que pintamos del Sprite. Como el Sprite está apareciendo_
 ;   _ por la parte alta de la pantalla hay que sitúar (Puntero_objeto) en la línea de datos correspondiente.
 
-    push ix
-    pop hl                                          ; (Puntero_de_impresion) en HL.
+    push hl
+    pop ix                                          ; (Puntero_de_impresion) en HL e IX.
 
     ld a,h
     cp $40
@@ -104,11 +107,12 @@ Modifica_puntero_objeto
 
 No_scanlines
 
-;   No se generarán scanlines. B="0", generamos cabecera, actualizamos (Scanlines_album_SP) y RET.
+    ld hl,Ctrl_4
+    set 7,(hl)                                       ; Indica que esta unidad no se imprime. NO SE AÑADE A LA TABLA DE PINTADO.
 
-    ld b,0
-    ld c,b                                          ; Cuando no se generan scans., BC siempre será "0".
-    call Genera_cabecera
+    push ix
+    pop hl                                           ; RET con el (Puntero_de_impresion) en HL e IX.
+
     ret
 
 ; -------------------------------------------------------------------
@@ -162,38 +166,20 @@ Genera_scanlines:
     ld (Scanlines_album_SP),de
     ld (Puntero_de_impresion_disparo_de_entidad),hl
 
+    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
+    pop hl
+
     ret
 
 ; ------------------------------------------------------------------------------------
 ;
-;   1/8/25
+;   6/8/25
 ;
 
 Genera_cabecera:
 
 ;   Genera cabecera, y actualiza (Scanlines_album_SP) situándolo en el movimiento de la siguiente entidad.
 ;   BC contendrá el nº de scanlines que vamos a imprimir.
-
-    ld a,b
-    and a
-    jr nz,Generando_scans
-
-No_se_generan_scans
-
-    ld hl,(Scanlines_album_SP)
-
-    inc hl
-    inc hl
-
-    ld (hl),a                                       ; "0" scans.
-
-    inc hl
-
-    ld (Scanlines_album_SP),hl                      ; Actualiza (Scanlines_album_SP). Lo sitúa en el siguiente movimiento.
-
-    ret
-
-Generando_scans
 
     ld (Stack),sp                                   ; Guardo SP en (Stack).
 
@@ -222,7 +208,7 @@ Generando_scans
 
 ; ------------------------------------------------------------------------------------
 ;
-;   30/7/25
+;   6/8/25
 ;
 ;   Calcula el nº de scanlines que vamos a generar, (cuando la entidad no está apareciendo).
 ;
@@ -273,10 +259,6 @@ Calcula_scans_desapareciendo
     ld a,$58
     sub h
     ld b,a
-
-;    di
-;    jr $
-;    ei
 
     ld a,l
     cp $e0

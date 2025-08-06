@@ -460,7 +460,7 @@ Ctrl_4 db 0													; 4º Byte de Ctrl. general, (no específico) a una úni
 ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta?.
 ; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
 ;															BIT 5, "1" Indica que ha terminado la transición de salida de Amadeus por la parte baja de la pantalla.
-
+;															BIT 6  "1" Indica aL reloj IM2 que ha de borrar una vida de la pantalla.
 
 
 Ctrl_5 db 0
