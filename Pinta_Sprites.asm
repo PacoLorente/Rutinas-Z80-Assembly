@@ -435,14 +435,16 @@ Pinta_Sprites:
 
     ld b,(hl)                           ; B contiene el nº de scanlines a imprimir.
 
-    inc b
-    dec b
-    jr nz,13F
+;    inc b
+;    dec b
+;    jr nz,13F
 
-    ld sp,(Stack)
-    ret
+;    ld sp,(Stack)
+;    ret
 
-13 inc l
+13 
+
+    inc l
     ld sp,hl                            ; El SP irá extrayendo scanlines en HL.
 
 ;   Seleccionamos rutina de impresión:

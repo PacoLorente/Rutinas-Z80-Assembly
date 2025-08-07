@@ -862,10 +862,6 @@ Bucle_de_entidades
 	push hl
 	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
 
-	di
-	jr $
-	ei
-
 	push de                                                         ; PUSH (Puntero_de_impresion).
 	call Genera_datos_de_impresion									; No se generan datos de impresión si el objeto está por detrás del panel marcador del juego.
 	call Genera_coordenadas
@@ -882,7 +878,9 @@ Bucle_de_entidades
 	bit 7,a
 	jr nz,12F
 
+	push af
 	call Entidad_a_Tabla_de_pintado									; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
+	pop af
 
 12 res 7,a
 	ld (Ctrl_4),a
@@ -1349,7 +1347,7 @@ Entidad_a_Tabla_de_pintado
 	ld (hl),a 		 										; (Columnas).
 	inc l
 
-	ld de,(Scanlines_album_SP)
+	ld de,(Puntero_tabla_Random)
 
 	ld (hl),e   
 	inc l
@@ -2096,7 +2094,7 @@ Pintando_entidades
 
 ;	Recabamos los datos de la (Tabla_de_pintado).
 
-3 ld hl,(India_SP) 											; (India_SP) se encuentra al comienzo de la TABLA_DE_PINTADO.
+3 ld hl,(India_SP) 										; (India_SP) se encuentra al comienzo de la TABLA_DE_PINTADO.
 
 	inc l													; Nota: No cambia el byte alto en las tablas de pintado y borrado.
 
