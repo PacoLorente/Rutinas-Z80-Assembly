@@ -850,32 +850,46 @@ Bucle_de_entidades
 ;		    												; (Puntero_de_impresion) codificado en BC.
 	call Decodifica_Puntero_de_impresion
 
-;	IX apunta al 1er .db de la caja.
-;	DE (Puntero_objeto).
+	push bc
+	pop hl
 
-	push de 												; (Puntero_objeto).
-	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
-;	call Ajusta_velocidad_entidad							; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
+;	Nota: En este punto: BC y HL contienen el (Puntero_de_impresion).
+;						 IX contiene (1er_db_caja_de_entidades).
+;						 DE contiene (Puntero_objeto).
+
+	push ix  														; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
+
+	push hl
+	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
+
+	di
+	jr $
+	ei
+
+	push de                                                         ; PUSH (Puntero_de_impresion).
+	call Genera_datos_de_impresion									; No se generan datos de impresión si el objeto está por detrás del panel marcador del juego.
+	call Genera_coordenadas
 	pop de
 
-	push ix													; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
-	ld ix,(Puntero_de_impresion)
-	call Genera_datos_de_impresion
-	pop ix													; Pop .db (Tipo) de la entidad, (caja de entidades correspondiente) en IX.
+	pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+
+	ld bc,(Coordenada_X)
+
+	ld (ix+2),c
+	ld (ix+3),b														; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+
+	ld a,(Ctrl_4)
+	bit 7,a
+	jr nz,12F
+
+	call Entidad_a_Tabla_de_pintado									; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
+
+12 res 7,a
+	ld (Ctrl_4),a
 
 	call Decrementa_Contador_de_mov_masticados					
 
 ; -------------------------------------------
-
-;	Generamos las coordenadas de la entidad que hemos iniciado o desplazado.
-
-	ld hl,(Puntero_de_impresion)
-	call Genera_coordenadas
-
-	ld bc,(Coordenada_X)
-
-	ld (ix+2),c												; Actualiza las coordenadas de la entidad.
-	ld (ix+3),b			
 
 ;	TODO: Generamos disparo ???
 
@@ -1759,7 +1773,7 @@ Cargamos_registros_con_mov_masticado_Amadeus
 
 ; ---------------------------------------------------------------------------------------------------------------------
 ;
-;	18/6/24
+;	07/08/25
 ;
 ;	Genera la coordenada X de Amadeus y los datos de impresión de la nave en su (Album_de_pintado_Amadeus).
 
@@ -1774,6 +1788,9 @@ Genera_datos_de_impresion_Amadeus
 
 	call Cargamos_registros_con_mov_masticado_Amadeus	
 
+;	DE contiene (Puntero_objeto) de Amadeus.
+;	IX contiene (Puntero-de_impresion).
+
 1 ld a,ixl
 	and $1f
 	ld (CX_Amadeus),a 										; Coordenada X del Amadeus, (0-$1f). Columnas.
@@ -1781,8 +1798,13 @@ Genera_datos_de_impresion_Amadeus
 	ld hl,(Scanlines_album_SP)
 	push hl
 
+;	Posicionamos (Scanlines_album_SP) en el álbum de líneas de Amadeus.
+
 	ld hl,(Album_de_pintado_Amadeus)
 	ld (Scanlines_album_SP),hl
+
+	push ix
+	pop hl 													; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
 
 	call Genera_datos_de_impresion
 

@@ -4,8 +4,8 @@
 ;
 ;   INPUTS:
 ;
-;   DE contiene Puntero_objeto.
-;   HL contiene el Puntero de impresión.
+;   DE contiene (Puntero_objeto).
+;   HL e IX contienen (Puntero_de_impresion).
 ;
 ;   MODIFY: A,IX,HL,BC y DE.
 
@@ -15,9 +15,6 @@ Genera_datos_de_impresion:
 ;   No se han de generar scanlines cuando la entidad se imprima en zona de ROM o completamente en zona de MARCADOR de pantalla, (3 primeras líneas).
 ;   Cuando el (Puntero_de_impresion) se genera en la 2ª o 3ª línea de pantalla hay que calcular el nº de scanlines que pintamos del Sprite. Como el Sprite está apareciendo_
 ;   _ por la parte alta de la pantalla hay que sitúar (Puntero_objeto) en la línea de datos correspondiente.
-
-    push hl
-    pop ix                                          ; (Puntero_de_impresion) en HL e IX.
 
     ld a,h
     cp $40

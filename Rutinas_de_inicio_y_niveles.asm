@@ -727,7 +727,8 @@ Prepara_Cajas_de_Entidades
 ;						 IX contiene (1er_db_caja_de_entidades).
 ;						 DE contiene (Puntero_objeto).
 
-	jr $
+	push hl
+	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
 
 	push de                                                         ; PUSH (Puntero_de_impresion).
 	call Genera_datos_de_impresion									; No se generan datos de impresión si el objeto está por detrás del panel marcador del juego.
