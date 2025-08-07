@@ -712,8 +712,6 @@ Prepara_Cajas_de_Entidades
 ; ------------------------------------------------------ IX
 ; ------------------------------------------------------ IX
 
-	push ix															; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
-
 	call Obtenemos_puntero_de_impresion
 	call Decodifica_Puntero_de_impresion
 
@@ -726,6 +724,8 @@ Prepara_Cajas_de_Entidades
 ;	Nota: En este punto: BC y HL contienen el (Puntero_de_impresion).
 ;						 IX contiene (1er_db_caja_de_entidades).
 ;						 DE contiene (Puntero_objeto).
+
+	push ix															; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
 	push hl
 	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].

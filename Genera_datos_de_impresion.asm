@@ -181,7 +181,7 @@ Genera_cabecera:
     ld (Stack),sp                                   ; Guardo SP en (Stack).
 
     ld hl,(Scanlines_album_SP)
-    ld (Puntero_tabla_Random),hl                    ; Copia de respaldo de (Scanlines_album_SP). Se utilizará más adelante en la tabla de pintado.
+    ld (Mantequilla),hl                             ; Copia de respaldo de (Scanlines_album_SP). Se utilizará más adelante en la tabla de pintado.
 
     ld a,l
     add 5

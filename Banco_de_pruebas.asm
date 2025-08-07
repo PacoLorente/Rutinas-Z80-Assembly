@@ -537,6 +537,7 @@ Shield_3 db 0
 Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
 Puntero_de_vidas defw Indice_de_vidas
 
+Mantequilla defw 0
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -1347,7 +1348,7 @@ Entidad_a_Tabla_de_pintado
 	ld (hl),a 		 										; (Columnas).
 	inc l
 
-	ld de,(Puntero_tabla_Random)
+	ld de,(Mantequilla)
 
 	ld (hl),e   
 	inc l
@@ -2357,6 +2358,10 @@ Borra_entidad_colisionada
 
 1 call Cargamos_registros_con_explosion
 	call calcula_CColumnass_Explosion_entidad
+
+	di
+	jr $
+	ei
 
 	push ix 												; (Puntero_de_impresion).
 	push de 												; (Puntero_objeto).
