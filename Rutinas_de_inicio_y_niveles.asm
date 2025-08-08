@@ -1,4 +1,4 @@
-; ---------------------------------------------------------------------------------------------------------------------
+	; ---------------------------------------------------------------------------------------------------------------------
 ;
 ;	13/03/24
 ;
@@ -676,7 +676,6 @@ Prepara_Cajas_de_Entidades
 ; Preparamos los punteros de las cajas de entidades:
 
 
-
 	call Inicia_punteros_de_cajas									; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
 ;																	; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
 	call Inicializa_Numero_parcial_de_entidades						; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
@@ -705,55 +704,7 @@ Prepara_Cajas_de_Entidades
 
 ;																	; DE apunta ahora al 1er .db de la siguiente caja de entidades.
 
-; En este punto debemos generar coordenadas y puntero de impresión.:
-;
-; ------------------------------------------------------ IX
-; ------------------------------------------------------ IX
-; ------------------------------------------------------ IX
-; ------------------------------------------------------ IX
-
-	call Obtenemos_puntero_de_impresion
-	call Decodifica_Puntero_de_impresion
-
-	ld (ix+6),c
-	ld (ix+7),b 													; (Puntero_de_impresion) en Caja_de_entidades.
-
-	ld l,c
-	ld h,b															; (Puntero_de_impresion) en HL.
-
-;	Nota: En este punto: BC y HL contienen el (Puntero_de_impresion).
-;						 IX contiene (1er_db_caja_de_entidades).
-;						 DE contiene (Puntero_objeto).
-
-	push ix															; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
-
-	push hl
-	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
-
-	push de                                                         ; PUSH (Puntero_de_impresion).
-	call Genera_datos_de_impresion									; No se generan datos de impresión si el objeto está por detrás del panel marcador del juego.
-	call Genera_coordenadas
-	pop de
-
-	pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
-
-	ld bc,(Coordenada_X)
-
-	ld (ix+2),c
-	ld (ix+3),b														; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
-
-	ld a,(Ctrl_4)
-	bit 7,a
-	jr nz,2F
-
-	call Entidad_a_Tabla_de_pintado									; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
-
-; Actualizamos (Contador_de_mov_masticados) tras la foto.	
-
-2 res 7,a
-	ld (Ctrl_4),a
-
-	call Decrementa_Contador_de_mov_masticados
+	call Scanlines_generator
 
 ;	Borramos las variables DRAW que hemos utilizado para preparar la Tabla_de_pintado y los scanlines_
 ;	_en el álbum_de_pintado.

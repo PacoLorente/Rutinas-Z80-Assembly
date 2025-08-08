@@ -846,47 +846,7 @@ Bucle_de_entidades
 ; 	Movement !!!
 
 3 call Ajusta_velocidad_entidad								; Ajusta el perfil de velocidad de la entidad en función de (Contader_de_vueltas).
-	call Obtenemos_puntero_de_impresion						; Cargamos los registros con el movimiento actual y `saltamos' al movimiento siguiente.
-;															; (Puntero_objeto) en DE;
-;		    												; (Puntero_de_impresion) codificado en BC.
-	call Decodifica_Puntero_de_impresion
-
-	push bc
-	pop hl
-
-;	Nota: En este punto: BC y HL contienen el (Puntero_de_impresion).
-;						 IX contiene (1er_db_caja_de_entidades).
-;						 DE contiene (Puntero_objeto).
-
-	push ix  														; Push .db (Tipo) de la entidad, (caja de entidades correspondiente).
-
-	push hl
-	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
-
-	push de                                                         ; PUSH (Puntero_de_impresion).
-	call Genera_datos_de_impresion									; No se generan datos de impresión si el objeto está por detrás del panel marcador del juego.
-	call Genera_coordenadas
-	pop de
-
-	pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
-
-	ld bc,(Coordenada_X)
-
-	ld (ix+2),c
-	ld (ix+3),b														; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
-
-	ld a,(Ctrl_4)
-	bit 7,a
-	jr nz,12F
-
-	push af
-	call Entidad_a_Tabla_de_pintado									; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
-	pop af
-
-12 res 7,a
-	ld (Ctrl_4),a
-
-	call Decrementa_Contador_de_mov_masticados					
+	call Scanlines_generator
 
 ; -------------------------------------------
 
@@ -1617,7 +1577,7 @@ Actualiza_Puntero_de_almacen_de_mov_masticados
 ;	MODIFY: A,BC,DE y HL. 
 
 
-Obtenemos_puntero_de_impresion
+Obtenemos_puntero_de_impresion:
 
 	ld l,(ix+8)
 	ld h,(ix+9)
@@ -1659,7 +1619,7 @@ Obtenemos_puntero_de_impresion
 
 ; ----- ----- ----- ----- -----
 
-Decodifica_Puntero_de_impresion 
+Decodifica_Puntero_de_impresion:
 
 ;	Inicialmente suponemos que la entidad está apareciendo por el lado izquierdo de la pantalla, (1 Columna) y (Puntero_objeto) se encuentra en ROM, (por debajo de $4000).
 
@@ -2356,25 +2316,16 @@ Borra_entidad_colisionada
 	ld a,%01000110 											; Amarillo.
 	ld (ix+13),a
 
-1 call Cargamos_registros_con_explosion
+1 push ix 													; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+
+	call Cargamos_registros_con_explosion
 	call calcula_CColumnass_Explosion_entidad
 
-	di
-	jr $
-	ei
+;	HL e IX contienen (Puntero_de_impresion). de la explosión.
+;	DE contiene (Puntero_objeto).
 
-	push ix 												; (Puntero_de_impresion).
-	push de 												; (Puntero_objeto).
-
-	ld ix,(Puntero_store_caja)
-	call Entidad_a_Tabla_de_pintado							; Almacena la Coordenada_Y y (Scanlines_album_SP) de la entidad en curso en la TABLA_DE_PINTADO.
-
-	pop de
-	pop ix
-
-	call Genera_datos_de_impresion
-
-	ld ix,(Puntero_store_caja)
+	pop ix													; Pop 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+	call Explosion_scanlines_generator
 
 	xor a
 	inc a 													; Necesario NZ a la salida de la subrutina.

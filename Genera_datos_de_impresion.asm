@@ -1,3 +1,74 @@
+; ---------------------------------------------------------------------------------------------------------------------------------------
+;
+;	8/8/25
+;
+;	Scanlines_generator.
+;
+;	Obtiene el (Puntero_de_impresion) codificado del álbum de movimientos masticados. Lo decodifica y genera sus coordenadas X e Y.
+;	Tanto el puntero decodificado como las coordenadas son actualizadas en su correspondiente `Caja_de_entidades'.
+;	Cuando que el objeto es `visible' en pantalla, (no esté situado en zona ROM ni en marcador), generará la cabecera de impresión y los scanlines correspondientes en el (Album_de_pintado).
+;	En este caso, anotará además la correspondiente línea informativa en la (Tabla_de_pintado).
+;
+;		Estructura de cada línea en la (Tabla_de_pintado):
+;
+;		(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
+;		.db, .db, .db, .defw
+;
+;	Por último; decrementa el contador (Contador_de_mov_masticados).
+;
+;	INPUTS: IX apunta al 1er .db de la `Caja_de_entidades' correspondiente.
+;
+;	MODIFY: A,BC,DE y HL
+
+Scanlines_generator:
+
+	call Obtenemos_puntero_de_impresion
+	call Decodifica_Puntero_de_impresion
+
+	ld (ix+6),c
+	ld (ix+7),b 													; (Puntero_de_impresion) en Caja_de_entidades.
+
+	ld l,c
+	ld h,b															; (Puntero_de_impresion) en HL.
+
+;	Nota: En este punto: BC y HL contienen el (Puntero_de_impresion).
+;						 IX contiene (1er_db_caja_de_entidades).
+;						 DE contiene (Puntero_objeto).
+
+Explosion_scanlines_generator
+
+    push ix								; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+
+	push hl
+	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
+
+    push de                                                         ; PUSH (Puntero_objeto).
+    call Genera_datos_de_impresion									; No se generan datos de impresión si el objeto está por detrás del panel marcador del juego.
+	call Genera_coordenadas
+	pop de                                                          ; POP (Puntero_objeto).
+
+	pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+
+	ld bc,(Coordenada_X)
+
+	ld (ix+2),c
+	ld (ix+3),b														; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+
+	ld a,(Ctrl_4)
+	bit 7,a
+	jr nz,1F
+
+	call Entidad_a_Tabla_de_pintado									; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
+
+; Actualizamos (Contador_de_mov_masticados) tras la foto.
+
+1 res 7,a
+	ld (Ctrl_4),a
+
+	call Decrementa_Contador_de_mov_masticados
+
+	ret
+
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ;	6/8/25

@@ -24,9 +24,9 @@ Indice_de_niveles
 
 ; NIVEL_1. Tres tipos de BadSat. 
 
-Nivel_1 db 1
+Nivel_1 db 4
 
-	db 1
+	db 2,3,4,2
 ;	db 3,3,4,4,2
 ;	db 3,3,2,4,2
 ;	db 3,3,2,4,2
