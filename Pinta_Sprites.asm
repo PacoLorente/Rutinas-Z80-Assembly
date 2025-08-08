@@ -442,7 +442,7 @@ Pinta_Sprites:
 ;    ld sp,(Stack)
 ;    ret
 
-13 
+;13
 
     inc l
     ld sp,hl                            ; El SP irá extrayendo scanlines en HL.

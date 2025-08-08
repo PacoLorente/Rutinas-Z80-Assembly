@@ -1486,7 +1486,7 @@ Intercambia_1_byte
 ;	INPUTS: IX contiene (Puntero_de_impresion)
 ;			IY contiene (Puntero_objeto)
 
-Codifica_Puntero_de_impresion
+Codifica_Puntero_de_impresion:
 
 	ld a,(Columnas)
 	dec a
@@ -1532,7 +1532,7 @@ Una_Columna
 
 ; ----- ----- ----- ----- -----
 
-Ajusta_Puntero_objeto 
+Ajusta_Puntero_objeto:
 
 	ld a,(Columnas)
 	ld b,a
@@ -1552,7 +1552,7 @@ Ajusta_Puntero_objeto
 ;
 ;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
 
-Actualiza_Puntero_de_almacen_de_mov_masticados 
+Actualiza_Puntero_de_almacen_de_mov_masticados:
 
 	ld hl,(Puntero_de_almacen_de_mov_masticados)
 	ld bc,4
