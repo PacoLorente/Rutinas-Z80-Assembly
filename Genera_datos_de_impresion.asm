@@ -1,6 +1,6 @@
 ; ---------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	8/8/25
+;	9/8/25
 ;
 ;	Scanlines_generator.
 ;
@@ -25,11 +25,8 @@ Scanlines_generator:
 	call Obtenemos_puntero_de_impresion
 	call Decodifica_Puntero_de_impresion
 
-	ld (ix+6),c
-	ld (ix+7),b 													; (Puntero_de_impresion) en Caja_de_entidades.
-
-	ld l,c
-	ld h,b															; (Puntero_de_impresion) en HL.
+    push bc
+    pop hl
 
 ;	Nota: En este punto: BC y HL contienen el (Puntero_de_impresion).
 ;						 IX contiene (1er_db_caja_de_entidades).
@@ -37,7 +34,7 @@ Scanlines_generator:
 
 Explosion_scanlines_generator
 
-    push ix								; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+    push ix								                             ; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
 	push hl
 	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
@@ -55,17 +52,18 @@ Explosion_scanlines_generator
 	ld (ix+3),b														; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
 
 	ld a,(Ctrl_4)
-	bit 7,a
+    push af
+
+    bit 7,a
 	jr nz,1F
 
 	call Entidad_a_Tabla_de_pintado									; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
 
-; Actualizamos (Contador_de_mov_masticados) tras la foto.
-
-1 res 7,a
+1 pop af
+    res 7,a
 	ld (Ctrl_4),a
 
-	call Decrementa_Contador_de_mov_masticados
+	call Decrementa_Contador_de_mov_masticados                     ; Actualizamos (Contador_de_mov_masticados) tras la foto.
 
 	ret
 

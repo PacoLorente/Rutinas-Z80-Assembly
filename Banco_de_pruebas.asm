@@ -1,14 +1,13 @@
 
-	include "Macros_y_herramientas.asm"
-
 	DEVICE ZXSPECTRUM48
+
+	include "Macros_y_herramientas.asm"
 
 ;	Reloj del juego. IM2 *******************************************************************************************************************************************************************
 ;
 ;	13/08/24
 ;
 ;	
-
 	org $fcff															; (Debajo de la pila).
 
 	defw $8310															; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
@@ -70,11 +69,11 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 	push af
 	push hl
 
-;	! ------------------- STOP si no hemos terminado de construir el FRAME.
+;	-------------------- STOP si no hemos terminado de construir el FRAME.
 	ld hl,Ctrl_3				
 	bit 0,(hl)
 	jr z,$
-;	! -------------------
+;	--------------------
 
 ; 	Actualiza marcadores.
 
@@ -870,11 +869,10 @@ Gestiona_siguiente_entidad
 	ld hl,Impacto2 											; Inicializamos el FLAG de impacto.
 	res 3,(hl)
 
-; 	Hemos gestionado todas las entidades.
-; 	----- ----- -----
+; 	Hemos gestionado todas las entidades.					--------------------------------------------------------------------------------------------------
 
 	call Inicializa_India_y_limpia_Tabla_de_impresion 		; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
-	call Ordena_tabla_de_impresion
+;	call Ordena_tabla_de_impresion
 	call Inicia_punteros_de_cajas 							; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
 
 	call Borra_diferencia
@@ -1357,7 +1355,7 @@ Ordena_tabla_de_impresion
 ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
 
 	ld a,(Entidades_en_curso)
-	cp 4 	
+	cp 4
 	ret c 													; < 4 entidades, no ordenamos la Tabla.
 
 	dec a
@@ -1366,21 +1364,23 @@ Ordena_tabla_de_impresion
 
 	ld a,(hl)												; Nº de Fila de la 1ª entidad, (1er byte de la tabla).
 	ld hl,Tabla_de_pintado+5
-	ld b,(hl)
+	ld b,(hl) 												; Nº de Fila de la 2ª entidad a comparar.
 
-	ld (India_2_SP),hl
+	ld (India_2_SP),hl										; Apunta a la segunda entidad a comparar.
 
 ; --- --- --- --- --- --- ---
 ;
 ;	Comparador.
 
 1 cp b  				 						
+
 	jr c, Avanza_India_2_SP
 	jr z, Avanza_India_2_SP
 ;
 ; --- --- --- --- --- --- --- 
 
 	call Trueque
+
 	jr Avanza_India_2_SP
 
 	ret
@@ -1398,13 +1398,14 @@ Avanza_India_2_SP
 	inc l
 
 	ld b,(hl)
+
 	ld (India_2_SP),hl 										; Siguiente entidad en la Tabla.
 
 	jr 1B 													; Salta al comparador.
 
 Trueque 
 
-	push de 												; Preservo DE pues D contiene (Entidades_en_curso)-1.
+	push de 												; Preservo (Entidades_en_curso)-1.
 	push hl													; Preservo (India_2_SP).
 
 ;	Intercambia (Fila).
@@ -1412,16 +1413,15 @@ Trueque
 	ld de,(India_SP)
 	ex de,hl
 	ld (hl),b
-	ld (de),a									
+	ld (de),a												; Intercambio de Fila, (Coordenada_Y).
 
-;	Intercambia .defw (Album_de_pintado).
+	call Intercambia_1_byte 								; Intercambio de Attrs.
+	call Intercambia_1_byte									; Intercambio de Columna.
 
-	call Intercambia_1_byte
-	call Intercambia_1_byte
+;	Intercambiamos (Scanlines_album) .defw
 
-;	Intercambiamos (Columnas).
-
-	call Intercambia_1_byte
+	call Intercambia_1_byte									; low byte.
+	call Intercambia_1_byte									; high byte.
 
 ; Volvemos a iniciar A. Vuelve a contener `el nuevo contenido, (Fila), de (India_SP).
 ; Recuperamos (India_2_SP) en HL.
@@ -1563,7 +1563,7 @@ Actualiza_Puntero_de_almacen_de_mov_masticados:
 
 ; ------------------------------------------
 ;
-;	8/3/25
+;	9/8/25
 ;
 ;	Extraemos del Almacen_de_mov_masticados:
 ;
@@ -1572,7 +1572,7 @@ Actualiza_Puntero_de_almacen_de_mov_masticados:
 ;
 ;	OUTPUTS: (Puntero_objeto) en DE.
 ;	         (Puntero_de_impresion) codificado en BC.
-;			 (Puntero_de_almacen_de_mov_masticados) actualizado.
+;			 (Puntero_de_almacen_de_mov_masticados) actualizado en su correspondiente caja de entidades.
 ;
 ;	MODIFY: A,BC,DE y HL. 
 
@@ -1580,18 +1580,16 @@ Actualiza_Puntero_de_almacen_de_mov_masticados:
 Obtenemos_puntero_de_impresion:
 
 	ld l,(ix+8)
-	ld h,(ix+9)
+	ld h,(ix+9) 											; (Puntero_de_almacen_de_mov_masticados) en HL.
 
 ;	hl apunta al .defw (Puntero_de_almacen_de_mov_masticados).
 ;	Comprueba si hemos finalizado todos los mov. masticados de la entidad.
 	
-	ld c,(hl)
-	inc hl
-	ld b,(hl)
+	inc hl													; HL apunta al Byte alto de (Puntero_objeto).
+	ld a,(hl)
 	dec hl
 
-	ld a,c
-	or b													; Comprueba si ya no hay datos en el almacén.
+	and a													; Comprueba si quedan más movimientos masticados en el almacén.
 
 	call z,Reinicia_entidad_maliciosa
 	jr z,Obtenemos_puntero_de_impresion
@@ -1609,7 +1607,7 @@ Obtenemos_puntero_de_impresion:
 	add hl,sp
 
 	ld (ix+8),l
-	ld (ix+9),h
+	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) de la caja de entidades actualizado.
 
 	ld sp,(Stack)
 
@@ -1617,7 +1615,17 @@ Obtenemos_puntero_de_impresion:
 
 ; Decodificamos (Puntero_de_impresion) para almacenarlo correctamente.
 
-; ----- ----- ----- ----- -----
+; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+;
+;	9/8/25
+;
+;
+;	INPUTS: IX apunta al .db de la caja de entidades correspondiente.
+;			BC contiene (Puntero_de_impresion) codificado.
+;
+;	OUTPUT: BC contiene el (Puntero_de_impresion) decodificdo.
+;
+;			Se actualizan las variables: (Puntero_de_impresion) y (Columnas) de la bandeja DRAW.
 
 Decodifica_Puntero_de_impresion:
 
@@ -1656,7 +1664,7 @@ Decodifica_Puntero_de_impresion:
 	ld (Columnas),a
 
 2 ld (ix+6),c
-	ld (ix+7),b
+	ld (ix+7),b												; Actualiza el (Puntero_de_impresion) decodificado en la caja de entidades.
 
 	ld (Puntero_de_impresion),bc
 
@@ -1996,12 +2004,6 @@ Actualiza_pantalla
 	jr z,Ejecuta_escudo                                     ; No hay movimiento de entidades. Saltamos a Amadeus.
 
 ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
-
-	ld hl,(Scanlines_album_SP)
-	call Extrae_address
-	inc h
-	dec h
-	jr z,Pintando_entidades
 
 Borrando_entidades
 
