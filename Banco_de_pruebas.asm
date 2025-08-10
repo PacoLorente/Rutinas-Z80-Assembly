@@ -776,6 +776,8 @@ Main
 	call Change 											; Intercambio `Album_de_pintado - Album_de_borrado?.
 ;															; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
 ;	 														; _viceversa.
+	xor a
+	ld (Limite_vertical),a 									; Inicializa el contador de entidades "visibles" en pantalla, (se cargan en la Tabla_de_pintado).
 
 Bucle_de_entidades 
 
@@ -872,7 +874,7 @@ Gestiona_siguiente_entidad
 ; 	Hemos gestionado todas las entidades.					--------------------------------------------------------------------------------------------------
 
 	call Inicializa_India_y_limpia_Tabla_de_impresion 		; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
-;	call Ordena_tabla_de_impresion
+	call Ordena_tabla_de_impresion
 	call Inicia_punteros_de_cajas 							; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
 
 	call Borra_diferencia
@@ -1293,6 +1295,9 @@ Borra_diferencia
 
 Entidad_a_Tabla_de_pintado
 
+	ld hl,Limite_vertical
+	inc (hl)		 										; (Limite_vertical) actúa ahora como contador de entidades imprimibles.
+;                                                           ; El nº de entidades almacenadas en la Tabla_de_pintado lo utilizara [Ordena_tabla_de_impresion] más adelante.
 	ld hl,(India_SP) 				 
 
 	ld e,(ix+3)
@@ -1354,7 +1359,7 @@ Ordena_tabla_de_impresion
 
 ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
 
-	ld a,(Entidades_en_curso)
+	ld a,(Limite_vertical)
 	cp 4
 	ret c 													; < 4 entidades, no ordenamos la Tabla.
 
