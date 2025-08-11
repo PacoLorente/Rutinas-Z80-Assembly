@@ -272,7 +272,10 @@ Ctrl_0 db 0 												; Byte de control. A través de este byte de control. La
 ; 															_ Utilizo la información que proporciona este BIT para modificar (CTRL_DESPLZ) si el siguiente movimiento_
 ; 															_ se va a producir a la izquierda. "1" DERECHA - "0" IZQUIERDA.
 
-Filas db 0												    ; Filas. [DRAW]
+Filas db 0												    ; Filas. [DRAW]. - 2ª Funcion tras haber generado los movimientos masticados: 
+;															; Almacena un bit que iremos alternando: "0" a "1" mediante una función XOR. Se utiliza para cambiar los attr. de la explosión de las entidades,_ 
+;															; _rojo - amarillo. 
+
 Columns db 0 												; Nº de columnas. [DRAW]
 Posicion_actual defw 0										; Dirección actual del Sprite. [DRAW]
 Puntero_objeto defw 0										; Donde están los datos para pintar el Sprite.
@@ -301,10 +304,15 @@ Indice_Sprite_der defw 0
 Indice_Sprite_izq defw 0
 Puntero_DESPLZ_der defw 0
 Puntero_DESPLZ_izq defw 0
-Posicion_inicio defw 0										; Dirección de pantalla donde aparece el objeto. [DRAW]. /
+Posicion_inicio defw 0										; Dirección de pantalla donde aparece el objeto. [DRAW]. 
 Cuad_objeto db 0											; Almacena el cuadrante de pantalla donde se encuentra el objeto, (1,2,3,4). [DRAW]
 Columnas db 0
 Limite_vertical db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
+;															; 2ª Función de (Limite_vertical):
+;															; Se inicializa a "0" cada vez que ejecutamos el bucle de entidades. Se utiliza como contador; se incrementa (+1) cada vez que se añade una_
+;															; _descripción a la (Tabla_de_pintado). Este valor lo utiliza la rutina [Ordena_tabla_de_pintado] para ordenar la tabla antes de imprimir.
+
+
 
 ; Variables de control general.
 
@@ -374,6 +382,11 @@ Repone_puntero_objeto defw 0								; Almacena (Puntero_objeto). Cuando el Sprit
 ; 															; _ hay que sustituirlo por un `sprite vacío' para que no se vea el 1er o último scanline.
 ; 															; _ Cuando hemos terminado de iniciarlo y guardado su foto, hemos de recuperar su (Puntero_objeto).
 ;															; (Repone_puntero_objeto) es una copia de respaldo de (Puntero_objeto) y su función es restaurarlo.
+;
+;															; 2ª Función:
+;
+;															; La rutina [Genera_cabecera] almacena la dirección del álbum de scanlines donde se inicia la cabecera para posteriormente_
+;															; _guardar esta dirección en la (Tabla_de_pintado).
 
 ; Gestión de ENTIDADES y CAJAS.
 
@@ -536,8 +549,6 @@ Shield_3 db 0
 Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
 Puntero_de_vidas defw Indice_de_vidas
 
-Mantequilla defw 0
-
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
 ;	19/7/25
@@ -665,7 +676,7 @@ INICIALIZACION
 
 ;	Transición de entrada.
 
-;	call Transicion_de_entrada
+	call Transicion_de_entrada
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
@@ -707,7 +718,7 @@ Main
 ;	*****************************************************************************
 ;	*****************************************************************************
 ;	***** Comentando la siguiente línea eliminamos los disparos de las entidades.
-;	call z,Autoriza_disparo_de_entidades
+	call z,Autoriza_disparo_de_entidades
 
 ;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
 
@@ -874,7 +885,7 @@ Gestiona_siguiente_entidad
 ; 	Hemos gestionado todas las entidades.					--------------------------------------------------------------------------------------------------
 
 	call Inicializa_India_y_limpia_Tabla_de_impresion 		; Inicializa el puntero (India_SP) y sanea la (Tabla_para_ordenar_entidades_antes_de_pintar).
-	call Ordena_tabla_de_impresion
+	call Ordena_tabla_de_pintado
 	call Inicia_punteros_de_cajas 							; Hemos terminado de mover todas las entidades. Nos situamos al principio del índice de entidades.
 
 	call Borra_diferencia
@@ -1311,7 +1322,7 @@ Entidad_a_Tabla_de_pintado
 	ld (hl),a 		 										; (Columnas).
 	inc l
 
-	ld de,(Mantequilla)
+	ld de,(Repone_puntero_objeto) 							; .defw (Album_de_pintado).
 
 	ld (hl),e   
 	inc l
@@ -1355,7 +1366,7 @@ Inicializa_India_y_limpia_Tabla_de_impresion
 ;
 ;	28/3/25
 
-Ordena_tabla_de_impresion
+Ordena_tabla_de_pintado
 
 ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
 
@@ -2346,7 +2357,7 @@ Siguiente_frame_explosion
 
 	ld a,(Filas)
 	xor 1
-	ld (Filas),a
+	ld (Filas),a 											; 2ª función de (Filas). Ahora almacena 1 bit que alterna su estado para cambiar los attr. de la explosión.													; _de la explosión amarillo-rojo.
 
 	ld (hl),4 												; Inicializamos (Clock_explosion), (velocidad de la explosión).
 
