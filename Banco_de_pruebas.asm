@@ -676,7 +676,7 @@ INICIALIZACION
 
 ;	Transición de entrada.
 
-	call Transicion_de_entrada
+;	call Transicion_de_entrada
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
@@ -1713,6 +1713,16 @@ Cargamos_registros_con_explosion
 
 	ret
 
+; ------------------------------------------------------
+;
+;	12/8/25
+;
+;	MODIFY:	HL,DE e IX.
+;
+;	OUTPUT: HL y DE contienen (Puntero_objeto) de la explosión de Amadeus.
+;			IX contiene el (Puntero_de_impresion) de Amadeus.
+
+
 Cargamos_registros_con_explosion_Amadeus
 
 	ld hl,(Pamm_Amadeus)
@@ -1742,6 +1752,7 @@ Cargamos_registros_con_mov_masticado_Amadeus
 	pop de 													; DE contiene Puntero_objeto
 	pop ix 													; IX contiene Puntero_de_impresion
 	ld (p.imp.amadeus),ix									; (Puntero_de_impresion_Amadeus) en su correspondiente caja.
+
 	ld sp,(Stack)
 
 ;	Estamos desapareciendo ???
@@ -1761,6 +1772,10 @@ Cargamos_registros_con_mov_masticado_Amadeus
 ;	Genera la coordenada X de Amadeus y los datos de impresión de la nave en su (Album_de_pintado_Amadeus).
 
 Genera_datos_de_impresion_Amadeus 
+
+	di
+	jr $
+	ei
 
 	ld a,(Impacto_Amadeus)
 	and a
@@ -2511,6 +2526,11 @@ Borra_Amadeus_impactado
 3 call Change_Amadeus
 	call Cargamos_registros_con_explosion_Amadeus
 
+;	Situación actual:
+;
+;	DE y HL contienen (Puntero_objeto) de la explosión de Amadeus.
+;	IX contiene el (Puntero_de_impresión) de la nave.
+
 ;	Detecta si Amadeus esta pegado al extremo derecho de la pantalla.
 ;	IX contiene (Puntero_de_impresion) de Amadeus.
 
@@ -2556,6 +2576,10 @@ Siguiente_frame_explosion_Amadeus
 
 ; Fín de Amadeus !!!!!!!!!!!!!
 ; Activamos el FLAG de Amadeus destruido, ( bit_6 Ctrl_3 ).
+
+	di
+	jr $
+	ei
 
 	xor a
 	ld (Impacto_Amadeus),a
