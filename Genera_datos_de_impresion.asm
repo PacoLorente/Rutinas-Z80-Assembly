@@ -34,7 +34,7 @@ Scanlines_generator:
 
 Explosion_scanlines_generator
 
-    push ix								                             ; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+    push ix								                            ; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
 	push hl
 	pop ix 															; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
@@ -82,7 +82,7 @@ Genera_datos_de_impresion:
 
 ;   En 1er lugar analizamos la posición del (Puntero_de_impresion).
 ;   No se han de generar scanlines cuando la entidad se imprima en zona de ROM o completamente en zona de MARCADOR de pantalla, (3 primeras líneas).
-;   Cuando el (Puntero_de_impresion) se genera en la 2ª o 3ª línea de pantalla hay que calcular el nº de scanlines que pintamos del Sprite. Como el Sprite está apareciendo_
+;   Cuando el (Puntero_de_imprersion) se genera en la 2ª o 3ª línea de pantalla hay que calcular el nº de scanlines que pintamos del Sprite. Como el Sprite está apareciendo_
 ;   _ por la parte alta de la pantalla hay que sitúar (Puntero_objeto) en la línea de datos correspondiente.
 
     ld a,h

@@ -276,7 +276,9 @@ Filas db 0												    ; Filas. [DRAW]. - 2ª Funcion tras haber generado los
 ;															; Almacena un bit que iremos alternando: "0" a "1" mediante una función XOR. Se utiliza para cambiar los attr. de la explosión de las entidades,_ 
 ;															; _rojo - amarillo. 
 
-Columns db 0 												; Nº de columnas. [DRAW]
+Columns db 0 												; Nº de columnas. [DRAW]. - 2ª Funcion tras haber generado los movimientos masticados: 
+;															; Almacena un bit que iremos alternando: "0" a "1" mediante una función XOR. Se utiliza para cambiar los attr. de la explosión de Amadeus, (rojo - amarillo). 														
+
 Posicion_actual defw 0										; Dirección actual del Sprite. [DRAW]
 Puntero_objeto defw 0										; Donde están los datos para pintar el Sprite.
 
@@ -676,7 +678,7 @@ INICIALIZACION
 
 ;	Transición de entrada.
 
-;	call Transicion_de_entrada
+	call Transicion_de_entrada
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
@@ -1322,7 +1324,7 @@ Entidad_a_Tabla_de_pintado
 	ld (hl),a 		 										; (Columnas).
 	inc l
 
-	ld de,(Repone_puntero_objeto) 							; .defw (Album_de_pintado).
+	ld de,(Repone_puntero_objeto)				 			; .defw (Album_de_pintado).
 
 	ld (hl),e   
 	inc l
@@ -1772,10 +1774,6 @@ Cargamos_registros_con_mov_masticado_Amadeus
 ;	Genera la coordenada X de Amadeus y los datos de impresión de la nave en su (Album_de_pintado_Amadeus).
 
 Genera_datos_de_impresion_Amadeus 
-
-	di
-	jr $
-	ei
 
 	ld a,(Impacto_Amadeus)
 	and a
