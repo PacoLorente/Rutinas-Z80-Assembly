@@ -67,6 +67,100 @@ Explosion_scanlines_generator
 
 	ret
 
+; ---------------------------------------------------------------------------------------------------------------------
+;
+;   07/08/25
+;
+;   Genera la coordenada X de Amadeus y los datos de impresión de la nave en su (Album_de_pintado_Amadeus).
+
+Genera_datos_de_impresion_Amadeus 
+
+    ld a,(Impacto_Amadeus)
+    and a
+    jr nz,1F
+
+; Si existe impacto en Amadeus ya tendremos modificados los registros DE con (Puntero_objeto)_
+; _apuntando a la correspondiente explosión.
+
+    call Cargamos_registros_con_mov_masticado_Amadeus   
+
+;   DE contiene (Puntero_objeto) de Amadeus.
+;   IX contiene (Puntero-de_impresion).
+
+1 ld a,ixl
+    and $1f
+    ld (CX_Amadeus),a                                       ; Coordenada X del Amadeus, (0-$1f). Columnas.
+
+    ld hl,(Scanlines_album_SP)
+    push hl
+
+;   Posicionamos (Scanlines_album_SP) en el álbum de líneas de Amadeus.
+
+    ld hl,(Album_de_pintado_Amadeus)
+    ld (Scanlines_album_SP),hl
+
+    push ix
+    pop hl                                                  ; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
+
+    call Genera_datos_de_impresion
+
+    pop hl
+    ld (Scanlines_album_SP),hl  
+
+    ret
+
+; --------------------------------------------------------------------------------------------------------------
+;
+;   17/06/24
+;
+;   Cargamos los registros DE e IX, (Puntero_de_almacen_de_mov_masticados) de Amadeus. 
+;   
+;   IX contiene el puntero de impresión.
+;   DE contiene (Puntero_objeto).
+ 
+
+Cargamos_registros_con_mov_masticado_Amadeus
+
+    ld (Stack),sp
+    ld sp,(Pamm_Amadeus)                                    ; (Puntero_de_almacen_de_mov_masticados_Amadeus) en su correspondiente caja.
+    pop de                                                  ; DE contiene Puntero_objeto
+    pop ix                                                  ; IX contiene Puntero_de_impresion
+    ld (p.imp.amadeus),ix                                   ; (Puntero_de_impresion_Amadeus) en su correspondiente caja.
+
+    ld sp,(Stack)
+
+;   Estamos desapareciendo ???
+
+    ld a,(Ctrl_2)
+    bit 6,a
+    ret z                                                   ; RET, Amadeus no hemos terminado el NIVEL.
+
+    call Transicion_de_salida
+
+    ret
+
+; ------------------------------------------------------
+;
+;   12/8/25
+;
+;   MODIFY: HL,DE e IX.
+;
+;   OUTPUT: HL y DE contienen (Puntero_objeto) de la explosión de Amadeus.
+;           IX contiene el (Puntero_de_impresion) de Amadeus.
+
+
+Cargamos_registros_con_explosion_Amadeus
+
+    ld hl,(Pamm_Amadeus)
+    call Extrae_address
+
+    ld e,l
+    ld d,h  
+
+    ld ix,(p.imp.amadeus)
+
+    ret
+
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ;	6/8/25
@@ -337,3 +431,85 @@ Calcula_scans_desapareciendo
     ld b,a
 
     ret
+
+; --------------------------------------------------------------------------------------
+;
+;   12/10/24
+;
+
+Genera_datos_de_impresion_disparos_Entidades
+
+    ld a,7
+    ex af,af                                                  ;? 7 Disparos como 7 amores.
+
+; ---------------
+
+;   En 1er lugar nos situamos en la 1ª caja de disparos de entidades.
+
+    ld hl,Indice_de_disparos_entidades
+
+1 call Extrae_address
+ 
+    inc de
+    inc de
+
+    ld (Puntero_DESPLZ_DISPARO_ENTIDADES),de 
+
+    dec l
+    ld a,(hl)
+    and a                                                     ;? Si el byte alto de control es "0" significa que la caja está vacía.
+    jr z,Situa_en_siguiente_caja                              ;? Avanzamos a la siguiente caja en ese caso.
+
+; ----- ----- ----- -----   
+
+    dec l
+    call Extrae_address
+    push hl                                                   
+
+    dec e
+
+    ex de,hl
+
+    ld c,(hl)                                                 ;? 3er byte del disparo de C.
+    dec l
+    ld b,(hl)                                                 ;? 2º byte del disparo de B.
+    dec l
+    ld e,(hl)                                                 ;? 1er byte del disparo de E.
+
+    pop hl                                                    ;? Puntero de impresión en HL.                                                   
+
+Genera_scanlines_de_los_disparos_de_entidades.
+
+    ld iy,(Nivel_scan_disparos_album_de_pintado)
+    ld (iy+0),e
+    ld (iy+1),b
+    ld (iy+2),c
+
+    ld (iy+3),l
+    ld (iy+4),h
+
+    call NextScan
+
+    ld (iy+5),l
+    ld (iy+6),h
+
+    push iy
+    pop hl
+
+    ld a,7
+    add l
+    ld l,a
+
+    ld (Nivel_scan_disparos_album_de_pintado),hl
+
+; ----- ----- ----- -----   
+
+Situa_en_siguiente_caja
+
+    ex af,af                                                  ;? Actualiza contador de cajas y RET si "Z".
+    dec a
+    ret z
+
+    ex af,af
+    ld hl,(Puntero_DESPLZ_DISPARO_ENTIDADES)
+    jr 1B
