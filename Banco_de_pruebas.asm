@@ -307,7 +307,11 @@ Indice_Sprite_izq defw 0
 Puntero_DESPLZ_der defw 0
 Puntero_DESPLZ_izq defw 0
 Posicion_inicio defw 0										; Dirección de pantalla donde aparece el objeto. [DRAW]. 
+
 Cuad_objeto db 0											; Almacena el cuadrante de pantalla donde se encuentra el objeto, (1,2,3,4). [DRAW]
+;															; 2ª FUNCIÓN: Temporizador, define la velocidad de la animación de Amadeus por la parte_
+;															; _baja de la pantalla cuando hemos superado el nivel.
+
 Columnas db 0
 Limite_vertical db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
 ;															; 2ª Función de (Limite_vertical):
@@ -949,7 +953,7 @@ Amadeus_vivo
 
 ;	Se ha iniciado la salida de Amadeus por la parte baja de la pantalla, NIVEL SUPERADO.
 
-	ld hl,Cuad_objeto
+	ld hl,Cuad_objeto                                       ; 2ª Función de (Cuad_objeto).
 	dec (hl)												; DEC temporizador, (FRAME rate) de la transición de salida.
 	jr nz,2F												; No forzamos la impresión de Amadeus si no ha habido pulsación de teclas.
 
@@ -960,6 +964,7 @@ Amadeus_vivo
 
 	ld hl,Ctrl_3
 	set 5,(hl)
+	jr Vivo_y_coleando
 
 2 ld hl,Ctrl_3
 	bit 5,(hl)
@@ -990,6 +995,7 @@ End_frame
 
 	ld hl,Ctrl_3
 	set 0,(hl) 												; Indica Frame completo.
+
 	res 3,(hl)
 	res 4,(hl)
 
@@ -2481,10 +2487,6 @@ Siguiente_frame_explosion_Amadeus
 ; Fín de Amadeus !!!!!!!!!!!!!
 ; Activamos el FLAG de Amadeus destruido, ( bit_6 Ctrl_3 ).
 
-	di
-	jr $
-	ei
-
 	xor a
 	ld (Impacto_Amadeus),a
 
@@ -2493,6 +2495,14 @@ Siguiente_frame_explosion_Amadeus
 
 	ld hl,Ctrl_4
 	set 6,(hl)												; Indica al reloj que ha de borrar una vida de la pantalla.
+
+;	Evitamos que la rutina [Pintando_Amadeus] llame a la rutina de pintado, [Pinta_sprites] y vuelva a pintar la última explosión. 
+;	Hace que la rutina [Pintando_Amadeus] interprete que (Album_de_pintado_Amadeus) está vacío. 
+
+	ld hl,(Album_de_borrado_Amadeus)
+	inc l
+	xor a
+	ld (hl),a
 
 	jr Borra_Amadeus_impactado
 
