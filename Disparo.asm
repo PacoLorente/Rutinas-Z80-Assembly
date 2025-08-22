@@ -236,7 +236,7 @@ Coincidencia
 ;   *************************************************************************
 ;   ***** Comentando la siguiente linea no nos afectan los disparos enemigos.
 
-    jr nz,Amadeus_impactado
+;    jr nz,Amadeus_impactado
 
     inc l
     inc e
@@ -478,7 +478,7 @@ Borra_6_bytes
 
 ; --------------------------------------------------------------------------------------
 ;
-;   12/10/24
+;   22/08/25
 ;
 
 Genera_disparo_de_entidad_maldosa
@@ -507,22 +507,12 @@ Genera_disparo_de_entidad_maldosa
     ld a,(Numero_de_disparos_de_entidades)
     and a
     ret z
-
-;   La entidad tiene que aparecer completamente en pantalla para poder efectuar un diaparo.
-
-    ld hl,(Puntero_de_impresion)
-    ld a,h
-    bit 6,a
-    ret z
-
-;   La entidad no podrá disparar mientras se encuentre en las filas: 0,1,15,16.
+                 
+;   No podrá disparar si se encuentra en las Filas: 0,1,(16-23).
 
     ld a,(Coordenada_y)
-    and a
-    ret z
-
-    dec a
-    ret z
+    cp 2
+    ret c
 
     cp 16
     ret nc
@@ -1242,7 +1232,7 @@ Genera_coordenadas_X
 ;   **************************************************************************
 ;   ***** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
 
-;    ret
+    ret
 
     ret nz
 

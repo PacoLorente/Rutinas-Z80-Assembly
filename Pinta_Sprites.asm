@@ -232,6 +232,8 @@ Pinta_imagen:
 
 Pinta_disparos_Entidades:
 
+;    ret
+
     ld (Stack),sp 
     ld sp,(Album_de_borrado_disparos_Entidades)
 
