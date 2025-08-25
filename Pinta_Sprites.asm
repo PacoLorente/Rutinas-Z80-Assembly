@@ -232,8 +232,6 @@ Pinta_imagen:
 
 Pinta_disparos_Entidades:
 
-;    ret
-
     ld (Stack),sp 
     ld sp,(Album_de_borrado_disparos_Entidades)
 
@@ -277,7 +275,17 @@ Pinta_disparos_Entidades:
     add $58
     ld h,a
 
+    dec l
+    dec l
     ld (hl),c                                           
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
 
 ; Imprime el 1er scanline del disparo.
 
@@ -368,7 +376,12 @@ Pinta_disparos_Amadeus:
     add $58
     ld h,a
 
+    dec l
     ld (hl),c                                           
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
 
 Imprime_scanlines_en_pantalla
 
