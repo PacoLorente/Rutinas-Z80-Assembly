@@ -230,6 +230,23 @@ Pinta_imagen:
 ;   2/4/25
 ;
 
+;   Estructura de un disparo de entidades.
+
+;   Disparo_1 defw 0                                ; Puntero objeto.
+;   defw 0                                          ; Puntero de impresión.
+;   defw 0                                          ; Control.
+
+;   El byte bajo de Control indica la velocidad a la que fué lanzado el disparo, (Velocidad)_
+;   _de la entidad en el momento de disparar.
+
+;   El byte de control muestra la siguiente información:
+
+;   Nibble alto    ..... Bits (6) y (7) ..... Indican si el disparo va hacia la derecha o hacia la izquierda.
+;
+;                        10xx ..... Izquierda.
+;                        01xx ..... Derecha.
+;                        00xx ..... Recto.
+
 Pinta_disparos_Entidades:
 
     ld (Stack),sp 
@@ -246,7 +263,7 @@ Pinta_disparos_Entidades:
 
 
 4 pop iy
-    pop de                        ; 1er .db IYL
+    pop de                              ; 1er .db IYL
 ;                                      ; 2º  .db IYH
 ;                                      ; 3er .db E.
 ;                                      ; .db que pintan el disparo, ej.: $18 $00 $00, (Puntero_objeto) del disparo, 3 .db's.
@@ -263,33 +280,33 @@ Pinta_disparos_Entidades:
     dec sp
 
     pop hl                          ; Puntero de impresión del 1er scanline en HL.
-    push hl
+;    push hl
 
 ; Atributos.
 
-    ld a,h                                  
-    and $18
-    sra a
-    sra a
-    sra a
-    add $58
-    ld h,a
+;    ld a,h                                  
+;    and $18
+;    sra a
+;    sra a
+;    sra a
+;    add $58
+;    ld h,a
 
-    dec l
-    dec l
-    ld (hl),c                                           
-    inc l
-    ld (hl),c
-    inc l
-    ld (hl),c
-    inc l
-    ld (hl),c
-    inc l
-    ld (hl),c
+;    dec l
+;    dec l
+;    ld (hl),c                                           
+;    inc l
+;    ld (hl),c
+;    inc l
+;    ld (hl),c
+;    inc l
+;    ld (hl),c
+;    inc l
+;    ld (hl),c
 
 ; Imprime el 1er scanline del disparo.
 
-    pop hl
+;    pop hl
 
     ld a,iyl    
     xor (hl)

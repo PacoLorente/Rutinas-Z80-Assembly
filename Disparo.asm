@@ -236,7 +236,7 @@ Coincidencia
 ;   *************************************************************************
 ;   ***** Comentando la siguiente linea no nos afectan los disparos enemigos.
 
-;    jr nz,Amadeus_impactado
+    jr nz,Amadeus_impactado
 
     inc l
     inc e
@@ -508,19 +508,35 @@ Genera_disparo_de_entidad_maldosa
     and a
     ret z
                  
-;   No podrá disparar si se encuentra en las Filas: 0,1,(16-23).
+    ld hl,(Puntero_de_impresion)
 
-    ld a,(Coordenada_y)
-    cp 2
-    ret c
+    ld a,h
+    cp $40
+    ret c                           ; La entidad no dispara en ROM.
 
-    cp 16
-    ret nc
+    call calcula_tercio  
+    and a
+    jr nz,2F
+
+    ld a,l
+    cp $60
+    ret c                           ; La entidad no puede disparar en las Filas 0,1 y 2.
+
+    jr 3F
+
+2 dec a
+    ld a,l
+    jr z,3F                     
+
+; Estamos en el último tercio de pantalla. No se genera disparo enn las proximidades de Amadeus.
+
+    ld a,l
+    cp $60
+    ret nc                          ; La entidad no puede disparar en las Filas (19-23).
 
 ;   La entidad no podrá disparar en las columnas 0 y 31
 
-    ld a,(Puntero_de_impresion)
-    and $1f
+3 and $1f
     ret z
     cp $1f
     ret z
@@ -1232,7 +1248,7 @@ Genera_coordenadas_X
 ;   **************************************************************************
 ;   ***** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
 
-    ret
+;    ret
 
     ret nz
 
