@@ -592,7 +592,6 @@ START:
 	call Imprime_vida
 	call Imprime_vida
 
-
 ;	Voy a cambiar los attr de la zona del marcador de pantalla.
 
 ;	ld a,%00110110

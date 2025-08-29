@@ -222,7 +222,9 @@ Inicia_Repetimos_movimiento
 ;
 ;   
 
-Inicia_Puntero_mov ld hl,(Puntero_indice_mov)
+Inicia_Puntero_mov 
+
+    ld hl,(Puntero_indice_mov)
     call Extrae_address
     ld (Puntero_mov),hl
     ret

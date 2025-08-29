@@ -293,7 +293,7 @@ Entidad_Clase_1 db 1,$81,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badsat_der							; (Indice_Sprite_der).
 	defw Indice_Badsat_izq							; (Indice_Sprite_izq).
-	defw $4000	                					; (Posicion_inicio).
+	defw $4060	                					; (Posicion_inicio).
 	db 0											; (Cuad_objeto).
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 									; (Attr).
@@ -304,7 +304,7 @@ Entidad_Clase_2 db 2,$81,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badsat_der							; (Indice_Sprite_der).
 	defw Indice_Badsat_izq							; (Indice_Sprite_izq).
-	defw $4000	                					; (Posicion_inicio).
+	defw $4060	                					; (Posicion_inicio).
 	db 0											; (Cuad_objeto).
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 									; (Attr).
@@ -315,7 +315,7 @@ Entidad_Clase_3 db 3,$81,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badsat_der							; (Indice_Sprite_der).
 	defw Indice_Badsat_izq							; (Indice_Sprite_izq).
-	defw $4000	                					; (Posicion_inicio).
+	defw $4060	                					; (Posicion_inicio).
 	db 0											; (Cuad_objeto).
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 									; (Attr).
@@ -327,7 +327,7 @@ Entidad_Clase_4 db 4,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badplate_der						; (Indice_Sprite_der).
 	defw Indice_Badplate_izq						; (Indice_Sprite_izq).
-	defw $4000	                					; (Posicion_inicio).
+	defw $4060	                					; (Posicion_inicio).
 	db 0											; (Cuad_objeto).
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 									; (Attr).
@@ -336,7 +336,7 @@ Entidad_Clase_5 db 5,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badplate_der						; (Indice_Sprite_der).
 	defw Indice_Badplate_izq						; (Indice_Sprite_izq).
-	defw $4000	                					; (Posicion_inicio).
+	defw $4060	                					; (Posicion_inicio).
 	db 0											; (Cuad_objeto).
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 									; (Attr).
@@ -345,7 +345,7 @@ Entidad_Clase_6 db 6,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
 	defw Indice_Badplate_der						; (Indice_Sprite_der).
 	defw Indice_Badplate_izq						; (Indice_Sprite_izq).
-	defw $4000	                					; (Posicion_inicio).
+	defw $4060	                					; (Posicion_inicio).
 	db 0											; (Cuad_objeto).
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 									; (Attr).

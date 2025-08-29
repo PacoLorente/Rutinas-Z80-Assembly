@@ -162,8 +162,9 @@ Avanza_siguiente_entidad_del_nivel
 
 ; -----------------------------------------------------------------------------------
 ;
-;	13/6/25
+;	29/8/25
 ;
+;	
 
 Determina_posicion_de_inicio
 
@@ -193,6 +194,7 @@ Determina_posicion_de_inicio
 ;	Entidad (Tipo)="$81", BadSat. Puede iniciar su baile desde cualquier columna.
 
 1 ld hl,Posicion_inicio
+	add (hl)
 	ld (hl),a
 
 	ret
@@ -653,6 +655,7 @@ Situa_Puntero_indice_mov
 ; Seleccionamos Danza.
 
 	ld a,(Posicion_inicio)
+	and $1f
 	cp $10
 	jr c,1F
 
