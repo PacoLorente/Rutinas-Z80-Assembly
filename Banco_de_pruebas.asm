@@ -478,8 +478,8 @@ Ctrl_4 db 0													; 4º Byte de Ctrl. general, (no específico) a una úni
 ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta?.
 ; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
 ;															BIT 5, "1" Indica que ha terminado la transición de salida de Amadeus por la parte baja de la pantalla.
-;															BIT 6  "1" Indica aL reloj IM2 que ha de borrar una vida de la pantalla.
-
+;															BIT 6, "1" Indica aL reloj IM2 que ha de borrar una vida de la pantalla.
+; 															BIT 7, !!! Used !!!. Averiguar para qué.
 
 Ctrl_5 db 0
 
@@ -694,7 +694,7 @@ INICIALIZACION
 ;
 ;	11/07/25
 
-Main 
+Main: 
 
 	ld hl,Ctrl_4
 	bit 5,(hl)
@@ -1588,7 +1588,7 @@ Actualiza_Puntero_de_almacen_de_mov_masticados:
 ;
 ;	9/8/25
 ;
-;	Extraemos del Almacen_de_mov_masticados:
+;	Extraemos movimiento del (Almacen_de_mov_masticados):
 ;
 ;	INPUTS: IX,(Puntero_store_caja). 
 ;		    (1er .db de la caja de la entidad en curso, (Tipo).)
@@ -1600,7 +1600,7 @@ Actualiza_Puntero_de_almacen_de_mov_masticados:
 ;	MODIFY: A,BC,DE y HL. 
 
 
-Obtenemos_puntero_de_impresion:
+Take_movement:
 
 	ld l,(ix+8)
 	ld h,(ix+9) 											; (Puntero_de_almacen_de_mov_masticados) en HL.
@@ -1615,7 +1615,7 @@ Obtenemos_puntero_de_impresion:
 	and a													; Comprueba si quedan más movimientos masticados en el almacén.
 
 	call z,Reinicia_entidad_maliciosa
-	jr z,Obtenemos_puntero_de_impresion
+	jr z,Take_movement
 
 	ld (Stack),sp
 	ld sp,hl
@@ -2336,7 +2336,7 @@ Siguiente_frame_explosion
 
 ; Generamos (Puntero_de_impresion) y coordenadas de la nueva entidad restaurada.
 
-	call Obtenemos_puntero_de_impresion
+	call Take_movement
 	call Decodifica_Puntero_de_impresion
 
 	ld l,(ix+6)

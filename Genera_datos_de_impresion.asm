@@ -22,7 +22,7 @@
 
 Scanlines_generator:
 
-	call Obtenemos_puntero_de_impresion
+	call Take_movement
 	call Decodifica_Puntero_de_impresion
 
     push bc
