@@ -144,7 +144,7 @@ Avanza_siguiente_entidad_del_nivel
 	pop bc															; Pop (Numero_de_entidades)/(Tipo).
 	pop hl															; Pop (Puntero_de_entidades).
 
-	inc l															; Puntero_de_entidades +1 en HL.
+	inc hl															; Puntero_de_entidades +1 en HL.
 	ld (Puntero_de_entidades),hl 									; Actualizamos (Puntero_de_entidades).
 
 	ld c,(hl)														; (Tipo) de la siguiente entidad en C.
@@ -155,7 +155,7 @@ Avanza_siguiente_entidad_del_nivel
 
 	ld hl,(Puntero_indice_NIVELES)
 	call Extrae_address
-	inc l
+	inc hl
 	ld (Puntero_de_entidades),hl
 
 	ret
@@ -319,12 +319,12 @@ Prepara_nuevo_almacen
 	ex de,hl
 
 	ld hl,(Puntero_indice_de_almacenes)
-	inc l
-	inc l
+	inc hl
+	inc hl
 	ld (Puntero_indice_de_almacenes),hl
 
 	ld (hl),e
-	inc l
+	inc hl
 	ld (hl),d
 
 	ret
@@ -347,8 +347,8 @@ Situa_en_contador_general_de_mov_masticados
 
 ;	Avanzamos a la siguiente si esta ya contiene una cantidad.
 
-    inc l
-    inc l
+    inc hl
+    inc hl
 
     jr 1B
 
@@ -397,22 +397,22 @@ Aplica_rnd_al_baile
 
 ; Almacenamos en A' el nº de direcciones que compartiran nº RND y sitúamos HL en el .defw que indica los límites.
 
-	inc l
+	inc hl
 	ld a,(hl)	
 	ex af,af
-	inc l
+	inc hl
 	ld a,(hl)
 
 Load_limits
 
 	ld c,a
-	inc l
+	inc hl
 	ld b,(hl)
 
 ;	Límites que tendrá este nº RND en BC.
 ;	B contiene lím.sup. y C contiene límite inf.
 
-	inc l
+	inc hl
 
 	call Extrae_address_y_avanza
 	ret z  															; Z Indica: FIN de la Tabla_Random.
@@ -475,7 +475,7 @@ Get_RND
 	exx
 	call RND_ini
 	ret
-1 dec l
+1 dec hl
 	exx
 	ret
 
@@ -550,7 +550,7 @@ Inicializa_1er_Nivel
 	ld (Numero_de_entidades),a					 					; Inicializa (Numero_de_entidades).
 	ld b,a
 
-	inc l
+	inc hl
 	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
 	ld c,(hl)													
 
@@ -659,8 +659,8 @@ Situa_Puntero_indice_mov
 	cp $10
 	jr c,1F
 
-	inc l
-	inc l
+	inc hl
+	inc hl
 
 1 call Extrae_address
 	ld (Puntero_indice_mov),hl
@@ -729,7 +729,7 @@ Prepara_Cajas_de_Entidades
 ; Siguiente entidad del Nivel.
 
 	ld hl,(Puntero_de_entidades)									; (Clase) de la siguiente entidad del nivel.
-	inc l 																
+	inc hl
 	ld (Puntero_de_entidades),hl
 
 	pop bc 															; Recuperamos (Numero_parcial_de_entidades), (nº de cajas que vamos a rellenar)
@@ -834,20 +834,30 @@ Decrementa_Contador_de_mov_masticados
 
 Reinicia_entidad_maliciosa 
 
-	ld a,(ix)														
+	ld l,(ix+10)
+	ld h,(ix+11)
+
+	ld a,(ix)
 
 ;	(Clase) de la entidad en A.
 ;	Hemos completado todos los movimientos masticados de la entidad.
 ;	Inicializamos el contador de mov_masticados de la Caja_Master correspondiente.
 
 	call Obtiene_datos_de_Caja_Master
+
+;	En este punto:
+;
+;	HL apunta al 1er .db de la CAJA MASTER correspondiente.
+;	IX apunta al 1er .db de la CAJA DE ENTIDADES correspondiente.
+
+
 	call Inicializa_Contador_de_mov_masticados
 
 ; 	En 2º lugar hay que inicializar el (Puntero_de_almacen_de_mov_masticados).
 ;	DE apunta al .defw (Contador_de_mov_masticados) de la Caja_Master.
 
-	dec e
-	dec e
+	dec de
+	dec de
 
 	ex de,hl
 
@@ -889,6 +899,7 @@ Reinicia_entidad_maliciosa
 	sra a
 
 	ld (ix+12),a 													; ld (Velocidad),a
+	and a
 
 ; Attr. 
 

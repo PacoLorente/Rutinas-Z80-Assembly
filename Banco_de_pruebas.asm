@@ -1089,8 +1089,6 @@ Ajusta_velocidad_entidad
 ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
 ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".   
 
-
-
 	sla a 													; Multiplica x2 (Velocidad) en cada FRAME.
 	ld (ix+12),a											; ld (Velocidad),a
 	and $10
@@ -1114,6 +1112,8 @@ Ajusta_velocidad_entidad
 
 	ld (ix+8),l
 	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) actualizado.
+
+	call Decrementa_Contador_de_mov_masticados
 
 	ret
 

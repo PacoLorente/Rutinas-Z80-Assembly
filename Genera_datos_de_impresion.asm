@@ -23,7 +23,7 @@
 Scanlines_generator:
 
 	call Take_movement
-	call Decodifica_Puntero_de_impresion
+    call Decodifica_Puntero_de_impresion
 
     push bc
     pop hl

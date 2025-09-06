@@ -26,7 +26,7 @@ Indice_de_niveles
 
 Nivel_1 db 3
 
-	db 1,1,1
+	db 1,2,3
 
 ;	db 1,4,3,1,4
 ;	db 3,3,4,4,4
