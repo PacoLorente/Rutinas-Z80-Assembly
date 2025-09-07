@@ -380,25 +380,6 @@ Inicializa_Puntero_indice_mov_2
 
 3 ld a,(Incrementa_puntero_backup)
     ld (Incrementa_puntero),a
+
 4 ret
 
-; ----------------------------------------------------------------------
-;
-;   17/5/25
-;
-;   INPUTS: HL apunta al 1er .db de la Caja_Master correspondiente a la (Clase) de la entidad.
-;                 DE apunta al 1er .db de la Caja_de_entidades de la entidad a reiniciar.
-;                 A contiene (Clase) de la entidad a reiniciar.
-
-Inicializa_Contador_de_mov_masticados
-
-    ld a,l
-    add 10
-    ld l,a                                                                                     
-
-    call Extrae_address
-
-    ld (ix+10),l
-    ld (ix+11),h
-
-    ret

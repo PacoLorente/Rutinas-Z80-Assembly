@@ -830,12 +830,9 @@ Decrementa_Contador_de_mov_masticados
 
 ; ---------------------------------------------------------------------
 ;
-;	5/4/25
+;	7/9/25
 
 Reinicia_entidad_maliciosa 
-
-	ld l,(ix+10)
-	ld h,(ix+11)
 
 	ld a,(ix)
 
@@ -850,26 +847,28 @@ Reinicia_entidad_maliciosa
 ;	HL apunta al 1er .db de la CAJA MASTER correspondiente.
 ;	IX apunta al 1er .db de la CAJA DE ENTIDADES correspondiente.
 
+;	Inicializamos (Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados).
 
-	call Inicializa_Contador_de_mov_masticados
+	ld a,l
+    add 8
+    ld l,a
 
-; 	En 2º lugar hay que inicializar el (Puntero_de_almacen_de_mov_masticados).
-;	DE apunta al .defw (Contador_de_mov_masticados) de la Caja_Master.
+    call Extrae_address
 
-	dec de
-	dec de
+	ld (ix+8),l
+	ld (ix+9),h
+
+	inc e
+	inc e
 
 	ex de,hl
 
-	ld a,(hl)
-	ld (ix+8),a
-	inc hl
-	ld a,(hl)
-	ld (ix+9),a
+	call Extrae_address
 
-;	(Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados) de la entidad inicializados.
+	inc hl 																		;	(Contador_de_mov_masticados)+1. Cuando regresemos, [Take_movement] le restará una unidad.
 
-;	call Obtenemos_puntero_de_impresion
+	ld (ix+10),l
+	ld (ix+11),h
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;
@@ -954,6 +953,7 @@ Blanco ld a,%01000111
 	jr 2F
 
 Amarillo ld a,%01000110
+
 2 ld (ix+13),a
 
 	ret

@@ -63,7 +63,7 @@ Explosion_scanlines_generator
     res 7,a
 	ld (Ctrl_4),a
 
-	call Decrementa_Contador_de_mov_masticados                     ; Actualizamos (Contador_de_mov_masticados) tras la foto.
+;	call Decrementa_Contador_de_mov_masticados                     ; Actualizamos (Contador_de_mov_masticados) tras la foto.
 
 	ret
 
@@ -179,9 +179,9 @@ Genera_datos_de_impresion:
 ;   Cuando el (Puntero_de_imprersion) se genera en la 2ª o 3ª línea de pantalla hay que calcular el nº de scanlines que pintamos del Sprite. Como el Sprite está apareciendo_
 ;   _ por la parte alta de la pantalla hay que sitúar (Puntero_objeto) en la línea de datos correspondiente.
 
-;    ld a,h
-;    cp $40
-;    jr c,No_scanlines                               ; La entidad se comienza a pintar en la ROM. No se generarán scanlines.
+    ld a,h
+    cp $40
+    jr c,No_scanlines                               ; La entidad se comienza a pintar en la ROM. No se generarán scanlines.
 
 ;   El objeto se imprime dentro de la pantalla, (NO ROM).
 

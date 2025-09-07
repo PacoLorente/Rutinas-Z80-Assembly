@@ -1097,6 +1097,25 @@ Ajusta_velocidad_entidad
 
 ; Restaura (Velocidad) a razón del nº de vueltas. Se ha superado (Velocidad)x8.
 
+;	Decrementa (Contador_de_mov_masticados), (SI SU CONTENIDO NO ES "0").
+
+	ld l,(ix+10)
+	ld h,(ix+11)
+
+	ld a,h
+	and a
+	jr nz,1F
+
+	inc l
+	dec l
+
+	ret z													; RET. Hay que REINICIAR LA ENTIDAD. (Contador_de_mov_masticados) = "0".
+
+1 dec hl
+
+	ld (ix+10),l
+	ld (ix+11),h
+
 	ld a,(ix+4)												; ld a,(Contador_de_vueltas)
 	sra a
 	sra a
@@ -1112,8 +1131,6 @@ Ajusta_velocidad_entidad
 
 	ld (ix+8),l
 	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) actualizado.
-
-	call Decrementa_Contador_de_mov_masticados
 
 	ret
 
@@ -1602,20 +1619,29 @@ Actualiza_Puntero_de_almacen_de_mov_masticados:
 
 Take_movement:
 
-	ld l,(ix+8)
-	ld h,(ix+9) 											; (Puntero_de_almacen_de_mov_masticados) en HL.
+	ld l,(ix+10)
+	ld h,(ix+11)
 
-;	hl apunta al .defw (Puntero_de_almacen_de_mov_masticados).
-;	Comprueba si hemos finalizado todos los mov. masticados de la entidad.
-	
-	inc hl													; HL apunta al Byte alto de (Puntero_objeto).
-	ld a,(hl)
-	dec hl
+;	(Contador_de_mov_masticados) en HL.
 
-	and a													; Comprueba si quedan más movimientos masticados en el almacén.
+	ld a,h
+	and a
+	jr nz,1F
+
+	inc l
+	dec l
 
 	call z,Reinicia_entidad_maliciosa
-	jr z,Take_movement
+
+;	El (Contador_de_mov_masticados) no ha llegado a "0". Dec.
+
+1 dec hl
+
+	ld (ix+10),l
+	ld (ix+11),h 											; (Contador_de_mov_masticados) actualizado.
+
+	ld l,(ix+8)
+	ld h,(ix+9) 											; (Puntero_de_almacen_de_mov_masticados) en HL.
 
 	ld (Stack),sp
 	ld sp,hl
