@@ -23,6 +23,11 @@
 Scanlines_generator:
 
 	call Take_movement
+
+    ld a,d
+    add e
+    ret z                                                           ; Movimiento NO VÁLIDO. Reiniciamos danza.
+
     call Decodifica_Puntero_de_impresion
 
     push bc
@@ -178,12 +183,6 @@ Genera_datos_de_impresion:
 ;   No se han de generar scanlines cuando la entidad se imprima en zona de ROM o completamente en zona de MARCADOR de pantalla, (3 primeras líneas).
 ;   Cuando el (Puntero_de_imprersion) se genera en la 2ª o 3ª línea de pantalla hay que calcular el nº de scanlines que pintamos del Sprite. Como el Sprite está apareciendo_
 ;   _ por la parte alta de la pantalla hay que sitúar (Puntero_objeto) en la línea de datos correspondiente.
-
-    ld a,h
-    cp $40
-    jr c,No_scanlines                               ; La entidad se comienza a pintar en la ROM. No se generarán scanlines.
-
-;   El objeto se imprime dentro de la pantalla, (NO ROM).
 
     call calcula_tercio                             ; HL contiene (Puntero_de_impresion).
     and a

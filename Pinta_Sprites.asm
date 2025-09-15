@@ -280,33 +280,33 @@ Pinta_disparos_Entidades:
     dec sp
 
     pop hl                          ; Puntero de impresión del 1er scanline en HL.
-;    push hl
+    push hl
 
 ; Atributos.
 
-;    ld a,h                                  
-;    and $18
-;    sra a
-;    sra a
-;    sra a
-;    add $58
-;    ld h,a
+    ld a,h                                  
+    and $18
+    sra a
+    sra a
+    sra a
+    add $58
+    ld h,a
 
-;    dec l
-;    dec l
-;    ld (hl),c                                           
-;    inc l
-;    ld (hl),c
-;    inc l
-;    ld (hl),c
-;    inc l
-;    ld (hl),c
-;    inc l
-;    ld (hl),c
+    dec l
+    dec l
+    ld (hl),c                                           
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
 
 ; Imprime el 1er scanline del disparo.
 
-;    pop hl
+    pop hl
 
     ld a,iyl    
     xor (hl)
