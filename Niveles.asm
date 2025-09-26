@@ -1,12 +1,16 @@
 ;	22/07/25	
 
-Indice_de_vidas	defw Vida_1
-	defw Vida_2
-Ultima_vida	defw Vida_3
+;Indice_de_vidas
 
-Indice_de_escudos defw Escudo_1
-	defw Escudo_2
-Ultimo_escudo defw Escudo_3
+;	defw Vida_1
+;	defw Vida_2
+;	defw Vida_3
+
+Indice_de_vidas
+
+	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
+	defw Vida_2,Amadeus_Fb,$0302
+	defw Vida_3,Amadeus,$0302
 
 ;	19/1/24
 

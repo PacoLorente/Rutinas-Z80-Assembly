@@ -1,116 +1,73 @@
 ; ------------------------------------------------------------------------
 ;
-;   23/7/25
+;   26/9/25
 ;
 ;   Imprime_escudo
 
-Imprime_escudo ld hl,(Puntero_de_escudos)
-    call Extrae_address
+Pinta_Vida
 
-    ld bc,Ultimo_escudo                                             ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
+    ld (Stack),sp
 
-    ld a,c
-    sub e
-    jr z,1F
-
-    inc de
-    inc de
-
-1 call Pinta_escudo
-
-    ret
-
-Borra_escudo 
-
-    ld hl,Ctrl_2
-    res 7,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando escudos.
-
-    ld hl,(Puntero_de_escudos)
-    call Extrae_address
-
-    push hl
-
-    ld bc,Indice_de_escudos                                         ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
-
-    ld a,e
-    sub c
-    jr z,1F
-
-    dec de
-    dec de
-
-1 call Pinta_escudo
+    ld sp,(Puntero_de_vidas)
 
     pop hl
+    pop de
+    pop bc
 
-    call Restaura_attr_vida
+    ld (Puntero_de_vidas),sp
 
-    ret
+    ld sp,(Stack)
 
-; ----- ----- ----- ----- -----
-
-Pinta_escudo 
-
-    ld (Puntero_de_escudos),de
-
-    ld de,Escudo
-    ld bc,$0303
-    ld a,%01000110
+    ld a,%01000101                                                  ; Cyan.
 
     call Pinta_imagen
 
     ret
 
-; --------------------------------------------------
-
-Imprime_vida ld hl,(Puntero_de_vidas)
-    call Extrae_address
-
-    ld bc,Ultima_vida                                               ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
-
-    ld a,c
-    sub e
-    jr z,1F
-
-    inc de
-    inc de
-
-1 call Pinta_vida
-
-    ret
-
-Borra_vida 
+Borra_vida
 
     ld hl,Ctrl_4
     res 6,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando vidas.
 
+; Debugggggg !!!!!!
+    ld hl,Ctrl_5
+    set 4,(hl)
+; Debugggggg !!!!!!
+
+;   Situamos (Puntero_de_vidas) en la posición correcta y actualizamos (Puntero_de_vidas).
+
+    ld bc,6
+
     ld hl,(Puntero_de_vidas)
-    call Extrae_address
+    sbc hl,bc
+    ld (Puntero_de_vidas),hl
 
-    ld bc,Indice_de_vidas                                           ; No incrementamos el Puntero_de_escudos si estamos al final del índice.
+    push hl
 
-    ld a,e
-    sub c
-    jr z,1F
+    call Pinta_Vida
 
-    dec de
-    dec de
+    pop hl
 
-1 call Pinta_vida
+    ld (Puntero_de_vidas),hl
 
     ret
 
-Pinta_vida
 
-    ld (Puntero_de_vidas),de
 
-    ld de,Vida
-    ld bc,$0101
-    ld a,%01000101
 
-    call Pinta_imagen
 
-    ret
+
+
+
+
+
+
+;Borra_escudo
+
+;    ld hl,Ctrl_2
+;    res 7,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando escudos.
+
+;    ld hl,(Puntero_de_escudos)
 
 ; ------------------------------------------------------------------------
 ;
@@ -122,28 +79,28 @@ Pinta_vida
 ;
 ;   MODIFICA: A.
 
-Restaura_attr_vida:
+;Restaura_attr_vida:
 
-    call Calcula_direccion_atributos
+;    call Calcula_direccion_atributos
 
-    inc l
+;    inc l
 
-    ld a,l
-    add $20
-    ld l,a                                                          ; Dirección de attr de pantalla, (centro del escudo) donde se encuentra el icono de VIDA.
+;    ld a,l
+;    add $20
+;    ld l,a                                                          ; Dirección de attr de pantalla, (centro del escudo) donde se encuentra el icono de VIDA.
 
-    ld a,%01000101                                                  ; Attr. de la vida.
-    ld (hl),a
+;    ld a,%01000101                                                  ; Attr. de la vida.
+;    ld (hl),a
 
-    ret
+;    ret
 
 ; ------------------------------------------------------------------------
 ;
-;	19/7/25
+;	26/9/25
 ;
 ;	Pinta_imagen.
 ;
-;	Pinta cualquier imagen en pantalla sin máscara. Esta rutina se utiliza para imágenes estáticas, (NO SPRITES).
+;	Pinta cualquier imagen en pantalla, (XOR). Esta rutina se utiliza para imágenes estáticas, (NO SPRITES).
 ;
 ;	INPUTS: HL contiene la dirección de memoria depantalla donde queremos imprimir la imagen, (esquina superior izquierda).
 ;			DE contiene la dirección del 1er .db que conforman los datos de la imagen.

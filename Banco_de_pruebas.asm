@@ -26,13 +26,13 @@ Sprite_vacio equ $82f0													; 48 Bytes de "0".
 
 ;	Vidas y escudos:
 
-Escudo_1 equ $4000														; Dirección de pantalla donde se pintan los escudos.
-Escudo_2 equ $4003
-Escudo_3 equ $4006
+Vida_1 equ $4001														; Dirección de pantalla donde se pintan los escudos.
+Vida_2 equ $4003
+Vida_3 equ $4006
 
-Vida_1 equ $4021														; Dirección de pantalla donde se pintan las vidas.
-Vida_2 equ $4024
-Vida_3 equ $4027															
+;  Vida_1 equ $4021														; Dirección de pantalla donde se pintan las vidas.
+;  Vida_2 equ $4024
+;  Vida_3 equ $4027
 
 ;	-----
 
@@ -77,9 +77,9 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
 ; 	Actualiza marcadores.
 
-	ld hl,Ctrl_2
-	bit 7,(hl)
-	call nz,Borra_escudo
+;	ld hl,Ctrl_2
+;	bit 7,(hl)
+;	call nz,Borra_escudo
 
 	ld hl,Ctrl_4
 	bit 6,(hl)
@@ -552,7 +552,7 @@ Shield db 100												; Temporización principal. Indica el tiempo que el esc
 Shield_2 db 0 												; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
 Shield_3 db 0
 
-Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
+;Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
 Puntero_de_vidas defw Indice_de_vidas
 
 ; 	INICIO  *************************************************************************************************************************************************************************
@@ -584,22 +584,13 @@ START:
 
 ;	Imprime escudos y vidas.
 
-	call Imprime_escudo
-	call Imprime_escudo
-	call Imprime_escudo
+	call Pinta_Vida
+	call Pinta_Vida
+	call Pinta_Vida
 
-	call Imprime_vida
-	call Imprime_vida
-	call Imprime_vida
-
-;	Voy a cambiar los attr de la zona del marcador de pantalla.
-
-;	ld a,%00110110
-;	ld b,96
-;	ld hl,$5800
-;1 ld (hl),a
-;	inc l
-;	djnz 1B
+;	call Imprime_vida
+;	call Imprime_vida
+;	call Imprime_vida
 
 	ld sp,0													; Situamos el inicio de Stack.
 	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
