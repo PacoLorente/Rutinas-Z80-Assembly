@@ -2,12 +2,14 @@
 ;
 ;   26/9/25
 ;
-;   Imprime_escudo
+;   Pinta un sprite de Amadeus en la parte superior izquierda de la pantalla.
+;
+;   MODIFY: A,HL,BC y DE
 
-Pinta_Vida
+
+Pinta_Vida:
 
     ld (Stack),sp
-
     ld sp,(Puntero_de_vidas)
 
     pop hl
@@ -24,15 +26,10 @@ Pinta_Vida
 
     ret
 
-Borra_vida
+Borra_vida:
 
     ld hl,Ctrl_4
     res 6,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando vidas.
-
-; Debugggggg !!!!!!
-    ld hl,Ctrl_5
-    set 4,(hl)
-; Debugggggg !!!!!!
 
 ;   Situamos (Puntero_de_vidas) en la posición correcta y actualizamos (Puntero_de_vidas).
 
@@ -52,22 +49,45 @@ Borra_vida
 
     ret
 
+Pinta_Escudo:
 
+    ld (Stack),sp
+    ld sp,(Puntero_de_escudos)
 
+    pop hl
+    pop de
+    pop bc
 
+    ld (Puntero_de_escudos),sp
 
+    ld sp,(Stack)
 
+    ld a,%01000111                                                  ; White.
 
+    call Pinta_imagen
 
+    ret
 
+Borra_escudo:
 
+    ld hl,Ctrl_2
+    res 7,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando escudos.
 
-;Borra_escudo
+    ld bc,6
 
-;    ld hl,Ctrl_2
-;    res 7,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando escudos.
+    ld hl,(Puntero_de_escudos)
+    sbc hl,bc
+    ld (Puntero_de_escudos),hl
 
-;    ld hl,(Puntero_de_escudos)
+    push hl
+
+    call Pinta_Escudo
+
+    pop hl
+
+    ld (Puntero_de_escudos),hl
+
+    ret
 
 ; ------------------------------------------------------------------------
 ;

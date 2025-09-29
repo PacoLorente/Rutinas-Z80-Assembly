@@ -1,17 +1,5 @@
 ;	22/07/25	
 
-;Indice_de_vidas
-
-;	defw Vida_1
-;	defw Vida_2
-;	defw Vida_3
-
-Indice_de_vidas
-
-	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
-	defw Vida_2,Amadeus_Fb,$0302
-	defw Vida_3,Amadeus,$0302
-
 ;	19/1/24
 
 Indice_de_niveles
@@ -30,11 +18,11 @@ Indice_de_niveles
 
 Nivel_1 db 25
 
-	db 1,4,3,1,4
-	db 3,3,4,4,4
-	db 3,3,4,1,4
-	db 3,3,4,1,3
-	db 1,4,3,3,4
+	db 1,2,3,1,2
+	db 3,3,2,2,1
+	db 3,3,2,1,2
+	db 3,3,2,1,3
+	db 1,2,3,3,2
 
 Nivel_2 db 12									; Nº de entidades.
 	db 2,1,1,1,1,2								; Tipo de entidad que vamos a introducir en las 7 cajas de DRAW.			
@@ -44,6 +32,23 @@ Nivel_2 db 12									; Nº de entidades.
 	defw 0
 
 ; --------------------------------------------------------------------------------------------------------------
+
+
+Indice_de_vidas
+
+	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
+	defw Vida_2,Amadeus_Fb,$0302
+	defw Vida_3,Amadeus,$0302
+
+Indice_de_escudos
+
+	defw Escudo_1,Escudo_00,$0201
+	defw Escudo_2,Escudo_00_Fb,$0301
+	defw Escudo_3,Escudo_00,$0201
+
+; --------------------------------------------------------------------------------------------------------------
+
+
 
 Indice_de_tablas_Random
 
