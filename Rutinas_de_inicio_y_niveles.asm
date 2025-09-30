@@ -550,6 +550,11 @@ Inicializa_1er_Nivel
 	ld (Numero_de_entidades),a					 					; Inicializa (Numero_de_entidades).
 	ld b,a
 
+; Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
+
+	call M_entidades_a_BCD											; Inicializa:	Entidades_BCD_unidades db 0
+;																					Entidades_BCD_decenas db 0
+
 	inc hl
 	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
 	ld c,(hl)													
@@ -1063,16 +1068,16 @@ Parametros_de_bandeja_DRAW_a_Caja_Master
 Inicializa_Numero_parcial_de_entidades 
 
 	ld a,(Numero_de_entidades)										; Nº TOTAL de las entidades del NIVEL.
-	cp 5												 			; "5" es el nº total de cajas de entidades de las que disponemos.
+	cp 4												 			; "5" es el nº total de cajas de entidades de las que disponemos.
 	jr c,1F
 	jr z,1F
 
 ; El nº de entidades es superior al que cabe en las cajas DRAW.
 ; Actualizamos variables.
 
-	sub 5
+	sub 4
 	ld (Numero_de_entidades),a
-	ld a,5
+	ld a,4
 	ld (Numero_parcial_de_entidades),a
 	ld b,a
 	ret
@@ -1086,3 +1091,42 @@ Inicializa_Numero_parcial_de_entidades
 	ld (Numero_de_entidades),a
 	ret
 
+;---------------------------------------------------------------------------------------------------------------
+;
+;	30/9/25
+;
+;	Convierte el valor hexadecimal de (Numero_de_entidades) a dos valores BCD que guardarán las variables:
+;
+;   Entidades_BCD_unidades
+;	Entidades_BCD_decenas
+;
+;	Utilizaremos estas variables para construir el marcador de dos dígitos digital que muestra el nº de entidades del nivel.
+
+M_entidades_a_BCD:
+
+	push hl
+	push bc
+
+	ld hl,Entidades_BCD_unidades
+	ld b,9
+	ld c,0
+
+2 cp b
+
+	jr z,1F
+	jr c,1F
+
+	sub 10
+
+	inc c
+
+	jr 2B
+
+1 ld (hl),a
+	inc hl
+	ld (hl),c
+
+	pop bc
+	pop hl
+
+	ret

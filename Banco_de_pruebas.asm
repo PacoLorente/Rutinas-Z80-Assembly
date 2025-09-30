@@ -552,8 +552,12 @@ Shield db 100												; Temporización principal. Indica el tiempo que el esc
 Shield_2 db 0 												; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
 Shield_3 db 0
 
+
 Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
 Puntero_de_vidas defw Indice_de_vidas
+
+Entidades_BCD_unidades db 0
+Entidades_BCD_decenas db 0
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -2334,6 +2338,12 @@ Siguiente_frame_explosion
 
 	ld hl,Entidades_en_curso
 	dec (hl)
+
+	ld hl,Numero_parcial_de_entidades
+
+	add (hl)
+
+	call M_entidades_a_BCD									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
 
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
 ; IX apunta al 1er .db de la entidad eliminada.
