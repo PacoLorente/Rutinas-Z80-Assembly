@@ -36,7 +36,8 @@ Escudo_3 equ $4046
 
 ;	Contador de entidades:
 
-Decenas_cont_ent equ $400d
+Decenas_cont_ent equ $400e
+
 Decenas_cont_ent_1 equ Decenas_cont_ent + 256
 Decenas_cont_ent_2 equ Decenas_cont_ent_1 + 256
 Decenas_cont_ent_3 equ Decenas_cont_ent_2 + 256
@@ -46,6 +47,7 @@ Decenas_cont_ent_6 equ Decenas_cont_ent_5 + 256
 Decenas_cont_ent_7 equ Decenas_cont_ent_6 + 256
 
 Decenas_cont_ent_8 equ Decenas_cont_ent + 32
+
 Decenas_cont_ent_9 equ Decenas_cont_ent_8 + 256
 Decenas_cont_ent_10 equ Decenas_cont_ent_9 + 256
 Decenas_cont_ent_11 equ Decenas_cont_ent_10 + 256
@@ -54,7 +56,27 @@ Decenas_cont_ent_13 equ Decenas_cont_ent_12 + 256
 Decenas_cont_ent_14 equ Decenas_cont_ent_13 + 256
 Decenas_cont_ent_15 equ Decenas_cont_ent_14 + 256
 
-Unidades_cont_ent equ $400f
+; ----- ----- -----
+
+Unidades_cont_ent equ $4010
+
+Unidades_cont_ent_1 equ Unidades_cont_ent + 256
+Unidades_cont_ent_2 equ Unidades_cont_ent_1 + 256
+Unidades_cont_ent_3 equ Unidades_cont_ent_2 + 256
+Unidades_cont_ent_4 equ Unidades_cont_ent_3 + 256
+Unidades_cont_ent_5 equ Unidades_cont_ent_4 + 256
+Unidades_cont_ent_6 equ Unidades_cont_ent_5 + 256
+Unidades_cont_ent_7 equ Unidades_cont_ent_6 + 256
+
+Unidades_cont_ent_8 equ Unidades_cont_ent + 32
+
+Unidades_cont_ent_9 equ Unidades_cont_ent_8 + 256
+Unidades_cont_ent_10 equ Unidades_cont_ent_9 + 256
+Unidades_cont_ent_11 equ Unidades_cont_ent_10 + 256
+Unidades_cont_ent_12 equ Unidades_cont_ent_11 + 256
+Unidades_cont_ent_13 equ Unidades_cont_ent_12 + 256
+Unidades_cont_ent_14 equ Unidades_cont_ent_13 + 256
+Unidades_cont_ent_15 equ Unidades_cont_ent_14 + 256
 
 ;	-----
 
@@ -106,6 +128,8 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 	ld hl,Ctrl_4
 	bit 6,(hl)
 	call nz,Borra_vida
+
+	call Print_enemy_counter
 
 ; 	Disparos.
 
@@ -585,6 +609,7 @@ Entidades_BCD_decenas db 0
 Puntero_unidades_grandes defw 0
 Puntero_decenas_grandes defw 0
 
+Attr_big_counter db %01000010 								; Inicialmente verde.
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -2378,10 +2403,26 @@ Siguiente_frame_explosion
 	dec (hl)
 
 	ld hl,Numero_parcial_de_entidades
-
 	add (hl)
 
-	call M_entidades_a_BCD									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
+;	Aplica attrs. al marcador de entidades.
+
+;	di
+;	jr $
+;	ei
+
+;	ld b,a
+
+;	srl b
+
+;	cp b
+
+	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
+
+;	ld hl, Attr_big_counter
+;	ld (hl),%01000110
+
+;	call M_entidades_a_BCD									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
 
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
 ; IX apunta al 1er .db de la entidad eliminada.
@@ -2424,7 +2465,11 @@ Siguiente_frame_explosion
 
 2 ld hl,Numero_parcial_de_entidades
 	dec (hl)
-	inc hl															
+
+	ld a,(hl)
+	call M_entidades_a_BCD									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
+
+	inc hl
 	dec (hl)		
 
 	call Limpia_caja_de_entidades

@@ -1093,7 +1093,7 @@ Inicializa_Numero_parcial_de_entidades
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;	30/9/25
+;	04/10/25
 ;
 ;	Convierte el valor hexadecimal de (Numero_de_entidades) a dos valores BCD que guardarán las variables:
 ;
@@ -1147,14 +1147,17 @@ M_entidades_a_BCD:
 
 	ret
 
-
 ; -----------------------------------------------
 
 Situa_en_indice_de_digitos_grandes:
 
+	and a 												; Identifica si el dñigito BCD es "0".
+
 	ld b,a
 
 	ld hl,Index_big_numbers
+
+	ret z
 
 1 inc hl
 	inc hl
