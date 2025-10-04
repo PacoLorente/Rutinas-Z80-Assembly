@@ -1126,7 +1126,39 @@ M_entidades_a_BCD:
 	inc hl
 	ld (hl),c
 
+;	Inicializa los punteros de dígitos.
+
+;	Unidades:
+
+	ld a,(Entidades_BCD_unidades)
+	call Situa_en_indice_de_digitos_grandes
+	call Extrae_address
+	ld (Puntero_unidades_grandes),hl
+
+;	Decenas:
+
+	ld a,(Entidades_BCD_decenas)
+	call Situa_en_indice_de_digitos_grandes
+	call Extrae_address
+	ld (Puntero_decenas_grandes),hl
+
 	pop bc
 	pop hl
+
+	ret
+
+
+; -----------------------------------------------
+
+Situa_en_indice_de_digitos_grandes:
+
+	ld b,a
+
+	ld hl,Index_big_numbers
+
+1 inc hl
+	inc hl
+
+	djnz 1B
 
 	ret

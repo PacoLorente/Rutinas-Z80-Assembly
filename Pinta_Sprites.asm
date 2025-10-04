@@ -1,3 +1,76 @@
+
+;Puntero_unidades_grandes defw 0
+;Puntero_decenas_grandes defw 0
+;Decenas_cont_ent equ $400d
+;Unidades_cont_ent equ $400f
+
+Print_enemy_counter:
+
+;    jr $
+
+    ld (Stack),sp
+    ld sp,(Puntero_decenas_grandes)
+;   ld hl,Unidades_cont_ent
+
+    pop hl
+    ld (Decenas_cont_ent),hl
+
+    pop hl
+    ld (Decenas_cont_ent_1),hl
+
+    pop hl
+    ld (Decenas_cont_ent_2),hl
+
+    pop hl
+    ld (Decenas_cont_ent_3),hl
+
+    pop hl
+    ld (Decenas_cont_ent_4),hl
+
+    pop hl
+    ld (Decenas_cont_ent_5),hl
+
+    pop hl
+    ld (Decenas_cont_ent_6),hl
+
+    pop hl
+    ld (Decenas_cont_ent_7),hl
+
+    pop hl
+    ld (Decenas_cont_ent_8),hl
+
+    pop hl
+    ld (Decenas_cont_ent_9),hl
+
+    pop hl
+    ld (Decenas_cont_ent_10),hl
+
+    pop hl
+    ld (Decenas_cont_ent_11),hl
+
+    pop hl
+    ld (Decenas_cont_ent_12),hl
+
+    pop hl
+    ld (Decenas_cont_ent_13),hl
+
+    pop hl
+    ld (Decenas_cont_ent_14),hl
+
+    pop hl
+    ld (Decenas_cont_ent_15),hl
+
+    ld sp,(Stack)
+
+    ret
+
+
+
+
+
+
+
+
 ; ------------------------------------------------------------------------
 ;
 ;   26/9/25

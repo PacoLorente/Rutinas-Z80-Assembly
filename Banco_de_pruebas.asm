@@ -34,6 +34,28 @@ Escudo_1 equ $4041														; Dirección de pantalla donde se pintan las vid
 Escudo_2 equ $4043
 Escudo_3 equ $4046
 
+;	Contador de entidades:
+
+Decenas_cont_ent equ $400d
+Decenas_cont_ent_1 equ Decenas_cont_ent + 256
+Decenas_cont_ent_2 equ Decenas_cont_ent_1 + 256
+Decenas_cont_ent_3 equ Decenas_cont_ent_2 + 256
+Decenas_cont_ent_4 equ Decenas_cont_ent_3 + 256
+Decenas_cont_ent_5 equ Decenas_cont_ent_4 + 256
+Decenas_cont_ent_6 equ Decenas_cont_ent_5 + 256
+Decenas_cont_ent_7 equ Decenas_cont_ent_6 + 256
+
+Decenas_cont_ent_8 equ Decenas_cont_ent + 32
+Decenas_cont_ent_9 equ Decenas_cont_ent_8 + 256
+Decenas_cont_ent_10 equ Decenas_cont_ent_9 + 256
+Decenas_cont_ent_11 equ Decenas_cont_ent_10 + 256
+Decenas_cont_ent_12 equ Decenas_cont_ent_11 + 256
+Decenas_cont_ent_13 equ Decenas_cont_ent_12 + 256
+Decenas_cont_ent_14 equ Decenas_cont_ent_13 + 256
+Decenas_cont_ent_15 equ Decenas_cont_ent_14 + 256
+
+Unidades_cont_ent equ $400f
+
 ;	-----
 
 Primer_scan_de_pantalla equ $4120										; Cuando (Puntero_de_impresion) se encuentra por debajo de esta dirección se generan "0" scanlines.
@@ -552,12 +574,17 @@ Shield db 100												; Temporización principal. Indica el tiempo que el esc
 Shield_2 db 0 												; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
 Shield_3 db 0
 
+; HUB
 
 Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
 Puntero_de_vidas defw Indice_de_vidas
 
 Entidades_BCD_unidades db 0
 Entidades_BCD_decenas db 0
+
+Puntero_unidades_grandes defw 0
+Puntero_decenas_grandes defw 0
+
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -621,6 +648,13 @@ INICIALIZACION
 ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
 
 	call Inicializa_1er_Nivel								; Inicializa el 1er nivel del juego.
+
+;	Imprime Contador de entidades.
+
+	push hl
+	call Print_enemy_counter
+	pop hl
+
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
 	call Prepara_Cajas_de_Entidades
 
@@ -673,6 +707,10 @@ INICIALIZACION
 	set 0,(hl) 												; Indica Frame completo.
 	set 2,(hl)
 	set 5,(hl)												; Imprimimos Amadeus.
+
+;	Imprime Contador de entidades.
+
+;	call Print_enemy_counter
 
 ;	Transición de entrada.
 
