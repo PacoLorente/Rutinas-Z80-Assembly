@@ -13,7 +13,7 @@
 
 ;	Free mem. $8cc6 - $8cff .....$39 / 57d Bytes.
 
-	org $8e00
+	org $8f00
 
 Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
@@ -219,7 +219,7 @@ Caja_2
 ; FREE SPACE $04, 04d ------------------------------------------------------
 ; --------------------------------------------------------------------------
 
-	org $8f00
+	org $9000
 
 Caja_3
 

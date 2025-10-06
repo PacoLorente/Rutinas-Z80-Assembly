@@ -61,6 +61,30 @@ Print_enemy_counter:
     pop hl
     ld (Decenas_cont_ent_15),hl
 
+    pop hl
+    ld (Decenas_cont_ent_16),hl
+
+    pop hl
+    ld (Decenas_cont_ent_17),hl
+
+    pop hl
+    ld (Decenas_cont_ent_18),hl
+
+    pop hl
+    ld (Decenas_cont_ent_19),hl
+
+    pop hl
+    ld (Decenas_cont_ent_20),hl
+
+    pop hl
+    ld (Decenas_cont_ent_21),hl
+
+    pop hl
+    ld (Decenas_cont_ent_22),hl
+
+    pop hl
+    ld (Decenas_cont_ent_23),hl
+
 ;   Unidades.
 
     ld sp,(Puntero_unidades_grandes)
@@ -113,6 +137,30 @@ Print_enemy_counter:
     pop hl
     ld (Unidades_cont_ent_15),hl
 
+    pop hl
+    ld (Unidades_cont_ent_16),hl
+
+    pop hl
+    ld (Unidades_cont_ent_17),hl
+
+    pop hl
+    ld (Unidades_cont_ent_18),hl
+
+    pop hl
+    ld (Unidades_cont_ent_19),hl
+
+    pop hl
+    ld (Unidades_cont_ent_20),hl
+
+    pop hl
+    ld (Unidades_cont_ent_21),hl
+
+    pop hl
+    ld (Unidades_cont_ent_22),hl
+
+    pop hl
+    ld (Unidades_cont_ent_23),hl
+
     ld sp,(Stack)
 
 ;   Attrs.
@@ -130,6 +178,20 @@ Print_enemy_counter:
     ld a, (Attr_big_counter)
     ld sp,(Stack)
     call Pintor:
+
+    ld hl,Decenas_cont_ent_16
+    call Calcula_direccion_atributos
+
+    ld a, (Attr_big_counter)
+    ld sp,(Stack)
+    call Pintor:
+
+
+
+
+
+
+
 
 Pintor:
 

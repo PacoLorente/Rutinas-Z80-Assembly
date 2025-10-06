@@ -56,7 +56,17 @@ Decenas_cont_ent_13 equ Decenas_cont_ent_12 + 256
 Decenas_cont_ent_14 equ Decenas_cont_ent_13 + 256
 Decenas_cont_ent_15 equ Decenas_cont_ent_14 + 256
 
-; ----- ----- -----
+Decenas_cont_ent_16 equ Decenas_cont_ent_8 + 32
+
+Decenas_cont_ent_17 equ Decenas_cont_ent_16 + 256
+Decenas_cont_ent_18 equ Decenas_cont_ent_17 + 256
+Decenas_cont_ent_19 equ Decenas_cont_ent_18 + 256
+Decenas_cont_ent_20 equ Decenas_cont_ent_19 + 256
+Decenas_cont_ent_21 equ Decenas_cont_ent_20 + 256
+Decenas_cont_ent_22 equ Decenas_cont_ent_21 + 256
+Decenas_cont_ent_23 equ Decenas_cont_ent_22 + 256
+
+; ----- ----- ----- ----- ----- ----- ----- -----
 
 Unidades_cont_ent equ $4010
 
@@ -78,7 +88,17 @@ Unidades_cont_ent_13 equ Unidades_cont_ent_12 + 256
 Unidades_cont_ent_14 equ Unidades_cont_ent_13 + 256
 Unidades_cont_ent_15 equ Unidades_cont_ent_14 + 256
 
-;	-----
+Unidades_cont_ent_16 equ Unidades_cont_ent_8 + 32
+
+Unidades_cont_ent_17 equ Unidades_cont_ent_16 + 256
+Unidades_cont_ent_18 equ Unidades_cont_ent_17 + 256
+Unidades_cont_ent_19 equ Unidades_cont_ent_18 + 256
+Unidades_cont_ent_20 equ Unidades_cont_ent_19 + 256
+Unidades_cont_ent_21 equ Unidades_cont_ent_20 + 256
+Unidades_cont_ent_22 equ Unidades_cont_ent_21 + 256
+Unidades_cont_ent_23 equ Unidades_cont_ent_22 + 256
+
+; ----- ----- ----- ----- ----- ----- ----- -----
 
 Primer_scan_de_pantalla equ $4120										; Cuando (Puntero_de_impresion) se encuentra por debajo de esta dirección se generan "0" scanlines.
 Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
@@ -609,7 +629,7 @@ Entidades_BCD_decenas db 0
 Puntero_unidades_grandes defw 0
 Puntero_decenas_grandes defw 0
 
-Attr_big_counter db %01000010 								; Inicialmente verde.
+Attr_big_counter db %01000110
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
