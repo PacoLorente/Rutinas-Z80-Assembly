@@ -100,6 +100,19 @@ Unidades_cont_ent_23 equ Unidades_cont_ent_22 + 256
 
 ; ----- ----- ----- ----- ----- ----- ----- -----
 
+; SCORE:
+
+
+
+
+
+
+
+
+
+
+
+
 Primer_scan_de_pantalla equ $4120										; Cuando (Puntero_de_impresion) se encuentra por debajo de esta dirección se generan "0" scanlines.
 Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
@@ -631,6 +644,23 @@ Puntero_decenas_grandes defw 0
 
 Attr_big_counter db %01000110
 
+; SCORE:
+
+Score_hex defw 42035
+Score_hex_1 defw 0
+
+Score_BCD_unidades db 0
+Score_BCD_decenas db 0
+Score_BCD_centenas db 0
+Score_BCD_unidades_de_millar db 0
+Score_BCD_decenas_de_millar db 0
+Score_BCD_centenas_de_millar db 0
+Score_BCD_unidades_de_millon db 0
+Score_BCD_decenas_de_millon db 0
+
+Puntero_de_digitos_score defw
+
+
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
 ;	19/7/25
@@ -656,6 +686,13 @@ START:
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
 
+	ld sp,0													; Situamos el inicio de Stack.
+	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
+	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
+	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
+
+INICIALIZACION:
+
 ;	Marcadores. -------------------------------------
 
 ;	Imprime escudos y vidas.
@@ -668,12 +705,9 @@ START:
 	call Pinta_Escudo
 	call Pinta_Escudo
 
-	ld sp,0													; Situamos el inicio de Stack.
-	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
-	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
-	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
+;	Imprime SCORE:
 
-INICIALIZACION
+	call Imprime_SCORE
 
 ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
 

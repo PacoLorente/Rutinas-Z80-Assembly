@@ -1,4 +1,37 @@
 ;---------------------------------------------------------------------
+;   Imprime el cartel SCORE:
+;
+;   10/10/25
+;
+;
+;
+
+Imprime_SCORE:
+
+    ld hl,$4018
+    ld de,_Sc
+    call bp
+
+    ld de,_or
+    call bp
+
+    ld de,_e
+    call bp
+
+    ret
+
+bp push hl
+    ld bc,$0202
+    ld a,%01000101
+    call Pinta_imagen
+    pop hl
+
+    inc l
+    inc l
+
+    ret
+
+;---------------------------------------------------------------------
 ;   Imprime el contador: ENEMIGOS RESTANTES.
 ;
 ;   4/10/25
@@ -185,13 +218,6 @@ Print_enemy_counter:
     ld a, (Attr_big_counter)
     ld sp,(Stack)
     call Pintor:
-
-
-
-
-
-
-
 
 Pintor:
 
