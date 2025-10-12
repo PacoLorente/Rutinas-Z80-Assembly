@@ -822,6 +822,20 @@ _Sc:
 	DEFB	$07,$9D,$03,$DC,$61,$DC,$70,$DC
 	DEFB	$79,$8F,$7F,$07,$00,$00,$00,$00
 
+
+Indice_de_digitos_score:
+
+	DEFW	Cero_Score
+	DEFW	Uno_Score
+	DEFW	Dos_Score
+	DEFW	Tres_Score
+	DEFW	Cuatro_Score
+	DEFW	Cinco_Score
+	DEFW	Seis_Score
+	DEFW	Siete_Score
+	DEFW	Ocho_Score
+	DEFW	Nueve_Score
+
 ; --------------------------------------------------------------------------
-; FREE SPACE $20, 32d ------------------------------------------------------
+; FREE SPACE $0c, 12d ------------------------------------------------------
 ; --------------------------------------------------------------------------

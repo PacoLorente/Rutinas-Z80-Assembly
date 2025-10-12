@@ -1,3 +1,162 @@
+Print_Score_Counter:
+
+; Attr.
+
+    ld hl,Unidades_Score
+    call Calcula_direccion_atributos
+
+    ld a,%01000111
+    ld b,4
+
+1 ld (hl),a
+    dec l
+    djnz 1B
+
+;   Utilizamos la pila.
+
+    ld (Stack),sp
+
+;   Unidades.
+
+    ld sp,(Puntero_de_unidades_Score)
+
+    pop hl
+
+    ld a,l
+    ld (Unidades_Score),a
+
+    ld a,h
+    ld (Unidades_Score_1),a
+
+    pop hl
+
+    ld a,l
+    ld (Unidades_Score_2),a
+
+    ld a,h
+    ld (Unidades_Score_3),a
+
+    pop hl
+
+    ld a,l
+    ld (Unidades_Score_4),a
+
+    ld a,h
+    ld (Unidades_Score_5),a
+
+    pop hl
+
+    ld a,l
+    ld (Unidades_Score_6),a
+
+    ld a,h
+    ld (Unidades_Score_7),a
+
+;   Decenas.
+
+    ld sp,(Puntero_de_decenas_Score)
+
+    pop hl
+
+    ld a,l
+    ld (Decenas_Score),a
+
+    ld a,h
+    ld (Decenas_Score_1),a
+
+    pop hl
+
+    ld a,l
+    ld (Decenas_Score_2),a
+
+    ld a,h
+    ld (Decenas_Score_3),a
+
+    pop hl
+
+    ld a,l
+    ld (Decenas_Score_4),a
+
+    ld a,h
+    ld (Decenas_Score_5),a
+
+    pop hl
+
+    ld a,l
+    ld (Decenas_Score_6),a
+
+    ld a,h
+    ld (Decenas_Score_7),a
+
+;   Centenas.
+
+    ld sp,(Puntero_de_centenas_Score)
+
+    pop hl
+
+    ld a,l
+    ld (Centenas_Score),a
+
+    ld a,h
+    ld (Centenas_Score_1),a
+
+    pop hl
+
+    ld a,l
+    ld (Centenas_Score_2),a
+
+    ld a,h
+    ld (Centenas_Score_3),a
+
+    pop hl
+
+    ld a,l
+    ld (Centenas_Score_4),a
+
+    ld a,h
+    ld (Centenas_Score_5),a
+
+    pop hl
+
+    ld a,l
+    ld (Centenas_Score_6),a
+
+    ld a,h
+    ld (Centenas_Score_7),a
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ld sp,(Stack)
+
+    ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;---------------------------------------------------------------------
 ;   Imprime el cartel SCORE:
 ;
@@ -8,7 +167,7 @@
 
 Imprime_SCORE:
 
-    ld hl,$4018
+    ld hl,$4019
     ld de,_Sc
     call bp
 

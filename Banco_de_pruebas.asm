@@ -102,10 +102,48 @@ Unidades_cont_ent_23 equ Unidades_cont_ent_22 + 256
 
 ; SCORE:
 
+; Direcciones de memoria ROM. Datos que forman los dígitos decimales del Spectrum.
 
+Cero_Score equ $3d80
+Uno_Score equ $3d88
+Dos_Score equ $3d90
+Tres_Score equ $3d98
+Cuatro_Score equ $3da0
+Cinco_Score equ $3da8
+Seis_Score equ $3db0
+Siete_Score equ $3db8
+Ocho_Score equ $3dc0
+Nueve_Score equ $3dc8
 
+Unidades_Score equ $405e
 
+Unidades_Score_1 equ Unidades_Score + 256
+Unidades_Score_2 equ Unidades_Score_1 + 256
+Unidades_Score_3 equ Unidades_Score_2 + 256
+Unidades_Score_4 equ Unidades_Score_3 + 256
+Unidades_Score_5 equ Unidades_Score_4 + 256
+Unidades_Score_6 equ Unidades_Score_5 + 256
+Unidades_Score_7 equ Unidades_Score_6 + 256
 
+Decenas_Score equ Unidades_Score - 1
+
+Decenas_Score_1 equ Decenas_Score + 256
+Decenas_Score_2 equ Decenas_Score_1 + 256
+Decenas_Score_3 equ Decenas_Score_2 + 256
+Decenas_Score_4 equ Decenas_Score_3 + 256
+Decenas_Score_5 equ Decenas_Score_4 + 256
+Decenas_Score_6 equ Decenas_Score_5 + 256
+Decenas_Score_7 equ Decenas_Score_6 + 256
+
+Centenas_Score equ Decenas_Score - 1
+
+Centenas_Score_1 equ Centenas_Score + 256
+Centenas_Score_2 equ Centenas_Score_1 + 256
+Centenas_Score_3 equ Centenas_Score_2 + 256
+Centenas_Score_4 equ Centenas_Score_3 + 256
+Centenas_Score_5 equ Centenas_Score_4 + 256
+Centenas_Score_6 equ Centenas_Score_5 + 256
+Centenas_Score_7 equ Centenas_Score_6 + 256
 
 
 
@@ -127,6 +165,7 @@ Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 
 
 Scanlines_album equ $8000	                    ;	($8000 - $8118) 	; Inicialmente 280 bytes, $118.
 Scanlines_album_2 equ $811a	                    ;   ($811a - $8232)
+
 Amadeus_scanlines_album equ $8234	            ;	($8234 - $8256) 	; Inicialmente 34 bytes, $22.
 Amadeus_scanlines_album_2 equ $8258	            ;	($8258 - $827a)
 
@@ -380,6 +419,7 @@ CTRL_DESPLZ db 0											; Este byte nos indica la posición que tiene el Spri
 ; 			 5 ..... CIAN
 ;			 6 ..... AMARILLO
 ; 			 7 ..... BLANCO
+
 
 Indice_Sprite_der defw 0
 Indice_Sprite_izq defw 0
@@ -646,20 +686,19 @@ Attr_big_counter db %01000110
 
 ; SCORE:
 
-Score_hex defw 42035
-Score_hex_1 defw 0
+Score_hex defw 0
 
 Score_BCD_unidades db 0
 Score_BCD_decenas db 0
 Score_BCD_centenas db 0
 Score_BCD_unidades_de_millar db 0
 Score_BCD_decenas_de_millar db 0
-Score_BCD_centenas_de_millar db 0
-Score_BCD_unidades_de_millon db 0
-Score_BCD_decenas_de_millon db 0
 
-Puntero_de_digitos_score defw
-
+Puntero_de_unidades_Score defw Cinco_Score
+Puntero_de_decenas_Score defw Ocho_Score
+Puntero_de_centenas_Score defw Cuatro_Score
+Puntero_de_um_Score defw Tres_Score
+Puntero_de_dm_Score defw Uno_Score
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -732,6 +771,12 @@ INICIALIZACION:
 
 	push hl
 	call Print_enemy_counter
+
+;	Imprime Puntuación.
+
+	push bc
+	call Print_Score_Counter
+	pop bc
 	pop hl
 
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
