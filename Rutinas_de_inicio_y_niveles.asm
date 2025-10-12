@@ -1151,7 +1151,7 @@ M_entidades_a_BCD:
 
 Situa_en_indice_de_digitos_grandes:
 
-	and a 												; Identifica si el dñigito BCD es "0".
+	and a 												; Identifica si el dígito BCD es "0".
 
 	ld b,a
 
@@ -1165,3 +1165,46 @@ Situa_en_indice_de_digitos_grandes:
 	djnz 1B
 
 	ret
+
+;---------------------------------------------------------------------------------------------------------------
+;
+;	12/10/25
+;
+;	Convierte el valor hexadecimal de (Score_hex) a 5 valores BCD que guardarán las variables:
+;
+;	Score_BCD_unidades
+;	Score_BCD_decenas
+;	Score_BCD_centenas
+;	Score_BCD_unidades_de_millar
+;	Score_BCD_decenas_de_millar
+;
+;	Utilizaremos estas variables para construir el marcador de 5 dígitos digital que muestra nuestra puntuación.
+;
+;	INPUT: HL apunta a Score_hex.
+
+Score_a_BCD:
+
+;	di
+;	jr $
+;	ei
+
+
+
+
+
+	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

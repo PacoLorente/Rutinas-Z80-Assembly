@@ -6,7 +6,7 @@ Print_Score_Counter:
     call Calcula_direccion_atributos
 
     ld a,%01000111
-    ld b,4
+    ld b,5
 
 1 ld (hl),a
     dec l
@@ -52,9 +52,15 @@ Print_Score_Counter:
     ld a,h
     ld (Unidades_Score_7),a
 
+; Consulta dígito de Ctrl.
+
+    ld a,(Score_Ctrl)
+    and a
+    jp z,Exit_1
+
 ;   Decenas.
 
-    ld sp,(Puntero_de_decenas_Score)
+2 ld sp,(Puntero_de_decenas_Score)
 
     pop hl
 
@@ -124,38 +130,81 @@ Print_Score_Counter:
     ld a,h
     ld (Centenas_Score_7),a
 
+;   Unidades_de_millar.
 
+    ld sp,(Puntero_de_um_Score)
 
+    pop hl
 
+    ld a,l
+    ld (Unidades_de_millar_Score),a
 
+    ld a,h
+    ld (Unidades_de_millar_Score_1),a
 
+    pop hl
 
+    ld a,l
+    ld (Unidades_de_millar_Score_2),a
 
+    ld a,h
+    ld (Unidades_de_millar_Score_3),a
 
+    pop hl
 
+    ld a,l
+    ld (Unidades_de_millar_Score_4),a
 
+    ld a,h
+    ld (Unidades_de_millar_Score_5),a
 
+    pop hl
 
+    ld a,l
+    ld (Unidades_de_millar_Score_6),a
 
+    ld a,h
+    ld (Unidades_de_millar_Score_7),a
 
-    ld sp,(Stack)
+;   Decenas_de_millar.
+
+    ld sp,(Puntero_de_dm_Score)
+
+    pop hl
+
+    ld a,l
+    ld (Decenas_de_millar_Score),a
+
+    ld a,h
+    ld (Decenas_de_millar_Score_1),a
+
+    pop hl
+
+    ld a,l
+    ld (Decenas_de_millar_Score_2),a
+
+    ld a,h
+    ld (Decenas_de_millar_Score_3),a
+
+    pop hl
+
+    ld a,l
+    ld (Decenas_de_millar_Score_4),a
+
+    ld a,h
+    ld (Decenas_de_millar_Score_5),a
+
+    pop hl
+
+    ld a,l
+    ld (Decenas_de_millar_Score_6),a
+
+    ld a,h
+    ld (Decenas_de_millar_Score_7),a
+
+Exit_1 ld sp,(Stack)
 
     ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ;---------------------------------------------------------------------
 ;   Imprime el cartel SCORE:

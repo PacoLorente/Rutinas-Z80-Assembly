@@ -145,11 +145,27 @@ Centenas_Score_5 equ Centenas_Score_4 + 256
 Centenas_Score_6 equ Centenas_Score_5 + 256
 Centenas_Score_7 equ Centenas_Score_6 + 256
 
+Unidades_de_millar_Score equ Centenas_Score - 1
 
+Unidades_de_millar_Score_1 equ Unidades_de_millar_Score + 256
+Unidades_de_millar_Score_2 equ Unidades_de_millar_Score_1 + 256
+Unidades_de_millar_Score_3 equ Unidades_de_millar_Score_2 + 256
+Unidades_de_millar_Score_4 equ Unidades_de_millar_Score_3 + 256
+Unidades_de_millar_Score_5 equ Unidades_de_millar_Score_4 + 256
+Unidades_de_millar_Score_6 equ Unidades_de_millar_Score_5 + 256
+Unidades_de_millar_Score_7 equ Unidades_de_millar_Score_6 + 256
 
+Decenas_de_millar_Score equ Unidades_de_millar_Score - 1
 
+Decenas_de_millar_Score_1 equ Decenas_de_millar_Score + 256
+Decenas_de_millar_Score_2 equ Decenas_de_millar_Score_1 + 256
+Decenas_de_millar_Score_3 equ Decenas_de_millar_Score_2 + 256
+Decenas_de_millar_Score_4 equ Decenas_de_millar_Score_3 + 256
+Decenas_de_millar_Score_5 equ Decenas_de_millar_Score_4 + 256
+Decenas_de_millar_Score_6 equ Decenas_de_millar_Score_5 + 256
+Decenas_de_millar_Score_7 equ Decenas_de_millar_Score_6 + 256
 
-
+; ----- ----- ----- ----- ----- ----- ----- -----
 
 Primer_scan_de_pantalla equ $4120										; Cuando (Puntero_de_impresion) se encuentra por debajo de esta dirección se generan "0" scanlines.
 Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
@@ -699,6 +715,9 @@ Puntero_de_decenas_Score defw Ocho_Score
 Puntero_de_centenas_Score defw Cuatro_Score
 Puntero_de_um_Score defw Tres_Score
 Puntero_de_dm_Score defw Uno_Score
+
+Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
+; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -2498,30 +2517,28 @@ Siguiente_frame_explosion
 	dec a
 	ld (Numero_de_entidades),a
 
+; Incrementa puntuación.
+; Hay que crear una rutina que sume puntos al marcador teniendo en cuenta el "Tipo" de entidad y la distancia a la que se encuentra de Amadeus.
+; De momento:
+
+	ld hl,Score_hex
+
+	inc (hl)
+	inc (hl)
+	inc (hl)
+	inc (hl)
+	inc (hl)
+
+	call Score_a_BCD
+
 	ld hl,Entidades_en_curso
 	dec (hl)
 
 	ld hl,Numero_parcial_de_entidades
 	add (hl)
 
-;	Aplica attrs. al marcador de entidades.
-
-;	di
-;	jr $
-;	ei
-
-;	ld b,a
-
-;	srl b
-
-;	cp b
 
 	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
-
-;	ld hl, Attr_big_counter
-;	ld (hl),%01000110
-
-;	call M_entidades_a_BCD									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
 
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
 ; IX apunta al 1er .db de la entidad eliminada.
