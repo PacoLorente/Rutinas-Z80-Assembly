@@ -702,7 +702,7 @@ Attr_big_counter db %01000110
 
 ; SCORE:
 
-Score_hex defw 0
+Score_hex defw 32715
 
 Score_BCD_unidades db 0
 Score_BCD_decenas db 0
@@ -710,11 +710,11 @@ Score_BCD_centenas db 0
 Score_BCD_unidades_de_millar db 0
 Score_BCD_decenas_de_millar db 0
 
-Puntero_de_unidades_Score defw Cinco_Score
-Puntero_de_decenas_Score defw Ocho_Score
-Puntero_de_centenas_Score defw Cuatro_Score
-Puntero_de_um_Score defw Tres_Score
-Puntero_de_dm_Score defw Uno_Score
+Puntero_de_unidades_Score defw Cero_Score
+Puntero_de_decenas_Score defw Cero_Score
+Puntero_de_centenas_Score defw Cero_Score
+Puntero_de_um_Score defw Cero_Score
+Puntero_de_dm_Score defw Cero_Score
 
 Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
 ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
@@ -2529,7 +2529,7 @@ Siguiente_frame_explosion
 	inc (hl)
 	inc (hl)
 
-	call Score_a_BCD
+;	call Score_a_BCD
 
 	ld hl,Entidades_en_curso
 	dec (hl)

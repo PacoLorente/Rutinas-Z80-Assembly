@@ -1178,9 +1178,13 @@ Situa_en_indice_de_digitos_grandes:
 ;	Score_BCD_unidades_de_millar
 ;	Score_BCD_decenas_de_millar
 ;
+;	10000d ..... $2710 ..... set (4) (Score_Ctrl)
+;	 1000d ..... $03e8 .....     (3)
+;	  100d ..... $0064 .....     (2)
+;	   10d ..... $000a .....     (1)
+;
 ;	Utilizaremos estas variables para construir el marcador de 5 dígitos digital que muestra nuestra puntuación.
 ;
-;	INPUT: HL apunta a Score_hex.
 
 Score_a_BCD:
 
@@ -1188,9 +1192,153 @@ Score_a_BCD:
 ;	jr $
 ;	ei
 
+	xor a
+	ld (Score_hex),a								; En 1er lugar inicializamos la variable de Ctrl, (Score_hex).
 
+	ld hl,(Score_hex)
 
+	ld de,Score_Ctrl 								; DE apunta al byte de control de Score, (Score_Ctrl).
 
+	ld bc,$2710 									; 10000d.
+
+;	Averigua cuantas decenas de millar contiene (Score_hex).
+
+	and a
+
+1 sbc hl,bc
+
+	jr c, No_decenas_de_millar
+
+	push hl
+
+	ld hl, Score_BCD_decenas_de_millar
+	inc (hl)
+
+	pop hl
+
+; Activamos FLAG. Permiso para imprimir todos los dígitos BCD de Score.
+
+	ex de,hl
+	set 3,(hl)
+	ex de,hl
+
+	jr 1B
+
+No_decenas_de_millar
+
+	ld a,(Score_Ctrl)
+	bit 3,a
+	jr nz,2F 										; (Score_hex) dispone de decenas de millar. No inicializamos HL.
+
+	ld hl,(Score_hex)
+
+2 ld bc,$03e8
+
+	and a
+
+3 sbc hl,bc
+
+	jr c, No_unidades_de_millar
+
+	push hl
+
+	ld hl, Score_BCD_unidades_de_millar
+	inc (hl)
+
+	pop hl
+
+; Activamos FLAG. Permiso para imprimir los 4 últimos dígitos BCD de Score.
+
+	ex de,hl
+	set 2,(hl)
+	ex de,hl
+
+	jr 3B
+
+No_unidades_de_millar
+
+	ld a,(Score_Ctrl)
+	bit 3,a
+	jr nz,4F
+	bit 2,a
+	jr nz,4F
+
+	ld hl,(Score_hex)
+
+4 ld bc,$0064
+
+	and a
+
+5 sbc hl,bc
+
+	jr c, No_centenas
+
+	push hl
+
+	ld hl, Score_BCD_centenas
+	inc (hl)
+
+	pop hl
+
+; Activamos FLAG. Permiso para imprimir los 3 últimos dígitos BCD de Score.
+
+	ex de,hl
+	set 1,(hl)
+	ex de,hl
+
+	jr 5B
+
+No_centenas
+
+	ld a,(Score_Ctrl)
+	bit 3,a
+	jr nz,6F
+	bit 2,a
+	jr nz,6F
+	bit 1,a
+	jr nz,6F
+
+	ld hl,(Score_hex)
+
+6 ld bc,$000a
+
+	and a
+
+7 sbc hl,bc
+
+	jr c, No_decenas
+
+	push hl
+
+	ld hl, Score_BCD_decenas
+	inc (hl)
+
+	pop hl
+
+; Activamos FLAG. Permiso para imprimir los 2 últimos dígitos BCD de Score.
+
+	ex de,hl
+	set 0,(hl)
+	ex de,hl
+
+	jr 7B
+
+No_decenas
+
+	ld a,(Score_Ctrl)
+	bit 3,a
+	jr nz,8F
+	bit 2,a
+	jr nz,8F
+	bit 1,a
+	jr nz,8F
+	bit 0,a
+	jr nz,8F
+
+	ld hl,(Score_hex)
+
+8 ld a,l
+	ld (Score_BCD_unidades),a
 
 	ret
 
