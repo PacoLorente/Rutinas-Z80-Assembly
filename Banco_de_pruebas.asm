@@ -702,7 +702,7 @@ Attr_big_counter db %01000110
 
 ; SCORE:
 
-Score_hex defw 32715
+Score_hex defw 448
 
 Score_BCD_unidades db 0
 Score_BCD_decenas db 0
@@ -2521,15 +2521,13 @@ Siguiente_frame_explosion
 ; Hay que crear una rutina que sume puntos al marcador teniendo en cuenta el "Tipo" de entidad y la distancia a la que se encuentra de Amadeus.
 ; De momento:
 
-	ld hl,Score_hex
+;	ld hl,Score_hex
 
-	inc (hl)
-	inc (hl)
-	inc (hl)
-	inc (hl)
-	inc (hl)
-
-;	call Score_a_BCD
+;	inc (hl)
+;	inc (hl)
+;	inc (hl)
+;	inc (hl)
+;	inc (hl)
 
 	ld hl,Entidades_en_curso
 	dec (hl)
@@ -2537,8 +2535,9 @@ Siguiente_frame_explosion
 	ld hl,Numero_parcial_de_entidades
 	add (hl)
 
-
 	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
+
+	call Score_a_BCD
 
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
 ; IX apunta al 1er .db de la entidad eliminada.

@@ -1168,7 +1168,7 @@ Situa_en_indice_de_digitos_grandes:
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;	12/10/25
+;	14/10/25
 ;
 ;	Convierte el valor hexadecimal de (Score_hex) a 5 valores BCD que guardarán las variables:
 ;
@@ -1179,7 +1179,7 @@ Situa_en_indice_de_digitos_grandes:
 ;	Score_BCD_decenas_de_millar
 ;
 ;	10000d ..... $2710 ..... set (4) (Score_Ctrl)
-;	 1000d ..... $03e8 .....     (3)
+;	 1000d ..... $03e8 .....  "  (3)
 ;	  100d ..... $0064 .....     (2)
 ;	   10d ..... $000a .....     (1)
 ;
@@ -1188,12 +1188,16 @@ Situa_en_indice_de_digitos_grandes:
 
 Score_a_BCD:
 
-;	di
-;	jr $
-;	ei
+; En 1er lugar inicializamos la variable de Ctrl, (Score_hex) y todos los dígitos BCD del marcador SCORE.
 
 	xor a
-	ld (Score_hex),a								; En 1er lugar inicializamos la variable de Ctrl, (Score_hex).
+
+	ld (Score_Ctrl),a								
+	ld (Score_BCD_unidades),a
+	ld (Score_BCD_decenas),a
+	ld (Score_BCD_centenas),a 
+	ld (Score_BCD_unidades_de_millar),a
+	ld (Score_BCD_decenas_de_millar),a
 
 	ld hl,(Score_hex)
 
@@ -1226,6 +1230,9 @@ Score_a_BCD:
 
 No_decenas_de_millar
 
+	and a                                           ; Elimina la suma del Carry a ADC.
+	adc hl,bc 										; Recupera valor de HL.
+
 	ld a,(Score_Ctrl)
 	bit 3,a
 	jr nz,2F 										; (Score_hex) dispone de decenas de millar. No inicializamos HL.
@@ -1256,6 +1263,9 @@ No_decenas_de_millar
 	jr 3B
 
 No_unidades_de_millar
+
+	and a
+	adc hl,bc
 
 	ld a,(Score_Ctrl)
 	bit 3,a
@@ -1289,6 +1299,9 @@ No_unidades_de_millar
 	jr 5B
 
 No_centenas
+
+	and a
+	adc hl,bc
 
 	ld a,(Score_Ctrl)
 	bit 3,a
@@ -1324,6 +1337,9 @@ No_centenas
 	jr 7B
 
 No_decenas
+
+	and a
+	adc hl,bc
 
 	ld a,(Score_Ctrl)
 	bit 3,a
