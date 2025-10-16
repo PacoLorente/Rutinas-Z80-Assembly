@@ -1190,9 +1190,13 @@ Score_a_BCD:
 
 ; En 1er lugar inicializamos la variable de Ctrl, (Score_hex) y todos los dígitos BCD del marcador SCORE.
 
+;	di
+;	jr $
+;	ei
+
+
 	xor a
 
-	ld (Score_Ctrl),a								
 	ld (Score_BCD_unidades),a
 	ld (Score_BCD_decenas),a
 	ld (Score_BCD_centenas),a 
@@ -1237,8 +1241,6 @@ No_decenas_de_millar
 	bit 3,a
 	jr nz,2F 										; (Score_hex) dispone de decenas de millar. No inicializamos HL.
 
-	ld hl,(Score_hex)
-
 2 ld bc,$03e8
 
 	and a
@@ -1272,8 +1274,6 @@ No_unidades_de_millar
 	jr nz,4F
 	bit 2,a
 	jr nz,4F
-
-	ld hl,(Score_hex)
 
 4 ld bc,$0064
 
@@ -1311,8 +1311,6 @@ No_centenas
 	bit 1,a
 	jr nz,6F
 
-	ld hl,(Score_hex)
-
 6 ld bc,$000a
 
 	and a
@@ -1341,31 +1339,48 @@ No_decenas
 	and a
 	adc hl,bc
 
-	ld a,(Score_Ctrl)
-	bit 3,a
-	jr nz,8F
-	bit 2,a
-	jr nz,8F
-	bit 1,a
-	jr nz,8F
-	bit 0,a
-	jr nz,8F
-
-	ld hl,(Score_hex)
-
 8 ld a,l
 	ld (Score_BCD_unidades),a
 
 	ret
 
+; -------------------------------------------------------------------
+;
+;	16/10/25
+;
 
 
+Actualiza_Punteros_Score:
+
+;	Exclusiones:
+
+	ld a,(Score_Ctrl)
+	and a
+	ret z 														; RET si no hay incremento en el marcador.
+
+	ld a,(Score_BCD_unidades)
+	and a
+	jr z, Actualiza_puntero_decenas_score
+
+Actualiza_puntero_unidades_score
+
+	ld b,a
+
+	ld hl,(Puntero_de_unidades_Score)
+
+1 inc l
+	inc l
+
+	djnz 1B
+
+	call Extrae_address
+
+	ld (Puntero_de_unidades_Score),hl
+
+Actualiza_puntero_decenas_score
 
 
-
-
-
-
+	ret
 
 
 

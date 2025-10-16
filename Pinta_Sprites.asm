@@ -1,6 +1,15 @@
+; ---------------------------------------------------------------------------
+;
+;   16/10/25
+;
+;   Imprime el contador de 16 bits SCORE.
+
+
 Print_Score_Counter:
 
-; Attr.
+;   En 1er lugar fijamos los attr.
+
+;   Attr.
 
     ld hl,Unidades_Score
     call Calcula_direccion_atributos
@@ -52,7 +61,7 @@ Print_Score_Counter:
     ld a,h
     ld (Unidades_Score_7),a
 
-; Consulta dígito de Ctrl.
+;   Consulta dígito de Ctrl.
 
     ld a,(Score_Ctrl)
     and a
@@ -94,6 +103,12 @@ Print_Score_Counter:
     ld a,h
     ld (Decenas_Score_7),a
 
+;   Consulta dígito de Ctrl.
+
+    ld a,(Score_Ctrl)
+    and %11111110
+    jp z,Exit_1
+
 ;   Centenas.
 
     ld sp,(Puntero_de_centenas_Score)
@@ -129,6 +144,12 @@ Print_Score_Counter:
 
     ld a,h
     ld (Centenas_Score_7),a
+
+;   Consulta dígito de Ctrl.
+
+    ld a,(Score_Ctrl)
+    and %11111100
+    jr z,Exit_1
 
 ;   Unidades_de_millar.
 
@@ -168,6 +189,12 @@ Print_Score_Counter:
 
 ;   Decenas_de_millar.
 
+;   Consulta dígito de Ctrl.
+
+    ld a,(Score_Ctrl)
+    and %11111000
+    jr z,Exit_1
+
     ld sp,(Puntero_de_dm_Score)
 
     pop hl
@@ -202,12 +229,17 @@ Print_Score_Counter:
     ld a,h
     ld (Decenas_de_millar_Score_7),a
 
-Exit_1 ld sp,(Stack)
+Exit_1
+
+    xor a
+    ld (Score_Ctrl),a
+
+    ld sp,(Stack)
 
     ret
 
 ;---------------------------------------------------------------------
-;   Imprime el cartel SCORE:
+;   Imprime el cartel SCORE: (Encima del marcador de puntuación).
 ;
 ;   10/10/25
 ;
