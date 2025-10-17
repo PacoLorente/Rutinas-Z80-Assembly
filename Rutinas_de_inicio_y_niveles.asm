@@ -1190,11 +1190,6 @@ Score_a_BCD:
 
 ; En 1er lugar inicializamos la variable de Ctrl, (Score_hex) y todos los dígitos BCD del marcador SCORE.
 
-;	di
-;	jr $
-;	ei
-
-
 	xor a
 
 	ld (Score_BCD_unidades),a
@@ -1227,7 +1222,7 @@ Score_a_BCD:
 ; Activamos FLAG. Permiso para imprimir todos los dígitos BCD de Score.
 
 	ex de,hl
-	set 3,(hl)
+	set 4,(hl)
 	ex de,hl
 
 	jr 1B
@@ -1237,15 +1232,11 @@ No_decenas_de_millar
 	and a                                           ; Elimina la suma del Carry a ADC.
 	adc hl,bc 										; Recupera valor de HL.
 
-	ld a,(Score_Ctrl)
-	bit 3,a
-	jr nz,2F 										; (Score_hex) dispone de decenas de millar. No inicializamos HL.
-
-2 ld bc,$03e8
+	ld bc,$03e8
 
 	and a
 
-3 sbc hl,bc
+2 sbc hl,bc
 
 	jr c, No_unidades_de_millar
 
@@ -1259,27 +1250,21 @@ No_decenas_de_millar
 ; Activamos FLAG. Permiso para imprimir los 4 últimos dígitos BCD de Score.
 
 	ex de,hl
-	set 2,(hl)
+	set 3,(hl)
 	ex de,hl
 
-	jr 3B
+	jr 2B
 
 No_unidades_de_millar
 
 	and a
 	adc hl,bc
 
-	ld a,(Score_Ctrl)
-	bit 3,a
-	jr nz,4F
-	bit 2,a
-	jr nz,4F
-
-4 ld bc,$0064
+	ld bc,$0064
 
 	and a
 
-5 sbc hl,bc
+3 sbc hl,bc
 
 	jr c, No_centenas
 
@@ -1293,29 +1278,21 @@ No_unidades_de_millar
 ; Activamos FLAG. Permiso para imprimir los 3 últimos dígitos BCD de Score.
 
 	ex de,hl
-	set 1,(hl)
+	set 2,(hl)
 	ex de,hl
 
-	jr 5B
+	jr 3B
 
 No_centenas
 
 	and a
 	adc hl,bc
 
-	ld a,(Score_Ctrl)
-	bit 3,a
-	jr nz,6F
-	bit 2,a
-	jr nz,6F
-	bit 1,a
-	jr nz,6F
-
-6 ld bc,$000a
+	ld bc,$000a
 
 	and a
 
-7 sbc hl,bc
+4 sbc hl,bc
 
 	jr c, No_decenas
 
@@ -1329,26 +1306,29 @@ No_centenas
 ; Activamos FLAG. Permiso para imprimir los 2 últimos dígitos BCD de Score.
 
 	ex de,hl
-	set 0,(hl)
+	set 1,(hl)
 	ex de,hl
 
-	jr 7B
+	jr 4B
 
 No_decenas
 
 	and a
 	adc hl,bc
 
-8 ld a,l
+	ld a,l
 	ld (Score_BCD_unidades),a
+
+	ex de,hl
+	set 0,(hl)
+	ex de,hl
 
 	ret
 
 ; -------------------------------------------------------------------
 ;
-;	16/10/25
+;	17/10/25
 ;
-
 
 Actualiza_Punteros_Score:
 
@@ -1358,15 +1338,44 @@ Actualiza_Punteros_Score:
 	and a
 	ret z 														; RET si no hay incremento en el marcador.
 
-	ld a,(Score_BCD_unidades)
-	and a
-	jr z, Actualiza_puntero_decenas_score
+	ld de,Score_BCD_unidades
+	ld hl,Puntero_de_unidades_Score
+	ld b,5
 
-Actualiza_puntero_unidades_score
+; ---------------------
+
+1 ld a,(de)
+
+	exx
+
+	ld hl, Indice_de_digitos_score
+
+	and a
+
+	call nz, Actualiza_puntero_score
+
+; ---------------------
+
+Siguiente_puntero
+
+	exx
+
+	inc de 														; Siguiente byte BCD de Score.
+
+	inc hl
+	inc hl 														; Siguiente puntero.
+
+	djnz 1B
+
+	exx
+
+	ret
+
+; ---------------------
+
+Actualiza_puntero_score
 
 	ld b,a
-
-	ld hl,(Puntero_de_unidades_Score)
 
 1 inc l
 	inc l
@@ -1375,10 +1384,22 @@ Actualiza_puntero_unidades_score
 
 	call Extrae_address
 
-	ld (Puntero_de_unidades_Score),hl
+	push hl
+	pop iy
 
-Actualiza_puntero_decenas_score
+	exx
 
+	ld a,iyl
+	ld (hl),a	                                             ; Actualiza la dirección hacia la que debe apuntar el puntero correspondiente.
+
+	inc hl
+
+	ld a,iyh
+	ld (hl),a
+
+	dec hl
+
+	exx
 
 	ret
 

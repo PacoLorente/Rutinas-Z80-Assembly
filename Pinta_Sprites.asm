@@ -63,8 +63,10 @@ Print_Score_Counter:
 
 ;   Consulta dígito de Ctrl.
 
+;   Consulta dígito de Ctrl.
+
     ld a,(Score_Ctrl)
-    and a
+    and %11111110
     jp z,Exit_1
 
 ;   Decenas.
@@ -106,7 +108,7 @@ Print_Score_Counter:
 ;   Consulta dígito de Ctrl.
 
     ld a,(Score_Ctrl)
-    and %11111110
+    and %11111100
     jp z,Exit_1
 
 ;   Centenas.
@@ -148,7 +150,7 @@ Print_Score_Counter:
 ;   Consulta dígito de Ctrl.
 
     ld a,(Score_Ctrl)
-    and %11111100
+    and %11111000
     jr z,Exit_1
 
 ;   Unidades_de_millar.
@@ -192,7 +194,7 @@ Print_Score_Counter:
 ;   Consulta dígito de Ctrl.
 
     ld a,(Score_Ctrl)
-    and %11111000
+    and %11110000
     jr z,Exit_1
 
     ld sp,(Puntero_de_dm_Score)

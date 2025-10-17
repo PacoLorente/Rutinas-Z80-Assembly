@@ -219,7 +219,7 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
 	call Print_enemy_counter
 
-	ld a,(Score_Ctrl) 													;	Sólo imprime el marcador cuando este se incrementa.
+	ld a,(Score_Ctrl) 													;	Sólo se imprime el marcador Score cuando este se incrementa.
 	and a
 	call nz, Print_Score_Counter
 
@@ -706,13 +706,13 @@ Attr_big_counter db %01000110
 
 ; SCORE:
 
-Score_hex defw 7
+Score_hex defw 65535
 
-Score_BCD_unidades db 7
-Score_BCD_decenas db 1
-Score_BCD_centenas db 2
-Score_BCD_unidades_de_millar db 4
-Score_BCD_decenas_de_millar db 5
+Score_BCD_unidades db 0
+Score_BCD_decenas db 0
+Score_BCD_centenas db 0
+Score_BCD_unidades_de_millar db 0
+Score_BCD_decenas_de_millar db 0
 
 Puntero_de_unidades_Score defw Cero_Score
 Puntero_de_decenas_Score defw Cero_Score
