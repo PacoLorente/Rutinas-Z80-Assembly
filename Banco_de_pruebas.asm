@@ -706,7 +706,7 @@ Attr_big_counter db %01000110
 
 ; SCORE:
 
-Score_hex defw 65535
+Score_hex defw 0
 
 Score_BCD_unidades db 0
 Score_BCD_decenas db 0
@@ -2521,23 +2521,13 @@ Siguiente_frame_explosion
 	dec a
 	ld (Numero_de_entidades),a
 
-; Incrementa puntuación.
-; Hay que crear una rutina que sume puntos al marcador teniendo en cuenta el "Tipo" de entidad y la distancia a la que se encuentra de Amadeus.
-; De momento:
-
-;	ld hl,Score_hex
-
-;	inc (hl)
-;	inc (hl)
-;	inc (hl)
-;	inc (hl)
-;	inc (hl)
-
 	ld hl,Entidades_en_curso
 	dec (hl)
 
 	ld hl,Numero_parcial_de_entidades
 	add (hl)
+
+	call Incrementa_Score
 
 	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
 
@@ -2741,6 +2731,70 @@ Siguiente_frame_explosion_Amadeus
 	jr Borra_Amadeus_impactado
 
 ; ---------------------------------------------------------------
+
+; ------------------------------
+;
+;	20/10/25
+;
+;	INPUTS: IX apunta al prumer .db (Clase) de la caja de entidades.
+
+Incrementa_Score:
+
+	ld a,(ix+1)
+	ld b,a
+
+	ld hl,Tabla_de_puntuacion -1
+1 inc hl
+	djnz 1B
+
+	ld c,(hl) 								; C contiene la puntuación BASE.
+
+	ld l,(ix+6)
+	ld h,(ix+7)
+
+	call calcula_tercio
+	jr z,vel
+
+	dec c
+	dec c
+	dec c
+
+	dec a
+	jr z,vel
+
+	dec c
+	dec c
+
+vel
+
+	ld a,(ix+12)
+	and a
+
+	add c
+	ld c,a
+
+suma 
+
+	and a
+	ld hl,(Score_hex)
+	adc hl,bc
+
+	ld (Score_hex),hl
+
+	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;	Rutinas consecutivas, no hay bytes libres entre ellas.
 
