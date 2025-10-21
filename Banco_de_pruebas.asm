@@ -2743,11 +2743,6 @@ Siguiente_frame_explosion_Amadeus
 
 Incrementa_Score:
 
-	di
-	jr $
-	ei
-
-
 	ld a,(ix+1)
 	ld b,a
 
@@ -2790,20 +2785,7 @@ suma
 
 	ret
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-;	Rutinas consecutivas, no hay bytes libres entre ellas.
+	;	Rutinas consecutivas, no hay bytes libres entre ellas.
 
 	include "RND_Derivando.asm"
 	include "Rutinas_de_inicio_y_niveles.asm"
