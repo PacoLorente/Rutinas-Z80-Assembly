@@ -232,9 +232,9 @@ Coincidencia
     and (hl)
     cp c
 
-;   *************************************************************************
-;   *************************************************************************
-;   ***** Comentando la siguiente linea no nos afectan los disparos enemigos.
+;>  *************************************************************************
+;>  *************************************************************************
+;>  ***** Comentando la siguiente linea no nos afectan los disparos enemigos.
 
     jr nz,Amadeus_impactado
 
@@ -1244,10 +1244,9 @@ Genera_coordenadas_X
     call Compara_coordenadas_X
     pop ix
 
-;   **************************************************************************
-;   **************************************************************************
-;   ***** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
-
+;>   **************************************************************************
+;>   **************************************************************************
+;>   ***** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
 ;    ret
 
     ret nz
