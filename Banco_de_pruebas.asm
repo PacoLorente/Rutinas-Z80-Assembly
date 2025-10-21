@@ -2510,6 +2510,8 @@ Siguiente_frame_explosion
 ; Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de entidades. (6 Cajas).
 ; Entidades_en_curso db 0									; Entidades en pantalla.
 
+	call Incrementa_Score
+
 ; La entidad eliminada, es la última del nivel ?
 
 	ld a,(Numero_de_entidades)
@@ -2527,11 +2529,12 @@ Siguiente_frame_explosion
 	ld hl,Numero_parcial_de_entidades
 	add (hl)
 
-	call Incrementa_Score
+; ----------------------------------
 
 	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
 
 	call Score_a_BCD
+
 	call Actualiza_Punteros_Score 							; Actualizamos los dígitos BCD del marcador Score, (Score_hex) y fijamos los punteros BCD_Score.
 
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
@@ -2740,6 +2743,11 @@ Siguiente_frame_explosion_Amadeus
 
 Incrementa_Score:
 
+	di
+	jr $
+	ei
+
+
 	ld a,(ix+1)
 	ld b,a
 
@@ -2768,7 +2776,6 @@ Incrementa_Score:
 vel
 
 	ld a,(ix+12)
-	and a
 
 	add c
 	ld c,a
