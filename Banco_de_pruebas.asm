@@ -191,13 +191,56 @@ Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
 Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
+;	Datos fijos de los álbumes de líneas de Amadeus: 
+
+	org Amadeus_scanlines_album + 2
+
+	db $00,$50
+	db $00,$51
+	db $00,$52
+	db $00,$53
+	db $00,$54
+	db $00,$55
+	db $00,$56
+	db $00,$57
+
+	db $00,$50
+	db $00,$51
+	db $00,$52
+	db $00,$53
+	db $00,$54
+	db $00,$55
+	db $00,$56
+	db $00,$57
+
+	org Amadeus_scanlines_album_2
+
+	db $00,$50
+	db $00,$51
+	db $00,$52
+	db $00,$53
+	db $00,$54
+	db $00,$55
+	db $00,$56
+	db $00,$57
+
+	db $00,$50
+	db $00,$51
+	db $00,$52
+	db $00,$53
+	db $00,$54
+	db $00,$55
+	db $00,$56
+	db $00,$57
+
 ;	Reloj del juego. IM2 ---------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ;	13/08/24
 ;
 
-
 	org $8310
+
+	jr $
 
 	push af
 	push hl
@@ -723,6 +766,8 @@ Puntero_de_dm_Score defw Cero_Score
 
 Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
 ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
+
+Primer_scan_Amadeus defw $50cf
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -2279,6 +2324,9 @@ Ejecuta_escudo
 	ld c,a
 
 Borrando_Amadeus
+
+;> Debuggggg ..... 22/10/25
+	jr $
 
 	ld hl,Ctrl_3
 	bit 5,(hl)
