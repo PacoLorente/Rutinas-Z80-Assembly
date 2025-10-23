@@ -87,6 +87,10 @@ Genera_datos_de_impresion_Amadeus
 ; Si existe impacto en Amadeus ya tendremos modificados los registros DE con (Puntero_objeto)_
 ; _apuntando a la correspondiente explosión.
 
+    ld a,(Ctrl_3)
+    bit 6,a
+    jr nz,1F                                                ; Amadeus ha sido eliminado. Borramos el último FRAME.
+;                                                           ; _No es necesario volver a cargar los registros.
     call Cargamos_registros_con_mov_masticado_Amadeus   
 
 ;   DE contiene (Puntero_objeto) de Amadeus.

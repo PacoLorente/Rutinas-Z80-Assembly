@@ -1257,13 +1257,13 @@ Reinicia_Amadeus
 
 	xor a
 	ld (hl),a
+	inc l
+	ld (hl),a
 
-	push hl
-	pop de
-	inc de
+; 	Restauramos el FLAG: Amadeus vivo.
 
-	ld bc,35
-	ldir
+	ld hl,Ctrl_3
+	res 6,(hl)
 
 	call Genera_datos_de_impresion_Amadeus
 
@@ -1276,11 +1276,6 @@ Reinicia_Amadeus
 
 	ld a,100
 	ld (Temp_new_live),a
-
-; 	Restauramos el FLAG: Amadeus vivo.
-
-	ld hl,Ctrl_3
-	res 6,(hl)
 
 ;	Fuerza la impresión de la nave en el siguiente frame.
 
@@ -2352,14 +2347,6 @@ Pintando_Amadeus
 	res 2,(hl)												; Reinicia el flag DETECTA MOVIMIENTO, (entidades).
 	res 5,(hl)												; Reinicia el flag MOVIMIENTO DE AMADEUS.
 
-; 	Si Amadeus está desapareciendo no restauramos el FLAG de mov. de Amadeus.
-
-;	ld a,(Ctrl_2)
-;	bit 6,a
-;	ret nz
-
-;	res 5,(hl)
-
 	ret
 
 ;	Ejecuta Shield. 
@@ -2767,16 +2754,22 @@ Siguiente_frame_explosion_Amadeus
 ;	Evitamos que la rutina [Pintando_Amadeus] llame a la rutina de pintado, [Pinta_sprites] y vuelva a pintar la última explosión. 
 ;	Hace que la rutina [Pintando_Amadeus] interprete que (Album_de_pintado_Amadeus) está vacío. 
 
-	di
-	jr $
-	ei
+	xor a
 
 	ld hl,(Album_de_borrado_Amadeus)
+	ld (hl),a
 	inc l
-	xor a
 	ld (hl),a
 
-	jr Borra_Amadeus_impactado
+	call Change_Amadeus
+
+	ld hl,Ctrl_3
+	set 5,(hl)												; Indicamos que hay movimiento, (se modifica el Sprite debido a la explosión).
+
+	xor a
+	inc a 		
+
+	ret
 
 1 inc hl
 	inc hl
