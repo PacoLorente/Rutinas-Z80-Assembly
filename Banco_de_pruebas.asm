@@ -193,8 +193,9 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
-	org Amadeus_scanlines_album + 2
+	org Amadeus_scanlines_album 
 
+	db $00,$00,$10
 	db $00,$50
 	db $00,$51
 	db $00,$52
@@ -213,8 +214,9 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 	db $00,$56
 	db $00,$57
 
-	org Amadeus_scanlines_album_2
+	org Amadeus_scanlines_album_2 
 
+	db $00,$00,$10
 	db $00,$50
 	db $00,$51
 	db $00,$52
@@ -239,8 +241,6 @@ Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 ;
 
 	org $8310
-
-	jr $
 
 	push af
 	push hl
@@ -887,7 +887,7 @@ INICIALIZACION:
 
 	call Inicia_Shield
 
-6 ld hl,(Scanlines_album_SP)
+	ld hl,(Scanlines_album_SP)
 	ld (Techo_Scanlines_album),hl
 
 	ld hl,(Album_de_borrado)
@@ -900,12 +900,6 @@ INICIALIZACION:
 	set 0,(hl) 												; Indica Frame completo.
 	set 2,(hl)
 	set 5,(hl)												; Imprimimos Amadeus.
-
-;	Imprime Contador de entidades.
-
-;	call Print_enemy_counter
-
-;	Transición de entrada.
 
 	call Transicion_de_entrada
 
@@ -2325,12 +2319,12 @@ Ejecuta_escudo
 
 Borrando_Amadeus
 
-;> Debuggggg ..... 22/10/25
-	jr $
-
 	ld hl,Ctrl_3
 	bit 5,(hl)
 	jr z,1F													; No borramos. No ha habido movimiento.
+
+	ld a,3													
+	out ($fe),a 											; Morado. Indica (borrado-Pintado) de Amadeus.
 
 	ld hl,(Album_de_borrado_Amadeus)
 	call Extrae_address
@@ -2701,6 +2695,7 @@ Borra_Amadeus_impactado
 
 	ld a,(Columns)
 	and a
+
 	jr nz,3F
 
 	ld a,%01000110 											; Amarillo.
@@ -2771,6 +2766,10 @@ Siguiente_frame_explosion_Amadeus
 
 ;	Evitamos que la rutina [Pintando_Amadeus] llame a la rutina de pintado, [Pinta_sprites] y vuelva a pintar la última explosión. 
 ;	Hace que la rutina [Pintando_Amadeus] interprete que (Album_de_pintado_Amadeus) está vacío. 
+
+	di
+	jr $
+	ei
 
 	ld hl,(Album_de_borrado_Amadeus)
 	inc l

@@ -96,17 +96,7 @@ Genera_datos_de_impresion_Amadeus
     and $1f
     ld (CX_Amadeus),a                                       ; Coordenada X del Amadeus, (0-$1f). Columnas.
 
-    jr $
-
-    ld hl,(Scanlines_album_SP)
-    push hl
-
-;   Posicionamos (Scanlines_album_SP) en el álbum de líneas de Amadeus.
-
     ld hl,(Album_de_pintado_Amadeus)
-    ld (Scanlines_album_SP),hl
-
-;> Debuggggg ..... 22/10/25
 
     ld a,ixl
     ld b,8
@@ -115,6 +105,8 @@ Genera_datos_de_impresion_Amadeus
     ld (hl),e
     inc l
     ld (hl),d
+
+    inc l
     inc l
 
 2 ld (hl),a
@@ -126,16 +118,6 @@ Genera_datos_de_impresion_Amadeus
     add $20
     dec c
     jr nz,2B
-
-    push ix
-    pop hl                                                  ; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
-
-    call Genera_datos_de_impresion
-
-    pop hl
-    ld (Scanlines_album_SP),hl  
-
-    ld hl,(Scanlines_album_SP)
 
     ret
 
