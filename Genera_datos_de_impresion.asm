@@ -100,11 +100,38 @@ Genera_datos_de_impresion_Amadeus
     and $1f
     ld (CX_Amadeus),a                                       ; Coordenada X del Amadeus, (0-$1f). Columnas.
 
-    ld hl,(Album_de_pintado_Amadeus)
+;   Genera Scanlines (TRANSICION_DE_SALIDA).
+
+    ld a,(Ctrl_2)
+    bit 6,a
+    jr z,3F
+
+    di
+    jr $
+    ei
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;   Genera Scanlines:
+
+3 ld hl,(Album_de_pintado_Amadeus)
 
     ld a,ixl
-    ld b,8
     ld c,2
+    ld b,8
 
     ld (hl),e
     inc l

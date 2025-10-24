@@ -108,7 +108,7 @@ Imprime_Logo_principal
 
 ; ------------------------------------------------------------------------
 ;
-;	11/07/25
+;	24/10/25
 ;
 ;	Nivel superado.
 ;
@@ -116,11 +116,15 @@ Imprime_Logo_principal
 ;
 ;	Amadeus va desapareciendo scan a scan por la parte baja de la pantalla.
 
-
 ; 	Nota: Cuando se inicia el proceso de desaparición de Amadeus, se imprimirá nuestra nave en pantalla en cada FRAME, (aunque no haya movimiento).
 ;	Bit 5 (Ctrl_3) a "1".
 
+;	INPUTS: IX contiene (Puntero_de_impresion).
+; 			DE contiene (Puntero_objeto).
+;			HL contiene (Album_de_pintado_Amadeus).
+
 ;	Se ha iniciado el proceso de Transición de salida de Amadeus ???.
+
 
 Transicion_de_salida
 
