@@ -106,24 +106,29 @@ Genera_datos_de_impresion_Amadeus
     bit 6,a
     jr z,3F
 
-    di
-    jr $
-    ei
+;    di
+;    jr $
+;    ei
 
+; ---------------------------------------------
 
+    ld hl,(Scanlines_album_SP)
+    push hl
 
+;   Posicionamos (Scanlines_album_SP) en el álbum de líneas de Amadeus.
 
+    ld hl,(Album_de_pintado_Amadeus)
+    ld (Scanlines_album_SP),hl
 
+    push ix
+    pop hl                                                  ; HL e IX han de contener (Puntero_de_impresion) antes de call [Genera_datos_de_impresion].
 
+    call Genera_datos_de_impresion
 
+    pop hl
+    ld (Scanlines_album_SP),hl  
 
-
-
-
-
-
-
-
+    ret
 
 ;   Genera Scanlines:
 

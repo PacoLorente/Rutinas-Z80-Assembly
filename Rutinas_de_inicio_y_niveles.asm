@@ -1064,20 +1064,22 @@ Parametros_de_bandeja_DRAW_a_Caja_Master
 
 ;	MODIFICA: A y B. 
 
+;> Aumentaremos el nº de entidades en pantalla !!!!!!!!!!!!!!!!!!!!!!!!!!
+;> !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Inicializa_Numero_parcial_de_entidades 
 
 	ld a,(Numero_de_entidades)										; Nº TOTAL de las entidades del NIVEL.
-	cp 4												 			; "5" es el nº total de cajas de entidades de las que disponemos.
+	cp 5												 			; "5" es el nº total de cajas de entidades de las que disponemos.
 	jr c,1F
 	jr z,1F
 
 ; El nº de entidades es superior al que cabe en las cajas DRAW.
 ; Actualizamos variables.
 
-	sub 4
+	sub 5
 	ld (Numero_de_entidades),a
-	ld a,4
+	ld a,5
 	ld (Numero_parcial_de_entidades),a
 	ld b,a
 	ret

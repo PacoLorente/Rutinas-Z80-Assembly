@@ -2318,7 +2318,7 @@ Borrando_Amadeus
 	bit 5,(hl)
 	jr z,1F													; No borramos. No ha habido movimiento.
 
-	ld a,3													
+	ld a,6													
 	out ($fe),a 											; Morado. Indica (borrado-Pintado) de Amadeus.
 
 	ld hl,(Album_de_borrado_Amadeus)
