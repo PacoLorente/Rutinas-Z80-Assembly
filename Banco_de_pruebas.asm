@@ -2318,7 +2318,7 @@ Borrando_Amadeus
 	bit 5,(hl)
 	jr z,1F													; No borramos. No ha habido movimiento.
 
-	ld a,6													
+	ld a,6
 	out ($fe),a 											; Morado. Indica (borrado-Pintado) de Amadeus.
 
 	ld hl,(Album_de_borrado_Amadeus)
@@ -2326,7 +2326,12 @@ Borrando_Amadeus
 	inc h
 	dec h
 	jr z,Pintando_Amadeus
+
 	call Pinta_Sprites
+
+;	8234 - 10166 ..... 1932
+;	7939 - 9871 ..... 1932
+;	8338 - 10270 ..... 1932 T/States es lo que tarda la rutina Pinta_Sprites en pintar Amadeus.
 
 Pintando_Amadeus
 
@@ -2335,7 +2340,10 @@ Pintando_Amadeus
 	inc h
 	dec h
 	jr z,1F
-	call Pinta_Sprites
+
+;	call Pinta_Sprites
+
+	call Pinta_Amadeus
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
