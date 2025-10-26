@@ -20,40 +20,7 @@ Pinta_Amadeus:
     inc l
     inc l
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ; ---------------------------------------------------------------------------
 ;
@@ -770,7 +737,6 @@ Pinta_disparos_Entidades:
 3 ld b,7                           ; Nº máximo de disparos. Fuerza la salida del album cuando hemos pintado 7 veces_
 ;                                      _ aunque IYL+IYH+E no sea "0". (No hay separacíon entre el álbum de borrado y el de pintado).
 ;                                      _ No encontraría "0".
-
 
 4 pop iy
     pop de                              ; 1er .db IYL

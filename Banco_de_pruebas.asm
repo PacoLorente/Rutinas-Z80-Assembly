@@ -2341,9 +2341,8 @@ Pintando_Amadeus
 	dec h
 	jr z,1F
 
-;	call Pinta_Sprites
-
-	call Pinta_Amadeus
+	call Pinta_Sprites
+;	call Pinta_Amadeus
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 

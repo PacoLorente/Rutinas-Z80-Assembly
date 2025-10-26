@@ -78,7 +78,7 @@ Explosion_scanlines_generator
 ;
 ;   Genera la coordenada X de Amadeus y los datos de impresión de la nave en su (Album_de_pintado_Amadeus).
 
-Genera_datos_de_impresion_Amadeus 
+Genera_datos_de_impresion_Amadeus:
 
     ld a,(Impacto_Amadeus)
     and a
@@ -100,17 +100,14 @@ Genera_datos_de_impresion_Amadeus
     and $1f
     ld (CX_Amadeus),a                                       ; Coordenada X del Amadeus, (0-$1f). Columnas.
 
-;   Genera Scanlines (TRANSICION_DE_SALIDA).
-
     ld a,(Ctrl_2)
     bit 6,a
     jr z,3F
 
-;    di
-;    jr $
-;    ei
-
 ; ---------------------------------------------
+
+;   Genera Scanlines (TRANSICION_DE_SALIDA).
+
 
     ld hl,(Scanlines_album_SP)
     push hl
@@ -167,7 +164,7 @@ Genera_datos_de_impresion_Amadeus
 ;   DE contiene (Puntero_objeto).
  
 
-Cargamos_registros_con_mov_masticado_Amadeus
+Cargamos_registros_con_mov_masticado_Amadeus:
 
     ld (Stack),sp
     ld sp,(Pamm_Amadeus)                                    ; (Puntero_de_almacen_de_mov_masticados_Amadeus) en su correspondiente caja.
@@ -197,7 +194,7 @@ Cargamos_registros_con_mov_masticado_Amadeus
 ;           IX contiene el (Puntero_de_impresion) de Amadeus.
 
 
-Cargamos_registros_con_explosion_Amadeus
+Cargamos_registros_con_explosion_Amadeus:
 
     ld hl,(Pamm_Amadeus)
     call Extrae_address
@@ -338,6 +335,17 @@ Completo_o_desapareciendo
 
 Genera_scanlines:
 
+;   6066 - 6340 ..... 274
+;   9778 - 10232 .... 454
+;   9701 - 10335 .... 634
+;   7951 - 8804 ..... 853
+;   8179 - 9212 ..... 1033
+;   8502 - 9715 ..... 1213
+;   8826 - 10219 .... 1393
+;  11149 - 12671 .... 1522
+;   9510 - 11032 .... 1522
+;   9495 - 11017 .... 1522                          ; T/States máx que tarda en ejecutarse esta rutina.
+
     ex de,hl
 
     push ix
@@ -350,28 +358,174 @@ Genera_scanlines:
 ;   DE contiene (Scanlines_album_SP).
 ;   B contiene el nº de scanlines (-1) a generar.
 
-1 call NextScan
+    ld a,b
+    sub 8
+    jr nc,5F
 
-    ex de,hl
+    jr Escribimos_L
 
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
+5 ld c,a
+    ld b,8
 
-    ex de,hl
+Escribimos_L
 
-    djnz 1B
+    push bc                                         ; Nº de Scanlines de la entidad a imprimir.
+;                                                   ; B contiene los 8 scanlines superiores y C los restantes inferiores.
+    push de
 
-; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
+    ld a,l
+
+4 ld (de),a
+    inc de
+    inc de
+    djnz 4B
+
+    inc c
+    dec c
+    jr z, Localiza_tercio
+
+    add $20
+    ld l,a
+
+    ex af,af                                        ; Si existe acarreo, se produce cambio de tercio.
+
+    ld a,l
+    ld b,c
+    ld c,0
+    jr 4B
+
+Localiza_tercio
+
+    ld a,h
+    and %00001000
+    jr nz,1F
+
+    ld a,h
+    and %00010000
+    jr nz,2F
+
+;   1er tercio ---------------------------------------------------------------------
+
+    ld a,h
+    ld hl,H1ter
+
+    and %00000111
+    jr z, Escribimos_H
+    ld b,a
+
+6 inc l
+    djnz 6B
+
+    jr Escribimos_H
+
+;   2º tercio ---------------------------------------------------------------------
+
+    di
+    jr $
+    ei
+
+;    ld hl,H2ter
+
+;    jr Escribimos_H
+
+;   3er tercio ---------------------------------------------------------------------
+
+    di
+    jr $
+    ei
+
+;    ld hl,H3ter
+
+;    jr Escribimos_H
+
+
+Escribimos_H
+
+    pop de
+    pop bc
+
+    inc l
+    inc de
+
+7 ld a,(hl)
+    ld (de),a
+
+    inc l
+
+    inc de
+    inc de
+
+    djnz 7B
+
+    inc c
+    dec c
+    jr z,8F
+
+    ld b,c
+    ld c,0
+
+    ex af,af
+
+    jr nc,7B
+
+8
+
+;    di
+;    jr $
+;    ei
+
+    dec de
 
     ld (Scanlines_album_SP),de
-    ld (Puntero_de_impresion_disparo_de_entidad),hl
+;    ld (Puntero_de_impresion_disparo_de_entidad),hl
 
     push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
     pop hl
 
+    di
+    jr $
+    ei
+
+
+
+
     ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;1 call NextScan
+
+;    ex de,hl
+
+;    ld (hl),e
+;    inc hl
+;    ld (hl),d
+;    inc hl
+
+;    ex de,hl
+
+;    djnz 1B
+
+; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
+
+;    ld (Scanlines_album_SP),de
+;    ld (Puntero_de_impresion_disparo_de_entidad),hl
+
+;    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
+;    pop hl
+
+;    ret
 
 ; ------------------------------------------------------------------------------------
 ;

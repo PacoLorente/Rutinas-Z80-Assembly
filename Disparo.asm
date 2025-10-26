@@ -236,7 +236,7 @@ Coincidencia
 ;>  *************************************************************************
 ;>  ***** Comentando la siguiente linea no nos afectan los disparos enemigos.
 
-;    jr nz,Amadeus_impactado
+    jr nz,Amadeus_impactado
 
     inc l
     inc e
@@ -1247,7 +1247,7 @@ Genera_coordenadas_X
 ;>   **************************************************************************
 ;>   **************************************************************************
 ;>   ***** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
-    ret
+;    ret
 
     ret nz
 
