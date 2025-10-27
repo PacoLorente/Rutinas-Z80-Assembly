@@ -354,158 +354,52 @@ Genera_scanlines:
     dec b
     ret z
 
-;   HL contiene el 1er scanline, (Puntero_de_impresion).
-;   DE contiene (Scanlines_album_SP).
-;   B contiene el nº de scanlines (-1) a generar.
+;1 call calcula_tercio
+;    and a
+;    jr z,Scan_1ter
+;    dec a
+;    jr z,Scan_2ter
 
-;   Vamos a dividir esta rutina en dos partes:
+;Scan_3ter
 
-;   1. Prepara en BC el nº de scanlines a pintar. B contendrá los 7 scanlines que restan para completar_
-;      _la fila superior y C contendrá los restantes.
+;    di
+;    jr $
+;    ei
 
-    ld a,b
-    sub 7
-    jr nc,1F
+;Scan_2ter
 
-    jr 1F
+;    di
+;    jr $
+;    ei
 
-    ld c,a
-    ld b,7
+;Scan_1ter
 
-1 push bc
-    push de
+;    di
+;    jr $
+;    ei
 
-Escribe_filas
+1 call NextScan
 
-    ld a,l
+    ex de,hl
 
-2 ld (de),a
-    inc de
-    inc de
-    djnz 2B
+    ld (hl),e
+    inc hl
+    ld (hl),d
+    inc hl
 
-    inc c
-    dec c
-    jr z, Localiza_tercio
+    ex de,hl
 
-    add $20
-    ld b,a
+    djnz 1B
 
-    ex af,af                                        ; Si existe acarreo, se produce cambio de tercio.
+; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
 
-    ld a,b
-    ld b,c
-    ld c,0
-    jr 2B
-
-Localiza_tercio
-
-    pop de
-    inc de                              ; Nos situamos correctamente en el álbum de pintado.
-    pop bc
- 
-    call calcula_tercio      
-    and a
-    jr z,Scan_1ter
-    dec a
-    jr z,Scan_2ter
-
-Scan_3ter
- 
-    di
-    jr $
-    ei
-
-Scan_2ter 
-
-    di
-    jr $
-    ei
-
-Scan_1ter
-
-    ld a,h
-    ld hl,H1ter
-    and %00000111
-    inc a
-
-3 inc l
-    dec a
-    jr nz,3B
-
-Escribimos_H
-
-    ld a,(hl)
-    ld (de),a
-
-    inc l
-
-    inc de
-    inc de
-
-    djnz Escribimos_H
-
-
-    inc c
-    dec c
-    jr z,5F
-
-    ld b,c
-    ld c,0
-
-    ex af,af
-    jr nc, Escribimos_H
-
-;   Cambio de tercio.
-
-    di
-    jr $
-    ei
-
-5 dec de
     ld (Scanlines_album_SP),de
-
-    ld a,(hl)
-    ld h,a
-
-    dec de
-    dec de
-
-    ld a,(de)
-    ld l,a
-
     ld (Puntero_de_impresion_disparo_de_entidad),hl
-
-    inc de
-    inc de
 
     push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
     pop hl
 
     ret
-
-;1 call NextScan
-
-;    ex de,hl
-
-;    ld (hl),e
-;    inc hl
-;    ld (hl),d
-;    inc hl
-
-;    ex de,hl
-
-;    djnz 1B
-
-; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
-
-;    ld (Scanlines_album_SP),de
-;    ld (Puntero_de_impresion_disparo_de_entidad),hl
-
-;    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
-;    pop hl
-
-;    ret
 
 ; ------------------------------------------------------------------------------------
 ;
