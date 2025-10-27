@@ -358,96 +358,84 @@ Genera_scanlines:
 ;   DE contiene (Scanlines_album_SP).
 ;   B contiene el nº de scanlines (-1) a generar.
 
+;   Vamos a dividir esta rutina en dos partes:
+
+;   1. Prepara en BC el nº de scanlines a pintar. B contendrá los 7 scanlines que restan para completar_
+;      _la fila superior y C contendrá los restantes.
+
     ld a,b
-    sub 8
-    jr nc,5F
+    sub 7
+    jr nc,1F
 
-    jr Escribimos_L
+    jr 1F
 
-5 ld c,a
-    ld b,8
+    ld c,a
+    ld b,7
 
-Escribimos_L
-
-    push bc                                         ; Nº de Scanlines de la entidad a imprimir.
-;                                                   ; B contiene los 8 scanlines superiores y C los restantes inferiores.
+1 push bc
     push de
+
+Escribe_filas
 
     ld a,l
 
-4 ld (de),a
+2 ld (de),a
     inc de
     inc de
-    djnz 4B
+    djnz 2B
 
     inc c
     dec c
     jr z, Localiza_tercio
 
     add $20
-    ld l,a
+    ld b,a
 
     ex af,af                                        ; Si existe acarreo, se produce cambio de tercio.
 
-    ld a,l
+    ld a,b
     ld b,c
     ld c,0
-    jr 4B
+    jr 2B
 
 Localiza_tercio
 
-    ld a,h
-    and %00001000
-    jr nz,1F
+    pop de
+    inc de                              ; Nos situamos correctamente en el álbum de pintado.
+    pop bc
+ 
+    call calcula_tercio      
+    and a
+    jr z,Scan_1ter
+    dec a
+    jr z,Scan_2ter
 
-    ld a,h
-    and %00010000
-    jr nz,2F
+Scan_3ter
+ 
+    di
+    jr $
+    ei
 
-;   1er tercio ---------------------------------------------------------------------
+Scan_2ter 
+
+    di
+    jr $
+    ei
+
+Scan_1ter
 
     ld a,h
     ld hl,H1ter
-
     and %00000111
-    jr z, Escribimos_H
-    ld b,a
+    inc a
 
-6 inc l
-    djnz 6B
-
-    jr Escribimos_H
-
-;   2º tercio ---------------------------------------------------------------------
-
-    di
-    jr $
-    ei
-
-;    ld hl,H2ter
-
-;    jr Escribimos_H
-
-;   3er tercio ---------------------------------------------------------------------
-
-    di
-    jr $
-    ei
-
-;    ld hl,H3ter
-
-;    jr Escribimos_H
-
+3 inc l
+    dec a
+    jr nz,3B
 
 Escribimos_H
 
-    pop de
-    pop bc
-
-    inc l
-    inc de
-
-7 ld a,(hl)
+    ld a,(hl)
     ld (de),a
 
     inc l
@@ -455,54 +443,46 @@ Escribimos_H
     inc de
     inc de
 
-    djnz 7B
+    djnz Escribimos_H
+
 
     inc c
     dec c
-    jr z,8F
+    jr z,5F
 
     ld b,c
     ld c,0
 
     ex af,af
+    jr nc, Escribimos_H
 
-    jr nc,7B
-
-8
-
-;    di
-;    jr $
-;    ei
-
-    dec de
-
-    ld (Scanlines_album_SP),de
-;    ld (Puntero_de_impresion_disparo_de_entidad),hl
-
-    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
-    pop hl
+;   Cambio de tercio.
 
     di
     jr $
     ei
 
+5 dec de
+    ld (Scanlines_album_SP),de
 
+    ld a,(hl)
+    ld h,a
 
+    dec de
+    dec de
+
+    ld a,(de)
+    ld l,a
+
+    ld (Puntero_de_impresion_disparo_de_entidad),hl
+
+    inc de
+    inc de
+
+    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
+    pop hl
 
     ret
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ;1 call NextScan
 
