@@ -354,6 +354,54 @@ Genera_scanlines:
     dec b
     ret z
 
+;   28/10/25
+
+    di
+    jr $
+    ei
+
+;   En 1er lugar necesitamos saber el nº de scan.
+;   Este nº determina la posición exacta donde nos situaremos dentro de las tablas.
+
+    ld a,h
+    and %00001111
+    inc a
+
+    ex af,af
+
+;   Generamos el byte bajo en todos los scanlines, (filas).
+
+    push de
+
+    ld a,l
+    and %11110000
+
+    rr a
+    rr a
+    rr a
+    rr a                                            ; 4 rotaciones a derecha.
+
+    ld hl,Fast_L_Index                              ; hl apunta a la línea correspondiente del índice de líneas.
+
+1 inc l
+    inc l
+
+    dec a
+    jr nz,1B
+
+    call Extrae_address
+
+
+
+
+
+
+
+
+
+
+
+
 ;1 call calcula_tercio
 ;    and a
 ;    jr z,Scan_1ter
@@ -378,18 +426,20 @@ Genera_scanlines:
 ;    jr $
 ;    ei
 
-1 call NextScan
+; ------------------------------
 
-    ex de,hl
+;1 call NextScan
 
-    ld (hl),e
-    inc hl
-    ld (hl),d
-    inc hl
+;    ex de,hl
 
-    ex de,hl
+;    ld (hl),e
+;    inc hl
+;    ld (hl),d
+;    inc hl
 
-    djnz 1B
+;    ex de,hl
+
+;    djnz 1B
 
 ; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
 
