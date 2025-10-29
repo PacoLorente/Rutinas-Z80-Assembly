@@ -351,14 +351,10 @@ Genera_scanlines:
     push ix
     pop hl                                          ; (Puntero_de_impresion) en HL.
 
-    dec b
-    ret z
+    dec b                                           ; El 1er scanline ya está guardado en el álbum de pintado,_
+    ret z                                           ; _ lo escribió la rutina que genera la cabecera.
 
 ;   28/10/25
-
-    di
-    jr $
-    ei
 
 ;   En 1er lugar necesitamos saber el nº de scan.
 ;   Este nº determina la posición exacta donde nos situaremos dentro de las tablas.
@@ -367,11 +363,13 @@ Genera_scanlines:
     and %00001111
     inc a
 
-    ex af,af
+    ex af,af                                        ; Desplazamiento en tablas, (a´).
 
 ;   Generamos el byte bajo en todos los scanlines, (filas).
 
-    push de
+    ld a,l
+    and %00001111
+    ld c,a                                          ; Nº de columna, ($00 - $1f) en C.
 
     ld a,l
     and %11110000
@@ -389,8 +387,78 @@ Genera_scanlines:
     dec a
     jr nz,1B
 
+    push bc                                         ; Nº de scanlines a guardar en B / Nº de columna en C.
+    push de                                         ; Puntero del álbum de pintado en DE.
+
     call Extrae_address
 
+    ex af,af
+    push af
+    ex af,af
+    pop af                                          ; Desplazamiento en A y A´.
+
+2 inc l
+
+    dec a
+    jr nz,2B                                        ; Estamos situados en el .db (0-7) de la "Fila" que corresponde.
+
+; ----- ----- -----
+
+    pop de
+    push de
+
+Guarda_Filas_en_album
+
+3 ld a,(hl)
+    or c
+    ld (de),a
+
+    inc l                                           ; Siguiente fila de la tabla.
+
+    inc de
+    inc de                                          ; Siguiente scanline en el álbum.
+
+    djnz 3B
+
+;   Nos situamos el el 
+
+    push ix
+    pop hl
+
+    call calcula_tercio
+    and a
+    jr z,h1ter
+    dec a
+    jr z,h2ter
+
+h3ter
+
+    ld hl,H3ter 
+    jr 4F
+
+h2ter
+
+    ld hl,H2ter    
+    jr 4F
+
+h1ter ld hl,H1ter
+
+;   Prepara registros de nuevo para el volcado de los scanlines en el álbum.
+
+4 
+
+    di
+    jr $
+    ei
+
+    inc l 
+
+    pop de
+    inc de
+
+    pop bc 
+
+Guarda_Scans_en_album
 
 
 
@@ -402,29 +470,14 @@ Genera_scanlines:
 
 
 
-;1 call calcula_tercio
-;    and a
-;    jr z,Scan_1ter
-;    dec a
-;    jr z,Scan_2ter
 
-;Scan_3ter
 
-;    di
-;    jr $
-;    ei
 
-;Scan_2ter
 
-;    di
-;    jr $
-;    ei
 
-;Scan_1ter
 
-;    di
-;    jr $
-;    ei
+
+
 
 ; ------------------------------
 

@@ -856,11 +856,15 @@ Indice_de_digitos_score:
 ;
 ;	El objetivo de estas tablas es el de generar los scanlines lo más rápido posible en el álbum de pintado.
 ;
-;	La tabla + el índice: 228 bytes.
+;	La tabla + el índice: 
+
+Fast_H_Index:
+
+	defw H1ter
+	defw H2ter
+	defw H3ter
 
 Fast_H_Table:
-
-;   69 bytes.
 
 H1ter db $40,$41,$42,$43,$44,$45,$46,$47,$40,$41,$42,$43,$44,$45,$46,$47,$40,$41,$42,$43,$44,$45,$46
 H2ter db $48,$49,$4a,$4b,$4c,$4d,$4e,$4f,$48,$49,$4a,$4b,$4c,$4d,$4e,$4f,$48,$49,$4a,$4b,$4c,$4d,$4e
@@ -882,7 +886,7 @@ Fast_L_Index:
 	defw Line_b
 	defw Line_c
 	defw Line_d
-	defw Line_e
+Ultima_linea defw Line_e
 	defw Line_f
 
 Fast_L_Table:
@@ -906,5 +910,5 @@ Line_d	db $d0,$d0,$d0,$d0,$d0,$d0,$d0,$d0
 Line_f	db $f0,$f0,$f0,$f0,$f0,$f0,$f0,$f0
 
 ; --------------------------------------------------------------------------
-; FREE SPACE $1b, 27d ------------------------------------------------------
+; FREE SPACE $??, ??d ------------------------------------------------------
 ; --------------------------------------------------------------------------
