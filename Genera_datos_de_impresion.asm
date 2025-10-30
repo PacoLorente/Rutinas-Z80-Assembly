@@ -406,6 +406,7 @@ Genera_scanlines:
 
     pop de
     push de
+    push bc
 
 Guarda_Filas_en_album
 
@@ -445,39 +446,50 @@ h1ter ld hl,H1ter
 
 ;   Prepara registros de nuevo para el volcado de los scanlines en el álbum.
 
-4 
+4 ex af,af                                        ; Desplazamiento en A'.
+    inc l
+    dec a
+    jr nz,4B
+
+    pop bc 
+    pop de
+
+    inc de
+
+Guarda_Scans_en_album
+
+    ld a,(hl)
+
+    ld (de),a
+
+    inc l
+
+    inc de
+    inc de
+
+    djnz Guarda_Scans_en_album
+
+    dec de
+
+    ld (Scanlines_album_SP),de
+
+    dec de
+    dec de
+
+    ex de,hl
+
+    call Extrae_address
+
+    ld (Puntero_de_impresion_disparo_de_entidad),hl
+
+    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
+    pop hl
 
     di
     jr $
     ei
 
-    inc l 
-
-    pop de
-    inc de
-
-    pop bc 
-
-Guarda_Scans_en_album
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    ret
 
 ; ------------------------------
 
@@ -496,13 +508,13 @@ Guarda_Scans_en_album
 
 ; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
 
-    ld (Scanlines_album_SP),de
-    ld (Puntero_de_impresion_disparo_de_entidad),hl
+;    ld (Scanlines_album_SP),de
+;    ld (Puntero_de_impresion_disparo_de_entidad),hl
 
-    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
-    pop hl
+;    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
+;    pop hl
 
-    ret
+;    ret
 
 ; ------------------------------------------------------------------------------------
 ;
