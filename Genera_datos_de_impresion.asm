@@ -381,16 +381,21 @@ Genera_scanlines:
 
     ld hl,Fast_L_Index                              ; hl apunta a la línea correspondiente del índice de líneas.
 
+    di
+    jr $
+    ei
+
 1 inc l
     inc l
 
     dec a
     jr nz,1B
 
-    push bc                                         ; Nº de scanlines a guardar en B / Nº de columna en C.
-    push de                                         ; Puntero del álbum de pintado en DE.
+;    push bc                                         ; Nº de scanlines a guardar en B / Nº de columna en C.
 
+    push de                                         ; Puntero del álbum de pintado en DE.
     call Extrae_address
+    pop de
 
     ex af,af
     push af
@@ -404,7 +409,8 @@ Genera_scanlines:
 
 ; ----- ----- -----
 
-    pop de
+;    pop de
+
     push de
     push bc
 
@@ -421,7 +427,10 @@ Guarda_Filas_en_album
 
     djnz 3B
 
-;   Nos situamos el el 
+    pop bc
+    pop de
+
+;   Nos posicionamos en el scanline correspondiente dentro de la tabla.
 
     push ix
     pop hl
@@ -447,12 +456,13 @@ h1ter ld hl,H1ter
 ;   Prepara registros de nuevo para el volcado de los scanlines en el álbum.
 
 4 ex af,af                                        ; Desplazamiento en A'.
-    inc l
-    dec a
-    jr nz,4B
 
-    pop bc 
-    pop de
+5 inc l
+    dec a
+    jr nz,5B
+
+;    pop bc
+;    pop de
 
     inc de
 
@@ -485,9 +495,9 @@ Guarda_Scans_en_album
     push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
     pop hl
 
-    di
-    jr $
-    ei
+;    di
+;    jr $
+;    ei
 
     ret
 
