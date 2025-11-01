@@ -1572,104 +1572,101 @@
  860+ 8F00
  861+ 8F00              Fast_H_Index:
  862+ 8F00
- 863+ 8F00 06 8F        	defw H1ter
- 864+ 8F02 0F 8F        	defw H2ter
- 865+ 8F04 18 8F        	defw H3ter
- 866+ 8F06
- 867+ 8F06              Fast_H_Table:
- 868+ 8F06
- 869+ 8F06 40 41 42 43  H1ter db $40,$41,$42,$43,$44,$45,$46,$47,0	 			; El "0" Indica "Fín de línea".
- 869+ 8F0A 44 45 46 47
- 869+ 8F0E 00
- 870+ 8F0F 48 49 4A 4B  H2ter db $48,$49,$4a,$4b,$4c,$4d,$4e,$4f,0
- 870+ 8F13 4C 4D 4E 4F
- 870+ 8F17 00
- 871+ 8F18 50 51 52 53  H3ter db $50,$51,$52,$53,$54,$55,$56,$57,0
- 871+ 8F1C 54 55 56 57
- 871+ 8F20 00
- 872+ 8F21
- 873+ 8F21              Fast_L_Index:
- 874+ 8F21
- 875+ 8F21 41 8F        	defw Line_0
- 876+ 8F23 82 8F        	defw Line_1
- 877+ 8F25 49 8F        	defw Line_2
- 878+ 8F27 8A 8F        	defw Line_3
- 879+ 8F29 51 8F        	defw Line_4
- 880+ 8F2B 92 8F        	defw Line_5
- 881+ 8F2D 59 8F        	defw Line_6
- 882+ 8F2F 9A 8F        	defw Line_7
- 883+ 8F31 61 8F        	defw Line_8
- 884+ 8F33 A2 8F        	defw Line_9
- 885+ 8F35 69 8F        	defw Line_a
- 886+ 8F37 AA 8F        	defw Line_b
- 887+ 8F39 71 8F        	defw Line_c
- 888+ 8F3B B2 8F        	defw Line_d
- 889+ 8F3D 79 8F        Ultima_linea defw Line_e
- 890+ 8F3F BA 8F        	defw Line_f
- 891+ 8F41
- 892+ 8F41              Fast_L_Table:
- 893+ 8F41
- 894+ 8F41 00 00 00 00  Line_0  db $00,$00,$00,$00,$00,$00,$00,$00
- 894+ 8F45 00 00 00 00
- 895+ 8F49 20 20 20 20  Line_2	db $20,$20,$20,$20,$20,$20,$20,$20
- 895+ 8F4D 20 20 20 20
- 896+ 8F51 40 40 40 40  Line_4	db $40,$40,$40,$40,$40,$40,$40,$40
- 896+ 8F55 40 40 40 40
- 897+ 8F59 60 60 60 60  Line_6	db $60,$60,$60,$60,$60,$60,$60,$60
- 897+ 8F5D 60 60 60 60
- 898+ 8F61 80 80 80 80  Line_8	db $80,$80,$80,$80,$80,$80,$80,$80
- 898+ 8F65 80 80 80 80
- 899+ 8F69 A0 A0 A0 A0  Line_a	db $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
- 899+ 8F6D A0 A0 A0 A0
- 900+ 8F71 C0 C0 C0 C0  Line_c	db $c0,$c0,$c0,$c0,$c0,$c0,$c0,$c0
- 900+ 8F75 C0 C0 C0 C0
- 901+ 8F79 E0 E0 E0 E0  Line_e	db $e0,$e0,$e0,$e0,$e0,$e0,$e0,$e0
- 901+ 8F7D E0 E0 E0 E0
- 902+ 8F81
- 903+ 8F81 00           Cambio_de_tercio db 0
- 904+ 8F82
- 905+ 8F82 10 10 10 10  Line_1  db $10,$10,$10,$10,$10,$10,$10,$10
- 905+ 8F86 10 10 10 10
- 906+ 8F8A 30 30 30 30  Line_3	db $30,$30,$30,$30,$30,$30,$30,$30
- 906+ 8F8E 30 30 30 30
- 907+ 8F92 50 50 50 50  Line_5	db $50,$50,$50,$50,$50,$50,$50,$50
- 907+ 8F96 50 50 50 50
- 908+ 8F9A 70 70 70 70  Line_7	db $70,$70,$70,$70,$70,$70,$70,$70
- 908+ 8F9E 70 70 70 70
- 909+ 8FA2 90 90 90 90  Line_9	db $90,$90,$90,$90,$90,$90,$90,$90
- 909+ 8FA6 90 90 90 90
- 910+ 8FAA B0 B0 B0 B0  Line_b	db $b0,$b0,$b0,$b0,$b0,$b0,$b0,$b0
- 910+ 8FAE B0 B0 B0 B0
- 911+ 8FB2 D0 D0 D0 D0  Line_d	db $d0,$d0,$d0,$d0,$d0,$d0,$d0,$d0
- 911+ 8FB6 D0 D0 D0 D0
- 912+ 8FBA F0 F0 F0 F0  Line_f	db $f0,$f0,$f0,$f0,$f0,$f0,$f0,$f0
- 912+ 8FBE F0 F0 F0 F0
- 913+ 8FC2
- 914+ 8FC2 00           Cambio_de_tercio_2 db 0
- 915+ 8FC3
- 916+ 8FC3              ; --------------------------------------------------------------------------
- 917+ 8FC3              ; FREE SPACE $??, ??d ------------------------------------------------------
- 918+ 8FC3              ; --------------------------------------------------------------------------
- 919+ 8FC3
+ 863+ 8F00              ;	defw H1ter
+ 864+ 8F00              ;	defw H2ter
+ 865+ 8F00              ;	defw H3ter
+ 866+ 8F00
+ 867+ 8F00              Fast_H_Table:
+ 868+ 8F00
+ 869+ 8F00 40 41 42 43  H1ter db $40,$41,$42,$43,$44,$45,$46,$47,0	 			; El "0" Indica "Fín de línea".
+ 869+ 8F04 44 45 46 47
+ 869+ 8F08 00
+ 870+ 8F09 48 49 4A 4B  H2ter db $48,$49,$4a,$4b,$4c,$4d,$4e,$4f,0
+ 870+ 8F0D 4C 4D 4E 4F
+ 870+ 8F11 00
+ 871+ 8F12 50 51 52 53  H3ter db $50,$51,$52,$53,$54,$55,$56,$57,0
+ 871+ 8F16 54 55 56 57
+ 871+ 8F1A 00
+ 872+ 8F1B
+ 873+ 8F1B              Fast_L_Index:
+ 874+ 8F1B
+ 875+ 8F1B 3D 8F        	defw Line_0
+ 876+ 8F1D 7D 8F        	defw Line_1
+ 877+ 8F1F 45 8F        	defw Line_2
+ 878+ 8F21 85 8F        	defw Line_3
+ 879+ 8F23 4D 8F        	defw Line_4
+ 880+ 8F25 8D 8F        	defw Line_5
+ 881+ 8F27 55 8F        	defw Line_6
+ 882+ 8F29 95 8F        	defw Line_7
+ 883+ 8F2B 5D 8F        	defw Line_8
+ 884+ 8F2D 9D 8F        	defw Line_9
+ 885+ 8F2F 65 8F        	defw Line_a
+ 886+ 8F31 A5 8F        	defw Line_b
+ 887+ 8F33 6D 8F        	defw Line_c
+ 888+ 8F35 AD 8F        	defw Line_d
+ 889+ 8F37 75 8F        	defw Line_e
+ 890+ 8F39 B5 8F        	defw Line_f
+ 891+ 8F3B 00 00        	defw 0
+ 892+ 8F3D
+ 893+ 8F3D              Fast_L_Table:
+ 894+ 8F3D
+ 895+ 8F3D 00 00 00 00  Line_0  db $00,$00,$00,$00,$00,$00,$00,$00
+ 895+ 8F41 00 00 00 00
+ 896+ 8F45 20 20 20 20  Line_2	db $20,$20,$20,$20,$20,$20,$20,$20
+ 896+ 8F49 20 20 20 20
+ 897+ 8F4D 40 40 40 40  Line_4	db $40,$40,$40,$40,$40,$40,$40,$40
+ 897+ 8F51 40 40 40 40
+ 898+ 8F55 60 60 60 60  Line_6	db $60,$60,$60,$60,$60,$60,$60,$60
+ 898+ 8F59 60 60 60 60
+ 899+ 8F5D 80 80 80 80  Line_8	db $80,$80,$80,$80,$80,$80,$80,$80
+ 899+ 8F61 80 80 80 80
+ 900+ 8F65 A0 A0 A0 A0  Line_a	db $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+ 900+ 8F69 A0 A0 A0 A0
+ 901+ 8F6D C0 C0 C0 C0  Line_c	db $c0,$c0,$c0,$c0,$c0,$c0,$c0,$c0
+ 901+ 8F71 C0 C0 C0 C0
+ 902+ 8F75 E0 E0 E0 E0  Line_e	db $e0,$e0,$e0,$e0,$e0,$e0,$e0,$e0
+ 902+ 8F79 E0 E0 E0 E0
+ 903+ 8F7D
+ 904+ 8F7D 10 10 10 10  Line_1  db $10,$10,$10,$10,$10,$10,$10,$10
+ 904+ 8F81 10 10 10 10
+ 905+ 8F85 30 30 30 30  Line_3	db $30,$30,$30,$30,$30,$30,$30,$30
+ 905+ 8F89 30 30 30 30
+ 906+ 8F8D 50 50 50 50  Line_5	db $50,$50,$50,$50,$50,$50,$50,$50
+ 906+ 8F91 50 50 50 50
+ 907+ 8F95 70 70 70 70  Line_7	db $70,$70,$70,$70,$70,$70,$70,$70
+ 907+ 8F99 70 70 70 70
+ 908+ 8F9D 90 90 90 90  Line_9	db $90,$90,$90,$90,$90,$90,$90,$90
+ 908+ 8FA1 90 90 90 90
+ 909+ 8FA5 B0 B0 B0 B0  Line_b	db $b0,$b0,$b0,$b0,$b0,$b0,$b0,$b0
+ 909+ 8FA9 B0 B0 B0 B0
+ 910+ 8FAD D0 D0 D0 D0  Line_d	db $d0,$d0,$d0,$d0,$d0,$d0,$d0,$d0
+ 910+ 8FB1 D0 D0 D0 D0
+ 911+ 8FB5 F0 F0 F0 F0  Line_f	db $f0,$f0,$f0,$f0,$f0,$f0,$f0,$f0
+ 911+ 8FB9 F0 F0 F0 F0
+ 912+ 8FBD
+ 913+ 8FBD              ; --------------------------------------------------------------------------
+ 914+ 8FBD              ; FREE SPACE $??, ??d ------------------------------------------------------
+ 915+ 8FBD              ; --------------------------------------------------------------------------
+ 916+ 8FBD
 # file closed: Sprites_e_indices.asm
- 345  8FC3              	include "Cajas_y_disparos.asm"
+ 345  8FBD              	include "Cajas_y_disparos.asm"
 # file opened: Cajas_y_disparos.asm
-   1+ 8FC3              ; ---------------------------------------------------------------------
-   2+ 8FC3              ; Cajas de entidades, Amadeus y disparos. Índices de disparos y cajas.
-   3+ 8FC3              ; Índice de Patrón de movimiento para tipo de entidad.
-   4+ 8FC3              ; ---------------------------------------------------------------------
-   5+ 8FC3
-   6+ 8FC3              ; 30/05/24
-   7+ 8FC3              ;
-   8+ 8FC3              ;	En esta tabla iremos almacenando:
-   9+ 8FC3              ;
-  10+ 8FC3              ;	(Columna_Y),(Dirección de memoria donde se encuentran almacenados los scanlines masticados de cada entidad, (Scanlines_album)).
-  11+ 8FC3              ;
-  12+ 8FC3              ;	Los 6 últimos bytes contienen el borrado/pintado de Amadeus, (Amadeus_scanlines_album).
-  13+ 8FC3
-  14+ 8FC3              ;	Free mem. $8cc6 - $8cff .....$39 / 57d Bytes.
-  15+ 8FC3
-  16+ 8FC3              	org $9000
+   1+ 8FBD              ; ---------------------------------------------------------------------
+   2+ 8FBD              ; Cajas de entidades, Amadeus y disparos. Índices de disparos y cajas.
+   3+ 8FBD              ; Índice de Patrón de movimiento para tipo de entidad.
+   4+ 8FBD              ; ---------------------------------------------------------------------
+   5+ 8FBD
+   6+ 8FBD              ; 30/05/24
+   7+ 8FBD              ;
+   8+ 8FBD              ;	En esta tabla iremos almacenando:
+   9+ 8FBD              ;
+  10+ 8FBD              ;	(Columna_Y),(Dirección de memoria donde se encuentran almacenados los scanlines masticados de cada entidad, (Scanlines_album)).
+  11+ 8FBD              ;
+  12+ 8FBD              ;	Los 6 últimos bytes contienen el borrado/pintado de Amadeus, (Amadeus_scanlines_album).
+  13+ 8FBD
+  14+ 8FBD              ;	Free mem. $8cc6 - $8cff .....$39 / 57d Bytes.
+  15+ 8FBD
+  16+ 8FBD              	org $9000
   17+ 9000
   18+ 9000 00 00 00...  Numeros_aleatorios ds 7
   19+ 9007 00 00 00...  Numeros_aleatorios_baile ds 7
@@ -7509,7 +7506,7 @@
  379+ A3FB CB 1F            rr a
  380+ A3FD CB 1F            rr a                                            ; 4 rotaciones a derecha.
  381+ A3FF
- 382+ A3FF 21 21 8F         ld hl,Fast_L_Index                              ; hl apunta a la línea correspondiente del índice de líneas.
+ 382+ A3FF 21 1B 8F         ld hl,Fast_L_Index                              ; hl apunta a la línea correspondiente del índice de líneas.
  383+ A402
  384+ A402 F3               di
  385+ A403 18 FE            jr $
@@ -7573,15 +7570,15 @@
  443+ A430
  444+ A430              h3ter
  445+ A430
- 446+ A430 21 18 8F         ld hl,H3ter
+ 446+ A430 21 12 8F         ld hl,H3ter
  447+ A433 18 08            jr 4F
  448+ A435
  449+ A435              h2ter
  450+ A435
- 451+ A435 21 0F 8F         ld hl,H2ter
+ 451+ A435 21 09 8F         ld hl,H2ter
  452+ A438 18 03            jr 4F
  453+ A43A
- 454+ A43A 21 06 8F     h1ter ld hl,H1ter
+ 454+ A43A 21 00 8F     h1ter ld hl,H1ter
  455+ A43D
  456+ A43D              ;   Prepara registros de nuevo para el volcado de los scanlines en el álbum.
  457+ A43D

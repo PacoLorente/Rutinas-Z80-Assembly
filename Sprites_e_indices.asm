@@ -860,9 +860,9 @@ Indice_de_digitos_score:
 
 Fast_H_Index:
 
-	defw H1ter
-	defw H2ter
-	defw H3ter
+;	defw H1ter
+;	defw H2ter
+;	defw H3ter
 
 Fast_H_Table:
 
@@ -886,8 +886,9 @@ Fast_L_Index:
 	defw Line_b
 	defw Line_c
 	defw Line_d
-Ultima_linea defw Line_e
+	defw Line_e
 	defw Line_f
+	defw 0
 
 Fast_L_Table:
 
@@ -900,8 +901,6 @@ Line_a	db $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
 Line_c	db $c0,$c0,$c0,$c0,$c0,$c0,$c0,$c0
 Line_e	db $e0,$e0,$e0,$e0,$e0,$e0,$e0,$e0
 
-Cambio_de_tercio db 0
-
 Line_1  db $10,$10,$10,$10,$10,$10,$10,$10
 Line_3	db $30,$30,$30,$30,$30,$30,$30,$30
 Line_5	db $50,$50,$50,$50,$50,$50,$50,$50
@@ -910,8 +909,6 @@ Line_9	db $90,$90,$90,$90,$90,$90,$90,$90
 Line_b	db $b0,$b0,$b0,$b0,$b0,$b0,$b0,$b0
 Line_d	db $d0,$d0,$d0,$d0,$d0,$d0,$d0,$d0
 Line_f	db $f0,$f0,$f0,$f0,$f0,$f0,$f0,$f0
-
-Cambio_de_tercio_2 db 0
 
 ; --------------------------------------------------------------------------
 ; FREE SPACE $??, ??d ------------------------------------------------------
