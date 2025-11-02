@@ -354,22 +354,53 @@ Genera_scanlines:
     dec b                                           ; El 1er scanline ya está guardado en el álbum de pintado,_
     ret z                                           ; _ lo escribió la rutina que genera la cabecera.
 
-;   28/10/25
+;   Ahora tenemos:
 
-;   En 1er lugar necesitamos saber el nº de scan.
-;   Este nº determina la posición exacta donde nos situaremos dentro de las tablas.
+;   HL (Puntero_de_impresion), 1er scanline ya escrito en el álbum.
+;   DE (Album_de_pintado), situado en el 1er .db libre después de la cabecera.
+;   B  Nº de scanlines.
+
+Acopio_de_datos:
 
     ld a,h
-    and %00001111
-    inc a
+    and %00010000
+    jr nz,h3ter
 
-    ex af,af                                        ; Desplazamiento en tablas, (a´).
+    call Desplz_en_A
+    ld hl,H1ter
+    jr 1F
 
-;   Generamos el byte bajo en todos los scanlines, (filas).
+h3ter
+
+    call Desplz_en_A
+    ld hl,H3ter
+
+1 inc l
+    dec a
+    jr nz,1B
+
+    push de
+    push bc
+    exx
+    pop bc
+    pop de
+
+    push ix
+    pop hl
+
+
+;   En este momento tenemos:
+
+;   Desplazamiento de tablas en C'.
+;   HL' contiene el "Puntero de tablas H", situado en el .db correspondiente.
+
+;   Ahora necesitamos situar un marcador o puntero en la línea correspondiente del índice "Fast_L_Index:". Este puntero avanzará_
+;   _una posición, (dentro del índice) cada vez que el puntero HL' se encuentre con el .db de fín de línea ($00).
+;   _ Así sabremos cuando se produce un cambio de tercio.
 
     ld a,l
     and %00001111
-    ld c,a                                          ; Nº de columna, ($00 - $1f) en C.
+    ld c,a                                          ; C contiene el nº de columna.
 
     ld a,l
     and %11110000
@@ -379,96 +410,64 @@ Genera_scanlines:
     rr a
     rr a                                            ; 4 rotaciones a derecha.
 
-    ld hl,Fast_L_Index                              ; hl apunta a la línea correspondiente del índice de líneas.
+    ld hl,Fast_L_Index
 
-    di
-    jr $
-    ei
+    and a
+    jr z,3F
 
-1 inc l
+2 inc l
     inc l
 
     dec a
-    jr nz,1B
+    jr nz,2B
 
-;    push bc                                         ; Nº de scanlines a guardar en B / Nº de columna en C.
+3 push hl
+    pop iy                                          ; Puntero de índice de Filas en IY.
 
-    push de                                         ; Puntero del álbum de pintado en DE.
+; Ahora situamos en puntero de filas en el .db correspondiente de la tabla de filas.
+
+    push de
     call Extrae_address
     pop de
 
-    ex af,af
-    push af
-    ex af,af
-    pop af                                          ; Desplazamiento en A y A´.
+    exx
+    ld a,c                                          ; Desplazamiento en A.
+    exx
 
-2 inc l
-
+4 inc l
     dec a
-    jr nz,2B                                        ; Estamos situados en el .db (0-7) de la "Fila" que corresponde.
+    jr nz,4B
 
-; ----- ----- -----
+;   Ya disponemos de todos los datos necesarios para guardar todos los scanlines en el álbum de pintado:
 
-;    pop de
+;   HL ..... Está situado en la tabla de filas, puntero de filas.
+;   IY ..... Puntero del Índice de filas, (Indica si se produce, o no cambio de tercio).
+;   HL' .... Puntero de Scanlines.
+;   C ...... Desplazamiento.
+;   DE y DE'..... Puntero (Scanlines_album).
+;   B y B'..... Nº de scanlines.
 
-    push de
-    push bc
 
-Guarda_Filas_en_album
+Escribimos_en_album
 
-3 ld a,(hl)
+5 ld a,(hl)
     or c
     ld (de),a
 
-    inc l                                           ; Siguiente fila de la tabla.
+    inc l
 
     inc de
-    inc de                                          ; Siguiente scanline en el álbum.
+    inc de
 
-    djnz 3B
+    djnz 5B
 
-    pop bc
-    pop de
+    exx
 
-;   Nos posicionamos en el scanline correspondiente dentro de la tabla.
+    inc de
 
-    push ix
-    pop hl
-
-    call calcula_tercio
+6 ld a,(hl)
     and a
-    jr z,h1ter
-    dec a
-    jr z,h2ter
-
-h3ter
-
-    ld hl,H3ter 
-    jr 4F
-
-h2ter
-
-    ld hl,H2ter    
-    jr 4F
-
-h1ter ld hl,H1ter
-
-;   Prepara registros de nuevo para el volcado de los scanlines en el álbum.
-
-4 ex af,af                                        ; Desplazamiento en A'.
-
-5 inc l
-    dec a
-    jr nz,5B
-
-;    pop bc
-;    pop de
-
-    inc de
-
-Guarda_Scans_en_album
-
-    ld a,(hl)
+    jr z,Fin_de_linea
 
     ld (de),a
 
@@ -477,10 +476,11 @@ Guarda_Scans_en_album
     inc de
     inc de
 
-    djnz Guarda_Scans_en_album
+    djnz 6B
+
+; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
 
     dec de
-
     ld (Scanlines_album_SP),de
 
     dec de
@@ -495,11 +495,54 @@ Guarda_Scans_en_album
     push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
     pop hl
 
-;    di
-;    jr $
-;    ei
+    ret
+
+Fin_de_linea
+
+    di
+    jr $
+    ei
+
+; ----- ----- ----- ----- -----
+
+Desplz_en_A
+
+    ld a,h
+    and %00001111
+    inc a
+    ld c,a
 
     ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ; ------------------------------
 
