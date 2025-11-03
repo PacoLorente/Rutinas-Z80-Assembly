@@ -450,6 +450,8 @@ h3ter
 
 Escribimos_en_album
 
+;   Filas + columnas
+
 5 ld a,(hl)
     or c
     ld (de),a
@@ -465,9 +467,11 @@ Escribimos_en_album
 
     inc de
 
+;   Scanlines.
+
 6 ld a,(hl)
     and a
-    jr z,Fin_de_linea
+    call z,Fin_de_linea
 
     ld (de),a
 
@@ -499,9 +503,53 @@ Escribimos_en_album
 
 Fin_de_linea
 
+;   Avanzamos una línea en el índice de filas para averiguar si cambiamos de tercio.
+
+    inc iyl
+    inc iyl
+    inc iyl
+    inc iyl
+
+    ld a,(iy+0)
+    and a
+    jr nz,1F
+
+;   Cambio de tercio.
+
     di
     jr $
     ei
+
+    inc l
+    ld a,(hl)
+
+    ret
+
+;   NO HAY CAMBIO DE TERCIO.
+;   Carga siguiente dato.
+
+1 ld a,l
+    sub 8
+    ld l,a
+
+    ld a,(hl)
+
+    ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ; ----- ----- ----- ----- -----
 
