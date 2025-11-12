@@ -267,6 +267,39 @@ Caja_5
 	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
+; ---------- ---------- ---------- ---------- ----------
+
+Caja_6
+
+	db 0 											; (Clase).
+	db 0 											; (Tipo).
+	db 0 											; (Coordenada_X).
+	db 0 											; (Coordenada_Y).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
+	defw 0											; (Puntero_de_impresion).
+	defw 0											; (Puntero_de_almacen_de_mov_masticados).
+	defw 0 											; (Contador_de_mov_masticados).
+	db 0											; (Velocidad).
+	db 0 											; Atributos.
+
+; ---------- ---------- ---------- ---------- ----------
+
+Caja_7
+
+	db 0 											; (Clase).
+	db 0 											; (Tipo).
+	db 0 											; (Coordenada_X).
+	db 0 											; (Coordenada_Y).
+	db 0											; (Contador_de_vueltas).
+	db 0											; (Impacto).
+	defw 0											; (Puntero_de_impresion).
+	defw 0											; (Puntero_de_almacen_de_mov_masticados).
+	defw 0 											; (Contador_de_mov_masticados).
+	db 0											; (Velocidad).
+	db 0 											; Atributos.
+
+
 ; -------------------------------------------------------------------------------------
 ;
 ;	06/4/25
@@ -349,15 +382,6 @@ Entidad_Clase_6 db 6,$82,2,2		                ; (Clase) /(Tipo) / (Filas) / (Col
 	db 0											; (Cuad_objeto).
 	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
 	db %01000100 									; (Attr).
-
-
-
-
-
-
-
-
-
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;

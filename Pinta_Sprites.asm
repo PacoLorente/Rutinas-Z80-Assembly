@@ -1,27 +1,3 @@
-; ------------------------------------------------
-;
-;   24/10/25
-;
-;   INPUTS: HL contiene (Puntero_objeto).
-;           DE contiene (Scanlines_album).
-;           IX contiene (Puntero_de_impresion).
-;           (Columnas)
-;           C contiene attr.
-
-Pinta_Amadeus:
-
-    jr $
-
-    ld (Stack),sp
-    ld sp,hl
-    ex de,hl
-
-    inc l
-    inc l
-    inc l
-
-    ret
-
 ; ---------------------------------------------------------------------------
 ;
 ;   16/10/25

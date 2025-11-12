@@ -769,6 +769,10 @@ Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos l
 
 Primer_scan_Amadeus defw $50cf
 
+Control_de_entidades_rapidas db 0
+; ------------------------------%10000111 XOR $87
+; ------------------------------%01100111
+
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
 ;	19/7/25
@@ -1360,6 +1364,7 @@ Change
 	ld a,(Switch)
 	xor 1
 	ld (Switch),a
+
 	ld hl,(Album_de_pintado)
 	ld de,(Album_de_borrado)
 	ex de,hl
@@ -2289,13 +2294,72 @@ Pintando_entidades
 ; ----- ----- ----- -----
 
 	call Extrae_address
+
+;	Debuggg -----------
+
+;	di
+;	jr $
+;	ei
+
+;	ld a,(Control_de_entidades_rapidas)
+;	bit 0,a
+
+;	di
+;	jr z,$
+;	ei
+
+;	jr z,2F
+
+;	Debuggg -----------
+
 	call Pinta_Sprites
+
+
+;2
+
+;	Debuggg --------------------------
+
+
+;	di
+;	jr $
+;	ei
+
+
+;	ld hl,Control_de_entidades_rapidas
+;	srl (hl)
+
+;	%0001 1111 - %0000 1111 -
+
+;	%1001 1000
+
+;	Debuggg --------------------------
 
 	jr 3B
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
 Ejecuta_escudo
+
+;	Debuggg --------------------------
+
+
+;	di
+;	jr $
+;	ei
+
+
+
+;	ld a,%00011111 											; Restaura valor inicial de permisos.
+;	xor %01111000 											; XOR $78.
+;	ld (Control_de_entidades_rapidas),a
+
+
+;	Recuerda: Función XOR, nº iguales "0", distintos "1".
+
+;	Debuggg --------------------------
+;	Control_de_entidades_rapidas db %00011111
+; 	------------------------------%01111000
+; 	------------------------------%01100111
 
 	ld a,3
 	ld (Columnas),a
@@ -2329,10 +2393,6 @@ Borrando_Amadeus
 
 	call Pinta_Sprites
 
-;	8234 - 10166 ..... 1932
-;	7939 - 9871 ..... 1932
-;	8338 - 10270 ..... 1932 T/States es lo que tarda la rutina Pinta_Sprites en pintar Amadeus.
-
 Pintando_Amadeus
 
 	ld hl,(Album_de_pintado_Amadeus)
@@ -2342,7 +2402,6 @@ Pintando_Amadeus
 	jr z,1F
 
 	call Pinta_Sprites
-;	call Pinta_Amadeus
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
@@ -2488,7 +2547,7 @@ Teclado
 ;	10/3/25
 ;
 
-Genera_explosion 
+Genera_explosion:
 
 	ld hl,Clock_explosion								
 	dec (hl)
