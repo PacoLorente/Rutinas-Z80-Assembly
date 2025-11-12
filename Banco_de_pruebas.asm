@@ -769,6 +769,9 @@ Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos l
 
 Primer_scan_Amadeus defw $50cf
 
+Anula_CLOCK db 0
+
+
 Control_de_entidades_rapidas db 0
 ; ------------------------------%10000111 XOR $87
 ; ------------------------------%01100111
@@ -953,6 +956,15 @@ Main:
 
 ;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
 
+	ld a,(Anula_CLOCK)
+	and a
+	jr z,7F
+
+	xor a
+	ld (Anula_CLOCK),a
+	jr 8F
+
+7
 	ld hl,(Clock_next_entity)
 	ld bc,(FRAMES) 
 	and a
@@ -972,6 +984,8 @@ Main:
 ;	--- Numero_de_entidades db 0							; Nº total de entidades maliciosas que contiene el nivel.
 ; 	--- Numero_parcial_de_entidades db 5					; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
 ; 	--- Entidades_en_curso db 0								; Entidades en pantalla.
+
+8
 
 	ld hl,Numero_parcial_de_entidades
 	ld b,(hl)
@@ -2620,6 +2634,9 @@ Siguiente_frame_explosion
 
 	dec a
 	ld (Numero_de_entidades),a
+
+	ld hl,Anula_CLOCK
+	inc (hl)
 
 	ld hl,Entidades_en_curso
 	dec (hl)
