@@ -335,17 +335,6 @@ Completo_o_desapareciendo
 
 Genera_scanlines:
 
-;   6066 - 6340 ..... 274
-;   9778 - 10232 .... 454
-;   9701 - 10335 .... 634
-;   7951 - 8804 ..... 853
-;   8179 - 9212 ..... 1033
-;   8502 - 9715 ..... 1213
-;   8826 - 10219 .... 1393
-;  11149 - 12671 .... 1522
-;   9510 - 11032 .... 1522
-;   9495 - 11017 .... 1522                          ; T/States máx que tarda en ejecutarse esta rutina.
-
     ex de,hl
 
     push ix
@@ -354,268 +343,28 @@ Genera_scanlines:
     dec b                                           ; El 1er scanline ya está guardado en el álbum de pintado,_
     ret z                                           ; _ lo escribió la rutina que genera la cabecera.
 
-;   Ahora tenemos:
-
-;   HL (Puntero_de_impresion), 1er scanline ya escrito en el álbum.
-;   DE (Album_de_pintado), situado en el 1er .db libre después de la cabecera.
-;   B  Nº de scanlines.
-
-Acopio_de_datos:
-
-    ld a,h
-    and %00010000
-    jr nz,h3ter
-
-    call Desplz_en_A
-    ld hl,H1ter
-    jr 1F
-
-h3ter
-
-    call Desplz_en_A
-    ld hl,H3ter
-
-1 inc l
-    dec a
-    jr nz,1B
-
-    push de
-    push bc
-    exx
-    pop bc
-    pop de
-
-    push ix
-    pop hl
-
-
-;   En este momento tenemos:
-
-;   Desplazamiento de tablas en C'.
-;   HL' contiene el "Puntero de tablas H", situado en el .db correspondiente.
-
-;   Ahora necesitamos situar un marcador o puntero en la línea correspondiente del índice "Fast_L_Index:". Este puntero avanzará_
-;   _una posición, (dentro del índice) cada vez que el puntero HL' se encuentre con el .db de fín de línea ($00).
-;   _ Así sabremos cuando se produce un cambio de tercio.
-
-    ld a,l
-    and %00001111
-    ld c,a                                          ; C contiene el nº de columna.
-
-    ld a,l
-    and %11110000
-
-    rr a
-    rr a
-    rr a
-    rr a                                            ; 4 rotaciones a derecha.
-
-    ld hl,Fast_L_Index
-
-    and a
-    jr z,3F
-
-2 inc l
-    inc l
-
-    dec a
-    jr nz,2B
-
-3 push hl
-    pop iy                                          ; Puntero de índice de Filas en IY.
-
-; Ahora situamos en puntero de filas en el .db correspondiente de la tabla de filas.
-
-    push de
-    call Extrae_address
-    pop de
-
-    exx
-    ld a,c                                          ; Desplazamiento en A.
-    exx
-
-4 inc l
-    dec a
-    jr nz,4B
-
-;   Ya disponemos de todos los datos necesarios para guardar todos los scanlines en el álbum de pintado:
-
-;   HL ..... Está situado en la tabla de filas, puntero de filas.
-;   IY ..... Puntero del Índice de filas, (Indica si se produce, o no cambio de tercio).
-;   HL' .... Puntero de Scanlines.
-;   C ...... Desplazamiento.
-;   DE y DE'..... Puntero (Scanlines_album).
-;   B y B'..... Nº de scanlines.
-
-
-Escribimos_en_album
-
-;   Filas + columnas
-
-5 ld a,(hl)
-    or c
-    ld (de),a
-
-    inc l
-
-    inc de
-    inc de
-
-    djnz 5B
-
-    exx
-
-    inc de
-
-;   Scanlines.
-
-6 ld a,(hl)
-    and a
-    call z,Fin_de_linea
-
-    ld (de),a
-
-    inc l
-
-    inc de
-    inc de
-
-    djnz 6B
-
-; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
-
-    dec de
-    ld (Scanlines_album_SP),de
-
-    dec de
-    dec de
+1 call NextScan
 
     ex de,hl
 
-    call Extrae_address
+    ld (hl),e
+    inc hl
+    ld (hl),d
+    inc hl
 
+    ex de,hl
+
+    djnz 1B
+
+; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
+
+    ld (Scanlines_album_SP),de
     ld (Puntero_de_impresion_disparo_de_entidad),hl
 
     push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
     pop hl
 
     ret
-
-Fin_de_linea
-
-;   Avanzamos una línea en el índice de filas para averiguar si cambiamos de tercio.
-
-    inc iyl
-    inc iyl
-    inc iyl
-    inc iyl
-
-    ld a,(iy+0)
-    and a
-    jr nz,1F
-
-;   Cambio de tercio.
-
-    di
-    jr $
-    ei
-
-    inc l
-    ld a,(hl)
-
-    ret
-
-;   NO HAY CAMBIO DE TERCIO.
-;   Carga siguiente dato.
-
-1 ld a,l
-    sub 8
-    ld l,a
-
-    ld a,(hl)
-
-    ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-; ----- ----- ----- ----- -----
-
-Desplz_en_A
-
-    ld a,h
-    and %00001111
-    inc a
-    ld c,a
-
-    ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-; ------------------------------
-
-;1 call NextScan
-
-;    ex de,hl
-
-;    ld (hl),e
-;    inc hl
-;    ld (hl),d
-;    inc hl
-
-;    ex de,hl
-
-;    djnz 1B
-
-; Todos los scanlines generados. actualizamos el puntero (Scanlines_album_SP).
-
-;    ld (Scanlines_album_SP),de
-;    ld (Puntero_de_impresion_disparo_de_entidad),hl
-
-;    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
-;    pop hl
-
-;    ret
 
 ; ------------------------------------------------------------------------------------
 ;
