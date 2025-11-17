@@ -669,7 +669,7 @@ Ctrl_5 db 0
 ;															BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria.
 ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.
 ;															BIT	3, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la izquierda.								
-
+;															BIT 4, "1" Indica que en el último FRAME hemos eliminado a un enemigo.
 ; Gestión de Disparos.
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
@@ -769,13 +769,6 @@ Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos l
 
 Primer_scan_Amadeus defw $50cf
 
-Anula_CLOCK db 0
-
-
-Control_de_entidades_rapidas db 0
-; ------------------------------%10000111 XOR $87
-; ------------------------------%01100111
-
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
 ;	19/7/25
@@ -835,9 +828,7 @@ INICIALIZACION:
 	call Derivando_RND 										; Rutina de generación de nº aleatorios.
 
 	call Extrae_numero_aleatorio_y_avanza
-	ld l,a
-	ld h,0
-	ld (Clock_next_entity),hl 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
+	ld (Clock_next_entity),a 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
 
 ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
 
@@ -955,20 +946,20 @@ Main:
 ;>	*****************************************************************************
 
 ;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
+;	Si en el FRAME anterior hemos eliminado a una entidad, programamos la salida de una nueva entidad para dentro de 0,8 segundos.
 
-	ld a,(Anula_CLOCK)
-	and a
+	ld hl,Ctrl_5
+	bit 4,(hl)
 	jr z,7F
+	res 4,(hl)
+	ld a,(FRAMES)
+	add 40
+	ld (Clock_next_entity),a
 
-	xor a
-	ld (Anula_CLOCK),a
-	jr 8F
-
-7
-	ld hl,(Clock_next_entity)
-	ld bc,(FRAMES) 
-	and a
-	sbc hl,bc
+7 ld a,(FRAMES)
+	ld b,a
+	ld a,(Clock_next_entity)
+	sub b
 	jr nz,1F
 
 ; - Define el tiempo que ha de transcurrir para que aparezca la siguiente entidad. ----------------------------
@@ -984,8 +975,6 @@ Main:
 ;	--- Numero_de_entidades db 0							; Nº total de entidades maliciosas que contiene el nivel.
 ; 	--- Numero_parcial_de_entidades db 5					; Nº de cajas que contiene un bloque de entidades. (5 Cajas).
 ; 	--- Entidades_en_curso db 0								; Entidades en pantalla.
-
-8
 
 	ld hl,Numero_parcial_de_entidades
 	ld b,(hl)
@@ -2635,8 +2624,8 @@ Siguiente_frame_explosion
 	dec a
 	ld (Numero_de_entidades),a
 
-	ld hl,Anula_CLOCK
-	inc (hl)
+	ld hl,Ctrl_5
+	set 4,(hl) 												; Flag que indica: ENTIDAD ELIMINADA.
 
 	ld hl,Entidades_en_curso
 	dec (hl)
