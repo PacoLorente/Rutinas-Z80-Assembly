@@ -705,7 +705,7 @@ RND_SP defw Numeros_aleatorios								; Puntero que se irá desplazando por el S
 Puntero_num_aleatorios_disparos defw Numeros_aleatorios		; Puntero que se irá desplazando por el SET de nº aleatorios, (para generar disparos de entidades).
 Numero_rnd_disparos db 0
 
-Clock_next_entity defw 0									; Transcurrido este tiempo aparece una nueva entidad.
+Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva entidad.
 Repone_CLOCK_disparos db $a0								; Reloj decreciente.
 CLOCK_disparos_de_entidades db $a0
 
@@ -873,6 +873,7 @@ INICIALIZACION:
 	call Genera_datos_de_impresion_Amadeus
 
 ;	Inicializa techo y suelo de (Clock_next_entity). 
+
 ;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
 ;	Este valor irá decreciendo conforme van apareciendo entidades.
 
@@ -1412,7 +1413,7 @@ Change_Disparos
 
 ; ------------------------------------
 ;
-; 	22/04/25
+; 	18/11/25
 
 ; 	Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
 ; 	Si el puntero está situado en el último nº, lo volvemos a situar al principio.
@@ -1422,7 +1423,7 @@ Change_Disparos
 
 ;	Variables implicadas: (RND_SP).
 
-Extrae_numero_aleatorio_y_avanza 
+Extrae_numero_aleatorio_y_avanza:
 
 	ld hl,Numeros_aleatorios+7
 	ex de,hl
@@ -1449,6 +1450,9 @@ Extrae_numero_aleatorio_y_avanza
 ;
 ; 	23/04/25
 
+;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
+;	Este valor irá decreciendo conforme van apareciendo entidades.
+
 ; 	$32 1 seg.
 ; 	$64 2 seg.
 ; 	$96 3 seg.
@@ -1464,30 +1468,32 @@ Extrae_numero_aleatorio_y_avanza
 ;	$0500 25 seg. aproximadamente.
 ;	$0600 30 seg. aproximadamente.
 
-Define_Clock_next_entity 
+Define_Clock_next_entity:
 
-	ld hl,Vel_left
+	ld hl,Vel_left  										;	Inicialmente $ff
 	cp (hl)
 	ld c,a
 	jr nc,1F
 
 ;	Por debajo del límite inferior.
+;	Siempre que el nº aleatorio se encuentra por debajo del límite inferior, decrementamos el límite en 10 unidades.
+
 
 	ld c,(hl)
+
 	ld a,c
 	sub 10
-	ld (hl),a
 
-	jr 1F
+
+
+
+	ld (hl),a
 
 ;	Actualiza (Clock_next_entity).
 
-1 ld b,0
-	
-	ld hl,(FRAMES)
-	and a
-	adc hl,bc
-	ld (Clock_next_entity),hl  								; Actualizamos variable.
+1 ld a,(FRAMES)
+	add c
+	ld (Clock_next_entity),a
 
 	ret
 
