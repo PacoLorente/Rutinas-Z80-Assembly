@@ -669,8 +669,6 @@ Ctrl_5 db 0
 ;															BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria.
 ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.
 ;															BIT	3, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la izquierda.								
-;															BIT 4, "1" Indica que en el último FRAME hemos eliminado a un enemigo.
-; Gestión de Disparos.
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
@@ -768,6 +766,11 @@ Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos l
 ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
 
 Primer_scan_Amadeus defw $50cf
+
+; Varios:
+
+Max_time_to_appear_entities db 0
+
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -949,15 +952,7 @@ Main:
 ;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
 ;	Si en el FRAME anterior hemos eliminado a una entidad, programamos la salida de una nueva entidad para dentro de 0,8 segundos.
 
-	ld hl,Ctrl_5
-	bit 4,(hl)
-	jr z,7F
-	res 4,(hl)
 	ld a,(FRAMES)
-	add 40
-	ld (Clock_next_entity),a
-
-7 ld a,(FRAMES)
 	ld b,a
 	ld a,(Clock_next_entity)
 	sub b
@@ -1478,15 +1473,10 @@ Define_Clock_next_entity:
 ;	Por debajo del límite inferior.
 ;	Siempre que el nº aleatorio se encuentra por debajo del límite inferior, decrementamos el límite en 10 unidades.
 
-
 	ld c,(hl)
 
 	ld a,c
 	sub 10
-
-
-
-
 	ld (hl),a
 
 ;	Actualiza (Clock_next_entity).
@@ -2629,9 +2619,6 @@ Siguiente_frame_explosion
 
 	dec a
 	ld (Numero_de_entidades),a
-
-	ld hl,Ctrl_5
-	set 4,(hl) 												; Flag que indica: ENTIDAD ELIMINADA.
 
 	ld hl,Entidades_en_curso
 	dec (hl)

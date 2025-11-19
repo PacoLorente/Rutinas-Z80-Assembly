@@ -1,6 +1,4 @@
-;	22/07/25	
-
-;	19/1/24
+;	19/11/25
 
 Indice_de_niveles
 
@@ -14,11 +12,11 @@ Indice_de_niveles
 	defw 0
 	defw 0
 
-; NIVEL_1. Tres tipos de BadSat. 
+; NIVEL_1. Tres clases de entidades tipo BadSat.
 
-Nivel_1 db 33
-
-	db 1,2,3,1,2
+Nivel_1 db 33 								; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+;												; 2º byte: Nº de entidades que tiene el nivel.
+	db 1,2,3,1,2 								; Clases de las enitades que irán apareciendo.
 	db 3,3,2,2,1
 	db 3,3,2,1,2
 	db 3,3,2,1,3
@@ -27,8 +25,8 @@ Nivel_1 db 33
 	db 1,2,3
 
 
-Nivel_2 db 12									; Nº de entidades.
-	db 2,1,1,1,1,2								; Tipo de entidad que vamos a introducir en las 7 cajas de DRAW.			
+Nivel_2 db 12
+	db 2,1,1,1,1,2
 	db 2,1,1,1,1,2
 
 	defw 0
