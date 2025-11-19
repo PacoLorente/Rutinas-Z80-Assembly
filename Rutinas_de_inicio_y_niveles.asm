@@ -156,6 +156,7 @@ Avanza_siguiente_entidad_del_nivel
 	ld hl,(Puntero_indice_NIVELES)
 	call Extrae_address
 	inc hl
+	inc hl
 	ld (Puntero_de_entidades),hl
 
 	ret
@@ -532,11 +533,6 @@ Extrae_address_y_avanza call Extrae_address
 
 Inicializa_1er_Nivel
 
-; Inicializa puntero de Cajas_Master.
-
-;	ld hl,Indice_de_cajas_master
-;	ld (Puntero_indice_master),hl									; defw Caja_master_1.
-
 ; Inicializa (Puntero_indice_NIVELES).
 
 	ld hl,Indice_de_niveles
@@ -547,7 +543,13 @@ Inicializa_1er_Nivel
 ; Nº de entidades del 1er nivel en A y B.
 
 	ld a,(hl)
+	ld (Max_time_to_appear_entities),a
+
+	inc hl
+
+	ld a,(hl)
 	ld (Numero_de_entidades),a					 					; Inicializa (Numero_de_entidades).
+
 	ld b,a
 
 ; Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
@@ -556,6 +558,7 @@ Inicializa_1er_Nivel
 ;																					Entidades_BCD_decenas db 0
 
 	inc hl
+
 	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
 	ld c,(hl)													
 
@@ -682,7 +685,6 @@ Situa_Puntero_indice_mov
 Prepara_Cajas_de_Entidades
 
 ; Preparamos los punteros de las cajas de entidades:
-
 
 	call Inicia_punteros_de_cajas									; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
 ;																	; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
