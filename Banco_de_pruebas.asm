@@ -770,8 +770,8 @@ Primer_scan_Amadeus defw $50cf
 ; Varios:
 
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
-Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
+Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
 Decrease_ground_time_entities db 0 							; Cada vez que eliminamos una entidad decrementa (Min_time_to_appear_entities) con este valor.
 
 
@@ -2128,7 +2128,7 @@ Pulsa_ENTER ld a,$bf 										; Esperamos la pulsación de la tecla "ENTER".
 ;	!!!!!!!! DESTRUYE BC !!!!!!!!!!!
 
 DELAY
-															;$0320 ..... Delay mínimo
+;															;$0320 ..... Delay mínimo
 	dec bc  												;Sumaremos $0045 por FILA a esta cantidad inicial. Ejempl: si el Sprite ocupa la 1ª y 2ª_
 	LD a,b
 	AND a
@@ -2305,72 +2305,12 @@ Pintando_entidades
 ; ----- ----- ----- -----
 
 	call Extrae_address
-
-;	Debuggg -----------
-
-;	di
-;	jr $
-;	ei
-
-;	ld a,(Control_de_entidades_rapidas)
-;	bit 0,a
-
-;	di
-;	jr z,$
-;	ei
-
-;	jr z,2F
-
-;	Debuggg -----------
-
 	call Pinta_Sprites
-
-
-;2
-
-;	Debuggg --------------------------
-
-
-;	di
-;	jr $
-;	ei
-
-
-;	ld hl,Control_de_entidades_rapidas
-;	srl (hl)
-
-;	%0001 1111 - %0000 1111 -
-
-;	%1001 1000
-
-;	Debuggg --------------------------
-
 	jr 3B
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
 Ejecuta_escudo
-
-;	Debuggg --------------------------
-
-
-;	di
-;	jr $
-;	ei
-
-
-
-;	ld a,%00011111 											; Restaura valor inicial de permisos.
-;	xor %01111000 											; XOR $78.
-;	ld (Control_de_entidades_rapidas),a
-
-
-;	Recuerda: Función XOR, nº iguales "0", distintos "1".
-
-;	Debuggg --------------------------
-;	Control_de_entidades_rapidas db %00011111
-; 	------------------------------%01111000
-; 	------------------------------%01100111
 
 	ld a,3
 	ld (Columnas),a
@@ -2611,7 +2551,6 @@ Siguiente_frame_explosion
 	sub l
 	jr nz,1F
 
-
 ; Fín de la entidad !!!!!!!!!!!!!
 ; Gestionamos entidades !!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -2620,6 +2559,10 @@ Siguiente_frame_explosion
 ; Entidades_en_curso db 0									; Entidades en pantalla.
 
 	call Incrementa_Score
+
+; Cada vez que eliminamos a una entidad decrementamos el valor de (Min_time_to_appear_entities).
+
+	call Decrementa_suelo
 
 ; La entidad eliminada, es la última del nivel ?
 
@@ -2741,6 +2684,31 @@ Aparece_izquierda inc a
 	inc a
 	ld (Columnas),a
 	inc e
+
+	ret
+
+; --------------------------------------------------------------- 
+;
+;	20/11/25
+;
+
+Decrementa_suelo:
+
+	ld hl,Min_time_to_appear_entities
+	ld a,(hl)
+
+	inc hl
+	sub (hl)
+	jr c,2F
+
+	cp $0a
+
+	jr nc,1F
+
+2 ld a,$0a
+
+1 dec hl
+	ld (hl),a
 
 	ret
 
