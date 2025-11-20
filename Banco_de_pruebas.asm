@@ -769,7 +769,10 @@ Primer_scan_Amadeus defw $50cf
 
 ; Varios:
 
-Max_time_to_appear_entities db 0
+Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
+Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
+Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
+Decrease_ground_time_entities db 0 							; Cada vez que eliminamos una entidad decrementa (Min_time_to_appear_entities) con este valor.
 
 
 ; 	INICIO  *************************************************************************************************************************************************************************
@@ -1445,6 +1448,8 @@ Extrae_numero_aleatorio_y_avanza:
 ;
 ; 	23/04/25
 
+;	INPUTS: A contiene un nº aleatorio comprendido entre ($00 y $ff).
+;			Este valor no podrá ser menor que $
 ;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
 ;	Este valor irá decreciendo conforme van apareciendo entidades.
 
@@ -1465,21 +1470,28 @@ Extrae_numero_aleatorio_y_avanza:
 
 Define_Clock_next_entity:
 
-	ld hl,Vel_left  										;	Inicialmente $ff
-	cp (hl)
-	ld c,a
-	jr nc,1F
+	ld c,$30 											; Valor mínimo, (SUELO), del tiempo de aparición de las entidades en pantalla.
 
-;	Por debajo del límite inferior.
+	cp $30
+	jr nc,2F
+
+	ld c,$30
+	jr 1F
+
+
+2 ld hl,Max_time_to_appear_entities  										
+	cp (hl)
+
+	ld c,a 												; Nº aleatorio ($00 - $ff) en A.
+
+	jr c,1F
+
+;	Por encima o igual que (Max_time_to_appear_entities).
 ;	Siempre que el nº aleatorio se encuentra por debajo del límite inferior, decrementamos el límite en 10 unidades.
 
 	ld c,(hl)
 
-	ld a,c
-	sub 10
-	ld (hl),a
-
-;	Actualiza (Clock_next_entity).
+;	Actualiza (Clock_next_entity). El nº aleatorio no supera el valor de (Max_time_to_appear_entities).
 
 1 ld a,(FRAMES)
 	add c

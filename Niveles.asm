@@ -2,8 +2,8 @@
 
 Indice_de_niveles
 
-	defw Nivel_1
-	defw Nivel_2
+	defw Nivel_1 
+	defw Nivel_2 
 
 ;	...
 ;	...
@@ -14,9 +14,16 @@ Indice_de_niveles
 
 ; NIVEL_1. Tres clases de entidades tipo BadSat.
 
-Nivel_1 db $ff,33 								; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
-;												; 2º byte: Nº de entidades que tiene el nivel.
-	db 1,2,3,1,2 								; Clases de las enitades que irán apareciendo.
+Nivel_1 db $ff,$05,$40,$05
+
+;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+;												; 4º byte: Define el valor de (Decrease_ground_time_entities).
+
+	db 33 										; Nº de entidades que tiene el nivel. 		
+
+	db 1,2,3,1,2 								; Clases de entidades. (Irán apareciendo por este orden).
 	db 3,3,2,2,1
 	db 3,3,2,1,2
 	db 3,3,2,1,3

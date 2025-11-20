@@ -155,8 +155,11 @@ Avanza_siguiente_entidad_del_nivel
 
 	ld hl,(Puntero_indice_NIVELES)
 	call Extrae_address
-	inc hl
-	inc hl
+
+	ld a,5
+	add l
+	ld l,a
+
 	ld (Puntero_de_entidades),hl
 
 	ret
@@ -517,7 +520,7 @@ Extrae_address_y_avanza call Extrae_address
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   14/4/25
+;   20/11/25
 ;
 ;	Inicializa el 1er Nivel del juego.
 ;	
@@ -544,6 +547,17 @@ Inicializa_1er_Nivel
 
 	ld a,(hl)
 	ld (Max_time_to_appear_entities),a
+	inc hl
+	ld a,(hl)
+	ld (Decrease_top_time_entities),a
+
+	inc hl
+
+	ld a,(hl)
+	ld (Min_time_to_appear_entities),a
+	inc hl
+	ld a,(hl)
+	ld (Decrease_ground_time_entities),a
 
 	inc hl
 
@@ -552,11 +566,10 @@ Inicializa_1er_Nivel
 
 	ld b,a
 
-; Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
+;	Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
 
 	call M_entidades_a_BCD											; Inicializa:	Entidades_BCD_unidades db 0
 ;																					Entidades_BCD_decenas db 0
-
 	inc hl
 
 	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
