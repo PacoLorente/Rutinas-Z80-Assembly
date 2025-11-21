@@ -156,7 +156,7 @@ Avanza_siguiente_entidad_del_nivel
 	ld hl,(Puntero_indice_NIVELES)
 	call Extrae_address
 
-	ld a,5
+	ld a,4
 	add l
 	ld l,a
 
@@ -550,14 +550,9 @@ Inicializa_1er_Nivel
 	inc hl
 	ld a,(hl)
 	ld (Decrease_top_time_entities),a
-
 	inc hl
-
 	ld a,(hl)
 	ld (Min_time_to_appear_entities),a
-	inc hl
-	ld a,(hl)
-	ld (Decrease_ground_time_entities),a
 
 	inc hl
 

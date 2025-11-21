@@ -771,9 +771,8 @@ Primer_scan_Amadeus defw $50cf
 
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
-Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
-Decrease_ground_time_entities db 0 							; Cada vez que eliminamos una entidad decrementa (Min_time_to_appear_entities) con este valor.
 
+Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -1439,32 +1438,23 @@ Extrae_numero_aleatorio_y_avanza:
 ; ------------------------------------
 ;
 ; 	21/11/25
-
+;
 ;	INPUTS: A contiene un nº aleatorio comprendido entre ($00 y $ff).
-;			Este valor no podrá ser menor que $
-;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
-;	Este valor irá decreciendo conforme van apareciendo entidades.
-
-; 	$32 1 seg.
-; 	$64 2 seg.
-; 	$96 3 seg.
-; 	$c8 4 seg.
-; 	$fa 5 seg.
-
-; 	$ffff 1310,7 seg, 22 minutos.
-
-;	$0100  5 seg. aproximadamente.
-;	$0200 10 seg. aproximadamente.
-;	$0300 15 seg. aproximadamente.
-;	$0400 20 seg. aproximadamente.
-;	$0500 25 seg. aproximadamente.
-;	$0600 30 seg. aproximadamente.
+;
+;			La rutina sumará este valor a (FRAMES) siendo este nuevo valor el tiempo que tardará en aparecer una nueva entidad, (Clock_next_entity).
+;
+;			Antes de sumar el valor de (A) a (FRAMES), la rutina "filtra" esa cantidad manteniéndola entre 2 valores:
+;			(Max_time_to_appear_entities) ... Valor máximo de tiempo. (A) no podrá superar nunca este valor.
+;			(Min_time_to_appear_entities) ... Valor mínimo. (A) no podrá tener un valor más bajo que este.
+;
+;			Nota: Se puede dar el caso de que (Max_time_to_appear_entities) y (Min_time_to_appear_entities) contengan el mismo valor debido a que_
+;				  _la rutina [Decrementa_techo] irá decrementando el valor de (Max_time_to_appear_entities) un nº de unidades definido por:
+;				  _(Decrease_top_time_entities) cada vez que eliminamos a una entidad. De esta manera iremos aumentando la dificultad del nivel a_
+;				  _medida que transcurre el tiempo.
+;
+;	OUTPUT: Define (Clock_next_entity).
 
 Define_Clock_next_entity:
-
-	di
-	jr $
-	ei
 
 	ld hl,Max_time_to_appear_entities  										
 	cp (hl)
@@ -2558,9 +2548,7 @@ Siguiente_frame_explosion
 
 	call Incrementa_Score
 
-; Cada vez que eliminamos a una entidad decrementamos el valor de (Max_time_to_appear_entities).
-
-	call Decrementa_techo
+	call Decrementa_techo 									; Cada vez que eliminamos a una entidad decrementamos el valor de (Max_time_to_appear_entities).
 
 ; La entidad eliminada, es la última del nivel ?
 
@@ -2689,6 +2677,8 @@ Aparece_izquierda inc a
 ;
 ;	21/11/25
 ;
+;	Decrementa el valor de (Max_time_to_appear_entities) en (Decrease_top_time_entities) unidades.
+;	(Max_time_to_appear_entities) nunca será mayor que (Min_time_to_appear_entities).
 
 Decrementa_techo:
 
