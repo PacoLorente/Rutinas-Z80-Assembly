@@ -1462,6 +1462,10 @@ Extrae_numero_aleatorio_y_avanza:
 
 Define_Clock_next_entity:
 
+	di
+	jr $
+	ei
+
 	ld hl,Max_time_to_appear_entities  										
 	cp (hl)
 	ld c,a 												; Nº aleatorio ($00 - $ff) en A.
@@ -2556,7 +2560,7 @@ Siguiente_frame_explosion
 
 ; Cada vez que eliminamos a una entidad decrementamos el valor de (Max_time_to_appear_entities).
 
-;	call Decrementa_techo
+	call Decrementa_techo
 
 ; La entidad eliminada, es la última del nivel ?
 
@@ -2693,14 +2697,24 @@ Decrementa_techo:
 	inc hl
 	sub (hl)
 
-	jr c,1F
+;	New TOP-time in A.
 
-2 dec hl
+	inc hl
+	
+	cp (hl)
+
+	jr nc,1F
+
+;	Si estamos por debajo del valor mínimo corregimos:
+
+	ld a,(hl)
+
+1 dec hl
+	dec hl
+
 	ld (hl),a
-	ret
 
-1 add (hl)
-	jr 2B
+	ret
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
