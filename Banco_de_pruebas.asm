@@ -878,15 +878,7 @@ INICIALIZACION:
 
 	call Genera_datos_de_impresion_Amadeus
 
-;	Inicializa techo y suelo de (Clock_next_entity). 
-
-;	Una vez creados todos los movimientos, (Vel_left) contiene el valor mínimo que podrá contener (Clock_next_entity).
-;	Este valor irá decreciendo conforme van apareciendo entidades.
-
-	ld a,$ff
-	ld (Vel_left),a
-
-;! ---------------------------------------------------------------------------------------------------------------------------------------------------------
+;! ------------------
 
 	call Inicia_punteros_de_cajas						 	; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
 
@@ -1446,7 +1438,7 @@ Extrae_numero_aleatorio_y_avanza:
 
 ; ------------------------------------
 ;
-; 	23/04/25
+; 	21/11/25
 
 ;	INPUTS: A contiene un nº aleatorio comprendido entre ($00 y $ff).
 ;			Este valor no podrá ser menor que $
@@ -1470,18 +1462,8 @@ Extrae_numero_aleatorio_y_avanza:
 
 Define_Clock_next_entity:
 
-	ld c,$30 											; Valor mínimo, (SUELO), del tiempo de aparición de las entidades en pantalla.
-
-	cp $30
-	jr nc,2F
-
-	ld c,$30
-	jr 1F
-
-
-2 ld hl,Max_time_to_appear_entities  										
+	ld hl,Max_time_to_appear_entities  										
 	cp (hl)
-
 	ld c,a 												; Nº aleatorio ($00 - $ff) en A.
 
 	jr c,1F
@@ -1491,9 +1473,21 @@ Define_Clock_next_entity:
 
 	ld c,(hl)
 
-;	Actualiza (Clock_next_entity). El nº aleatorio no supera el valor de (Max_time_to_appear_entities).
+;	El nº aleatorio no supera el valor de (Max_time_to_appear_entities).
+;	Por debajo del mínimo?, (Min_time_to_appear_entities)??.
 
-1 ld a,(FRAMES)
+1 inc hl
+	inc hl
+
+	cp (hl)
+
+	jr nc,2F
+
+;	Por DEBAJO de (Min_time_to_appear_entities).
+
+	ld c,(hl)
+
+2 ld a,(FRAMES)
 	add c
 	ld (Clock_next_entity),a
 
@@ -2560,9 +2554,9 @@ Siguiente_frame_explosion
 
 	call Incrementa_Score
 
-; Cada vez que eliminamos a una entidad decrementamos el valor de (Min_time_to_appear_entities).
+; Cada vez que eliminamos a una entidad decrementamos el valor de (Max_time_to_appear_entities).
 
-	call Decrementa_suelo
+;	call Decrementa_techo
 
 ; La entidad eliminada, es la última del nivel ?
 
@@ -2689,28 +2683,24 @@ Aparece_izquierda inc a
 
 ; --------------------------------------------------------------- 
 ;
-;	20/11/25
+;	21/11/25
 ;
 
-Decrementa_suelo:
+Decrementa_techo:
 
-	ld hl,Min_time_to_appear_entities
+	ld hl, Max_time_to_appear_entities
 	ld a,(hl)
-
 	inc hl
 	sub (hl)
-	jr c,2F
 
-	cp $0a
+	jr c,1F
 
-	jr nc,1F
-
-2 ld a,$0a
-
-1 dec hl
+2 dec hl
 	ld (hl),a
-
 	ret
+
+1 add (hl)
+	jr 2B
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
