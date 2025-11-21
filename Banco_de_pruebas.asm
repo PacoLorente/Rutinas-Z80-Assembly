@@ -946,20 +946,9 @@ Main:
 ;	(Clock_next_entity) contiene un nº de 16 bits. El 1er nº aleatorio de los 7 generados define su valor inicial, ($0000 - $00ff).
 ;	Si en el FRAME anterior hemos eliminado a una entidad, programamos la salida de una nueva entidad para dentro de 0,8 segundos.
 
-	ld a,(FRAMES)
-	ld b,a
-	ld a,(Clock_next_entity)
-	sub b
-	jr nz,1F
-
-; - Define el tiempo que ha de transcurrir para que aparezca la siguiente entidad. ----------------------------
-
-	call Extrae_numero_aleatorio_y_avanza 					; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
-	call Define_Clock_next_entity
-
 ; 	GESTIÓN DE ENTIDADES.
 
-;	Si aún quedan entidades por aparecer del bloque de entidades, (7 cajas), incrementaremos (Entidades_en_curso) y calcularemos_
+;	Si aún quedan entidades por aparecer del bloque de entidades, (4 cajas), incrementaremos (Entidades_en_curso) y calcularemos_
 ;	_ (Clock_next_entity) para la siguiente entidad.
 
 ;	--- Numero_de_entidades db 0							; Nº total de entidades maliciosas que contiene el nivel.
@@ -973,8 +962,6 @@ Main:
 	dec b
 
 ;
-
-	ld hl,(Clock_next_entity)
 	call z,Dispara_salida_de_amadeus						; Nivel superado !!!!!
 
 ; ----------------------------------------------------------------
@@ -982,12 +969,22 @@ Main:
 	ld a,(Entidades_en_curso)								; Entidades que hay en pantalla.
 	cp b
 	jr z,1F
-	jr nc,1F
+
+	ld a,(FRAMES)
+	ld b,a
+	ld a,(Clock_next_entity)
+	sub b
+	jr nz,1F
+
+; - Define el tiempo que ha de transcurrir para que aparezca la siguiente entidad. ----------------------------
+
+	call Extrae_numero_aleatorio_y_avanza 					; A contiene un nº aleatorio (0-255). De 0 a 5 segundos, aproximadamente.
+	call Define_Clock_next_entity
 
 ;	Incrementamos (Entidades_en_curso) y DEC (Numero_parcial_de_entidades) y (Numero_de_entidades).
 
-	inc a
-	ld (Entidades_en_curso),a
+	ld hl,Entidades_en_curso
+	inc (hl)
 
 	ld hl,Ctrl_4
 	set 0,(hl)												; Permiso para activar a una entidad "dormida".
