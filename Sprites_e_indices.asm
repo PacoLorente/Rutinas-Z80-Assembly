@@ -844,6 +844,49 @@ Indice_de_digitos_score:
 	DEFW	Ocho_Score
 	DEFW	Nueve_Score
 
-; --------------------------------------------------------------------------
+; ASM source file created by SevenuP v1.20
+; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
+
+;GRAPHIC DATA:
+;Pixel Size:      ( 48,  40)
+;Char Size:       (  6,   5)
+;Sort Priorities: X char, Char line, Y char
+;Data Outputted:  Gfx
+;Interleave:      Line
+;Mask:            No
+
+Moon:
+	DEFB	$BF,$FF,$FD,$03,$7F,$FF,$D8,$F3
+	DEFB	$FD,$86,$FE,$07,$68,$F9,$FE,$FD
+	DEFB	$F6,$07,$78,$FC,$FF,$33,$F6,$07
+	DEFB	$38,$FC,$FF,$CF,$BB,$07,$3F,$FC
+	DEFB	$FF,$FF,$BB,$8F,$1F,$F9,$FF,$FC
+	DEFB	$7C,$FF,$1F,$E3,$83,$FF,$FF,$7F
+	DEFB	$11,$FF,$1D,$FF,$FF,$9F,$30,$FF
+	DEFB	$1D,$DF,$FF,$FF,$20,$7F,$1D,$DE
+	DEFB	$FF,$FF,$7C,$3F,$1D,$EC,$F0,$7F
+	DEFB	$46,$1F,$83,$F3,$EF,$BF,$63,$1F
+	DEFB	$81,$FF,$D8,$DF,$31,$8F,$E3,$FF
+	DEFB	$B0,$5F,$18,$8F,$FF,$FF,$A0,$AF
+	DEFB	$0C,$8E,$FE,$7F,$61,$AF,$07,$FE
+	DEFB	$FD,$BF,$63,$AF,$00,$0F,$7F,$B3
+	DEFB	$B7,$AF,$00,$07,$BE,$73,$B3,$5F
+	DEFB	$00,$03,$CF,$FF,$DC,$DF,$00,$01
+	DEFB	$FF,$FF,$EF,$BF,$00,$00,$FF,$FF
+	DEFB	$F0,$7F,$00,$00,$C7,$F8,$FF,$FF
+	DEFB	$00,$01,$83,$F7,$7F,$FF,$00,$01
+	DEFB	$F1,$E9,$7F,$FF,$00,$01,$08,$F9
+	DEFB	$5F,$8F,$00,$00,$84,$7E,$DF,$F7
+	DEFB	$00,$00,$C2,$3F,$DF,$FB,$00,$00
+	DEFB	$61,$3F,$9E,$7B,$00,$00,$39,$3E
+	DEFB	$3D,$9B,$00,$00,$0F,$FE,$7B,$FB
+	DEFB	$00,$00,$03,$8F,$FB,$FB,$00,$00
+	DEFB	$00,$07,$FA,$F7,$00,$00,$00,$01
+	DEFB	$FF,$0F,$00,$00,$00,$00,$7F,$FF
+	DEFB	$00,$00,$00,$00,$1F,$FF,$00,$00
+	DEFB	$00,$00,$07,$FF,$00,$00,$00,$00
+	DEFB	$01,$FF,$00,$00,$00,$00,$00,$1F
+
+	; --------------------------------------------------------------------------
 ; FREE SPACE $??, ??d ------------------------------------------------------
 ; --------------------------------------------------------------------------

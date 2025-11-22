@@ -822,6 +822,26 @@ INICIALIZACION:
 
 	call Imprime_SCORE
 
+;-----------------------------
+
+;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;	COLORES: 0 ..... NEGRO
+;    		 1 ..... AZUL
+; 			 2 ..... ROJO
+;			 3 ..... MAGENTA
+; 			 4 ..... VERDE
+; 			 5 ..... CIAN
+;			 6 ..... AMARILLO
+; 			 7 ..... BLANCO
+
+	ld hl,$407a
+	ld de,$8ef4
+	ld a,%00000111
+	ld b,6
+	ld c,10
+	call Pinta_imagen
+
 ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
 
 	call Inicia_albumes_de_lineas
