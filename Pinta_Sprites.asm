@@ -664,7 +664,7 @@ Pinta_imagen:
     ld (hl),a
 
     inc l
-    inc e
+    inc de
 
     djnz 3B
 

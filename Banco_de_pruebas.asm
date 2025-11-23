@@ -835,11 +835,12 @@ INICIALIZACION:
 ;			 6 ..... AMARILLO
 ; 			 7 ..... BLANCO
 
-	ld hl,$407a
+	ld hl,$427a
 	ld de,$8ef4
-	ld a,%00000111
+	ld a,%01000111
 	ld b,6
-	ld c,10
+	ld c,5
+
 	call Pinta_imagen
 
 ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
