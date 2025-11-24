@@ -250,7 +250,7 @@ Exit_1
 
 Imprime_SCORE:
 
-    ld hl,$4019
+    ld hl,$4012                       ;$4019
     ld de,_Sc
     call bp
 

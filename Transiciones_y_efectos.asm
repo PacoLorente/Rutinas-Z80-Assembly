@@ -128,6 +128,8 @@ Imprime_Logo_principal
 
 Transicion_de_salida
 
+;	Temporizador
+
 	ld bc,$0101
 
 	ld a,(CTRL_DESPLZ)
@@ -179,13 +181,10 @@ Inicia_transicion_de_salida
 ;	NOTA: Esta rutina sólo se ejecuta cada vez que (Clock_next_entity) = (FRAMES).
 ;			!! NO SE EJECUTA CADA FRAME !!
 
-Dispara_salida_de_amadeus
+Dispara_salida_de_amadeus:
 
 	ld hl,Ctrl_2
 	set 6,(hl)														;	Bit 6 de Ctrl_2 indica que hemos iniciado la "Transicion_de_salida" de Amadeus.
-
-;	ld hl,Ctrl_3													;	Bit 5 de Ctrl_3 indica que existe movimiento en Amadeus.
-;	set 5,(hl)
 
 	ret
 
@@ -198,7 +197,7 @@ Dispara_salida_de_amadeus
 ;	Un rayo que arranca desde el lado izquierdo de la pantalla va dibujando nuestra nave, scan a scan.
 ;	El rayo desaparece por la parte derecha de la pantalla.
 
-Transicion_de_entrada
+Transicion_de_entrada:
 
 	ld hl,(p.imp.amadeus)
 	inc l

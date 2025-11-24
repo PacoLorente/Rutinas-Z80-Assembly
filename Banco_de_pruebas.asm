@@ -36,7 +36,7 @@ Escudo_3 equ $4046
 
 ;	Contador de entidades:
 
-Decenas_cont_ent equ $400e
+Decenas_cont_ent equ $400b									;$400e
 
 Decenas_cont_ent_1 equ Decenas_cont_ent + 256
 Decenas_cont_ent_2 equ Decenas_cont_ent_1 + 256
@@ -68,7 +68,7 @@ Decenas_cont_ent_23 equ Decenas_cont_ent_22 + 256
 
 ; ----- ----- ----- ----- ----- ----- ----- -----
 
-Unidades_cont_ent equ $4010
+Unidades_cont_ent equ $400d									;$4010
 
 Unidades_cont_ent_1 equ Unidades_cont_ent + 256
 Unidades_cont_ent_2 equ Unidades_cont_ent_1 + 256
@@ -115,7 +115,7 @@ Siete_Score equ $3db8
 Ocho_Score equ $3dc0
 Nueve_Score equ $3dc8
 
-Unidades_Score equ $405e
+Unidades_Score equ $4057							;$405e
 
 Unidades_Score_1 equ Unidades_Score + 256
 Unidades_Score_2 equ Unidades_Score_1 + 256
@@ -190,6 +190,16 @@ Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 
 Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
 Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
+
+; Atributos de la luna.
+
+Attr_Moon_File4 equ $587a
+Attr_Moon_File4_2 equ $587c
+Attr_Moon_File4_3 equ $587e
+
+Attr_Moon_File5 equ $589a
+Attr_Moon_File5_2 equ $589c
+Attr_Moon_File5_3 equ $589e
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
@@ -328,10 +338,29 @@ Incrementa_FRAMES
 
 	call Actualiza_pantalla
 
+;	-------------------------------------------------------------
+;
+;	Repone_Attr_Moon
+;
+;	Repone los Attr. de la luna antes de volcar pantalla, si una entidad sobrevuela sobre ella cambiaría su color.
+;
+;	MODIFY: HL.
+
+	ld hl,$4747
+
+	ld (Attr_Moon_File4),hl
+	ld (Attr_Moon_File4_2),hl
+	ld (Attr_Moon_File4_3),hl
+
+	ld (Attr_Moon_File5),hl
+	ld (Attr_Moon_File5_2),hl
+	ld (Attr_Moon_File5_3),hl
+
 	pop bc
 	pop de
 	pop hl
 	pop af
+
 
 	ei
 
@@ -835,7 +864,7 @@ INICIALIZACION:
 ;			 6 ..... AMARILLO
 ; 			 7 ..... BLANCO
 
-	ld hl,$427a
+	ld hl,$401a
 	ld de,$8ef4
 	ld a,%01000111
 	ld b,6

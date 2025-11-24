@@ -858,10 +858,6 @@ Indice_de_digitos_score:
 Moon:
 
 	DEFB	$BF,$FF,$FD,$03,$7F,$FF,$D8,$F3
-
-
-
-;	DEFB	$00,$00,$00,$00,$00,$00,$00,$00
 	DEFB	$FD,$86,$FE,$07,$68,$F9,$FE,$FD
 	DEFB	$F6,$07,$78,$FC,$FF,$33,$F6,$07
 	DEFB	$38,$FC,$FF,$CF,$BB,$07,$3F,$FC
