@@ -1,5 +1,83 @@
 ; ------------------------------------------------------------------------
 ;
+;	27/11/25
+;
+;	Genera estrellas en pantalla.
+
+make_stars:
+
+;	Genera 7 nº aleatorios.
+
+	ld bc,$0702											 	; Generamos 7 nº aleatorios.
+
+3 push bc
+
+	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
+	call Derivando_RND 										; Rutina de generación de nº aleatorios.
+
+;	Datos iniciales.
+
+2 ld b,6 									; nº de estrellas.
+	ld hl,Numeros_aleatorios
+	ld de,$4060 							; A partir de esta dirección se pueden generar estrellas.
+
+1 push bc
+	push hl
+
+	ld c,(hl)
+	inc l
+	ld b,(hl)
+
+;	BC contiene un nº aleatorio comprendido entre $0000 - $ffff.
+;	Vamos a limitar esa cantidad ($179f). 
+;	
+;		Las estrellas se pintarán a partir de la 4ª fila del 1er tercio de pantalla, ($4060).
+;		$4060 + $179f = $57ff
+
+	ld a,c
+	and $9f
+	ld l,a
+
+	ld a,b
+	and $17
+	ld h,a 									; Nº aleatorio `filtrado´ en HL.
+
+	adc hl,de
+
+	ld a,$10
+	ld (hl),a
+
+	pop hl
+	inc l
+	pop bc
+	djnz 1B
+
+	pop bc
+	dec c
+	ret z
+
+	jr 3B
+
+; ------------------------------------------------------------------------
+;
+;	27/11/25
+;
+;	Imprime en pantalla la Luna lunera.
+
+Print_Moon:
+
+	ld hl,$401a
+	ld de,$8ef4
+	ld a,%01000111
+	ld b,6
+	ld c,5
+
+	call Pinta_imagen
+
+	ret
+
+; ------------------------------------------------------------------------
+;
 ;	19/7/25
 ;
 ;	Imprime en pantalla la imagen del logo principal.

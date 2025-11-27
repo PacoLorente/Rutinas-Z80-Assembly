@@ -851,26 +851,9 @@ INICIALIZACION:
 
 	call Imprime_SCORE
 
-;-----------------------------
+;	Imprime luna.
 
-;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
-;
-;	COLORES: 0 ..... NEGRO
-;    		 1 ..... AZUL
-; 			 2 ..... ROJO
-;			 3 ..... MAGENTA
-; 			 4 ..... VERDE
-; 			 5 ..... CIAN
-;			 6 ..... AMARILLO
-; 			 7 ..... BLANCO
-
-	ld hl,$401a
-	ld de,$8ef4
-	ld a,%01000111
-	ld b,6
-	ld c,5
-
-	call Pinta_imagen
+	call Print_Moon
 
 ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
 
@@ -881,6 +864,10 @@ INICIALIZACION:
 	ld b,7   											 	; Generamos 7 nº aleatorios.
 	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
 	call Derivando_RND 										; Rutina de generación de nº aleatorios.
+
+;	Make a RND universe, (make stars).
+
+	call make_stars
 
 	call Extrae_numero_aleatorio_y_avanza
 	ld (Clock_next_entity),a 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
