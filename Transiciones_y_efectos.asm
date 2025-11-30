@@ -1,6 +1,6 @@
 ; ------------------------------------------------------------------------
 ;
-;	27/11/25
+;	30/11/25
 ;
 ;	Genera estrellas en pantalla.
 
@@ -8,7 +8,7 @@ make_stars:
 
 ;	Genera 7 nº aleatorios.
 
-	ld bc,$0702											 	; Generamos 7 nº aleatorios.
+	ld bc,$0705										 	; Generamos 7 nº aleatorios.
 
 3 push bc
 
@@ -17,34 +17,56 @@ make_stars:
 
 ;	Datos iniciales.
 
-2 ld b,6 									; nº de estrellas.
+2 ld b,6 													; nº de estrellas.
 	ld hl,Numeros_aleatorios
-	ld de,$4060 							; A partir de esta dirección se pueden generar estrellas.
+	ld de,$4080												; A partir de esta dirección se pueden generar estrellas.
 
 1 push bc
 	push hl
 
+;	Extraemos nº de 16 bits, ($0000 - $1fff).
+
 	ld c,(hl)
 	inc l
-	ld b,(hl)
+	ld a,(hl)
+	and $1f
+	ld b,a
 
-;	BC contiene un nº aleatorio comprendido entre $0000 - $ffff.
-;	Vamos a limitar esa cantidad ($179f). 
-;	
-;		Las estrellas se pintarán a partir de la 4ª fila del 1er tercio de pantalla, ($4060).
-;		$4060 + $179f = $57ff
+;	Construimos dirección aleatoria de pantalla:
 
-	ld a,c
-	and $9f
-	ld l,a
+	ld l,c
+	ld h,b
 
-	ld a,b
-	and $17
-	ld h,a 									; Nº aleatorio `filtrado´ en HL.
+	adc hl,de 												; Dirección aleatoria de pantalla en HL.
 
-	adc hl,de
+;	Está dentro de los límites??
 
-	ld a,$10
+	ld a,$57
+	sub h
+	jr nc,4F
+
+;	La dirección de pantalla supera los límites.
+
+	ld h,d
+
+	push af
+
+	ld a,l
+	cp e
+	jr nc,5F
+
+	ld h,$48
+
+5 pop af
+
+6 inc h
+	inc a
+	jr nz,6B
+
+;		Las estrellas se pintarán a partir de la 4ª fila del 1er tercio de pantalla, ($4080).
+;		$4080 + $177f = $57ff
+
+4 ld a,$10
 	ld (hl),a
 
 	pop hl

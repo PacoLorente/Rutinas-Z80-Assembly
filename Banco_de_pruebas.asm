@@ -861,10 +861,6 @@ INICIALIZACION:
 	call Inicia_albumes_de_lineas_Amadeus
 	call Inicia_albumes_de_disparos
 
-	ld b,7   											 	; Generamos 7 nº aleatorios.
-	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
-	call Derivando_RND 										; Rutina de generación de nº aleatorios.
-
 ;	Make a RND universe, (make stars).
 
 	call make_stars
