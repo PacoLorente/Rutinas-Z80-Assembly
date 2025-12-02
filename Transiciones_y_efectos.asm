@@ -276,12 +276,27 @@ Inicia_transicion_de_salida
 
 ; ------------------------------------------------------------------------
 ;
-;	11/7/25
+;	2/12/25
 ;
-;	NOTA: Esta rutina sólo se ejecuta cada vez que (Clock_next_entity) = (FRAMES).
-;			!! NO SE EJECUTA CADA FRAME !!
+;	Activa FLAG (GAME OVER) y ajusta el temporizador (GAME OVER), para ello "reutilizamos": (Temp_new_live).
+
+game_over:
+
+	ld hl,Ctrl_5
+	set 6,(hl)
+
+	ld a,200 														;	Tiempo que tarda en comenzar la secuencia: GAME OVER.
+	ld (Temp_new_live),a
+
+	ret
+
+; ------------------------------------------------------------------------
 
 Dispara_salida_de_amadeus:
+
+	ld hl,Temp_Amadeus_exit
+	dec (hl)
+	ret nz
 
 	ld hl,Ctrl_2
 	set 6,(hl)														;	Bit 6 de Ctrl_2 indica que hemos iniciado la "Transicion_de_salida" de Amadeus.

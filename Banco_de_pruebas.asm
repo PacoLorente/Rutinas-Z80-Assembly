@@ -698,6 +698,9 @@ Ctrl_5 db 0
 ;															BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria.
 ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.
 ;															BIT	3, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la izquierda.								
+;															BIT 4, ?????
+;															BIT 5, "1" Indica: NIVEL SUPERADO !!!.
+;															BIT 6, "1" Indica: GAME OVER !!!.
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
@@ -802,6 +805,8 @@ Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
 
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
+
+Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -941,7 +946,7 @@ INICIALIZACION:
 
 ; ------------------------------------
 ;
-;	11/07/25
+;	02/12/25
 
 Main: 
 
@@ -994,7 +999,6 @@ Main:
 	inc b
 	dec b
 
-;
 	call z,Dispara_salida_de_amadeus						; Nivel superado !!!!!
 
 ; ----------------------------------------------------------------
@@ -1157,7 +1161,20 @@ Gestiona_siguiente_entidad
 
 Gestion_de_Amadeus
  
-	ld hl,Ctrl_3
+	ld hl,Ctrl_5
+	bit 6,(hl)
+	jr z,7F
+
+	ld hl,Temp_new_live
+	dec (hl)
+
+	di
+	jr z,$ 						;> GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	ei
+
+	jr End_frame
+
+7 ld hl,Ctrl_3
 	bit 6,(hl)
 	jr z,Amadeus_vivo
 
@@ -1173,13 +1190,10 @@ Gestion_de_Amadeus
 	ld hl,Lives
 	dec (hl)
 
-;	! Fin del juego
+	call z,game_over
+	jr z,End_frame
 
-	di
-	jr z,$													; ! GAME OVER !!!!!
-	ei
-
-; 	Nueva nave.
+New_Amadeus
 
 	call Reinicia_Amadeus
 	jr End_frame
