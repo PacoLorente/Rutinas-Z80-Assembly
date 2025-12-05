@@ -2925,6 +2925,7 @@ suma
 	include "Direcciones.asm"
 	include "Movimiento.asm"
 	include "Disparo.asm"
+	include "Sound.asm"
 
 ;	End $ae8f Último byte.
 ;		$ae90 1er byte libre.
