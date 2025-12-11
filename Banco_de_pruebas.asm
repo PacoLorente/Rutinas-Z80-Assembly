@@ -255,11 +255,16 @@ Attr_Moon_File5_3 equ $589e
 	push af
 	push hl
 
-;	-------------------- STOP si no hemos terminado de construir el FRAME.
+;	BC contiene el tiempo de un semiciclo, (tiempo que tiene que estar el beeper activado/desactivado antes de cambiar_
+;	_de estado).
+
+ ;	-------------------- STOP si no hemos terminado de construir el FRAME.
 	ld hl,Ctrl_3				
 	bit 0,(hl)
 	jr z,$
 ;	--------------------
+
+	call Beeper
 
 ; 	Actualiza marcadores.
 
@@ -360,7 +365,6 @@ Incrementa_FRAMES
 	pop de
 	pop hl
 	pop af
-
 
 	ei
 
@@ -799,6 +803,12 @@ Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos l
 
 Primer_scan_Amadeus defw $50cf
 
+; Sound:
+
+Sound defw $0010		; $021a								
+;Sound_CTRL db 1
+Sound_duration db 1
+
 ; Varios:
 
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
@@ -807,6 +817,9 @@ Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad 
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
 
 Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
+
+
+
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -2388,7 +2401,9 @@ Pintando_Amadeus
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
-1 ld a,1													; Borde azul.
+1 
+
+	ld a,1													; Borde azul.
 	out ($fe),a
 
 	ld hl,Ctrl_3
@@ -2930,7 +2945,7 @@ suma
 ;	End $ae8f Último byte.
 ;		$ae90 1er byte libre.
 
-	SAVESNA "Pruebas.sna", START
+	SAVESNA "Amadeus.sna", START
 
 
 

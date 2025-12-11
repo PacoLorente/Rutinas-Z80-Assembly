@@ -29,44 +29,47 @@ Beeper:
 ;                       ;                14009 t/states bc $021b *
 ;                       ;                13083 t/states bc $021a
 
-    ld b,8
-1 push bc
+    ld bc,(Sound)
+    ld a,b
+    or c
+    ret z                 ; RET si no hay sonido que reproducir.
 
-    ld a,%0001000       ;   Borde negro [10] 7 t/states
-    out ($fe),a         ;   Beeper ON.
-    call Retardo
+;   Existe sonido a reproducir.
+
+;    push bc
+
+    ld a,%00010000        ; Borde negro [10] 7 t/states
+    out ($fe),a           ; Beeper ON.
+
+;    dec c
+;    nop
+;    nop
+;    nop
+
+    call Aplica_Delay       
 
     xor a
-    out ($fe),a         ;   Beeper OFF.
-    call Retardo
+    out ($fe),a           ; Beeper OFF.
 
-    pop bc
-    djnz 1B
+    ld hl,Sound_duration
+    dec (hl)
+    ret nz
 
-    ret
+    ld (Sound),bc
 
-; -----------------------------------------------------
-
-Retardo
-
-    ld bc,$021f         ;   [20]            10 t/states
-
-1 dec bc                ;   [26]             6 t/states
-    ld a,b              ;   [30]             4 t/states
-    or c                ;   [34]             4 t/states
-    jr nz,1B            ;   [46]            12 t/states
+;    pop bc
+;    dec bc
+;    call Aplica_Delay
 
     ret
 
-; -----------------------------------------------------
+; ----- ----- ----- ----- -----
 
-;    push                ;   [31]            11 t/states
-;    ld b,c              ;   [35]             4 t/states
-;1 djnz 1B               ;   [3345]        3310 t/states
-;2 djnz 2B               ;
-;    ld b,$ff  ;   7 t/states
-;   1 djnz 1B   ;   3310 t/states
+Aplica_Delay
 
+    dec bc                ; Aplica Retardo.
+    ld a,b
+    or c
+    jr nz,Aplica_Delay
 
-
-
+    ret
