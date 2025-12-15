@@ -1026,6 +1026,15 @@ Genera_disparo_Amadeus
 
 Define_puntero_objeto_disparo
 
+
+;   Se produce un nuevo disparo de Amadeus.
+;   Iniciamos sonido.
+
+    ld hl,Disparo_sound
+    ld (Sound),hl
+    ld a,Disparo_sound_duration
+    ld (Sound_duration),a
+
 ;   Inicializamos contador.
 
     ld b,0

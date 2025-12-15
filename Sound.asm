@@ -29,37 +29,65 @@ Beeper:
 ;                       ;                14009 t/states bc $021b *
 ;                       ;                13083 t/states bc $021a
 
-    ld bc,(Sound)
+    ld a,2
+    ex af,af
+
+2 ld bc,(Sound)
     ld a,b
     or c
     ret z                 ; RET si no hay sonido que reproducir.
 
 ;   Existe sonido a reproducir.
 
-;    push bc
+1 push bc
 
     ld a,%00010000        ; Borde negro [10] 7 t/states
     out ($fe),a           ; Beeper ON.
 
-;    dec c
-;    nop
-;    nop
-;    nop
+;   Delay .....
+    dec c
+    nop
+    nop
+    nop
+;   Delay .....
 
     call Aplica_Delay       
 
     xor a
     out ($fe),a           ; Beeper OFF.
 
+    pop bc
+
+;   Delay .....
+    dec bc
+;   Delay .....
+
+    call Aplica_Delay
+
+;   Nº de veces que vamos a generar la onda, duración del sonido.
+
     ld hl,Sound_duration
     dec (hl)
-    ret nz
+    jr nz,2B
 
+;    jr $
+
+    ex af,af
+    dec a
+
+    jr z,$
+
+;    ret z
+
+    ex af,af
+
+    ld a,$02
+    ld (Sound_duration),a
+
+    ld bc,$0bff
     ld (Sound),bc
 
-;    pop bc
-;    dec bc
-;    call Aplica_Delay
+    jr 1B   
 
     ret
 

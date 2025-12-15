@@ -191,7 +191,7 @@ Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
 Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
-; Atributos de la luna.
+;	Atributos de la luna.
 
 Attr_Moon_File4 equ $587a
 Attr_Moon_File4_2 equ $587c
@@ -200,6 +200,12 @@ Attr_Moon_File4_3 equ $587e
 Attr_Moon_File5 equ $589a
 Attr_Moon_File5_2 equ $589c
 Attr_Moon_File5_3 equ $589e
+
+;	Sonidos.
+
+Disparo_sound equ $01ff 	;$021a					;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
+Disparo_sound_duration equ $02 					;	Nº de veces que reproducimos la onda completa del sonido de disparo de Amadeus.
+
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
@@ -805,9 +811,9 @@ Primer_scan_Amadeus defw $50cf
 
 ; Sound:
 
-Sound defw $0010		; $021a								
+Sound defw 0												; $021a								
 ;Sound_CTRL db 1
-Sound_duration db 1
+Sound_duration db 0
 
 ; Varios:
 
