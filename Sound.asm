@@ -1,6 +1,6 @@
 ;   Beeper.
 
-Beeper:
+Sound_Constructor:
 
 ;   Vamos a generar un DO continuo.
 ;   La frecuencia de un Do es 130,6Hz.
@@ -29,15 +29,27 @@ Beeper:
 ;                       ;                14009 t/states bc $021b *
 ;                       ;                13083 t/states bc $021a
 
-    ld a,2
+    ld a,3
     ex af,af
 
-2 ld bc,(Sound)
+    ld bc,5
+    ld hl,Sound
+    exx
+
+    ld hl,Sound
+
+2 ld c,(hl)
+    inc hl
+    ld b,(hl)
+    dec hl                
+
     ld a,b
     or c
     ret z                 ; RET si no hay sonido que reproducir.
 
 ;   Existe sonido a reproducir.
+
+    ex de,hl
 
 1 push bc
 
@@ -68,26 +80,44 @@ Beeper:
 
     ld hl,Sound_duration
     dec (hl)
+
+    ex de,hl              ; Recupera puntero de sonido, EX no afecta a los FLAGS.
+
     jr nz,2B
 
-;    jr $
+;   Fin de la 1ª nota.
 
     ex af,af
     dec a
-
     jr z,$
 
-;    ret z
+;    ret z                
+
+; Prepara la 2ª nota.
 
     ex af,af
 
-    ld a,$02
-    ld (Sound_duration),a
+    exx
 
-    ld bc,$0bff
-    ld (Sound),bc
+    inc hl
+    inc hl
 
-    jr 1B   
+    push hl
+    push hl
+
+    adc hl,bc
+    dec bc
+
+    ld a,(hl)
+    ld (Sound),a
+
+    pop hl
+
+    exx
+
+    pop hl
+
+    jr 2B   
 
     ret
 

@@ -203,9 +203,13 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Disparo_sound equ $01ff 	;$021a					;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
-Disparo_sound_duration equ $02 					;	Nº de veces que reproducimos la onda completa del sonido de disparo de Amadeus.
+Disparo_sound_1 equ $00ff 							;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
+Disparo_sound_2 equ $01ff
+Disparo_sound_3 equ $02ff
 
+Disparo_sound_duration_1 equ $03 					;	Nº de veces que reproducimos la onda completa del sonido de disparo de Amadeus.
+Disparo_sound_duration_2 equ $03
+Disparo_sound_duration_3 equ $03
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
@@ -270,7 +274,7 @@ Disparo_sound_duration equ $02 					;	Nº de veces que reproducimos la onda comp
 	jr z,$
 ;	--------------------
 
-	call Beeper
+	call Sound_Constructor
 
 ; 	Actualiza marcadores.
 
@@ -812,8 +816,12 @@ Primer_scan_Amadeus defw $50cf
 ; Sound:
 
 Sound defw 0												; $021a								
-;Sound_CTRL db 1
+Sound_2 defw 0
+Sound_3 defw 0
+
 Sound_duration db 0
+Sound_duration_2 db 0
+Sound_duration_3 db 0
 
 ; Varios:
 

@@ -1030,10 +1030,23 @@ Define_puntero_objeto_disparo
 ;   Se produce un nuevo disparo de Amadeus.
 ;   Iniciamos sonido.
 
-    ld hl,Disparo_sound
+    ld hl,Disparo_sound_1
     ld (Sound),hl
-    ld a,Disparo_sound_duration
+
+    ld hl,Disparo_sound_2
+    ld (Sound_2),hl
+
+    ld hl,Disparo_sound_3
+    ld (Sound_3),hl
+
+    ld a,Disparo_sound_duration_1
     ld (Sound_duration),a
+
+    ld a,Disparo_sound_duration_2
+    ld (Sound_duration_2),a
+
+    ld a,Disparo_sound_duration_3
+    ld (Sound_duration_3),a
 
 ;   Inicializamos contador.
 
