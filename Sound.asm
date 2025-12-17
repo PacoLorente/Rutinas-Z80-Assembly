@@ -30,7 +30,7 @@ Sound_Constructor:
 ;                       ;                13083 t/states bc $021a
 
     ld a,3
-    ex af,af
+    ex af,af            ; Nº de notas a ejecutar en A´.
 
     ld bc,5
     ld hl,Sound
@@ -38,7 +38,7 @@ Sound_Constructor:
 
     ld hl,Sound
 
-2 ld c,(hl)
+1 ld c,(hl)
     inc hl
     ld b,(hl)
     dec hl                
@@ -49,9 +49,7 @@ Sound_Constructor:
 
 ;   Existe sonido a reproducir.
 
-    ex de,hl
-
-1 push bc
+    push bc
 
     ld a,%00010000        ; Borde negro [10] 7 t/states
     out ($fe),a           ; Beeper ON.
@@ -78,17 +76,16 @@ Sound_Constructor:
 
 ;   Nº de veces que vamos a generar la onda, duración del sonido.
 
-    ld hl,Sound_duration
-    dec (hl)
+    ld a,(Sound_duration)
+    dec a                               ; dec. (Nº de ciclos que hemos de reproducir la nota).
+    ld (Sound_duration),a               ; Recupera puntero de sonido, EX no afecta a los FLAGS.
 
-    ex de,hl              ; Recupera puntero de sonido, EX no afecta a los FLAGS.
+    jr nz,1B
 
-    jr nz,2B
-
-;   Fin de la 1ª nota.
+;   Nota reproducida !!!
 
     ex af,af
-    dec a
+    dec a                               ; Nota ejecutada.
     jr z,$
 
 ;    ret z                
@@ -109,7 +106,7 @@ Sound_Constructor:
     dec bc
 
     ld a,(hl)
-    ld (Sound),a
+    ld (Sound_duration),a
 
     pop hl
 
@@ -117,7 +114,7 @@ Sound_Constructor:
 
     pop hl
 
-    jr 2B   
+    jr 1B   
 
     ret
 

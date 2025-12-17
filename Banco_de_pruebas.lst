@@ -295,13 +295,13 @@
  203  FD01
  204  FD01              ;	Sonidos.
  205  FD01
- 206  FD01              Disparo_sound_1 equ $00ff 							;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
- 207  FD01              Disparo_sound_2 equ $01ff
- 208  FD01              Disparo_sound_3 equ $02ff
+ 206  FD01              Disparo_sound_1 equ $006a ;	$006a						;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
+ 207  FD01              Disparo_sound_2 equ $00d0 ; $00d0
+ 208  FD01              Disparo_sound_3 equ $0300 ; $0300
  209  FD01
- 210  FD01              Disparo_sound_duration_1 equ $03 					;	Nº de veces que reproducimos la onda completa del sonido de disparo de Amadeus.
- 211  FD01              Disparo_sound_duration_2 equ $03
- 212  FD01              Disparo_sound_duration_3 equ $03
+ 210  FD01              Disparo_sound_duration_1 equ $08 ;$08 				;	Nº de veces que reproducimos la onda completa del sonido de disparo de Amadeus.
+ 211  FD01              Disparo_sound_duration_2 equ $06 ;$06
+ 212  FD01              Disparo_sound_duration_3 equ $03 ;$03
  213  FD01
  214  FD01              ;	Datos fijos de los álbumes de líneas de Amadeus:
  215  FD01
@@ -12856,19 +12856,19 @@
 1030+ B6BF              ;   Se produce un nuevo disparo de Amadeus.
 1031+ B6BF              ;   Iniciamos sonido.
 1032+ B6BF
-1033+ B6BF 21 FF 00         ld hl,Disparo_sound_1
+1033+ B6BF 21 6A 00         ld hl,Disparo_sound_1
 1034+ B6C2 22 51 95         ld (Sound),hl
 1035+ B6C5
-1036+ B6C5 21 FF 01         ld hl,Disparo_sound_2
+1036+ B6C5 21 D0 00         ld hl,Disparo_sound_2
 1037+ B6C8 22 53 95         ld (Sound_2),hl
 1038+ B6CB
-1039+ B6CB 21 FF 02         ld hl,Disparo_sound_3
+1039+ B6CB 21 00 03         ld hl,Disparo_sound_3
 1040+ B6CE 22 55 95         ld (Sound_3),hl
 1041+ B6D1
-1042+ B6D1 3E 03            ld a,Disparo_sound_duration_1
+1042+ B6D1 3E 08            ld a,Disparo_sound_duration_1
 1043+ B6D3 32 57 95         ld (Sound_duration),a
 1044+ B6D6
-1045+ B6D6 3E 03            ld a,Disparo_sound_duration_2
+1045+ B6D6 3E 06            ld a,Disparo_sound_duration_2
 1046+ B6D8 32 58 95         ld (Sound_duration_2),a
 1047+ B6DB
 1048+ B6DB 3E 03            ld a,Disparo_sound_duration_3
@@ -13335,7 +13335,7 @@
   30+ B840              ;                       ;                13083 t/states bc $021a
   31+ B840
   32+ B840 3E 03            ld a,3
-  33+ B842 08               ex af,af
+  33+ B842 08               ex af,af            ; Nº de notas a ejecutar en A´.
   34+ B843
   35+ B843 01 05 00         ld bc,5
   36+ B846 21 51 95         ld hl,Sound
@@ -13343,7 +13343,7 @@
   38+ B84A
   39+ B84A 21 51 95         ld hl,Sound
   40+ B84D
-  41+ B84D 4E           2 ld c,(hl)
+  41+ B84D 4E           1 ld c,(hl)
   42+ B84E 23               inc hl
   43+ B84F 46               ld b,(hl)
   44+ B850 2B               dec hl
@@ -13354,97 +13354,94 @@
   49+ B854
   50+ B854              ;   Existe sonido a reproducir.
   51+ B854
-  52+ B854 EB               ex de,hl
+  52+ B854 C5               push bc
   53+ B855
-  54+ B855 C5           1 push bc
-  55+ B856
-  56+ B856 3E 10            ld a,%00010000        ; Borde negro [10] 7 t/states
-  57+ B858 D3 FE            out ($fe),a           ; Beeper ON.
-  58+ B85A
-  59+ B85A              ;   Delay .....
-  60+ B85A 0D               dec c
-  61+ B85B 00               nop
-  62+ B85C 00               nop
-  63+ B85D 00               nop
-  64+ B85E              ;   Delay .....
-  65+ B85E
-  66+ B85E CD 87 B8         call Aplica_Delay
-  67+ B861
-  68+ B861 AF               xor a
-  69+ B862 D3 FE            out ($fe),a           ; Beeper OFF.
+  54+ B855 3E 10            ld a,%00010000        ; Borde negro [10] 7 t/states
+  55+ B857 D3 FE            out ($fe),a           ; Beeper ON.
+  56+ B859
+  57+ B859              ;   Delay .....
+  58+ B859 0D               dec c
+  59+ B85A 00               nop
+  60+ B85B 00               nop
+  61+ B85C 00               nop
+  62+ B85D              ;   Delay .....
+  63+ B85D
+  64+ B85D CD 88 B8         call Aplica_Delay
+  65+ B860
+  66+ B860 AF               xor a
+  67+ B861 D3 FE            out ($fe),a           ; Beeper OFF.
+  68+ B863
+  69+ B863 C1               pop bc
   70+ B864
-  71+ B864 C1               pop bc
-  72+ B865
+  71+ B864              ;   Delay .....
+  72+ B864 0B               dec bc
   73+ B865              ;   Delay .....
-  74+ B865 0B               dec bc
-  75+ B866              ;   Delay .....
-  76+ B866
-  77+ B866 CD 87 B8         call Aplica_Delay
-  78+ B869
-  79+ B869              ;   Nº de veces que vamos a generar la onda, duración del sonido.
-  80+ B869
-  81+ B869 21 57 95         ld hl,Sound_duration
-  82+ B86C 35               dec (hl)
-  83+ B86D
-  84+ B86D EB               ex de,hl              ; Recupera puntero de sonido, EX no afecta a los FLAGS.
-  85+ B86E
-  86+ B86E 20 DD            jr nz,2B
-  87+ B870
-  88+ B870              ;   Fin de la 1ª nota.
-  89+ B870
-  90+ B870 08               ex af,af
-  91+ B871 3D               dec a
-  92+ B872 28 FE            jr z,$
-  93+ B874
-  94+ B874              ;    ret z
-  95+ B874
-  96+ B874              ; Prepara la 2ª nota.
-  97+ B874
-  98+ B874 08               ex af,af
-  99+ B875
- 100+ B875 D9               exx
- 101+ B876
- 102+ B876 23               inc hl
- 103+ B877 23               inc hl
- 104+ B878
- 105+ B878 E5               push hl
- 106+ B879 E5               push hl
- 107+ B87A
- 108+ B87A ED 4A            adc hl,bc
- 109+ B87C 0B               dec bc
- 110+ B87D
- 111+ B87D 7E               ld a,(hl)
- 112+ B87E 32 51 95         ld (Sound),a
- 113+ B881
- 114+ B881 E1               pop hl
- 115+ B882
- 116+ B882 D9               exx
- 117+ B883
- 118+ B883 E1               pop hl
- 119+ B884
- 120+ B884 18 C7            jr 2B
- 121+ B886
- 122+ B886 C9               ret
- 123+ B887
- 124+ B887              ; ----- ----- ----- ----- -----
- 125+ B887
- 126+ B887              Aplica_Delay
- 127+ B887
- 128+ B887 0B               dec bc                ; Aplica Retardo.
- 129+ B888 78               ld a,b
- 130+ B889 B1               or c
- 131+ B88A 20 FB            jr nz,Aplica_Delay
- 132+ B88C
- 133+ B88C C9               ret
- 134+ B88D
+  74+ B865
+  75+ B865 CD 88 B8         call Aplica_Delay
+  76+ B868
+  77+ B868              ;   Nº de veces que vamos a generar la onda, duración del sonido.
+  78+ B868
+  79+ B868 3A 57 95         ld a,(Sound_duration)
+  80+ B86B 3D               dec a                               ; dec. (Nº de ciclos que hemos de reproducir la nota).
+  81+ B86C 32 57 95         ld (Sound_duration),a               ; Recupera puntero de sonido, EX no afecta a los FLAGS.
+  82+ B86F
+  83+ B86F 20 DC            jr nz,1B
+  84+ B871
+  85+ B871              ;   Nota reproducida !!!
+  86+ B871
+  87+ B871 08               ex af,af
+  88+ B872 3D               dec a                               ; Nota ejecutada.
+  89+ B873 28 FE            jr z,$
+  90+ B875
+  91+ B875              ;    ret z
+  92+ B875
+  93+ B875              ; Prepara la 2ª nota.
+  94+ B875
+  95+ B875 08               ex af,af
+  96+ B876
+  97+ B876 D9               exx
+  98+ B877
+  99+ B877 23               inc hl
+ 100+ B878 23               inc hl
+ 101+ B879
+ 102+ B879 E5               push hl
+ 103+ B87A E5               push hl
+ 104+ B87B
+ 105+ B87B ED 4A            adc hl,bc
+ 106+ B87D 0B               dec bc
+ 107+ B87E
+ 108+ B87E 7E               ld a,(hl)
+ 109+ B87F 32 57 95         ld (Sound_duration),a
+ 110+ B882
+ 111+ B882 E1               pop hl
+ 112+ B883
+ 113+ B883 D9               exx
+ 114+ B884
+ 115+ B884 E1               pop hl
+ 116+ B885
+ 117+ B885 18 C6            jr 1B
+ 118+ B887
+ 119+ B887 C9               ret
+ 120+ B888
+ 121+ B888              ; ----- ----- ----- ----- -----
+ 122+ B888
+ 123+ B888              Aplica_Delay
+ 124+ B888
+ 125+ B888 0B               dec bc                ; Aplica Retardo.
+ 126+ B889 78               ld a,b
+ 127+ B88A B1               or c
+ 128+ B88B 20 FB            jr nz,Aplica_Delay
+ 129+ B88D
+ 130+ B88D C9               ret
+ 131+ B88E
 # file closed: Sound.asm
-2958  B88D
-2959  B88D              ;	End $ae8f Último byte.
-2960  B88D              ;		$ae90 1er byte libre.
-2961  B88D
-2962  B88D              	SAVESNA "Amadeus.sna", START
-2963  B88D
-2964  B88D
-2965  B88D
-2966  B88D
+2958  B88E
+2959  B88E              ;	End $ae8f Último byte.
+2960  B88E              ;		$ae90 1er byte libre.
+2961  B88E
+2962  B88E              	SAVESNA "Amadeus.sna", START
+2963  B88E
+2964  B88E
+2965  B88E
+2966  B88E
 # file closed: Banco_de_pruebas.asm
