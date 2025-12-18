@@ -1,4 +1,49 @@
-;   Beeper.
+Beeper:
+
+    ld bc,(Sound)
+
+    ld a,b
+    or c
+    ret z                 ; RET si no hay sonido que reproducir.
+
+    ld hl,Sound_duration
+    inc (hl)
+    dec (hl)
+    ret z
+
+    push bc
+
+    ld a,%00010000        ; Borde negro [10] 7 t/states
+    out ($fe),a           ; Beeper ON.
+
+;   Delay .....
+    dec c
+    nop
+    nop
+    nop
+;   Delay .....
+
+    call Aplica_Delay       
+
+    xor a
+    out ($fe),a           ; Beeper OFF.
+
+    pop bc
+
+;   Delay .....
+    dec bc
+;   Delay .....
+
+    call Aplica_Delay
+
+    dec (hl)
+
+    ret
+
+
+
+
+
 
 Sound_Constructor:
 
