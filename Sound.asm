@@ -106,6 +106,9 @@ Sound_Constructor:
 
     ld hl,Sound_duration
     dec (hl)
+<<<<<<< HEAD
+>>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
+=======
 >>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
 
     ex de,hl              ; Recupera puntero de sonido, EX no afecta a los FLAGS.
@@ -137,7 +140,11 @@ Sound_Constructor:
 
     ld a,(hl)
 <<<<<<< HEAD
+<<<<<<< HEAD
 ;    ld (Sound_duration),a
+=======
+    ld (Sound),a
+>>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
 =======
     ld (Sound),a
 >>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)

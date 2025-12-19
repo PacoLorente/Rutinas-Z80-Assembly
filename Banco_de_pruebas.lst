@@ -296,6 +296,7 @@
  204  FD01              ;	Sonidos.
  205  FD01
 <<<<<<< HEAD
+<<<<<<< HEAD
  206  FD01              Disparo_sound_1 equ $006a ;	$006a	2768 t/states	;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
  207  FD01              Disparo_sound_2 equ $00d0 ; $00d0	5420 t/states
  208  FD01              Disparo_sound_3 equ $0300 ; $0300  26636 t/states
@@ -410,6 +411,12 @@
  207  FD01              Disparo_sound_2 equ $01ff
  208  FD01              Disparo_sound_3 equ $02ff
  209  FD01
+=======
+ 206  FD01              Disparo_sound_1 equ $00ff 							;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
+ 207  FD01              Disparo_sound_2 equ $01ff
+ 208  FD01              Disparo_sound_3 equ $02ff
+ 209  FD01
+>>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
  210  FD01              Disparo_sound_duration_1 equ $03 					;	Nº de veces que reproducimos la onda completa del sonido de disparo de Amadeus.
  211  FD01              Disparo_sound_duration_2 equ $03
  212  FD01              Disparo_sound_duration_3 equ $03
@@ -15189,5 +15196,8 @@
 2964  B88D
 2965  B88D
 2966  B88D
+<<<<<<< HEAD
+>>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
+=======
 >>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
 # file closed: Banco_de_pruebas.asm
