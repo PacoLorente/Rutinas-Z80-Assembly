@@ -4,46 +4,21 @@ Beeper:
 
     ld a,b
     or c
-    ret z                 ; RET si no hay sonido que reproducir.
-
-    ld hl,Sound_duration
-    inc (hl)
-    dec (hl)
     ret z
 
-    push bc
+    jr $
 
     ld a,%00010000        ; Borde negro [10] 7 t/states
     out ($fe),a           ; Beeper ON.
-
-;   Delay .....
-    dec c
-    nop
-    nop
-    nop
-;   Delay .....
 
     call Aplica_Delay       
 
     xor a
     out ($fe),a           ; Beeper OFF.
 
-    pop bc
-
-;   Delay .....
-    dec bc
-;   Delay .....
-
-    call Aplica_Delay
-
-    dec (hl)
+;    dec (hl)
 
     ret
-
-
-
-
-
 
 Sound_Constructor:
 
@@ -120,10 +95,10 @@ Sound_Constructor:
     call Aplica_Delay
 
 ;   Nº de veces que vamos a generar la onda, duración del sonido.
-
-    ld a,(Sound_duration)
-    dec a                               ; dec. (Nº de ciclos que hemos de reproducir la nota).
-    ld (Sound_duration),a               ; Recupera puntero de sonido, EX no afecta a los FLAGS.
+;
+;    ld a,(Sound_duration)
+    dec a                               ; dec. (Nº de ciclos que hemos de reproducir la nota).;
+;    ld (Sound_duration),a               ; Recupera puntero de sonido, EX no afecta a los FLAGS.
 
     jr nz,1B
 
@@ -151,7 +126,7 @@ Sound_Constructor:
     dec bc
 
     ld a,(hl)
-    ld (Sound_duration),a
+;    ld (Sound_duration),a
 
     pop hl
 

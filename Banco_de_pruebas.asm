@@ -207,10 +207,6 @@ Disparo_sound_1 equ $006a ;	$006a	2768 t/states	;	Duración del semiciclo de la 
 Disparo_sound_2 equ $00d0 ; $00d0	5420 t/states
 Disparo_sound_3 equ $0300 ; $0300  26636 t/states
 
-Disparo_sound_duration_1 equ $02 ;$08 				;	Nº de veces que reproducimos la onda completa del sonido de disparo de Amadeus.
-Disparo_sound_duration_2 equ $06 ;$06
-Disparo_sound_duration_3 equ $03 ;$03
-
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
 	org Amadeus_scanlines_album 
@@ -816,13 +812,13 @@ Primer_scan_Amadeus defw $50cf
 
 ; Sound:
 
+Sound_counter db 2,5
+
 Sound defw 0												; $021a								
 Sound_2 defw 0
 Sound_3 defw 0
 
-Sound_duration db 0
-Sound_duration_2 db 0
-Sound_duration_3 db 0
+Sound_pointer defw Sound
 
 ; Varios:
 
