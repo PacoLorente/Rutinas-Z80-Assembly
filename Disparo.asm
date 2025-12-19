@@ -443,7 +443,7 @@ Exit pop hl
 ;
 ;   25/9/24
 
-Elimina_disparo_entidad
+Elimina_disparo_entidad:
 
     ld hl,Numero_de_disparos_de_entidades
     inc (hl)                                                            ; Incrementamos el nº de disparos de entidades.
@@ -1013,7 +1013,7 @@ Salida
 ;   12/09/24
 ;
 
-Genera_disparo_Amadeus
+Genera_disparo_Amadeus:
 
 ;*  Exclusiones.
 
@@ -1026,18 +1026,19 @@ Genera_disparo_Amadeus
 
 Define_puntero_objeto_disparo
 
-
 ;   Se produce un nuevo disparo de Amadeus.
 ;   Iniciamos sonido.
 
     ld hl,Disparo_sound_1
     ld (Sound),hl
 
-    ld hl,Disparo_sound_2
-    ld (Sound_2),hl
+    call Sonido_disparo
 
-    ld hl,Disparo_sound_3
-    ld (Sound_3),hl
+;    ld hl,Disparo_sound_2
+;    ld (Sound),hl
+
+	ld hl,0
+    ld (Sound),hl
 
 ;   Inicializamos contador.
 

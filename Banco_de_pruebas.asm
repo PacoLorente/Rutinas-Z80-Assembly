@@ -203,25 +203,8 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-Disparo_sound_1 equ $006a ;	$006a	2768 t/states	;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
-Disparo_sound_2 equ $00d0 ; $00d0	5420 t/states
-Disparo_sound_3 equ $0300 ; $0300  26636 t/states
-=======
-=======
->>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
-Disparo_sound_1 equ $00ff 							;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
-Disparo_sound_2 equ $01ff
-Disparo_sound_3 equ $02ff
-
-Disparo_sound_duration_1 equ $03 					;	Nº de veces que reproducimos la onda completa del sonido de disparo de Amadeus.
-Disparo_sound_duration_2 equ $03
-Disparo_sound_duration_3 equ $03
-<<<<<<< HEAD
->>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
-=======
->>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
+Disparo_sound_1 equ $00e0 ;	$006a	2768 t/states	;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
+;Disparo_sound_2 equ $0060
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
@@ -286,8 +269,10 @@ Disparo_sound_duration_3 equ $03
 	jr z,$
 ;	--------------------
 
-;	call Sound_Constructor
-	call Beeper
+;	call Beeper
+
+;	ld hl,0
+;    ld (Sound),hl
 
 ; 	Actualiza marcadores.
 
@@ -828,13 +813,7 @@ Primer_scan_Amadeus defw $50cf
 
 ; Sound:
 
-Sound_counter db 2,5
-
-Sound defw 0												; $021a								
-Sound_2 defw 0
-Sound_3 defw 0
-
-Sound_pointer defw Sound
+Sound defw 0												; $021a
 
 ; Varios:
 
