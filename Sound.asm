@@ -50,7 +50,7 @@ Sound_Constructor:
 ;                       ;                13083 t/states bc $021a
 
     ld a,3
-    ex af,af            ; Nº de notas a ejecutar en A´.
+    ex af,af
 
     ld bc,5
     ld hl,Sound
@@ -58,7 +58,7 @@ Sound_Constructor:
 
     ld hl,Sound
 
-1 ld c,(hl)
+2 ld c,(hl)
     inc hl
     ld b,(hl)
     dec hl                
@@ -69,7 +69,9 @@ Sound_Constructor:
 
 ;   Existe sonido a reproducir.
 
-    push bc
+    ex de,hl
+
+1 push bc
 
     ld a,%00010000        ; Borde negro [10] 7 t/states
     out ($fe),a           ; Beeper ON.
@@ -95,17 +97,25 @@ Sound_Constructor:
     call Aplica_Delay
 
 ;   Nº de veces que vamos a generar la onda, duración del sonido.
+<<<<<<< HEAD
 ;
 ;    ld a,(Sound_duration)
     dec a                               ; dec. (Nº de ciclos que hemos de reproducir la nota).;
 ;    ld (Sound_duration),a               ; Recupera puntero de sonido, EX no afecta a los FLAGS.
+=======
 
-    jr nz,1B
+    ld hl,Sound_duration
+    dec (hl)
+>>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
 
-;   Nota reproducida !!!
+    ex de,hl              ; Recupera puntero de sonido, EX no afecta a los FLAGS.
+
+    jr nz,2B
+
+;   Fin de la 1ª nota.
 
     ex af,af
-    dec a                               ; Nota ejecutada.
+    dec a
     jr z,$
 
 ;    ret z                
@@ -126,7 +136,11 @@ Sound_Constructor:
     dec bc
 
     ld a,(hl)
+<<<<<<< HEAD
 ;    ld (Sound_duration),a
+=======
+    ld (Sound),a
+>>>>>>> parent of a519388 (17/12/25. Sonido de disparo diseñado, ahora toca implementarlo en el juego.)
 
     pop hl
 
@@ -134,7 +148,7 @@ Sound_Constructor:
 
     pop hl
 
-    jr 1B   
+    jr 2B   
 
     ret
 
