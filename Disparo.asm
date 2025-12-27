@@ -235,7 +235,7 @@ Coincidencia
 ;>  *************************************************************************
 ;>  *************************************************************************
 ;>  ***** Comentando la siguiente linea no nos afectan los disparos enemigos.
-   jr nz,Amadeus_impactado
+;   jr nz,Amadeus_impactado
 
     inc l
     inc e
@@ -1032,14 +1032,6 @@ Define_puntero_objeto_disparo
     ld hl,Disparo_sound_1
     ld (Sound),hl
 
-    call Sonido_disparo
-
-;    ld hl,Disparo_sound_2
-;    ld (Sound),hl
-
-	ld hl,0
-    ld (Sound),hl
-
 ;   Inicializamos contador.
 
     ld b,0
@@ -1260,7 +1252,7 @@ Genera_coordenadas_X
 ;>   **************************************************************************
 ;>   **************************************************************************
 ;>   ***** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
-;    ret
+    ret
 
     ret nz
 
