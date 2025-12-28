@@ -21,7 +21,7 @@ Sonido_disparo:
 
 ; Beeper activo.
 
-    ld c,9                  ; 5 ondas completas per frame.
+    ld c,5                  ; 5 ondas completas per frame.
 
 Loop
 
@@ -52,6 +52,7 @@ Delay_2 djnz Delay_2
 
     dec h
 
+;    jr z,$
     jr z,Clean_Sound
 
     dec c

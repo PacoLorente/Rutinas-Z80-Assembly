@@ -1032,6 +1032,8 @@ Define_puntero_objeto_disparo
     ld hl,Disparo_sound_1
     ld (Sound),hl
 
+;    call Sonido_disparo
+
 ;   Inicializamos contador.
 
     ld b,0

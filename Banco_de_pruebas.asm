@@ -203,8 +203,7 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Disparo_sound_1 equ $a001 ;	$006a	2768 t/states	;	Duración del semiciclo de la onda que genera el sonido de un disparo de nuestra nave.
-;Disparo_sound_2 equ $0060
+Disparo_sound_1 equ $1001 ;	$5001
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
