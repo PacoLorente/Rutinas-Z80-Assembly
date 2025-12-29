@@ -203,7 +203,8 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Disparo_sound_1 equ $1001 ;	$5001
+Disparo_sound equ $1001 ;	$5001
+;Explosion_sound equ $c801
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
@@ -368,7 +369,7 @@ Incrementa_FRAMES
 	ld (Attr_Moon_File5_2),hl
 	ld (Attr_Moon_File5_3),hl
 
-	call Sonido_disparo
+	call Efectos_de_sonido
 
 	pop bc
 	pop de
@@ -2549,10 +2550,16 @@ Teclado
 
 ; ------------------------------------------------------------------------------------------------------------------------ 
 ;
-;	10/3/25
+;	29/12/25
 ;
 
 Genera_explosion:
+
+;	En primer lugar activamos el sonido de la explosión.
+
+	ld h,$40
+
+	ld (Sound),hl
 
 	ld hl,Clock_explosion								
 	dec (hl)
