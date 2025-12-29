@@ -1,12 +1,12 @@
-;   Basic Sound Routine.
+;   29/12/25
 ;
-;   Sonido del disparo de Amadeus.
-
+;   FX Sounds.
+;
 ;   INPUTS: (Sound)
 
-;   MODIFY: HL y A, siempre que (Sound) contenga dato.
+;   MODIFY: HL,B y A, siempre que (Sound) contenga dato.
 
-Efectos_de_sonido:
+Genera_sonido:
 
     ld hl,(Sound)
 
@@ -14,16 +14,18 @@ Efectos_de_sonido:
     or l
     ret z                   ; RET si no existe sonido a ejecutar.
 
+;   What sound are we going to play ???
 
-; HL definen el sonido.
+;    ld a,(Sound_type)
+;    and a
+;    jr Efecto_disparo
+
+Efecto_explosion
+
+;   HL define el sonido.
 ;
-;   L define el retardo o longitud de cada semiciclo de la onda.
+;   L define el retardo o longitud de cada semiciclo de la onda, en este caso un valor aleatorio, (0-$ff).
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
-
-; Beeper activo.
-
-;    jr $
-
 
     ld c,5                  ; 5 ondas completas per frame.
 
@@ -32,29 +34,22 @@ Loop
     ld a,r
     ld b,a
 
-    ld a,%00010000          ; Borde negro [10] 7 t/states
+    ld a,%00010000          ; Borde negro.
     out ($fe),a             ; Beeper ON.
 
-; call Aplica_Delay
-
-Delay_1 djnz Delay_1
-
-; Beeper inactivo.
+Delay_1 djnz Delay_1        ; Aplica Delay.
 
     xor a
-    out ($fe),a
+    out ($fe),a             ; Beeper OFF.
 
     ld a,r
     ld b,a
 
-Delay_2 djnz Delay_2
+Delay_2 djnz Delay_2        ; Aplica Delay.
 
-; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
-
-;    inc l
     dec h
 
-    jr z,Clean_Sound
+    jr z,Clean_Sound        ; Hemos tardado de reproducir el soniquete, limpiamos (Sound) y salimos.
 
     dec c
 
@@ -67,71 +62,56 @@ Delay_2 djnz Delay_2
 Clean_Sound ld l,0
 
     ld (Sound),hl
+    xor a
+    ld (Sound_type),a
 
     ret
 
+; ----- ----- ----- ----- -----
 
+Efecto_disparo
 
-
-
-
-
-
-
-
-; HL definen el sonido.
+;   HL define el sonido.
 ;
 ;   L define el retardo o longitud de cada semiciclo de la onda.
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
-; Beeper activo.
+    ld c,5                  ; 5 ondas completas per frame.
 
-;    ld c,5                  ; 5 ondas completas per frame.
+Loop_1
 
-;Loop
+    ld a,%00010000          ; Borde negro.
+    out ($fe),a             ; Beeper ON.
 
-;    ld a,%00010000          ; Borde negro [10] 7 t/states
-;    out ($fe),a             ; Beeper ON.
+    ld b,l
 
-; call Aplica_Delay
+Delay_3 djnz Delay_3        ; Aplica Delay.
 
-;    ld b,l
+    xor a
+    out ($fe),a
 
-;Delay_1 djnz Delay_1
+    ld b,l
 
-; Beeper inactivo.
-
-;    xor a
-;    out ($fe),a
-
-;    ld b,l
-
-;Delay_2 djnz Delay_2
+Delay_4 djnz Delay_4        ; Aplica Delay.
 
 ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
 
-;    inc l
-;    inc l
-;    inc l
-;    inc l
+    inc l
+    inc l
+    inc l
+    inc l
 
-;    dec h
+    dec h
 
-;    jr z,Clean_Sound
+    jr z,Clean_Sound
 
-;    dec c
+    dec c
 
-;    jr nz,Loop
+    jr nz,Loop_1
 
-;    ld (Sound),hl
+    ld (Sound),hl
 
-;    ret
-
-;Clean_Sound ld l,0
-
-;    ld (Sound),hl
-
-;    ret
+    ret
 
 
 

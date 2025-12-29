@@ -369,7 +369,7 @@ Incrementa_FRAMES
 	ld (Attr_Moon_File5_2),hl
 	ld (Attr_Moon_File5_3),hl
 
-	call Efectos_de_sonido
+	call Genera_sonido
 
 	pop bc
 	pop de
@@ -815,7 +815,8 @@ Primer_scan_Amadeus defw $50cf
 
 ; Sound:
 
-Sound defw 0												; $021a
+Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
+Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
 
 ; Varios:
 
@@ -825,8 +826,6 @@ Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad 
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
 
 Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
-
-
 
 
 ; 	INICIO  *************************************************************************************************************************************************************************
@@ -2557,11 +2556,12 @@ Genera_explosion:
 
 ;	En primer lugar activamos el sonido de la explosión.
 
-	ld h,$40
-
+	ld h,$30
 	ld (Sound),hl
+	ld a,1
+	ld (Sound_type),a
 
-	ld hl,Clock_explosion								
+	ld hl,Clock_explosion
 	dec (hl)
 	jr z,Siguiente_frame_explosion							; Gestionamos la siguiente entidad.
 
