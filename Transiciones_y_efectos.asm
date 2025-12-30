@@ -335,15 +335,18 @@ Transicion_de_entrada:
 
 	call Pinta_rayo
 
-; 	Decrece scan.
-
 2 dec l
 	dec l
 
 	ld d,l
+
 	dec e
 
-	jr nz,3B
+	jr nz,3B 														;	Borramos el rayo de inicio.
+
+	jr $
+
+; 	Hemos pintado y borrado el Rayo inicial.
 
 	inc l
 	inc l
@@ -464,7 +467,7 @@ Borra_pinta_scan ld b,2
 
 ;	-----------------------------
 
-Pinta_rayo cp d
+Pinta_rayo cp d 													; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 	ret z
 
 	ld bc,$0b00
