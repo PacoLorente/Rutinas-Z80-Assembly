@@ -59,7 +59,7 @@ Delay_2 djnz Delay_2        ; Aplica Delay.
 
     ret
 
-Clean_Sound ld l,0
+Clean_Sound ld hl,0
 
     ld (Sound),hl
     xor a

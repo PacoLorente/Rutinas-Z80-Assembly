@@ -344,8 +344,6 @@ Transicion_de_entrada:
 
 	jr nz,3B 														;	Borramos el rayo de inicio.
 
-	jr $
-
 ; 	Hemos pintado y borrado el Rayo inicial.
 
 	inc l
