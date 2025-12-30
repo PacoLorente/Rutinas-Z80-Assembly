@@ -295,8 +295,8 @@
  203  FD01
  204  FD01              ;	Sonidos.
  205  FD01
- 206  FD01              Disparo_sound equ $1001 ;	$5001
- 207  FD01              ;Explosion_sound equ $c801
+ 206  FD01              Disparo_sound equ $1001
+ 207  FD01              Entrada_sound equ $d001
  208  FD01
  209  FD01              ;	Datos fijos de los álbumes de líneas de Amadeus:
  210  FD01
@@ -461,7 +461,7 @@
  369  837F 22 9C 58     	ld (Attr_Moon_File5_2),hl
  370  8382 22 9E 58     	ld (Attr_Moon_File5_3),hl
  371  8385
- 372  8385 CD 22 B8     	call Genera_sonido
+ 372  8385 CD 2C B8     	call Genera_sonido
  373  8388
  374  8388 C1           	pop bc
  375  8389 D1           	pop de
@@ -3285,7 +3285,7 @@
  987  960B              ; 	Si alguna de las coordenadas_X de alguna entidad que esté en zona de Amadeus coincide con alguna de las coordenadas_X de Amadeus, habrá que comprobar si existe colisión.
  988  960B              ; 	Este hecho lo indica el bit2 de (Impacto2).
  989  960B
- 990  960B CD B5 B7     	call Detecta_colision_nave_entidad 						; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
+ 990  960B CD BF B7     	call Detecta_colision_nave_entidad 						; La rutina verifica la colisión entre una entidad y Amadeus, (RES 2 Impacto2).
  991  960E
  992  960E              ; 	TEMPORIZACIONES !!!!!!!!!!!!!!!!
  993  960E
@@ -3444,7 +3444,7 @@
 1146  96A4 A7           	and a
 1147  96A5 C4 BF B3     	call nz,Entidad_genera_disparo_si_procede
 1148  96A8
-1149  96A8 CD 2E B7     4 call Colision_Entidad_Amadeus								; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
+1149  96A8 CD 38 B7     4 call Colision_Entidad_Amadeus								; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
 1150  96AB
 1151  96AB              Gestiona_siguiente_entidad
 1152  96AB
@@ -12701,7 +12701,7 @@
  875+ B652
  876+ B652 2B               dec hl
  877+ B653
- 878+ B653 CD 15 B7         call Detecta_impacto_en_disparo_de_Amadeus                          ; Nos situamos en el 1er .db de la caja y comprobamos Impacto.
+ 878+ B653 CD 1F B7         call Detecta_impacto_en_disparo_de_Amadeus                          ; Nos situamos en el 1er .db de la caja y comprobamos Impacto.
  879+ B656
  880+ B656 E1               pop hl
  881+ B657
@@ -12717,7 +12717,7 @@
  891+ B65E 32 0A 95         ld (Impacto2),a
  892+ B661
  893+ B661 E5               push hl                                                                                         ; PUSH Puntero_de_impresion del disparo.
- 894+ B662 CD 02 B7         call Genera_coordenadas_de_disparo_Amadeus
+ 894+ B662 CD 0C B7         call Genera_coordenadas_de_disparo_Amadeus
  895+ B665 E1               pop hl                                                                                           ; POP Puntero_de_impresion del disparo.
  896+ B666
  897+ B666 C9               ret
@@ -12855,567 +12855,567 @@
 1029+ B6C1              ;   Se produce un nuevo disparo de Amadeus.
 1030+ B6C1              ;   Iniciamos sonido.
 1031+ B6C1
-1032+ B6C1              ;    ld hl,Disparo_sound
-1033+ B6C1              ;    ld (Sound),hl
-1034+ B6C1              ;    xor a
-1035+ B6C1              ;    ld (Sound_type),a
-1036+ B6C1
-1037+ B6C1              ;   Inicializamos contador.
-1038+ B6C1
-1039+ B6C1 06 00            ld b,0
-1040+ B6C3
-1041+ B6C3 2A D8 90         ld hl,(p.imp.amadeus)
-1042+ B6C6 2C               inc l
-1043+ B6C7
-1044+ B6C7 3E 80            ld a,$80
-1045+ B6C9 BE               cp (hl)
-1046+ B6CA 28 0D            jr z,1F
-1047+ B6CC
-1048+ B6CC 04               inc b
-1049+ B6CD
-1050+ B6CD 3E 60            ld a,$60
-1051+ B6CF BE               cp (hl)
-1052+ B6D0 28 07            jr z,1F
-1053+ B6D2
-1054+ B6D2
-1055+ B6D2 04               inc b
-1056+ B6D3
-1057+ B6D3 3E 18            ld a,$18
-1058+ B6D5 BE               cp (hl)
-1059+ B6D6 28 01            jr z,1F
-1060+ B6D8
-1061+ B6D8 04               inc b
-1062+ B6D9
-1063+ B6D9              ;   Calcula el Puntero_de_impresión del disparo.
-1064+ B6D9
-1065+ B6D9              ;   El Puntero_de_impresión del disparo apunta al último scanline de los tres que componen el disparo, (el de abajo).
-1066+ B6D9
-1067+ B6D9 CD 7D AE     1 call PreviousScan
-1068+ B6DC
-1069+ B6DC 78               ld a,b
-1070+ B6DD CB 3F            srl a
-1071+ B6DF 28 03            jr z,4F
-1072+ B6E1
-1073+ B6E1              ; --- Guarda el puntero_de_impresión del disparo en la pila.
-1074+ B6E1 E5               push hl
-1075+ B6E2 18 02            jr 5F
-1076+ B6E4 2D           4 dec l
-1077+ B6E5 E5               push hl
-1078+ B6E6              ; ---
-1079+ B6E6
-1080+ B6E6              ;   Calcula el Puntero_objeto del disparo.
-1081+ B6E6
-1082+ B6E6 21 5E 85     5 ld hl,Indice_disparo_Amadeus
-1083+ B6E9 04               inc b
-1084+ B6EA 05               dec b
-1085+ B6EB 28 04            jr z,2F
-1086+ B6ED
-1087+ B6ED              ;   Nos desplazamos por el índice de disparos.
-1088+ B6ED
-1089+ B6ED 2C           3 inc l
-1090+ B6EE 2C               inc l
-1091+ B6EF 10 FC            djnz 3B
-1092+ B6F1
-1093+ B6F1              ; --- Guarda el Puntero_objeto del disparo en la pila.
-1094+ B6F1 CD FD 99     2 call Extrae_address
-1095+ B6F4 E5               push hl
-1096+ B6F5              ; ---
-1097+ B6F5
-1098+ B6F5              ; Almacenamos (Puntero_objeto) y (Puntero_de_impresion) en su correspondiente caja.
-1099+ B6F5              ; HL en el 1er .db de la caja.
-1100+ B6F5
-1101+ B6F5 21 58 90         ld hl,Disparo_Amad
-1102+ B6F8
-1103+ B6F8 06 02            ld b,2
-1104+ B6FA
-1105+ B6FA D1           6 pop de
-1106+ B6FB 73               ld (hl),e
-1107+ B6FC 23               inc hl
-1108+ B6FD 72               ld (hl),d
-1109+ B6FE 23               inc hl
-1110+ B6FF
-1111+ B6FF 10 F9            djnz 6B
-1112+ B701
-1113+ B701 C9               ret
-1114+ B702
-1115+ B702              Genera_coordenadas_de_disparo_Amadeus
-1116+ B702
-1117+ B702              ;   HL apunta al .db (Puntero_de_impresion) del disparo de Amadeus.
-1118+ B702              ;   Esta parte de la rutina sólo aplica cuando un disparo nuestro alcanza algún objeto.
-1119+ B702              ;   Genera las coordenadas de nuestro disparo.
-1120+ B702
-1121+ B702 CD FD 99         call Extrae_address
-1122+ B705 CD E8 A1         call Genera_coordenadas
-1123+ B708
-1124+ B708 3D               dec a
-1125+ B709
-1126+ B709 21 0D 95         ld hl,Coordenadas_disparo_certero
-1127+ B70C 77               ld (hl),a                                           ;   Almacenamos la Coordenada_Y, (Fila) del disparo.
-1128+ B70D 23               inc hl
-1129+ B70E 3A 92 94         ld a,(Coordenada_X)
-1130+ B711 77               ld (hl),a                                           ;   Almacenamos la Coordenada_X, (Columna) del disparo.
-1131+ B712
-1132+ B712 AF               xor a
-1133+ B713 3C               inc a                                               ;   Fuerza "NZ" a la salida.
-1134+ B714
-1135+ B714 C9               ret
-1136+ B715
-1137+ B715              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1138+ B715              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1139+ B715              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-1140+ B715
-1141+ B715              ; ----------------------------------------------
-1142+ B715              ;
-1143+ B715              ;   22/03/25
-1144+ B715              ;
-1145+ B715              ;   INPUTS: HL contiene el .defw (Puntero_objeto) de la caja de disparo de Amadeus.
-1146+ B715              ;   OUTPUT: FLAG Z indica NO IMPACTO, NZ indica IMPACTO.
-1147+ B715
-1148+ B715              Detecta_impacto_en_disparo_de_Amadeus
-1149+ B715
-1150+ B715              Extraccion_de_datos
-1151+ B715
-1152+ B715              ; Album_de_pintado_disparos_Amadeus $8cac
-1153+ B715              ; Album_de_borrado_disparos_Amadeus $8cae
-1154+ B715              ; Amadeus_disparos_scanlines_album equ $827c
-1155+ B715              ; Amadeus_disparos_scanlines_album_2 equ $8282
-1156+ B715
-1157+ B715 5E               ld e,(hl)
-1158+ B716 2C               inc l
-1159+ B717 56               ld d,(hl)
-1160+ B718
-1161+ B718 1C               inc e
-1162+ B719 1C               inc e                                                   ; DE contiene Puntero_objeto `aumentado' del_
-1163+ B71A              ;                                                                _disparo de Amadeus.
-1164+ B71A 2C               inc l
-1165+ B71B
-1166+ B71B 4E               ld c,(hl)
-1167+ B71C 2C               inc l
-1168+ B71D 46               ld b,(hl)
-1169+ B71E
-1170+ B71E C5               push bc
-1171+ B71F E1               pop hl                                                 ; Puntero_de_impresión del disparo en HL.
-1172+ B720
-1173+ B720              ;   La detección de colisión se efectúa con el disparo impreso en pantalla.
-1174+ B720
-1175+ B720 CD 7D AE         call PreviousScan
-1176+ B723 CD 7D AE         call PreviousScan
-1177+ B726
-1178+ B726              Detecta_impacto_
-1179+ B726
-1180+ B726 1A               ld a,(de)
-1181+ B727 A6               and (hl)
-1182+ B728 C0               ret nz
-1183+ B729
-1184+ B729 1C               inc e
-1185+ B72A 2C               inc l
-1186+ B72B
-1187+ B72B 1A               ld a,(de)
-1188+ B72C A6               and (hl)
-1189+ B72D
-1190+ B72D C9               ret
-1191+ B72E
-1192+ B72E              ; -------------------------------------------------------------------------------------------------------------
-1193+ B72E              ;
-1194+ B72E              ;   25/11//24
-1195+ B72E              ;
-1196+ B72E              ;   La entidad se encuentra en la fila $14,$15 o $16 de pantalla.
-1197+ B72E              ;   Vamos a comprobar si la entidad ocupa alguna de las columnas ocupadas por Amadeus y por lo_
-1198+ B72E              ;   _ tanto, existe riesgo alto de colisión entre ambas.
-1199+ B72E              ;
-1200+ B72E              ;   MODIFICA: HL,DE,BC y A.
-1201+ B72E              ;   OUTPUTS: (Coordenadas_X_Entidad) y (Coordenadas_X_Amadeus) contienen el nº de las columnas que ocupan en pantalla.
-1202+ B72E              ;            (Impacto) se coloca a "1" si coincide alguna de las columnas. Alto riesgo de colisión.
-1203+ B72E
-1204+ B72E              Colision_Entidad_Amadeus
-1205+ B72E
-1206+ B72E              ; Posible contacto de entidad con Amadeus. ?????
-1207+ B72E
-1208+ B72E              ; Exclusiones:
-1209+ B72E
-1210+ B72E 3A 2F 95         ld a,(Shield)
-1211+ B731 A7               and a
-1212+ B732 C0               ret nz                                                  ; No comprobamos contacto si existe Shield.
-1213+ B733
-1214+ B733 21 03 95         ld hl,Ctrl_3
-1215+ B736 CB 76            bit 6,(hl)
-1216+ B738 C0               ret nz                                                  ; Salimos si Amadeus ha sido destruido y estamos esperando nueva nave o mensaje final.
-1217+ B739
-1218+ B739 21 0A 95         ld hl,Impacto2
-1219+ B73C CB 56            bit 2,(hl)
-1220+ B73E C0               ret nz                                                  ; Salimos si tenemos una posible colisión de una entidad anterior. Tenemos almacenadas las coordenadas X de otra entidad.
-1221+ B73F
-1222+ B73F DD 7E 03     	ld a,(ix+3)                                             ; ld a,(coordenada_y)
-1223+ B742 FE 14        	cp $14
-1224+ B744 D8           	ret c                                                   ; Salimos si la entidad no está en zona de Amadeus.
-1225+ B745
-1226+ B745 3A D7 90         ld a,(Impacto_Amadeus)
-1227+ B748 A7               and a
-1228+ B749 C0               ret nz                                                  ; Evita que se produzca colisión con dos entidades a la vez.
-1229+ B74A
-1230+ B74A              Genera_coordenadas_X
-1231+ B74A
-1232+ B74A              ;   Guardamos las coordenadas_X de la entidad y Amadeus en sus correspondientes almacenes.
-1233+ B74A              ;   DRAW tiene almacenados, en este momento, los datos de la última ENTIDAD que hemos desplazado.
-1234+ B74A
-1235+ B74A              ;   Limpiamos almacenes.
-1236+ B74A
-1237+ B74A              ;    call Limpia_Coordenadas_X
-1238+ B74A
-1239+ B74A              ;   Almacenamos las coordenadas X de la entidad peligrosa, (en curso).
-1240+ B74A
-1241+ B74A 21 0F 95         ld hl,Coordenadas_X_Entidad
-1242+ B74D DD 7E 02         ld a,(ix+2)                                             ; ld a,(Coordenada_X)
-1243+ B750 CD 77 B7         call Guarda_coordenadas_X
-1244+ B753
-1245+ B753              ;   Almacenamos las coordenadas X de Amadeus.
-1246+ B753
-1247+ B753 3A D4 90         ld a,(CX_Amadeus)
-1248+ B756 CD 77 B7         call Guarda_coordenadas_X
-1249+ B759
-1250+ B759 DD E5            push ix
-1251+ B75B CD 8B B7         call Compara_coordenadas_X
-1252+ B75E DD E1            pop ix
-1253+ B760
-1254+ B760              ;>   **************************************************************************
-1255+ B760              ;>   **************************************************************************
-1256+ B760              ;>   ***** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
-1257+ B760 C9               ret
-1258+ B761
-1259+ B761 C0               ret nz
-1260+ B762
-1261+ B762 3E 01            ld a,1                                               ; El .db (Impacto)="1" indica que es altamente probable que esta_
-1262+ B764 DD 77 05         ld (ix+5),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y
-1263+ B767
-1264+ B767 DD 7D            ld a,ixl
-1265+ B769 C6 05            add 5
-1266+ B76B DD 6F            ld ixl,a
-1267+ B76D
-1268+ B76D DD 22 0B 95      ld (Entidad_sospechosa_de_colision),ix               ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.
-1269+ B771
-1270+ B771 21 0A 95         ld hl,Impacto2                                       ; _ alguna de las columnas_X que ocupa coinciden con las de Amadeus.
-1271+ B774 CB D6            set 2,(hl)
-1272+ B776
-1273+ B776 C9               ret
-1274+ B777
-1275+ B777               ; ----- ----- ----- ----- -----
-1276+ B777
-1277+ B777 77           Guarda_coordenadas_X ld (hl),a
-1278+ B778 3C               inc a
-1279+ B779 2C               inc l
-1280+ B77A 77               ld (hl),a
-1281+ B77B 3C               inc a
-1282+ B77C 2C               inc l
-1283+ B77D 77               ld (hl),a
-1284+ B77E 2C               inc l
-1285+ B77F C9               ret
-1286+ B780
-1287+ B780 AF           Limpia_Coordenadas_X xor a
-1288+ B781 06 06            ld b,6
-1289+ B783 21 12 95         ld hl,Coordenadas_X_Amadeus
-1290+ B786 77           1 ld (hl),a
-1291+ B787 23               inc hl
-1292+ B788 10 FC            djnz 1B
-1293+ B78A C9               ret
-1294+ B78B
-1295+ B78B              ; ----- ----- ----- ----- -----
-1296+ B78B
-1297+ B78B              Compara_coordenadas_X
-1298+ B78B
-1299+ B78B DD 21 0F 95      ld ix,Coordenadas_X_Entidad
-1300+ B78F DD 7E 00         ld a,(ix+0)
-1301+ B792 CD A0 B7         call Comparando
-1302+ B795 C8               ret z
-1303+ B796
-1304+ B796 3C               inc a
-1305+ B797 CD AF B7         call Comparando_1
-1306+ B79A C8               ret z
-1307+ B79B
-1308+ B79B 3C               inc a
-1309+ B79C CD AF B7         call Comparando_1
-1310+ B79F
-1311+ B79F C9               ret
-1312+ B7A0
-1313+ B7A0              ; ----- ----- ----- ----- -----
-1314+ B7A0              ;
-1315+ B7A0              ;   4/12/23
-1316+ B7A0              ;
-1317+ B7A0              ;   Sub. de [Compara_coordenadas_X]. Deja de comparar cuando encuentra coincidencia.
-1318+ B7A0
-1319+ B7A0              Comparando
-1320+ B7A0
-1321+ B7A0 DD 2C            inc ixl
-1322+ B7A2 DD 2C            inc ixl
-1323+ B7A4 DD 2C            inc ixl
-1324+ B7A6
-1325+ B7A6 DD 46 00         ld b,(ix+0)
-1326+ B7A9 DD 4E 01         ld c,(ix+1)
-1327+ B7AC DD 56 02         ld d,(ix+2)
-1328+ B7AF
-1329+ B7AF B8           Comparando_1 cp b
-1330+ B7B0 C8               ret z
-1331+ B7B1 B9               cp c
-1332+ B7B2 C8               ret z
-1333+ B7B3 BA               cp d
-1334+ B7B4 C9               ret
-1335+ B7B5
-1336+ B7B5              ; -----------------------------------------------------------------------
-1337+ B7B5              ;
-1338+ B7B5              ;   04/7/24
-1339+ B7B5              ;
-1340+ B7B5
-1341+ B7B5              Detecta_colision_nave_entidad
-1342+ B7B5
-1343+ B7B5              ; Exclusiones:
-1344+ B7B5
-1345+ B7B5              ; Salimos de la rutina si no hay advertencia de posible colisión.
-1346+ B7B5
-1347+ B7B5 21 0A 95     	ld hl,Impacto2
-1348+ B7B8 CB 56        	bit 2,(hl)
-1349+ B7BA C8           	ret z
-1350+ B7BB
-1351+ B7BB              ; Detección byte a byte de colisión ENTIDAD-NAVE.
-1352+ B7BB
-1353+ B7BB 2A DA 90         ld hl,(Pamm_Amadeus)
-1354+ B7BE CD FD 99         call Extrae_address
-1355+ B7C1 54               ld d,h
-1356+ B7C2 5D               ld e,l                                         ; (Puntero_objeto) en DE.
-1357+ B7C3
-1358+ B7C3 2A D8 90         ld hl,(p.imp.amadeus)                          ; (Puntero_de_impresion) en HL.
-1359+ B7C6 06 10            ld b,16                                        ; Contador de scanlines en B.
-1360+ B7C8 FD 2E 03         ld iyl,3                                       ; Contador de impacto. Si su valor es "0" se considera "Colisión". Esto me permitirá ajustar la sensibilidad de la colisión en Amadeus.
-1361+ B7CB
-1362+ B7CB C5           1 push bc
-1363+ B7CC 06 03            ld b,3
-1364+ B7CE E5               push hl
-1365+ B7CF
-1366+ B7CF              ; .db
-1367+ B7CF
-1368+ B7CF 1A           3 ld a,(de)
-1369+ B7D0 A7               and a
-1370+ B7D1 20 03            jr nz,4F
-1371+ B7D3
-1372+ B7D3 2C               inc l
-1373+ B7D4 18 08            jr 2F                                         ; No aplica CPI, no hay píxels en este .db.
-1374+ B7D6
-1375+ B7D6 ED A1        4 cpi                                             ; Comparamos el 1er .db de los tres de ancho que tiene el sprite de Amadeus.
-1376+ B7D8 28 04            jr z,2F
-1377+ B7DA
-1378+ B7DA              ; Impacto.
-1379+ B7DA FD 2D            dec iyl
-1380+ B7DC 28 22            jr z,5F
-1381+ B7DE
-1382+ B7DE 1C           2 inc e
-1383+ B7DF 10 EE            djnz 3B
-1384+ B7E1
-1385+ B7E1 E1               pop hl
-1386+ B7E2
-1387+ B7E2              ; Hay salto de línea en el puntero de impresión ???
-1388+ B7E2
-1389+ B7E2 7C               ld a,h
-1390+ B7E3 D6 57            sub $57
-1391+ B7E5 20 0A            jr nz,6F
-1392+ B7E7
-1393+ B7E7              ; Comprobamos la parte baja de Amadeus. Modifico manualmente el salto de línea en HL para no haver llamadas a [NextScan].
-1394+ B7E7
-1395+ B7E7 2A D8 90         ld hl,(p.imp.amadeus)
-1396+ B7EA 3E 20            ld a,$20
-1397+ B7EC A7               and a
-1398+ B7ED 85               add l
-1399+ B7EE 6F               ld l,a
-1400+ B7EF 18 01            jr 7F
-1401+ B7F1
-1402+ B7F1 24           6 inc h
-1403+ B7F2
-1404+ B7F2 C1           7 pop bc
-1405+ B7F3 10 D6            djnz 1B
-1406+ B7F5
-1407+ B7F5              ;   Fin de la comparativa.
-1408+ B7F5
-1409+ B7F5              ;   NO HAY COLISIÓN !!!!!.
-1410+ B7F5              ;
-1411+ B7F5              ;   .db (Impacto) de Amadeus a "0".
-1412+ B7F5              ;   RES el bit2 de (Impacto2).
-1413+ B7F5              ;
-1414+ B7F5              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
-1415+ B7F5              ;   Lo colocamos a "0".
-1416+ B7F5
-1417+ B7F5 21 0A 95         ld hl,Impacto2
-1418+ B7F8 CB 96            res 2,(hl)
-1419+ B7FA 2A 0B 95         ld hl,(Entidad_sospechosa_de_colision)
-1420+ B7FD 36 00            ld (hl),0                                       ; Coloca a "0" el .db (Impacto) de la (Entidad_sospechosa_de_colision).
-1421+ B7FF C9               ret
-1422+ B800
-1423+ B800              ;   COLISIÓN !!!!!.
-1424+ B800              ;
-1425+ B800              ;   .db (Impacto) de Amadeus a "1".
-1426+ B800              ;   SET el bit3 de (Impacto2).
-1427+ B800              ;
-1428+ B800              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
-1429+ B800
-1430+ B800 E1           5 pop hl
-1431+ B801 C1               pop bc
-1432+ B802
-1433+ B802 21 D7 90         ld hl,Impacto_Amadeus
-1434+ B805 36 01            ld (hl),1
-1435+ B807 21 0A 95         ld hl,Impacto2                                 ; Cuando se produce Colisión, RES el bit2 de (Impacto2) y_
-1436+ B80A CB 96            res 2,(hl)                                     ; _ SET el bit3. El bit3 de (Impacto2) indica que hay contacto_
-1437+ B80C
-1438+ B80C 11 60 8B         ld de,Indice_Explosion_entidades
-1439+ B80F 2A 0B 95         ld hl,(Entidad_sospechosa_de_colision)         ; Situamos el (Puntero_de_almacen_de_mov_masticados) de la entidad impactada en la primera palabra del índice de explosiones.
-1440+ B812
-1441+ B812 23               inc hl
-1442+ B813 23               inc hl
-1443+ B814 23               inc hl
-1444+ B815
-1445+ B815 73               ld (hl),e
-1446+ B816 23               inc hl
-1447+ B817 72               ld (hl),d
-1448+ B818
-1449+ B818              ; Situamos también el (Puntero_de_almacen_de_mov_masticados) de Amadeus en la primero explosión.
-1450+ B818
-1451+ B818 11 F6 8B         ld de,Indice_Explosion_Amadeus
-1452+ B81B 21 DA 90         ld hl,Pamm_Amadeus
-1453+ B81E
-1454+ B81E 73               ld (hl),e
-1455+ B81F 23               inc hl
-1456+ B820 72               ld (hl),d
-1457+ B821
-1458+ B821 C9               ret
-1459+ B822
-1460+ B822
-1461+ B822
-1462+ B822
+1032+ B6C1 21 01 10         ld hl,Disparo_sound
+1033+ B6C4 22 51 95         ld (Sound),hl
+1034+ B6C7 AF               xor a
+1035+ B6C8 32 53 95         ld (Sound_type),a
+1036+ B6CB
+1037+ B6CB              ;   Inicializamos contador.
+1038+ B6CB
+1039+ B6CB 06 00            ld b,0
+1040+ B6CD
+1041+ B6CD 2A D8 90         ld hl,(p.imp.amadeus)
+1042+ B6D0 2C               inc l
+1043+ B6D1
+1044+ B6D1 3E 80            ld a,$80
+1045+ B6D3 BE               cp (hl)
+1046+ B6D4 28 0D            jr z,1F
+1047+ B6D6
+1048+ B6D6 04               inc b
+1049+ B6D7
+1050+ B6D7 3E 60            ld a,$60
+1051+ B6D9 BE               cp (hl)
+1052+ B6DA 28 07            jr z,1F
+1053+ B6DC
+1054+ B6DC
+1055+ B6DC 04               inc b
+1056+ B6DD
+1057+ B6DD 3E 18            ld a,$18
+1058+ B6DF BE               cp (hl)
+1059+ B6E0 28 01            jr z,1F
+1060+ B6E2
+1061+ B6E2 04               inc b
+1062+ B6E3
+1063+ B6E3              ;   Calcula el Puntero_de_impresión del disparo.
+1064+ B6E3
+1065+ B6E3              ;   El Puntero_de_impresión del disparo apunta al último scanline de los tres que componen el disparo, (el de abajo).
+1066+ B6E3
+1067+ B6E3 CD 7D AE     1 call PreviousScan
+1068+ B6E6
+1069+ B6E6 78               ld a,b
+1070+ B6E7 CB 3F            srl a
+1071+ B6E9 28 03            jr z,4F
+1072+ B6EB
+1073+ B6EB              ; --- Guarda el puntero_de_impresión del disparo en la pila.
+1074+ B6EB E5               push hl
+1075+ B6EC 18 02            jr 5F
+1076+ B6EE 2D           4 dec l
+1077+ B6EF E5               push hl
+1078+ B6F0              ; ---
+1079+ B6F0
+1080+ B6F0              ;   Calcula el Puntero_objeto del disparo.
+1081+ B6F0
+1082+ B6F0 21 5E 85     5 ld hl,Indice_disparo_Amadeus
+1083+ B6F3 04               inc b
+1084+ B6F4 05               dec b
+1085+ B6F5 28 04            jr z,2F
+1086+ B6F7
+1087+ B6F7              ;   Nos desplazamos por el índice de disparos.
+1088+ B6F7
+1089+ B6F7 2C           3 inc l
+1090+ B6F8 2C               inc l
+1091+ B6F9 10 FC            djnz 3B
+1092+ B6FB
+1093+ B6FB              ; --- Guarda el Puntero_objeto del disparo en la pila.
+1094+ B6FB CD FD 99     2 call Extrae_address
+1095+ B6FE E5               push hl
+1096+ B6FF              ; ---
+1097+ B6FF
+1098+ B6FF              ; Almacenamos (Puntero_objeto) y (Puntero_de_impresion) en su correspondiente caja.
+1099+ B6FF              ; HL en el 1er .db de la caja.
+1100+ B6FF
+1101+ B6FF 21 58 90         ld hl,Disparo_Amad
+1102+ B702
+1103+ B702 06 02            ld b,2
+1104+ B704
+1105+ B704 D1           6 pop de
+1106+ B705 73               ld (hl),e
+1107+ B706 23               inc hl
+1108+ B707 72               ld (hl),d
+1109+ B708 23               inc hl
+1110+ B709
+1111+ B709 10 F9            djnz 6B
+1112+ B70B
+1113+ B70B C9               ret
+1114+ B70C
+1115+ B70C              Genera_coordenadas_de_disparo_Amadeus
+1116+ B70C
+1117+ B70C              ;   HL apunta al .db (Puntero_de_impresion) del disparo de Amadeus.
+1118+ B70C              ;   Esta parte de la rutina sólo aplica cuando un disparo nuestro alcanza algún objeto.
+1119+ B70C              ;   Genera las coordenadas de nuestro disparo.
+1120+ B70C
+1121+ B70C CD FD 99         call Extrae_address
+1122+ B70F CD E8 A1         call Genera_coordenadas
+1123+ B712
+1124+ B712 3D               dec a
+1125+ B713
+1126+ B713 21 0D 95         ld hl,Coordenadas_disparo_certero
+1127+ B716 77               ld (hl),a                                           ;   Almacenamos la Coordenada_Y, (Fila) del disparo.
+1128+ B717 23               inc hl
+1129+ B718 3A 92 94         ld a,(Coordenada_X)
+1130+ B71B 77               ld (hl),a                                           ;   Almacenamos la Coordenada_X, (Columna) del disparo.
+1131+ B71C
+1132+ B71C AF               xor a
+1133+ B71D 3C               inc a                                               ;   Fuerza "NZ" a la salida.
+1134+ B71E
+1135+ B71E C9               ret
+1136+ B71F
+1137+ B71F              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1138+ B71F              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1139+ B71F              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+1140+ B71F
+1141+ B71F              ; ----------------------------------------------
+1142+ B71F              ;
+1143+ B71F              ;   22/03/25
+1144+ B71F              ;
+1145+ B71F              ;   INPUTS: HL contiene el .defw (Puntero_objeto) de la caja de disparo de Amadeus.
+1146+ B71F              ;   OUTPUT: FLAG Z indica NO IMPACTO, NZ indica IMPACTO.
+1147+ B71F
+1148+ B71F              Detecta_impacto_en_disparo_de_Amadeus
+1149+ B71F
+1150+ B71F              Extraccion_de_datos
+1151+ B71F
+1152+ B71F              ; Album_de_pintado_disparos_Amadeus $8cac
+1153+ B71F              ; Album_de_borrado_disparos_Amadeus $8cae
+1154+ B71F              ; Amadeus_disparos_scanlines_album equ $827c
+1155+ B71F              ; Amadeus_disparos_scanlines_album_2 equ $8282
+1156+ B71F
+1157+ B71F 5E               ld e,(hl)
+1158+ B720 2C               inc l
+1159+ B721 56               ld d,(hl)
+1160+ B722
+1161+ B722 1C               inc e
+1162+ B723 1C               inc e                                                   ; DE contiene Puntero_objeto `aumentado' del_
+1163+ B724              ;                                                                _disparo de Amadeus.
+1164+ B724 2C               inc l
+1165+ B725
+1166+ B725 4E               ld c,(hl)
+1167+ B726 2C               inc l
+1168+ B727 46               ld b,(hl)
+1169+ B728
+1170+ B728 C5               push bc
+1171+ B729 E1               pop hl                                                 ; Puntero_de_impresión del disparo en HL.
+1172+ B72A
+1173+ B72A              ;   La detección de colisión se efectúa con el disparo impreso en pantalla.
+1174+ B72A
+1175+ B72A CD 7D AE         call PreviousScan
+1176+ B72D CD 7D AE         call PreviousScan
+1177+ B730
+1178+ B730              Detecta_impacto_
+1179+ B730
+1180+ B730 1A               ld a,(de)
+1181+ B731 A6               and (hl)
+1182+ B732 C0               ret nz
+1183+ B733
+1184+ B733 1C               inc e
+1185+ B734 2C               inc l
+1186+ B735
+1187+ B735 1A               ld a,(de)
+1188+ B736 A6               and (hl)
+1189+ B737
+1190+ B737 C9               ret
+1191+ B738
+1192+ B738              ; -------------------------------------------------------------------------------------------------------------
+1193+ B738              ;
+1194+ B738              ;   25/11//24
+1195+ B738              ;
+1196+ B738              ;   La entidad se encuentra en la fila $14,$15 o $16 de pantalla.
+1197+ B738              ;   Vamos a comprobar si la entidad ocupa alguna de las columnas ocupadas por Amadeus y por lo_
+1198+ B738              ;   _ tanto, existe riesgo alto de colisión entre ambas.
+1199+ B738              ;
+1200+ B738              ;   MODIFICA: HL,DE,BC y A.
+1201+ B738              ;   OUTPUTS: (Coordenadas_X_Entidad) y (Coordenadas_X_Amadeus) contienen el nº de las columnas que ocupan en pantalla.
+1202+ B738              ;            (Impacto) se coloca a "1" si coincide alguna de las columnas. Alto riesgo de colisión.
+1203+ B738
+1204+ B738              Colision_Entidad_Amadeus
+1205+ B738
+1206+ B738              ; Posible contacto de entidad con Amadeus. ?????
+1207+ B738
+1208+ B738              ; Exclusiones:
+1209+ B738
+1210+ B738 3A 2F 95         ld a,(Shield)
+1211+ B73B A7               and a
+1212+ B73C C0               ret nz                                                  ; No comprobamos contacto si existe Shield.
+1213+ B73D
+1214+ B73D 21 03 95         ld hl,Ctrl_3
+1215+ B740 CB 76            bit 6,(hl)
+1216+ B742 C0               ret nz                                                  ; Salimos si Amadeus ha sido destruido y estamos esperando nueva nave o mensaje final.
+1217+ B743
+1218+ B743 21 0A 95         ld hl,Impacto2
+1219+ B746 CB 56            bit 2,(hl)
+1220+ B748 C0               ret nz                                                  ; Salimos si tenemos una posible colisión de una entidad anterior. Tenemos almacenadas las coordenadas X de otra entidad.
+1221+ B749
+1222+ B749 DD 7E 03     	ld a,(ix+3)                                             ; ld a,(coordenada_y)
+1223+ B74C FE 14        	cp $14
+1224+ B74E D8           	ret c                                                   ; Salimos si la entidad no está en zona de Amadeus.
+1225+ B74F
+1226+ B74F 3A D7 90         ld a,(Impacto_Amadeus)
+1227+ B752 A7               and a
+1228+ B753 C0               ret nz                                                  ; Evita que se produzca colisión con dos entidades a la vez.
+1229+ B754
+1230+ B754              Genera_coordenadas_X
+1231+ B754
+1232+ B754              ;   Guardamos las coordenadas_X de la entidad y Amadeus en sus correspondientes almacenes.
+1233+ B754              ;   DRAW tiene almacenados, en este momento, los datos de la última ENTIDAD que hemos desplazado.
+1234+ B754
+1235+ B754              ;   Limpiamos almacenes.
+1236+ B754
+1237+ B754              ;    call Limpia_Coordenadas_X
+1238+ B754
+1239+ B754              ;   Almacenamos las coordenadas X de la entidad peligrosa, (en curso).
+1240+ B754
+1241+ B754 21 0F 95         ld hl,Coordenadas_X_Entidad
+1242+ B757 DD 7E 02         ld a,(ix+2)                                             ; ld a,(Coordenada_X)
+1243+ B75A CD 81 B7         call Guarda_coordenadas_X
+1244+ B75D
+1245+ B75D              ;   Almacenamos las coordenadas X de Amadeus.
+1246+ B75D
+1247+ B75D 3A D4 90         ld a,(CX_Amadeus)
+1248+ B760 CD 81 B7         call Guarda_coordenadas_X
+1249+ B763
+1250+ B763 DD E5            push ix
+1251+ B765 CD 95 B7         call Compara_coordenadas_X
+1252+ B768 DD E1            pop ix
+1253+ B76A
+1254+ B76A              ;>   **************************************************************************
+1255+ B76A              ;>   **************************************************************************
+1256+ B76A              ;>   ***** Descomentando el siguiente RET anulamos la colisión AMADEUS-ENTIDAD.
+1257+ B76A C9               ret
+1258+ B76B
+1259+ B76B C0               ret nz
+1260+ B76C
+1261+ B76C 3E 01            ld a,1                                               ; El .db (Impacto)="1" indica que es altamente probable que esta_
+1262+ B76E DD 77 05         ld (ix+5),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y
+1263+ B771
+1264+ B771 DD 7D            ld a,ixl
+1265+ B773 C6 05            add 5
+1266+ B775 DD 6F            ld ixl,a
+1267+ B777
+1268+ B777 DD 22 0B 95      ld (Entidad_sospechosa_de_colision),ix               ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.
+1269+ B77B
+1270+ B77B 21 0A 95         ld hl,Impacto2                                       ; _ alguna de las columnas_X que ocupa coinciden con las de Amadeus.
+1271+ B77E CB D6            set 2,(hl)
+1272+ B780
+1273+ B780 C9               ret
+1274+ B781
+1275+ B781               ; ----- ----- ----- ----- -----
+1276+ B781
+1277+ B781 77           Guarda_coordenadas_X ld (hl),a
+1278+ B782 3C               inc a
+1279+ B783 2C               inc l
+1280+ B784 77               ld (hl),a
+1281+ B785 3C               inc a
+1282+ B786 2C               inc l
+1283+ B787 77               ld (hl),a
+1284+ B788 2C               inc l
+1285+ B789 C9               ret
+1286+ B78A
+1287+ B78A AF           Limpia_Coordenadas_X xor a
+1288+ B78B 06 06            ld b,6
+1289+ B78D 21 12 95         ld hl,Coordenadas_X_Amadeus
+1290+ B790 77           1 ld (hl),a
+1291+ B791 23               inc hl
+1292+ B792 10 FC            djnz 1B
+1293+ B794 C9               ret
+1294+ B795
+1295+ B795              ; ----- ----- ----- ----- -----
+1296+ B795
+1297+ B795              Compara_coordenadas_X
+1298+ B795
+1299+ B795 DD 21 0F 95      ld ix,Coordenadas_X_Entidad
+1300+ B799 DD 7E 00         ld a,(ix+0)
+1301+ B79C CD AA B7         call Comparando
+1302+ B79F C8               ret z
+1303+ B7A0
+1304+ B7A0 3C               inc a
+1305+ B7A1 CD B9 B7         call Comparando_1
+1306+ B7A4 C8               ret z
+1307+ B7A5
+1308+ B7A5 3C               inc a
+1309+ B7A6 CD B9 B7         call Comparando_1
+1310+ B7A9
+1311+ B7A9 C9               ret
+1312+ B7AA
+1313+ B7AA              ; ----- ----- ----- ----- -----
+1314+ B7AA              ;
+1315+ B7AA              ;   4/12/23
+1316+ B7AA              ;
+1317+ B7AA              ;   Sub. de [Compara_coordenadas_X]. Deja de comparar cuando encuentra coincidencia.
+1318+ B7AA
+1319+ B7AA              Comparando
+1320+ B7AA
+1321+ B7AA DD 2C            inc ixl
+1322+ B7AC DD 2C            inc ixl
+1323+ B7AE DD 2C            inc ixl
+1324+ B7B0
+1325+ B7B0 DD 46 00         ld b,(ix+0)
+1326+ B7B3 DD 4E 01         ld c,(ix+1)
+1327+ B7B6 DD 56 02         ld d,(ix+2)
+1328+ B7B9
+1329+ B7B9 B8           Comparando_1 cp b
+1330+ B7BA C8               ret z
+1331+ B7BB B9               cp c
+1332+ B7BC C8               ret z
+1333+ B7BD BA               cp d
+1334+ B7BE C9               ret
+1335+ B7BF
+1336+ B7BF              ; -----------------------------------------------------------------------
+1337+ B7BF              ;
+1338+ B7BF              ;   04/7/24
+1339+ B7BF              ;
+1340+ B7BF
+1341+ B7BF              Detecta_colision_nave_entidad
+1342+ B7BF
+1343+ B7BF              ; Exclusiones:
+1344+ B7BF
+1345+ B7BF              ; Salimos de la rutina si no hay advertencia de posible colisión.
+1346+ B7BF
+1347+ B7BF 21 0A 95     	ld hl,Impacto2
+1348+ B7C2 CB 56        	bit 2,(hl)
+1349+ B7C4 C8           	ret z
+1350+ B7C5
+1351+ B7C5              ; Detección byte a byte de colisión ENTIDAD-NAVE.
+1352+ B7C5
+1353+ B7C5 2A DA 90         ld hl,(Pamm_Amadeus)
+1354+ B7C8 CD FD 99         call Extrae_address
+1355+ B7CB 54               ld d,h
+1356+ B7CC 5D               ld e,l                                         ; (Puntero_objeto) en DE.
+1357+ B7CD
+1358+ B7CD 2A D8 90         ld hl,(p.imp.amadeus)                          ; (Puntero_de_impresion) en HL.
+1359+ B7D0 06 10            ld b,16                                        ; Contador de scanlines en B.
+1360+ B7D2 FD 2E 03         ld iyl,3                                       ; Contador de impacto. Si su valor es "0" se considera "Colisión". Esto me permitirá ajustar la sensibilidad de la colisión en Amadeus.
+1361+ B7D5
+1362+ B7D5 C5           1 push bc
+1363+ B7D6 06 03            ld b,3
+1364+ B7D8 E5               push hl
+1365+ B7D9
+1366+ B7D9              ; .db
+1367+ B7D9
+1368+ B7D9 1A           3 ld a,(de)
+1369+ B7DA A7               and a
+1370+ B7DB 20 03            jr nz,4F
+1371+ B7DD
+1372+ B7DD 2C               inc l
+1373+ B7DE 18 08            jr 2F                                         ; No aplica CPI, no hay píxels en este .db.
+1374+ B7E0
+1375+ B7E0 ED A1        4 cpi                                             ; Comparamos el 1er .db de los tres de ancho que tiene el sprite de Amadeus.
+1376+ B7E2 28 04            jr z,2F
+1377+ B7E4
+1378+ B7E4              ; Impacto.
+1379+ B7E4 FD 2D            dec iyl
+1380+ B7E6 28 22            jr z,5F
+1381+ B7E8
+1382+ B7E8 1C           2 inc e
+1383+ B7E9 10 EE            djnz 3B
+1384+ B7EB
+1385+ B7EB E1               pop hl
+1386+ B7EC
+1387+ B7EC              ; Hay salto de línea en el puntero de impresión ???
+1388+ B7EC
+1389+ B7EC 7C               ld a,h
+1390+ B7ED D6 57            sub $57
+1391+ B7EF 20 0A            jr nz,6F
+1392+ B7F1
+1393+ B7F1              ; Comprobamos la parte baja de Amadeus. Modifico manualmente el salto de línea en HL para no haver llamadas a [NextScan].
+1394+ B7F1
+1395+ B7F1 2A D8 90         ld hl,(p.imp.amadeus)
+1396+ B7F4 3E 20            ld a,$20
+1397+ B7F6 A7               and a
+1398+ B7F7 85               add l
+1399+ B7F8 6F               ld l,a
+1400+ B7F9 18 01            jr 7F
+1401+ B7FB
+1402+ B7FB 24           6 inc h
+1403+ B7FC
+1404+ B7FC C1           7 pop bc
+1405+ B7FD 10 D6            djnz 1B
+1406+ B7FF
+1407+ B7FF              ;   Fin de la comparativa.
+1408+ B7FF
+1409+ B7FF              ;   NO HAY COLISIÓN !!!!!.
+1410+ B7FF              ;
+1411+ B7FF              ;   .db (Impacto) de Amadeus a "0".
+1412+ B7FF              ;   RES el bit2 de (Impacto2).
+1413+ B7FF              ;
+1414+ B7FF              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
+1415+ B7FF              ;   Lo colocamos a "0".
+1416+ B7FF
+1417+ B7FF 21 0A 95         ld hl,Impacto2
+1418+ B802 CB 96            res 2,(hl)
+1419+ B804 2A 0B 95         ld hl,(Entidad_sospechosa_de_colision)
+1420+ B807 36 00            ld (hl),0                                       ; Coloca a "0" el .db (Impacto) de la (Entidad_sospechosa_de_colision).
+1421+ B809 C9               ret
+1422+ B80A
+1423+ B80A              ;   COLISIÓN !!!!!.
+1424+ B80A              ;
+1425+ B80A              ;   .db (Impacto) de Amadeus a "1".
+1426+ B80A              ;   SET el bit3 de (Impacto2).
+1427+ B80A              ;
+1428+ B80A              ;   Nota: El .db (Impacto) de la entidad implicada lo puso a "1" la rutina [Compara_coordenadas_X].
+1429+ B80A
+1430+ B80A E1           5 pop hl
+1431+ B80B C1               pop bc
+1432+ B80C
+1433+ B80C 21 D7 90         ld hl,Impacto_Amadeus
+1434+ B80F 36 01            ld (hl),1
+1435+ B811 21 0A 95         ld hl,Impacto2                                 ; Cuando se produce Colisión, RES el bit2 de (Impacto2) y_
+1436+ B814 CB 96            res 2,(hl)                                     ; _ SET el bit3. El bit3 de (Impacto2) indica que hay contacto_
+1437+ B816
+1438+ B816 11 60 8B         ld de,Indice_Explosion_entidades
+1439+ B819 2A 0B 95         ld hl,(Entidad_sospechosa_de_colision)         ; Situamos el (Puntero_de_almacen_de_mov_masticados) de la entidad impactada en la primera palabra del índice de explosiones.
+1440+ B81C
+1441+ B81C 23               inc hl
+1442+ B81D 23               inc hl
+1443+ B81E 23               inc hl
+1444+ B81F
+1445+ B81F 73               ld (hl),e
+1446+ B820 23               inc hl
+1447+ B821 72               ld (hl),d
+1448+ B822
+1449+ B822              ; Situamos también el (Puntero_de_almacen_de_mov_masticados) de Amadeus en la primero explosión.
+1450+ B822
+1451+ B822 11 F6 8B         ld de,Indice_Explosion_Amadeus
+1452+ B825 21 DA 90         ld hl,Pamm_Amadeus
+1453+ B828
+1454+ B828 73               ld (hl),e
+1455+ B829 23               inc hl
+1456+ B82A 72               ld (hl),d
+1457+ B82B
+1458+ B82B C9               ret
+1459+ B82C
+1460+ B82C
+1461+ B82C
+1462+ B82C
 # file closed: Disparo.asm
-2957  B822              	include "Sound.asm"
+2957  B82C              	include "Sound.asm"
 # file opened: Sound.asm
-   1+ B822              ;   29/12/25
-   2+ B822              ;
-   3+ B822              ;   FX Sounds.
-   4+ B822              ;
-   5+ B822              ;   INPUTS: (Sound)
-   6+ B822
-   7+ B822              ;   MODIFY: HL,B y A, siempre que (Sound) contenga dato.
-   8+ B822
-   9+ B822              Genera_sonido:
-  10+ B822
-  11+ B822 2A 51 95         ld hl,(Sound)
-  12+ B825
-  13+ B825 7C               ld a,h
-  14+ B826 B5               or l
-  15+ B827 C8               ret z                   ; RET si no existe sonido a ejecutar.
-  16+ B828
-  17+ B828              ;   What sound are we going to play ???
-  18+ B828
-  19+ B828              ;    ld a,(Sound_type)
-  20+ B828              ;    and a
-  21+ B828              ;    jr Efecto_disparo
-  22+ B828
-  23+ B828              Efecto_explosion
-  24+ B828
-  25+ B828              ;   HL define el sonido.
-  26+ B828              ;
-  27+ B828              ;   L define el retardo o longitud de cada semiciclo de la onda, en este caso un valor aleatorio, (0-$ff).
-  28+ B828              ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
-  29+ B828
-  30+ B828 0E 05            ld c,5                  ; 5 ondas completas per frame.
-  31+ B82A
-  32+ B82A              Loop
-  33+ B82A
-  34+ B82A ED 5F            ld a,r
-  35+ B82C 47               ld b,a
-  36+ B82D
-  37+ B82D 3E 10            ld a,%00010000          ; Borde negro.
-  38+ B82F D3 FE            out ($fe),a             ; Beeper ON.
-  39+ B831
-  40+ B831 10 FE        Delay_1 djnz Delay_1        ; Aplica Delay.
-  41+ B833
-  42+ B833 AF               xor a
-  43+ B834 D3 FE            out ($fe),a             ; Beeper OFF.
-  44+ B836
-  45+ B836 ED 5F            ld a,r
-  46+ B838 47               ld b,a
-  47+ B839
-  48+ B839 10 FE        Delay_2 djnz Delay_2        ; Aplica Delay.
-  49+ B83B
-  50+ B83B 25               dec h
-  51+ B83C
-  52+ B83C 28 07            jr z,Clean_Sound        ; Hemos tardado de reproducir el soniquete, limpiamos (Sound) y salimos.
-  53+ B83E
-  54+ B83E 0D               dec c
-  55+ B83F
-  56+ B83F 20 E9            jr nz,Loop
-  57+ B841
-  58+ B841 22 51 95         ld (Sound),hl
-  59+ B844
-  60+ B844 C9               ret
-  61+ B845
-  62+ B845 2E 00        Clean_Sound ld l,0
-  63+ B847
-  64+ B847 22 51 95         ld (Sound),hl
-  65+ B84A AF               xor a
-  66+ B84B 32 53 95         ld (Sound_type),a
-  67+ B84E
-  68+ B84E C9               ret
-  69+ B84F
-  70+ B84F              ; ----- ----- ----- ----- -----
-  71+ B84F
-  72+ B84F              Efecto_disparo
-  73+ B84F
-  74+ B84F              ;   HL define el sonido.
-  75+ B84F              ;
-  76+ B84F              ;   L define el retardo o longitud de cada semiciclo de la onda.
-  77+ B84F              ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
-  78+ B84F
-  79+ B84F 0E 05            ld c,5                  ; 5 ondas completas per frame.
-  80+ B851
-  81+ B851              Loop_1
-  82+ B851
-  83+ B851 3E 10            ld a,%00010000          ; Borde negro.
-  84+ B853 D3 FE            out ($fe),a             ; Beeper ON.
-  85+ B855
-  86+ B855 45               ld b,l
-  87+ B856
-  88+ B856 10 FE        Delay_3 djnz Delay_3        ; Aplica Delay.
-  89+ B858
-  90+ B858 AF               xor a
-  91+ B859 D3 FE            out ($fe),a
-  92+ B85B
-  93+ B85B 45               ld b,l
-  94+ B85C
-  95+ B85C 10 FE        Delay_4 djnz Delay_4        ; Aplica Delay.
-  96+ B85E
-  97+ B85E              ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
-  98+ B85E
-  99+ B85E 2C               inc l
- 100+ B85F 2C               inc l
- 101+ B860 2C               inc l
- 102+ B861 2C               inc l
- 103+ B862
- 104+ B862 25               dec h
- 105+ B863
- 106+ B863 28 E0            jr z,Clean_Sound
- 107+ B865
- 108+ B865 0D               dec c
- 109+ B866
- 110+ B866 20 E9            jr nz,Loop_1
- 111+ B868
- 112+ B868 22 51 95         ld (Sound),hl
- 113+ B86B
- 114+ B86B C9               ret
- 115+ B86C
- 116+ B86C
- 117+ B86C
- 118+ B86C
- 119+ B86C
+   1+ B82C              ;   29/12/25
+   2+ B82C              ;
+   3+ B82C              ;   FX Sounds.
+   4+ B82C              ;
+   5+ B82C              ;   INPUTS: (Sound)
+   6+ B82C
+   7+ B82C              ;   MODIFY: HL,B y A, siempre que (Sound) contenga dato.
+   8+ B82C
+   9+ B82C              Genera_sonido:
+  10+ B82C
+  11+ B82C 2A 51 95         ld hl,(Sound)
+  12+ B82F
+  13+ B82F 7C               ld a,h
+  14+ B830 B5               or l
+  15+ B831 C8               ret z                   ; RET si no existe sonido a ejecutar.
+  16+ B832
+  17+ B832              ;   What sound are we going to play ???
+  18+ B832
+  19+ B832 3A 53 95         ld a,(Sound_type)
+  20+ B835 A7               and a
+  21+ B836 28 27            jr z,Efecto_disparo
+  22+ B838
+  23+ B838              Efecto_explosion
+  24+ B838
+  25+ B838              ;   HL define el sonido.
+  26+ B838              ;
+  27+ B838              ;   L define el retardo o longitud de cada semiciclo de la onda, en este caso un valor aleatorio, (0-$ff).
+  28+ B838              ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
+  29+ B838
+  30+ B838 0E 04            ld c,4                  ; 4 ondas completas per frame.
+  31+ B83A
+  32+ B83A              Loop
+  33+ B83A
+  34+ B83A ED 5F            ld a,r
+  35+ B83C 47               ld b,a
+  36+ B83D
+  37+ B83D 3E 10            ld a,%00010000          ; Borde negro.
+  38+ B83F D3 FE            out ($fe),a             ; Beeper ON.
+  39+ B841
+  40+ B841 10 FE        Delay_1 djnz Delay_1        ; Aplica Delay.
+  41+ B843
+  42+ B843 AF               xor a
+  43+ B844 D3 FE            out ($fe),a             ; Beeper OFF.
+  44+ B846
+  45+ B846 ED 5F            ld a,r
+  46+ B848 47               ld b,a
+  47+ B849
+  48+ B849 10 FE        Delay_2 djnz Delay_2        ; Aplica Delay.
+  49+ B84B
+  50+ B84B 25               dec h
+  51+ B84C
+  52+ B84C 28 07            jr z,Clean_Sound        ; Hemos tardado de reproducir el soniquete, limpiamos (Sound) y salimos.
+  53+ B84E
+  54+ B84E 0D               dec c
+  55+ B84F
+  56+ B84F 20 E9            jr nz,Loop
+  57+ B851
+  58+ B851 22 51 95         ld (Sound),hl
+  59+ B854
+  60+ B854 C9               ret
+  61+ B855
+  62+ B855 2E 00        Clean_Sound ld l,0
+  63+ B857
+  64+ B857 22 51 95         ld (Sound),hl
+  65+ B85A AF               xor a
+  66+ B85B 32 53 95         ld (Sound_type),a
+  67+ B85E
+  68+ B85E C9               ret
+  69+ B85F
+  70+ B85F              ; ----- ----- ----- ----- -----
+  71+ B85F
+  72+ B85F              Efecto_disparo
+  73+ B85F
+  74+ B85F              ;   HL define el sonido.
+  75+ B85F              ;
+  76+ B85F              ;   L define el retardo o longitud de cada semiciclo de la onda.
+  77+ B85F              ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
+  78+ B85F
+  79+ B85F 0E 05            ld c,5                  ; 5 ondas completas per frame.
+  80+ B861
+  81+ B861              Loop_1
+  82+ B861
+  83+ B861 3E 10            ld a,%00010000          ; Borde negro.
+  84+ B863 D3 FE            out ($fe),a             ; Beeper ON.
+  85+ B865
+  86+ B865 45               ld b,l
+  87+ B866
+  88+ B866 10 FE        Delay_3 djnz Delay_3        ; Aplica Delay.
+  89+ B868
+  90+ B868 AF               xor a
+  91+ B869 D3 FE            out ($fe),a
+  92+ B86B
+  93+ B86B 45               ld b,l
+  94+ B86C
+  95+ B86C 10 FE        Delay_4 djnz Delay_4        ; Aplica Delay.
+  96+ B86E
+  97+ B86E              ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
+  98+ B86E
+  99+ B86E 2C               inc l
+ 100+ B86F 2C               inc l
+ 101+ B870 2C               inc l
+ 102+ B871 2C               inc l
+ 103+ B872
+ 104+ B872 25               dec h
+ 105+ B873
+ 106+ B873 28 E0            jr z,Clean_Sound
+ 107+ B875
+ 108+ B875 0D               dec c
+ 109+ B876
+ 110+ B876 20 E9            jr nz,Loop_1
+ 111+ B878
+ 112+ B878 22 51 95         ld (Sound),hl
+ 113+ B87B
+ 114+ B87B C9               ret
+ 115+ B87C
+ 116+ B87C
+ 117+ B87C
+ 118+ B87C
+ 119+ B87C
 # file closed: Sound.asm
-2958  B86C
-2959  B86C              ;	End $ae8f Último byte.
-2960  B86C              ;		$ae90 1er byte libre.
-2961  B86C
-2962  B86C              	SAVESNA "Amadeus.sna", START
-2963  B86C
-2964  B86C
-2965  B86C
-2966  B86C
+2958  B87C
+2959  B87C              ;	End $ae8f Último byte.
+2960  B87C              ;		$ae90 1er byte libre.
+2961  B87C
+2962  B87C              	SAVESNA "Amadeus.sna", START
+2963  B87C
+2964  B87C
+2965  B87C
+2966  B87C
 # file closed: Banco_de_pruebas.asm

@@ -203,8 +203,8 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Disparo_sound equ $1001 ;	$5001
-;Explosion_sound equ $c801
+Disparo_sound equ $1001 
+Entrada_sound equ $d001
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 

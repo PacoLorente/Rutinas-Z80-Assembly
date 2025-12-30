@@ -16,9 +16,9 @@ Genera_sonido:
 
 ;   What sound are we going to play ???
 
-;    ld a,(Sound_type)
-;    and a
-;    jr Efecto_disparo
+    ld a,(Sound_type)
+    and a
+    jr z,Efecto_disparo
 
 Efecto_explosion
 
@@ -27,7 +27,7 @@ Efecto_explosion
 ;   L define el retardo o longitud de cada semiciclo de la onda, en este caso un valor aleatorio, (0-$ff).
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
-    ld c,5                  ; 5 ondas completas per frame.
+    ld c,4                  ; 4 ondas completas per frame.
 
 Loop
 
