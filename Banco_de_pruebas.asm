@@ -203,7 +203,9 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Disparo_sound equ $1001 
+Laser_de_entrada equ $00cf
+
+Disparo_sound equ $1001
 Entrada_sound equ $d001
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
@@ -815,7 +817,9 @@ Primer_scan_Amadeus defw $50cf
 
 ; Sound:
 
+Sound_2 defw 0 												; Usaremos está variable para introducir la duración de un efecto de entrada o salida de Amadeus.
 Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
+
 Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
 
 ; Varios:

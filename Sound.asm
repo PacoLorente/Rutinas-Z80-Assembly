@@ -1,3 +1,113 @@
+Efecto_laser_de_entrada:
+
+
+;    jr $
+
+    push hl
+    push de
+
+    ld de,(Sound_2)
+
+    ld a,d
+    or e
+    jr z,Borra_sonido                   ; RET si no existe sonido a ejecutar.
+
+    ld hl,(Sound)
+    ld de,(Sound_2)
+
+    ld b,12
+
+Loop_2 ld a,%00010000          ; Borde negro.
+    out ($fe),a             ; Beeper ON.
+
+Delay_5 dec hl              ; Aplica Delay.
+
+    ld a,h
+    or l
+    jr nz,Delay_5
+
+    ld hl,(Sound)
+
+    xor a                   ; Borde negro.
+    out ($fe),a             ; Beeper ON.
+
+Delay_6 dec hl              ; Aplica Delay.
+
+    ld a,h
+    or l
+    jr nz,Delay_6
+
+    dec de
+
+    ld a,d
+    or e
+
+;    jr z,$
+    jr z,Borra_sonido
+
+    ld (Sound_2),de
+
+    ld hl,(Sound)
+    inc hl
+    ld (Sound),hl           ; Incrementa HL. La siguiente nota a ejecutar será más grave.
+
+    djnz Loop_2
+
+;    jr $
+
+    pop de
+    pop hl
+
+    ret
+
+Borra_sonido
+
+    ld (Sound_2),de
+
+    pop de
+    pop hl
+
+    ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;   29/12/25
 ;
 ;   FX Sounds.

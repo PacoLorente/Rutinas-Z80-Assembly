@@ -333,6 +333,18 @@ Transicion_de_entrada:
 
 ; 	Pintamos el rayo.
 
+	push hl
+	push de
+
+	ld hl,1
+	ld (Sound),hl
+
+	ld de,Laser_de_entrada
+	ld (Sound_2),de
+
+	pop de
+	pop hl
+
 	call Pinta_rayo
 
 2 dec l
@@ -468,8 +480,11 @@ Borra_pinta_scan ld b,2
 Pinta_rayo cp d 													; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 	ret z
 
-	ld bc,$0b00
-	call DELAY
+	call Efecto_laser_de_entrada
+
+
+;	ld bc,$0050
+;	call DELAY
 
 	ld a,(hl)
 	xor $ff
