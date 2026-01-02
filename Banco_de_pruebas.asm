@@ -203,8 +203,7 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Laser_de_entrada equ $00cf
-
+Laser_de_entrada_sound equ $f0	;	$f0
 Disparo_sound equ $1001
 Entrada_sound equ $d001
 
@@ -270,11 +269,6 @@ Entrada_sound equ $d001
 	bit 0,(hl)
 	jr z,$
 ;	--------------------
-
-;	call Beeper
-
-;	ld hl,0
-;    ld (Sound),hl
 
 ; 	Actualiza marcadores.
 
@@ -819,7 +813,6 @@ Primer_scan_Amadeus defw $50cf
 
 Sound_2 defw 0 												; Usaremos está variable para introducir la duración de un efecto de entrada o salida de Amadeus.
 Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
-
 Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
 
 ; Varios:
@@ -958,6 +951,13 @@ INICIALIZACION:
 	set 0,(hl) 												; Indica Frame completo.
 	set 2,(hl)
 	set 5,(hl)												; Imprimimos Amadeus.
+
+;	Transicion_de_entrada
+
+	ld a,Laser_de_entrada_sound
+	ld (Sound_2),a
+	ld hl,50
+	ld (Sound),hl
 
 	call Transicion_de_entrada
 

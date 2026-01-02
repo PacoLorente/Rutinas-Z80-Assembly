@@ -1,27 +1,26 @@
-Efecto_laser_de_entrada:
+;   2/1/26
 
+Efecto_laser:
 
-;    jr $
+;   HL define el sonido.
+;
+;   L define el retardo o longitud de cada semiciclo de la onda.
+;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
-    push hl
-    push de
+    ld a,(Sound_2)
+    and a
+    ret z
 
-    ld de,(Sound_2)
+    ld c,7                 ; 10 ondas por ciclo de ejecución.
 
-    ld a,d
-    or e
-    jr z,Borra_sonido                   ; RET si no existe sonido a ejecutar.
+Loop_2
 
     ld hl,(Sound)
-    ld de,(Sound_2)
 
-    ld b,12
-
-Loop_2 ld a,%00010000          ; Borde negro.
+    ld a,%00010000          ; Borde negro.
     out ($fe),a             ; Beeper ON.
 
-Delay_5 dec hl              ; Aplica Delay.
-
+Delay_5 dec hl
     ld a,h
     or l
     jr nz,Delay_5
@@ -29,84 +28,30 @@ Delay_5 dec hl              ; Aplica Delay.
     ld hl,(Sound)
 
     xor a                   ; Borde negro.
-    out ($fe),a             ; Beeper ON.
+    out ($fe),a             ; Beeper OFF.
 
-Delay_6 dec hl              ; Aplica Delay.
-
+Delay_6 dec hl
     ld a,h
     or l
     jr nz,Delay_6
 
-    dec de
-
-    ld a,d
-    or e
-
-;    jr z,$
-    jr z,Borra_sonido
-
-    ld (Sound_2),de
+; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
 
     ld hl,(Sound)
     inc hl
-    ld (Sound),hl           ; Incrementa HL. La siguiente nota a ejecutar será más grave.
+    ld (Sound),hl
 
-    djnz Loop_2
+; Descontamos la onda generada del total de ondas que tiene el efecto, (Sound).
 
-;    jr $
+    ld hl,Sound_2
+    dec (hl)
+    ret z
 
-    pop de
-    pop hl
+    dec c
 
-    ret
-
-Borra_sonido
-
-    ld (Sound_2),de
-
-    pop de
-    pop hl
+    jr nz,Loop_2
 
     ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ;   29/12/25
 ;
@@ -213,6 +158,7 @@ Delay_4 djnz Delay_4        ; Aplica Delay.
 
     dec h
 
+    jr z,$
     jr z,Clean_Sound
 
     dec c

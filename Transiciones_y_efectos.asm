@@ -333,18 +333,6 @@ Transicion_de_entrada:
 
 ; 	Pintamos el rayo.
 
-	push hl
-	push de
-
-	ld hl,1
-	ld (Sound),hl
-
-	ld de,Laser_de_entrada
-	ld (Sound_2),de
-
-	pop de
-	pop hl
-
 	call Pinta_rayo
 
 2 dec l
@@ -355,6 +343,12 @@ Transicion_de_entrada:
 	dec e
 
 	jr nz,3B 														;	Borramos el rayo de inicio.
+
+	xor a
+	ld (Sound_2),a
+;	ld hl,0
+;	ld (Sound),hl
+;	pop hl
 
 ; 	Hemos pintado y borrado el Rayo inicial.
 
@@ -434,6 +428,8 @@ Transicion_de_entrada:
 	ld d,0
 	ld a,l
 
+	jr $
+
 	call Pinta_rayo
 
 	pop hl
@@ -477,11 +473,15 @@ Borra_pinta_scan ld b,2
 
 ;	-----------------------------
 
+;	$20 es el nº de veces que se ejecuta Pinta_rayo.
+;	El efecto del rayo ha de medir 20 * C, (siendo C el nº de ondas completas de efecto que reproduciremos cada vez que ejecutamos [Pinta_rayo]).
+
 Pinta_rayo cp d 													; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 	ret z
 
-	call Efecto_laser_de_entrada
-
+	push hl
+	call Efecto_laser
+	pop hl
 
 ;	ld bc,$0050
 ;	call DELAY
