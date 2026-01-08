@@ -203,7 +203,7 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Laser_de_entrada_sound equ $f0	;	$f0
+Laser_de_entrada_sound equ $013f	;	$00f0
 Disparo_sound equ $1001
 Entrada_sound equ $d001
 
@@ -954,8 +954,8 @@ INICIALIZACION:
 
 ;	Transicion_de_entrada
 
-	ld a,Laser_de_entrada_sound
-	ld (Sound_2),a
+	ld hl,Laser_de_entrada_sound
+	ld (Sound_2),hl
 	ld hl,50
 	ld (Sound),hl
 

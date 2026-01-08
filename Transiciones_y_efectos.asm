@@ -331,6 +331,12 @@ Transicion_de_entrada:
 	and $f0
 	ld l,a
 
+;	Indicamos "Rayo de entrada".
+
+	ld a,(Ctrl_5)
+	set 7,a
+	ld (Ctrl_5),a
+
 ; 	Pintamos el rayo.
 
 	call Pinta_rayo
@@ -344,11 +350,8 @@ Transicion_de_entrada:
 
 	jr nz,3B 														;	Borramos el rayo de inicio.
 
-	xor a
-	ld (Sound_2),a
-;	ld hl,0
-;	ld (Sound),hl
-;	pop hl
+;	xor a
+;	ld (Sound_2),a
 
 ; 	Hemos pintado y borrado el Rayo inicial.
 
@@ -425,10 +428,21 @@ Transicion_de_entrada:
 
 	push hl
 
+;	Indicamos "Rayo de salida".
+
+	ld a,(Ctrl_5)
+	res 7,a
+	ld (Ctrl_5),a
+
 	ld d,0
 	ld a,l
 
-	jr $
+;	jr $
+
+	push hl
+	ld hl,Laser_de_entrada_sound
+	ld (Sound_2),hl
+	pop hl
 
 	call Pinta_rayo
 
@@ -436,6 +450,8 @@ Transicion_de_entrada:
 	ld a,l
 
 	call Pinta_rayo
+
+	jr $
 
 ; 	Borra Amadeus para enlazar con el pintado del Nivel.
 

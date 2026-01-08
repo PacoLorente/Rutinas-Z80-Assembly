@@ -2,16 +2,25 @@
 
 Efecto_laser:
 
+;   (Variables cuando ejecutamos el Rayo de salida).
+
+;   $9551 (Sound_2) ..... $00f0
+;   $9553 (Sound)   ..... $0172
+
 ;   HL define el sonido.
 ;
 ;   L define el retardo o longitud de cada semiciclo de la onda.
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
-    ld a,(Sound_2)
-    and a
+    ld hl,(Sound_2)
+    ld a,h
+    or l
+
+    jr z,$
+
     ret z
 
-    ld c,7                 ; 10 ondas por ciclo de ejecución.
+    ld c,10                 ; 10 ondas por ciclo de ejecución.
 
 Loop_2
 
@@ -37,14 +46,30 @@ Delay_6 dec hl
 
 ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
 
+    ld a,(Ctrl_5)
+
     ld hl,(Sound)
-    inc hl
-    ld (Sound),hl
+
+; Rayo de entrada o de salida ???
+
+    bit 7,a
+    jr nz,1F
+
+    dec hl
+    jr 2F
+
+1 inc hl
+2 ld (Sound),hl
 
 ; Descontamos la onda generada del total de ondas que tiene el efecto, (Sound).
 
-    ld hl,Sound_2
-    dec (hl)
+    ld hl,(Sound_2)
+    dec hl
+    ld (Sound_2),hl
+
+    ld a,h
+    or l
+
     ret z
 
     dec c
