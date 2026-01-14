@@ -270,6 +270,18 @@ Entrada_sound equ $d001
 	jr z,$
 ;	--------------------
 
+; ----- Shield iniciado
+
+;	ld a,90
+;	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
+
+;	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
+;	dec (hl)
+
+;	ld hl,Ctrl_2                                            ; Indica que hemos pulsado "SHIELD". "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
+;	set 7,(hl)												; La rutina [Borra_escudo], inicializará el FLAG.
+
+
 ; 	Actualiza marcadores.
 
 	ld hl,Ctrl_2
@@ -317,7 +329,9 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 	bit 3,(hl)
 	jr z,2F	
 
-	call Inicia_Shield	
+	call Efecto_Escudo
+
+	call Inicia_Shield
 
 	jr Incrementa_FRAMES
 
@@ -961,7 +975,8 @@ INICIALIZACION:
 
 	call Transicion_de_entrada
 
-	ld hl,$ff01
+	ld hl,0
+	ld (Sound_2),hl
 	ld (Sound),hl
 
 	ld a,3
@@ -2218,6 +2233,9 @@ Inicia_Shield
 
 	ld a,1
 	ld (Shield_3),a											; (Shield_3) se inicia con "1".
+
+	ld hl,$1001
+	ld (Sound_2),hl
 
 	ret
 

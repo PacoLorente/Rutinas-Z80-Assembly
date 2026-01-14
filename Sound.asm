@@ -1,16 +1,15 @@
+;   14/1/26
+
+Efecto_Escudo:
+
+    ld hl,0
+    ld (Sound_2),hl
+
+    ret
+
 ;   2/1/26
 
 Efecto_laser:
-
-;   (Variables cuando ejecutamos el Rayo de salida).
-
-;   $9551 (Sound_2) ..... $00f0
-;   $9553 (Sound)   ..... $0172
-
-;   HL define el sonido.
-;
-;   L define el retardo o longitud de cada semiciclo de la onda.
-;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
 ;   MODIFY: A,HL, C
 
@@ -85,6 +84,12 @@ Delay_6 dec hl
 ;   INPUTS: (Sound)
 
 ;   MODIFY: HL,B y A, siempre que (Sound) contenga dato.
+
+
+;   (Sound_2) $0000
+;   (Sound) $ff01 - $fa15 - $f529
+;   (Sound_type) $00
+
 
 Genera_sonido:
 
@@ -183,7 +188,7 @@ Delay_4 djnz Delay_4        ; Aplica Delay.
 
     dec h
 
-    jr z,$
+;    jr z,$
     jr z,Clean_Sound
 
     dec c
@@ -193,6 +198,18 @@ Delay_4 djnz Delay_4        ; Aplica Delay.
     ld (Sound),hl
 
     ret
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
