@@ -350,10 +350,18 @@ Transicion_de_entrada:
 
 	jr nz,3B 														;	Borramos el rayo de inicio.
 
-;	xor a
-;	ld (Sound_2),a
-
 ; 	Hemos pintado y borrado el Rayo inicial.
+
+;	Indicamos "Rayo de salida".
+
+	ld a,(Ctrl_5)
+	res 7,a
+	ld (Ctrl_5),a
+
+	push hl
+	ld hl,Laser_de_entrada_sound
+	ld (Sound_2),hl
+	pop hl
 
 	inc l
 	inc l
@@ -383,24 +391,31 @@ Transicion_de_entrada:
 	ld b,16
 
 4 push bc
+
 	push hl
+
 	ld b,2
 
 5 ld a,(de)
 	ld (hl),a
-
 	inc l
 	inc e
-
 	djnz 5B
 
 	inc e
+
 	pop hl
+
 	call NextScan
+
+
+	pop bc
 
 	ld a,$58
 	cp h
 	jr z,6F
+
+	push bc
 
 ; 	Pinta scan.
 
@@ -412,6 +427,7 @@ Transicion_de_entrada:
 	call Borra_pinta_scan
 
 	pop bc
+
 	djnz 4B
 
 ; -----------------------------------------------------------
@@ -428,30 +444,15 @@ Transicion_de_entrada:
 
 	push hl
 
-;	Indicamos "Rayo de salida".
-
-	ld a,(Ctrl_5)
-	res 7,a
-	ld (Ctrl_5),a
-
 	ld d,0
 	ld a,l
 
-;	jr $
-
-	push hl
-	ld hl,Laser_de_entrada_sound
-	ld (Sound_2),hl
-	pop hl
-
 	call Pinta_rayo
 
 	pop hl
 	ld a,l
 
 	call Pinta_rayo
-
-	jr $
 
 ; 	Borra Amadeus para enlazar con el pintado del Nivel.
 
@@ -466,6 +467,8 @@ Transicion_de_entrada:
 	pop hl 															; (Puntero_objeto) en HL.
 
 	ld c,%01000101 													; (Attr).
+
+	ld a,(Columnas)
 
 	call Pinta_Sprites
 

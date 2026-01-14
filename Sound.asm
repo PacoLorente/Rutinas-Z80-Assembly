@@ -12,15 +12,15 @@ Efecto_laser:
 ;   L define el retardo o longitud de cada semiciclo de la onda.
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
+;   MODIFY: A,HL, C
+
     ld hl,(Sound_2)
     ld a,h
     or l
 
-    jr z,$
-
     ret z
 
-    ld c,10                 ; 10 ondas por ciclo de ejecución.
+    ld c,8                 ; 10 ondas por ciclo de ejecución.
 
 Loop_2
 
@@ -193,8 +193,6 @@ Delay_4 djnz Delay_4        ; Aplica Delay.
     ld (Sound),hl
 
     ret
-
-
 
 
 

@@ -961,6 +961,9 @@ INICIALIZACION:
 
 	call Transicion_de_entrada
 
+	ld hl,$ff01
+	ld (Sound),hl
+
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
 
@@ -2790,7 +2793,12 @@ Decrementa_techo:
 
 Genera_explosion_Amadeus:
 
-	ld hl,Clock_explosion_Amadeus								
+	ld h,$30
+	ld (Sound),hl
+	ld a,1
+	ld (Sound_type),a
+
+	ld hl,Clock_explosion_Amadeus
 	dec (hl)
 	jr z,Siguiente_frame_explosion_Amadeus					; Gestionamos la siguiente entidad.
 
