@@ -2,10 +2,64 @@
 
 Efecto_Escudo:
 
-    ld hl,0
+;    jr $
+
+    ld hl,(Sound_2)
+
+    ld c,3                  ; 5 ondas completas per frame.
+
+Loop_3
+
+    ld a,%00010000          ; Borde negro.
+    out ($fe),a             ; Beeper ON.
+
+    ld b,l
+
+Delay_7 djnz Delay_7        ; Aplica Delay.
+
+    xor a
+    out ($fe),a
+
+    ld b,l
+
+Delay_8 djnz Delay_8        ; Aplica Delay.
+
+; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
+
+;    inc l
+;    inc l
+
+;    inc l
+;    inc l
+
+    dec h
+
+    jr z,$
+    jr z,Clean_Sound
+
+    dec c
+
+    jr nz,Loop_3
+
     ld (Sound_2),hl
 
     ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
 ;   2/1/26
 

@@ -204,6 +204,7 @@ Attr_Moon_File5_3 equ $589e
 ;	Sonidos.
 
 Laser_de_entrada_sound equ $013f	;	$00f0
+Shield_sound equ $ffa0 	;	$ffb0
 Disparo_sound equ $1001
 Entrada_sound equ $d001
 
@@ -270,18 +271,6 @@ Entrada_sound equ $d001
 	jr z,$
 ;	--------------------
 
-; ----- Shield iniciado
-
-;	ld a,90
-;	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
-
-;	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
-;	dec (hl)
-
-;	ld hl,Ctrl_2                                            ; Indica que hemos pulsado "SHIELD". "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
-;	set 7,(hl)												; La rutina [Borra_escudo], inicializará el FLAG.
-
-
 ; 	Actualiza marcadores.
 
 	ld hl,Ctrl_2
@@ -313,10 +302,9 @@ Temporizacion_shield
 	jr z,Incrementa_FRAMES												;	No hay escudo. Se agotó el tiempo Shield.
 
 	dec (hl)															;	Decrementa tiempo Shield, (Shield).
-
 	inc hl
-	dec (hl)															;	Decrementa temporizador de estados, (Shield_2).
 
+	dec (hl)															;	Decrementa temporizador de estados, (Shield_2).
 	jr nz,Incrementa_FRAMES
 
 															
@@ -325,13 +313,18 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 ;	Indica cambio de estado.
 
 	inc hl																;	Sitúa en (Shield_3).
-
 	bit 3,(hl)
 	jr z,2F	
 
+	call Inicia_Shield
 	call Efecto_Escudo
 
-	call Inicia_Shield
+	ld a,(Shield)
+	and a
+	jr nz,Incrementa_FRAMES
+
+	ld hl,0
+	ld (Sound_2),hl
 
 	jr Incrementa_FRAMES
 
@@ -976,8 +969,10 @@ INICIALIZACION:
 	call Transicion_de_entrada
 
 	ld hl,0
-	ld (Sound_2),hl
 	ld (Sound),hl
+
+	ld hl,Shield_sound
+	ld (Sound_2),hl 										; Fuente para ejecutar el sonido del 1er Shield.
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
@@ -2234,7 +2229,14 @@ Inicia_Shield
 	ld a,1
 	ld (Shield_3),a											; (Shield_3) se inicia con "1".
 
-	ld hl,$1001
+;	Sonido, (Efecto_escudo).
+
+	ld hl,(Sound_2)
+	ld a,h
+	or l
+	ret nz 													; RET si ya estamos reproduciendo el efecto del escudo.
+
+	ld hl,Shield_sound 										; Inicia sonido.
 	ld (Sound_2),hl
 
 	ret
