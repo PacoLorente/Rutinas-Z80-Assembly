@@ -6,7 +6,7 @@ Efecto_Escudo:
 
     ld hl,(Sound_2)
 
-    ld c,3                  ; 5 ondas completas per frame.
+    ld c,3                  ; 3 ondas completas per frame.
 
 Loop_3
 

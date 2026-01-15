@@ -391,7 +391,7 @@ Print_enemy_counter:
     pop hl
     ld (Unidades_cont_ent_8),hl
 
-     pop hl
+    pop hl
     ld (Unidades_cont_ent_9),hl
 
     pop hl

@@ -204,7 +204,7 @@ Attr_Moon_File5_3 equ $589e
 ;	Sonidos.
 
 Laser_de_entrada_sound equ $013f	;	$00f0
-Shield_sound equ $ffa0 	;	$ffb0
+Shield_sound equ $ff60 	;	$ffb0
 Disparo_sound equ $1001
 Entrada_sound equ $d001
 
