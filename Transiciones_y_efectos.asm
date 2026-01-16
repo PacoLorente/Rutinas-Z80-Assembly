@@ -352,17 +352,6 @@ Transicion_de_entrada:
 
 ; 	Hemos pintado y borrado el Rayo inicial.
 
-;	Indicamos "Rayo de salida".
-
-	ld a,(Ctrl_5)
-	res 7,a
-	ld (Ctrl_5),a
-
-	push hl
-	ld hl,Laser_de_entrada_sound
-	ld (Sound_2),hl
-	pop hl
-
 	inc l
 	inc l
 
@@ -389,6 +378,16 @@ Transicion_de_entrada:
 	pop de
 
 	ld b,16
+
+;	Datos para generar el sonido de soldador.
+
+
+
+
+
+
+
+
 
 4 push bc
 
@@ -421,8 +420,16 @@ Transicion_de_entrada:
 
 	call Borra_pinta_scan
 
-	ld bc,$2000
-	call DELAY
+; Efecto Soldadura
+
+	push hl
+	ld h,$ff
+	ld (Sound_2),hl
+	call Efecto_soldadura
+	pop hl
+
+;	ld bc,$1000
+;	call DELAY
 
 	call Borra_pinta_scan
 
@@ -436,7 +443,18 @@ Transicion_de_entrada:
 
 ; 	Situamos HL en la VRAM donde vamos a iniciar el rayo.
 
-6 call PreviousScan
+;	Indicamos "Rayo de salida".
+
+6 ld a,(Ctrl_5)
+	res 7,a
+	ld (Ctrl_5),a
+
+	push hl
+	ld hl,Laser_de_entrada_sound
+	ld (Sound_2),hl
+	pop hl
+
+	call PreviousScan
 	call PreviousScan
 
 	inc l
