@@ -5,7 +5,9 @@ Efecto_soldadura
 ;   L define el retardo o longitud de cada semiciclo de la onda, en este caso un valor aleatorio, (0-$ff).
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
-    ld c,40                  ; 4 ondas completas per frame.
+;    jr $
+
+    ld c,$d0                  ; 4 ondas completas per frame.
 
 Loop_4
 
@@ -15,27 +17,19 @@ Loop_4
     ld a,%00010000          ; Borde negro.
     out ($fe),a             ; Beeper ON.
 
-Delay_9 djnz Delay_9        ; Aplica Delay.
-
-    xor a
-    out ($fe),a             ; Beeper OFF.
+Delay_9 djnz Delay_9
 
     ld a,r
     ld b,a
 
-Delay_10 djnz Delay_10        ; Aplica Delay.
+    xor a
+    out ($fe),a             ; Beeper OFF.
 
-    dec h
-
-;    jr z,Clean_Sound        ; Hemos tardado de reproducir el soniquete, limpiamos (Sound) y salimos.
-
-    jr z,$
+Delay_10 djnz Delay_10
 
     dec c
 
     jr nz,Loop_4
-
-    ld (Sound_2),hl
 
     ret
 

@@ -423,13 +423,10 @@ Transicion_de_entrada:
 ; Efecto Soldadura
 
 	push hl
-	ld h,$ff
-	ld (Sound_2),hl
-	call Efecto_soldadura
-	pop hl
 
-;	ld bc,$1000
-;	call DELAY
+	call Efecto_soldadura
+
+	pop hl
 
 	call Borra_pinta_scan
 
