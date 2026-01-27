@@ -339,7 +339,7 @@ Transicion_de_entrada:
 
 ; 	Pintamos el rayo.
 
-	call Pinta_rayo
+	call Construye_rayo
 
 2 dec l
 	dec l
@@ -462,12 +462,12 @@ Transicion_de_entrada:
 	ld d,0
 	ld a,l
 
-	call Pinta_rayo
+	call Construye_rayo
 
 	pop hl
 	ld a,l
 
-	call Pinta_rayo
+	call Construye_rayo
 
 ; 	Borra Amadeus para enlazar con el pintado del Nivel.
 
@@ -506,23 +506,41 @@ Borra_pinta_scan ld b,2
 	ret
 
 ;	-----------------------------
+;
+;	27/01/26
 
-;	$20 es el nº de veces que se ejecuta Pinta_rayo.
-;	El efecto del rayo ha de medir 20 * C, (siendo C el nº de ondas completas de efecto que reproduciremos cada vez que ejecutamos [Pinta_rayo]).
+;	INPUT: A contiene (CTRL_5). El bit 7 de A nos indica, (si está a "1" que el sonido es ascendente); "0" descendente.
 
-Pinta_rayo cp d 													; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
+Construye_rayo cp d 												; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 	ret z
 
+;	Prepara INPUTS para generar efecto de sonido del rayo.
+
 	push hl
+	push de
+
+	ld c,8 															; Nº de ondas completas a ejecutar.
+
+	ld d,1 															; Efecto ascendente por defecto.
+
+	bit 7,a
+	jr nz,Ejecuta_efecto
+
+	dec d 															; El rayo está saliendo de la pantalla. Efecto descendente.
+
+Ejecuta_efecto 
+
+;	push hl
 	call Efecto_laser
+
+	pop de
 	pop hl
 
-;	ld bc,$0050
-;	call DELAY
+Pinta_rayo
 
 	ld a,(hl)
 	xor $ff
 	ld (hl),a
 	inc l
 	ld a,l
-	jr Pinta_rayo
+	jr Construye_rayo

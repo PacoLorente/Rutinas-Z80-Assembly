@@ -110,23 +110,25 @@ Delay_8 djnz Delay_8        ; Aplica Delay.
 
     
 
-;   2/1/26
+;   27/1/26
 
 Efecto_laser:
 
-;   MODIFY: A,HL, C
+;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
+;           D Indica si el sonido es ascendente, "1" o descendente, "0".
 
-    ld hl,(Sound_2)
+;   MODIFY: A,HL,C,D
+
+;   Exclusión:
+
+    ld hl,(Sound)
     ld a,h
     or l
-
-    ret z
-
-    ld c,8                 ; 10 ondas por ciclo de ejecución.
+    ret z                   ; Salimos de la rutina si no hay sonido a ejecutar.
 
 Loop_2
 
-    ld hl,(Sound)
+;    ld hl,(Sound)
 
     ld a,%00010000          ; Borde negro.
     out ($fe),a             ; Beeper ON.
@@ -148,13 +150,17 @@ Delay_6 dec hl
 
 ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
 
-    ld a,(Ctrl_5)
+;    ld a,(Ctrl_5)
+    ld a,d
 
     ld hl,(Sound)
 
 ; Rayo de entrada o de salida ???
 
-    bit 7,a
+;    bit 7,a
+
+    and a 
+
     jr nz,1F
 
     dec hl
@@ -165,14 +171,15 @@ Delay_6 dec hl
 
 ; Descontamos la onda generada del total de ondas que tiene el efecto, (Sound).
 
-    ld hl,(Sound_2)
-    dec hl
-    ld (Sound_2),hl
+;    ld hl,(Sound_2)
+;    dec hl
+;    ld (Sound_2),hl
 
-    ld a,h
-    or l
+;    ld a,h
+;    or l
 
-    ret z
+;    jr z,$
+;    ret z
 
     dec c
 

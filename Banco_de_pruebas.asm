@@ -718,6 +718,7 @@ Ctrl_5 db 0
 ;															BIT 4, ?????
 ;															BIT 5, "1" Indica: NIVEL SUPERADO !!!.
 ;															BIT 6, "1" Indica: GAME OVER !!!.
+;															BIT 7, "1" Indica a la rutina de sonido que hemos de generar un efecto ascendente; (estamos pintando el rayo de entrada de la transición de entrada). 
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
