@@ -7,7 +7,7 @@ Efecto_soldadura
 
 ;    jr $
 
-    ld c,$d0                  ; 4 ondas completas per frame.
+    ld c,$d0                  ; Ondas completas per frame.
 
 Loop_4
 
@@ -94,30 +94,16 @@ Delay_8 djnz Delay_8        ; Aplica Delay.
 
     ret
 
+;   28/1/26
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-
-;   27/1/26
-
-Efecto_laser:
+Efecto_largo:
 
 ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
 ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
 
-;   MODIFY: A,HL,C,D
+
+;   MODIFY: A,HL,BC y DE.
 
 ;   Exclusión:
 
@@ -128,19 +114,17 @@ Efecto_laser:
 
 Loop_2
 
-;    ld hl,(Sound)
-
     ld a,%00010000          ; Borde negro.
     out ($fe),a             ; Beeper ON.
 
-Delay_5 dec hl
+Delay_5 dec hl              ; 26 tstates mide el bucle Delay_5
     ld a,h
     or l
     jr nz,Delay_5
 
-    ld hl,(Sound)
+    ld hl,(Sound)           ; 16 tstates
 
-    xor a                   ; Borde negro.
+    xor a                   ; Borde negro.    ---     4 tstates
     out ($fe),a             ; Beeper OFF.
 
 Delay_6 dec hl
@@ -148,57 +132,49 @@ Delay_6 dec hl
     or l
     jr nz,Delay_6
 
-; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
-
-;    ld a,(Ctrl_5)
-    ld a,d
+; Hemos generado una onda sonora.
+; Averiguamos si existe incremento/decremento del delay; (variación del tono).
 
     ld hl,(Sound)
 
+    inc e
+    dec e
+    jr z,1F
+
+    ld b,e                  ; B contiene ahora el nº de incrementos/decrementos.
+    ld a,d
+
 ; Rayo de entrada o de salida ???
 
-;    bit 7,a
-
     and a 
+    jr nz,Incrementa_delay
 
-    jr nz,1F
+Decrementa_delay
 
     dec hl
-    jr 2F
+    djnz Decrementa_delay
 
-1 inc hl
-2 ld (Sound),hl
+    jr 1F
+
+Incrementa_delay
+
+    inc hl
+    djnz Incrementa_delay
 
 ; Descontamos la onda generada del total de ondas que tiene el efecto, (Sound).
 
-;    ld hl,(Sound_2)
-;    dec hl
-;    ld (Sound_2),hl
+1 dec c
 
-;    ld a,h
-;    or l
-
-;    jr z,$
-;    ret z
-
-    dec c
+    ld (Sound),hl
 
     jr nz,Loop_2
 
     ret
 
-;   29/12/25
-;
-;   FX Sounds.
-;
-;   INPUTS: (Sound)
-
-;   MODIFY: HL,B y A, siempre que (Sound) contenga dato.
 
 
-;   (Sound_2) $0000
-;   (Sound) $ff01 - $fa15 - $f529
-;   (Sound_type) $00
+
+
 
 
 Genera_sonido:

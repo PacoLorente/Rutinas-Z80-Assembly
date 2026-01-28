@@ -422,11 +422,7 @@ Transicion_de_entrada:
 
 ; Efecto Soldadura
 
-	push hl
-
 	call Efecto_soldadura
-
-	pop hl
 
 	call Borra_pinta_scan
 
@@ -445,11 +441,6 @@ Transicion_de_entrada:
 6 ld a,(Ctrl_5)
 	res 7,a
 	ld (Ctrl_5),a
-
-	push hl
-	ld hl,Laser_de_entrada_sound
-	ld (Sound_2),hl
-	pop hl
 
 	call PreviousScan
 	call PreviousScan
@@ -519,10 +510,12 @@ Construye_rayo cp d 												; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 	push hl
 	push de
 
-	ld c,8 															; Nº de ondas completas a ejecutar.
+	ld c,6 															; Nº de ondas completas a ejecutar.
 
 	ld d,1 															; Efecto ascendente por defecto.
+	ld e,1 															; Nº de incrementos/decrementos que aplicaremos al delay antes de salir.
 
+	ld a,(Ctrl_5)
 	bit 7,a
 	jr nz,Ejecuta_efecto
 
@@ -530,8 +523,7 @@ Construye_rayo cp d 												; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 
 Ejecuta_efecto 
 
-;	push hl
-	call Efecto_laser
+	call Efecto_largo
 
 	pop de
 	pop hl

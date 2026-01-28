@@ -962,9 +962,7 @@ INICIALIZACION:
 
 ;	Transicion_de_entrada
 
-	ld hl,Laser_de_entrada_sound
-	ld (Sound_2),hl
-	ld hl,50
+ 	ld hl,80												; Delay inicial, (efecto del laser de entrada).
 	ld (Sound),hl
 
 	call Transicion_de_entrada
