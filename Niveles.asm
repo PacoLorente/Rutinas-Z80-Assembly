@@ -21,10 +21,10 @@ Nivel_1 db $ff,$05,$80
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 	db 20										; Nº de entidades que tiene el nivel.
 
-	db 1,2,3,1,2 								; Clases de entidades. (Irán apareciendo por este orden).
-	db 3,3,2,2,1
-	db 3,3,2,1,2
-	db 3,3,2,1,3
+	db 5,2,3,5,2 								; Clases de entidades. (Irán apareciendo por este orden).
+	db 3,3,2,2,5
+	db 3,3,2,5,2
+	db 3,3,2,5,3
 
 Nivel_2 db 12
 

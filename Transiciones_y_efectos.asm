@@ -350,6 +350,12 @@ Transicion_de_entrada:
 
 	jr nz,3B 														;	Borramos el rayo de inicio.
 
+	push hl
+	ld hl,(Sound)
+	ld (Sound_2),hl
+	pop hl 															;	Almacenamos la nota en la que hemos finalizado el rayo de entrada_
+; 																	;	_para iniciar el efecto del rayo de salida con esa misma nota.
+
 ; 	Hemos pintado y borrado el Rayo inicial.
 
 	inc l
@@ -422,7 +428,13 @@ Transicion_de_entrada:
 
 ; Efecto Soldadura
 
-	call Efecto_soldadura
+	push hl
+
+	ld c,$d0
+
+	call Efecto_explosion
+
+	pop hl
 
 	call Borra_pinta_scan
 
@@ -438,7 +450,14 @@ Transicion_de_entrada:
 
 ;	Indicamos "Rayo de salida".
 
-6 ld a,(Ctrl_5)
+6 push hl
+
+	ld hl,(Sound_2)
+	ld (Sound),hl
+
+	pop hl
+
+	ld a,(Ctrl_5)
 	res 7,a
 	ld (Ctrl_5),a
 

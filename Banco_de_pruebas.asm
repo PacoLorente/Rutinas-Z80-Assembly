@@ -204,7 +204,7 @@ Attr_Moon_File5_3 equ $589e
 ;	Sonidos.
 
 Laser_de_entrada_sound equ $013f	;	$00f0
-Shield_sound equ $ff60 	;	$ffb0
+Shield_sound equ $0060 	;	$ffb0
 Disparo_sound equ $1001
 Entrada_sound equ $d001
 
@@ -317,6 +317,10 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 	jr z,2F	
 
 	call Inicia_Shield
+
+	ld c,3
+	ld e,0
+
 	call Efecto_Escudo
 
 	ld a,(Shield)
@@ -324,7 +328,7 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 	jr nz,Incrementa_FRAMES
 
 	ld hl,0
-	ld (Sound_2),hl
+	ld (Sound),hl
 
 	jr Incrementa_FRAMES
 
@@ -2217,7 +2221,7 @@ DELAY
 ; Shield_2 db 0 											; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
 ; Shield_3 db 0
 
-Inicia_Shield	
+Inicia_Shield
 
 	ld hl,Datos_Shield
 	ld (Puntero_datos_shield),hl 							; Inicia el puntero (Puntero_datos_shield), lo situamos en la 1ª temporización.
@@ -2230,10 +2234,10 @@ Inicia_Shield
 
 ;	Sonido, (Efecto_escudo).
 
-	ld hl,(Sound_2)
-	ld a,h
-	or l
-	ret nz 													; RET si ya estamos reproduciendo el efecto del escudo.
+;	ld hl,(Sound_2)
+;	ld a,h
+;	or l
+;	ret nz 													; RET si ya estamos reproduciendo el efecto del escudo.
 
 	ld hl,Shield_sound 										; Inicia sonido.
 	ld (Sound_2),hl
