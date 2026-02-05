@@ -203,10 +203,9 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Laser_de_entrada_sound equ $013f	;	$00f0
-Shield_sound equ $0060 	;	$ffb0
-Disparo_sound equ $1001
-Entrada_sound equ $d001
+Laser_sound_init_value equ $00c0
+Shield_sound_init_value equ $0060
+Shot_sound_init_value equ $1001
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
 
@@ -318,17 +317,17 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 
 	call Inicia_Shield
 
-	ld c,3
-	ld e,0
+;	ld c,3
+;	ld e,0
 
-	call Efecto_Escudo
+;	call Efecto_Escudo
 
 	ld a,(Shield)
 	and a
 	jr nz,Incrementa_FRAMES
 
-	ld hl,0
-	ld (Sound),hl
+;	ld hl,0
+;	ld (Sound),hl
 
 	jr Incrementa_FRAMES
 
@@ -376,7 +375,7 @@ Incrementa_FRAMES
 	ld (Attr_Moon_File5_2),hl
 	ld (Attr_Moon_File5_3),hl
 
-	call Genera_sonido
+;	call Genera_sonido
 
 	pop bc
 	pop de
@@ -821,11 +820,14 @@ Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos l
 
 Primer_scan_Amadeus defw $50cf
 
-; Sound:
+; Sounds:
 
-Sound_2 defw 0 												; Usaremos está variable para introducir la duración de un efecto de entrada o salida de Amadeus.
+;Sound_2 defw 0 											; Usaremos está variable para introducir la duración de un efecto de entrada o salida de Amadeus.
 Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
-Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
+;Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
+Laser_sound defw Laser_sound_init_value
+Shield_sound defw Shield_sound_init_value
+shot_sound defw Shot_sound_init_value
 
 ; Varios:
 
@@ -974,8 +976,8 @@ INICIALIZACION:
 	ld hl,0
 	ld (Sound),hl
 
-	ld hl,Shield_sound
-	ld (Sound_2),hl 										; Fuente para ejecutar el sonido del 1er Shield.
+;	ld hl,Shield_sound
+;	ld (Sound_2),hl 										; Fuente para ejecutar el sonido del 1er Shield.
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
@@ -2239,8 +2241,8 @@ Inicia_Shield
 ;	or l
 ;	ret nz 													; RET si ya estamos reproduciendo el efecto del escudo.
 
-	ld hl,Shield_sound 										; Inicia sonido.
-	ld (Sound_2),hl
+;	ld hl,Shield_sound 										; Inicia sonido.
+;	ld (Sound_2),hl
 
 	ret
 
@@ -2588,8 +2590,9 @@ Genera_explosion:
 
 	ld h,$30
 	ld (Sound),hl
-	ld a,1
-	ld (Sound_type),a
+
+;	ld a,1
+;	ld (Sound_type),a
 
 	ld hl,Clock_explosion
 	dec (hl)
@@ -2818,8 +2821,8 @@ Genera_explosion_Amadeus:
 
 	ld h,$30
 	ld (Sound),hl
-	ld a,1
-	ld (Sound_type),a
+;	ld a,1
+;	ld (Sound_type),a
 
 	ld hl,Clock_explosion_Amadeus
 	dec (hl)

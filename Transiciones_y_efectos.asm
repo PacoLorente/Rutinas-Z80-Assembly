@@ -350,13 +350,9 @@ Transicion_de_entrada:
 
 	jr nz,3B 														;	Borramos el rayo de inicio.
 
-	push hl
-	ld hl,(Sound)
-	ld (Sound_2),hl
-	pop hl 															;	Almacenamos la nota en la que hemos finalizado el rayo de entrada_
-; 																	;	_para iniciar el efecto del rayo de salida con esa misma nota.
-
 ; 	Hemos pintado y borrado el Rayo inicial.
+
+;	Cargamos en (Sound) el siguiente efecto a ejecutar:
 
 	inc l
 	inc l
@@ -384,16 +380,6 @@ Transicion_de_entrada:
 	pop de
 
 	ld b,16
-
-;	Datos para generar el sonido de soldador.
-
-
-
-
-
-
-
-
 
 4 push bc
 
@@ -430,9 +416,9 @@ Transicion_de_entrada:
 
 	push hl
 
-	ld c,$d0
+	ld bc,$01d0 								; B="1" efecto ruido. / C contiene el nº de ondas del sonido a ejecutar.
 
-	call Efecto_explosion
+	call Sound_Generator
 
 	pop hl
 
@@ -452,8 +438,8 @@ Transicion_de_entrada:
 
 6 push hl
 
-	ld hl,(Sound_2)
-	ld (Sound),hl
+;	ld hl,(Sound_2)
+;	ld (Sound),hl
 
 	pop hl
 
@@ -529,8 +515,11 @@ Construye_rayo cp d 												; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 	push hl
 	push de
 
-	ld c,6 															; Nº de ondas completas a ejecutar.
+;	Tipo de efecto y características:
 
+	ld hl,(Laser_sound)
+	ld (Sound),hl 													; Laser.
+	ld bc,6															; Nº de ondas completas a ejecutar.
 	ld d,1 															; Efecto ascendente por defecto.
 	ld e,1 															; Nº de incrementos/decrementos que aplicaremos al delay antes de salir.
 
@@ -538,11 +527,13 @@ Construye_rayo cp d 												; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 	bit 7,a
 	jr nz,Ejecuta_efecto
 
-	dec d 															; El rayo está saliendo de la pantalla. Efecto descendente.
+	dec d 															; El rayo está saliendo de la pantalla. Modificamos a efecto descendente.
 
 Ejecuta_efecto 
 
-	call Efecto_largo
+	call Sound_Generator
+
+	ld (Laser_sound),hl
 
 	pop de
 	pop hl

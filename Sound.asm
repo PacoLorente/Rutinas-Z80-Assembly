@@ -2,7 +2,7 @@
 
 Efecto_Escudo:
 
-    ld a,(Sound_2)
+;    ld a,(Sound_2)
     ld b,a
 
     ex af,af
@@ -32,14 +32,31 @@ Delay_8 djnz Delay_8        ; Aplica Delay.
 
     ret
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;   28/1/26
 
-Efecto_largo:
+Sound_Generator:
 
 ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
 ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
 ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
-
+;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
 
 ;   MODIFY: A,HL,BC y DE.
 
@@ -49,6 +66,10 @@ Efecto_largo:
     ld a,h
     or l
     ret z                   ; Salimos de la rutina si no hay sonido a ejecutar.
+
+    inc b
+    dec b
+    jr nz,Noise_efect
 
 Loop_2
 
@@ -107,29 +128,13 @@ Incrementa_delay
 
     jr nz,Loop_2
 
-    ret
-
-
-
-
-
-
-
-Genera_sonido:
-
-    ld hl,(Sound)
-
     ld a,h
     or l
-    ret z                   ; RET si no existe sonido a ejecutar.
+    jr z,$
 
-;   What sound are we going to play ???
+    ret
 
-    ld a,(Sound_type)
-    and a
-    jr z,Efecto_disparo
-
-Efecto_explosion
+Noise_efect:
 
 ;   HL define el sonido.
 ;
@@ -167,13 +172,36 @@ Delay_2 djnz Delay_2        ; Aplica Delay.
 
     ret
 
-Clean_Sound ld hl,0
 
-    ld (Sound),hl
-    xor a
-    ld (Sound_type),a
 
-    ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ; ----- ----- ----- ----- -----
 
@@ -212,7 +240,7 @@ Delay_4 djnz Delay_4        ; Aplica Delay.
     dec h
 
 ;    jr z,$
-    jr z,Clean_Sound
+;    jr z,Clean_Sound
 
     dec c
 
