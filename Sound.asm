@@ -1,6 +1,6 @@
 ;   14/1/26
 
-Efecto_Escudo:
+Shield_effect:
 
 ;    ld a,(Sound_2)
     ld b,a
@@ -160,9 +160,6 @@ Delay_1 djnz Delay_1        ; Aplica Delay.
 Delay_2 djnz Delay_2        ; Aplica Delay.
 
     dec h
-
-;    jr z,$
-;    jr z,Clean_Sound        ; Hemos tardado de reproducir el soniquete, limpiamos (Sound) y salimos.
 
     dec c
 

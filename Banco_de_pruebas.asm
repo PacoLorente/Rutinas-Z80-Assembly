@@ -204,7 +204,7 @@ Attr_Moon_File5_3 equ $589e
 ;	Sonidos.
 
 Laser_sound_init_value equ $00c0
-Shield_sound_init_value equ $0060
+Shield_sound_init_value equ $60
 Shot_sound_init_value equ $1001
 
 ;	Datos fijos de los álbumes de líneas de Amadeus: 
@@ -317,17 +317,17 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 
 	call Inicia_Shield
 
-;	ld c,3
-;	ld e,0
+	ld c,3
+	ld e,0
 
-;	call Efecto_Escudo
+	call Sound_Generator
 
 	ld a,(Shield)
 	and a
 	jr nz,Incrementa_FRAMES
 
-;	ld hl,0
-;	ld (Sound),hl
+	ld hl,0
+	ld (Sound),hl
 
 	jr Incrementa_FRAMES
 
@@ -826,7 +826,6 @@ Primer_scan_Amadeus defw $50cf
 Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
 ;Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
 Laser_sound defw Laser_sound_init_value
-Shield_sound defw Shield_sound_init_value
 shot_sound defw Shot_sound_init_value
 
 ; Varios:
@@ -950,7 +949,7 @@ INICIALIZACION:
 
 	call Inicia_punteros_de_cajas						 	; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
 
-	call Inicia_Shield
+;	call Inicia_Shield
 
 	ld hl,(Scanlines_album_SP)
 	ld (Techo_Scanlines_album),hl
@@ -973,8 +972,10 @@ INICIALIZACION:
 
 	call Transicion_de_entrada
 
-	ld hl,0
-	ld (Sound),hl
+	call Inicia_Shield
+
+;	ld hl,0
+;	ld (Sound),hl
 
 ;	ld hl,Shield_sound
 ;	ld (Sound_2),hl 										; Fuente para ejecutar el sonido del 1er Shield.
@@ -2235,14 +2236,9 @@ Inicia_Shield
 	ld (Shield_3),a											; (Shield_3) se inicia con "1".
 
 ;	Sonido, (Efecto_escudo).
-
-;	ld hl,(Sound_2)
-;	ld a,h
-;	or l
-;	ret nz 													; RET si ya estamos reproduciendo el efecto del escudo.
-
-;	ld hl,Shield_sound 										; Inicia sonido.
-;	ld (Sound_2),hl
+											; RET si ya estamos reproduciendo el efecto del escudo.
+	ld a,Shield_sound_init_value 							; Inicia sonido.
+	ld (Sound),a
 
 	ret
 
