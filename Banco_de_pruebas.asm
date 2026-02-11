@@ -204,10 +204,10 @@ Attr_Moon_File5_3 equ $589e
 ;	Sonidos.
 
 Laser_sound_init_value equ $00c0
-Shield_sound_init_value equ $60
-Shot_sound_init_value equ $1001
+Shield_sound_init_value equ $ff60
+Shot_sound_init_value equ $2001
 
-;	Datos fijos de los álbumes de líneas de Amadeus: 
+;	Datos fijos de los álbumes de líneas de Amadeus:
 
 	org Amadeus_scanlines_album 
 
@@ -255,7 +255,6 @@ Shot_sound_init_value equ $1001
 ;
 ;	13/08/24
 ;
-
 	org $8310
 
 	push af
@@ -317,10 +316,10 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 
 	call Inicia_Shield
 
-	ld c,3
-	ld e,0
+;	ld c,3
+;	ld e,0
 
-	call Sound_Generator
+;	call Sound_Generator
 
 	ld a,(Shield)
 	and a
@@ -375,7 +374,9 @@ Incrementa_FRAMES
 	ld (Attr_Moon_File5_2),hl
 	ld (Attr_Moon_File5_3),hl
 
-;	call Genera_sonido
+;	Sound efects
+
+	call Play_shot_sound_effect
 
 	pop bc
 	pop de
@@ -822,19 +823,16 @@ Primer_scan_Amadeus defw $50cf
 
 ; Sounds:
 
-;Sound_2 defw 0 											; Usaremos está variable para introducir la duración de un efecto de entrada o salida de Amadeus.
 Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
-;Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
+Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
 Laser_sound defw Laser_sound_init_value
-shot_sound defw Shot_sound_init_value
+Shot_sound defw 0
 
 ; Varios:
 
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
-
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
-
 Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
 
@@ -2236,9 +2234,9 @@ Inicia_Shield
 	ld (Shield_3),a											; (Shield_3) se inicia con "1".
 
 ;	Sonido, (Efecto_escudo).
-											; RET si ya estamos reproduciendo el efecto del escudo.
-	ld a,Shield_sound_init_value 							; Inicia sonido.
-	ld (Sound),a
+															; RET si ya estamos reproduciendo el efecto del escudo.
+;	ld a,Shield_sound_init_value 							; Inicia sonido.
+;	ld (Sound),a
 
 	ret
 
@@ -2815,10 +2813,8 @@ Decrementa_techo:
 
 Genera_explosion_Amadeus:
 
-	ld h,$30
-	ld (Sound),hl
-;	ld a,1
-;	ld (Sound_type),a
+	ld a,1
+	ld (Sound_type),a
 
 	ld hl,Clock_explosion_Amadeus
 	dec (hl)

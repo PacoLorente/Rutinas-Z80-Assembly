@@ -1,54 +1,3 @@
-;   14/1/26
-
-Shield_effect:
-
-;    ld a,(Sound_2)
-    ld b,a
-
-    ex af,af
-
-    ld c,3                  ; 3 ondas completas per frame.
-
-Loop_3
-
-    ld a,%00010000          ; Borde negro.
-    out ($fe),a             ; Beeper ON.
-
-Delay_7 djnz Delay_7        ; Aplica Delay.
-
-    ex af,af
-    ld b,a
-
-    xor a
-    out ($fe),a
-
-Delay_8 djnz Delay_8        ; Aplica Delay.
-
-; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
-
-    dec c
-
-    jr nz,Loop_3
-
-    ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;   28/1/26
 
 Sound_Generator:
@@ -169,47 +118,21 @@ Delay_2 djnz Delay_2        ; Aplica Delay.
 
     ret
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ; ----- ----- ----- ----- -----
 
-Efecto_disparo
+Play_shot_sound_effect:
 
 ;   HL define el sonido.
 ;
 ;   L define el retardo o longitud de cada semiciclo de la onda.
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
-    ld c,5                  ; 5 ondas completas per frame.
+    ld hl,(Shot_sound)
+    ld a,h
+    or l
+    ret z
+
+    ld c,3                  ; 4 ondas completas per frame.
 
 Loop_1
 
@@ -236,20 +159,21 @@ Delay_4 djnz Delay_4        ; Aplica Delay.
 
     dec h
 
-;    jr z,$
-;    jr z,Clean_Sound
+    call z,Clean_shot_effect
 
     dec c
 
     jr nz,Loop_1
 
-    ld (Sound),hl
+    ld (Shot_sound),hl
 
     ret
 
+Clean_shot_effect:
 
-
-
+    ld hl,0
+    ld c,1
+    ret
 
 
 
