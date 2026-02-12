@@ -206,6 +206,7 @@ Attr_Moon_File5_3 equ $589e
 Laser_sound_init_value equ $00c0
 Shield_sound_init_value equ $ff60
 Shot_sound_init_value equ $2001
+Burst_sound_init_value equ $3000	;	(C =¨3¨).	$24 / $03 = $0c Frames que vamos a estar ejecutando la explosión.
 
 ;	Datos fijos de los álbumes de líneas de Amadeus:
 
@@ -377,6 +378,7 @@ Incrementa_FRAMES
 ;	Sound efects
 
 	call Play_shot_sound_effect
+	call Play_burst_sound_effect
 
 	pop bc
 	pop de
@@ -827,6 +829,7 @@ Sound defw 0												; Esta variable almacenará el efecto de sonido a reprod
 Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
 Laser_sound defw Laser_sound_init_value
 Shot_sound defw 0
+Burst_sound defw 0
 
 ; Varios:
 
@@ -2434,9 +2437,7 @@ Pintando_Amadeus
 
 ; --------------------- ----------------------- ---------------------- ---------------------- ---------------
 
-1 
-
-	ld a,1													; Borde azul.
+1 ld a,1													; Borde azul.
 	out ($fe),a
 
 	ld hl,Ctrl_3
@@ -2582,11 +2583,7 @@ Genera_explosion:
 
 ;	En primer lugar activamos el sonido de la explosión.
 
-	ld h,$30
-	ld (Sound),hl
-
-;	ld a,1
-;	ld (Sound_type),a
+	call Init_Burst_sound
 
 	ld hl,Clock_explosion
 	dec (hl)
@@ -2773,39 +2770,6 @@ Aparece_izquierda inc a
 
 	ret
 
-; --------------------------------------------------------------- 
-;
-;	21/11/25
-;
-;	Decrementa el valor de (Max_time_to_appear_entities) en (Decrease_top_time_entities) unidades.
-;	(Max_time_to_appear_entities) nunca será mayor que (Min_time_to_appear_entities).
-
-Decrementa_techo:
-
-	ld hl, Max_time_to_appear_entities
-	ld a,(hl)
-	inc hl
-	sub (hl)
-
-;	New TOP-time in A.
-
-	inc hl
-	
-	cp (hl)
-
-	jr nc,1F
-
-;	Si estamos por debajo del valor mínimo corregimos:
-
-	ld a,(hl)
-
-1 dec hl
-	dec hl
-
-	ld (hl),a
-
-	ret
-
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
 ;	24/07/25
@@ -2813,8 +2777,9 @@ Decrementa_techo:
 
 Genera_explosion_Amadeus:
 
-	ld a,1
-	ld (Sound_type),a
+;	Autoriza sonido de explosión.
+
+	call Init_Burst_sound
 
 	ld hl,Clock_explosion_Amadeus
 	dec (hl)
@@ -2919,6 +2884,57 @@ Siguiente_frame_explosion_Amadeus
 	jr Borra_Amadeus_impactado
 
 ; ---------------------------------------------------------------
+;
+;	12/2/26
+
+Init_Burst_sound:
+
+;	ret si ya está iniciado el efecto.
+
+	ld hl,(Burst_sound)
+	ld a,h
+	or l
+	ret nz
+
+;	Init sound_effect.
+
+	ld hl,Burst_sound_init_value
+	ld (Burst_sound),hl
+
+	ret
+
+; ---------------------------------------------------------------
+;
+;	21/11/25
+;
+;	Decrementa el valor de (Max_time_to_appear_entities) en (Decrease_top_time_entities) unidades.
+;	(Max_time_to_appear_entities) nunca será mayor que (Min_time_to_appear_entities).
+
+Decrementa_techo:
+
+	ld hl, Max_time_to_appear_entities
+	ld a,(hl)
+	inc hl
+	sub (hl)
+
+;	New TOP-time in A.
+
+	inc hl
+
+	cp (hl)
+
+	jr nc,1F
+
+;	Si estamos por debajo del valor mínimo corregimos:
+
+	ld a,(hl)
+
+1 dec hl
+	dec hl
+
+	ld (hl),a
+
+	ret
 
 ; ------------------------------
 ;

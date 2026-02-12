@@ -157,7 +157,7 @@ Delay_4 djnz Delay_4        ; Aplica Delay.
     inc l
     inc l
 
-    dec h
+2 dec h
 
     call z,Clean_shot_effect
 
@@ -175,11 +175,37 @@ Clean_shot_effect:
     ld c,1
     ret
 
+;   -------------------------------------------------------------------------------------------
 
 
+Play_burst_sound_effect:
 
+    ld hl,(Burst_sound)
+    ld a,h
+    or l
+    ret z
 
+    ld hl,(Burst_sound)
+    ld (Sound),hl
 
+    ld c,3
+
+    call Noise_efect
+
+    inc h
+    dec h
+    call z,Clean_burst_effect
+
+    ld (Burst_sound),hl
+
+    ret
+
+Clean_burst_effect:
+
+    ld hl,0
+    ld (Sound),hl
+
+    ret
 
 
 
