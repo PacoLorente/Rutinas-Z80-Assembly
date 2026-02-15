@@ -189,7 +189,7 @@ Amadeus_disparos_scanlines_album equ $827c	    ;	($827c - $8281) 	; 6 Bytes, (1 
 Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 
 Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
-Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
+Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)Burst
 
 ;	Atributos de la luna.
 
@@ -205,7 +205,7 @@ Attr_Moon_File5_3 equ $589e
 
 Laser_sound_init_value equ $00c0
 Shield_sound_init_value equ $ff60
-Shot_sound_init_value equ $2001
+Shot_sound_init_value equ $1801
 Burst_sound_init_value equ $3000	;	(C =¨3¨).	$24 / $03 = $0c Frames que vamos a estar ejecutando la explosión.
 
 ;	Datos fijos de los álbumes de líneas de Amadeus:
@@ -317,10 +317,7 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 
 	call Inicia_Shield
 
-;	ld c,3
-;	ld e,0
-
-;	call Sound_Generator
+	call Play_Shield_sound_effect
 
 	ld a,(Shield)
 	and a
@@ -830,6 +827,7 @@ Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de soni
 Laser_sound defw Laser_sound_init_value
 Shot_sound defw 0
 Burst_sound defw 0
+Shield_sound defw 0
 
 ; Varios:
 
@@ -2238,8 +2236,8 @@ Inicia_Shield
 
 ;	Sonido, (Efecto_escudo).
 															; RET si ya estamos reproduciendo el efecto del escudo.
-;	ld a,Shield_sound_init_value 							; Inicia sonido.
-;	ld (Sound),a
+	ld hl,Shield_sound_init_value 							; Inicia sonido.
+	ld (Shield_sound_init_value),hl
 
 	ret
 

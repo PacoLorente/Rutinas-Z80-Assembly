@@ -132,7 +132,7 @@ Play_shot_sound_effect:
     or l
     ret z
 
-    ld c,3                  ; 4 ondas completas per frame.
+    ld c,2                  ; 3 ondas completas per frame.
 
 Loop_1
 
@@ -157,7 +157,7 @@ Delay_4 djnz Delay_4        ; Aplica Delay.
     inc l
     inc l
 
-2 dec h
+    dec h
 
     call z,Clean_shot_effect
 
@@ -207,6 +207,36 @@ Clean_burst_effect:
 
     ret
 
+;   -------------------------------------------------------------------------------------------
+
+Play_Shield_sound_effect:
+
+    ld hl,(Shield_sound)
+    ld a,h
+    or l
+    ret z
+
+    ld (Sound),hl
+
+    ld bc,$0003
+    ld de,0
+
+    call Sound_Generator
+
+    inc h
+    dec h
+    call z,Clean_Shield_effect
+
+    ld (Shield_sound),hl
+
+    ret
+
+Clean_Shield_effect:
+
+    ld hl,0
+    ld (Sound),hl
+
+    ret
 
 
 
