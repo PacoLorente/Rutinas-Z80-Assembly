@@ -204,7 +204,7 @@ Attr_Moon_File5_3 equ $589e
 ;	Sonidos.
 
 Laser_sound_init_value equ $00c0
-Shield_sound_init_value equ $ff60
+Shield_sound_init_value equ $00c0
 Shot_sound_init_value equ $1801
 Burst_sound_init_value equ $3000	;	(C =¨3¨).	$24 / $03 = $0c Frames que vamos a estar ejecutando la explosión.
 
@@ -374,8 +374,11 @@ Incrementa_FRAMES
 
 ;	Sound efects
 
-	call Play_shot_sound_effect
 	call Play_burst_sound_effect
+	call Play_shot_sound_effect
+
+	ld hl,Ctrl_6
+	res 0,(hl) 															; Inicializa el inhibidor de efectos de sonido.
 
 	pop bc
 	pop de
@@ -723,6 +726,11 @@ Ctrl_5 db 0
 ;															BIT 6, "1" Indica: GAME OVER !!!.
 ;															BIT 7, "1" Indica a la rutina de sonido que hemos de generar un efecto ascendente; (estamos pintando el rayo de entrada de la transición de entrada). 
 
+Ctrl_6 db 0 												
+
+;															BIT 0, "1" Activa el inhibidor de efectos de sonido. No se ejecutará [Play_burst_sound_effect], tampoco [Play_shot_sound_effect]_
+; 																   _si está señal está activa.	
+
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
 Impacto2 db 0												; Byte de control de impactos.
@@ -971,13 +979,7 @@ INICIALIZACION:
 
 	call Transicion_de_entrada
 
-	call Inicia_Shield
-
-;	ld hl,0
-;	ld (Sound),hl
-
-;	ld hl,Shield_sound
-;	ld (Sound_2),hl 										; Fuente para ejecutar el sonido del 1er Shield.
+	call Inicia_Shield										; Fuente para ejecutar el sonido del 1er Shield.
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
@@ -2235,9 +2237,9 @@ Inicia_Shield
 	ld (Shield_3),a											; (Shield_3) se inicia con "1".
 
 ;	Sonido, (Efecto_escudo).
-															; RET si ya estamos reproduciendo el efecto del escudo.
+
 	ld hl,Shield_sound_init_value 							; Inicia sonido.
-	ld (Shield_sound_init_value),hl
+	ld (Shield_sound),hl
 
 	ret
 

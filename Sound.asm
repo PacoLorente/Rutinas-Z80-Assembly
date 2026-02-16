@@ -127,12 +127,18 @@ Play_shot_sound_effect:
 ;   L define el retardo o longitud de cada semiciclo de la onda.
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
+;   Exclusiones:
+
     ld hl,(Shot_sound)
     ld a,h
     or l
-    ret z
+    ret z                   ; RET si no se ha producido disparo.
 
-    ld c,2                  ; 3 ondas completas per frame.
+    ld a,(Ctrl_6)
+    bit 0,a
+    ret nz                  ; RET si el inhibidor de sonido está activo.
+
+    ld c,2                  ; Nº de ondas de sonido que vamos a ejecutar por FRAME.
 
 Loop_1
 
@@ -180,12 +186,21 @@ Clean_shot_effect:
 
 Play_burst_sound_effect:
 
+;   Exclusiones:
+
     ld hl,(Burst_sound)
     ld a,h
     or l
-    ret z
+    ret z                   ; RET si no hay sonido.
 
-    ld hl,(Burst_sound)
+    ld a,(Ctrl_6)
+    bit 0,a
+    ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido".
+
+    set 0,a
+    ld (Ctrl_6),a           ; Activa el inhibidor de sounds effects.
+
+
     ld (Sound),hl
 
     ld c,3
@@ -216,28 +231,38 @@ Play_Shield_sound_effect:
     or l
     ret z
 
-    ld (Sound),hl
+    ld a,(Ctrl_6)
+    set 0,a
+    ld (Ctrl_6),a           ; Activa el Inhibidor de sonido.
 
-    ld bc,$0003
-    ld de,0
+    ld c,2                  ; 2 ondas completas per frame.
 
-    call Sound_Generator
+Loop_3
 
-    inc h
-    dec h
-    call z,Clean_Shield_effect
+    ld a,%00010000          ; Borde negro.
+    out ($fe),a             ; Beeper ON.
 
+    ld b,l
+
+Delay_7 djnz Delay_7        ; Aplica Delay.
+
+    xor a
+    out ($fe),a
+
+    ld b,l
+
+Delay_8 djnz Delay_8        ; Aplica Delay.
+
+; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
+
+    dec c
+
+    jr nz,Loop_3
+
+    ld hl,0
     ld (Shield_sound),hl
 
     ret
-
-Clean_Shield_effect:
-
-    ld hl,0
-    ld (Sound),hl
-
-    ret
-
 
 
 
