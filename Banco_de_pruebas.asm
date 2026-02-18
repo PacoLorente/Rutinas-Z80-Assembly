@@ -15,9 +15,40 @@
 ;
 ;	12/10/24
 ;
-; 	Constantes del programa.
+; 	Constantes de programa.
 ;
- 
+
+;	Filas de pantalla. 													; Utilizaremos estas constantes para colocar el texto en pantalla.
+
+Line_0 equ $4000
+Line_1 equ Line_0 + $20
+Line_2 equ Line_1 + $20
+Line_3 equ Line_2 + $20
+Line_4 equ Line_3 + $20
+Line_5 equ Line_4 + $20
+Line_6 equ Line_5 + $20
+Line_7 equ Line_6 + $20
+
+Line_8 equ $4800
+Line_9 equ Line_8 + $20
+Line_10 equ Line_9 + $20
+Line_11 equ Line_10 + $20
+Line_12 equ Line_11 + $20
+Line_13 equ Line_12 + $20
+Line_14 equ Line_13 + $20
+Line_15 equ Line_14 + $20
+
+Line_16 equ $5000
+Line_17 equ Line_16 + $20
+Line_18 equ Line_17 + $20
+Line_19 equ Line_18 + $20
+Line_20 equ Line_19 + $20
+Line_21 equ Line_20 + $20
+Line_22 equ Line_21 + $20
+Line_23 equ Line_22 + $20
+
+ROM_ASCII equ $3c00
+
 FRAMES equ $5c78														; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
@@ -844,6 +875,16 @@ Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad 
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
 Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
+; Mensajes:
+
+Keyboard defm '0. KEYBOARD'
+Kempstom defm '1. KEMPSTOM'
+Define defm '2. DEFINE'
+
+Start defm 'Press FIRE to START.'
+
+Top_score defm 'Top SCORE: '
+
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -864,6 +905,49 @@ START:
 ;	Construimos LOGO.
 
 	call Imprime_Logo_principal
+
+
+
+
+
+
+
+
+
+
+;	Imprime menú principal.
+;	--------------------------------------------------------
+;	--------------------------------------------------------
+
+	ld hl,Keyboard											; msg.
+	ld de,Line_11 											; Línea de pantalla donde se imprimirá el msg.
+	ld a,$07 												; attr.
+
+	call Print_text_msg
+
+;	--------------------------------------------------------
+;	--------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
 
@@ -3001,6 +3085,7 @@ suma
 	include "Movimiento.asm"
 	include "Disparo.asm"
 	include "Sound.asm"
+	include "Print_text_msg.asm"
 
 ;	End $ae8f Último byte.
 ;		$ae90 1er byte libre.
