@@ -921,7 +921,7 @@ START:
 
 	ld hl,Keyboard											; msg.
 	ld de,Line_11 											; Línea de pantalla donde se imprimirá el msg.
-	ld a,$07 												; attr.
+	ld a,%01000111 											; attrs.
 
 	call Print_text_msg
 

@@ -3231,7 +3231,7 @@
  921  95AB
  922  95AB 21 61 95     	ld hl,Keyboard											; msg.
  923  95AE 11 60 48     	ld de,Line_11 											; Línea de pantalla donde se imprimirá el msg.
- 924  95B1 3E 07        	ld a,$07 												; attr.
+ 924  95B1 3E 47        	ld a,%01000111 											; attrs.
  925  95B3
  926  95B3 CD 98 B9     	call Print_text_msg
  927  95B6
@@ -13776,26 +13776,68 @@
    4+ B998              ;
    5+ B998              ;   INPUTS: HL apunta al mensage a imprimir, (msg).
    6+ B998              ;           DE indica la fila de pantalla donde queremos imprimir el msg.
-   7+ B998              ;            A contiene los attrs. del msg.
+   7+ B998              ;            C contiene los attrs. del msg.
    8+ B998              ;
    9+ B998              ;           % FBPPPIII
   10+ B998
   11+ B998              Print_text_msg:
   12+ B998
-  13+ B998
-  14+ B998
-  15+ B998
-  16+ B998
-  17+ B998 C9               ret
-  18+ B999
+  13+ B998 E5               push hl
+  14+ B999
+  15+ B999 06 08            ld b,8
+  16+ B99B
+  17+ B99B              ;   Find char. data.
+  18+ B99B
+  19+ B99B              Find_address
+  20+ B99B
+  21+ B99B
+  22+ B99B 01 00 3C         ld bc,ROM_ASCII
+  23+ B99E
+  24+ B99E 6E               ld l,(hl)
+  25+ B99F 26 00            ld h,0
+  26+ B9A1
+  27+ B9A1 29               add hl,hl
+  28+ B9A2 29               add hl,hl
+  29+ B9A3 29               add hl,hl                               ;   ASCII * 8
+  30+ B9A4
+  31+ B9A4 09               add hl,bc
+  32+ B9A5
+  33+ B9A5 EB               ex de,hl                                ;   BIN en DE - Fila en HL.
+  34+ B9A6
+  35+ B9A6 E5               push hl
+  36+ B9A7
+  37+ B9A7 06 08            ld b,8
+  38+ B9A9 4F               ld c,a
+  39+ B9AA
+  40+ B9AA              Print_BIN
+  41+ B9AA
+  42+ B9AA 1A               ld a,(de)
+  43+ B9AB 77               ld (hl),a                               ;   Print
+  44+ B9AC
+  45+ B9AC 24               inc h                                   ;   INC scanline.
+  46+ B9AD 1C               inc e                                   ;   INC data address
+  47+ B9AE
+  48+ B9AE 10 FA            djnz Print_BIN
+  49+ B9B0
+  50+ B9B0 E1               pop hl
+  51+ B9B1
+  52+ B9B1 CD 32 A2         call Calcula_direccion_atributos
+  53+ B9B4
+  54+ B9B4 71               ld (hl),c
+  55+ B9B5
+  56+ B9B5 18 FE            jr $
+  57+ B9B7
+  58+ B9B7
+  59+ B9B7 C9               ret
+  60+ B9B8
 # file closed: Print_text_msg.asm
-3089  B999
-3090  B999              ;	End $ae8f Último byte.
-3091  B999              ;		$ae90 1er byte libre.
-3092  B999
-3093  B999              	SAVESNA "Amadeus.sna", START
-3094  B999
-3095  B999
-3096  B999
-3097  B999
+3089  B9B8
+3090  B9B8              ;	End $ae8f Último byte.
+3091  B9B8              ;		$ae90 1er byte libre.
+3092  B9B8
+3093  B9B8              	SAVESNA "Amadeus.sna", START
+3094  B9B8
+3095  B9B8
+3096  B9B8
+3097  B9B8
 # file closed: Banco_de_pruebas.asm
