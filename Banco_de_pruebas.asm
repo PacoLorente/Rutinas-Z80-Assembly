@@ -906,46 +906,7 @@ START:
 
 	call Imprime_Logo_principal
 
-
-;	Imprime menú principal.
-;	--------------------------------------------------------
-;	--------------------------------------------------------
-
-	ld hl,Keyboard											; msg.
-	ld de,Line_11 + 11										; Línea de pantalla donde se imprimirá el msg.
-	ld a,%01000110 											; attrs.
-
-	push de
-	call Print_text_msg
-	pop hl
-
-	call Calcula_direccion_atributos
-	ld a,%01101000
-	ld (hl),a
-
-;	--------------------------------------------------------
-;	--------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	call Print_Main_menu
 
 	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
 
