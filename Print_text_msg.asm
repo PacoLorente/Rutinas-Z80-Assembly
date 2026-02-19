@@ -4,20 +4,42 @@
 ;
 ;   INPUTS: HL apunta al mensage a imprimir, (msg).
 ;           DE indica la fila de pantalla donde queremos imprimir el msg.
-;            C contiene los attrs. del msg.
+;            A contiene los attrs. del msg.
 ;
 ;           % FBPPPIII
 
 Print_text_msg:
 
-    push hl
+    ex af,af                                ;   Attr. en A´.
 
-    ld b,8
+    push hl
+    push de
+
+    call Find_address
+
+    ex de,hl                                ;   BIN en DE - Fila en HL.
+
+    call Print_BIN
+
+    pop de
+    pop hl
+
+;   Suiguiente char.
+
+    inc hl
+
+    inc (hl)
+    dec (hl)
+
+    ret z                                   ;   RET, fin de msg.
+
+    inc e
+
+    jr Print_text_msg
 
 ;   Find char. data.
 
 Find_address
-
 
     ld bc,ROM_ASCII
 
@@ -30,30 +52,27 @@ Find_address
 
     add hl,bc
 
-    ex de,hl                                ;   BIN en DE - Fila en HL.
-
-    push hl
-
-    ld b,8
-    ld c,a
+    ret
 
 Print_BIN
 
-    ld a,(de)
+    ld b,8                                  ;   Nº de lineas que forman el caracter.
+
+    push hl
+
+1 ld a,(de)
     ld (hl),a                               ;   Print
 
     inc h                                   ;   INC scanline.
     inc e                                   ;   INC data address
 
-    djnz Print_BIN
+    djnz 1B
 
     pop hl
 
     call Calcula_direccion_atributos
 
-    ld (hl),c
-
-    jr $
-
+    ex af,af
+    ld (hl),a
 
     ret

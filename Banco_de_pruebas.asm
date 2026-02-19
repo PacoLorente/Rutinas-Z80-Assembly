@@ -877,13 +877,13 @@ Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEU
 
 ; Mensajes:
 
-Keyboard defm '0. KEYBOARD'
-Kempstom defm '1. KEMPSTOM'
-Define defm '2. DEFINE'
+Keyboard defm 'KEYBOARD',0
+Kempstom defm 'KEMPSTOM',0
+Define defm 'DEFINE',0
 
-Start defm 'Press FIRE to START.'
+Start defm 'Press FIRE to START.',0
 
-Top_score defm 'Top SCORE: '
+Top_score defm 'Top SCORE: ',0
 
 
 ; 	INICIO  *************************************************************************************************************************************************************************
@@ -907,23 +907,21 @@ START:
 	call Imprime_Logo_principal
 
 
-
-
-
-
-
-
-
-
 ;	Imprime menú principal.
 ;	--------------------------------------------------------
 ;	--------------------------------------------------------
 
 	ld hl,Keyboard											; msg.
-	ld de,Line_11 											; Línea de pantalla donde se imprimirá el msg.
-	ld a,%01000111 											; attrs.
+	ld de,Line_11 + 11										; Línea de pantalla donde se imprimirá el msg.
+	ld a,%01000110 											; attrs.
 
+	push de
 	call Print_text_msg
+	pop hl
+
+	call Calcula_direccion_atributos
+	ld a,%01101000
+	ld (hl),a
 
 ;	--------------------------------------------------------
 ;	--------------------------------------------------------
