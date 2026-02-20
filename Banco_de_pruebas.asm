@@ -881,9 +881,10 @@ Keyboard defm 'KEYBOARD',0
 Kempstom defm 'KEMPSTOM',0
 Define defm 'DEFINE',0
 
-Start defm 'Press FIRE to START.',0
+Start defm "START",0
 
-Top_score defm 'Top SCORE: ',0
+
+Top_score defm "BEST SCORE: ",0
 
 
 ; 	INICIO  *************************************************************************************************************************************************************************
