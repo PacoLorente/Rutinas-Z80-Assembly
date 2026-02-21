@@ -47,12 +47,12 @@ Line_21 equ Line_20 + $20
 Line_22 equ Line_21 + $20
 Line_23 equ Line_22 + $20
 
-ROM_ASCII equ $3c00
+ROM_ASCII equ $3c00 													; A esta dirección de memoria sumaremos el código ASCII correspondiente para situarnos en los 8 bytes que forman el char.
 
 FRAMES equ $5c78														; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
-Direccion_Logo_principal equ $4048
+Direccion_Logo_principal equ $4049
 Sprite_vacio equ $82f0													; 48 Bytes de "0".
 
 ;	Vidas y escudos:
@@ -67,7 +67,7 @@ Escudo_3 equ $4046
 
 ;	Contador de entidades:
 
-Decenas_cont_ent equ $400b									;$400e
+Decenas_cont_ent equ $400b
 
 Decenas_cont_ent_1 equ Decenas_cont_ent + 256
 Decenas_cont_ent_2 equ Decenas_cont_ent_1 + 256
@@ -234,7 +234,7 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sonidos.
 
-Laser_sound_init_value equ $00c0
+Laser_sound_init_value equ $00a0	;	$00c0
 Shield_sound_init_value equ $00c0
 Shot_sound_init_value equ $1801
 Burst_sound_init_value equ $3000	;	(C =¨3¨).	$24 / $03 = $0c Frames que vamos a estar ejecutando la explosión.
@@ -877,15 +877,13 @@ Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEU
 
 ; Mensajes:
 
-Keyboard defm 'KEYBOARD',0
-Kempstom defm 'KEMPSTOM',0
-Define defm 'DEFINE',0
-
+Keyboard defm "KEYBOARD",0
+Kempstom defm "KEMPSTOM",0
+Define defm "DEFINE",0
 Start defm "START",0
-
-
 Top_score defm "BEST SCORE: ",0
-
+Done defm "DONE !",0
+Game_Over defm "GAME OVER",0
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -1017,9 +1015,6 @@ INICIALIZACION:
 	set 5,(hl)												; Imprimimos Amadeus.
 
 ;	Transicion_de_entrada
-
- 	ld hl,80												; Delay inicial, (efecto del laser de entrada).
-	ld (Sound),hl
 
 	call Transicion_de_entrada
 

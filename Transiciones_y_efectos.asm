@@ -104,7 +104,7 @@ Print_Moon:
 ;
 ;	Imprime en pantalla la imagen del logo principal.
 
-Imprime_Logo_principal
+Imprime_Logo_principal:
 
 ;	Datos.
 
@@ -226,7 +226,15 @@ Imprime_Logo_principal
 ;	Se ha iniciado el proceso de Transición de salida de Amadeus ???.
 
 
-Transicion_de_salida
+Transicion_de_salida:
+
+	push hl
+	push de
+
+	call Print_DONE
+
+	pop de
+	pop hl
 
 ;	Temporizador
 

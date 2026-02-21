@@ -6,7 +6,7 @@
 Print_Main_menu:
 
     ld hl,Keyboard                                          ; msg.
-    ld de,Line_9 + 11                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld de,Line_9 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000110                                          ; attrs.
 
     push de
@@ -17,7 +17,7 @@ Print_Main_menu:
     call Modify_first_char_attr
 
     ld hl,Kempstom                                          ; msg.
-    ld de,Line_11 + 11                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000110                                          ; attrs.
 
     push de
@@ -30,7 +30,7 @@ Print_Main_menu:
     call Modify_first_char_attr
 
     ld hl,Define                                            ; msg.
-    ld de,Line_13 + 11                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000110                                          ; attrs.
 
     push de
@@ -41,7 +41,7 @@ Print_Main_menu:
     call Modify_first_char_attr
 
     ld hl,Start                                             ; msg.
-    ld de,Line_18 + 11                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000110                                          ; attrs.
 
     push de
@@ -51,14 +51,51 @@ Print_Main_menu:
     ld b,%01101000
     call Modify_first_char_attr
 
+    ld hl,Top_score                                         ; msg.
+    ld de,Line_20 + 10                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld a,%01000101                                          ; attrs.
+
+    push de
+    call Print_text_msg
+    pop hl
+
     ret
 
+; ----------------------------------------------------------
+;
+;   21/2/26
+;
 
+Print_DONE:
 
+    ld hl,Done                                              ; msg.
+    ld de,Line_11 + 13                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld a,%10000110                                          ; attrs.
 
+    push de
+    call Print_text_msg
+    pop hl
 
+    ret
 
+; ----------------------------------------------------------
+;
+;   21/2/26
+;
 
+Print_Game_Over:
+
+    ld hl,Game_Over                                         ; msg.
+    ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld a,%11000011                                          ; attrs.
+
+    push de
+    call Print_text_msg
+    pop hl
+
+    ret
+
+    ; ----------------------------------------------------------
 
 Modify_first_char_attr call Calcula_direccion_atributos
     ld (hl),b
