@@ -882,8 +882,16 @@ Kempstom defm "KEMPSTOM",0
 Define defm "DEFINE",0
 Start defm "START",0
 Top_score defm "BEST SCORE: ",0
-Done defm "DONE !",0
+Done defm "DONE",0
 Game_Over defm "GAME OVER",0
+
+
+; Control de Amadeus:
+
+Move_LEFT db $24
+Move_RIGHT db $1c
+Move_Fire db $04
+Move_Shield db $20
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -907,7 +915,17 @@ START:
 
 	call Print_Main_menu
 
+	call ROM_Key_Scan
+
+
+
+
+
 	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
+
+INICIALIZACION:
+
+;	Marcadores. -------------------------------------
 
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
@@ -916,10 +934,6 @@ START:
 	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
 	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
 	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
-
-INICIALIZACION:
-
-;	Marcadores. -------------------------------------
 
 ;	Imprime escudos y vidas.
 
@@ -2546,6 +2560,35 @@ Borra_Pinta_Amadeus_shield
 
 	call Borra_Amadeus_shield
 	call Pinta_Amadeus_shield
+
+	ret
+
+; --------------------------------------------
+;
+;	23/2/26
+
+ROM_Key_Scan:
+
+	call $028e 												; ROM, KEY-SCAN
+
+;	Tras ejecutar la rutina de escaneo del teclado:
+;
+;	Si pulsamos 2 teclas el registro D y E contendrán el Key CODE de las teclas plsadas respectivamente.
+;	Si sólo pulsamos una tecla el registro D contemdrá "$ff" y el registro E contendrá el KEY CODE de la tecla pulsada.
+;
+
+;	Hemos pulsado alguna tecla?
+
+	inc de
+
+	ld a,d
+	or e
+	jr z,ROM_Key_Scan 										; None key presed.
+
+	dec de
+
+	inc d
+	jr nz,ROM_Key_Scan 										; Two keys pressed.
 
 	ret
 

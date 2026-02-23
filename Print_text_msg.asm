@@ -40,19 +40,8 @@ Print_Main_menu:
     ld b,%01101000
     call Modify_first_char_attr
 
-    ld hl,Start                                             ; msg.
-    ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-    ld a,%01000110                                          ; attrs.
-
-    push de
-    call Print_text_msg
-    pop hl
-
-    ld b,%01101000
-    call Modify_first_char_attr
-
     ld hl,Top_score                                         ; msg.
-    ld de,Line_20 + 10                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld de,Line_19 + 9                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000101                                          ; attrs.
 
     push de
@@ -69,8 +58,8 @@ Print_Main_menu:
 Print_DONE:
 
     ld hl,Done                                              ; msg.
-    ld de,Line_11 + 13                                      ; Línea de pantalla donde se imprimirá el msg.
-    ld a,%10000110                                          ; attrs.
+    ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld a,%11000100                                          ; attrs.
 
     push de
     call Print_text_msg
