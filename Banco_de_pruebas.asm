@@ -2583,12 +2583,12 @@ ROM_Key_Scan:
 
 	ld a,d
 	or e
-	jr z,ROM_Key_Scan 										; None key presed.
+	jr z,ROM_Key_Scan 						; RET No key pressed.
 
 	dec de
 
 	inc d
-	jr nz,ROM_Key_Scan 										; Two keys pressed.
+	jr nz,ROM_Key_Scan                      ; Más de una tecla pulsada.
 
 	ret
 

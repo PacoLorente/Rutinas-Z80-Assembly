@@ -4893,12 +4893,12 @@
 2583  9BCE
 2584  9BCE 7A           	ld a,d
 2585  9BCF B3           	or e
-2586  9BD0 28 F8        	jr z,ROM_Key_Scan 										; None key presed.
+2586  9BD0 28 F8        	jr z,ROM_Key_Scan 						; RET No key pressed.
 2587  9BD2
 2588  9BD2 1B           	dec de
 2589  9BD3
 2590  9BD3 14           	inc d
-2591  9BD4 20 F4        	jr nz,ROM_Key_Scan 										; Two keys pressed.
+2591  9BD4 20 F4        	jr nz,ROM_Key_Scan                      ; Más de una tecla pulsada.
 2592  9BD6
 2593  9BD6 C9           	ret
 2594  9BD7
