@@ -48,6 +48,7 @@ Line_22 equ Line_21 + $20
 Line_23 equ Line_22 + $20
 
 ROM_ASCII equ $3c00 													; A esta dirección de memoria sumaremos el código ASCII correspondiente para situarnos en los 8 bytes que forman el char.
+KEY_SCAN equ $028e
 
 FRAMES equ $5c78														; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
@@ -875,6 +876,42 @@ Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad 
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
 Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
+Tabla_de_conversion_KEYCODE_ASCII_CODE
+
+    defm "B"
+    defm "H"
+    defm "Y"
+    defm "6"
+    defm "5"
+    defm "T"
+    defm "G"
+    defm "V"
+    defm "N"
+    defm "J"
+    defm "U"
+    defm "7"
+    defm "4"
+    defm "R"
+    defm "F"
+    defm "C"
+    defm "M"
+    defm "K"
+    defm "I"
+    defm "8"
+    defm "3"
+    defm "E"
+    defm "D"
+    defm "X"
+    db 0 													; SYMBOL SHIFT no dispone de código ASCII.
+    db $20 													; SPACE ASCII CODE.
+    db $0d 													; ENTER ASCII CODE.
+    defm "P"
+    defm "0"
+    defm "1"
+    defm "Q"
+    defm "A"
+	db 0 													; CAPS SHIFT no dispone de código ASCII.
+
 ; Mensajes:
 
 Keyboard defm "KEYBOARD",0
@@ -915,9 +952,9 @@ START:
 
 	call Print_Main_menu
 
-	call ROM_Key_Scan
+	call ROM_Key_Scan										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
-
+;	call Options 											;
 
 
 
@@ -2226,17 +2263,6 @@ Incrementa_punteros_de_cajas
     ld (Puntero_restore_caja),hl
     ret
 
-; -----------------------------------------------------------
-
-; Teclado.
-
-Pulsa_ENTER ld a,$bf 										; Esperamos la pulsación de la tecla "ENTER".
-	in a,($fe)
-	and $01
-	jr z,1f
-	jr Pulsa_ENTER
-1 ret
-
 ; **************************************************************************************************
 ;
 ; Temporización.
@@ -2563,99 +2589,6 @@ Borra_Pinta_Amadeus_shield
 
 	ret
 
-; --------------------------------------------
-;
-;	23/2/26
-
-ROM_Key_Scan:
-
-	call $028e 												; ROM, KEY-SCAN
-
-;	Tras ejecutar la rutina de escaneo del teclado:
-;
-;	Si pulsamos 2 teclas el registro D y E contendrán el Key CODE de las teclas plsadas respectivamente.
-;	Si sólo pulsamos una tecla el registro D contemdrá "$ff" y el registro E contendrá el KEY CODE de la tecla pulsada.
-;
-
-;	Hemos pulsado alguna tecla?
-
-	inc de
-
-	ld a,d
-	or e
-	jr z,ROM_Key_Scan 						; RET No key pressed.
-
-	dec de
-
-	inc d
-	jr nz,ROM_Key_Scan                      ; Más de una tecla pulsada.
-
-	ret
-
-; --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-;
-;	11/7/25
-;
-	
-Teclado
-
-; Shield.
-
-	ld a,(Shields)
-	and a
-	jr z,1F 												; NO leemos SHIELD, no quedan escudos.
-
-	ld a,(Shield)
-	and a
-	jr nz,1F 												; No leemos SHIELD, estamos ejecutando escudo.
-
-	ld a,$7f
-	in a,($fe)
-	and $01
-	call z,Inicia_Shield      								; "SPACE" para SHIELD.
-	jr nz,1F
-
-; ----- Shield iniciado
-
-	ld a,90
-	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
-
-	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
-	dec (hl)	
-
-	ld hl,Ctrl_2                                            ; Indica que hemos pulsado "SHIELD". "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
-	set 7,(hl)												; La rutina [Borra_escudo], inicializará el FLAG.
-
-; 	Disparo.
-
-1 ld a,$f7													; "5" para disparar.
-	in a,($fe)
-	and $10
-	call z,Genera_disparo_Amadeus
-
-;	Movement.
-
-	ld hl,Ctrl_2
-	bit 6,(hl)
-	ret nz													; NIVEL SUPERADO. Amadeus está desapareciendo, no leemos teclado.
-
-	ld a,$f7		  										; Detecta cuando se pulsan las teclas "1" y "2"  y llama a las rutinas de "Mov_izq" y "Mov_der". $f7  detecta fila de teclas (5,4,3,2,1).
-	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
-	and $01													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $01 resulta "0"  llama a la rutina "Mov_izq".
-    call z,Amadeus_a_izquierda
-
-	ld a,$f7
-	in a,($fe)
-	and $01
-	ret z
-
-	ld a,$f7
-	in a,($fe)												; Carga en A la información proveniente del puerto $FE, teclado.
-	and $02													; Detecta cuando la tecla (1) está actuada. "1" no pulsada "0" pulsada. Cuando la operación AND $02 resulta "0"  llama a la rutina "Mov_der".
-	call z,Amadeus_a_derecha
-
-	ret	
-
 ; ------------------------------------------------------------------------------------------------------------------------ 
 ;
 ;	29/12/25
@@ -2703,7 +2636,8 @@ Siguiente_frame_explosion
 
 	ld a,(Filas)
 	xor 1
-	ld (Filas),a 											; 2ª función de (Filas). Ahora almacena 1 bit que alterna su estado para cambiar los attr. de la explosión.													; _de la explosión amarillo-rojo.
+	ld (Filas),a 											; 2ª función de (Filas). Ahora almacena 1 bit que alterna su estado para cambiar los attr. de la explosión.
+;															; _de la explosión amarillo-rojo.
 
 	ld (hl),4 												; Inicializamos (Clock_explosion), (velocidad de la explosión).
 
@@ -3070,6 +3004,7 @@ suma
 
 	;	Rutinas consecutivas, no hay bytes libres entre ellas.
 
+	include "Rutinas_de_teclado.asm"
 	include "RND_Derivando.asm"
 	include "Rutinas_de_inicio_y_niveles.asm"
 	include "calcula_tercio.asm"
@@ -3084,9 +3019,6 @@ suma
 	include "Disparo.asm"
 	include "Sound.asm"
 	include "Print_text_msg.asm"
-
-;	End $ae8f Último byte.
-;		$ae90 1er byte libre.
 
 	SAVESNA "Amadeus.sna", START
 
