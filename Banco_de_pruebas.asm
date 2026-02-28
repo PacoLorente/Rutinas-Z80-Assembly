@@ -925,9 +925,9 @@ Game_Over defm "GAME OVER",0
 ; Msg_keyboard_menu:
 
 a0 defm "Press ",0
-a1 defm "or",0
-a2 defm "to move",0
-a3 defm "LEFT and RIGHT.",0
+a1 defm " or ",0
+a2 defm " to move ",0
+a3 defm " LEFT and RIGHT.",0
 a4 defm "Press   to FIRE and",0
 a5 defm "to SHIELD.",0
 a6 defm "FIRE to START",0
@@ -948,7 +948,7 @@ Move_SHIELD db $20
 Move_LEFT_ASCII_CODE db "1",0
 Move_RIGHT_ASCII_CODE db "2",0
 Move_FIRE_ASCII_CODE db "5",0
-Move_SHIELD_ASCII_CODE db $20,0
+Move_SHIELD_ASCII_CODE db " ",0
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
