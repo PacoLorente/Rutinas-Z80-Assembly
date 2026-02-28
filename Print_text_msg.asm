@@ -2,11 +2,102 @@
 ;
 ;   19/2/26
 ;
+Show_controls_keys:
+
+	ld hl,a0                                                ; "Press   or   to move"
+    ld de,Line_9 + 6
+    ld a,%01000111                                          ; attrs.
+
+    call Print_text_msg
+
+; LEFT
+
+    inc e
+
+    ld hl,Move_LEFT_ASCII_CODE
+
+    call Comprueba_SPACE_o_ENTER
+
+
+
+
+
+    ld a,%01110000                                          ; attrs.
+
+    call Print_text_msg
+
+;;    ld hl,a2                                                ; "Press   to FIRE and"
+;;    ld de,Line_13 + 6
+;;    ld a,%01000111                                          ; attrs.
+
+;;    call Print_text_msg
+
+;;    ld hl,a3                                                ; "to SHIELD."
+;;    ld de,Line_15 + 12
+;;    ld a,%01000111                                          ; attrs.
+
+;;    call Print_text_msg
+
+;;    ld hl,a4                                                ; "FIRE to START"
+;;    ld de,Line_22 + 10
+;;    ld a,%11110000                                          ; attrs.
+
+;;    call Print_text_msg
+
+
+;    ld hl,a5                                                ; Mensaje vacío, (lo utilizamos para borrae BEST SCORE).
+;    ld de,Line_19+9
+;    ld a,%00000000
+
+;    call Print_text_msg
+
+    jr $
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	ret
+
+Comprueba_SPACE_o_ENTER:
+
+    jr $
+
+    ld a,(hl)
+
+
+
+    ret
+
+
+
+
+
+
+
+
+
+
+; ----------------------------------------------------------
+;
+;   19/2/26
+;
 
 Print_Main_menu:
 
     ld hl,Keyboard                                          ; msg.
-    ld de,Line_9 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000110                                          ; attrs.
 
     push de

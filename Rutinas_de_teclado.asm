@@ -1,10 +1,11 @@
 ; --------------------------------------------
 ;
 ;	23/2/26
+;
 
 ROM_Key_Scan:
 
-	call KEY_SCAN 												; ROM, KEY-SCAN
+	call KEY_SCAN 											; ROM, KEY-SCAN
 
 ;	Tras ejecutar la rutina de escaneo del teclado:
 ;
@@ -25,6 +26,20 @@ ROM_Key_Scan:
 	inc d
 	jr nz,ROM_Key_Scan                      				; Más de una tecla pulsada.
 
+;	Analize key_code
+
+;	"K" key was pressed?
+
+	ld a,e
+	cp $11 													; "K" key_code.
+	call z,Show_controls_keys
+	cp $15 													; "E" key_code.
+	call z,Active_kempstom_joystick
+	cp $16
+	call z,Define_menu 										; "D" key_code.
+
+	jr ROM_Key_Scan
+
 	ret
 
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -32,7 +47,7 @@ ROM_Key_Scan:
 ;	11/7/25
 ;
 
-Teclado:
+Main_keyboard_routine:
 
 ; Shield.
 
@@ -46,7 +61,7 @@ Teclado:
 	and a
 	jr nz,1F 												; No leemos SHIELD, estamos ejecutando escudo.
 
-    ld a,(Move_Shield)
+    ld a,(Move_SHIELD)
     cp e
 	call z,Inicia_Shield
     cp d
@@ -67,7 +82,7 @@ Teclado:
 
 ; 	Disparo.
 
-1 ld a,(Move_Fire)
+1 ld a,(Move_FIRE)
     cp e
     call z,Genera_disparo_Amadeus
     cp d
@@ -87,7 +102,7 @@ Teclado:
 
     ld hl,Ctrl_3
 	bit 5,(hl)
-    ret nz
+    ret nz 													; RET if yoy turned left.
 
 	ld a,(Move_RIGHT)
 	cp e
@@ -107,3 +122,31 @@ Pulsa_ENTER ld a,$bf 										; Esperamos la pulsación de la tecla "ENTER".
 	jr z,1f
 	jr Pulsa_ENTER
 1 ret
+
+
+
+
+
+
+Active_kempstom_joystick:
+
+	jr $
+
+	ret
+
+Define_menu:
+
+	jr $
+
+	ret
+
+
+
+
+
+
+
+
+
+
+

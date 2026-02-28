@@ -922,13 +922,33 @@ Top_score defm "BEST SCORE: ",0
 Done defm "DONE",0
 Game_Over defm "GAME OVER",0
 
+; Msg_keyboard_menu:
+
+a0 defm "Press ",0
+a1 defm "or",0
+a2 defm "to move",0
+a3 defm "LEFT and RIGHT.",0
+a4 defm "Press   to FIRE and",0
+a5 defm "to SHIELD.",0
+a6 defm "FIRE to START",0
+a7 defm "                  ",0
+
+; Teclas especiales:
+
+Space_key defm "SPACE",0
+Enter_key defm "ENTER",0
 
 ; Control de Amadeus:
 
 Move_LEFT db $24
 Move_RIGHT db $1c
-Move_Fire db $04
-Move_Shield db $20
+Move_FIRE db $04
+Move_SHIELD db $20
+
+Move_LEFT_ASCII_CODE db "1",0
+Move_RIGHT_ASCII_CODE db "2",0
+Move_FIRE_ASCII_CODE db "5",0
+Move_SHIELD_ASCII_CODE db $20,0
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -1341,7 +1361,7 @@ Amadeus_vivo
 	call nz,Genera_explosion_Amadeus
 	jr nz,End_frame
 
-	call Teclado
+	call Main_keyboard_routine
 
 	ld hl,Ctrl_2
 	bit 6,(hl)
