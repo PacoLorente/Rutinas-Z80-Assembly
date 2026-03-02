@@ -33,6 +33,7 @@ ROM_Key_Scan:
 	ld a,e
 	cp $11 													; "K" key_code.
 	call z,Show_controls_keys
+	ret z
 	cp $15 													; "E" key_code.
 	call z,Active_kempstom_joystick
 	cp $16
@@ -113,20 +114,22 @@ Main_keyboard_routine:
 	ret
 
 ; -----------------------------------------------------------
+;
+;	2/3/26
 
-; Teclado.
+Press_START:
 
-Pulsa_ENTER ld a,$bf 										; Esperamos la pulsación de la tecla "ENTER".
-	in a,($fe)
-	and $01
-	jr z,1f
-	jr Pulsa_ENTER
-1 ret
+	call KEY_SCAN
 
+	ld a,(Move_FIRE) 										; Esperamos la pulsación de la tecla "ENTER".
+	cp e
+	jr nz,Press_START
 
+;	Activa START GAME.
 
+	xor a 													; "0" before RET to START GAME.
 
-
+	ret
 
 Active_kempstom_joystick:
 

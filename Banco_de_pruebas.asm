@@ -924,15 +924,16 @@ Game_Over defm "GAME OVER",0
 
 ; Msg_keyboard_menu:
 
+
 a0 defm "Press ",0
 a1 defm " or ",0
 a2 defm " to move ",0
 a3 defm " LEFT and RIGHT.",0
-a4 defm "Press   to FIRE and",0
+a4 defm " to FIRE and ",0
 a5 defm "to SHIELD.",0
-a6 defm "FIRE to START",0
-a7 defm "                  ",0
-
+a6 defm "Press FIRE to START",0
+a7 defm "CONTROLS:",0
+a8 defm "                 ",0
 ; Teclas especiales:
 
 Space_key defm "SPACE",0
@@ -970,15 +971,11 @@ START:
 
 	call Imprime_Logo_principal
 
-	call Print_Main_menu
+Main_menu:
 
+	call Print_Main_menu
 	call ROM_Key_Scan										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
-;	call Options 											;
-
-
-
-	call Pulsa_ENTER										; PULSA ENTER para disparar el programa.
 
 INICIALIZACION:
 

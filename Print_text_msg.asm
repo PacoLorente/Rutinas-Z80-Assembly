@@ -8,8 +8,37 @@ Show_controls_keys:
 ;   Hay que corregir la posición donde escribiremos la primera línea de texto si hemos definido "SPACE" o "Enter"_
 ;   _como alguna de las teclas de movimiento de Amadeus
 
+;   Borramos el menú principal.
+
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_9 + 6
+    call Print_text_msg
+
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_11 + 6
+    call Print_text_msg
+
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_13 + 6
+    call Print_text_msg
+
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_19 + 6
+    call Print_text_msg
+
+;   Imprimimos CONTROLES.
+
+    ld hl,a7                                                ; "Controls:".
+    ld de,Line_8 + 12
+    ld a,%01000110                                          ; attrs.
+    call Print_text_msg
+
     ld hl,Move_LEFT_ASCII_CODE
-    ld de,Line_9 + 6                                        ; Posición de inicio de línea.
+    ld de,Line_12 + 6                                        ; Posición de inicio de línea.
 
     call Corrige_inicio_de_linea
 
@@ -51,39 +80,70 @@ Show_controls_keys:
 
 ;   Next msn
 
-    ld hl,a3                                                ; "or ".
-    ld de,Line_11 + 8
+    ld hl,a3                                                ; " LEFT and RIGHT.".
+    ld de,Line_14 + 8
     ld a,%01000111                                          ; attrs.
     call Print_text_msg
     inc e
 
+;   Hay que corregir la posición donde escribiremos la tercera línea de texto si hemos definido "SPACE" o "Enter"_
+;   _como alguna de las teclas de disparo o shield.
 
-;;    ld hl,a2                                              ; "Press   to FIRE and"
-;;    ld de,Line_13 + 6
-;;    ld a,%01000111                                        ; attrs.
+    ld hl,Move_FIRE_ASCII_CODE
+    ld de,Line_16 + 6                                        ; Posición de inicio de línea.
 
-;;    call Print_text_msg
+    call Corrige_inicio_de_linea
 
-;;    ld hl,a3                                              ; "to SHIELD."
-;;    ld de,Line_15 + 12
-;;    ld a,%01000111                                        ; attrs.
+    inc hl
+    inc hl                                                  ; HL ahora apunta a Move_SHIELD_ASCII_CODE.
 
-;;    call Print_text_msg
+    call Corrige_inicio_de_linea
 
-;;    ld hl,a4                                              ; "FIRE to START"
-;;    ld de,Line_22 + 10
-;;    ld a,%11110000                                        ; attrs.
+;   Next msn
 
-;;    call Print_text_msg
+    ld hl,a0                                                ; "Press ".
+    ld a,%01000111                                          ; attrs.
+    call Print_text_msg
+    inc e
 
+;   Next msn
 
-;    ld hl,a5                                               ; Mensaje vacío, (lo utilizamos para borrae BEST SCORE).
-;    ld de,Line_19+9
-;    ld a,%00000000
+    ld hl,Move_FIRE_ASCII_CODE                             ; Move_FIRE_ASCII_CODE -----
+    call Print_ctrl_key
+    inc e
 
-;    call Print_text_msg
+;   Next msn
 
-    jr $
+    ld hl,a4                                                ; " to FIRE and ".
+    ld a,%01000111                                          ; attrs.
+    call Print_text_msg
+    inc e
+
+;   Next msn
+
+    ld hl,Move_SHIELD_ASCII_CODE                            ; Move_SHIELD_ASCII_CODE -----
+    call Print_ctrl_key
+
+;   Next msn
+
+    ld hl,a5                                                ; " to FIRE and ".
+    ld de,Line_18 + 11
+    ld a,%01000111                                          ; attrs.
+    call Print_text_msg
+
+;   Next msn
+
+    ld hl,a6                                                ; " to FIRE and ".
+    ld de,Line_22 + 7
+    ld a,%11000101                                          ; attrs.
+    call Print_text_msg
+
+;    ld b,$ff
+;1 djnz 1B
+
+;   Scan KEYBOARD to START GAME.
+
+    call Press_START
 
 	ret
 
@@ -183,7 +243,7 @@ Print_Main_menu:
     call Modify_first_char_attr
 
     ld hl,Top_score                                         ; msg.
-    ld de,Line_19 + 9                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld de,Line_19 + 9                                       ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000101                                          ; attrs.
 
     push de
