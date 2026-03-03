@@ -10,25 +10,15 @@ Show_controls_keys:
 
 ;   Borramos el menú principal.
 
-    ld hl,a8
-    ld a,%01000000
-    ld de,Line_9 + 6
-    call Print_text_msg
+    call Clean_main_menu
 
-    ld hl,a8
-    ld a,%01000000
-    ld de,Line_11 + 6
-    call Print_text_msg
+    ld a,1
+    out ($fe),a                                             ; BORDER NEGRO.
 
-    ld hl,a8
-    ld a,%01000000
-    ld de,Line_13 + 6
-    call Print_text_msg
+;   Inicializa RETURN TO MAIN MENU.
 
-    ld hl,a8
-    ld a,%01000000
-    ld de,Line_19 + 6
-    call Print_text_msg
+    ld HL,Ctrl_6
+    res 1,(hl)
 
 ;   Imprimimos CONTROLES.
 
@@ -138,14 +128,47 @@ Show_controls_keys:
     ld a,%11000101                                          ; attrs.
     call Print_text_msg
 
-;    ld b,$ff
-;1 djnz 1B
-
 ;   Scan KEYBOARD to START GAME.
 
     call Press_START
 
 	ret
+
+; ----------------------------------------------------------
+;
+;   28/2/26
+;
+
+Clean_main_menu: 
+
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_9 + 6
+    call Print_text_msg
+
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_11 + 6
+    call Print_text_msg
+
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_13 + 6
+    call Print_text_msg
+
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_19 + 6
+    call Print_text_msg
+
+    ret
+
+Clean_Show_controls_menu:
+
+    jr $
+
+
+    ret
 
 ; ----------------------------------------------------------
 ;

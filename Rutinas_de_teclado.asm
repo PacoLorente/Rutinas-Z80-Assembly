@@ -115,9 +115,19 @@ Main_keyboard_routine:
 
 ; -----------------------------------------------------------
 ;
-;	2/3/26
+;	3/3/26
 
 Press_START:
+
+	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
+; 															; _la pantalla de controles. Pasado este tiempo volvemos al menú principal.	
+	dec hl
+	
+	ld a,h
+	or l
+	jr z,Leave_menu
+
+	ld (Start_counter),hl
 
 	call KEY_SCAN
 
@@ -130,6 +140,22 @@ Press_START:
 	xor a 													; "0" before RET to START GAME.
 
 	ret
+
+Leave_menu
+
+	call Clean_Show_controls_menu 							; Borra las líneas de la pantalla de CONTROLES. 
+
+	ld hl,$ffff
+	ld (Start_counter),hl 									; Inicializa temporizador.
+
+	ld hl,Ctrl_6
+	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
+
+	xor a
+
+	ret
+
+; ------------------------------------------------------------------------
 
 Active_kempstom_joystick:
 

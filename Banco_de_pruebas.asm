@@ -800,6 +800,8 @@ Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva ent
 Repone_CLOCK_disparos db $a0								; Reloj decreciente.
 CLOCK_disparos_de_entidades db $a0
 
+Start_counter defw $ffff
+
 ;---------------------------------------------------------------------------------------------------------------
 
 ; Gestión de NIVELES.
@@ -976,6 +978,9 @@ Main_menu:
 	call Print_Main_menu
 	call ROM_Key_Scan										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
+	ld a,(Ctrl_6)
+	bit 1,a
+	jr nz,Main_menu
 
 INICIALIZACION:
 
