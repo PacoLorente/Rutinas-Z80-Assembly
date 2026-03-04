@@ -45,14 +45,18 @@ ROM_Key_Scan:
 
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	11/7/25
+;	04/03/26
 ;
+;	
+
 
 Main_keyboard_routine:
 
-; Shield.
+;	Shield.
 
     call KEY_SCAN
+
+;	Excepciones, (lectura de la tecla SHIELD).
 
     ld a,(Shields)
 	and a
@@ -62,17 +66,21 @@ Main_keyboard_routine:
 	and a
 	jr nz,1F 												; No leemos SHIELD, estamos ejecutando escudo.
 
+; 	Reading SHIELD key.
+
     ld a,(Move_SHIELD)
     cp e
 	call z,Inicia_Shield
+	jr z,2F 												; SHIELD iniciado.
+
+	ld a,(Move_SHIELD)
     cp d
 	call z,Inicia_Shield
-
 	jr nz,1F
 
 ; ----- Shield iniciado
 
-	ld a,90
+2 ld a,90 
 	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
 
 	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
@@ -91,7 +99,7 @@ Main_keyboard_routine:
 
 ;	Movement.
 
-	ld hl,Ctrl_2
+3 ld hl,Ctrl_2
 	bit 6,(hl)
 	ret nz													; NIVEL SUPERADO. Amadeus está desapareciendo, no leemos teclado.
 

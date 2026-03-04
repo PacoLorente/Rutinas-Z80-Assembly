@@ -917,7 +917,7 @@ Tabla_de_conversion_KEYCODE_ASCII_CODE
 ; Mensajes:
 
 Keyboard defm "KEYBOARD",0
-Kempstom defm "KEMPSTOM",0
+Kempstom defm "KEMPSTON",0
 Define defm "DEFINE",0
 Start defm "START",0
 Top_score defm "BEST SCORE: ",0
@@ -2341,6 +2341,8 @@ Inicia_Shield
 
 	ld hl,Shield_sound_init_value 							; Inicia sonido.
 	ld (Shield_sound),hl
+
+	xor a
 
 	ret
 

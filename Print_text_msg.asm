@@ -12,8 +12,8 @@ Show_controls_keys:
 
     call Clean_main_menu
 
-    ld a,1
-    out ($fe),a                                             ; BORDER NEGRO.
+;    ld a,1
+;    out ($fe),a                                             ; BORDER AZUL.
 
 ;   Inicializa RETURN TO MAIN MENU.
 
@@ -156,17 +156,38 @@ Clean_main_menu:
     ld de,Line_13 + 6
     call Print_text_msg
 
-    ld hl,a8
-    ld a,%01000000
-    ld de,Line_19 + 6
-    call Print_text_msg
-
     ret
 
 Clean_Show_controls_menu:
 
-    jr $
+    ld hl,Line_8
+    call CLean_file 
 
+    ld hl,Line_12
+    call CLean_file
+
+    ld hl,Line_14
+    call CLean_file
+
+    ld hl,Line_16
+    call CLean_file 
+
+    ld hl,Line_18
+    call CLean_file
+
+    ld hl,Line_22
+    call CLean_file
+
+CLean_file
+
+    call Calcula_direccion_atributos
+
+    ld b,32
+    xor a
+
+1 ld (hl),a
+    inc hl
+    djnz 1B
 
     ret
 
@@ -230,20 +251,23 @@ SPACE_ascii_code
 
 Print_Main_menu:
 
+    ld a,1
+    out ($fe),a                                             ; BORDER AZUL.
+
     ld hl,Keyboard                                          ; msg.
     ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
-    ld a,%01000110                                          ; attrs.
+    ld a,%01000111                                          ; attrs. Ink white.
 
     push de
     call Print_text_msg
     pop hl
 
-    ld b,%01101000
+    ld b,%01110000                                          ; Yellow
     call Modify_first_char_attr
 
     ld hl,Kempstom                                          ; msg.
     ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-    ld a,%01000110                                          ; attrs.
+    ld a,%01000111                                          ; attrs. Ink white.
 
     push de
     call Print_text_msg
@@ -256,22 +280,14 @@ Print_Main_menu:
 
     ld hl,Define                                            ; msg.
     ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-    ld a,%01000110                                          ; attrs.
+    ld a,%01000111                                          ; attrs. Ink white.
 
     push de
     call Print_text_msg
     pop hl
 
-    ld b,%01101000
+    ld b,%01110000
     call Modify_first_char_attr
-
-    ld hl,Top_score                                         ; msg.
-    ld de,Line_19 + 9                                       ; Línea de pantalla donde se imprimirá el msg.
-    ld a,%01000101                                          ; attrs.
-
-    push de
-    call Print_text_msg
-    pop hl
 
     ret
 
