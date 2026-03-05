@@ -954,7 +954,7 @@ b4 defm "Shield ",0
 Space_key defm "SPACE",0
 Enter_key defm "ENTER",0
 
-; Control de Amadeus:
+; Control de Amadeus, (KEY CODES).
 
 Move_LEFT db $24
 Move_RIGHT db $1c
@@ -989,7 +989,7 @@ START:
 Main_menu:
 
 	call Print_Main_menu
-	call ROM_Key_Scan										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
+	call Key_Scan											; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
 	ld a,(Ctrl_6)
 	bit 1,a

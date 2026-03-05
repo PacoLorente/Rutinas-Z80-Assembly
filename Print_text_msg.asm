@@ -11,18 +11,77 @@ Define_menu:
 
 ;   Imprime DEFINE MENU:
 
+;   Title.
+
     ld hl,b0                                                ; "DEFINE CONTROLS KEYS:".
     ld de,Line_8 + 9
     ld a,%01000110                                          ; attrs. Yellow ink.
     call Print_text_msg
 
-    ld hl,b1                                                ; "DEFINE CONTROLS KEYS:".
+;   LEFT.
+
+    ld hl,b1                                                ; "LEFT".
     ld de,Line_12 + 9
-    ld a,%11000111                                          ; attrs.
+    ld a,%11000111                                          ; attrs. Flash White.
     call Print_text_msg
+
+;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
+
+    ld bc,$ffff
+    call DELAY
+
+    push de                                                 ; Guardo la posición del carro de impresión.
+
+    ld hl,Move_LEFT
+    call Define_key
+
+
+Define_key:
+
+    push hl
+
+    call ROM_Key_Scan                                       ; Scan keyboard.
+
+; Guarda el correspondiente KEY CODE / KEY ASCII CODE.
+
+    pop hl
+
+    ld (hl),e
 
     jr $
 
+
+
+
+
+
+
+; Modifica attrs. de left. NO FLASH NOW. Key pressed.
+
+    ld hl,Line_12 + 9
+    call Calcula_direccion_atributos
+    ld a,%01000111
+
+    ld b,5
+
+1 ld (hl),a
+    inc l
+    djnz 1B
+
+    jr $
+
+; Imprime tecla pulsada, (LEFT).
+
+
+
+
+
+
+
+
+
+
+ 
     ret
 
 

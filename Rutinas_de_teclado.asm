@@ -1,8 +1,3 @@
-; --------------------------------------------
-;
-;	23/2/26
-;
-
 ROM_Key_Scan:
 
 	call KEY_SCAN 											; ROM, KEY-SCAN
@@ -26,6 +21,17 @@ ROM_Key_Scan:
 	inc d
 	jr nz,ROM_Key_Scan                      				; Más de una tecla pulsada.
 
+	ret
+
+; --------------------------------------------
+;
+;	5/3/26
+;
+
+Key_Scan:
+
+	call ROM_Key_Scan 										; Scan keyboard.
+
 ;	Analize key_code
 
 ;	"K" key was pressed?
@@ -39,7 +45,7 @@ ROM_Key_Scan:
 	cp $16
 	call z,Define_menu 										; "D" key_code.
 
-	jr ROM_Key_Scan
+	jr Key_Scan
 
 	ret
 
