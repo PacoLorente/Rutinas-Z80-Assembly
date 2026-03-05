@@ -1,5 +1,46 @@
 ; ----------------------------------------------------------
 ;
+;   5/3/26
+;
+
+Define_menu:
+
+;   Borramos el menú principal.
+
+    call Clean_main_menu
+
+;   Imprime DEFINE MENU:
+
+    ld hl,b0                                                ; "DEFINE CONTROLS KEYS:".
+    ld de,Line_8 + 9
+    ld a,%01000110                                          ; attrs. Yellow ink.
+    call Print_text_msg
+
+    ld hl,b1                                                ; "DEFINE CONTROLS KEYS:".
+    ld de,Line_12 + 9
+    ld a,%11000111                                          ; attrs.
+    call Print_text_msg
+
+    jr $
+
+    ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+; ----------------------------------------------------------
+;
 ;   19/2/26
 ;
 

@@ -68,6 +68,7 @@ Main_keyboard_routine:
 
 ; 	Reading SHIELD key.
 
+
     ld a,(Move_SHIELD)
     cp e
 	call z,Inicia_Shield
@@ -171,11 +172,7 @@ Active_kempstom_joystick:
 
 	ret
 
-Define_menu:
 
-	jr $
-
-	ret
 
 
 

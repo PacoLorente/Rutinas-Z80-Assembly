@@ -762,6 +762,11 @@ Ctrl_6 db 0
 
 ;															BIT 0, "1" Activa el inhibidor de efectos de sonido. No se ejecutará [Play_burst_sound_effect], tampoco [Play_shot_sound_effect]_
 ; 																   _si está señal está activa.	
+; 															BIT 1, "1" Este bit es activado por la rutina [Press_START] cuando el temporizador (Start_counter) llega a "0".
+; 																   El bit indica a la rutina principal START: que ha de volver a mostrar el menú principal.
+; 																   El submenú CONTROLS se muestra en pantalla un tiempo definido por (Start_counter), pasado este tiempo_
+;																   _la rutina activa `este bit´ y sale de la rutina. El menú está así diseñado para poder DEFINIR los controles si los
+; 																   _actuales no nos agradan. 
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
@@ -924,8 +929,7 @@ Top_score defm "BEST SCORE: ",0
 Done defm "DONE",0
 Game_Over defm "GAME OVER",0
 
-; Msg_keyboard_menu:
-
+; Msg_keyboard_menu, show CONTROLS.
 
 a0 defm "Press ",0
 a1 defm " or ",0
@@ -936,7 +940,16 @@ a5 defm "to SHIELD.",0
 a6 defm "Press FIRE to START",0
 a7 defm "CONTROLS:",0
 a8 defm "                 ",0
-; Teclas especiales:
+
+; DEFINE MENU.
+
+b0 defm "DEFINE CONTROLS",0
+b1 defm "LEFT ",0
+b2 defm "Right ",0
+b3 defm "Fire ",0
+b4 defm "Shield ",0
+
+; Special keys:
 
 Space_key defm "SPACE",0
 Enter_key defm "ENTER",0
