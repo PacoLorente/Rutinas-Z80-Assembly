@@ -18,7 +18,7 @@ Define_menu:
     ld a,%01000110                                          ; attrs. Yellow ink.
     call Print_text_msg
 
-;   LEFT.
+;   LEFT. -----------------------------------------------------------------------------------------------------------------
 
     ld hl,b1                                                ; "LEFT".
     ld de,Line_12 + 9
@@ -29,24 +29,92 @@ Define_menu:
 
     ld bc,$ffff
     call DELAY
+    ld bc,$2fff
+    call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
 
     ld hl,Move_LEFT
-    call Define_key
+    ld de,Move_LEFT_ASCII_CODE
+    call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
+
+    ld hl,Line_12+9
+    call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+
+; Imprime tecla pulsada, (LEFT).
+
+    ld hl,Move_LEFT_ASCII_CODE
+    pop de                                                  ; Recupera posición del carro de impresión.
+    ld a,%01101000
+    call Print_text_msg
+
+;   RIGHT. -----------------------------------------------------------------------------------------------------------------
+
+    ld hl,b2                                                ; "RIGHT".
+    ld de,Line_14 + 9
+    ld a,%11000111                                          ; attrs. Flash White.
+    call Print_text_msg
+
+;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
+
+    ld bc,$ffff
+    call DELAY
+    ld bc,$2fff
+    call DELAY
+
+    push de                                                 ; Guardo la posición del carro de impresión.
+
+    ld hl,Move_RIGHT
+    ld de,Move_RIGHT_ASCII_CODE
+    call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
+
+    ld hl,Line_14+9
+    call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+
+; Imprime tecla pulsada, (RIGHT).
+
+    ld hl,Move_RIGHT_ASCII_CODE
+    pop de                                                  ; Recupera posición del carro de impresión.
+    ld a,%01101000
+    call Print_text_msg
+
+;   FIRE. -----------------------------------------------------------------------------------------------------------------
+
+    ld hl,b3                                                ; "FIRE".
+    ld de,Line_16 + 9
+    ld a,%11000111                                          ; attrs. Flash White.
+    call Print_text_msg
+
+;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
+
+    ld bc,$ffff
+    call DELAY
+    ld bc,$2fff
+    call DELAY
+
+    push de                                                 ; Guardo la posición del carro de impresión.
+
+    ld hl,Move_FIRE
+    ld de,Move_FIRE_ASCII_CODE
+    call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
+
+    ld hl,Line_16+9
+    call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+
+; Imprime tecla pulsada, (FIRE).
+
+    ld hl,Move_FIRE_ASCII_CODE
+    pop de                                                  ; Recupera posición del carro de impresión.
+    ld a,%01101000
+    call Print_text_msg
 
 
-Define_key:
 
-    push hl
 
-    call ROM_Key_Scan                                       ; Scan keyboard.
 
-; Guarda el correspondiente KEY CODE / KEY ASCII CODE.
 
-    pop hl
 
-    ld (hl),e
+
 
     jr $
 
@@ -56,47 +124,105 @@ Define_key:
 
 
 
+; ----------------------------------------------------------
+;
+;   7/3/26
+;
+
+Define_key:
+
+    push hl
+    push de
+
+    call ROM_Key_Scan                                       ; Scan keyboard.
+
+;   Guarda el correspondiente KEY CODE / KEY ASCII CODE.
+
+    ld a,e                                                  ; Key code en A.
+
+    pop de
+    pop hl
+
+    ld (hl),a                                               ; Key_code almacenado.
+
+;   Special Key_code ???
+
+    cp $18
+    jr z,Print_SYMB
+    cp $20
+    jr z,Print_SPACE
+    cp $21
+    jr z,Print_ENTER
+    cp $27
+    jr z,Print_CAPS
+
+;   No special key_code.
+
+;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
+
+    ld c,a
+    ld b,0
+
+    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
+
+    add hl,bc
+
+    ld a,(hl)
+    ld (de),a
+
+    ret
+
+Print_SYMB
+
+    ld hl,Symbol_key
+    call Get_ascii_message
+    ret z
+
+Print_SPACE
+
+    ld hl,Space_key
+    call Get_ascii_message
+    ret z
+
+Print_ENTER
+
+    ld hl,Enter_key
+    call Get_ascii_message
+    ret z
+
+Print_CAPS
+
+    ld hl,Caps_key
+    call Get_ascii_message
+    ret z
+
+Get_ascii_message:
+
+    ld a,(hl)
+    ld (de),a
+
+    and a
+    ret z
+
+    inc hl
+    inc de
+
+    jr Get_ascii_message
+
 ; Modifica attrs. de left. NO FLASH NOW. Key pressed.
 
-    ld hl,Line_12 + 9
+Modifica_atributos:
+
     call Calcula_direccion_atributos
     ld a,%01000111
 
-    ld b,5
+    ld b,6
 
 1 ld (hl),a
     inc l
     djnz 1B
 
-    jr $
-
-; Imprime tecla pulsada, (LEFT).
-
-
-
-
-
-
-
-
-
-
- 
     ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ; ----------------------------------------------------------
 ;

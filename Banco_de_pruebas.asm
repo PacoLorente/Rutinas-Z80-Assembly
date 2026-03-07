@@ -893,6 +893,7 @@ Tabla_de_conversion_KEYCODE_ASCII_CODE
     defm "T"
     defm "G"
     defm "V"
+
     defm "N"
     defm "J"
     defm "U"
@@ -901,6 +902,7 @@ Tabla_de_conversion_KEYCODE_ASCII_CODE
     defm "R"
     defm "F"
     defm "C"
+
     defm "M"
     defm "K"
     defm "I"
@@ -909,15 +911,24 @@ Tabla_de_conversion_KEYCODE_ASCII_CODE
     defm "E"
     defm "D"
     defm "X"
-    db 0 													; SYMBOL SHIFT no dispone de código ASCII.
+
+    db $18													; SYMBOL SHIFT no dispone de código ASCII.
+    defm "L"
+    defm "O"
+    defm "9"
+    defm "2"
+    defm "W"
+    defm "S"
+    defm "Z"
+
     db $20 													; SPACE ASCII CODE.
-    db $0d 													; ENTER ASCII CODE.
+    db $21 													; ENTER ASCII CODE.
     defm "P"
     defm "0"
     defm "1"
     defm "Q"
     defm "A"
-	db 0 													; CAPS SHIFT no dispone de código ASCII.
+	db $27 													; CAPS SHIFT no dispone de código ASCII.
 
 ; Mensajes:
 
@@ -944,15 +955,17 @@ a8 defm "                 ",0
 ; DEFINE MENU.
 
 b0 defm "DEFINE CONTROLS",0
-b1 defm "LEFT ",0
-b2 defm "Right ",0
-b3 defm "Fire ",0
-b4 defm "Shield ",0
+b1 defm "LEFT   ",0
+b2 defm "RIGHT  ",0
+b3 defm "FIRE   ",0
+b4 defm "SHIELD ",0
 
 ; Special keys:
 
+Symbol_key defm "SYMB.",0
 Space_key defm "SPACE",0
 Enter_key defm "ENTER",0
+Caps_key defm "CAPS.",0
 
 ; Control de Amadeus, (KEY CODES).
 
