@@ -25,14 +25,20 @@ ROM_Key_Scan:
 
 ; --------------------------------------------
 ;
-;	5/3/26
+;	9/3/26
 ;
+;	Scan keyboard in Main menu.
 
-Key_Scan:
+Main_menu_key:
+
+;   Inicializa RETURN TO MAIN MENU.
+
+    ld HL,Ctrl_6
+    res 1,(hl)
 
 	call ROM_Key_Scan 										; Scan keyboard.
 
-;	Analize key_code
+;	Analize key_code.
 
 ;	"K" key was pressed?
 
@@ -40,12 +46,20 @@ Key_Scan:
 	cp $11 													; "K" key_code.
 	call z,Show_controls_keys
 	ret z
+
+;	"E" key was pressed?
+
 	cp $15 													; "E" key_code.
 	call z,Active_kempstom_joystick
+	ret z
+
+;	"D" key was pressed?
+
 	cp $16
 	call z,Define_menu 										; "D" key_code.
+	ret z
 
-	jr Key_Scan
+	jr Main_menu_key
 
 	ret
 

@@ -21,7 +21,7 @@ Define_menu:
 ;   LEFT. -----------------------------------------------------------------------------------------------------------------
 
     ld hl,b1                                                ; "LEFT".
-    ld de,Line_12 + 9
+    ld de,Line_12 + 12
     ld a,%11000111                                          ; attrs. Flash White.
     call Print_text_msg
 
@@ -38,7 +38,7 @@ Define_menu:
     ld de,Move_LEFT_ASCII_CODE
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
-    ld hl,Line_12+9
+    ld hl,Line_12+12
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (LEFT).
@@ -51,11 +51,11 @@ Define_menu:
 ;   RIGHT. -----------------------------------------------------------------------------------------------------------------
 
     ld hl,b2                                                ; "RIGHT".
-    ld de,Line_14 + 9
+    ld de,Line_14 + 12
     ld a,%11000111                                          ; attrs. Flash White.
     call Print_text_msg
 
-;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
+;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move LEFT).
 
     ld bc,$ffff
     call DELAY
@@ -68,7 +68,7 @@ Define_menu:
     ld de,Move_RIGHT_ASCII_CODE
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
-    ld hl,Line_14+9
+    ld hl,Line_14+12
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (RIGHT).
@@ -81,11 +81,11 @@ Define_menu:
 ;   FIRE. -----------------------------------------------------------------------------------------------------------------
 
     ld hl,b3                                                ; "FIRE".
-    ld de,Line_16 + 9
+    ld de,Line_16 + 12
     ld a,%11000111                                          ; attrs. Flash White.
     call Print_text_msg
 
-;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
+;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_RIGHT).
 
     ld bc,$ffff
     call DELAY
@@ -98,7 +98,7 @@ Define_menu:
     ld de,Move_FIRE_ASCII_CODE
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
-    ld hl,Line_16+9
+    ld hl,Line_16+12
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (FIRE).
@@ -108,21 +108,61 @@ Define_menu:
     ld a,%01101000
     call Print_text_msg
 
+;   SHIELD. -----------------------------------------------------------------------------------------------------------------
 
+    ld hl,b4                                                ; "SHIELD".
+    ld de,Line_18 + 12
+    ld a,%11000111                                          ; attrs. Flash White.
+    call Print_text_msg
 
+;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_FIRE).
 
+    ld bc,$ffff
+    call DELAY
+    ld bc,$2fff
+    call DELAY
 
+    push de                                                 ; Guardo la posición del carro de impresión.
 
+    ld hl,Move_SHIELD
+    ld de,Move_SHIELD_ASCII_CODE
+    call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
+    ld hl,Line_18+12
+    call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
 
+; Imprime tecla pulsada, (FIRE).
 
-    jr $
+    ld hl,Move_SHIELD_ASCII_CODE
+    pop de                                                  ; Recupera posición del carro de impresión.
+    ld a,%01101000
+    call Print_text_msg
 
+; Teclas definidas.
 
+    ld bc,$ffff
+    call DELAY
+    ld bc,$ffff
+    call DELAY                                              
+    ld bc,$ffff
+    call DELAY
+    ld bc,$ffff
+    call DELAY                                              ; DELAY before exit to Main menu.
+    ld bc,$ffff
+    call DELAY
+    ld bc,$ffff
+    call DELAY                                              ; DELAY before exit to Main menu.
 
+; Clean Define menu.
 
+    call Clean_Define_menu
 
+    ld hl,Ctrl_6
+    set 1,(hl)                                              ; Bit 1 "1", means: Return to Main menu.
 
+    xor a
+
+    ret
 
 ; ----------------------------------------------------------
 ;
@@ -237,14 +277,6 @@ Show_controls_keys:
 ;   Borramos el menú principal.
 
     call Clean_main_menu
-
-;    ld a,1
-;    out ($fe),a                                             ; BORDER AZUL.
-
-;   Inicializa RETURN TO MAIN MENU.
-
-    ld HL,Ctrl_6
-    res 1,(hl)
 
 ;   Imprimimos CONTROLES.
 
@@ -362,8 +394,28 @@ Show_controls_keys:
 
 ; ----------------------------------------------------------
 ;
-;   28/2/26
+;   9/3/26
 ;
+;   CLEAN MENUS ROUTINES.
+
+Clean_Define_menu:
+
+    ld hl,Line_8
+    call CLean_file
+
+    ld hl,Line_12
+    call CLean_file
+
+    ld hl,Line_14
+    call CLean_file
+
+    ld hl,Line_16
+    call CLean_file 
+
+    ld hl,Line_18
+    call CLean_file
+
+    ret
 
 Clean_main_menu: 
 
@@ -404,6 +456,8 @@ Clean_Show_controls_menu:
     ld hl,Line_22
     call CLean_file
 
+    ret
+
 CLean_file
 
     call Calcula_direccion_atributos
@@ -426,11 +480,19 @@ Corrige_inicio_de_linea
 
 ;  Comprueba Move_LEFT_ASCII_CODE:
 
+    ld a,$18                                                ; "SYMBOL SHIFT" ascii code.
+    cp (hl)
+    jr z,Retrocede_carro
+
     ld a,$20                                                ; "SPACE" ascii code.
     cp (hl)
     jr z,Retrocede_carro
 
-    ld a,$0d                                                ; "ENTER" ascii code.
+    ld a,$21                                                ; "ENTER" ascii code.
+    cp (hl)
+    jr z,Retrocede_carro
+
+    ld a,$27                                                ; "CAPS SHIFT" ascii code.
     cp (hl)
     jr z,Retrocede_carro
 

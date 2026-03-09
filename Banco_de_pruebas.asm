@@ -1002,7 +1002,7 @@ START:
 Main_menu:
 
 	call Print_Main_menu
-	call Key_Scan											; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
+	call Main_menu_key										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
 	ld a,(Ctrl_6)
 	bit 1,a
