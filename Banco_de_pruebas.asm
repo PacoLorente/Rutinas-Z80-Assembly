@@ -955,10 +955,10 @@ a8 defm "                 ",0
 ; DEFINE MENU.
 
 b0 defm "DEFINE CONTROLS",0
-b1 defm "LEFT   ",0
-b2 defm "RIGHT  ",0
-b3 defm "FIRE   ",0
-b4 defm "SHIELD ",0
+b1 defm "LEFT",0
+b2 defm "RIGHT",0
+b3 defm "FIRE",0
+b4 defm "SHIELD",0
 
 ; Special keys:
 
@@ -974,10 +974,14 @@ Move_RIGHT db $1c
 Move_FIRE db $04
 Move_SHIELD db $20
 
-Move_LEFT_ASCII_CODE db "1",0
-Move_RIGHT_ASCII_CODE db "2",0
-Move_FIRE_ASCII_CODE db "5",0
-Move_SHIELD_ASCII_CODE db " ",0
+Move_LEFT_ASCII_CODE db "1"
+	ds 5
+Move_RIGHT_ASCII_CODE db "2"
+	ds 5
+Move_FIRE_ASCII_CODE db "5"
+	ds 5
+Move_SHIELD_ASCII_CODE db " "
+	ds 5
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;

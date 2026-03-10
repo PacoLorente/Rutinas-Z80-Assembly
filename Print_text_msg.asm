@@ -1,6 +1,6 @@
 ; ----------------------------------------------------------
 ;
-;   5/3/26
+;   10/3/26
 ;
 
 Define_menu:
@@ -39,12 +39,19 @@ Define_menu:
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
     ld hl,Line_12+12
+    ld b,4
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (LEFT).
 
     ld hl,Move_LEFT_ASCII_CODE
     pop de                                                  ; Recupera posición del carro de impresión.
+
+    inc e
+    inc e
+    inc e
+    inc e
+
     ld a,%01101000
     call Print_text_msg
 
@@ -69,12 +76,18 @@ Define_menu:
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
     ld hl,Line_14+12
+    ld b,5
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (RIGHT).
 
     ld hl,Move_RIGHT_ASCII_CODE
     pop de                                                  ; Recupera posición del carro de impresión.
+
+    inc e
+    inc e
+    inc e
+
     ld a,%01101000
     call Print_text_msg
 
@@ -99,12 +112,19 @@ Define_menu:
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
     ld hl,Line_16+12
+    ld b,4
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (FIRE).
 
     ld hl,Move_FIRE_ASCII_CODE
     pop de                                                  ; Recupera posición del carro de impresión.
+
+    inc e
+    inc e
+    inc e
+    inc e
+
     ld a,%01101000
     call Print_text_msg
 
@@ -129,12 +149,17 @@ Define_menu:
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
     ld hl,Line_18+12
+    ld b,6
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (FIRE).
 
     ld hl,Move_SHIELD_ASCII_CODE
     pop de                                                  ; Recupera posición del carro de impresión.
+
+    inc e
+    inc e
+
     ld a,%01101000
     call Print_text_msg
 
@@ -256,8 +281,6 @@ Modifica_atributos:
     call Calcula_direccion_atributos
     ld a,%01000111
 
-    ld b,6
-
 1 ld (hl),a
     inc l
     djnz 1B
@@ -266,7 +289,7 @@ Modifica_atributos:
 
 ; ----------------------------------------------------------
 ;
-;   19/2/26
+;   10/3/26
 ;
 
 Show_controls_keys:
@@ -283,47 +306,51 @@ Show_controls_keys:
     ld hl,a7                                                ; "Controls:".
     ld de,Line_8 + 12
     ld a,%01000110                                          ; attrs.
-    call Print_text_msg
+    call Print_text_msg                                     ; Print "Controls:".
 
-    ld hl,Move_LEFT_ASCII_CODE
-    ld de,Line_12 + 6                                        ; Posición de inicio de línea.
-
-    call Corrige_inicio_de_linea
-
-    inc hl
-    inc hl                                                  ; HL ahora apunta a Move_LEFT_ASCII_CODE
+    ld hl,Move_LEFT
+    ld de,Line_12 + 6                                       ; Posición de inicio de línea.
 
     call Corrige_inicio_de_linea
+
+    inc hl                                                  
+
+    call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales).
 
     ld hl,a0                                                ; "Press ".
     ld a,%01000111                                          ; attrs.
-    call Print_text_msg
+    call Print_text_msg                                     ; Print "Press ".
+
     inc e
 
 ;   Next msn
 
     ld hl,Move_LEFT_ASCII_CODE                              ; Move_LEFT_ASCII_CODE -----
-    call Print_ctrl_key
+    call Print_ctrl_key                                     ; Print (LEFT_ASCII_CODE).
+
     inc e
 
 ;   Next msn
 
     ld hl,a1                                                ; "or ".
     ld a,%01000111                                          ; attrs.
-    call Print_text_msg
+    call Print_text_msg                                     ; Print "or ".
+
     inc e
 
 ;   Next msn
 
     ld hl,Move_RIGHT_ASCII_CODE                             ; Move_RIGHT_ASCII_CODE -----
-    call Print_ctrl_key
+    call Print_ctrl_key                                     ; Print (RIGHT_ASCII_CODE).
+
     inc e
 
 ;   Next msn
 
     ld hl,a2                                                ; " to move ".
     ld a,%01000111                                          ; attrs.
-    call Print_text_msg
+    call Print_text_msg                                     ; Print " to move".
+
     inc e
 
 ;   Next msn
@@ -331,60 +358,63 @@ Show_controls_keys:
     ld hl,a3                                                ; " LEFT and RIGHT.".
     ld de,Line_14 + 8
     ld a,%01000111                                          ; attrs.
-    call Print_text_msg
+    call Print_text_msg                                     ; Print " LEFT and RIGHT.".
+
     inc e
 
 ;   Hay que corregir la posición donde escribiremos la tercera línea de texto si hemos definido "SPACE" o "Enter"_
 ;   _como alguna de las teclas de disparo o shield.
 
-    ld hl,Move_FIRE_ASCII_CODE
-    ld de,Line_16 + 6                                        ; Posición de inicio de línea.
+    ld hl,Move_FIRE
+    ld de,Line_16 + 6                                       ; Posición de inicio de línea.
 
     call Corrige_inicio_de_linea
 
     inc hl
-    inc hl                                                  ; HL ahora apunta a Move_SHIELD_ASCII_CODE.
-
-    call Corrige_inicio_de_linea
+                                                    
+    call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales). 
 
 ;   Next msn
 
     ld hl,a0                                                ; "Press ".
     ld a,%01000111                                          ; attrs.
     call Print_text_msg
-    inc e
+
+    inc e                                                   ; Print "Press ".
 
 ;   Next msn
 
-    ld hl,Move_FIRE_ASCII_CODE                             ; Move_FIRE_ASCII_CODE -----
-    call Print_ctrl_key
+    ld hl,Move_FIRE_ASCII_CODE                              ; Move_FIRE_ASCII_CODE -----
+    call Print_ctrl_key                                     ; Print (FIRE_ASCII_CODE).
+
     inc e
 
 ;   Next msn
 
     ld hl,a4                                                ; " to FIRE and ".
     ld a,%01000111                                          ; attrs.
-    call Print_text_msg
+    call Print_text_msg                                     ; Print " to FIRE and ".
+
     inc e
 
 ;   Next msn
 
     ld hl,Move_SHIELD_ASCII_CODE                            ; Move_SHIELD_ASCII_CODE -----
-    call Print_ctrl_key
+    call Print_ctrl_key                                     ; Print (SHIELD_ASCII_CODE).
 
 ;   Next msn
 
     ld hl,a5                                                ; " to FIRE and ".
     ld de,Line_18 + 11
     ld a,%01000111                                          ; attrs.
-    call Print_text_msg
+    call Print_text_msg                                     ; Print " to FIRE and ".
 
 ;   Next msn
 
-    ld hl,a6                                                ; " to FIRE and ".
+    ld hl,a6                                                ; "SHIELD."
     ld de,Line_22 + 7
     ld a,%11000101                                          ; attrs.
-    call Print_text_msg
+    call Print_text_msg                                     ; Print "SHIELD".
 
 ;   Scan KEYBOARD to START GAME.
 
@@ -504,7 +534,7 @@ Retrocede_carro
 
     dec e
     dec e
-
+ 
     ret
 
 ; -----------------------------------------------
