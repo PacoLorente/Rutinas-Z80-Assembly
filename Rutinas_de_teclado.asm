@@ -144,7 +144,7 @@ Main_keyboard_routine:
 
 ; -----------------------------------------------------------
 ;
-;	3/3/26
+;	11/3/26
 
 Press_START:
 
@@ -158,9 +158,35 @@ Press_START:
 
 	ld (Start_counter),hl
 
-	call KEY_SCAN
+;	Keys or Kempston joystick ???
 
-	ld a,(Move_FIRE) 										; Esperamos la pulsación de la tecla "ENTER".
+	ld a,(Ctrl_6)
+	bit 2,a
+	jr z,1F
+
+;	Esperamos la pulsación del disparo.
+
+	in a,(31) 												; Leemos el puerto 31, (KEMPSTON)
+	and %00011111 											; Limpiamos los bits altos, (no se utilizan y pueden contener ruido eléctrico).
+;
+;	Kempston joystick:
+;
+;	Bit_0 ..... "1" Indica Move_RIGHT.	(1d).
+;	Bit_1 ..... "1"    "     "  LEFT.	(2d).
+;	Bit_2 ..... "1"    "     "  DOWN.	(4d).
+;	Bit_3 ..... "1"    "     "  UP.		(8d).
+;	Bit_4 ..... "1"    "     "  FIRE.	(16d).
+
+	cp 16
+
+	jr nz,Press_START
+
+	jr $
+
+
+1 call KEY_SCAN
+
+	ld a,(Move_FIRE) 										; Esperamos la pulsación del disparo.
 	cp e
 	jr nz,Press_START
 
@@ -179,6 +205,7 @@ Leave_menu
 
 	ld hl,Ctrl_6
 	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
+	res 2,(hl) 												; Deshabilitamos Kempston antes de volver al menú principal.
 
 	xor a
 
@@ -187,6 +214,22 @@ Leave_menu
 ; ------------------------------------------------------------------------
 
 Active_kempstom_joystick:
+
+	ld hl,Ctrl_6
+	set 2,(hl) 												; Indica que vamos a activar el Kempston joystick.
+
+;	Fijamos
+
+	call Clean_main_menu
+
+	ld hl,a6                                                ; "Press FIRE to START"
+    ld de,Line_22 + 7
+    ld a,%11000101                                          ; attrs.
+    call Print_text_msg                                     ; Print "Press FIRE to START".
+
+;   Scan KEYBOARD to START GAME.
+
+    call Press_START
 
 	jr $
 

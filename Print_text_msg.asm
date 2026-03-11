@@ -1,6 +1,6 @@
 ; ----------------------------------------------------------
 ;
-;   10/3/26
+;   11/3/26
 ;
 
 Define_menu:
@@ -29,7 +29,7 @@ Define_menu:
 
     ld bc,$ffff
     call DELAY
-    ld bc,$2fff
+    ld bc,$07ff
     call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
@@ -69,7 +69,7 @@ Define_menu:
 
     ld bc,$ffff
     call DELAY
-    ld bc,$2fff
+    ld bc,$07ff
     call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
@@ -108,7 +108,7 @@ Define_menu:
 
     ld bc,$ffff
     call DELAY
-    ld bc,$2fff
+    ld bc,$07ff
     call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
@@ -148,7 +148,7 @@ Define_menu:
 
     ld bc,$ffff
     call DELAY
-    ld bc,$2fff
+    ld bc,$07ff
     call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
@@ -196,6 +196,8 @@ Define_menu:
 
     xor a
 
+    ld (No_repeat_key_code),a
+
     ret
 
 ; ----------------------------------------------------------
@@ -223,14 +225,16 @@ Define_key:
     and a
     jr z,2F                                                 ; (A)="0" Indica que estamos definiendo Move_LEFT.
 
-    ld b,a                                                  ; B contiene el nº de teclas definidas-1. 
+    ld b,a                                                  ; B contiene el nº de teclas definidas-1.
 
     ld hl,Move_LEFT
-    ld a,(hl)                                               ; KEY_CODE de Move_LEFT en A.
+4 ld a,(hl)                                                 ; KEY_CODE de Move_LEFT en A.
     cp e                                                    ; Comparo con el Key_code recién adquirido.
     jr z,3B                                                 ; Esta tecla ya se definió anteriormente. Volvemos a escanear el teclado.
 
-    jr $
+    inc hl                                                  ; Next key_code to compare.
+
+    djnz 4B
 
 2 ld a,e                                                    ; KEY_code en A.
 
@@ -438,17 +442,17 @@ Show_controls_keys:
 
 ;   Next msn
 
-    ld hl,a5                                                ; " to FIRE and ".
+    ld hl,a5                                                ; "SHIELD".
     ld de,Line_18 + 11
     ld a,%01000111                                          ; attrs.
     call Print_text_msg                                     ; Print " to FIRE and ".
 
 ;   Next msn
 
-    ld hl,a6                                                ; "SHIELD."
+    ld hl,a6                                                ; "Press FIRE to START"
     ld de,Line_22 + 7
     ld a,%11000101                                          ; attrs.
-    call Print_text_msg                                     ; Print "SHIELD".
+    call Print_text_msg                                     ; Print "Press FIRE to START".
 
 ;   Scan KEYBOARD to START GAME.
 
@@ -540,7 +544,7 @@ CLean_file
 ;   28/2/26
 ;
 
-Corrige_inicio_de_linea
+Corrige_inicio_de_linea:
 
 ;  Comprueba Move_LEFT_ASCII_CODE:
 
@@ -603,8 +607,8 @@ SPACE_ascii_code
 
 Print_Main_menu:
 
-    ld a,1
-    out ($fe),a                                             ; BORDER AZUL.
+;    ld a,1
+;    out ($fe),a                                             ; BORDER AZUL.
 
     ld hl,Keyboard                                          ; msg.
     ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
@@ -627,7 +631,7 @@ Print_Main_menu:
 
     inc l
 
-    ld b,%01101000
+    ld b,%01110000
     call Modify_first_char_attr
 
     ld hl,Define                                            ; msg.

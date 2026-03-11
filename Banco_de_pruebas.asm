@@ -432,7 +432,7 @@ Incrementa_FRAMES
 
 ; --------------------------------------------------------------------------------
 ;
-; 29/4/25
+; 11/3/26
 ;
 ; Parámetros DRAW. 	
 ;
@@ -767,24 +767,9 @@ Ctrl_6 db 0
 ; 																   El submenú CONTROLS se muestra en pantalla un tiempo definido por (Start_counter), pasado este tiempo_
 ;																   _la rutina activa `este bit´ y sale de la rutina. El menú está así diseñado para poder DEFINIR los controles si los
 ; 																   _actuales no nos agradan. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+; 															BIT 2, "1" Indica que vamos a utilizar el Kempston Joystick para jugar.
+; 																   Este bit lo activa la rutina de teclado: [Active_kempstom_joystick] y su función es evitar_
+; 																   _que la rutina [Press_START] escanee el teclado esperando disparo para comenzar la partida.
 
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
