@@ -768,6 +768,25 @@ Ctrl_6 db 0
 ;																   _la rutina activa `este bit´ y sale de la rutina. El menú está así diseñado para poder DEFINIR los controles si los
 ; 																   _actuales no nos agradan. 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
 Impacto2 db 0												; Byte de control de impactos.
@@ -968,6 +987,8 @@ Enter_key defm "ENTER",0
 Caps_key defm "CAPS.",0
 
 ; Control de Amadeus, (KEY CODES).
+
+No_repeat_key_code db 0
 
 Move_LEFT db $24
 Move_RIGHT db $1c

@@ -38,6 +38,9 @@ Define_menu:
     ld de,Move_LEFT_ASCII_CODE
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
+    ld hl,No_repeat_key_code
+    inc (hl)
+
     ld hl,Line_12+12
     ld b,4
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
@@ -75,6 +78,9 @@ Define_menu:
     ld de,Move_RIGHT_ASCII_CODE
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
+    ld hl,No_repeat_key_code
+    inc (hl)
+
     ld hl,Line_14+12
     ld b,5
     call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
@@ -110,6 +116,9 @@ Define_menu:
     ld hl,Move_FIRE
     ld de,Move_FIRE_ASCII_CODE
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
+
+    ld hl,No_repeat_key_code
+    inc (hl)
 
     ld hl,Line_16+12
     ld b,4
@@ -191,19 +200,39 @@ Define_menu:
 
 ; ----------------------------------------------------------
 ;
-;   7/3/26
+;   11/3/26
 ;
+;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
+;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
+
 
 Define_key:
 
     push hl
     push de
 
-    call ROM_Key_Scan                                       ; Scan keyboard.
+3 call ROM_Key_Scan                                         ; Scan keyboard.
 
 ;   Guarda el correspondiente KEY CODE / KEY ASCII CODE.
 
-    ld a,e                                                  ; Key code en A.
+;    ld a,e                                                  ; Key code en A.
+
+;   Hay que evitar que se "defina" la misma tecla para realizar distintas funciones.
+
+    ld a,(No_repeat_key_code)
+    and a
+    jr z,2F                                                 ; (A)="0" Indica que estamos definiendo Move_LEFT.
+
+    ld b,a                                                  ; B contiene el nº de teclas definidas-1. 
+
+    ld hl,Move_LEFT
+    ld a,(hl)                                               ; KEY_CODE de Move_LEFT en A.
+    cp e                                                    ; Comparo con el Key_code recién adquirido.
+    jr z,3B                                                 ; Esta tecla ya se definió anteriormente. Volvemos a escanear el teclado.
+
+    jr $
+
+2 ld a,e                                                    ; KEY_code en A.
 
     pop de
     pop hl
@@ -232,8 +261,13 @@ Define_key:
 
     add hl,bc
 
-    ld a,(hl)
-    ld (de),a
+    ld b,4                                                  ; Contador de "0" para limpiar .db después de almacenar el ASCII_code.
+
+    ld a,(hl)                                               
+1 ld (de),a                                                 ; ASCII_code almacenado. 
+    xor a                                                   ; Ahora almacenamos "0"´s.    
+    inc de
+    djnz 1B 
 
     ret
 
