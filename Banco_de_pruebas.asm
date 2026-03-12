@@ -809,7 +809,8 @@ Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva ent
 Repone_CLOCK_disparos db $a0								; Reloj decreciente.
 CLOCK_disparos_de_entidades db $a0
 
-Start_counter defw $ffff
+Start_counter defw 0
+Start_counter_2 db $06
 
 ;---------------------------------------------------------------------------------------------------------------
 

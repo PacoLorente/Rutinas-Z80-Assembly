@@ -158,15 +158,64 @@ Press_START:
 
 	ld (Start_counter),hl
 
-;	Keys or Kempston joystick ???
+	call KEY_SCAN
 
-	ld a,(Ctrl_6)
-	bit 2,a
-	jr z,1F
+	ld a,(Move_FIRE) 										; Esperamos la pulsación del disparo.
+	cp e
+	jr nz,Press_START
+
+;	Order to play.
+
+	ld hl,0
+	ld (Start_counter),hl 									; Inicializa temporizador.
+
+;	Activa START GAME.
+
+	xor a 													; "0" before RET to START GAME.
+
+	ret
+
+Leave_menu
+
+	ld (Start_counter),hl
+
+	call Clean_Show_controls_menu 							; Borra las líneas de la pantalla de CONTROLES. 
+
+	ld hl,Ctrl_6
+	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
+
+	xor a
+
+	ret
+
+; -----------------------------------------------------------
+;
+;	12/3/26
+
+Press_START_KEMPSTON:
+
+	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
+; 															; _el menú KEMPSTON. Pasado este tiempo volvemos al menú principal.	
+	dec hl
+	
+	ld a,h
+	or l
+	jr nz,1F
+
+	ld (Start_counter),hl
+
+	ld hl,Start_counter_2
+	dec (hl)
+
+	jr z,Leave_menu_2
+
+	jr 2F
+
+1 ld (Start_counter),hl
 
 ;	Esperamos la pulsación del disparo.
 
-	in a,(31) 												; Leemos el puerto 31, (KEMPSTON)
+2 in a,(31) 												; Leemos el puerto 31, (KEMPSTON)
 	and %00011111 											; Limpiamos los bits altos, (no se utilizan y pueden contener ruido eléctrico).
 ;
 ;	Kempston joystick:
@@ -179,35 +228,28 @@ Press_START:
 
 	cp 16
 
-	jr nz,Press_START
+	jr nz,Press_START_KEMPSTON
 
-	jr $
+;	Order to play with a Kempston joystick.
 
-
-1 call KEY_SCAN
-
-	ld a,(Move_FIRE) 										; Esperamos la pulsación del disparo.
-	cp e
-	jr nz,Press_START
-
-;	Activa START GAME.
-
-	xor a 													; "0" before RET to START GAME.
+    ld hl,Line_22
+    call CLean_file 
 
 	ret
 
-Leave_menu
+Leave_menu_2
 
-	call Clean_Show_controls_menu 							; Borra las líneas de la pantalla de CONTROLES. 
-
-	ld hl,$ffff
-	ld (Start_counter),hl 									; Inicializa temporizador.
+	ld a,$06
+	ld (hl),a 												; Inicializa Start_counter_2.
 
 	ld hl,Ctrl_6
-	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
-	res 2,(hl) 												; Deshabilitamos Kempston antes de volver al menú principal.
+	set 1,(hl)
+	res 2,(hl) 												; Indica más adelante que volvemos al menú principal.
 
-	xor a
+;	Clean Kempston menu.
+
+    ld hl,Line_22
+    call CLean_file 										; Borra "Press Fire to START".
 
 	ret
 
@@ -216,7 +258,7 @@ Leave_menu
 Active_kempstom_joystick:
 
 	ld hl,Ctrl_6
-	set 2,(hl) 												; Indica que vamos a activar el Kempston joystick.
+	set 2,(hl) 												; Indica que activamos el Kempston joystick.
 
 ;	Fijamos
 
@@ -229,9 +271,9 @@ Active_kempstom_joystick:
 
 ;   Scan KEYBOARD to START GAME.
 
-    call Press_START
+    call Press_START_KEMPSTON
 
-	jr $
+    xor a
 
 	ret
 
