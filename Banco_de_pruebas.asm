@@ -809,8 +809,8 @@ Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva ent
 Repone_CLOCK_disparos db $a0								; Reloj decreciente.
 CLOCK_disparos_de_entidades db $a0
 
-Start_counter defw 0
-Start_counter_2 db $06
+Start_counter defw 0 										; Temporizador. Espera la pulsación de "FIRE" en los menús KEYBOARD y KEMPSTON. 
+Start_counter_2 db $06 										; 2º Temporizador, (3 bytes counter). Espera la pulsación "FIRE" en el menú KEMPSTON.
 
 ;---------------------------------------------------------------------------------------------------------------
 
@@ -1017,7 +1017,7 @@ Main_menu:
 
 	ld a,(Ctrl_6)
 	bit 1,a
-	jr nz,Main_menu
+	jr nz,Main_menu 										; No hemos pulsado "FIRE" en los menús: Keyboard y Kempston. Pasado un tiempo, 
 
 INICIALIZACION:
 
@@ -1400,7 +1400,10 @@ Amadeus_vivo
 	call nz,Genera_explosion_Amadeus
 	jr nz,End_frame
 
+;	Control.
+
 	call Main_keyboard_routine
+	call Kempston_control
 
 	ld hl,Ctrl_2
 	bit 6,(hl)

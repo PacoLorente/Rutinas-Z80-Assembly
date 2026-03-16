@@ -65,14 +65,92 @@ Main_menu_key:
 
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	04/03/26
+;	16/03/26
+;
+;	
+;	Kempston joystick:
+;
+;	Bit_0 ..... "1" Indica Move_RIGHT.	(1d).
+;	Bit_1 ..... "1"    "     "  LEFT.	(2d).
+;	Bit_2 ..... "1"    "     "  DOWN.	(4d).
+;	Bit_3 ..... "1"    "     "  UP.		(8d).
+;	Bit_4 ..... "1"    "     "  FIRE.	(16d).
+
+Kempston_control:
+
+	ld a,(Ctrl_6)
+	bit 2,a
+	ret z 													; Exit routine. We´re going to play with Keyboard.
+
+;	Excepciones, (lectura de la tecla SHIELD).
+
+    ld a,(Shields)
+	and a
+	jr z,1F 												; NO leemos SHIELD, no quedan escudos.
+
+	ld a,(Shield)
+	and a
+	jr nz,1F 												; No leemos SHIELD, estamos ejecutando escudo.
+
+; 	Reading SHIELD key.
+
+	in a,(31) 												; Read port, ($1f). (KEMPSTON).
+	and %00011111 		
+	cp 8 													; UP.
+	call z,Inicia_Shield
+	jr nz,1F
+
+; ----- Shield iniciado
+
+	ld a,90 
+	ld (Shield),a 											; Hemos iniciado SHIELD, inicializamos el temporizador SHIELD.
+
+	ld hl,Shields   										; (Shield) -1. Inicialmente 3.
+	dec (hl)
+
+	ld hl,Ctrl_2                                            ; Indica que hemos pulsado "SHIELD". "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
+	set 7,(hl)												; La rutina [Borra_escudo], inicializará el FLAG.
+
+; 	Disparo.
+
+1 in a,(31) 												; Read port, ($1f). (KEMPSTON).
+	and %00011111 		
+	cp 16 													; UP.
+	call z,Genera_disparo_Amadeus
+
+;	Movement.
+
+3 ld hl,Ctrl_2
+	bit 6,(hl)
+	ret nz													; NIVEL SUPERADO. Amadeus está desapareciendo, no leemos teclado.
+
+	in a,(31) 												; Read port, ($1f). (KEMPSTON).
+	and %00011111 		
+	cp 2 													; IZQUIERDA.
+	call z,Amadeus_a_izquierda
+
+    ld hl,Ctrl_3
+	bit 5,(hl)
+    ret nz 													; RET if yoy turned left.
+
+	in a,(31) 												; Read port, ($1f). (KEMPSTON).
+	and %00011111 		
+	cp 1 													; UP.
+	call z,Amadeus_a_derecha
+
+	ret
+
+; --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+;
+;	16/03/26
 ;
 ;	
 
-
 Main_keyboard_routine:
 
-;	Shield.
+	ld a,(Ctrl_6)
+	bit 2,a
+	ret nz 													; Exit routine. We´re going to play with Kempston joystick.
 
     call KEY_SCAN
 
@@ -233,7 +311,7 @@ Press_START_KEMPSTON:
 ;	Order to play with a Kempston joystick.
 
     ld hl,Line_22
-    call CLean_file 
+    call CLean_file  										; Clean "Press FIRE to START", (Line_22).
 
 	ret
 
