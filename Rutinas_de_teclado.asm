@@ -40,20 +40,26 @@ Main_menu_key:
 
 ;	Analize key_code.
 
-;	"K" key was pressed?
+;	"K" key was pressed ?
 
 	ld a,e
 	cp $11 													; "K" key_code.
 	call z,Show_controls_keys
 	ret z
 
-;	"E" key was pressed?
+;	"E" key was pressed ?
 
 	cp $15 													; "E" key_code.
 	call z,Active_kempstom_joystick
 	ret z
 
-;	"D" key was pressed?
+;	"S" key was pressed ?
+
+	cp $1e 													; "S" key_code.
+	call z,Active_sinclair_joystick
+	ret z
+
+;	"D" key was pressed ?
 
 	cp $16
 	call z,Define_menu 										; "D" key_code.
@@ -347,15 +353,27 @@ Active_kempstom_joystick:
 
 	ret
 
+Active_sinclair_joystick:
+
+;	"1" Izquierda ..... Key code $24
+;	"2" Derecha   ..... Key code $1c
+;	"3" Abajo     ..... Key code $14
+;	"4" Arriba    ..... Key code $0c
+;	"5" Disparo   ..... Key code $04
 
 
+	call Clean_main_menu
 
+	ld hl,a6                                                ; "Press FIRE to START"
+    ld de,Line_22 + 7
+    ld a,%11000101                                          ; attrs.
+    call Print_text_msg                                     ; Print "Press FIRE to START".
 
+	jr $
 
+	xor a
 
-
-
-
+	ret
 
 
 

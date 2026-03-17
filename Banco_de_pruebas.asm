@@ -939,6 +939,7 @@ Tabla_de_conversion_KEYCODE_ASCII_CODE
 
 Keyboard defm "KEYBOARD",0
 Kempstom defm "KEMPSTON",0
+Interface defm "SINCLAIR",0
 Define defm "DEFINE",0
 Start defm "START",0
 Top_score defm "BEST SCORE: ",0
@@ -989,6 +990,12 @@ Move_FIRE_ASCII_CODE db "5"
 	ds 5
 Move_SHIELD_ASCII_CODE db " "
 	ds 5
+
+; Key code BOX.
+; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
+; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
+
+Sinclair_db_box ds 4
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;

@@ -502,6 +502,11 @@ Clean_main_menu:
     ld de,Line_13 + 6
     call Print_text_msg
 
+    ld hl,a8
+    ld a,%01000000
+    ld de,Line_15 + 6
+    call Print_text_msg
+
     ret
 
 Clean_Show_controls_menu:
@@ -618,7 +623,7 @@ Print_Main_menu:
     call Print_text_msg
     pop hl
 
-    ld b,%01110000                                          ; Yellow
+    ld b,%01010000                                          ; Red bright.
     call Modify_first_char_attr
 
     ld hl,Kempstom                                          ; msg.
@@ -631,10 +636,10 @@ Print_Main_menu:
 
     inc l
 
-    ld b,%01110000
+    ld b,%01110000                                          ; Yellow bright.
     call Modify_first_char_attr
 
-    ld hl,Define                                            ; msg.
+    ld hl,Interface                                         ; msg.
     ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000111                                          ; attrs. Ink white.
 
@@ -642,7 +647,18 @@ Print_Main_menu:
     call Print_text_msg
     pop hl
 
-    ld b,%01110000
+    ld b,%01100000                                          ; Verde bright.
+    call Modify_first_char_attr
+
+    ld hl,Define                                            ; msg.
+    ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld a,%01000111                                          ; attrs. Ink white.
+
+    push de
+    call Print_text_msg
+    pop hl
+
+    ld b,%01001000                                          ; Azul bright._
     call Modify_first_char_attr
 
     ret
