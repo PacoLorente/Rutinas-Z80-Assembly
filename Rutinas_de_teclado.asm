@@ -65,16 +65,16 @@ Main_menu_key:
 
 ; --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	16/03/26
+;	17/03/26
 ;
 ;	
 ;	Kempston joystick:
 ;
-;	Bit_0 ..... "1" Indica Move_RIGHT.	(1d).
-;	Bit_1 ..... "1"    "     "  LEFT.	(2d).
-;	Bit_2 ..... "1"    "     "  DOWN.	(4d).
-;	Bit_3 ..... "1"    "     "  UP.		(8d).
-;	Bit_4 ..... "1"    "     "  FIRE.	(16d).
+;	Bit_0 ..... "1" Indica Move_RIGHT.	
+;	Bit_1 ..... "1"    "     "  LEFT.	
+;	Bit_2 ..... "1"    "     "  DOWN.	
+;	Bit_3 ..... "1"    "     "  UP.		
+;	Bit_4 ..... "1"    "     "  FIRE.	
 
 Kempston_control:
 
@@ -82,23 +82,42 @@ Kempston_control:
 	bit 2,a
 	ret z 													; Exit routine. We´re going to play with Keyboard.
 
-;	Excepciones, (lectura de la tecla SHIELD).
-
-    ld a,(Shields)
-	and a
-	jr z,1F 												; NO leemos SHIELD, no quedan escudos.
-
-	ld a,(Shield)
-	and a
-	jr nz,1F 												; No leemos SHIELD, estamos ejecutando escudo.
-
-; 	Reading SHIELD key.
+;	Reading Port:
 
 	in a,(31) 												; Read port, ($1f). (KEMPSTON).
 	and %00011111 		
-	cp 8 													; UP.
-	call z,Inicia_Shield
-	jr nz,1F
+	bit 0,a
+
+	call nz,Amadeus_a_derecha
+
+	in a,(31) 												; Read port, ($1f). (KEMPSTON).
+	and %00011111 		
+	bit 1,a
+
+	call nz,Amadeus_a_izquierda
+
+	in a,(31) 												; Read port, ($1f). (KEMPSTON).
+	and %00011111 		
+	bit 4,a
+
+	call nz,Genera_disparo_Amadeus
+
+	in a,(31) 												; Read port, ($1f). (KEMPSTON).
+	and %00011111 		
+	bit 2,a
+	ret z
+
+;	Excepciones:
+
+    ld a,(Shields)
+	and a
+	ret z	 												; NO leemos SHIELD, no quedan escudos.
+
+	ld a,(Shield)
+	and a
+	ret nz 													; No leemos SHIELD, estamos ejecutando escudo.
+
+	call Inicia_Shield
 
 ; ----- Shield iniciado
 
@@ -110,33 +129,6 @@ Kempston_control:
 
 	ld hl,Ctrl_2                                            ; Indica que hemos pulsado "SHIELD". "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
 	set 7,(hl)												; La rutina [Borra_escudo], inicializará el FLAG.
-
-; 	Disparo.
-
-1 in a,(31) 												; Read port, ($1f). (KEMPSTON).
-	and %00011111 		
-	cp 16 													; UP.
-	call z,Genera_disparo_Amadeus
-
-;	Movement.
-
-3 ld hl,Ctrl_2
-	bit 6,(hl)
-	ret nz													; NIVEL SUPERADO. Amadeus está desapareciendo, no leemos teclado.
-
-	in a,(31) 												; Read port, ($1f). (KEMPSTON).
-	and %00011111 		
-	cp 2 													; IZQUIERDA.
-	call z,Amadeus_a_izquierda
-
-    ld hl,Ctrl_3
-	bit 5,(hl)
-    ret nz 													; RET if yoy turned left.
-
-	in a,(31) 												; Read port, ($1f). (KEMPSTON).
-	and %00011111 		
-	cp 1 													; UP.
-	call z,Amadeus_a_derecha
 
 	ret
 
