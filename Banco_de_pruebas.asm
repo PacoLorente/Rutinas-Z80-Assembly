@@ -810,7 +810,7 @@ Repone_CLOCK_disparos db $a0								; Reloj decreciente.
 CLOCK_disparos_de_entidades db $a0
 
 Start_counter defw 0 										; Temporizador. Espera la pulsación de "FIRE" en los menús KEYBOARD y KEMPSTON. 
-Start_counter_2 db $06 										; 2º Temporizador, (3 bytes counter). Espera la pulsación "FIRE" en el menú KEMPSTON.
+Start_counter_2 db $05 										; 2º Temporizador, (3 bytes counter). Espera la pulsación "FIRE" en el menú KEMPSTON.
 
 ;---------------------------------------------------------------------------------------------------------------
 

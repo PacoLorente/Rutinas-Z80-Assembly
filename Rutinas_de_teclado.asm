@@ -266,32 +266,22 @@ Leave_menu
 
 ; -----------------------------------------------------------
 ;
-;	12/3/26
+;	18/3/26
+;
+;	Press_START_KEMPSTON and Press_START_SINCLAIR.
 
 Press_START_KEMPSTON:
 
-	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
-; 															; _el menú KEMPSTON. Pasado este tiempo volvemos al menú principal.	
-	dec hl
-	
-	ld a,h
-	or l
-	jr nz,1F
+	call Dec_START_counter
 
-	ld (Start_counter),hl
+;	"Z" indica que salimos de la rutina, (out of time).
+;	"NZ" Espera la pulsación "FIRE" para comenzar la partida.
 
-	ld hl,Start_counter_2
-	dec (hl)
-
-	jr z,Leave_menu_2
-
-	jr 2F
-
-1 ld (Start_counter),hl
+	jr z, Leave_menu_2
 
 ;	Esperamos la pulsación del disparo.
 
-2 in a,(31) 												; Leemos el puerto 31, (KEMPSTON)
+	in a,(31) 												; Leemos el puerto 31, (KEMPSTON)
 	and %00011111 											; Limpiamos los bits altos, (no se utilizan y pueden contener ruido eléctrico).
 ;
 ;	Kempston joystick:
@@ -308,6 +298,13 @@ Press_START_KEMPSTON:
 
 ;	Order to play with a Kempston joystick.
 
+Order_to_play
+
+	ld a,$05
+	ld (Start_counter_2),a 									
+	ld hl,0
+	ld (Start_counter),hl 									; Inicializa temporizador.
+
     ld hl,Line_22
     call CLean_file  										; Clean "Press FIRE to START", (Line_22).
 
@@ -315,8 +312,7 @@ Press_START_KEMPSTON:
 
 Leave_menu_2
 
-	ld a,$06
-	ld (hl),a 												; Inicializa Start_counter_2.
+	ld (hl),$05  											
 
 	ld hl,Ctrl_6
 	set 1,(hl)
@@ -326,6 +322,77 @@ Leave_menu_2
 
     ld hl,Line_22
     call CLean_file 										; Borra "Press Fire to START".
+
+	ret
+
+
+Press_START_SINCLAIR:
+
+	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
+; 															; _la pantalla de controles. Pasado este tiempo volvemos al menú principal.	
+	dec hl
+	
+	ld a,h
+	or l
+	jr z,Leave_menu_3
+
+	ld (Start_counter),hl
+
+;	Esperamos la pulsación del disparo.
+
+	call KEY_SCAN
+
+	ld a,(Move_FIRE) 										; Esperamos la pulsación del disparo.
+	cp e
+	jr nz,Press_START_SINCLAIR
+
+;	Order to play.
+
+	jr Order_to_play
+
+Leave_menu_3
+
+	ld (Start_counter),hl
+
+	ld hl,Ctrl_6
+	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
+
+;	Clean Kempston menu.
+
+    ld hl,Line_22
+    call CLean_file 										; Borra "Press Fire to START".
+
+;	Recuperar key_codes de la caja.
+
+	ret
+
+; -----------------------------------------------------------
+;
+;	18/3/26
+;
+;	DESTROY: HL.
+;
+;	OUTPUT: FLAG "Z" Out of time.
+;				 "NZ" in time.	
+
+Dec_START_counter: 
+
+	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
+; 															; _el menú KEMPSTON. Pasado este tiempo volvemos al menú principal.	
+	dec hl
+	
+	ld a,h
+	or l
+	jr nz,1F
+
+	ld (Start_counter),hl
+
+	ld hl,Start_counter_2
+	dec (hl)
+
+	ret
+
+1 ld (Start_counter),hl
 
 	ret
 
@@ -369,7 +436,25 @@ Active_sinclair_joystick:
     ld a,%11000101                                          ; attrs.
     call Print_text_msg                                     ; Print "Press FIRE to START".
 
-	jr $
+;	Guarda los controles KEYBOARD en la caja.
+
+	ld hl,Move_LEFT
+	ld de,Sinclair_db_box
+	ld bc,4
+	ldir
+
+;	Introduce Sinclair´s key_code. 
+
+	ld hl,Move_LEFT
+	ld (hl),$24 											; LEFT.
+	inc hl
+	ld (hl),$1c 											; RIGHT.
+	inc hl
+	ld (hl),$04 											; FIRE.
+	inc hl
+	ld (hl),$14 											; SHIELD.
+
+	call Press_START_SINCLAIR
 
 	xor a
 
