@@ -1086,6 +1086,26 @@ INICIALIZACION:
 	pop bc
 	pop hl
 
+
+
+
+;	Imprime mensaje de nivel.
+
+	call Print_level_msg
+
+
+
+
+
+
+
+
+
+
+
+
+;	Prepara cajas.
+
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
 	call Prepara_Cajas_de_Entidades
 
@@ -1111,16 +1131,6 @@ INICIALIZACION:
 	djnz 2B
 
 	call Genera_datos_de_impresion_Amadeus
-
-
-;	Imprime mensaje de nivel.
-
-	call Print_level_msg
-
-
-
-
-
 
 ;! ------------------
 

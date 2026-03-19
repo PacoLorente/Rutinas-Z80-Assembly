@@ -409,6 +409,7 @@ Active_kempstom_joystick:
 
 	ld hl,a6                                                ; "Press FIRE to START"
     ld de,Line_22 + 7
+	ld b,0
     ld a,%11000101                                          ; attrs.
     call Print_text_msg                                     ; Print "Press FIRE to START".
 

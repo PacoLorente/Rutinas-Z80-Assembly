@@ -5,14 +5,26 @@
 
 Print_level_msg:
 
+
+
     ld hl,Puntero_de_mensajes_de_niveles
     call Extrae_address
 
-    push hl                                                 ; Push mesg pointer.
+;    push hl                                                 ; Push mesg pointer.
 
-    ld de,Line_10 + 9
-    ld a,%01000111                                          ; attrs. Yellow ink.
+;   Attrs. del mensaje a imprimir, (atributos, línea de impresión, temporizador).
+
+    ld de,Line_10 + 9                                        ; Línea de impresión.
+    ld a,%01111000                                           ; attrs. Paper white, black ink.
+    ld b,100                                                 ; Activa temporizador.
+
+
     call Print_text_msg
+
+    jr $
+
+
+
 
     pop hl
 
@@ -50,6 +62,7 @@ Define_menu:
     ld hl,b0                                                ; "DEFINE CONTROLS KEYS:".
     ld de,Line_8 + 9
     ld a,%01000110                                          ; attrs. Yellow ink.
+    ld b,0
     call Print_text_msg
 
 ;   LEFT. -----------------------------------------------------------------------------------------------------------------
@@ -57,6 +70,7 @@ Define_menu:
     ld hl,b1                                                ; "LEFT".
     ld de,Line_12 + 12
     ld a,%11000111                                          ; attrs. Flash White.
+    ld b,0
     call Print_text_msg
 
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
@@ -90,6 +104,7 @@ Define_menu:
     inc e
 
     ld a,%01101000
+    ld b,0
     call Print_text_msg
 
 ;   RIGHT. -----------------------------------------------------------------------------------------------------------------
@@ -97,6 +112,7 @@ Define_menu:
     ld hl,b2                                                ; "RIGHT".
     ld de,Line_14 + 12
     ld a,%11000111                                          ; attrs. Flash White.
+    ld b,0
     call Print_text_msg
 
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move LEFT).
@@ -129,6 +145,7 @@ Define_menu:
     inc e
 
     ld a,%01101000
+    ld b,0
     call Print_text_msg
 
 ;   FIRE. -----------------------------------------------------------------------------------------------------------------
@@ -136,6 +153,7 @@ Define_menu:
     ld hl,b3                                                ; "FIRE".
     ld de,Line_16 + 12
     ld a,%11000111                                          ; attrs. Flash White.
+    ld b,0
     call Print_text_msg
 
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_RIGHT).
@@ -169,6 +187,7 @@ Define_menu:
     inc e
 
     ld a,%01101000
+    ld b,0
     call Print_text_msg
 
 ;   SHIELD. -----------------------------------------------------------------------------------------------------------------
@@ -176,6 +195,7 @@ Define_menu:
     ld hl,b4                                                ; "SHIELD".
     ld de,Line_18 + 12
     ld a,%11000111                                          ; attrs. Flash White.
+    ld b,0
     call Print_text_msg
 
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_FIRE).
@@ -204,6 +224,7 @@ Define_menu:
     inc e
 
     ld a,%01101000
+    ld b,0
     call Print_text_msg
 
 ; Teclas definidas.
@@ -377,6 +398,7 @@ Show_controls_keys:
 
     ld hl,a7                                                ; "Controls:".
     ld de,Line_8 + 12
+    ld b,0
     ld a,%01000110                                          ; attrs.
     call Print_text_msg                                     ; Print "Controls:".
 
@@ -391,6 +413,7 @@ Show_controls_keys:
 
     ld hl,a0                                                ; "Press ".
     ld a,%01000111                                          ; attrs.
+    ld b,0
     call Print_text_msg                                     ; Print "Press ".
 
     inc e
@@ -406,6 +429,7 @@ Show_controls_keys:
 
     ld hl,a1                                                ; "or ".
     ld a,%01000111                                          ; attrs.
+    ld b,0
     call Print_text_msg                                     ; Print "or ".
 
     inc e
@@ -421,6 +445,7 @@ Show_controls_keys:
 
     ld hl,a2                                                ; " to move ".
     ld a,%01000111                                          ; attrs.
+    ld b,0
     call Print_text_msg                                     ; Print " to move".
 
     inc e
@@ -430,6 +455,7 @@ Show_controls_keys:
     ld hl,a3                                                ; " LEFT and RIGHT.".
     ld de,Line_14 + 8
     ld a,%01000111                                          ; attrs.
+    ld b,0
     call Print_text_msg                                     ; Print " LEFT and RIGHT.".
 
     inc e
@@ -450,6 +476,7 @@ Show_controls_keys:
 
     ld hl,a0                                                ; "Press ".
     ld a,%01000111                                          ; attrs.
+    ld b,0
     call Print_text_msg
 
     inc e                                                   ; Print "Press ".
@@ -465,6 +492,7 @@ Show_controls_keys:
 
     ld hl,a4                                                ; " to FIRE and ".
     ld a,%01000111                                          ; attrs.
+    ld b,0
     call Print_text_msg                                     ; Print " to FIRE and ".
 
     inc e
@@ -479,6 +507,7 @@ Show_controls_keys:
     ld hl,a5                                                ; "SHIELD".
     ld de,Line_18 + 11
     ld a,%01000111                                          ; attrs.
+    ld b,0
     call Print_text_msg                                     ; Print " to FIRE and ".
 
 ;   Next msn
@@ -486,6 +515,7 @@ Show_controls_keys:
     ld hl,a6                                                ; "Press FIRE to START"
     ld de,Line_22 + 7
     ld a,%11000101                                          ; attrs.
+    ld b,0
     call Print_text_msg                                     ; Print "Press FIRE to START".
 
 ;   Scan KEYBOARD to START GAME.
@@ -523,21 +553,25 @@ Clean_main_menu:
 
     ld hl,a8
     ld a,%01000000
+    ld b,0
     ld de,Line_9 + 6
     call Print_text_msg
 
     ld hl,a8
     ld a,%01000000
+    ld b,0
     ld de,Line_11 + 6
     call Print_text_msg
 
     ld hl,a8
     ld a,%01000000
+    ld b,0
     ld de,Line_13 + 6
     call Print_text_msg
 
     ld hl,a8
     ld a,%01000000
+    ld b,0
     ld de,Line_15 + 6
     call Print_text_msg
 
@@ -643,13 +677,19 @@ SPACE_ascii_code
 ;
 ;   19/2/26
 ;
+;   Print MAIN MENU.
+;
+;       KEYBOARD
+;       KEMPSTON
+;       SINCLAIR
+;       DEFINE
+
 
 Print_Main_menu:
 
-;    ld a,1
-;    out ($fe),a                                             ; BORDER AZUL.
 
-    ld hl,Keyboard                                          ; msg.
+    ld hl,Keyboard                                          ; HL contiene el mensaje.
+    ld b,0                                                  ; NO TEMPORIZADOR.
     ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000111                                          ; attrs. Ink white.
 
@@ -661,6 +701,7 @@ Print_Main_menu:
     call Modify_first_char_attr
 
     ld hl,Kempstom                                          ; msg.
+    ld bc,0                                                 ; NO TEMPORIZADOR.
     ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000111                                          ; attrs. Ink white.
 
@@ -674,6 +715,7 @@ Print_Main_menu:
     call Modify_first_char_attr
 
     ld hl,Interface                                         ; msg.
+    ld bc,0                                                 ; NO TEMPORIZADOR.
     ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000111                                          ; attrs. Ink white.
 
@@ -685,6 +727,7 @@ Print_Main_menu:
     call Modify_first_char_attr
 
     ld hl,Define                                            ; msg.
+    ld bc,0                                                 ; NO TEMPORIZADOR.
     ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01000111                                          ; attrs. Ink white.
 
@@ -744,21 +787,28 @@ Modify_first_char_attr call Calcula_direccion_atributos
 ;   INPUTS: HL apunta al mensage a imprimir, (msg).
 ;           DE indica la fila de pantalla donde queremos imprimir el msg.
 ;            A contiene los attrs. del msg.
+;           BC Es un temporizador, ralentiza la impresión de caracteres. No actúa cuando es "0".
+
+
 ;
 ;           % FBPPPIII
 
 Print_text_msg:
+
+    push bc                                 ;   PUSH temporizador.
 
     ex af,af                                ;   Attr. en A´.
 
     push hl
     push de
 
+;    push bc                                ;   Push TEMPORIZADOR.
+
     call Find_address
 
     ex de,hl                                ;   BIN en DE - Fila en HL.
 
-    call Print_BIN
+    call Print_BIN                          ;   Imprime caracter con atributos.
 
     pop de
     pop hl
@@ -770,11 +820,38 @@ Print_text_msg:
     inc (hl)
     dec (hl)
 
-    ret z                                   ;   RET, fin de msg.
+    jr z,Exit_01                            ;   RET, fin de msg.
 
     inc e
 
+;   TEMPORIZADOR.
+
+    pop bc                                  ;  Carga el temporizador en B.
+
+    inc b
+    dec b
+
+    jr z,Print_text_msg                     ; Mensaje NO TEMPORIZADO. Siguiente char.
+
+    push bc                                 ; Guarda valor del temporizador para restaurar después del decremento.
+
+1 ld c,$ff
+2 dec c
+    jr nz,2B
+    djnz 1B                                 ; Aplica temporización.
+
+    pop bc
+
     jr Print_text_msg
+
+
+Exit_01
+
+    pop bc
+
+    ret
+
+; -----------------------------------------------------
 
 ;   Find char. data.
 
