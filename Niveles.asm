@@ -1,3 +1,17 @@
+; ------------------------------------------------------------------
+;
+; 19/3/26
+
+Msg_level_index:
+
+	defm "Level 1.",0
+	defm "Flies.",0
+
+	defm "Level 2.",0
+	defm " Flies and UFOS.",0
+
+	defw 0
+
 ;	19/11/25
 
 Indice_de_niveles
@@ -14,28 +28,38 @@ Indice_de_niveles
 
 ; NIVEL_1. Tres clases de entidades tipo BadSat.
 
-Nivel_1 db $ff,$05,$80
+Nivel_1 db $ff,$05,$80 							; FLIES !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 	db 20										; Nº de entidades que tiene el nivel.
 
-	db 5,2,3,5,2 								; Clases de entidades. (Irán apareciendo por este orden).
-	db 3,3,2,2,5
-	db 3,3,2,5,2
-	db 3,3,2,5,3
+	db 1,2,3,2,3 								; Clases de entidades. (Irán apareciendo por este orden).
+	db 3,3,2,1,2
+	db 1,3,1,2,3
+	db 3,2,2,1,3
 
-Nivel_2 db 12
+; ---------------------------------------------------------------------------------------
 
-	db 2,1,1,1,1,2
-	db 2,1,1,1,1,2
+; Nivel_2. Bad_Sats y platillos.
+
+Nivel_2 db $ff,$05,$80 							; Flies and UFOS !!!!!.
+
+;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+	db 20
+
+	db 4,6,2,4,2
+	db 2,4,6,2,6
+	db 2,4,2,6,6
+	db 2,4,2,6,2
 
 	defw 0
 	defw 0
 
 ; --------------------------------------------------------------------------------------------------------------
-
 
 Indice_de_vidas
 

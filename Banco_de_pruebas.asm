@@ -822,6 +822,7 @@ Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1
 																				
 Puntero_de_entidades defw 0									; Este puntero se va desplazando por los distintos bytes_
 ; 															; _ que definen el NIVEL.
+Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
 
 ; ---------------------------------------------------------------------------------------------------------------
 
@@ -1110,6 +1111,16 @@ INICIALIZACION:
 	djnz 2B
 
 	call Genera_datos_de_impresion_Amadeus
+
+
+;	Imprime mensaje de nivel.
+
+	call Print_level_msg
+
+
+
+
+
 
 ;! ------------------
 

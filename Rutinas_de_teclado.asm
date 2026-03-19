@@ -31,9 +31,7 @@ ROM_Key_Scan:
 
 Main_menu_key:
 
-;   Inicializa RETURN TO MAIN MENU.
-
-    ld HL,Ctrl_6
+    ld HL,Ctrl_6 											; Inicializa RETURN TO MAIN MENU.
     res 1,(hl)
 
 	call ROM_Key_Scan 										; Scan keyboard.
@@ -221,6 +219,8 @@ Main_keyboard_routine:
 ; -----------------------------------------------------------
 ;
 ;	11/3/26
+;
+;	Espera la pulsación "FIRE" cuando seleccionamos la opción KEYBOARD.
 
 Press_START:
 

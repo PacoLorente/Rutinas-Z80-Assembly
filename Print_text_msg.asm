@@ -1,5 +1,39 @@
 ; ----------------------------------------------------------
 ;
+;   19/3/26
+;
+
+Print_level_msg:
+
+    ld hl,Puntero_de_mensajes_de_niveles
+    call Extrae_address
+
+    push hl                                                 ; Push mesg pointer.
+
+    ld de,Line_10 + 9
+    ld a,%01000111                                          ; attrs. Yellow ink.
+    call Print_text_msg
+
+    pop hl
+
+    inc hl
+    inc hl
+
+    push hl
+
+    ld de,Line_12 + 9
+    ld a,%01000111                                          ; attrs. Yellow ink.
+    call Print_text_msg
+
+    pop hl
+
+    jr $
+
+
+    ret
+
+; ----------------------------------------------------------
+;
 ;   11/3/26
 ;
 
