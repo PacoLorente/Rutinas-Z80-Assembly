@@ -1083,31 +1083,26 @@ INICIALIZACION:
 
 	push bc
 	call Print_Score_Counter
-	pop bc
-	pop hl
 
-
-
+	ld bc,$ffff
+    call DELAY
+	ld bc,$afff
+    call DELAY
 
 ;	Imprime mensaje de nivel.
 
+	ld a,%01000111                                           ; attrs. Paper white, black ink.
+	ld b,150                                                 ; Activa temporizador.
 	call Print_level_msg
 
-
-
-
-
-
-
-
-
-
-
+	pop bc
+	pop hl
 
 ;	Prepara cajas.
 
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
 	call Prepara_Cajas_de_Entidades
+
 
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
 
@@ -1156,7 +1151,9 @@ INICIALIZACION:
 
 	call Transicion_de_entrada
 
-	call Inicia_Shield										; Fuente para ejecutar el sonido del 1er Shield.
+;	Borramos el mensaje de nivel.
+
+	call Clear_level_msg
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).

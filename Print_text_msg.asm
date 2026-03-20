@@ -5,44 +5,38 @@
 
 Print_level_msg:
 
-
-
     ld hl,Puntero_de_mensajes_de_niveles
+
+    call Extrae_address
     call Extrae_address
 
-;    push hl                                                 ; Push mesg pointer.
+    push de
 
 ;   Attrs. del mensaje a imprimir, (atributos, línea de impresión, temporizador).
 
-    ld de,Line_10 + 9                                        ; Línea de impresión.
-    ld a,%01111000                                           ; attrs. Paper white, black ink.
-    ld b,100                                                 ; Activa temporizador.
-
-
+    ld de,Line_9 + 12                                        ; Línea de impresión.
     call Print_text_msg
 
-    jr $
-
-
-
-
-    pop hl
-
-    inc hl
-    inc hl
-
-    push hl
-
-    ld de,Line_12 + 9
-    ld a,%01000111                                          ; attrs. Yellow ink.
-    call Print_text_msg
-
-    pop hl
-
-    jr $
-
+    pop de
 
     ret
+
+Clear_level_msg:
+
+    ld a,%01000000
+    ld b,80
+
+    call Print_level_msg
+
+    inc de
+    inc de
+
+    ld (Puntero_de_mensajes_de_niveles),de
+
+    ret
+
+
+
 
 ; ----------------------------------------------------------
 ;
@@ -686,7 +680,6 @@ SPACE_ascii_code
 
 
 Print_Main_menu:
-
 
     ld hl,Keyboard                                          ; HL contiene el mensaje.
     ld b,0                                                  ; NO TEMPORIZADOR.

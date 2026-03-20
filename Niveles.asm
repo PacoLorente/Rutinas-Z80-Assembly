@@ -1,16 +1,21 @@
 ; ------------------------------------------------------------------
 ;
-; 19/3/26
+; 20/3/26
 
 Msg_level_index:
 
-	defm "Level 1.",0
-	defm "Flies.",0
-
-	defm "Level 2.",0
-	defm " Flies and UFOS.",0
+	defw Msg_1
+	defw Msg_2
+	defw Msg_3
+	defw Msg_4
 
 	defw 0
+	defw 0
+
+Msg_1 defm "1. FLIES",0
+Msg_2 defm "Flies.",0
+Msg_3 defm "Level 2.",0
+Msg_4 defm " Flies and UFOS.",0
 
 ;	19/11/25
 
