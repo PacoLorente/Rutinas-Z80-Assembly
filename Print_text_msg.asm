@@ -5,6 +5,7 @@
 
 Print_level_msg:
 
+
     ld hl,Puntero_de_mensajes_de_niveles
 
     call Extrae_address
@@ -14,9 +15,9 @@ Print_level_msg:
 
 ;   Attrs. del mensaje a imprimir, (atributos, línea de impresión, temporizador).
 
-	ld a,%01000111                                           ; attrs. Paper white, black ink.
-	ld b,150                                                 ; Activa temporizador.
-    ld de,Line_9 + 12                                        ; Línea de impresión.
+    ld a,%01000111                                          ; attrs. Paper white, black ink.
+	ld b,150                                                ; Activa temporizador.
+    ld de,Line_9 + 12                                       ; Línea de impresión.
     call Print_text_msg
 
     pop de
@@ -782,7 +783,7 @@ Modify_first_char_attr call Calcula_direccion_atributos
 ;   INPUTS: HL apunta al mensage a imprimir, (msg).
 ;           DE indica la fila de pantalla donde queremos imprimir el msg.
 ;            A contiene los attrs. del msg.
-;           BC Es un temporizador, ralentiza la impresión de caracteres. No actúa cuando es "0".
+;            B Actúa como temporizador, ralentiza la impresión de caracteres. No actúa cuando es "0".
 
 
 ;
@@ -796,8 +797,6 @@ Print_text_msg:
 
     push hl
     push de
-
-;    push bc                                ;   Push TEMPORIZADOR.
 
     call Find_address
 

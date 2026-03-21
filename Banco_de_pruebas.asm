@@ -1151,7 +1151,7 @@ INICIALIZACION:
 
 ;	Borramos el mensaje de nivel.
 
-;	call Clear_level_msg
+	call Clear_level_msg
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
