@@ -14,6 +14,8 @@ Print_level_msg:
 
 ;   Attrs. del mensaje a imprimir, (atributos, línea de impresión, temporizador).
 
+	ld a,%01000111                                           ; attrs. Paper white, black ink.
+	ld b,150                                                 ; Activa temporizador.
     ld de,Line_9 + 12                                        ; Línea de impresión.
     call Print_text_msg
 

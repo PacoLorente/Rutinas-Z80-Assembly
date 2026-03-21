@@ -4,7 +4,7 @@
 ;
 ;	Inicialización de los álbumes de líneas, (pintado/borrado).
 
-Inicia_albumes_de_lineas
+Inicia_albumes_de_lineas:
 
 	ld hl,Scanlines_album
 	ld (Album_de_pintado),hl
@@ -15,7 +15,7 @@ Inicia_albumes_de_lineas
 
 	ret
 
-Inicia_albumes_de_lineas_Amadeus
+Inicia_albumes_de_lineas_Amadeus:
 
 	ld hl,Amadeus_scanlines_album
 	ld (Album_de_pintado_Amadeus),hl
@@ -24,7 +24,7 @@ Inicia_albumes_de_lineas_Amadeus
 
 	ret
 
-Inicia_albumes_de_disparos
+Inicia_albumes_de_disparos:
 
 	ld hl,Amadeus_disparos_scanlines_album
 	ld (Album_de_pintado_disparos_Amadeus),hl

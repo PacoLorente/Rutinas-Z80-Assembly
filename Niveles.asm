@@ -12,7 +12,7 @@ Msg_level_index:
 	defw 0
 	defw 0
 
-Msg_1 defm "1. FLIES",0
+Msg_1 defm "FLIES",0
 Msg_2 defm "Flies.",0
 Msg_3 defm "Level 2.",0
 Msg_4 defm " Flies and UFOS.",0
