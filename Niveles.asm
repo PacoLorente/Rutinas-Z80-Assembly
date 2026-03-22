@@ -19,7 +19,7 @@ Msg_4 defm " Flies and UFOS.",0
 
 ;	19/11/25
 
-Indice_de_niveles
+Indice_de_niveles:
 
 	defw Nivel_1 
 	defw Nivel_2 
@@ -45,6 +45,9 @@ Nivel_1 db $ff,$05,$80 							; FLIES !!!
 	db 1,3,1,2,3
 	db 3,2,2,1,3
 
+;	defw 0
+;	defw 0
+
 ; ---------------------------------------------------------------------------------------
 
 ; Nivel_2. Bad_Sats y platillos.
@@ -61,8 +64,8 @@ Nivel_2 db $ff,$05,$80 							; Flies and UFOS !!!!!.
 	db 2,4,2,6,6
 	db 2,4,2,6,2
 
-	defw 0
-	defw 0
+;	defw 0
+;	defw 0
 
 ; --------------------------------------------------------------------------------------------------------------
 

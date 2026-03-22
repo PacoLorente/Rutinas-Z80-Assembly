@@ -5,7 +5,6 @@
 
 Print_level_msg:
 
-
     ld hl,Puntero_de_mensajes_de_niveles
 
     call Extrae_address
@@ -15,12 +14,17 @@ Print_level_msg:
 
 ;   Attrs. del mensaje a imprimir, (atributos, línea de impresión, temporizador).
 
+    ld ixl,0
+
     ld a,%01000111                                          ; attrs. Paper white, black ink.
 	ld b,150                                                ; Activa temporizador.
     ld de,Line_9 + 12                                       ; Línea de impresión.
     call Print_text_msg
 
     pop de
+
+    ld a,ixl
+    ld (Counter_msg_char),a
 
     ret
 
@@ -803,6 +807,8 @@ Print_text_msg:
     ex de,hl                                ;   BIN en DE - Fila en HL.
 
     call Print_BIN                          ;   Imprime caracter con atributos.
+
+    inc ixl
 
     pop de
     pop hl

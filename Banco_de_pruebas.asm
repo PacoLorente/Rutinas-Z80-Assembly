@@ -997,6 +997,8 @@ Move_SHIELD_ASCII_CODE db " "
 ; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
 
 Sinclair_db_box ds 4
+Counter_msg_char db 0
+
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -1091,7 +1093,7 @@ INICIALIZACION:
 
 ;	Imprime mensaje de nivel.
 
-	call Print_level_msg
+;	call Print_level_msg
 
 	pop bc
 	pop hl
@@ -1151,7 +1153,7 @@ INICIALIZACION:
 
 ;	Borramos el mensaje de nivel.
 
-	call Clear_level_msg
+;	call Clear_level_msg
 
 	ld a,3
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
