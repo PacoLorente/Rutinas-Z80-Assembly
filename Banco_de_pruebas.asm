@@ -822,7 +822,7 @@ Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1
 																				
 Puntero_de_entidades defw 0									; Este puntero se va desplazando por los distintos bytes_
 ; 															; _ que definen el NIVEL.
-Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
+Puntero_de_mensajes_de_niveles defw 0 ;Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
 
 ; ---------------------------------------------------------------------------------------------------------------
 
@@ -997,7 +997,7 @@ Move_SHIELD_ASCII_CODE db " "
 ; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
 
 Sinclair_db_box ds 4
-Counter_msg_char db 0
+;Counter_msg_char db 0
 
 
 ; 	INICIO  *************************************************************************************************************************************************************************
@@ -1130,8 +1130,7 @@ INICIALIZACION:
 ;! ------------------
 
 	call Inicia_punteros_de_cajas						 	; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
-
-;	call Inicia_Shield
+	call Inicia_Shield
 
 	ld hl,(Scanlines_album_SP)
 	ld (Techo_Scanlines_album),hl

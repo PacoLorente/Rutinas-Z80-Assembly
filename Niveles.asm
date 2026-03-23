@@ -2,27 +2,27 @@
 ;
 ; 20/3/26
 
-Msg_level_index:
+;Msg_level_index:
 
-	defw Msg_1
-	defw Msg_2
-	defw Msg_3
-	defw Msg_4
+;	defw Msg_1
+;	defw Msg_2
+;	defw Msg_3
+;	defw Msg_4
 
-	defw 0
-	defw 0
+;	defw 0
+;	defw 0
 
-Msg_1 defm "FLIES",0
-Msg_2 defm "Flies.",0
-Msg_3 defm "Level 2.",0
-Msg_4 defm " Flies and UFOS.",0
+;Msg_1 defm "FLIES",0
+;Msg_2 defm "Flies.",0
+;Msg_3 defm "Level 2.",0
+;Msg_4 defm " Flies and UFOS.",0
 
 ;	19/11/25
 
 Indice_de_niveles:
 
 	defw Nivel_1 
-	defw Nivel_2 
+;	defw Nivel_2
 
 ;	...
 ;	...
@@ -45,7 +45,7 @@ Nivel_1 db $ff,$05,$80 							; FLIES !!!
 	db 1,3,1,2,3
 	db 3,2,2,1,3
 
-;	defw 0
+;   defw 0
 ;	defw 0
 
 ; ---------------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ Nivel_2 db $ff,$05,$80 							; Flies and UFOS !!!!!.
 
 ;	defw 0
 ;	defw 0
-
+;
 ; --------------------------------------------------------------------------------------------------------------
 
 Indice_de_vidas

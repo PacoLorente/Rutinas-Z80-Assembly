@@ -302,6 +302,10 @@ game_over:
 
 Dispara_salida_de_amadeus:
 
+
+	jr $
+
+
 	ld hl,Temp_Amadeus_exit
 	dec (hl)
 	ret nz
