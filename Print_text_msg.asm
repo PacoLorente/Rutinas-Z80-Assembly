@@ -1,29 +1,79 @@
 ; ----------------------------------------------------------
 ;
-;   19/3/26
+;   25/3/26
 ;
 
 Print_level_msg:
+
+;    ld a,1
+;    out (254),a
 
     ld hl,Puntero_de_mensajes_de_niveles
 
     call Extrae_address
     call Extrae_address
 
-    push de
+;   Actualiza (Puntero_de_mensajes_de_niveles).
 
-;   Attrs. del mensaje a imprimir, (atributos, línea de impresión, temporizador).
+    inc de
+    inc de
 
-    ld a,%01000111                                          ; attrs. Paper white, black ink.
-	ld b,150                                                ; Activa temporizador.
-    ld de,Line_9 + 12                                       ; Línea de impresión.
+    ld (Puntero_de_mensajes_de_niveles),de
+
+;   HL apunta al 1er .db del mensaje de niveles, (centrado en pantalla del msg).
+
+    ld de,Line_9 + 6                                           ; Línea de impresión.
+
+    ld b,(hl) 
+    ld c,b                                                      ; Incremento del carro de impresión en B y C.
+
+1 inc e
+    djnz 1B                                                     ; DE contiene la dirección donde imprimiremos el 1er char.
+
+    inc hl                                                      ; HL apunta al 2º .db del mensaje de niveles, (nº de caracteres que tiene el msg).
+
+    ld b,(hl)
+    ld (Desplazamiento_level_msg),bc                                   
+
+    inc hl
+
+;   HL apunta al "msg" a imprimir. Asignamos attrs. y temporización. 
+
+    ld a,%01000111                                              ; attrs. Paper white, black ink.
+    ld b,150                                                    ; Activa temporizador.
+    
     call Print_text_msg
-
-    pop de
 
     ret
 
 Clear_level_msg:
+
+    jr $
+
+    ld hl,Counter_msg_char 
+    ld b,(hl)                                                    ; nº de chars en B.                                              
+
+    ld de,Line_9 + 12                                             ; Línea de impresión.
+
+    inc e
+
+
+
+    inc hl
+
+    ld b,(hl)                                                   ; Desplazamiento para centrar el borrado en C.
+
+
+
+
+
+
+    ld hl,a8
+    ld a,%01000000
+    ld b,0
+    ld de,Line_9 + 6
+    call Print_text_msg
+
 
     ld a,%01000000
     ld b,80
@@ -742,13 +792,15 @@ Print_Main_menu:
 
 Print_DONE:
 
+    di
+    jr $
+    ei
+
     ld hl,Done                                              ; msg.
     ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%11000100                                          ; attrs.
 
-    push de
     call Print_text_msg
-    pop hl
 
     ret
 
@@ -859,7 +911,9 @@ Find_address
     add hl,hl
     add hl,hl                               ;   ASCII * 8
 
-    add hl,bc
+    xor a
+
+    adc hl,bc
 
     ret
 

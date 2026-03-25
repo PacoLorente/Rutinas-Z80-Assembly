@@ -997,7 +997,8 @@ Move_SHIELD_ASCII_CODE db " "
 ; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
 
 Sinclair_db_box ds 4
-;Counter_msg_char db 0
+Desplazamiento_level_msg db 0
+Counter_msg_char db 0
 
 
 ; 	INICIO  *************************************************************************************************************************************************************************
@@ -1093,7 +1094,7 @@ INICIALIZACION:
 
 ;	Imprime mensaje de nivel.
 
-;	call Print_level_msg
+	call Print_level_msg
 
 	pop bc
 	pop hl
@@ -1102,7 +1103,6 @@ INICIALIZACION:
 
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
 	call Prepara_Cajas_de_Entidades
-
 
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
 
@@ -1154,7 +1154,7 @@ INICIALIZACION:
 
 ;	call Clear_level_msg
 
-	ld a,3
+	ld a,5
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
 
 	ei
@@ -1386,7 +1386,7 @@ Gestion_de_Amadeus
 	dec (hl)
 
 	di
-	jr z,$ 						;> GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	jr z,$ 													;> GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	ei
 
 	jr End_frame
@@ -1441,7 +1441,7 @@ Amadeus_vivo
 
 ;	Forzamos la impresión de Amadeus e inicializamos el temporizador.
 
-	ld a,3
+	ld a,5
 	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
 
 	ld hl,Ctrl_3
@@ -2371,9 +2371,10 @@ Incrementa_punteros_de_cajas
 DELAY
 ;															;$0320 ..... Delay mínimo
 	dec bc  												;Sumaremos $0045 por FILA a esta cantidad inicial. Ejempl: si el Sprite ocupa la 1ª y 2ª_
-	LD a,b
-	AND a
-	JR nz,DELAY
+	
+	ld a,b
+	or c
+	jr nz,DELAY
 
 	ret
 
@@ -2748,7 +2749,6 @@ Siguiente_frame_explosion
 ; Entidades_en_curso db 0									; Entidades en pantalla.
 
 	call Incrementa_Score
-
 	call Decrementa_techo 									; Cada vez que eliminamos a una entidad decrementamos el valor de (Max_time_to_appear_entities).
 
 ; La entidad eliminada, es la última del nivel ?

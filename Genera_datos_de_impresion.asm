@@ -108,7 +108,6 @@ Genera_datos_de_impresion_Amadeus:
 
 ;   Genera Scanlines (TRANSICION_DE_SALIDA).
 
-
     ld hl,(Scanlines_album_SP)
     push hl
 

@@ -228,13 +228,13 @@ Imprime_Logo_principal:
 
 Transicion_de_salida:
 
-	push hl
-	push de
+;	push hl
+;	push de
 
-	call Print_DONE
+;	call Print_DONE
 
-	pop de
-	pop hl
+;	pop de
+;	pop hl
 
 ;	Temporizador
 
@@ -302,9 +302,10 @@ game_over:
 
 Dispara_salida_de_amadeus:
 
+    ld bc,$03ff
+    call DELAY
 
-	jr $
-
+	call Print_DONE
 
 	ld hl,Temp_Amadeus_exit
 	dec (hl)
