@@ -8,7 +8,7 @@
 ;	13/08/24
 ;
 ;	
-	org $fcff															; (Debajo de la pila).
+	org $fcff        													; (Debajo de la pila).
 
 	defw $8310															; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
 
@@ -200,7 +200,7 @@ Decenas_de_millar_Score_7 equ Decenas_de_millar_Score_6 + 256
 ; ----- ----- ----- ----- ----- ----- ----- -----
 
 Primer_scan_de_pantalla equ $4120										; Cuando (Puntero_de_impresion) se encuentra por debajo de esta dirección se generan "0" scanlines.
-Almacen_de_movimientos_masticados_Amadeus equ $c000						; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
+Almacen_de_movimientos_masticados_Amadeus equ $c000 					; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
 ; Scanlines_album. 
 
@@ -239,6 +239,10 @@ Laser_sound_init_value equ $00a0	;	$00c0
 Shield_sound_init_value equ $00c0
 Shot_sound_init_value equ $1801
 Burst_sound_init_value equ $3000	;	(C =¨3¨).	$24 / $03 = $0c Frames que vamos a estar ejecutando la explosión.
+
+;	Mensajes de texto.
+
+Fila_msg_de_nivel equ Line_9 + 6	;	Los mensajes de nivel se imprimen en la fila 9, columna 6, (antes del centrado).
 
 ;	Datos fijos de los álbumes de líneas de Amadeus:
 
@@ -1094,7 +1098,7 @@ INICIALIZACION:
 
 ;	Imprime mensaje de nivel.
 
-	call Print_level_msg
+;	call Print_level_msg
 
 	pop bc
 	pop hl

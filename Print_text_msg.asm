@@ -3,92 +3,84 @@
 ;   25/3/26
 ;
 
-Print_level_msg:
+;Print_level_msg:
 
 ;    ld a,1
 ;    out (254),a
 
-    ld hl,Puntero_de_mensajes_de_niveles
+;;    ld hl,Puntero_de_mensajes_de_niveles
 
-    call Extrae_address
-    call Extrae_address
+;;    call Extrae_address
+;;    call Extrae_address
 
 ;   Actualiza (Puntero_de_mensajes_de_niveles).
 
-    inc de
-    inc de
+;;    inc de
+;;    inc de
 
-    ld (Puntero_de_mensajes_de_niveles),de
+;;    ld (Puntero_de_mensajes_de_niveles),de
 
 ;   HL apunta al 1er .db del mensaje de niveles, (centrado en pantalla del msg).
 
-    ld de,Line_9 + 6                                           ; Línea de impresión.
+ ;;   ld de,Fila_msg_de_nivel                                     ; Línea de impresión.
 
-    ld b,(hl) 
-    ld c,b                                                      ; Incremento del carro de impresión en B y C.
+;;    ld b,(hl) 
+;;    ld c,b                                                      ; Incremento del carro de impresión en B y C.
 
-1 inc e
-    djnz 1B                                                     ; DE contiene la dirección donde imprimiremos el 1er char.
+;1 inc e
+;    djnz 1B                                                     ; DE contiene la dirección donde imprimiremos el 1er char.
 
-    inc hl                                                      ; HL apunta al 2º .db del mensaje de niveles, (nº de caracteres que tiene el msg).
+;    inc hl                                                      ; HL apunta al 2º .db del mensaje de niveles, (nº de caracteres que tiene el msg).
 
-    ld b,(hl)
-    ld (Desplazamiento_level_msg),bc                                   
+ ;   ld b,(hl)
+;    ld (Desplazamiento_level_msg),bc                                   
 
-    inc hl
+;    inc hl
 
 ;   HL apunta al "msg" a imprimir. Asignamos attrs. y temporización. 
 
-    ld a,%01000111                                              ; attrs. Paper white, black ink.
-    ld b,150                                                    ; Activa temporizador.
+;    ld a,%01000111                                              ; attrs. Paper white, black ink.
+;    ld b,150                                                    ; Activa temporizador.
     
-    call Print_text_msg
+;    call Print_text_msg
 
-    ret
+;    ret
 
-Clear_level_msg:
+; -------------------------------------------------------
 
-    jr $
+;;Clear_level_msg:
 
-    ld hl,Counter_msg_char 
-    ld b,(hl)                                                    ; nº de chars en B.                                              
+;    jr $
 
-    ld de,Line_9 + 12                                             ; Línea de impresión.
+;    ld hl,a8
+;    call Find_address
 
-    inc e
+;    ex de,hl
 
+;    ld hl,Fila_msg_de_nivel
 
-
-    inc hl
-
-    ld b,(hl)                                                   ; Desplazamiento para centrar el borrado en C.
-
+;    ld a,%01000000                  
+;    ex af,af                                                    ; attrs. en AF´.
 
 
+;   Tenemos:    HL Carro de impresión.
+;               DE Datos del caracter a imprimir, " ".
+;                A Atributos.
 
 
+;    ld a,(Counter_msg_char)
+;    ld b,a
 
-    ld hl,a8
-    ld a,%01000000
-    ld b,0
-    ld de,Line_9 + 6
-    call Print_text_msg
+;1 push bc
 
+;    call Print_BIN
 
-    ld a,%01000000
-    ld b,80
+;    pop bc
 
-    call Print_level_msg
+;    djnz 1B
 
-    inc de
-    inc de
-
-    ld (Puntero_de_mensajes_de_niveles),de
-
-    ret
-
-
-
+;    ret
+    
 
 ; ----------------------------------------------------------
 ;
@@ -792,9 +784,7 @@ Print_Main_menu:
 
 Print_DONE:
 
-    di
-    jr $
-    ei
+;   BC entra con valor "0" en la rutina.
 
     ld hl,Done                                              ; msg.
     ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.

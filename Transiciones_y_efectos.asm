@@ -228,14 +228,6 @@ Imprime_Logo_principal:
 
 Transicion_de_salida:
 
-;	push hl
-;	push de
-
-;	call Print_DONE
-
-;	pop de
-;	pop hl
-
 ;	Temporizador
 
 	ld bc,$0101
