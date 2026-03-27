@@ -8,7 +8,7 @@
 ;	13/08/24
 ;
 ;	
-	org $fcff        													; (Debajo de la pila).
+	org $feff		;$fcff        													; (Debajo de la pila).
 
 	defw $8310															; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
 
@@ -200,7 +200,7 @@ Decenas_de_millar_Score_7 equ Decenas_de_millar_Score_6 + 256
 ; ----- ----- ----- ----- ----- ----- ----- -----
 
 Primer_scan_de_pantalla equ $4120										; Cuando (Puntero_de_impresion) se encuentra por debajo de esta dirección se generan "0" scanlines.
-Almacen_de_movimientos_masticados_Amadeus equ $c000 					; ($c000 - $c1e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
+Almacen_de_movimientos_masticados_Amadeus equ $c800 					; ($c800 - $c9e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
 ; Scanlines_album. 
 
@@ -1042,7 +1042,7 @@ INICIALIZACION:
 	call Cls
 
 	ld sp,0													; Situamos el inicio de Stack.
-	ld a,$fc 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
+	ld a,$fe 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
 	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
 	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
 
@@ -1098,7 +1098,7 @@ INICIALIZACION:
 
 ;	Imprime mensaje de nivel.
 
-;	call Print_level_msg
+	call Print_level_msg
 
 	pop bc
 	pop hl
@@ -1156,9 +1156,9 @@ INICIALIZACION:
 
 ;	Borramos el mensaje de nivel.
 
-;	call Clear_level_msg
+	call Clear_level_msg
 
-	ld a,5
+	ld a,4
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
 
 	ei
@@ -1445,7 +1445,7 @@ Amadeus_vivo
 
 ;	Forzamos la impresión de Amadeus e inicializamos el temporizador.
 
-	ld a,5
+	ld a,4
 	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
 
 	ld hl,Ctrl_3

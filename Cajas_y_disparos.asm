@@ -24,7 +24,7 @@ Tabla_de_borrado ds 24
 ;	db 0, defw 0, db 0
 ;	.....
 
-Almacen_de_movimientos_masticados_1 defw $c1e6													
+Almacen_de_movimientos_masticados_1 defw $c9e6													
 Almacen_de_movimientos_masticados_2 defw 0
 Almacen_de_movimientos_masticados_3 defw 0
 
