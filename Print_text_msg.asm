@@ -65,24 +65,24 @@ Clear_level_msg:
     ld b,a
 
 2 inc l
-    djnz 2B
+    djnz 2B                                                     ; HL está situado en el último char. a borrar.
+
+    inc a
 
     ld b,a
-    push bc                                                     ; PUSH nº de chars -1.
 
 ;   Estamos en el último char. del mensaje de nivel. 
 
-    ld e,%11111110                                              ; máscara chachi.
+5 ld e,%11111110                                              ; Utilizaremos esta máscara para ir borrando. Comenzamos con el último bit.
+
+    push bc                                                       ; PUSH nº de chars -1.
 
     ld b,8                                                      ; 8 bits. 8 interacciones para borrar un byte.
+4 push bc                                                     
 
-    jr $
+    ld b,8
 
     push hl
-
-    push bc
-
-    push bc 
 
 3 ld a,(hl)
     and e
@@ -90,22 +90,22 @@ Clear_level_msg:
     inc h
     djnz 3B
 
-    pop bc
+    ld bc,$0aff
+    call DELAY
+
+    pop hl
 
     sla e
 
     pop bc
-
-
-
-    ld bc,$0fff
-    call DELAY
+    djnz 4B
  
-    jr $
+    dec l
+    pop bc
+    djnz 5B
 
     ret
     
-
 ; ----------------------------------------------------------
 ;
 ;   11/3/26

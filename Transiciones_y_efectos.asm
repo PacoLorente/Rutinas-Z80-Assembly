@@ -524,7 +524,7 @@ Construye_rayo cp d 												; Ha llegado el rayo a (p.imp.amadeus) + 2 ???
 
 	ld hl,(Laser_sound)
 	ld (Sound),hl 													; Laser.
-	ld bc,6															; Nº de ondas completas a ejecutar.
+	ld bc,5															; Nº de ondas completas a ejecutar.
 	ld d,1 															; Efecto ascendente por defecto.
 	ld e,1 															; Nº de incrementos/decrementos que aplicaremos al delay antes de salir.
 

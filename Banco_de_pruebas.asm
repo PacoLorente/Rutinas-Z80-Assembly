@@ -1150,13 +1150,13 @@ INICIALIZACION:
 	set 2,(hl)
 	set 5,(hl)												; Imprimimos Amadeus.
 
+	call Clear_level_msg
+
 ;	Transicion_de_entrada
 
 	call Transicion_de_entrada
 
 ;	Borramos el mensaje de nivel.
-
-	call Clear_level_msg
 
 	ld a,4
 	ld (Cuad_objeto),a 										; Retardo, (transición de salida de Amadeus cuando superamos un nivel).
@@ -1415,6 +1415,10 @@ Gestion_de_Amadeus
 	jr z,End_frame
 
 New_Amadeus
+
+	di
+	jr $
+	ei
 
 	call Reinicia_Amadeus
 	jr End_frame
