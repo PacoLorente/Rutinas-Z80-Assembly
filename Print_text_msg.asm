@@ -803,7 +803,7 @@ Print_Main_menu:
 
 ; ----------------------------------------------------------
 ;
-;   21/2/26
+;   31/3/26
 ;
 
 Print_DONE:
@@ -812,7 +812,17 @@ Print_DONE:
 
     ld hl,Done                                              ; msg.
     ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
-    ld a,%11000100                                          ; attrs.
+    ld a,%11100000                                          ; attrs.
+
+    call Print_text_msg
+
+    ret
+
+Clean_DONE
+
+    ld hl,b0-5
+    ld de,Line_11 + 14
+    ld a,%01000000
 
     call Print_text_msg
 

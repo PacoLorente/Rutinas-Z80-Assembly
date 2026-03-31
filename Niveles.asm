@@ -40,14 +40,16 @@ Nivel_1 db $ff,$05,$80 							; FLIES !!!
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
-;	db 1										; Nº de entidades que tiene el nivel.
+	db 1										; Nº de entidades que tiene el nivel.
 
-	db 20
+	db 1
+	
+;	db 20
 
-	db 1,2,3,2,3 								; Clases de entidades. (Irán apareciendo por este orden).
-	db 3,3,2,1,2
-	db 1,3,1,2,3
-	db 3,2,2,1,3
+;	db 1,2,3,2,3 								; Clases de entidades. (Irán apareciendo por este orden).
+;	db 3,3,2,1,2
+;	db 1,3,1,2,3
+;	db 3,2,2,1,3
 
 ;    defw 0
 ;	defw 0

@@ -512,7 +512,7 @@ Ctrl_2 db 0
 ;															_ el último MOVIMIENTO que hayamos ejecutado.
 ;															BIT 4, ???
 ;															BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
-;															BIT 6, "1" Indica que hemos iniciado la "-Transicion_de_salida-" de Amadeus.
+;															BIT 6, -------------------------------------------------------------
 ;															BIT 7, "1" Detecta que hemos pulsado "SHIELD". ; "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
 ;															- La rutina [Borra_escudo], inicializará el FLAG.
 
@@ -1416,10 +1416,6 @@ Gestion_de_Amadeus
 
 New_Amadeus
 
-	di
-	jr $
-	ei
-
 	call Reinicia_Amadeus
 	jr End_frame
 
@@ -1437,24 +1433,24 @@ Amadeus_vivo
 	call Main_keyboard_routine
 	call Kempston_control
 
-	ld hl,Ctrl_2
-	bit 6,(hl)
-	jr z,2F
+;	ld hl,Ctrl_2
+;	bit 6,(hl)
+;	jr z,2F
 
 ;	Se ha iniciado la salida de Amadeus por la parte baja de la pantalla, NIVEL SUPERADO.
 
-	ld hl,Cuad_objeto                                       ; 2ª Función de (Cuad_objeto).
-	dec (hl)												; DEC temporizador, (FRAME rate) de la transición de salida.
-	jr nz,2F												; No forzamos la impresión de Amadeus si no ha habido pulsación de teclas.
+;	ld hl,Cuad_objeto                                       ; 2ª Función de (Cuad_objeto).
+;	dec (hl)												; DEC temporizador, (FRAME rate) de la transición de salida.
+;	jr nz,2F												; No forzamos la impresión de Amadeus si no ha habido pulsación de teclas.
 
 ;	Forzamos la impresión de Amadeus e inicializamos el temporizador.
 
-	ld a,4
-	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
+;	ld a,4
+;	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
 
-	ld hl,Ctrl_3
-	set 5,(hl)
-	jr Vivo_y_coleando
+;	ld hl,Ctrl_3
+;	set 5,(hl)
+;	jr Vivo_y_coleando
 
 2 ld hl,Ctrl_3
 	bit 5,(hl)
@@ -1513,7 +1509,7 @@ Reinicia_Amadeus
 
 	ld hl,$50de
 	ld (p.imp.amadeus),hl									; Inicializa el puntero de impresión.
-	ld hl,$c0f0
+	ld hl,Almacen_de_movimientos_masticados_Amadeus + $f0
 	ld (Pamm_Amadeus),hl									; Inicializa el puntero de almacén de movimientos masticados.
 	ld hl,$003d
 	ld (Comm_Amadeus),hl									; Inicializa el contador de movimientos masticados.
