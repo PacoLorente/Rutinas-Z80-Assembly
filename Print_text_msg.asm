@@ -826,6 +826,9 @@ Clean_DONE
 
     call Print_text_msg
 
+    xor a
+    inc a                                                   ; Fuerza NZ a la salida.
+
     ret
 
 ; ----------------------------------------------------------

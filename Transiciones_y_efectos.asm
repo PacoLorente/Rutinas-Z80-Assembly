@@ -305,8 +305,6 @@ Dispara_salida_de_amadeus:
 	dec (hl)
 	ret nz
 
-;	call Clean_DONE
-
  	ld hl,Ctrl_2
 	set 6,(hl)														;	Bit 6 de Ctrl_2 indica que hemos iniciado la "Transición: nivel superado".
 
