@@ -226,53 +226,53 @@ Imprime_Logo_principal:
 ;	Se ha iniciado el proceso de Transición de salida de Amadeus ???.
 
 
-;Transicion_de_salida:
+Transicion_de_salida:
 
 ;	Temporizador
 
-;	ld bc,$0101
+	ld bc,$0101
 
-;	ld a,(CTRL_DESPLZ)
-;	and a
-;	jr z,Inicia_transicion_de_salida
+	ld a,(CTRL_DESPLZ)
+	and a
+	jr z,Inicia_transicion_de_salida
 
 ;	Proceso de transición de salida iniciado.
 
-;	cp $10
-;	jr nz,2F
+	cp $10
+	jr nz,2F
 
 ;	Hay que borrar el último Scan de Amadeus.
 
-;	ld hl,Ctrl_4
-;	set 5,(hl)														;	Indica FIN de la transición.
+	ld hl,Ctrl_4
+	set 5,(hl)														;	Indica FIN de la transición.
 
-;	dec a
+	dec a
 
-;	ld hl,Sprite_vacio
+	ld hl,Sprite_vacio
 
-;	push hl
-;	pop de
+	push hl
+	pop de
 
-;2 ld b,a
-;	ld c,b
+2 ld b,a
+	ld c,b
 
-;Inicia_transicion_de_salida
+Inicia_transicion_de_salida
 
-;	push ix
-;	pop hl 															;	(Puntero_de_impresion) en HL.
+	push ix
+	pop hl 															;	(Puntero_de_impresion) en HL.
 
-;1 call NextScan
-;	djnz 1B															;	Inc. scan.
+1 call NextScan
+	djnz 1B															;	Inc. scan.
 
-;	inc c
-;	ld a,c
+	inc c
+	ld a,c
 
-;	ld (CTRL_DESPLZ),a												;	Inc. contador. (Incrementos de scanlines).
+	ld (CTRL_DESPLZ),a												;	Inc. contador. (Incrementos de scanlines).
 
-;	push hl
-;	pop ix															;	Nuevo (Puntero_de_impresion) en IX para generar datos de impresión.
+	push hl
+	pop ix															;	Nuevo (Puntero_de_impresion) en IX para generar datos de impresión.
 
-;	ret
+	ret
 
 ; ------------------------------------------------------------------------
 ;
@@ -294,6 +294,8 @@ game_over:
 
 Dispara_salida_de_amadeus:
 
+;	DONE msg, (Print & clear message).
+
     ld bc,$05ff
     call DELAY
 
@@ -303,13 +305,10 @@ Dispara_salida_de_amadeus:
 	dec (hl)
 	ret nz
 
-	call Clean_DONE
+;	call Clean_DONE
 
-; 	ld hl,Ctrl_2
-;	set 6,(hl)														;	Bit 6 de Ctrl_2 indica que hemos iniciado la "Transicion_de_salida" de Amadeus.
-
-	ld hl,Ctrl_4
-	set 5,(hl)
+ 	ld hl,Ctrl_2
+	set 6,(hl)														;	Bit 6 de Ctrl_2 indica que hemos iniciado la "Transición: nivel superado".
 
 	ret
 

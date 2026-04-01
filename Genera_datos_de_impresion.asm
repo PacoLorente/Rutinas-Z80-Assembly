@@ -175,11 +175,11 @@ Cargamos_registros_con_mov_masticado_Amadeus:
 
 ;   Estamos desapareciendo ???
 
-;    ld a,(Ctrl_2)
-;    bit 6,a
-;    ret z                                                   ; RET, Amadeus no hemos terminado el NIVEL.
+    ld a,(Ctrl_2)
+    bit 6,a
+    ret z                                                   ; RET, Amadeus no hemos terminado el NIVEL.
 
-;    call Transicion_de_salida
+    call Transicion_de_salida
 
     ret
 

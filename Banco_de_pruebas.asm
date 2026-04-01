@@ -1433,24 +1433,24 @@ Amadeus_vivo
 	call Main_keyboard_routine
 	call Kempston_control
 
-;	ld hl,Ctrl_2
-;	bit 6,(hl)
-;	jr z,2F
+	ld hl,Ctrl_2
+	bit 6,(hl)
+	jr z,2F
 
 ;	Se ha iniciado la salida de Amadeus por la parte baja de la pantalla, NIVEL SUPERADO.
 
-;	ld hl,Cuad_objeto                                       ; 2ª Función de (Cuad_objeto).
-;	dec (hl)												; DEC temporizador, (FRAME rate) de la transición de salida.
-;	jr nz,2F												; No forzamos la impresión de Amadeus si no ha habido pulsación de teclas.
+	ld hl,Cuad_objeto                                       ; 2ª Función de (Cuad_objeto).
+	dec (hl)												; DEC temporizador, (FRAME rate) de la transición de salida.
+	jr nz,2F												; No forzamos la impresión de Amadeus si no ha habido pulsación de teclas.
 
 ;	Forzamos la impresión de Amadeus e inicializamos el temporizador.
 
-;	ld a,4
-;	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
+	ld a,4
+	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
 
-;	ld hl,Ctrl_3
-;	set 5,(hl)
-;	jr Vivo_y_coleando
+	ld hl,Ctrl_3
+	set 5,(hl)
+	jr Vivo_y_coleando
 
 2 ld hl,Ctrl_3
 	bit 5,(hl)
@@ -2753,6 +2753,9 @@ Siguiente_frame_explosion
 ; Entidades_en_curso db 0									; Entidades en pantalla.
 
 	call Incrementa_Score
+	call Score_a_BCD
+	call Actualiza_Punteros_Score 							; Actualizamos los dígitos BCD del marcador Score, (Score_hex) y fijamos los punteros BCD_Score.
+
 	call Decrementa_techo 									; Cada vez que eliminamos a una entidad decrementamos el valor de (Max_time_to_appear_entities).
 
 ; La entidad eliminada, es la última del nivel ?
@@ -2775,10 +2778,6 @@ Siguiente_frame_explosion
 ; ----------------------------------
 
 	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
-
-	call Score_a_BCD
-
-	call Actualiza_Punteros_Score 							; Actualizamos los dígitos BCD del marcador Score, (Score_hex) y fijamos los punteros BCD_Score.
 
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
 ; IX apunta al 1er .db de la entidad eliminada.

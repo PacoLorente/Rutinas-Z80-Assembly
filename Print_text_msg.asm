@@ -33,8 +33,8 @@ Print_level_msg:
     inc hl                                                      ; HL apunta al 2º .db del mensaje de niveles, (nº de caracteres que tiene el msg).
 
     ld b,(hl)
-    ld (Desplazamiento_level_msg),bc                                   
-
+    ld (Desplazamiento_level_msg),bc                            ; Guarda el desplazamiento del carro, (para centrar el mensage) y el nº de chars.  
+;                                                               ; Estos datos son necesarios para borrar el mensaje más adelante.
     inc hl
 
 ;   HL apunta al "msg" a imprimir. Asignamos attrs. y temporización. 
