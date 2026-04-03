@@ -5,7 +5,7 @@
 Msg_level_index:
 
 	defw Msg_1
-Churra defw Msg_2
+	defw Msg_2
 	defw Msg_3
 	defw Msg_4
 
@@ -13,11 +13,18 @@ Churra defw Msg_2
 	defw 0
 
 Msg_1 db 8,5 									; Columna +5 , nº de chars del msg. 
-	defm "FLIES",0 								; msg, END of msg.
+	defm "FLIES"
+	db 0
+
 Msg_2 db 3,14
-	defm "FLIES AND UFOS",0
-Msg_3 defm "Level 2.",0
-Msg_4 defm " Flies and UFOS.",0
+	defm "FLIES AND UFOS"
+	db 0
+
+Msg_3 defm "Level 2."
+	db 0
+
+Msg_4 defm " Flies and UFOS."
+	db 0
 
 ;	19/11/25
 
@@ -40,16 +47,16 @@ Nivel_1 db $ff,$05,$80 							; FLIES !!!
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
-	db 1										; Nº de entidades que tiene el nivel.
+	db 19										; Nº de entidades que tiene el nivel.
 
-	db 1
+;	db 1
 	
 ;	db 20
 
-;	db 1,2,3,2,3 								; Clases de entidades. (Irán apareciendo por este orden).
-;	db 3,3,2,1,2
-;	db 1,3,1,2,3
-;	db 3,2,2,1,3
+	db 1,2,3,2,3 								; Clases de entidades. (Irán apareciendo por este orden).
+	db 3,3,2,1,2
+	db 1,3,1,2,3
+	db 3,2,2,1;,3
 
 ;    defw 0
 ;	defw 0

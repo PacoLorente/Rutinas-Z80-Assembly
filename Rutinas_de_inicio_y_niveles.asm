@@ -16,8 +16,14 @@ Next_level:
     call DELAY
     ld bc,$ffff
     call DELAY
+	ld bc,$ffff
+    call DELAY
+    ld bc,$ffff
+    call DELAY
 
 	call Print_level_msg
+
+
 
 
 	jr $

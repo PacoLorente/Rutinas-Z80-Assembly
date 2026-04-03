@@ -891,7 +891,7 @@ Shield_sound defw 0
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
-Temp_Amadeus_exit db 150 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
+Temp_Amadeus_exit db 120 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
 Tabla_de_conversion_KEYCODE_ASCII_CODE
 

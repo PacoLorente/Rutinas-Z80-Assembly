@@ -8,9 +8,8 @@ Print_level_msg:
 ;    ld a,1
 ;    out (254),a
 
-    ld hl,Puntero_de_mensajes_de_niveles
+    ld hl,(Puntero_de_mensajes_de_niveles)
 
-    call Extrae_address
     call Extrae_address
 
 ;   Actualiza (Puntero_de_mensajes_de_niveles).
