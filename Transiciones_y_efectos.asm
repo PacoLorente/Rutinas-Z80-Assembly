@@ -296,7 +296,7 @@ Dispara_salida_de_amadeus:
 
 ;	DONE msg, (Print & clear message).
 
-    ld bc,$05ff
+	ld bc,$05ff
     call DELAY
 
 	call Print_DONE

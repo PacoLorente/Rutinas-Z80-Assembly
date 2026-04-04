@@ -1,42 +1,3 @@
-; ------------------------------------------------------------------------
-;
-;	01/04/26
-;
-;	Inizializa el siguiente nivel.
-
-Next_level:
-
-	di
-
-	call Clean_DONE
-
-	ld bc,$ffff
-    call DELAY
-	ld bc,$ffff
-    call DELAY
-    ld bc,$ffff
-    call DELAY
-	ld bc,$ffff
-    call DELAY
-    ld bc,$ffff
-    call DELAY
-
-	call Print_level_msg
-
-
-
-
-	jr $
-
-
-
-
-
-
-
-
-
-
 ; ---------------------------------------------------------------------------------------------------------------------
 ;
 ;	13/03/24
@@ -89,7 +50,7 @@ Inicia_albumes_de_disparos:
 ;				C contiene la (Clase) de la 1ª entidad del nivel.
 ; 				HL contiene (Puntero_de_entidades).
 
-Prepara_Cajas_Master 
+Prepara_Cajas_Master:
 
 	push hl															; Push (Puntero_de_entidades).
 	push bc															; Push (Numero_de_entidades)/(Clase).
@@ -330,7 +291,7 @@ Construye_movimientos_masticados_entidad
 ;	Guarda el "movimiento_masticado" en el {Almacen_de_movimientos_masticados} de la entidad.
 ;	Actualiza el (Puntero_de_almacen_de_mov_masticados) tras el guardado.
 
-Guarda_movimiento_masticado	
+Guarda_movimiento_masticado:
 
 	ld (Stack),sp
 	ld sp,(Puntero_de_almacen_de_mov_masticados)					; Guardamos el movimiento masticado en el almacén.
@@ -352,7 +313,7 @@ Guarda_movimiento_masticado
 ;
 ;	15/4/25
 
-Prepara_nuevo_almacen
+Prepara_nuevo_almacen:
 
 	ld hl,(Puntero_de_almacen_de_mov_masticados)
 
@@ -379,7 +340,7 @@ Prepara_nuevo_almacen
 ;   Sitúa HL en el .defw del 1er (Contador_general_de_mov_masticados) vacío.
 ;
 
-Situa_en_contador_general_de_mov_masticados
+Situa_en_contador_general_de_mov_masticados:
 
 ;   Sitúa en la 1ª de las tres variables.
 
@@ -421,7 +382,7 @@ Situa_en_contador_general_de_mov_masticados
 
 ;	defw 0
 
-Aplica_rnd_al_baile
+Aplica_rnd_al_baile:
 
 	call RND_ini
 
@@ -559,7 +520,7 @@ Extrae_address_y_avanza call Extrae_address
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   20/11/25
+;   4/4/26
 ;
 ;	Inicializa el 1er Nivel del juego.
 ;	
@@ -573,13 +534,17 @@ Extrae_address_y_avanza call Extrae_address
 ;
 ;	MODIFY: A,HL,BC y DE.
 
-Inicializa_1er_Nivel
+Inicializa_Nivel:
 
-; Inicializa (Puntero_indice_NIVELES).
+; Actualiza (Puntero_indice_NIVELES).
 
-	ld hl,Indice_de_niveles
+	ld hl,(Puntero_indice_NIVELES)
 	call Extrae_address   						 					; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
-	ld (Puntero_indice_NIVELES),de									; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
+
+;	inc de
+;	inc de
+
+;	ld (Puntero_indice_NIVELES),de									; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
 
 ; Inicializa (Puntero_de_entidades).
 ; Nº de entidades del 1er nivel en A y B.
@@ -729,7 +694,7 @@ Situa_Puntero_indice_mov
 ;	Esta rutina se encarga de prepara todas las cajas de entidades. Cuando comienza un nivel han de estar todas completas.
 
 
-Prepara_Cajas_de_Entidades
+Prepara_Cajas_de_Entidades:
 
 ; Preparamos los punteros de las cajas de entidades:
 

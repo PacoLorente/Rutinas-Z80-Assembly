@@ -821,7 +821,7 @@ Start_counter_2 db $05 										; 2º Temporizador, (3 bytes counter). Espera l
 ; Gestión de NIVELES.
 
 Nivel db 0													; Nivel actual del juego.
-Puntero_indice_NIVELES defw 0
+Puntero_indice_NIVELES defw Indice_de_niveles
 Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1					
 																				
 Puntero_de_entidades defw 0									; Este puntero se va desplazando por los distintos bytes_
@@ -1060,26 +1060,34 @@ INICIALIZACION:
 
 	call Imprime_SCORE
 
-;	Imprime luna.
+;	Make Stars & moon.
 
 	call Print_Moon
+	call make_stars
+
+
+Init_level:
 
 ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
+
+	jr $
 
 	call Inicia_albumes_de_lineas
 	call Inicia_albumes_de_lineas_Amadeus
 	call Inicia_albumes_de_disparos
 
-;	Make a RND universe, (make stars).
+;	Make 7 rnd numbers.
 
-	call make_stars
+	ld b,7										 			; Generamos 7 nº aleatorios.
+	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
+	call Derivando_RND
 
 	call Extrae_numero_aleatorio_y_avanza
 	ld (Clock_next_entity),a 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
 
 ;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
 
-	call Inicializa_1er_Nivel								; Inicializa el 1er nivel del juego.
+	call Inicializa_Nivel
 
 ;	Imprime Contador de entidades.
 
@@ -1173,7 +1181,7 @@ Main:
 
 	ld hl,Ctrl_4
 	bit 5,(hl)
-	call nz,Next_level 										; Nivel Superado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	jp nz,Next_level 										; Nivel Superado !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 ; 	Gestión de disparos.
 
@@ -3090,7 +3098,38 @@ suma
 
 	ret
 
-	;	Rutinas consecutivas, no hay bytes libres entre ellas.
+; ------------------------------------------------------------------------
+;
+;	01/04/26
+;
+;	Inizializa el siguiente nivel.
+
+Next_level:
+
+	di
+
+;	Inicializa FLAF: (Nivel superado).
+
+	ld hl,Ctrl_4
+	res 5,(hl)
+
+	call Clean_DONE
+
+;	ld bc,$ffff
+;    call DELAY
+
+;	Actualiza (Puntero_indice_NIVELES).
+
+	ld hl,(Puntero_indice_NIVELES)
+
+	inc hl
+    inc hl
+
+    ld (Puntero_indice_NIVELES),hl
+
+    jp Init_level
+
+;	Rutinas consecutivas, no hay bytes libres entre ellas.
 
 	include "Rutinas_de_teclado.asm"
 	include "RND_Derivando.asm"
