@@ -633,12 +633,14 @@ PreviousScan ld a,h
 ;
 ;	MODIFY: HL,DE,BC
 
-Clean_mem	xor a
-	ld (hl),a
+Clean_mem:
+
+	ld (hl),0
 
 	push hl
 	pop de
-	inc e
+
+	inc de
 
 	ldir
 

@@ -246,7 +246,7 @@ Fila_msg_de_nivel equ Line_9 + 6	;	Los mensajes de nivel se imprimen en la fila 
 
 ;	Datos fijos de los álbumes de líneas de Amadeus:
 
-	org Amadeus_scanlines_album 
+	org Amadeus_scanlines_album
 
 	db $00,$00,$10
 	db $00,$50
@@ -267,7 +267,7 @@ Fila_msg_de_nivel equ Line_9 + 6	;	Los mensajes de nivel se imprimen en la fila 
 	db $00,$56
 	db $00,$57
 
-	org Amadeus_scanlines_album_2 
+	org Amadeus_scanlines_album_2
 
 	db $00,$00,$10
 	db $00,$50
@@ -1070,7 +1070,7 @@ Init_level:
 
 ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
 
-	jr $
+;	jr $
 
 	call Inicia_albumes_de_lineas
 	call Inicia_albumes_de_lineas_Amadeus
@@ -3115,8 +3115,88 @@ Next_level:
 
 	call Clean_DONE
 
-;	ld bc,$ffff
-;    call DELAY
+;	Vamos a empezar de nuevo. En primer lugar limpiamos los distintos álbumes de líneas.
+;	El álbum de líneas de Amadeus no está vacío. Para acelerar el proceso de pintado tiene almacenados los scanlines, ($00, $50, $00, $51, ..., $00, $57).
+
+
+;	Scanlines_album equ $8000	                    ;	($8000 - $8118) 	; Inicialmente 280 bytes, $118.
+;	Scanlines_album_2 equ $811a	                    ;   ($811a - $8232)
+
+;	Amadeus_scanlines_album equ $8234	            ;	($8234 - $8256) 	; Inicialmente 34 bytes, $22.
+;	Amadeus_scanlines_album_2 equ $8258	            ;	($8258 - $827a)
+
+;	Amadeus_disparos_scanlines_album equ $827c	    ;	($827c - $8281) 	; 6 Bytes, (1 único disparo).
+;	Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
+
+;	Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31.
+;	Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)Burst
+
+
+;	Limpiamos Scanlines_album:
+
+	ld hl,$8000
+	ld bc,34
+
+	call Clean_mem
+
+;	Limpiamos Scanlines_album_2:
+
+	ld hl,$811a
+	ld bc,34
+
+	call Clean_mem
+
+;	Inicializamos Amadeus_scanlines_album:
+
+;	org Amadeus_scanlines_album
+
+;	db $00,$00,$10
+;	db $00,$50
+;	db $00,$51
+;	db $00,$52
+;	db $00,$53
+;	db $00,$54
+;	db $00,$55
+;	db $00,$56
+;	db $00,$57
+
+;	db $00,$50
+;	db $00,$51
+;	db $00,$52
+;	db $00,$53
+;	db $00,$54
+;	db $00,$55
+;	db $00,$56
+;	db $00,$57
+
+;;	org Amadeus_scanlines_album_2
+
+;	db $00,$00,$10
+;	db $00,$50
+;	db $00,$51
+;	db $00,$52
+;	db $00,$53
+;	db $00,$54
+;	db $00,$55
+;	db $00,$56
+;	db $00,$57
+
+;	db $00,$50
+;	db $00,$51
+;	db $00,$52
+;	db $00,$53
+;	db $00,$54
+;	db $00,$55
+;	db $00,$56
+;	db $00,$57
+
+	ld hl,Amadeus_scanlines_album
+	call Inicializa_Amadeus_scanline_album
+
+	ld hl,Amadeus_scanlines_album_2
+	call Inicializa_Amadeus_scanline_album
+
+;	jr $
 
 ;	Actualiza (Puntero_indice_NIVELES).
 
@@ -3128,6 +3208,86 @@ Next_level:
     ld (Puntero_indice_NIVELES),hl
 
     jp Init_level
+
+;	--------------------------------------------------------------------
+
+Inicializa_Amadeus_scanline_album:
+
+	ld (hl),0
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$10
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$50
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$51
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$52
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$53
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$54
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$55
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$56
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$57
+
+	inc l
+
+	ld (hl),0
+	inc l
+	ld (hl),$50
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$51
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$52
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$53
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$54
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$55
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$56
+	inc l
+	ld (hl),0
+	inc l
+	ld (hl),$57
+
+	ret
+
+;	-----------------------------------------------------------------------------------------
 
 ;	Rutinas consecutivas, no hay bytes libres entre ellas.
 
