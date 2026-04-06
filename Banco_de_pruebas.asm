@@ -3146,6 +3146,34 @@ Next_level:
 
 	call Clean_mem
 
+;	Limpiamos:
+
+;	Numeros_aleatorios ds 7
+;	Numeros_aleatorios_baile ds 7
+
+;	Tabla_de_pintado ds 30								; No puede haber cambio de byte alto en la Tabla_de_pintado.
+;	Tabla_de_borrado ds 24
+
+	ld hl,Numeros_aleatorios
+	ld bc,67
+
+	call Clean_mem
+
+;	ld hl,Almacen_de_movimientos_masticados_2
+;	ld bc,11
+;	call Clean_mem
+
+;	Limpiamos las 3 cajas Master.
+
+	ld hl,Caja_master_1
+	ld bc,41
+
+	call Clean_mem
+
+;	jr $
+
+
+
 ;	Inicializamos Amadeus_scanlines_album:
 
 ;	org Amadeus_scanlines_album
@@ -3197,6 +3225,16 @@ Next_level:
 	call Inicializa_Amadeus_scanline_album
 
 ;	jr $
+
+
+
+
+
+
+
+
+
+
 
 ;	Actualiza (Puntero_indice_NIVELES).
 
