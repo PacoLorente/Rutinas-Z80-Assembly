@@ -3343,77 +3343,30 @@ Inicializa_Bandeja_DRAW:
 
 Inicializa_Amadeus_scanline_album:
 
-	ld (hl),0
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$10
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$50
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$51
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$52
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$53
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$54
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$55
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$56
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$57
+;	Encabezado:
 
-	inc l
+	xor a
 
-	ld (hl),0
+	ld (hl),a
 	inc l
-	ld (hl),$50
+	ld (hl),a
 	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$51
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$52
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$53
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$54
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$55
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$56
-	inc l
-	ld (hl),0
-	inc l
-	ld (hl),$57
+	ld (hl),10
+
+	jr $
+
+	ld b,35
+
+	ld a,l
+	add b
+	ld l,a
+
+	ld (Stack),sp
+
+	ld sp,hl 		 				; Sitúa sp al final del álbum de líneas de Amadeus.
+
+	jr $
+
 
 	ret
 
