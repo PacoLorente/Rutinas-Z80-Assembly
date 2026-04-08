@@ -3100,7 +3100,7 @@ suma
 
 ; ------------------------------------------------------------------------
 ;
-;	01/04/26
+;	08/04/26
 ;
 ;	Inizializa el siguiente nivel.
 
@@ -3108,42 +3108,35 @@ Next_level:
 
 	di
 
-;	Inicializa FLAF: (Nivel superado).
-
 	ld hl,Ctrl_4
 	res 5,(hl)
 
-	call Clean_DONE
+	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
 
 ;	Vamos a empezar de nuevo. En primer lugar limpiamos los distintos álbumes de líneas.
 ;	El álbum de líneas de Amadeus no está vacío. Para acelerar el proceso de pintado tiene almacenados los scanlines, ($00, $50, $00, $51, ..., $00, $57).
 
-
-;	Scanlines_album equ $8000	                    ;	($8000 - $8118) 	; Inicialmente 280 bytes, $118.
+;	Scanlines_album equ $8000	                    ;	($8000 - $8118) 	
 ;	Scanlines_album_2 equ $811a	                    ;   ($811a - $8232)
 
-;	Amadeus_scanlines_album equ $8234	            ;	($8234 - $8256) 	; Inicialmente 34 bytes, $22.
+;	Amadeus_scanlines_album equ $8234	            ;	($8234 - $8256) 	
 ;	Amadeus_scanlines_album_2 equ $8258	            ;	($8258 - $827a)
 
-;	Amadeus_disparos_scanlines_album equ $827c	    ;	($827c - $8281) 	; 6 Bytes, (1 único disparo).
+;	Amadeus_disparos_scanlines_album equ $827c	    ;	($827c - $8281) 	
 ;	Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 
-;	Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31.
-;	Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)Burst
+;	Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		
+;	Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
 
+;	Limpiamos Scanlines_album y Scanlines_album_2:
+;	Sólo limpiamos los primeros 35 bytes de cada álbum pues "eliminamos" a una última y única unidad para pasar de nivel.
 
-;	Limpiamos Scanlines_album:
-
-	ld hl,$8000
+	ld hl,Scanlines_album
 	ld bc,34
-
 	call Clean_mem
 
-;	Limpiamos Scanlines_album_2:
-
-	ld hl,$811a
+	ld hl,Scanlines_album_2
 	ld bc,34
-
 	call Clean_mem
 
 ;	Limpiamos:
@@ -3151,12 +3144,11 @@ Next_level:
 ;	Numeros_aleatorios ds 7
 ;	Numeros_aleatorios_baile ds 7
 
-;	Tabla_de_pintado ds 30								; No puede haber cambio de byte alto en la Tabla_de_pintado.
+;	Tabla_de_pintado ds 30								
 ;	Tabla_de_borrado ds 24
 
 	ld hl,Numeros_aleatorios
 	ld bc,67
-
 	call Clean_mem
 
 ;	ld hl,Almacen_de_movimientos_masticados_2
@@ -3167,10 +3159,44 @@ Next_level:
 
 	ld hl,Caja_master_1
 	ld bc,41
-
 	call Clean_mem
 
-;	jr $
+;	Limpiamos la caja de Amadeus.
+
+	ld hl,Amadeus_BOX
+	push hl
+	ld bc,13
+	call Clean_mem
+	pop hl
+
+	inc hl
+	inc hl
+	inc hl
+
+	ld (hl),15
+
+;	Limpiamos Almacenes de movimientos masticados de Amadeus  entidades.
+
+	ld hl,Almacen_de_movimientos_masticados_Amadeus
+	ld bc,$36fe
+	call Clean_mem
+
+	call Inicializa_Bandeja_DRAW
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3224,18 +3250,6 @@ Next_level:
 	ld hl,Amadeus_scanlines_album_2
 	call Inicializa_Amadeus_scanline_album
 
-;	jr $
-
-
-
-
-
-
-
-
-
-
-
 ;	Actualiza (Puntero_indice_NIVELES).
 
 	ld hl,(Puntero_indice_NIVELES)
@@ -3247,7 +3261,85 @@ Next_level:
 
     jp Init_level
 
-;	--------------------------------------------------------------------
+;------------------------------------------------------------------------
+;
+;	8/4/26
+;
+
+Inicializa_Bandeja_DRAW:
+
+	ld hl,Bandeja_DRAW
+	ld bc,$48
+	call Clean_mem
+
+;	Variables (Provisional).
+
+	ld hl,Stack_2
+	ld bc,21
+	call Clean_mem
+
+	ld hl,Permiso_de_disparo_Entidades
+	ld bc,9
+	call Clean_mem
+
+	ld hl,Ctrl_3
+	ld bc,18
+	call Clean_mem
+
+	ld hl,RND_SP
+	ld (hl),$00
+	inc hl
+	ld (hl),$90
+
+	ld hl,Clock_next_entity
+	ld (hl),0
+
+	ld a,$a0
+	inc hl
+	ld (hl),a
+	inc hl
+	ld (hl),a
+
+	ld hl,Puntero_indice_de_almacenes
+	ld (hl),$44
+	inc hl
+	ld (hl),$90
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),0
+
+	ld hl,Puntero_datos_shield
+	ld (hl),0
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),$64
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),0
+
+	ld hl,Laser_sound
+	ld (hl),$a0
+	inc hl
+	ld (hl),0
+
+	ld hl,Max_time_to_appear_entities
+	ld (hl),0
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),$78
+
+	ret
+
+;------------------------------------------------------------------------
+;
+;	8/4/26
+;
 
 Inicializa_Amadeus_scanline_album:
 
