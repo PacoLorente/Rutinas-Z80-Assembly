@@ -1,3 +1,162 @@
+;------------------------------------------------------------------------
+;
+;	8/4/26
+;
+
+Inicializa_Bandeja_DRAW:
+
+	ld hl,Bandeja_DRAW
+	ld bc,$48
+	call Clean_mem
+
+;	Variables (Provisional).
+
+	ld hl,Stack_2
+	ld bc,21
+	call Clean_mem
+
+	ld hl,Permiso_de_disparo_Entidades
+	ld bc,9
+	call Clean_mem
+
+	ld hl,Ctrl_3
+	ld bc,18
+	call Clean_mem
+
+	ld hl,RND_SP
+	ld (hl),$00
+	inc hl
+	ld (hl),$90
+
+	ld hl,Clock_next_entity
+	ld (hl),0
+
+	ld a,$a0
+	inc hl
+	ld (hl),a
+	inc hl
+	ld (hl),a
+
+	ld hl,Puntero_indice_de_almacenes
+	ld (hl),$44
+	inc hl
+	ld (hl),$90
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),0
+
+	ld hl,Puntero_datos_shield
+	ld (hl),0
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),$64
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),0
+
+	ld hl,Laser_sound
+	ld (hl),$a0
+	inc hl
+	ld (hl),0
+
+	ld hl,Max_time_to_appear_entities
+	ld (hl),0
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),0
+	inc hl
+	ld (hl),$78
+
+	ret
+
+;------------------------------------------------------------------------
+;
+;	9/4/26
+;
+;	Inicializamos Amadeus_scanlines_album:
+;
+;	Estructura de los dos álbumes de líneas de Amadeus:
+;
+;	org Amadeus_scanlines_album
+
+;	db $00,$00,$10
+;	db $00,$50
+;	db $00,$51
+;	db $00,$52
+;	db $00,$53
+;	db $00,$54
+;	db $00,$55
+;	db $00,$56
+;	db $00,$57
+
+;	db $00,$50
+;	db $00,$51
+;	db $00,$52
+;	db $00,$53
+;	db $00,$54
+;	db $00,$55
+;	db $00,$56
+;	db $00,$57
+
+;	org Amadeus_scanlines_album_2
+
+;	db $00,$00,$10
+;	db $00,$50
+;	db $00,$51
+;	db $00,$52
+;	db $00,$53
+;	db $00,$54
+;	db $00,$55
+;	db $00,$56
+;	db $00,$57
+
+;	db $00,$50
+;	db $00,$51
+;	db $00,$52
+;	db $00,$53
+;	db $00,$54
+;	db $00,$55
+;	db $00,$56
+;	db $00,$57
+
+Inicializa_Amadeus_scanline_album:
+
+;	Encabezado:
+
+	xor a
+
+	ld (hl),a
+	inc l
+	ld (hl),a
+	inc l
+	ld (hl),$10
+
+;	Scanlines:
+
+	ld a,2
+
+2 ld de,$5000
+	ld b,8
+
+1 inc l
+	ld (hl),e
+	inc l
+	ld (hl),d 
+
+	inc d
+
+	djnz 1B
+
+	dec a
+
+	jr nz,2B
+
+	ret
+
 ; ---------------------------------------------------------------------------------------------------------------------
 ;
 ;	13/03/24

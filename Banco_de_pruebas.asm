@@ -3134,7 +3134,7 @@ Next_level:
 	ld hl,Scanlines_album
 	ld bc,34
 	call Clean_mem
-
+;
 	ld hl,Scanlines_album_2
 	ld bc,34
 	call Clean_mem
@@ -3150,10 +3150,6 @@ Next_level:
 	ld hl,Numeros_aleatorios
 	ld bc,67
 	call Clean_mem
-
-;	ld hl,Almacen_de_movimientos_masticados_2
-;	ld bc,11
-;	call Clean_mem
 
 ;	Limpiamos las 3 cajas Master.
 
@@ -3183,67 +3179,6 @@ Next_level:
 
 	call Inicializa_Bandeja_DRAW
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;	Inicializamos Amadeus_scanlines_album:
-
-;	org Amadeus_scanlines_album
-
-;	db $00,$00,$10
-;	db $00,$50
-;	db $00,$51
-;	db $00,$52
-;	db $00,$53
-;	db $00,$54
-;	db $00,$55
-;	db $00,$56
-;	db $00,$57
-
-;	db $00,$50
-;	db $00,$51
-;	db $00,$52
-;	db $00,$53
-;	db $00,$54
-;	db $00,$55
-;	db $00,$56
-;	db $00,$57
-
-;;	org Amadeus_scanlines_album_2
-
-;	db $00,$00,$10
-;	db $00,$50
-;	db $00,$51
-;	db $00,$52
-;	db $00,$53
-;	db $00,$54
-;	db $00,$55
-;	db $00,$56
-;	db $00,$57
-
-;	db $00,$50
-;	db $00,$51
-;	db $00,$52
-;	db $00,$53
-;	db $00,$54
-;	db $00,$55
-;	db $00,$56
-;	db $00,$57
-
 	ld hl,Amadeus_scanlines_album
 	call Inicializa_Amadeus_scanline_album
 
@@ -3260,115 +3195,6 @@ Next_level:
     ld (Puntero_indice_NIVELES),hl
 
     jp Init_level
-
-;------------------------------------------------------------------------
-;
-;	8/4/26
-;
-
-Inicializa_Bandeja_DRAW:
-
-	ld hl,Bandeja_DRAW
-	ld bc,$48
-	call Clean_mem
-
-;	Variables (Provisional).
-
-	ld hl,Stack_2
-	ld bc,21
-	call Clean_mem
-
-	ld hl,Permiso_de_disparo_Entidades
-	ld bc,9
-	call Clean_mem
-
-	ld hl,Ctrl_3
-	ld bc,18
-	call Clean_mem
-
-	ld hl,RND_SP
-	ld (hl),$00
-	inc hl
-	ld (hl),$90
-
-	ld hl,Clock_next_entity
-	ld (hl),0
-
-	ld a,$a0
-	inc hl
-	ld (hl),a
-	inc hl
-	ld (hl),a
-
-	ld hl,Puntero_indice_de_almacenes
-	ld (hl),$44
-	inc hl
-	ld (hl),$90
-	inc hl
-	ld (hl),0
-	inc hl
-	ld (hl),0
-
-	ld hl,Puntero_datos_shield
-	ld (hl),0
-	inc hl
-	ld (hl),0
-	inc hl
-	ld (hl),$64
-	inc hl
-	ld (hl),0
-	inc hl
-	ld (hl),0
-
-	ld hl,Laser_sound
-	ld (hl),$a0
-	inc hl
-	ld (hl),0
-
-	ld hl,Max_time_to_appear_entities
-	ld (hl),0
-	inc hl
-	ld (hl),0
-	inc hl
-	ld (hl),0
-	inc hl
-	ld (hl),$78
-
-	ret
-
-;------------------------------------------------------------------------
-;
-;	8/4/26
-;
-
-Inicializa_Amadeus_scanline_album:
-
-;	Encabezado:
-
-	xor a
-
-	ld (hl),a
-	inc l
-	ld (hl),a
-	inc l
-	ld (hl),10
-
-	jr $
-
-	ld b,35
-
-	ld a,l
-	add b
-	ld l,a
-
-	ld (Stack),sp
-
-	ld sp,hl 		 				; Sitúa sp al final del álbum de líneas de Amadeus.
-
-	jr $
-
-
-	ret
 
 ;	-----------------------------------------------------------------------------------------
 
