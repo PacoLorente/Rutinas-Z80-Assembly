@@ -700,14 +700,6 @@ Inicializa_Nivel:
 	ld hl,(Puntero_indice_NIVELES)
 	call Extrae_address   						 					; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
 
-;	inc de
-;	inc de
-
-;	ld (Puntero_indice_NIVELES),de									; Inicializa (Puntero_indice_NIVELES), contiene: defw Nivel_1
-
-; Inicializa (Puntero_de_entidades).
-; Nº de entidades del 1er nivel en A y B.
-
 	ld a,(hl)
 	ld (Max_time_to_appear_entities),a
 	inc hl

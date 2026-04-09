@@ -432,7 +432,7 @@ Incrementa_FRAMES
 	include "Sprites_e_indices.asm"
 	include "Cajas_y_disparos.asm"
 	include "Patrones_de_mov.asm"
-	include "Niveles.asm"
+;	include "Niveles.asm"
 
 ; --------------------------------------------------------------------------------
 ;
@@ -3215,6 +3215,8 @@ Next_level:
 	include "Disparo.asm"
 	include "Sound.asm"
 	include "Print_text_msg.asm"
+	include "Niveles.asm"
+
 
 	SAVESNA "Amadeus.sna", START
 

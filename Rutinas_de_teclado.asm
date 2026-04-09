@@ -21,6 +21,21 @@ ROM_Key_Scan:
 	inc d
 	jr nz,ROM_Key_Scan                      				; Más de una tecla pulsada.
 
+;	Implementar sonido de tecla.
+
+;	push de
+
+;	ld bc,$0001
+;	ld de,0
+;	ld hl,$01bf
+
+;	ld (Sound),hl
+;	call Sound_Generator
+;	ld hl,0
+;	ld (Sound),hl
+;
+;	pop de
+
 	ret
 
 ; --------------------------------------------

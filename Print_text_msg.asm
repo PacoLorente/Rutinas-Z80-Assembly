@@ -138,14 +138,12 @@ Define_menu:
 
     ld bc,$ffff
     call DELAY
-    ld bc,$07ff
-    call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
 
     ld hl,Move_LEFT
     ld de,Move_LEFT_ASCII_CODE
-    call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
+    call Define_key                                         ; Almacena Key_code y ASCII_code en sus respectivas variables.
 
     ld hl,No_repeat_key_code
     inc (hl)
@@ -179,8 +177,6 @@ Define_menu:
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move LEFT).
 
     ld bc,$ffff
-    call DELAY
-    ld bc,$07ff
     call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
@@ -221,8 +217,6 @@ Define_menu:
 
     ld bc,$ffff
     call DELAY
-    ld bc,$07ff
-    call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
 
@@ -262,8 +256,6 @@ Define_menu:
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_FIRE).
 
     ld bc,$ffff
-    call DELAY
-    ld bc,$07ff
     call DELAY
 
     push de                                                 ; Guardo la posición del carro de impresión.
@@ -358,6 +350,25 @@ Define_key:
     pop hl
 
     ld (hl),a                                               ; Key_code almacenado.
+
+;   Sonido, (BEEP) de la pulsación de las teclas.
+
+    push af
+    push de
+    push hl
+
+    ld bc,$0001
+    ld de,0
+    ld hl,$01bf
+
+    ld (Sound),hl
+    call Sound_Generator
+    ld hl,0
+    ld (Sound),hl
+
+    pop hl
+    pop de
+    pop af
 
 ;   Special Key_code ???
 
