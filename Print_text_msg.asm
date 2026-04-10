@@ -39,8 +39,9 @@ Print_level_msg:
 ;   HL apunta al "msg" a imprimir. Asignamos attrs. y temporización. 
 
     ld a,%01000111                                              ; attrs. Paper white, black ink.
-    ld b,150                                                    ; Activa temporizador.
-    
+;    ld b,150                                                    ; Activa temporizador.
+    ld b,1
+
     call Print_text_msg
 
     ret
@@ -308,9 +309,9 @@ Define_menu:
 
     ret
 
-; ----------------------------------------------------------
+; -----------------------------------------------------------------------------------------------------------
 ;
-;   11/3/26
+;   10/04/26
 ;
 ;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
 ;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
@@ -351,24 +352,9 @@ Define_key:
 
     ld (hl),a                                               ; Key_code almacenado.
 
-;   Sonido, (BEEP) de la pulsación de las teclas.
+;   Sonido, (BEEP) de la pulsación de las teclas, (cuando está autorizada). No se ejecuta [BEEP] si la tecla ya está definida.
 
-    push af
-    push de
-    push hl
-
-    ld bc,$0001
-    ld de,0
-    ld hl,$01bf
-
-    ld (Sound),hl
-    call Sound_Generator
-    ld hl,0
-    ld (Sound),hl
-
-    pop hl
-    pop de
-    pop af
+    call BEEP
 
 ;   Special Key_code ???
 
@@ -832,6 +818,7 @@ Clean_DONE
 
     ld hl,b0-5
     ld de,Line_11 + 14
+    ld b,0
     ld a,%01000000
 
     call Print_text_msg
@@ -908,21 +895,37 @@ Print_text_msg:
 
 ;   TEMPORIZADOR.
 
-    pop bc                                  ;  Carga el temporizador en B.
+    pop bc                                  ;   Carga el temporizador en B.
 
     inc b
     dec b
 
-    jr z,Print_text_msg                     ; Mensaje NO TEMPORIZADO. Siguiente char.
+    jr z,Print_text_msg                     ;   Mensaje NO TEMPORIZADO. Siguiente char.
 
-    push bc                                 ; Guarda valor del temporizador para restaurar después del decremento.
+    ex af,af                                ;   attrs. del msg en AF´.
+
+    ld a,r
+    srl a 
+    bit 0,a
+
+    jr z,3F
+
+    ld b,90
+    jr 1F
+3 ld b,130
 
 1 ld c,$ff
 2 dec c
     jr nz,2B
-    djnz 1B                                 ; Aplica temporización.
+    djnz 1B                                 ;   Aplica temporización.
 
-    pop bc
+    call BEEP
+
+;    pop bc
+
+    ld b,1                                  ;   Activa retardo RND en el próximo char. a imprimir.
+
+    ex af,af                                ;   Recupera attrs. en A.
 
     jr Print_text_msg
 

@@ -1,4 +1,42 @@
+; ----------------------------------------------------------------------------------------------
+;
+;   10/4/26
+;
+
+BEEP:
+
+    push af
+    push bc
+    push de
+    push hl
+
+;   Configuración de un BEEP.
+
+;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
+;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+
+    ld bc,$0001                                             
+    ld de,0
+    ld hl,$01bf
+
+    ld (Sound),hl
+    call Sound_Generator
+    ld hl,0
+    ld (Sound),hl
+
+    pop hl
+    pop de
+    pop bc
+    pop af
+
+    ret
+
+; ----------------------------------------------------------------------------------------------
+;
 ;   28/1/26
+;
 
 Sound_Generator:
 

@@ -21,21 +21,6 @@ ROM_Key_Scan:
 	inc d
 	jr nz,ROM_Key_Scan                      				; Más de una tecla pulsada.
 
-;	Implementar sonido de tecla.
-
-;	push de
-
-;	ld bc,$0001
-;	ld de,0
-;	ld hl,$01bf
-
-;	ld (Sound),hl
-;	call Sound_Generator
-;	ld hl,0
-;	ld (Sound),hl
-;
-;	pop de
-
 	ret
 
 ; --------------------------------------------
@@ -56,25 +41,29 @@ Main_menu_key:
 ;	"K" key was pressed ?
 
 	ld a,e
-	cp $11 													; "K" key_code.
+	cp $11 		
+	call z,BEEP												; "K" key_code.
 	call z,Show_controls_keys
 	ret z
 
 ;	"E" key was pressed ?
 
 	cp $15 													; "E" key_code.
+	call z,BEEP
 	call z,Active_kempstom_joystick
 	ret z
 
 ;	"S" key was pressed ?
 
 	cp $1e 													; "S" key_code.
+	call z,BEEP
 	call z,Active_sinclair_joystick
 	ret z
 
 ;	"D" key was pressed ?
 
 	cp $16
+	call z,BEEP
 	call z,Define_menu 										; "D" key_code.
 	ret z
 
@@ -245,7 +234,7 @@ Press_START:
 	
 	ld a,h
 	or l
-	jr z,Leave_menu
+	jr z, Leave_menu
 
 	ld (Start_counter),hl
 
@@ -253,9 +242,11 @@ Press_START:
 
 	ld a,(Move_FIRE) 										; Esperamos la pulsación del disparo.
 	cp e
-	jr nz,Press_START
+	jr nz, Press_START
 
 ;	Order to play.
+
+	call BEEP
 
 	ld hl,0
 	ld (Start_counter),hl 									; Inicializa temporizador.
@@ -314,6 +305,8 @@ Press_START_KEMPSTON:
 ;	Order to play with a Kempston joystick.
 
 Order_to_play
+
+	call BEEP
 
 	ld a,$05
 	ld (Start_counter_2),a 									
