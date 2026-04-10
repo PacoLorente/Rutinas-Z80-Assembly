@@ -17,9 +17,9 @@ BEEP:
 ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
 ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
 
-    ld bc,$0001                                             
+    ld bc,$0001
     ld de,0
-    ld hl,$01bf
+    ld hl,$019f
 
     ld (Sound),hl
     call Sound_Generator

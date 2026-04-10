@@ -14140,7 +14140,7 @@
   19+ BBA3
   20+ BBA3 01 01 00         ld bc,$0001
   21+ BBA6 11 00 00         ld de,0
-  22+ BBA9 21 BF 01         ld hl,$01bf
+  22+ BBA9 21 9F 01         ld hl,$019f
   23+ BBAC
   24+ BBAC 22 C6 94         ld (Sound),hl
   25+ BBAF CD BD BB         call Sound_Generator
