@@ -1015,6 +1015,72 @@ START:
 
 	di
 
+; Voy a crear melodía Amadeus, (DONE).
+
+
+;   Configuración de un BEEP.
+
+;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
+;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+;		   HL = (NOTA).
+
+	ld bc,$0020
+	ld de,0
+	ld hl,$00fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_1.
+
+    ld bc,$1fff
+    call DELAY 												; Pause entre notas.
+
+;	Se mantiene la nota, (HL), BC y DE = "0".
+
+	ld c,$25
+	ld l,$a5	;
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_2.
+
+    ld bc,$6ff0
+	call DELAY 												; Pause entre notas.
+
+	ld c,$20
+	ld l,$fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_3.
+
+    ld bc,$1fff
+	call DELAY 												; Pause entre notas.
+
+;	Se mantiene la nota, (HL), BC y DE = "0".
+
+	ld c,$25
+	ld l,$b7	;	b6
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_4.
+
+
+
+
+
+
+
+
+
+
+
+    jr $
+
+
+
+
+
+
+
+
+
+
 	xor a
 	out ($fe),a 											; BORDER NEGRO.
 
