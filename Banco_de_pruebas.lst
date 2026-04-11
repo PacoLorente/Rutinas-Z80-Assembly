@@ -3180,18 +3180,18 @@
 1017  9614
 1018  9614              ; Voy a crear melodía Amadeus, (DONE).
 1019  9614
-1020  9614
-1021  9614              ;   Configuración de un BEEP.
-1022  9614
-1023  9614              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
-1024  9614              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
-1025  9614              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
-1026  9614              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
-1027  9614              ;		   HL = (NOTA).
-1028  9614
-1029  9614 01 20 00     	ld bc,$0020
-1030  9617 11 00 00     	ld de,0
-1031  961A 21 FA 00     	ld hl,$00fa
+1020  9614              ;   Configuración de un BEEP.
+1021  9614
+1022  9614              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
+1023  9614              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+1024  9614              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+1025  9614              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+1026  9614              ;		   HL = (NOTA).
+1027  9614
+1028  9614 01 1A 00     	ld bc,$001a
+1029  9617 11 00 00     	ld de,0
+1030  961A 21 FA 00     	ld hl,$00fa
+1031  961D
 1032  961D 22 C6 94     	ld (Sound),hl
 1033  9620 CD FE BB         call Sound_Generator 									; Nota_1.
 1034  9623
@@ -3205,10 +3205,10 @@
 1042  962D 22 C6 94     	ld (Sound),hl
 1043  9630 CD FE BB         call Sound_Generator 									; Nota_2.
 1044  9633
-1045  9633 01 F0 6F         ld bc,$6ff0
+1045  9633 01 00 6F         ld bc,$6f00
 1046  9636 CD 78 9B     	call DELAY 												; Pause entre notas.
 1047  9639
-1048  9639 0E 20        	ld c,$20
+1048  9639 0E 1A        	ld c,$1a
 1049  963B 2E FA        	ld l,$fa
 1050  963D 22 C6 94     	ld (Sound),hl
 1051  9640 CD FE BB         call Sound_Generator 									; Nota_3.
@@ -3218,8 +3218,8 @@
 1055  9649
 1056  9649              ;	Se mantiene la nota, (HL), BC y DE = "0".
 1057  9649
-1058  9649 0E 25        	ld c,$25
-1059  964B 2E B7        	ld l,$b7	;	b6
+1058  9649 0E 1A        	ld c,$1a
+1059  964B 2E B7        	ld l,$b7
 1060  964D 22 C6 94     	ld (Sound),hl
 1061  9650 CD FE BB         call Sound_Generator 									; Nota_4.
 1062  9653
