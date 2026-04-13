@@ -891,7 +891,7 @@ Shield_sound defw 0
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
-Temp_Amadeus_exit db 120 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
+Temp_Amadeus_exit db 20;120 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
 Tabla_de_conversion_KEYCODE_ASCII_CODE
 
@@ -1014,72 +1014,6 @@ START:
 ;	Menú Principal
 
 	di
-
-; Voy a crear melodía Amadeus, (DONE).
-
-;   Configuración de un BEEP.
-
-;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
-;           D Indica si el sonido es ascendente, "1" o descendente, "0".
-;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
-;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
-;		   HL = (NOTA).
-
-	ld bc,$001a
-	ld de,0
-	ld hl,$00fa
-
-	ld (Sound),hl
-    call Sound_Generator 									; Nota_1.
-
-    ld bc,$1fff
-    call DELAY 												; Pause entre notas.
-
-;	Se mantiene la nota, (HL), BC y DE = "0".
-
-	ld c,$25
-	ld l,$a5	;
-	ld (Sound),hl
-    call Sound_Generator 									; Nota_2.
-
-    ld bc,$6f00
-	call DELAY 												; Pause entre notas.
-
-	ld c,$1a
-	ld l,$fa
-	ld (Sound),hl
-    call Sound_Generator 									; Nota_3.
-
-    ld bc,$1fff
-	call DELAY 												; Pause entre notas.
-
-;	Se mantiene la nota, (HL), BC y DE = "0".
-
-	ld c,$1a
-	ld l,$b7
-	ld (Sound),hl
-    call Sound_Generator 									; Nota_4.
-
-
-
-
-
-
-
-
-
-
-
-    jr $
-
-
-
-
-
-
-
-
-
 
 	xor a
 	out ($fe),a 											; BORDER NEGRO.
@@ -1516,7 +1450,7 @@ Amadeus_vivo
 
 ;	Forzamos la impresión de Amadeus e inicializamos el temporizador.
 
-	ld a,4
+	ld a,2
 	ld (hl),a												; INICIALIZA el temporizador, (FRAME/rate) de la transición de salida.
 
 	ld hl,Ctrl_3
@@ -3173,6 +3107,11 @@ suma
 Next_level:
 
 	di
+
+	call Done_melody
+
+	ld bc,$05ff
+    call DELAY
 
 	ld hl,Ctrl_4
 	res 5,(hl)

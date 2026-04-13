@@ -1,5 +1,153 @@
 ; ----------------------------------------------------------------------------------------------
 ;
+;   13/4/26
+;
+
+Done_melody:
+
+
+;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
+;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+;		   HL = (NOTA).
+
+    push af
+    push bc
+    push de
+    push hl
+
+	ld bc,$0018
+	ld de,0
+	ld hl,$00fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_1.
+
+    ld bc,$1fff
+    call DELAY 												; Pause entre notas.
+
+;	Se mantiene la nota, (HL), BC y DE = "0".
+
+	ld c,$28
+	ld l,$a5
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_2.
+
+    ld bc,$5fff
+	call DELAY 												; Pause entre notas.
+
+	ld c,$18
+	ld l,$fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_3.
+
+    ld bc,$1fff
+	call DELAY 												; Pause entre notas.
+
+;	Se mantiene la nota, (HL), BC y DE = "0".
+
+	ld c,$25
+	ld l,$b7
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_4.
+
+    ld bc,$5fff
+	call DELAY 												; Pause entre notas.
+
+    ld c,$18
+	ld l,$fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_5.
+
+    ld bc,$1fea
+    call DELAY 												; Pause entre notas.
+
+	ld c,$28
+	ld l,$cd
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_6.
+
+    ld bc,$5fff
+	call DELAY 												; Pause entre notas.
+
+    ld c,$1a
+	ld l,$fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_7.
+
+    ld bc,$1fff
+    call DELAY 												; Pause entre notas.
+
+	ld c,$25
+	ld l,$cd
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_8.
+
+    ld bc,$5fff
+    call DELAY 												; Pause entre notas.
+
+	ld c,$25
+	ld l,$d4
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_9.
+
+    ld bc,$5fff
+    call DELAY 												; Pause entre notas.
+
+	ld c,$27
+	ld hl,$0117
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_10.
+
+    ld bc,$5f00
+    call DELAY 												; Pause entre notas.
+
+	ld c,$18
+	ld hl,$00fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_11.
+
+    ld bc,$1fff
+    call DELAY 												; Pause entre notas.
+
+	ld c,$18
+	ld l,$fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_12.
+
+    ld bc,$6fff
+    call DELAY 												; Pause entre notas.
+
+	ld c,$18
+	ld l,$fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_13.
+
+    ld bc,$5fff
+    call DELAY 												; Pause entre notas.
+
+	ld c,$18
+	ld hl,$0119
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_11.
+
+    ld bc,$1fff
+    call DELAY 												; Pause entre notas.
+
+	ld c,$27
+	ld hl,$00fa
+	ld (Sound),hl
+    call Sound_Generator 									; Nota_12.
+
+    pop hl
+    pop de
+    pop bc
+    pop af
+
+    ret
+
+; ----------------------------------------------------------------------------------------------
+;
 ;   11/4/26
 ;
 

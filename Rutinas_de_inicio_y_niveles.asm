@@ -73,56 +73,6 @@ Inicializa_Bandeja_DRAW:
 
 	ret
 
-;------------------------------------------------------------------------
-;
-;	9/4/26
-;
-;	Inicializamos Amadeus_scanlines_album:
-;
-;	Estructura de los dos álbumes de líneas de Amadeus:
-;
-;	org Amadeus_scanlines_album
-
-;	db $00,$00,$10
-;	db $00,$50
-;	db $00,$51
-;	db $00,$52
-;	db $00,$53
-;	db $00,$54
-;	db $00,$55
-;	db $00,$56
-;	db $00,$57
-
-;	db $00,$50
-;	db $00,$51
-;	db $00,$52
-;	db $00,$53
-;	db $00,$54
-;	db $00,$55
-;	db $00,$56
-;	db $00,$57
-
-;	org Amadeus_scanlines_album_2
-
-;	db $00,$00,$10
-;	db $00,$50
-;	db $00,$51
-;	db $00,$52
-;	db $00,$53
-;	db $00,$54
-;	db $00,$55
-;	db $00,$56
-;	db $00,$57
-
-;	db $00,$50
-;	db $00,$51
-;	db $00,$52
-;	db $00,$53
-;	db $00,$54
-;	db $00,$55
-;	db $00,$56
-;	db $00,$57
-
 Inicializa_Amadeus_scanline_album:
 
 ;	Encabezado:
