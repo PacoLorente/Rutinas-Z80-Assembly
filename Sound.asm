@@ -17,125 +17,125 @@ Done_melody:
     push de
     push hl
 
-	ld bc,$0018
+	ld bc,$0014
 	ld de,0
 	ld hl,$00fa
 	ld (Sound),hl
     call Sound_Generator 									; Nota_1.
 
-    ld bc,$1fff
+    ld bc,$1ff0
     call DELAY 												; Pause entre notas.
 
 ;	Se mantiene la nota, (HL), BC y DE = "0".
 
-	ld c,$28
+	ld c,$24
 	ld l,$a5
 	ld (Sound),hl
     call Sound_Generator 									; Nota_2.
 
-    ld bc,$5fff
+    ld bc,$5ff0
 	call DELAY 												; Pause entre notas.
 
-	ld c,$18
+	ld c,$14
 	ld l,$fa
 	ld (Sound),hl
     call Sound_Generator 									; Nota_3.
 
-    ld bc,$1fff
+    ld bc,$1ff0
 	call DELAY 												; Pause entre notas.
 
 ;	Se mantiene la nota, (HL), BC y DE = "0".
 
-	ld c,$25
+	ld c,$21
 	ld l,$b7
 	ld (Sound),hl
     call Sound_Generator 									; Nota_4.
 
-    ld bc,$5fff
+    ld bc,$5ff0
 	call DELAY 												; Pause entre notas.
 
-    ld c,$18
+    ld c,$14
 	ld l,$fa
 	ld (Sound),hl
     call Sound_Generator 									; Nota_5.
 
-    ld bc,$1fea
+    ld bc,$1feb
     call DELAY 												; Pause entre notas.
 
-	ld c,$28
+	ld c,$24
 	ld l,$cd
 	ld (Sound),hl
     call Sound_Generator 									; Nota_6.
 
-    ld bc,$5fff
+    ld bc,$5ff0
 	call DELAY 												; Pause entre notas.
 
-    ld c,$1a
+    ld c,$16
 	ld l,$fa
 	ld (Sound),hl
     call Sound_Generator 									; Nota_7.
 
-    ld bc,$1fff
+    ld bc,$1ff0
     call DELAY 												; Pause entre notas.
 
-	ld c,$25
+	ld c,$21
 	ld l,$cd
 	ld (Sound),hl
     call Sound_Generator 									; Nota_8.
 
-    ld bc,$5fff
+    ld bc,$5ff0
     call DELAY 												; Pause entre notas.
 
-	ld c,$25
+	ld c,$21
 	ld l,$d4
 	ld (Sound),hl
     call Sound_Generator 									; Nota_9.
 
-    ld bc,$5fff
+    ld bc,$5ff0
     call DELAY 												; Pause entre notas.
 
-	ld c,$27
+	ld c,$23
 	ld hl,$0117
 	ld (Sound),hl
     call Sound_Generator 									; Nota_10.
 
-    ld bc,$5f00
+    ld bc,$5ef1
     call DELAY 												; Pause entre notas.
 
-	ld c,$18
+	ld c,$14
 	ld hl,$00fa
 	ld (Sound),hl
     call Sound_Generator 									; Nota_11.
 
-    ld bc,$1fff
+    ld bc,$1ff0
     call DELAY 												; Pause entre notas.
 
-	ld c,$18
+	ld c,$14
 	ld l,$fa
 	ld (Sound),hl
     call Sound_Generator 									; Nota_12.
 
-    ld bc,$6fff
+    ld bc,$6ff0
     call DELAY 												; Pause entre notas.
 
-	ld c,$18
+	ld c,$14
 	ld l,$fa
 	ld (Sound),hl
     call Sound_Generator 									; Nota_13.
 
-    ld bc,$5fff
+    ld bc,$5ff0
     call DELAY 												; Pause entre notas.
 
-	ld c,$18
+	ld c,$14
 	ld hl,$0119
 	ld (Sound),hl
     call Sound_Generator 									; Nota_11.
 
-    ld bc,$1fff
+    ld bc,$1ff0
     call DELAY 												; Pause entre notas.
 
-	ld c,$27
-	ld hl,$00fa
+	ld c,$23
+	ld hl,$00fb
 	ld (Sound),hl
     call Sound_Generator 									; Nota_12.
 

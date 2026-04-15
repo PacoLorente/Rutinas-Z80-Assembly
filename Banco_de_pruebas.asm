@@ -432,7 +432,6 @@ Incrementa_FRAMES
 	include "Sprites_e_indices.asm"
 	include "Cajas_y_disparos.asm"
 	include "Patrones_de_mov.asm"
-;	include "Niveles.asm"
 
 ; --------------------------------------------------------------------------------
 ;
@@ -1014,6 +1013,14 @@ START:
 ;	Menú Principal
 
 	di
+
+	call Done_melody
+
+
+
+
+
+
 
 	xor a
 	out ($fe),a 											; BORDER NEGRO.
