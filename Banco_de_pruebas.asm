@@ -1014,7 +1014,7 @@ START:
 
 	di
 
-	call Done_melody
+;	call Done_melody
 
 
 
