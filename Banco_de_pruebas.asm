@@ -390,15 +390,22 @@ Incrementa_FRAMES
 
 	call Actualiza_pantalla
 
+;	Sound efects
+
+	call Play_burst_sound_effect
+	call Play_shot_sound_effect
+
 ;	-------------------------------------------------------------
 ;
 ;	Repone_Attr_Moon
 ;
-;	Repone los Attr. de la luna antes de volcar pantalla, si una entidad sobrevuela sobre ella cambiaría su color.
+;	Repone los Attr. de la luna, de la zona de vidas y de Amadeus. antes de volcar pantalla, si una entidad sobrevuela sobre ella cambiaría su color.
 ;
 ;	MODIFY: HL.
 
-	ld hl,$4747
+;	Moon.
+
+	ld hl,$4747 													; BRIGHT 1, BLACK paper, WHITE ink
 
 	ld (Attr_Moon_File4),hl
 	ld (Attr_Moon_File4_2),hl
@@ -408,13 +415,31 @@ Incrementa_FRAMES
 	ld (Attr_Moon_File5_2),hl
 	ld (Attr_Moon_File5_3),hl
 
+;	Lives. 															; Sólo restaura los attrs. de la 1ª Fila de las vidas.
+
+;	ld a,$45 														; BRIGHT 1, BLACK paper, CYAN ink.
+;	ld b,7
+
+;	ld hl,$5801
+
+;1 ld (hl),a
+;	inc l
+;	djnz 1B
+
+;	Amadeus
+
+;	ld hl,$5ac0 													; Dirección de attrs. de la Fila superior de Amadeus.
+;	call Repone_Attr_File_Amadeus
+;	ld hl,$5ae0 													; Dirección de attrs. de la Fila inferior.
+;	call Repone_Attr_File_Amadeus
+
 ;	Sound efects
 
-	call Play_burst_sound_effect
-	call Play_shot_sound_effect
+;	call Play_burst_sound_effect
+;	call Play_shot_sound_effect
 
 	ld hl,Ctrl_6
-	res 0,(hl) 															; Inicializa el inhibidor de efectos de sonido.
+	res 0,(hl) 														; Inicializa el inhibidor de efectos de sonido.
 
 	pop bc
 	pop de
@@ -1072,12 +1097,9 @@ INICIALIZACION:
 	call Print_Moon
 	call make_stars
 
-
 Init_level:
 
 ;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
-
-;	jr $
 
 	call Inicia_albumes_de_lineas
 	call Inicia_albumes_de_lineas_Amadeus

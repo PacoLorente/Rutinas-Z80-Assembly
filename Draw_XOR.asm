@@ -4,7 +4,7 @@
 ;
 ; DRAW. ************************************************************************************************************************************************************************************
 
-Draw 
+Draw:
 
 	call Prepara_draw
 
@@ -14,7 +14,7 @@ Draw
 
 ; --------------------------------------------------
 
-Inicializacion
+Inicializacion:
 	
 	ld hl,(Posicion_inicio) 						
 	ld (Posicion_actual),hl										
@@ -60,7 +60,7 @@ Inicializacion
 ;	MODIFY: A.	
 
 
-Calcula_Cuad_objeto
+Calcula_Cuad_objeto:
 
 	call calcula_tercio																			
 
@@ -120,7 +120,7 @@ Determina_lado_de_pantalla ld a,l
 ;
 ;	INPUT: HL contiene (Posicion_actual).
 
-Comprueba_limite_horizontal 
+Comprueba_limite_horizontal:
 
 	ld e,0											; Inicializamos E.
 
@@ -203,7 +203,7 @@ Comprueba_limite_horizontal
 ;	
 ;	INPUT: HL contiene (Posicion_actual).
 
-Comprueba_limite_vertical 
+Comprueba_limite_vertical:
 
 	ld a,(Cuad_objeto)
 	and 1
@@ -315,7 +315,7 @@ Centro_no_alcanzado
 
 
 
-Modificaccionne 
+Modificaccionne:
 	
 	ld a,(Cuad_objeto)
 	cp 2
@@ -410,7 +410,9 @@ Salida_nebulosamente_por_la_izquierda
 ;	OUTPUT: (Columnas).
 ;	
 
-calcula_CColumnass ld a,(Posicion_actual)
+calcula_CColumnass:
+
+	ld a,(Posicion_actual)
 	and $1f
 	jr z,One_CColumna
 	dec a
@@ -442,7 +444,7 @@ One_CColumna ld a,1
 ;
 ;	DESTRUYE: HL,B Y A.	
 
-Calcula_puntero_de_impresion
+Calcula_puntero_de_impresion:
 
 	ld a,(Cuad_objeto)
 	and 1
@@ -529,7 +531,9 @@ Cuadrante_dos
 ;
 ;	DESTRUYE!!!!! HL,B y A.
 
-Operandos ld hl,(Posicion_actual)
+Operandos:
+
+	ld hl,(Posicion_actual)
 	ld a,(Columnas)
 	dec a
 	jr nz,1F
@@ -551,7 +555,9 @@ Operandos ld hl,(Posicion_actual)
 ;
 ;	MODIFY: HL y BC.
 
-Prepara_draw ld hl,Filas 		 					; Prepara los registros BC, E y HL.
+Prepara_draw:
+
+	ld hl,Filas 		 					; Prepara los registros BC, E y HL.
 	ld b,(hl) 										; Carga Filas/Columns del objeto a pintar o inicializar en BC.
 	inc hl 											; Carga (Posicion_actual) en HL.
 	ld c,(hl) 											
@@ -575,7 +581,9 @@ Prepara_draw ld hl,Filas 		 					; Prepara los registros BC, E y HL.
 ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
 ;
 
-NextScan inc h          							; Incrementamos el scanline.
+NextScan:
+
+	inc h          							; Incrementamos el scanline.
     ld a,h
     and 7
     ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
@@ -607,7 +615,9 @@ NextScan inc h          							; Incrementamos el scanline.
 ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
 ;
 
-PreviousScan ld a,h         
+PreviousScan:
+
+	ld a,h
     dec h               							; Dec H.
     and 7
     ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).

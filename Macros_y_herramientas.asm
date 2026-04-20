@@ -87,3 +87,62 @@ wait dec bc
 
 ;   ---------------------------------------------------------------------------------------
 
+; Rejilla, mapa de pantalla.
+
+	macro Rejilla
+
+;	Líneas verticales.
+
+	ld hl,Line_0			; Pos. inicial.     $4000
+	ld b,$20 				; Nº de columnas
+
+2 push bc
+	push hl
+
+	ld b,192 				; Nº de scanlines.
+
+1 ld a,(hl)
+	xor 1
+	ld (hl),a				; Imprime línea vertical.
+
+	call NextScan
+	djnz 1B
+
+	pop hl
+	inc l 					; Next column.
+
+	pop bc
+	djnz 2B
+
+;	Líneas horizontales.
+
+	ld hl,$4700 			; Pos. inicial.     $4700
+	ld b,24 				; Nº de Filas.
+
+3 push bc
+	push hl
+
+	ld b,$20 				; Nº de columnas.
+
+1 ld a,(hl)
+	xor 255
+	ld (hl),a				; Imprime línea horizontal.
+
+	inc l
+	djnz 1B
+
+	pop hl
+
+	ld b,8
+
+2 push bc
+	call NextScan 			; Next File.
+	pop bc
+
+	djnz 2B
+
+	pop bc
+	djnz 3B
+
+	endm
+
