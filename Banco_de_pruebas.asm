@@ -1039,19 +1039,17 @@ START:
 
 	di
 
-;	call Done_melody
-
-
-
-
-
-
-
 	xor a
 	out ($fe),a 											; BORDER NEGRO.
 
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
+
+
+
+	call Done_melody
+
+
 
 ;	Construimos LOGO.
 
