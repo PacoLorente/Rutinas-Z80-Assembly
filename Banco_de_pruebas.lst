@@ -14692,9 +14692,9 @@
   75+ BDA4
   76+ BDA4 1E FE        5 ld e,%11111110                                              ; Utilizaremos esta máscara para ir borrando. Comenzamos con el último bit.
   77+ BDA6
-  78+ BDA6 C5               push bc                                                       ; PUSH nº de chars -1.
+  78+ BDA6 C5               push bc                                                   ; PUSH nº de chars -1.
   79+ BDA7
-  80+ BDA7 06 08            ld b,8                                                      ; 8 bits. 8 interacciones para borrar un byte.
+  80+ BDA7 06 08            ld b,8                                                    ; 8 bits. 8 interacciones para borrar un byte.
   81+ BDA9 C5           4 push bc
   82+ BDAA
   83+ BDAA 06 08            ld b,8
@@ -14707,7 +14707,7 @@
   90+ BDB0 24               inc h
   91+ BDB1 10 FA            djnz 3B
   92+ BDB3
-  93+ BDB3 01 FF 0A         ld bc,$0aff
+  93+ BDB3 01 00 06         ld bc,$0600                                               ; Velocidad del borrado del mensaje.
   94+ BDB6 CD 37 9B         call DELAY
   95+ BDB9
   96+ BDB9 E1               pop hl

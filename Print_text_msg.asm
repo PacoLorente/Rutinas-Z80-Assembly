@@ -75,9 +75,9 @@ Clear_level_msg:
 
 5 ld e,%11111110                                              ; Utilizaremos esta máscara para ir borrando. Comenzamos con el último bit.
 
-    push bc                                                       ; PUSH nº de chars -1.
+    push bc                                                   ; PUSH nº de chars -1.
 
-    ld b,8                                                      ; 8 bits. 8 interacciones para borrar un byte.
+    ld b,8                                                    ; 8 bits. 8 interacciones para borrar un byte.
 4 push bc                                                     
 
     ld b,8
@@ -90,7 +90,7 @@ Clear_level_msg:
     inc h
     djnz 3B
 
-    ld bc,$0aff
+    ld bc,$0600                                               ; Velocidad del borrado del mensaje.
     call DELAY
 
     pop hl
