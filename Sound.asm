@@ -54,16 +54,22 @@ Done_melody:
 	ld (Sound),hl
     call Sound_Generator 									; Nota_5.
 
-	ld c,$24
+	ld c,$24               ;$24
 	ld l,$cd
 	ld (Sound),hl
     call Sound_Generator 									; Nota_6.
 
-    ld bc,$4000         
+    ld c,$2d               
+    ld de,$0101
+    ld (Sound),hl
+    call Sound_Generator                                    ; Down to Note_7.
+
+    ld bc,$1000         
 	call DELAY 												; Pause entre notas.
 
+    dec d
+    dec e
     ld c,$16
-	ld l,$fa
 	ld (Sound),hl
     call Sound_Generator 									; Nota_7.
 
@@ -104,8 +110,6 @@ Done_melody:
     ld c,$40
     ld (Sound),hl
     call Sound_Generator                                    ; End Note.
-
-    jr $
 
     pop hl
     pop de

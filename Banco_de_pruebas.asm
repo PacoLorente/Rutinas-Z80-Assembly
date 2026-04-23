@@ -1045,12 +1045,6 @@ START:
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
 
-
-
-	call Done_melody
-
-
-
 ;	Construimos LOGO.
 
 	call Imprime_Logo_principal
