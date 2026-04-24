@@ -233,12 +233,13 @@ Attr_Moon_File5 equ $589a
 Attr_Moon_File5_2 equ $589c
 Attr_Moon_File5_3 equ $589e
 
-;	Sonidos.
+;	Sound efects.
 
-Laser_sound_init_value equ $00a0	;	$00c0
+Laser_sound_init_value equ $00a0	
 Shield_sound_init_value equ $00c0
 Shot_sound_init_value equ $1801
-Burst_sound_init_value equ $3000	;	(C =¨3¨).	$24 / $03 = $0c Frames que vamos a estar ejecutando la explosión.
+Burst_sound_init_value equ $3500				;	Longitud de la explosión de las entidades, (duración).	
+Amadeus_Burst_sound_init_value equ $7000		;	Longitud de la explosión de Amadeus, (duración).
 
 ;	Mensajes de texto.
 
@@ -3029,10 +3030,19 @@ Init_Burst_sound:
 	or l
 	ret nz
 
-;	Init sound_effect.
+;	Init Burst_sound_efect.
+
+;	La explosión de Amadeus ha de ser más larga que la de las entidades.
 
 	ld hl,Burst_sound_init_value
-	ld (Burst_sound),hl
+
+	ld a,(Impacto_Amadeus)
+	and a
+	jr z,1F
+
+	ld hl,Amadeus_Burst_sound_init_value
+	
+1 ld (Burst_sound),hl
 
 	ret
 

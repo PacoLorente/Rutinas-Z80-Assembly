@@ -245,7 +245,6 @@ Noise_efect:
 
 ;   HL define el sonido.
 ;
-;   L define el retardo o longitud de cada semiciclo de la onda, en este caso un valor aleatorio, (0-$ff).
 ;   H define el nº de ondas que vamos a generar, (longitud del sonido).
 
 Loop
@@ -340,7 +339,11 @@ Clean_shot_effect:
     ret
 
 ;   -------------------------------------------------------------------------------------------
-
+;
+;   24/04/26
+;
+;   Ejecuta el sonido de una explosión siempre que está se haya iniciado, [Init_Burst_sound] y no esté activo el_
+;   _inhibidor de efectos de sonido, (bit0 Ctrl_6).
 
 Play_burst_sound_effect:
 
@@ -355,28 +358,32 @@ Play_burst_sound_effect:
     bit 0,a
     ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido".
 
+;   ----------------------
+
     set 0,a
     ld (Ctrl_6),a           ; Activa el inhibidor de sounds effects.
 
+    push hl                 ; Cantidad de explosión que queda por ejecutar.
 
-    ld (Sound),hl
-
+    ld (Sound),hl           ; Cargamos el sonido de la explosión en (Sound) y definimos el nº de ondas a reproducir.
     ld c,3
-
     call Noise_efect
 
-    inc h
-    dec h
-    call z,Clean_burst_effect
+    pop de                  ; Hemos de averiguar que la explosión no tiene valor negativo. Evitamos que entre en un bucle infinito de ejecución. 
+
+    ld a,d                  ; Así podemos ejecutar una explosión con la duración que queramos.
+    sub h
+
+    jr c,Clean_burst_efect
 
     ld (Burst_sound),hl
 
     ret
 
-Clean_burst_effect:
+Clean_burst_efect
 
     ld hl,0
-    ld (Sound),hl
+    ld (Burst_sound),hl
 
     ret
 
