@@ -416,29 +416,6 @@ Incrementa_FRAMES
 	ld (Attr_Moon_File5_2),hl
 	ld (Attr_Moon_File5_3),hl
 
-;	Lives. 															; Sólo restaura los attrs. de la 1ª Fila de las vidas.
-
-;	ld a,$45 														; BRIGHT 1, BLACK paper, CYAN ink.
-;	ld b,7
-
-;	ld hl,$5801
-
-;1 ld (hl),a
-;	inc l
-;	djnz 1B
-
-;	Amadeus
-
-;	ld hl,$5ac0 													; Dirección de attrs. de la Fila superior de Amadeus.
-;	call Repone_Attr_File_Amadeus
-;	ld hl,$5ae0 													; Dirección de attrs. de la Fila inferior.
-;	call Repone_Attr_File_Amadeus
-
-;	Sound efects
-
-;	call Play_burst_sound_effect
-;	call Play_shot_sound_effect
-
 	ld hl,Ctrl_6
 	res 0,(hl) 														; Inicializa el inhibidor de efectos de sonido.
 
@@ -3148,6 +3125,9 @@ Next_level:
 	res 5,(hl)
 
 	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
+
+	call Replace_Amadeus_attr_zone 					;	Repone los atributos de las 2 últimas líneas de pantalla para que la entrada de Amadeus del siguiente nivel sea azul.
+
 
 ;	Vamos a empezar de nuevo. En primer lugar limpiamos los distintos álbumes de líneas.
 ;	El álbum de líneas de Amadeus no está vacío. Para acelerar el proceso de pintado tiene almacenados los scanlines, ($00, $50, $00, $51, ..., $00, $57).

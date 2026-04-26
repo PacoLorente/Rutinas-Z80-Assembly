@@ -2,6 +2,24 @@
 ;
 ;	30/11/25
 ;
+;	Repone attrs. de las dos últimas líneas de pantalla.
+
+Replace_Amadeus_attr_zone:
+
+	ld a,%01000101 											; ($45). Bright, Black paper, Cyan ink.
+	ld b,64
+	ld hl,$5ac0
+
+1 ld (hl),a
+	inc l
+	djnz 1B
+
+	ret
+
+; ------------------------------------------------------------------------
+;
+;	30/11/25
+;
 ;	Genera estrellas en pantalla.
 
 make_stars:

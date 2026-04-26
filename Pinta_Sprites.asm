@@ -1,25 +1,5 @@
 ; ---------------------------------------------------------------------------
 ;
-;   20/04/26
-;
-;   INPUTS: HL contiene la dirección de la 1ª o 2ª Fila de attrs. de Amadeus: $5ac0 o $5ad0.
-
-Repone_Attr_File_Amadeus:
-
-	ld a,(CX_Amadeus)
-	add l
-	ld l,a                                             ; (CX_Amadeus) nos indica la columna exacta donde se encuentra nuestra nave.
-
-	ld a,$45                                           ; Attr.: BRIGHT 1, BLACK paper, CYAN ink.
-
-	ld (hl),a
-	inc l
-	ld (hl),a                                          ; Fija attrs. en las 2 Columnas superiores o inferiores de Amadeus.
-
-	ret
-
-; ---------------------------------------------------------------------------
-;
 ;   16/10/25
 ;
 ;   Imprime el contador de 16 bits SCORE.

@@ -835,7 +835,7 @@ Limpia_album_de_pintado_disparos_entidades
 ;   27/4/25
 ;
 
-Motor_Disparos_Amadeus
+Motor_Disparos_Amadeus:
 
     ld hl,Disparo_Amad+1
 
@@ -847,7 +847,7 @@ Motor_Disparos_Amadeus
 ;   Existe un disparo de Amadeus.
 
     call Consulta_Impacto
-    call Mueve_disparo_Amadeus                        ; Movemos el disparo de Amadeus aunque exista colisión, (bit3 Impacto2 a "1")_
+    call Mueve_disparo_Amadeus                                           ; Movemos el disparo de Amadeus aunque exista colisión, (bit3 Impacto2 a "1")_
 ;                                                                            _pués no sabemos si se trata de una entidad u otro objeto.
     ret
 
