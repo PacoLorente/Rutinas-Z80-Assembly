@@ -631,7 +631,7 @@ Extrae_address_y_avanza call Extrae_address
 ;
 ;   4/4/26
 ;
-;	Inicializa el 1er Nivel del juego.
+;	Inicializa Nivel del juego.
 ;	
 ;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
 ;									(Numero_de_entidades) ... Contiene el nº de entidades del nivel, (.db).

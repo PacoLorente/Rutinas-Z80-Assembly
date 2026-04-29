@@ -914,7 +914,6 @@ Mueve_disparo_Amadeus
 
     ld a,h
 
-; debuggggg -----------
     cp $48
     jr nc,1F
  
@@ -944,7 +943,7 @@ Elimina_disparo_Amadeus
 ; HL apunta al .db (Puntero_de_impresion) del disparo.
 ; Recordemos la estructura de datos de una caja de disparos de Amadeus:
 
-;   Disparo_1A defw 0							; Puntero objeto.
+;   Disparo_1A defw 0							        ; Puntero objeto.
 ;   	defw 0											; Puntero de impresión.
 
     inc l
@@ -961,11 +960,7 @@ Elimina_disparo_Amadeus
 
     call Limpia_album_de_pintado_disparos_Amadeus
 
-    ld a,1
-    ld (Permiso_de_disparo_Amadeus),a
-
-    xor a
-    inc a                                               ;? Siempre que eliminamos un disparo tenemos: "NZ".
+    inc a                                               ; Siempre que eliminamos un disparo tenemos: "NZ".
 
     ret
 
@@ -1019,10 +1014,10 @@ Genera_disparo_Amadeus:
 
     ld a,(Permiso_de_disparo_Amadeus)
     and a
-    ret z                                                    ;? Salimos si no hay permiso de disparo.
+    ret nz                                                   ; Salimos si no hay permiso de disparo.
 
-    dec a
-    ld (Permiso_de_disparo_Amadeus),a                        ;? No volveremos a tener permiso de disparo hasta que desaparezaca este disparo.
+    ld a,$26                                                 ; Nº de fps que tendremos "deshabilitado" el disparo de Amadeus.
+    ld (Permiso_de_disparo_Amadeus),a                        ; No volveremos a tener permiso de disparo hasta que (Permiso_de_disparo_Amadeus) = "0".
 
 Define_puntero_objeto_disparo
 

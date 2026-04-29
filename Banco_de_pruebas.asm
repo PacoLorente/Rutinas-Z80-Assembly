@@ -715,7 +715,7 @@ Num_de_bytes_album_de_disparos_borrado db 0
 
 Numero_de_disparos_de_entidades db 7
 
-Permiso_de_disparo_Amadeus db 1								; A "1", se puede generar disparo.
+Permiso_de_disparo_Amadeus db 0								; "0" Permite disparo.
 Permiso_de_disparo_Entidades db 0							; A "1", se puede generar disparo.
 
 Techo_Scanlines_album defw 0
@@ -1196,7 +1196,14 @@ Main:
 
 ; 	TEMPORIZACIONES !!!!!!!!!!!!!!!!
 
-	ld hl,CLOCK_disparos_de_entidades
+	ld a,(Permiso_de_disparo_Amadeus)
+	and a
+	jr z,8F
+
+	dec a
+	ld (Permiso_de_disparo_Amadeus),a
+
+8 ld hl,CLOCK_disparos_de_entidades
 	dec (hl)
 
 ;>  *****************************************************************************
@@ -3116,6 +3123,24 @@ Next_level:
 
 	di
 
+;	Eliminamos el disparo de Amadeus y su sonido.
+
+    xor a
+
+    ld b,4
+    ld hl,Disparo_Amad
+
+1 ld (hl),a
+    inc hl
+    djnz 1B
+
+	ld hl,0
+	ld (Shot_sound),hl
+
+	call Change_Disparos							; Intercambiamos los álbumes de disparos.
+    call Pinta_disparos_Amadeus
+	call Change_Disparos							; Intercambiamos los álbumes de disparos.
+
 	call Done_melody
 
 	ld bc,$05ff
@@ -3154,6 +3179,10 @@ Next_level:
 	ld hl,Scanlines_album_2
 	ld bc,34
 	call Clean_mem
+
+
+
+
 
 ;	Limpiamos:
 
