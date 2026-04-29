@@ -806,9 +806,7 @@ Print_DONE:
     ld hl,Done                                              ; msg.
     ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%11100000                                          ; attrs.
-
     call Print_text_msg
-
     ret
 
 Clean_DONE
@@ -834,11 +832,14 @@ Print_Game_Over:
 
     ld hl,Game_Over                                         ; msg.
     ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-    ld a,%11000011                                          ; attrs.
+    ld a,%01010000                                          ; attrs.
 
-    push de
+    ld b,0
+
+
+;    push de
     call Print_text_msg
-    pop hl
+;    pop hl
 
     ret
 

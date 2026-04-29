@@ -303,8 +303,16 @@ game_over:
 	ld hl,Ctrl_5
 	set 6,(hl)
 
-	ld a,200 														;	Tiempo que tarda en comenzar la secuencia: GAME OVER.
+	ld a,255 														;	Tiempo que tarda en comenzar la secuencia: GAME OVER.
 	ld (Temp_new_live),a
+
+	call Print_Game_Over
+
+;	di
+;	jr $
+;	ei
+
+
 
 	ret
 
