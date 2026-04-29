@@ -294,25 +294,18 @@ Inicia_transicion_de_salida
 
 ; ------------------------------------------------------------------------
 ;
-;	2/12/25
+;	29/4/26
 ;
-;	Activa FLAG (GAME OVER) y ajusta el temporizador (GAME OVER), para ello "reutilizamos": (Temp_new_live).
+;	Activa FLAG (GAME OVER), "reutilizamos" el .defw (Entidad_sospechosa_de_colision) como contador de 16 bits.
+;	Lo utilizaremos como temporizador. Determina el tiempo que aparece el msg. "GAME OVER" en pantalla.
 
 game_over:
 
 	ld hl,Ctrl_5
 	set 6,(hl)
 
-	ld a,255 														;	Tiempo que tarda en comenzar la secuencia: GAME OVER.
-	ld (Temp_new_live),a
-
-	call Print_Game_Over
-
-;	di
-;	jr $
-;	ei
-
-
+	ld hl,$0150
+	ld (Entidad_sospechosa_de_colision),hl
 
 	ret
 

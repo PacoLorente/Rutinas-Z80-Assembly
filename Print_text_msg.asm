@@ -825,7 +825,7 @@ Clean_DONE
 
 ; ----------------------------------------------------------
 ;
-;   21/2/26
+;   29/4/26
 ;
 
 Print_Game_Over:
@@ -833,20 +833,19 @@ Print_Game_Over:
     ld hl,Game_Over                                         ; msg.
     ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%01010000                                          ; attrs.
-
     ld b,0
 
-
-;    push de
     call Print_text_msg
-;    pop hl
 
     ret
 
-    ; ----------------------------------------------------------
+; ----------------------------------------------------------
 
-Modify_first_char_attr call Calcula_direccion_atributos
+Modify_first_char_attr:
+
+    call Calcula_direccion_atributos
     ld (hl),b
+
     ret
 
 ; ----------------------------------------------------------

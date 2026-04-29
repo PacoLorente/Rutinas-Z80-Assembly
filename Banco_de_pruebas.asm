@@ -419,6 +419,10 @@ Incrementa_FRAMES
 	ld hl,Ctrl_6
 	res 0,(hl) 														; Inicializa el inhibidor de efectos de sonido.
 
+	ld a,(Ctrl_5)
+	bit 6,a
+	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
+
 	pop bc
 	pop de
 	pop hl
@@ -1391,19 +1395,23 @@ Gestiona_siguiente_entidad
 
 ;	! GESTIONA AMADEUS !!!!!!!!!!
 
-Gestion_de_Amadeus
- 
+Gestion_de_Amadeus:
+
 	ld hl,Ctrl_5
 	bit 6,(hl)
 	jr z,7F
 
-	ld hl,Temp_new_live
-	dec (hl)
+	ld hl,(Entidad_sospechosa_de_colision)
+	dec hl
+
+	ld a,h
+	or l
 
 	di
 	jr z,$ 													;> GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	ei
 
+	ld (Entidad_sospechosa_de_colision),hl
 	jr End_frame
 
 7 ld hl,Ctrl_3
@@ -1425,14 +1433,14 @@ Gestion_de_Amadeus
 	call z,game_over
 	jr z,End_frame
 
-New_Amadeus
+New_Amadeus:
 
 	call Reinicia_Amadeus
 	jr End_frame
 
 ; 	Hay Impacto???, Existe movimiento???, Disparamos???, Pausamos el juego???
 
-Amadeus_vivo
+Amadeus_vivo:
 
 	ld a,(Impacto_Amadeus)
 	and a
