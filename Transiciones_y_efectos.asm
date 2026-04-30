@@ -1,5 +1,25 @@
 ; ------------------------------------------------------------------------
 ;
+;	30/4/26
+;
+;	Pantalla de nueva "Max. puntuación", si la puntuación máxima ha sido superada nos pedirá nombre, en caso_
+;	_contrario volvemos al menú principal como un pardillo.
+
+Enter_name_screen:
+
+	di
+
+	jr $
+
+
+
+
+
+
+
+
+; ------------------------------------------------------------------------
+;
 ;	30/11/25
 ;
 ;	Repone attrs. de las dos últimas líneas de pantalla.
@@ -312,6 +332,7 @@ game_over:
 ; ------------------------------------------------------------------------
 
 Dispara_salida_de_amadeus:
+
 
 ;	DONE msg, (Print & clear message).
 

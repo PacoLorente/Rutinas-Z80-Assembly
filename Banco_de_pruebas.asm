@@ -1235,11 +1235,15 @@ Main:
 	inc b
 	dec b
 
-	call z,Dispara_salida_de_amadeus						; Nivel superado !!!!!
+	jr nz,9F
+
+;	ld a,(Impacto_Amadeus)
+
+	call Dispara_salida_de_amadeus						; Nivel superado !!!!!
 
 ; ----------------------------------------------------------------
 
-	ld a,(Entidades_en_curso)								; Entidades que hay en pantalla.
+9 ld a,(Entidades_en_curso)								; Entidades que hay en pantalla.
 	cp b
 	jr z,1F
 
@@ -1401,15 +1405,16 @@ Gestion_de_Amadeus:
 	bit 6,(hl)
 	jr z,7F
 
+;	El bit 6 de (Ctrl_5) indica que la partida ha terminado. Ahora el .defw (Entidad_sospechosa_de_colision) es un temporizador_
+;	_de 16 bits que determina cuanto tiempo va a estar el mensaje "GAME OVER" en pantalla.
+
 	ld hl,(Entidad_sospechosa_de_colision)
 	dec hl
 
 	ld a,h
 	or l
 
-	di
-	jr z,$ 													;> GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	ei
+	call z,Enter_name_screen
 
 	ld (Entidad_sospechosa_de_colision),hl
 	jr End_frame
