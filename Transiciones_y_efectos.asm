@@ -485,9 +485,6 @@ Transicion_de_entrada:
 
 6 push hl
 
-;	ld hl,(Sound_2)
-;	ld (Sound),hl
-
 	pop hl
 
 	ld a,(Ctrl_5)

@@ -897,7 +897,7 @@ Shield_sound defw 0
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
-Temp_Amadeus_exit db 20;120 									; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
+Temp_Amadeus_exit db 60										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
 Tabla_de_conversion_KEYCODE_ASCII_CODE
 
@@ -1235,15 +1235,11 @@ Main:
 	inc b
 	dec b
 
-	jr nz,9F
-
-;	ld a,(Impacto_Amadeus)
-
-	call Dispara_salida_de_amadeus						; Nivel superado !!!!!
+	call z,Dispara_salida_de_amadeus
 
 ; ----------------------------------------------------------------
 
-9 ld a,(Entidades_en_curso)								; Entidades que hay en pantalla.
+	ld a,(Entidades_en_curso)									; Entidades que hay en pantalla.
 	cp b
 	jr z,1F
 
@@ -1288,7 +1284,7 @@ Main:
 	xor a
 	ld (Limite_vertical),a 									; Inicializa el contador de entidades "visibles" en pantalla, (se cargan en la Tabla_de_pintado).
 
-Bucle_de_entidades 
+Bucle_de_entidades:
 
 	push bc 												; Nº de entidades en curso.
 
@@ -1434,7 +1430,6 @@ Gestion_de_Amadeus:
 
 	ld hl,Lives
 	dec (hl)
-
 	call z,game_over
 	jr z,End_frame
 
@@ -1485,7 +1480,7 @@ Vivo_y_coleando
 	call Change_Amadeus
 	call Genera_datos_de_impresion_Amadeus					; Genera los datos de impresión de la nave.
 
-End_frame 
+End_frame:
 
 ; 	23/08/24 Llegados a este punto: NO HAY POSIBILIDAD DE GENERAR MÁS DISPAROS.
 ; 	Generamos los datos de impresión en el álbum_de_pintado y limpiamos el sobrante de datos del anterior FRAME si toca.
@@ -1527,7 +1522,7 @@ End_frame
 ;
 ;	24/07/24
 
-Reinicia_Amadeus
+Reinicia_Amadeus:
 
 ;	Reinicia posición y estado.
 
@@ -1568,7 +1563,7 @@ Reinicia_Amadeus
 
 ;	Fuerza la impresión de la nave en el siguiente frame.
 
- 	ld hl,Ctrl_3	
+	ld hl,Ctrl_3
 	set 5,(hl)
 
 	ret
@@ -1577,7 +1572,7 @@ Reinicia_Amadeus
 ;
 ;	23/11/24
 
-Ajusta_velocidad_entidad 
+Ajusta_velocidad_entidad:
 
 	ld a,(ix+12)											; ld a,(Velocidad)
 	and a
@@ -1644,7 +1639,7 @@ Ajusta_velocidad_entidad
 ;
 ;	25/08/24
 
-Change 
+Change:
 
 	ld a,(Switch)
 	xor 1
@@ -1658,7 +1653,7 @@ Change
 	ld (Album_de_borrado),de
 	ret
 
-Change_Amadeus
+Change_Amadeus:
 
 	ld hl,(Album_de_pintado_Amadeus)
 	ld de,(Album_de_borrado_Amadeus)
@@ -1667,7 +1662,7 @@ Change_Amadeus
 	ld (Album_de_borrado_Amadeus),de
 	ret
 
-Change_Disparos
+Change_Disparos:
 
 ; Álbumes de Amadeus.
 
