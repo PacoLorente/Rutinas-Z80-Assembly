@@ -1232,10 +1232,10 @@ Main:
 	ld hl,Numero_parcial_de_entidades
 	ld b,(hl)
 
-	inc b
-	dec b
+;	inc b
+;	dec b
 
-	call z,Dispara_salida_de_amadeus
+;	call z,Dispara_salida_de_amadeus
 
 ; ----------------------------------------------------------------
 
@@ -1446,6 +1446,10 @@ Amadeus_vivo:
 	and a
 	call nz,Genera_explosion_Amadeus
 	jr nz,End_frame
+
+	ld a,(Numero_parcial_de_entidades)
+	and a
+	call z,Dispara_salida_de_amadeus
 
 ;	Control.
 
