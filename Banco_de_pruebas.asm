@@ -897,7 +897,7 @@ Shield_sound defw 0
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
-Temp_Amadeus_exit db 60										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
+Temp_Amadeus_exit db 80										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
 Tabla_de_conversion_KEYCODE_ASCII_CODE
 
@@ -1232,11 +1232,6 @@ Main:
 	ld hl,Numero_parcial_de_entidades
 	ld b,(hl)
 
-;	inc b
-;	dec b
-
-;	call z,Dispara_salida_de_amadeus
-
 ; ----------------------------------------------------------------
 
 	ld a,(Entidades_en_curso)									; Entidades que hay en pantalla.
@@ -1473,6 +1468,7 @@ Amadeus_vivo:
 
 	ld hl,Ctrl_3
 	set 5,(hl)
+
 	jr Vivo_y_coleando
 
 2 ld hl,Ctrl_3

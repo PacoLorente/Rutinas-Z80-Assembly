@@ -336,20 +336,31 @@ Dispara_salida_de_amadeus:
 
 ;	DONE msg, (Print & clear message).
 
+	ld a,(Ctrl_2)
+	bit 6,a
+	ret nz															;	RET si ya se ha disparado la salida de Amadeus.
+
 	ld a,(Shield)
 	and a
 	ret nz
 
+	ld a,70
+
 	ld hl,Temp_Amadeus_exit
+	dec (hl) 														;	Inicialmente 60d
+
+	cp (hl)
+
+	push hl
+	call z,Print_DONE
+	pop hl
+
+	inc (hl)
 	dec (hl)
+
 	ret nz
 
-	call Print_DONE
-
-	di
-	jr $
-	ei
-
+;	call Print_DONE
 
 	ld hl,Ctrl_2
 	set 6,(hl)														;	Bit 6 de Ctrl_2 indica que hemos iniciado la "Transición: nivel superado".
