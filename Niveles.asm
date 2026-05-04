@@ -19,61 +19,6 @@ Msg_1 db 8,5 									; Columna +5 , nº de chars del msg.
 Msg_2 db 3,14
 	defm "FLIES AND UFOS",0
 
-;	19/11/25
-
-Indice_de_niveles:
-
-	defw Nivel_1 
-	defw Nivel_2
-
-;	...
-;	...
-;	+ Niveles ...
-
-	defw 0
-	defw 0
-
-; NIVEL_1. Tres clases de entidades tipo BadSat.
-
-Nivel_1 db $f0,$07,$70 							; FLIES !!!
-
-;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
-;												; 2º byte: Define el valor de (Decrease_top_time_entities).
-;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
-;												; Nº de entidades que tiene el nivel.
-
-	db 1
-	db 1
-
-;	db 20
-
-;	db 1,2,3,2,3 								; Clases de entidades. (Irán apareciendo por este orden).
-;	db 3,2,1,2,1
-;	db 1,3,1,2,3
-;	db 1,3,2,1,2
-
-;    defw 0
-;	defw 0
-
-; ---------------------------------------------------------------------------------------
-
-; Nivel_2. Bad_Sats y platillos.
-
-Nivel_2 db $f0,$07,$70 							; Flies and UFOS !!!!!.
-
-;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
-;												; 2º byte: Define el valor de (Decrease_top_time_entities).
-;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
-	db 20
-
-	db 3,5,6,3,3
-	db 5,6,3,5,6
-	db 3,5,6,3,3
-	db 6,5,3,5,6
-
-;	defw 0
-;	defw 0
-;
 ; --------------------------------------------------------------------------------------------------------------
 
 Indice_de_vidas
@@ -190,7 +135,63 @@ Tabla_Random_Badplate
 
 	defw 0
 
+; ----------------------------------------------------------------------
+;
+;	19/11/25
 
+Indice_de_niveles:
+
+	defw Nivel_1 
+	defw Nivel_2
+
+;	...
+;	...
+;	+ Niveles ...
+
+	defw 0
+	defw 0
+
+; NIVEL_1. Tres clases de entidades tipo BadSat.
+
+Nivel_1 db $f0,$07,$70 							; FLIES !!!
+
+;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+;												; Nº de entidades que tiene el nivel.
+
+;	db 1
+;	db 1
+
+	db 20
+
+	db 1,2,3,2,3 								; Clases de entidades. (Irán apareciendo por este orden).
+	db 3,2,1,2,1
+	db 1,3,1,2,3
+	db 1,3,2,1,2
+
+;    defw 0
+;	defw 0
+
+; ---------------------------------------------------------------------------------------
+
+; Nivel_2. Bad_Sats y platillos.
+
+Nivel_2 db $f0,$07,$70 							; Flies and UFOS !!!!!.
+
+;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+	db 20
+
+	db 3,5,6,3,3
+	db 5,6,3,5,6
+	db 3,5,6,3,3
+	db 6,5,3,5,6
+
+;	defw 0
+;	defw 0
+;
 
 
 

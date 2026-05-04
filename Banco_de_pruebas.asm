@@ -1451,6 +1451,7 @@ Amadeus_vivo:
 	call Main_keyboard_routine
 	call Kempston_control
 
+
 	ld hl,Ctrl_2
 	bit 6,(hl)
 	jr z,2F
