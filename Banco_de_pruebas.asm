@@ -307,6 +307,15 @@ Fila_msg_de_nivel equ Line_9 + 6	;	Los mensajes de nivel se imprimen en la fila 
 	jr z,$
 ;	--------------------
 
+; 	Disparos.
+
+	call Pinta_disparos_Amadeus
+	call Pinta_disparos_Entidades
+
+;	Sprites.
+
+	call Actualiza_pantalla
+
 ; 	Actualiza marcadores.
 
 	ld hl,Ctrl_2
@@ -322,11 +331,6 @@ Fila_msg_de_nivel equ Line_9 + 6	;	Los mensajes de nivel se imprimen en la fila 
 	ld a,(Score_Ctrl) 													;	Sólo se imprime el marcador Score cuando este se incrementa.
 	and a
 	call nz, Print_Score_Counter
-
-; 	Disparos.
-
-	call Pinta_disparos_Amadeus
-	call Pinta_disparos_Entidades
 
 ; Actualiza variables Shield ----------------------- ----------------------- ------------------------  
 
@@ -389,8 +393,6 @@ Incrementa_FRAMES
 1 push de
 	push bc
 
-	call Actualiza_pantalla
-
 ;	Sound efects
 
 	call Play_burst_sound_effect
@@ -442,7 +444,7 @@ Incrementa_FRAMES
 
 ; --------------------------------------------------------------------------------
 ;
-; 11/3/26
+; 05/05/26
 ;
 ; Parámetros DRAW. 	
 ;
@@ -518,7 +520,8 @@ Ctrl_2 db 0
 ;															_ el último MOVIMIENTO que hayamos ejecutado.
 ;															BIT 4, ???
 ;															BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
-;															BIT 6, -------------------------------------------------------------
+;															BIT 6, Habilita la transición: "Salida de Amadeus" por la parte baja de la pantalla cuando completamos un nivel.
+;																   La rutina [Dispara_salida_de_amadeus] pone este bit a "1" tras imprimir el msg. "DONE".
 ;															BIT 7, "1" Detecta que hemos pulsado "SHIELD". ; "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
 ;															- La rutina [Borra_escudo], inicializará el FLAG.
 
@@ -751,6 +754,7 @@ Ctrl_4 db 0													; 4º Byte de Ctrl. general, (no específico) a una úni
 ;
 ;															BIT 0, "1" Cada vez que se incrementan las entidades en curso, este bit se pone a "1". Esto hará que una entidad pase de "dormida" a "activa".
 ;															BIT 1, (INVESTIGAR !!!)
+;															BIT 2, -------------------------------------------
 ;															BIT 3, "1" Indica que se ha asignado un color RND a la entidad. 
 ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta?.
 ; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
@@ -1399,12 +1403,13 @@ Gestion_de_Amadeus:
 ;	El bit 6 de (Ctrl_5) indica que la partida ha terminado. Ahora el .defw (Entidad_sospechosa_de_colision) es un temporizador_
 ;	_de 16 bits que determina cuanto tiempo va a estar el mensaje "GAME OVER" en pantalla.
 
+;	GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 	ld hl,(Entidad_sospechosa_de_colision)
 	dec hl
 
 	ld a,h
 	or l
-
 	call z,Enter_name_screen
 
 	ld (Entidad_sospechosa_de_colision),hl
