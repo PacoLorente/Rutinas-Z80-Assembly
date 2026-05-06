@@ -1,5 +1,26 @@
 ; ----------------------------------------------------------
 ;
+;   6/5/26
+;
+;   Limpia la pantalla fijando el negro y pinta el logo de Amadeus.
+
+
+Clean_and_logo:
+
+    xor a
+    out ($fe),a                                             ; BORDER NEGRO.
+
+    ld a,%01000101                                          ; Fondo NEGRO, tinta Cyan + bright.
+    call Cls
+
+;   Construimos LOGO.
+
+    call Imprime_Logo_principal
+
+    ret
+
+; ----------------------------------------------------------
+;
 ;   25/3/26
 ;
 

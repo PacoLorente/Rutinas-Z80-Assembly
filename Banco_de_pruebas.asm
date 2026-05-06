@@ -869,6 +869,7 @@ Attr_big_counter db %01000110
 ; SCORE:
 
 Score_hex defw 0
+Score_hex_max defw 0
 
 Score_BCD_unidades db 0
 Score_BCD_decenas db 0
@@ -1025,15 +1026,7 @@ START:
 
 	di
 
-	xor a
-	out ($fe),a 											; BORDER NEGRO.
-
-	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
-	call Cls
-
-;	Construimos LOGO.
-
-	call Imprime_Logo_principal
+	call Clean_and_logo
 
 Main_menu:
 
@@ -1411,6 +1404,7 @@ Gestion_de_Amadeus:
 	ld a,h
 	or l
 	call z,Enter_name_screen
+	jp z,START
 
 	ld (Entidad_sospechosa_de_colision),hl
 	jr End_frame
@@ -3193,10 +3187,6 @@ Next_level:
 	ld hl,Scanlines_album_2
 	ld bc,34
 	call Clean_mem
-
-
-
-
 
 ;	Limpiamos:
 

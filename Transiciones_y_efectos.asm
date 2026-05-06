@@ -9,6 +9,109 @@ Enter_name_screen:
 
 	di
 	
+;	En primer lugar comparamos la máxima puntuación almacenada con la puntuación actual.
+
+	ld hl, (Score_hex_max)
+	ld de, (Score_hex)
+
+	and a
+	sbc hl,de
+
+	jr c, New_max_score
+
+;	No hemos superado la puntuación máxima. Inicializamos partida.
+
+	
+
+
+
+
+
+
+
+	ld hl,Scanlines_album
+	ld bc,34
+	call Clean_mem
+;
+	ld hl,Scanlines_album_2
+	ld bc,34
+	call Clean_mem
+
+;	Limpiamos:
+
+;	Numeros_aleatorios ds 7
+;	Numeros_aleatorios_baile ds 7
+
+;	Tabla_de_pintado ds 30								
+;	Tabla_de_borrado ds 24
+
+	ld hl,Numeros_aleatorios
+	ld bc,67
+	call Clean_mem
+
+;	Limpiamos las 3 cajas Master.
+
+	ld hl,Caja_master_1
+	ld bc,41
+	call Clean_mem
+
+;	Limpiamos la caja de Amadeus.
+
+	ld hl,Amadeus_BOX
+	push hl
+	ld bc,13
+	call Clean_mem
+	pop hl
+
+	inc hl
+	inc hl
+	inc hl
+
+	ld (hl),15
+
+;	Limpiamos Almacenes de movimientos masticados de Amadeus  entidades.
+
+	ld hl,Almacen_de_movimientos_masticados_Amadeus
+	ld bc,$36fe
+	call Clean_mem
+
+	call Inicializa_Bandeja_DRAW
+
+	ld hl,Amadeus_scanlines_album
+	call Inicializa_Amadeus_scanline_album
+
+	ld hl,Amadeus_scanlines_album_2
+	call Inicializa_Amadeus_scanline_album
+
+
+
+
+
+
+
+
+    xor a
+
+    ei
+
+    ret
+
+
+
+
+
+
+;	ld hl,Ctrl_4
+;	res 5,(hl)
+
+New_max_score
+
+
+
+
+
+	call Clean_and_logo
+
 	jr $
 
 	ret
