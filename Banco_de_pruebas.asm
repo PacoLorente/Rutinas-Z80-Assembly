@@ -221,7 +221,7 @@ Amadeus_disparos_scanlines_album equ $827c	    ;	($827c - $8281) 	; 6 Bytes, (1 
 Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 
 Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
-Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)Burst
+Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)     Burst
 
 ;	Atributos de la luna.
 
