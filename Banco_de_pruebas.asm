@@ -449,7 +449,7 @@ Incrementa_FRAMES
 ; Parámetros DRAW. 	
 ;
 
-Bandeja_DRAW ; -----------------------------------------------------------------------------------------------
+Bandeja_DRAW: 	; ---------------------------------------------------------------------------------------------------------------------------
 
 Clase db 0  												; A cada entidad se le asigna un nº o (Clase) para poder asignarle una de las 3 Cajas_Master.
 ; 															; En cada (Nivel) sólo puede haber 3 (Clases) diferentes de entidad pués sólo dispondremos de_
@@ -1022,14 +1022,16 @@ Counter_msg_char db 0
 
 START:
 
-;	Menú Principal
+	ld sp,0													; Situamos el inicio de Stack.
+	ld a,$fe 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
+	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
+	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
 
 	di
 
-	call Clean_and_logo
-
 Main_menu:
 
+	call Clean_and_logo
 	call Print_Main_menu
 	call Main_menu_key										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
@@ -1043,11 +1045,6 @@ INICIALIZACION:
 
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
-
-	ld sp,0													; Situamos el inicio de Stack.
-	ld a,$fe 												; IM2 ON. Vector de interrupciones a $fcff, (defw debajo de la pila).
-	ld i,a 													; Byte alto de la dirección donde se encuentra el vector de interrupciones.
-	IM 2 											   		; Habilitamos el modo 2 de INTERRUPCIONES.
 
 ;	Imprime escudos y vidas.
 

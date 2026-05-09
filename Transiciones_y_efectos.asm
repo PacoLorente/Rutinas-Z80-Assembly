@@ -66,6 +66,10 @@ Enter_name_screen:
 	ld bc,67
 	call Clean_mem
 
+	ld hl,Almacen_de_movimientos_masticados_2
+	ld bc,(Contador_general_de_mov_masticados_3-Almacen_de_movimientos_masticados_2)+1
+	call Clean_mem
+
 ;	Limpiamos las 3 cajas Master.
 
 	ld hl,Caja_master_1
@@ -102,72 +106,98 @@ Enter_name_screen:
 
 ; --------------------------------------------------------------------------------------------
 
+;	Ahora vamos a inicializar las variables del juego.
+;	Toda la bandeja DRAW a "0".
+
+	ld hl,Bandeja_DRAW
+	ld bc,Temp_Amadeus_exit-Clase
+	call Clean_mem
+
+;	Inicializamos las variables necesarias:
+
 	ld a,7
 	ld (Numero_de_disparos_de_entidades),a
-	ld a,$64
-	ld (Temp_new_live),a
-	ld a,3
-	ld (Lives),a
-	ld (Shields),a
 
-	ld hl,Indice_de_escudos
-	ld (Puntero_de_escudos),hl
-	ld hl,Indice_de_vidas
-	ld (Puntero_de_vidas),hl
-
-	xor a
-	ld b,6
-
-	ld hl,Entidades_BCD_unidades
-1 ld (hl),a
+	ld hl,Clock_explosion 									; (Clock_explosion)="4", (Clock_explosion_Amadeus)="5", (Temp_new_live)="100".
+	ld (hl),4
 	inc hl
-	djnz 1B
-
+	ld (hl),5
 	inc hl
-	ld b,9
+	ld (hl),100
 
-2 ld (hl),a
+	ld hl,Numeros_aleatorios
+	ld (RND_SP),hl
+	ld (Puntero_num_aleatorios_disparos),hl
+
+	ld a,$a0
+	ld hl,Repone_CLOCK_disparos 							; (Repone_CLOCK_disparos) y (CLOCK_disparos_de_entidades) con "$a0".
+	ld (hl),a
 	inc hl
-	djnz 2B
-
-	ld hl,Cero_Score
-	ld (Puntero_de_unidades_Score),hl
-	ld (Puntero_de_decenas_Score),hl
-	ld (Puntero_de_centenas_Score),hl
-	ld (Puntero_de_um_Score),hl
-	ld (Puntero_de_dm_Score),hl
-
-	xor a
-
-	ld hl,Score_Ctrl
 	ld (hl),a
 
 	inc hl
 	inc hl
 	inc hl
 
-  	ld b,14
+	ld (hl),5 												; (Start_counter_2) con "$05".
 
-3 ld (hl),a
-  	inc hl
-  	djnz 3B
+	ld hl,Indice_de_niveles
+	ld (Puntero_indice_NIVELES),hl
 
-  	ld a,$50
-  	ld (hl),a
+	ld hl,Almacen_de_movimientos_masticados_1
+	ld (Puntero_indice_de_almacenes),hl
+
+	ld hl,Msg_level_index
+	ld (Puntero_de_mensajes_de_niveles),hl
+
+	ld hl,Lives
+	ld (hl),3
+	inc hl
+	ld (hl),3
+
+	inc hl
+	ld (hl),4
+	inc hl
+	ld (hl),1
+	inc hl
+	ld (hl),4
+	inc hl
+	ld (hl),1
+
+	inc hl
+	inc hl
+	inc hl
+
+	ld (hl),100
+
+	ld hl,Indice_de_escudos
+	ld (Puntero_de_escudos),hl
+	ld hl,Indice_de_vidas
+	ld (Puntero_de_vidas),hl
+
+	ld a,%01000110
+	ld (Attr_big_counter),a
+
+	ld hl,Cero_Score
+
+	ld (Puntero_de_unidades_Score),hl
+	ld (Puntero_de_decenas_Score),hl
+	ld (Puntero_de_centenas_Score),hl
+	ld (Puntero_de_um_Score),hl
+	ld (Puntero_de_dm_Score),hl
+
+	ld hl,$50cf
+	ld (Primer_scan_Amadeus),hl
+
+	ld hl,Laser_sound_init_value
+	ld (Laser_sound),hl
+
+	ld a,80
+	ld (Temp_Amadeus_exit),a
 
     xor a
 
-    ei
-
     ret
-
-
-
-
-
-
-;	ld hl,Ctrl_4
-;	res 5,(hl)
 
 New_max_score
 

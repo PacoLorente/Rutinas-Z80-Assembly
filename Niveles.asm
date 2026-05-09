@@ -160,8 +160,8 @@ Nivel_1 db $f0,$07,$70 							; FLIES !!!
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 ;												; Nº de entidades que tiene el nivel.
 
-	db 1
-	db 1
+	db 3
+	db 1,2,3
 
 ;	db 1,2,3,2,3 								; Clases de entidades. (Irán apareciendo por este orden).
 ;	db 3,2,1,2,1
