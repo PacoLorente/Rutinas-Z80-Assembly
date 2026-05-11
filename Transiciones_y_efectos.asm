@@ -24,6 +24,8 @@ Enter_name_screen:
 
 ;	En 1er lugar limpiamos ((Scanlines_album)) y ((Scanlines_album_2)).
 
+
+
 	ld hl,Scanlines_album
 	ld bc,562
 	call Clean_mem
@@ -105,11 +107,17 @@ Enter_name_screen:
 ; --------------------------------------------------------------------------------------------
 
 ;	Ahora vamos a inicializar las variables del juego.
-;	Toda la bandeja DRAW a "0".
+;	Toda la bandeja DRAW a "0", salvo (Score_hex_max).
+
+	ld hl,(Score_hex_max)
+	push hl
 
 	ld hl,Bandeja_DRAW
 	ld bc,Temp_Amadeus_exit-Clase
 	call Clean_mem
+
+	pop hl
+	ld (Score_hex_max),hl
 
 ;	Inicializamos las variables necesarias:
 
@@ -218,6 +226,17 @@ New_max_score
 
 	ld bc,$ffff
 	call DELAY
+
+	ld bc,$ffff
+	call DELAY
+
+	ld bc,$ffff
+	call DELAY
+
+	ld bc,$ffff
+	call DELAY
+
+	call New_best_msg
 
 	ret
 

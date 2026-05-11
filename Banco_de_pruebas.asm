@@ -973,6 +973,8 @@ a5 defm "to SHIELD.",0
 a6 defm "Press FIRE to START",0
 a7 defm "CONTROLS:",0
 a8 defm "                 ",0
+a9 defm "New Best Score!",0
+a10 defm "Enter your name",0
 
 ; DEFINE MENU.
 

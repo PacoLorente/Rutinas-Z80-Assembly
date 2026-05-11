@@ -2,6 +2,8 @@
 ;
 ; 25/3/26
 
+	org $c400
+
 Msg_level_index:
 
 	defw Msg_1
