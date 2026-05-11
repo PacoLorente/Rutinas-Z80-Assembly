@@ -1401,7 +1401,7 @@ Gestion_de_Amadeus:
 	ld a,h
 	or l
 	call z,Enter_name_screen
-	jp z,START
+	jp z,Main_menu
 
 	ld (Entidad_sospechosa_de_colision),hl
 	jr End_frame
@@ -2587,14 +2587,11 @@ Ejecuta_escudo
 	ld a,(Attr_Amadeus)
 	ld c,a
 
+	call Force_Amd_attr 									; Siempre fijamos attr. Exista o no exista movimiento de Amadeus.
+
 	ld a,(Shield)
 	and a
 	jr nz,Aplica_Shield
-
-; -------------------------- debugggggg
-
-	ld a,(Attr_Amadeus)
-	ld c,a
 
 Borrando_Amadeus
 

@@ -17,7 +17,7 @@ Enter_name_screen:
 	and a
 	sbc hl,de
 
-	jp c, New_max_score
+	call c, New_max_score
 
 ;	No hemos superado la puntuación máxima. 
 ;	Inicializamos partida.
@@ -96,8 +96,6 @@ Enter_name_screen:
 	ld bc,$36fe
 	call Clean_mem
 
-	call Inicializa_Bandeja_DRAW
-
 	ld hl,Amadeus_scanlines_album
 	call Inicializa_Amadeus_scanline_album
 
@@ -117,6 +115,11 @@ Enter_name_screen:
 
 	ld a,7
 	ld (Numero_de_disparos_de_entidades),a
+
+	ld hl,Tabla_de_pintado
+	ld (India_SP),hl
+	ld hl,Tabla_de_borrado
+	ld (India_3_SP),hl
 
 	ld hl,Clock_explosion 									; (Clock_explosion)="4", (Clock_explosion_Amadeus)="5", (Temp_new_live)="100".
 	ld (hl),4
@@ -201,13 +204,20 @@ Enter_name_screen:
 
 New_max_score
 
+	ex de,hl
 
-
-
+	ld (Score_hex_max),hl
 
 	call Clean_and_logo
 
-	jr $
+	ld bc,$ffff
+	call DELAY
+
+	ld bc,$ffff
+	call DELAY
+
+	ld bc,$ffff
+	call DELAY
 
 	ret
 

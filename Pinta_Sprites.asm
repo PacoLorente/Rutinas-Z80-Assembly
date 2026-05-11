@@ -1,5 +1,42 @@
 ; ---------------------------------------------------------------------------
 ;
+;   11/05/26
+;
+;   Fija los atributos de Amadeus.
+;
+;   MODIFY: A,HL
+
+
+Force_Amd_attr:
+
+    ld a,(Temp_new_live)
+    cp 100
+    ret nz                                                          ; No fijamos attrs. cuando Amadeus ha desaparecido. Los enemigos cambiarán de color.                                              
+    
+    ld a,(p.imp.amadeus)
+    ld l,a
+    ld h,$5a
+
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+    
+    add 32
+
+    ld l,a
+
+    ld (hl),c
+    inc l
+    ld (hl),c
+    inc l
+    ld (hl),c
+
+    ret
+
+; ---------------------------------------------------------------------------
+;
 ;   16/10/25
 ;
 ;   Imprime el contador de 16 bits SCORE.
