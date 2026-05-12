@@ -210,7 +210,7 @@ Enter_name_screen:
 
     ret
 
-New_max_score
+New_max_score:
 
 	ex de,hl
 
@@ -218,25 +218,14 @@ New_max_score
 
 	call Clean_and_logo
 
-	ld bc,$ffff
-	call DELAY
 
-	ld bc,$ffff
-	call DELAY
+	jr $
 
-	ld bc,$ffff
-	call DELAY
 
-	ld bc,$ffff
-	call DELAY
+; Direccion_Logo_principal
 
-	ld bc,$ffff
-	call DELAY
 
-	ld bc,$ffff
-	call DELAY
-
-	call New_best_msg
+;	call New_best_msg
 
 	ret
 
@@ -373,10 +362,13 @@ Imprime_Logo_principal:
 
 ;	Datos.
 
-	ld hl,Direccion_Logo_principal
+	ld hl,Direccion_Logo_principal 									; $4049,$404a,$404b ..... $5849,$584a,$584b
+;																	; $4069,$406a,$406b
+; 																	; $4089,$408a,$408b
+
 	ld de,Logo_nave													; (3x24)
 
-	ld a,%01000101													; Attr. en A.
+	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
 	ld b,3															; Nº de Columnas en B.
 	ld c,3															; Nº de Filas en C.
 
@@ -398,7 +390,10 @@ Imprime_Logo_principal:
 
 	ld de,Logo_ma													; (3x16)
 
-	ld a,%01000101													; Attr. en A.
+;																	; $406c, $406d, $406e ..... $586c
+;																	; $408c, $408d, $408e
+
+	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
 	ld b,3															; Nº de Columnas en B.
 	ld c,2															; Nº de Filas en C.
 
@@ -418,9 +413,13 @@ Imprime_Logo_principal:
 
 ;	Datos.
 
+;								 									; $404f,$4050,$4051 ..... $584f,$5850,$5851
+;																	; $406f,$4070,$4071
+; 																	; $408f,$4090,$4091
+
 	ld de,logo_ad													; (3x24)
 
-	ld a,%01000101													; Attr. en A.
+	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
 	ld b,3															; Nº de Columnas en B.
 	ld c,3															; Nº de Filas en C.
 
@@ -441,6 +440,9 @@ Imprime_Logo_principal:
 
 ;	Datos.
 
+;																	; $4072, $4073, $4074 ..... $5872, ...
+;																	; $4092, $4093, $4094
+
 	ld de,logo_eu													; (3x16)
 
 	ld a,%01000101													; Attr. en A.
@@ -458,6 +460,9 @@ Imprime_Logo_principal:
 	inc l
 
 ;	Datos.
+
+;																	; $4075, $4076, $4077 ..... $5875, ...
+;																	; $4095, $4096, $4097
 
 	ld de,logo_us													; (3x16)
 

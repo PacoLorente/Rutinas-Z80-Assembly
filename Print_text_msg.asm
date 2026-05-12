@@ -6,22 +6,17 @@
 
 New_best_msg:
 
-    ld hl,a9                                                ; "New Best Score!.".
-    ld de,Line_9 + 9
-    ld a,%11110000                                          ; attrs. Yellow ink.
-    ld b,0
-    call Print_text_msg
+;    ld hl,a9                                                ; "New Best Score!.".
+;    ld de,Line_9 + 9
+;    ld a,%11110000                                          ; attrs. Yellow ink.
+;    ld b,0
+;    call Print_text_msg
 
-    ld bc,$ffff
-	call DELAY
-    ld bc,$ffff
-	call DELAY
-
-    ld hl,a10                                                ; "New Best Score!.".
-    ld de,Line_18 + 9
-    ld a,%01000111                                          ; attrs. Yellow ink.
-    ld b,0
-    call Print_text_msg
+;    ld hl,a10                                                ; "New Best Score!.".
+;    ld de,Line_18 + 9
+;    ld a,%01000111                                          ; attrs. Yellow ink.
+;    ld b,0
+;    call Print_text_msg
 
 
 
