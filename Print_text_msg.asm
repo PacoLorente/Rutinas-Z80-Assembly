@@ -1,30 +1,32 @@
 ; ----------------------------------------------------------
 ;
-;   11/5/26
+;   13/5/26
 ;
 ;
 
 New_best_msg:
 
-;    ld hl,a9                                                ; "New Best Score!.".
-;    ld de,Line_9 + 9
-;    ld a,%11110000                                          ; attrs. Yellow ink.
-;    ld b,0
-;    call Print_text_msg
+    ld hl,a9                                                ; "New Best Score!.".
+    ld de,Line_7 + 9
+    ld a,%01000110                                          ; attrs. Yellow ink.
+    ld b,0
+    call Print_text_msg
 
-;    ld hl,a10                                                ; "New Best Score!.".
-;    ld de,Line_18 + 9
-;    ld a,%01000111                                          ; attrs. Yellow ink.
-;    ld b,0
-;    call Print_text_msg
+    ld hl,a10                                                ; "New Best Score!.".
+    ld de,Line_17 + 9
+    ld a,%01000111                                          ; attrs. Yellow ink.
+    ld b,0
+    call Print_text_msg
 
+;   Attrs.
 
+    ld h,%00101000
+    ld l,%01101000
 
-    jr $
+    ld ($5a8e),hl
+    ld ($5a90),hl
 
     ret
-
-
 
 ; ----------------------------------------------------------
 ;

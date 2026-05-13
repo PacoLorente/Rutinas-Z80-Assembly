@@ -218,21 +218,92 @@ New_max_score:
 
 	call Clean_and_logo
 
+	call New_best_msg
 
-	jr $
+	call Carrusell
 
+	ld bc,$ffff
+	call DELAY
 
-; Direccion_Logo_principal
+	ld bc,$ffff
+	call DELAY
 
+	ld bc,$ffff
+	call DELAY
 
-;	call New_best_msg
+	ld bc,$ffff
+	call DELAY
 
 	ret
 
+; ------------------------------------------------------------------------
+;
+;	13/5/26
+;
+;	Repone attrs. de las dos últimas líneas de pantalla.
 
+Carrusell:
 
+;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;	COLORES: 0 ..... NEGRO
+;    		 1 ..... AZUL
+; 			 2 ..... ROJO
+;			 3 ..... MAGENTA
+; 			 4 ..... VERDE
+; 			 5 ..... CIAN
+;			 6 ..... AMARILLO
+; 			 7 ..... BLANCO
+;
+;			$4049 - $4057
 
+	ld c,$41 								; attrs..
 
+3 ld hl,$5829                             	; Initial address.
+
+	ld b,$0f								; Columns.
+
+2 push hl
+
+	push bc
+
+	ld b,3 									; 3 Files.
+
+1 ld a,l
+	add 32
+	ld l,a
+
+	ld (hl),c
+
+	djnz 1B
+
+	pop bc
+	pop hl
+
+	inc l
+
+;	Temporización:
+
+;	Tiempo que tardamos en modificar los attrs. de la siguiente columna.
+
+	push bc
+
+	ld bc,$03ff
+	call DELAY
+
+	pop bc
+
+	djnz 2B
+
+	inc c 									; New color.
+
+	bit 3,c
+
+	jr z,3B
+
+	jr Carrusell
+
+	ret
 
 ; ------------------------------------------------------------------------
 ;

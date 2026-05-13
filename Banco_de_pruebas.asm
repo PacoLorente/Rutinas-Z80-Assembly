@@ -973,8 +973,8 @@ a5 defm "to SHIELD.",0
 a6 defm "Press FIRE to START",0
 a7 defm "CONTROLS:",0
 a8 defm "                 ",0
-;a9 defm "New Best Score!",0
-;a10 defm "Enter your name",0
+a9 defm "New Best Score!",0
+a10 defm "Enter your name",0
 
 ; DEFINE MENU.
 
@@ -1008,6 +1008,18 @@ Move_FIRE_ASCII_CODE db "5"
 	ds 5
 Move_SHIELD_ASCII_CODE db " "
 	ds 5
+
+; Name Best Player:
+
+CHAR_1 db 0
+CHAR_2 db 0
+CHAR_3 db 0
+CHAR_4 db 0
+
+CHAR_1_ASCII_CODE db 0
+CHAR_2_ASCII_CODE db 0
+CHAR_3_ASCII_CODE db 0
+CHAR_4_ASCII_CODE db 0
 
 ; Key code BOX.
 ; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
