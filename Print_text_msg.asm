@@ -20,11 +20,11 @@ New_best_msg:
 
 ;   Attrs.
 
-    ld h,%00101000
-    ld l,%01101000
+;    ld h,%00101000
+;    ld l,%01101000
 
-    ld ($5a8e),hl
-    ld ($5a90),hl
+;    ld ($5a8e),hl
+;    ld ($5a90),hl
 
     ret
 

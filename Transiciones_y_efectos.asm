@@ -217,19 +217,30 @@ New_max_score:
 	ld (Score_hex_max),hl
 
 	call Clean_and_logo
-
 	call New_best_msg
+	
+;	Vamos a imprimir la puntuación obtenida en pantalla, para ello vamos obtener el código ASCII de los 5 dígitos BCD_
+;	_que componen el marcador SCORE y lo almacenaremos en la caja de 5 bytes: ((Score_max_ascii)).
+
+	call Make_Score_ASCII_msg
+
+;	jr $
+
+;	Imprimimos ((Score_max_ascii)).
+
+	call Print_Score_max_msg
+
+;	Imprimimos ((Score_max_ascii)).
+
+	jr $
+
+
+
+
+
+
 
 	call Carrusell
-
-	ld bc,$ffff
-	call DELAY
-
-	ld bc,$ffff
-	call DELAY
-
-	ld bc,$ffff
-	call DELAY
 
 	ld bc,$ffff
 	call DELAY
@@ -257,24 +268,21 @@ Carrusell:
 ;
 ;			$4049 - $4057
 
-	ld c,$41 								; attrs..
+	ld c,$41 								; attrs. Arrancamos con: - BRIGHT, PAPER BLACK, INK BLUE -.
 
-3 ld hl,$5829                             	; Initial address.
-
+3 ld hl,$5829                             	; Dirección inicial de atributos de pantalla, (esquina superior izquierda de la nave).
 	ld b,$0f								; Columns.
 
 2 push hl
-
 	push bc
 
 	ld b,3 									; 3 Files.
 
 1 ld a,l
 	add 32
-	ld l,a
+	ld l,a 									; Situamos HL en la siguiente fila, (dirección de atributos de pantalla).
 
 	ld (hl),c
-
 	djnz 1B
 
 	pop bc
@@ -286,22 +294,112 @@ Carrusell:
 
 ;	Tiempo que tardamos en modificar los attrs. de la siguiente columna.
 
-	push bc
+;	push bc
+;	ld bc,$03ff
+;	call DELAY
+;	pop bc
 
-	ld bc,$03ff
-	call DELAY
+	call Enter_name
 
-	pop bc
+	djnz 2B 								; Siguiente columna.
 
-	djnz 2B
+;	Todo el logo pintado con los attrs., (c).
 
 	inc c 									; New color.
 
-	bit 3,c
+	bit 3,c 								; Ya hemos pintado de blanco ???, si es así repetimos la secuencia.
 
 	jr z,3B
 
 	jr Carrusell
+
+	ret
+
+; ------------------------------------------------------------------------
+;
+;	15/5/26
+;
+;	Construye un msg. ascii con el marcador SCORE.
+
+Make_Score_ASCII_msg:
+
+	ld hl,Score_BCD_decenas_de_millar+1
+	ld de,Score_max_ascii+5
+	ld b,5
+
+1 push bc
+
+	dec hl
+	dec de
+
+	call Get_ASCII_code
+
+	ld (de),a
+
+	pop bc
+
+	djnz 1B
+
+	ret
+
+; --------------------------------------
+
+Get_ASCII_code:
+
+	ld a,(hl)
+
+	ld c,a
+	ld b,0
+
+	push hl
+	
+	ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE 
+	add hl,bc
+
+	ld a,(hl) 													; ASCII del digito BCD en A.
+
+	pop hl
+
+	ret
+
+; ------------------------------------------------------------------------
+;
+;	15/5/26
+;
+;	Imprime en pantalla el marcador MAX. SCORE.
+
+Print_Score_max_msg:
+
+	ld hl,Score_max_ascii+4
+	ld de,Line_11 + 14 
+	ld b,5
+
+1 ld a,$42
+	cp (hl)
+	jr z,Next_char
+
+	push bc
+	push hl
+
+	call Find_address 							; HL contiene ahora el BIN que construye el dígito a imprimir.
+
+	ex de,hl
+
+	ld a,%01000110 								; attrs. 
+	ex af,af
+
+	call Print_BIN
+
+	ex af,af
+
+	pop hl
+	pop bc
+
+Next_char 
+
+	dec hl 
+	inc e
+	djnz 1B
 
 	ret
 
@@ -322,6 +420,96 @@ Replace_Amadeus_attr_zone:
 	djnz 1B
 
 	ret
+
+; ------------------------------------------------------------------------
+;
+;	14/05/26
+;
+
+Enter_name:
+
+	push bc
+    push hl
+    push de
+
+    ld hl,CHAR_1 											  ; El KEY_code del 1er caracter del nombre se almacenará en (CHAR_1).
+    ld de,CHAR_1_ASCII_CODE 								  ; El ASCII code del primer caracter del nombre se almacena en esta variable.
+
+    push hl
+    push de
+
+	call KEY_SCAN 											  ; ROM, KEY-SCAN
+
+;	Si pulsamos 2 teclas el registro D y E contendrán el Key CODE de las teclas plsadas respectivamente.
+;	Si sólo pulsamos una tecla el registro D contemdrá "$ff" y el registro E contendrá el KEY CODE de la tecla pulsada.
+
+	inc d
+	jr nz,1F 												  ; Más de 1 tecla pulsada, (RET).
+
+	inc e
+	jr z,1F 	 											  ; Ninguna tecla pelsada, (RET).
+
+;	TECLA PULSADA !!!!!
+
+	dec e
+	ld a,e                                                    ; KEY_code en A.
+
+;   Special Key_code o números ???
+
+    cp $18
+    jr z,1F
+    cp $20
+    jr z,1F
+    cp $21
+    jr z,1F
+    cp $27
+    jr z,1F
+
+;    call BEEP
+
+    pop de
+    pop hl
+
+    ld (hl),a                                                 ; Key_code de un caracter válido almacenado.
+
+;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
+
+    ld c,a
+    ld b,0
+
+    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
+    add hl,bc
+
+    ld a,(hl)
+    ld (de),a 												  ; ASCII code almacenado.
+
+ ;	Imprime caracter.
+
+; Imprime tecla pulsada, (LEFT).
+
+    ld hl,CHAR_1_ASCII_CODE
+	ld de,Line_20 + 14
+    ld a,%01000110
+    ld b,0
+    call Print_text_msg
+
+    call BEEP
+
+;    jr $
+
+
+
+
+
+
+1 pop de
+    pop hl
+
+    pop de
+    pop hl
+    pop bc
+
+    ret
 
 ; ------------------------------------------------------------------------
 ;
