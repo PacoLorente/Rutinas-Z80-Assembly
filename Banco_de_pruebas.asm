@@ -870,8 +870,8 @@ Attr_big_counter db %01000110
 
 Score_hex defw 0
 Score_hex_max defw 0
-Score_max_msg_pointer defw 0
-Score_max_ascii ds 5
+;Score_max_msg_pointer defw 0
+;Score_max_ascii ds 5
 
 Score_BCD_unidades db 0
 Score_BCD_decenas db 0

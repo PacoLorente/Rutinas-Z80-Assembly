@@ -219,20 +219,8 @@ New_max_score:
 	call Clean_and_logo
 	call New_best_msg
 	
-;	Vamos a imprimir la puntuación obtenida en pantalla, para ello vamos obtener el código ASCII de los 5 dígitos BCD_
-;	_que componen el marcador SCORE y lo almacenaremos en la caja de 5 bytes: ((Score_max_ascii)).
 
-	call Make_Score_ASCII_msg
 
-;	jr $
-
-;	Imprimimos ((Score_max_ascii)).
-
-	call Print_Score_max_msg
-
-;	Imprimimos ((Score_max_ascii)).
-
-	jr $
 
 
 
@@ -315,93 +303,7 @@ Carrusell:
 
 	ret
 
-; ------------------------------------------------------------------------
-;
-;	15/5/26
-;
-;	Construye un msg. ascii con el marcador SCORE.
 
-Make_Score_ASCII_msg:
-
-	ld hl,Score_BCD_decenas_de_millar+1
-	ld de,Score_max_ascii+5
-	ld b,5
-
-1 push bc
-
-	dec hl
-	dec de
-
-	call Get_ASCII_code
-
-	ld (de),a
-
-	pop bc
-
-	djnz 1B
-
-	ret
-
-; --------------------------------------
-
-Get_ASCII_code:
-
-	ld a,(hl)
-
-	ld c,a
-	ld b,0
-
-	push hl
-	
-	ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE 
-	add hl,bc
-
-	ld a,(hl) 													; ASCII del digito BCD en A.
-
-	pop hl
-
-	ret
-
-; ------------------------------------------------------------------------
-;
-;	15/5/26
-;
-;	Imprime en pantalla el marcador MAX. SCORE.
-
-Print_Score_max_msg:
-
-	ld hl,Score_max_ascii+4
-	ld de,Line_11 + 14 
-	ld b,5
-
-1 ld a,$42
-	cp (hl)
-	jr z,Next_char
-
-	push bc
-	push hl
-
-	call Find_address 							; HL contiene ahora el BIN que construye el dígito a imprimir.
-
-	ex de,hl
-
-	ld a,%01000110 								; attrs. 
-	ex af,af
-
-	call Print_BIN
-
-	ex af,af
-
-	pop hl
-	pop bc
-
-Next_char 
-
-	dec hl 
-	inc e
-	djnz 1B
-
-	ret
 
 ; ------------------------------------------------------------------------
 ;

@@ -282,8 +282,6 @@ Exit_1
 ;
 ;   10/10/25
 ;
-;
-;
 
 Imprime_SCORE:
 

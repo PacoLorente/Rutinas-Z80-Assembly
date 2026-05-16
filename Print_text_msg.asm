@@ -18,6 +18,13 @@ New_best_msg:
     ld b,0
     call Print_text_msg
 
+	call Print_Score_max_msg
+
+
+
+	jr $
+
+
 ;   Attrs.
 
 ;    ld h,%00101000
@@ -26,7 +33,100 @@ New_best_msg:
 ;    ld ($5a8e),hl
 ;    ld ($5a90),hl
 
-    ret
+	ret
+
+; ------------------------------------------------------------------------
+;
+;	15/5/26
+;
+;	Imprime en pantalla el marcador MAX. SCORE.
+
+Print_Score_max_msg:
+
+;   Cero_Score equ $3d80                        ; Dirección ROM donde ae encuentran los 8 bytes que componen el dígito "0".
+
+    ld hl,Puntero_de_dm_Score
+	ld de,Line_10 + 13
+	ld bc,$0500
+
+	ld a,%01001110
+	ex af,af                                    ; Attr. en A'.
+
+;   "0" ??
+
+	ld a,$80
+
+1 inc c
+    dec c
+    jr nz,2F                                    ; Si ya hemos impreso algún digito no tenemos en cuenta los "0".
+
+    cp (hl)
+	jr z,Next_char
+
+;   Imprime char. 1er caracter del marcador score "no cero".
+
+;    jr $
+
+2 push hl
+
+    push de
+    call Extrae_address
+    pop de
+
+    push de
+
+;   Ahora HL contiene la dirección de los "datos" del char.
+;     "   DE contiene la diección de pantalla donde ha de imprimirse el char.
+
+    ex de,hl
+
+    push bc
+    call Print_BIN
+    ex af,af
+    pop bc
+    inc c
+
+    pop de
+    pop hl
+
+;    jr $
+
+;Print_BIN
+
+;    ld b,8                                  ;   Nº de lineas que forman el caracter.
+
+;    push hl
+
+;1 ld a,(de)
+;    ld (hl),a                               ;   Print
+
+;    inc h                                   ;   INC scanline.
+;    inc e                                   ;   INC data address
+
+;    djnz 1B
+
+;    pop hl
+
+;    call Calcula_direccion_atributos
+
+;    ex af,af
+;    ld (hl),a
+
+;    ret
+
+
+Next_char
+
+    dec hl                                      ; (Puntero_de_dm_Score), (Puntero_de_um_Score),(Puntero_de_centenas_Score), ...
+	dec hl
+
+	inc e                                       ; Char. vacío, ("0"). No se imprime, nos situamos en el siguiente char. de pantalla.
+
+	djnz 1B
+
+	jr $
+
+	ret
 
 ; ----------------------------------------------------------
 ;
