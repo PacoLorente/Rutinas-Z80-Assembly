@@ -879,11 +879,24 @@ Score_BCD_centenas db 0
 Score_BCD_unidades_de_millar db 0
 Score_BCD_decenas_de_millar db 0
 
-Puntero_de_unidades_Score defw Cero_Score
-Puntero_de_decenas_Score defw Cero_Score
-Puntero_de_centenas_Score defw Cero_Score
-Puntero_de_um_Score defw Cero_Score
-Puntero_de_dm_Score defw Cero_Score
+
+
+;Cero_Score equ $3d80
+;Uno_Score equ $3d88
+;Dos_Score equ $3d90
+;Tres_Score equ $3d98
+;Cuatro_Score equ $3da0
+;Cinco_Score equ $3da8
+;Seis_Score equ $3db0
+;Siete_Score equ $3db8
+;Ocho_Score equ $3dc0
+;Nueve_Score equ $3dc8
+
+Puntero_de_unidades_Score defw Uno_Score
+Puntero_de_decenas_Score defw Dos_Score
+Puntero_de_centenas_Score defw Cinco_Score
+Puntero_de_um_Score defw Cuatro_Score
+Puntero_de_dm_Score defw Ocho_Score
 
 Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
 ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
@@ -1048,6 +1061,16 @@ START:
 Main_menu:
 
 	call Clean_and_logo
+
+
+	call New_max_score
+
+
+
+
+
+
+
 	call Print_Main_menu
 	call Main_menu_key										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 

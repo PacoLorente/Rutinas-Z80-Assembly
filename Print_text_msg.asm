@@ -20,11 +20,6 @@ New_best_msg:
 
 	call Print_Score_max_msg
 
-
-
-	jr $
-
-
 ;   Attrs.
 
 ;    ld h,%00101000
@@ -43,24 +38,26 @@ New_best_msg:
 
 Print_Score_max_msg:
 
-;   Cero_Score equ $3d80                        ; Dirección ROM donde ae encuentran los 8 bytes que componen el dígito "0".
+    ld a,1
+	out ($fe),a
 
     ld hl,Puntero_de_dm_Score
-	ld de,Line_10 + 13
+	ld de,Line_10 + 14                          ; 5 dígitos (14)
+;                                               ; 4 dígitos (13), 3 dígitos (13).
+
 	ld bc,$0500
 
 	ld a,%01001110
 	ex af,af                                    ; Attr. en A'.
 
-;   "0" ??
+1 ld a,$80
 
-	ld a,$80
-
-1 inc c
+    inc c
     dec c
     jr nz,2F                                    ; Si ya hemos impreso algún digito no tenemos en cuenta los "0".
 
     cp (hl)
+	call z,Centrando_score_msg
 	jr z,Next_char
 
 ;   Imprime char. 1er caracter del marcador score "no cero".
@@ -89,33 +86,7 @@ Print_Score_max_msg:
     pop de
     pop hl
 
-;    jr $
-
-;Print_BIN
-
-;    ld b,8                                  ;   Nº de lineas que forman el caracter.
-
-;    push hl
-
-;1 ld a,(de)
-;    ld (hl),a                               ;   Print
-
-;    inc h                                   ;   INC scanline.
-;    inc e                                   ;   INC data address
-
-;    djnz 1B
-
-;    pop hl
-
-;    call Calcula_direccion_atributos
-
-;    ex af,af
-;    ld (hl),a
-
-;    ret
-
-
-Next_char
+Next_char:
 
     dec hl                                      ; (Puntero_de_dm_Score), (Puntero_de_um_Score),(Puntero_de_centenas_Score), ...
 	dec hl
@@ -124,7 +95,29 @@ Next_char
 
 	djnz 1B
 
-	jr $
+	ret
+
+Centrando_score_msg:
+
+    ld a,5
+    cp b
+    jr z,1F
+
+    dec a
+    cp b
+    ret z
+
+    dec a
+    cp b
+    jr nz,2F
+
+    dec a
+    cp b
+    ret z
+
+1 dec e
+
+2 xor a                                         ; RET with "Z".
 
 	ret
 
