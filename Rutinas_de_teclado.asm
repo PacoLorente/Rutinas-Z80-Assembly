@@ -1,3 +1,150 @@
+; ------------------------------------------------------------------------
+;
+;	18/05/26
+;
+
+Enter_name:
+
+	push bc
+    push hl
+    push de
+
+    ld hl,Name_ASCII_CODE_CHAR
+    ld a,(Char_NAME_COUNTER)
+
+    push bc
+    push de
+    push hl
+
+	call KEY_SCAN 											  ; ROM, KEY-SCAN
+
+;	Si pulsamos 2 teclas el registro D y E contendrán el Key CODE de las teclas plsadas respectivamente.
+;	Si sólo pulsamos una tecla el registro D contemdrá "$ff" y el registro E contendrá el KEY CODE de la tecla pulsada.
+
+	inc d
+	jr nz,1F 												  ; Más de 1 tecla pulsada, (RET).
+
+	inc e
+	jr z,1F 	 											  ; Ninguna tecla pelsada, (RET).
+
+;	TECLA PULSADA !!!!!
+
+	dec e
+	ld a,e                                                    ; KEY_code en A.
+
+;	No Special KEYS & numbers in winner´s name.
+
+;	DELETE $27
+;	SPACE $20
+;	ENTER $21
+
+	ld hl,Non_authorized_KEY_CODES-1
+	ld b,11
+
+2 inc hl
+	cp (hl)
+	jr z,1F
+	djnz 2B
+
+;	Tecla autorizada, recuperamos posicionamiento.
+
+	pop hl
+	pop de
+	pop bc
+
+;	KEY_KODE en A
+
+;	ENTER ???
+
+	cp $21
+	jr nz,3F
+
+
+
+
+;	Delete ???
+
+3 cp $27
+	jr nz,4F
+
+;	Si estamos en el 1er char. no ocurre nada.
+
+	push af
+	ld a,5
+	cp b
+   	pop af
+
+   	jr z,1F
+
+;	
+
+
+
+
+
+4 jr $
+
+
+
+
+;    call BEEP
+
+    pop de
+    pop hl
+
+    ld (hl),a                                                 ; Key_code de un caracter válido almacenado.
+
+;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
+
+    ld c,a
+    ld b,0
+
+    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
+    add hl,bc
+
+    ld a,(hl)
+    ld (de),a 												  ; ASCII code almacenado.
+
+ ;	Imprime caracter.
+
+; Imprime tecla pulsada, (LEFT).
+
+;    ld hl,CHAR_1_ASCII_CODE
+;	ld de,Line_20 + 14
+;    ld a,%01000110
+;    ld b,0
+;    call Print_text_msg
+
+    call BEEP
+
+;    jr $
+
+
+
+
+
+
+1 pop hl
+    pop de
+    pop bc
+
+    pop de
+    pop hl
+    pop bc
+
+    ret
+
+
+
+
+
+
+
+
+
+
+; -----------------------------------------------------------------------------------------------
+
 ROM_Key_Scan:
 
 	call KEY_SCAN 											; ROM, KEY-SCAN

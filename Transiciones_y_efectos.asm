@@ -218,16 +218,6 @@ New_max_score:
 
 	call Clean_and_logo
 	call New_best_msg
-	
-
-
-
-
-
-
-
-
-
 	call Carrusell
 
 	ld bc,$ffff
@@ -322,96 +312,6 @@ Replace_Amadeus_attr_zone:
 	djnz 1B
 
 	ret
-
-; ------------------------------------------------------------------------
-;
-;	14/05/26
-;
-
-Enter_name:
-
-	push bc
-    push hl
-    push de
-
-    ld hl,CHAR_1 											  ; El KEY_code del 1er caracter del nombre se almacenará en (CHAR_1).
-    ld de,CHAR_1_ASCII_CODE 								  ; El ASCII code del primer caracter del nombre se almacena en esta variable.
-
-    push hl
-    push de
-
-	call KEY_SCAN 											  ; ROM, KEY-SCAN
-
-;	Si pulsamos 2 teclas el registro D y E contendrán el Key CODE de las teclas plsadas respectivamente.
-;	Si sólo pulsamos una tecla el registro D contemdrá "$ff" y el registro E contendrá el KEY CODE de la tecla pulsada.
-
-	inc d
-	jr nz,1F 												  ; Más de 1 tecla pulsada, (RET).
-
-	inc e
-	jr z,1F 	 											  ; Ninguna tecla pelsada, (RET).
-
-;	TECLA PULSADA !!!!!
-
-	dec e
-	ld a,e                                                    ; KEY_code en A.
-
-;   Special Key_code o números ???
-
-    cp $18
-    jr z,1F
-    cp $20
-    jr z,1F
-    cp $21
-    jr z,1F
-    cp $27
-    jr z,1F
-
-;    call BEEP
-
-    pop de
-    pop hl
-
-    ld (hl),a                                                 ; Key_code de un caracter válido almacenado.
-
-;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
-
-    ld c,a
-    ld b,0
-
-    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
-    add hl,bc
-
-    ld a,(hl)
-    ld (de),a 												  ; ASCII code almacenado.
-
- ;	Imprime caracter.
-
-; Imprime tecla pulsada, (LEFT).
-
-    ld hl,CHAR_1_ASCII_CODE
-	ld de,Line_20 + 14
-    ld a,%01000110
-    ld b,0
-    call Print_text_msg
-
-    call BEEP
-
-;    jr $
-
-
-
-
-
-
-1 pop de
-    pop hl
-
-    pop de
-    pop hl
-    pop bc
-
-    ret
 
 ; ------------------------------------------------------------------------
 ;

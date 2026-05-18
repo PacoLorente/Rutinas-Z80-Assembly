@@ -869,17 +869,15 @@ Attr_big_counter db %01000110
 ; SCORE:
 
 Score_hex defw 0
-Score_hex_max defw 0
+Score_hex_max defw $5fc9
 ;Score_max_msg_pointer defw 0
-;Score_max_ascii ds 5
+Score_max_msg ds 5
 
 Score_BCD_unidades db 0
 Score_BCD_decenas db 0
 Score_BCD_centenas db 0
 Score_BCD_unidades_de_millar db 0
 Score_BCD_decenas_de_millar db 0
-
-
 
 ;Cero_Score equ $3d80
 ;Uno_Score equ $3d88
@@ -896,7 +894,7 @@ Puntero_de_unidades_Score defw Uno_Score
 Puntero_de_decenas_Score defw Dos_Score
 Puntero_de_centenas_Score defw Cinco_Score
 Puntero_de_um_Score defw Cuatro_Score
-Puntero_de_dm_Score defw Ocho_Score
+Puntero_de_dm_Score defw Dos_Score
 
 Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
 ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
@@ -1026,15 +1024,18 @@ Move_SHIELD_ASCII_CODE db " "
 
 ; Name Best Player:
 
-CHAR_1 db 0
-CHAR_2 db 0
-CHAR_3 db 0
-CHAR_4 db 0
+;CHAR_1 db 0
+;CHAR_2 db 0
+;CHAR_3 db 0
+;CHAR_4 db 0
+;CHAR_5 db 0
 
-CHAR_1_ASCII_CODE db 0
-CHAR_2_ASCII_CODE db 0
-CHAR_3_ASCII_CODE db 0
-CHAR_4_ASCII_CODE db 0
+CHAR_ASCII_CODE db 0,0,0,0,0
+
+Name_ASCII_CODE_CHAR defw CHAR_ASCII_CODE
+Char_NAME_COUNTER db 5
+
+Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b     
 
 ; Key code BOX.
 ; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
@@ -1061,6 +1062,11 @@ START:
 Main_menu:
 
 	call Clean_and_logo
+
+
+
+
+
 
 
 	call New_max_score

@@ -2,23 +2,24 @@
 ;
 ;   13/5/26
 ;
-;
 
 New_best_msg:
 
     ld hl,a9                                                ; "New Best Score!.".
-    ld de,Line_7 + 9
+    ld de,Line_8 + 9
     ld a,%01000110                                          ; attrs. Yellow ink.
     ld b,0
     call Print_text_msg
 
+    call Print_Score_max_msg
+
     ld hl,a10                                                ; "New Best Score!.".
-    ld de,Line_17 + 9
+    ld de,Line_16 + 9
     ld a,%01000111                                          ; attrs. Yellow ink.
     ld b,0
     call Print_text_msg
 
-	call Print_Score_max_msg
+	
 
 ;   Attrs.
 
@@ -38,16 +39,16 @@ New_best_msg:
 
 Print_Score_max_msg:
 
-    ld a,1
-	out ($fe),a
+;    ld a,1
+;	out ($fe),a
 
     ld hl,Puntero_de_dm_Score
-	ld de,Line_10 + 14                          ; 5 dígitos (14)
+	ld de,Line_11 + 14                          ; 5 dígitos (14)
 ;                                               ; 4 dígitos (13), 3 dígitos (13).
 
 	ld bc,$0500
 
-	ld a,%01001110
+	ld a,%01000101
 	ex af,af                                    ; Attr. en A'.
 
 1 ld a,$80
