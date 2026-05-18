@@ -147,8 +147,7 @@ Siete_Score equ $3db8
 Ocho_Score equ $3dc0
 Nueve_Score equ $3dc8
 
-Unidades_Score equ $4057							;$405e
-
+Unidades_Score equ $4057												;$405e
 Unidades_Score_1 equ Unidades_Score + 256
 Unidades_Score_2 equ Unidades_Score_1 + 256
 Unidades_Score_3 equ Unidades_Score_2 + 256
@@ -158,7 +157,6 @@ Unidades_Score_6 equ Unidades_Score_5 + 256
 Unidades_Score_7 equ Unidades_Score_6 + 256
 
 Decenas_Score equ Unidades_Score - 1
-
 Decenas_Score_1 equ Decenas_Score + 256
 Decenas_Score_2 equ Decenas_Score_1 + 256
 Decenas_Score_3 equ Decenas_Score_2 + 256
@@ -168,7 +166,6 @@ Decenas_Score_6 equ Decenas_Score_5 + 256
 Decenas_Score_7 equ Decenas_Score_6 + 256
 
 Centenas_Score equ Decenas_Score - 1
-
 Centenas_Score_1 equ Centenas_Score + 256
 Centenas_Score_2 equ Centenas_Score_1 + 256
 Centenas_Score_3 equ Centenas_Score_2 + 256
@@ -178,7 +175,6 @@ Centenas_Score_6 equ Centenas_Score_5 + 256
 Centenas_Score_7 equ Centenas_Score_6 + 256
 
 Unidades_de_millar_Score equ Centenas_Score - 1
-
 Unidades_de_millar_Score_1 equ Unidades_de_millar_Score + 256
 Unidades_de_millar_Score_2 equ Unidades_de_millar_Score_1 + 256
 Unidades_de_millar_Score_3 equ Unidades_de_millar_Score_2 + 256
@@ -188,7 +184,6 @@ Unidades_de_millar_Score_6 equ Unidades_de_millar_Score_5 + 256
 Unidades_de_millar_Score_7 equ Unidades_de_millar_Score_6 + 256
 
 Decenas_de_millar_Score equ Unidades_de_millar_Score - 1
-
 Decenas_de_millar_Score_1 equ Decenas_de_millar_Score + 256
 Decenas_de_millar_Score_2 equ Decenas_de_millar_Score_1 + 256
 Decenas_de_millar_Score_3 equ Decenas_de_millar_Score_2 + 256
@@ -573,7 +568,7 @@ CTRL_DESPLZ db 0											; Este byte nos indica la posición que tiene el Spri
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;
 ;	COLORES: 0 ..... NEGRO
-;    		 1 ..... AZUL
+;    		 1 ..... AZUL    jr $
 ; 			 2 ..... ROJO
 ;			 3 ..... MAGENTA
 ; 			 4 ..... VERDE
@@ -629,7 +624,7 @@ Incrementa_puntero_backup db 0
 Repetimos_desplazamiento db 0								; El nibble bajo del 3er byte que compone un desplazamiento, indica el nº de veces que_
 ;															; repetimos dicho desplazamiento. Ese valor se almacena en esta variable, ($1-$f). NUNCA SERÁ "0".
 
-Repetimos_desplazamiento_backup db 0						; Restaura (Repetimos_desplazamiento) cuando este llega a "0".
+Repetimos_desplazamiento_backup db 0	   					; Restaura (Repetimos_desplazamiento) cuando este llega a "0".
 Repetimos_movimiento db 0									; Byte que indica el nº de veces que repetimos el último MOVIMIENTO.
 Cola_de_desplazamiento db 0									; Este byte indica:
 
@@ -1064,17 +1059,7 @@ Main_menu:
 	call Clean_and_logo
 
 
-
-
-
-
-
-	call New_max_score
-
-
-
-
-
+;	call New_max_score
 
 
 	call Print_Main_menu

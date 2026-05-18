@@ -48,7 +48,7 @@ Print_Score_Counter:
 
 ;   Attr.
 
-    ld hl,Unidades_Score
+    ld hl,Unidades_Score                                           ; $4057
     call Calcula_direccion_atributos
 
     ld a,%01000111
@@ -64,13 +64,14 @@ Print_Score_Counter:
 
 ;   Unidades.
 
+;   Extraemos los binarios que forman el cdígito popeando con la pila.
+
     ld sp,(Puntero_de_unidades_Score)
 
     pop hl
 
     ld a,l
     ld (Unidades_Score),a
-
     ld a,h
     ld (Unidades_Score_1),a
 
@@ -97,8 +98,6 @@ Print_Score_Counter:
 
     ld a,h
     ld (Unidades_Score_7),a
-
-;   Consulta dígito de Ctrl.
 
 ;   Consulta dígito de Ctrl.
 
