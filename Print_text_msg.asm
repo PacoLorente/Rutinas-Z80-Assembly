@@ -39,86 +39,42 @@ New_best_msg:
 
 Print_Score_max_msg:
 
-;    ld a,1
-;	out ($fe),a
+;   Necesito fabricar un msg. con la máxima puntuación.
+;   Para ello necesitamos el ASCII CODE de cada dígito del marcador SCORE.
 
-    ld hl,Puntero_de_dm_Score
-	ld de,Line_11 + 14                          ; 5 dígitos (14)
-;                                               ; 4 dígitos (13), 3 dígitos (13).
+    jr $
 
-	ld bc,$0500
+    ld b,5                              ; Inicialmente 5 dígitos.
+    ld hl,Score_BCD_decenas_de_millar
+    ld de,Score_max_msg
 
-	ld a,%01000101
-	ex af,af                                    ; Attr. en A'.
+1 ld a,(hl)
+    and a 
+    jr z,Next_digit
 
-1 ld a,$80
-
-    inc c
-    dec c
-    jr nz,2F                                    ; Si ya hemos impreso algún digito no tenemos en cuenta los "0".
-
-    cp (hl)
-	call z,Centrando_score_msg
-	jr z,Next_char
-
-;   Imprime char. 1er caracter del marcador score "no cero".
-
-;    jr $
-
-2 push hl
-
-    push de
-    call Extrae_address
-    pop de
-
-    push de
-
-;   Ahora HL contiene la dirección de los "datos" del char.
-;     "   DE contiene la diección de pantalla donde ha de imprimirse el char.
-
-    ex de,hl
-
+    push hl
     push bc
-    call Print_BIN
-    ex af,af
-    pop bc
-    inc c
 
-    pop de
+    ld c,a
+    ld b,0
+
+;   ld hl,Tabla_de_conversion_BCD_a_KEYCODE
+;    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
+
+    add hl,bc
+    ld a,(hl)                                               
+    ld (de),a                                                 ; ASCII_code almacenado. 
+
+    pop bc
     pop hl
 
-Next_char:
 
-    dec hl                                      ; (Puntero_de_dm_Score), (Puntero_de_um_Score),(Puntero_de_centenas_Score), ...
-	dec hl
+Next_digit:
 
-	inc e                                       ; Char. vacío, ("0"). No se imprime, nos situamos en el siguiente char. de pantalla.
-
-	djnz 1B
-
-	ret
-
-Centrando_score_msg:
-
-    ld a,5
-    cp b
-    jr z,1F
-
-    dec a
-    cp b
-    ret z
-
-    dec a
-    cp b
-    jr nz,2F
-
-    dec a
-    cp b
-    ret z
-
-1 dec e
-
-2 xor a                                         ; RET with "Z".
+    inc de
+    dec hl
+    dec b
+    djnz 1B
 
 	ret
 

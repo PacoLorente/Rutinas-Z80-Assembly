@@ -868,11 +868,11 @@ Score_hex_max defw $5fc9
 ;Score_max_msg_pointer defw 0
 Score_max_msg ds 5
 
-Score_BCD_unidades db 0
-Score_BCD_decenas db 0
+Score_BCD_unidades db 4
+Score_BCD_decenas db 3
 Score_BCD_centenas db 0
-Score_BCD_unidades_de_millar db 0
-Score_BCD_decenas_de_millar db 0
+Score_BCD_unidades_de_millar db 2
+Score_BCD_decenas_de_millar db 3
 
 ;Cero_Score equ $3d80
 ;Uno_Score equ $3d88
@@ -885,11 +885,11 @@ Score_BCD_decenas_de_millar db 0
 ;Ocho_Score equ $3dc0
 ;Nueve_Score equ $3dc8
 
-Puntero_de_unidades_Score defw Uno_Score
-Puntero_de_decenas_Score defw Dos_Score
-Puntero_de_centenas_Score defw Cinco_Score
-Puntero_de_um_Score defw Cuatro_Score
-Puntero_de_dm_Score defw Dos_Score
+Puntero_de_unidades_Score defw Cero_Score
+Puntero_de_decenas_Score defw Cero_Score
+Puntero_de_centenas_Score defw Cero_Score
+Puntero_de_um_Score defw Cero_Score
+Puntero_de_dm_Score defw Cero_Score
 
 Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
 ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
@@ -1059,7 +1059,7 @@ Main_menu:
 	call Clean_and_logo
 
 
-;	call New_max_score
+	call New_max_score
 
 
 	call Print_Main_menu
