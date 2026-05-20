@@ -1,5 +1,31 @@
 ; ----------------------------------------------------------
 ;
+;   20/5/26
+;
+
+Print_New_Record:
+
+    call Mide_msg
+
+
+
+
+
+
+    ret
+
+Mide_msg:
+
+    jr $
+
+    ld hl,Score_max_msg
+    ld b,0
+
+
+
+
+; ----------------------------------------------------------
+;
 ;   13/5/26
 ;
 
@@ -11,23 +37,15 @@ New_best_msg:
     ld b,0
     call Print_text_msg
 
-    call Make_Score_max_msg
+    call Make_Score_max_msg                                 ; Construye un mensaje de texto con la puntuación máx. obtenida.
 
-    ld hl,a10                                                ; "New Best Score!.".
+    call Print_New_Record
+
+    ld hl,a10                                               ; "Enter your name".
     ld de,Line_16 + 9
-    ld a,%01000111                                          ; attrs. Yellow ink.
+    ld a,%01000101                                          ; attrs. Yellow ink.
     ld b,0
     call Print_text_msg
-
-	
-
-;   Attrs.
-
-;    ld h,%00101000
-;    ld l,%01101000
-
-;    ld ($5a8e),hl
-;    ld ($5a90),hl
 
 	ret
 
@@ -35,7 +53,8 @@ New_best_msg:
 ;
 ;	15/5/26
 ;
-;	Imprime en pantalla el marcador MAX. SCORE.
+;	Construye un mensaje de texto con la puntuación obtenida, (Score_hex_max). Este es el nuevo máximo.
+
 
 Make_Score_max_msg:
 
@@ -90,11 +109,7 @@ Next_digit:
                                   
     djnz 1B                                  ; Digit counter.
 
-    jr $
-
-    defm "16" 
-
-	ret
+ 	ret
 
 ; ---------------------------------------
 

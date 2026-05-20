@@ -867,22 +867,11 @@ Score_hex defw 0
 Score_hex_max defw $5fc9
 Score_max_msg ds 5
 
-Score_BCD_unidades db 6
-Score_BCD_decenas db 1
+Score_BCD_unidades db 4
+Score_BCD_decenas db 6
 Score_BCD_centenas db 0
-Score_BCD_unidades_de_millar db 0
-Score_BCD_decenas_de_millar db 0
-
-;Cero_Score equ $3d80
-;Uno_Score equ $3d88
-;Dos_Score equ $3d90
-;Tres_Score equ $3d98
-;Cuatro_Score equ $3da0
-;Cinco_Score equ $3da8
-;Seis_Score equ $3db0
-;Siete_Score equ $3db8
-;Ocho_Score equ $3dc0
-;Nueve_Score equ $3dc8
+Score_BCD_unidades_de_millar db 1
+Score_BCD_decenas_de_millar db 2
 
 Puntero_de_unidades_Score defw Cero_Score
 Puntero_de_decenas_Score defw Cero_Score
