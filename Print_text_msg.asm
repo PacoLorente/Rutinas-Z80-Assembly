@@ -11,7 +11,7 @@ New_best_msg:
     ld b,0
     call Print_text_msg
 
-    call Print_Score_max_msg
+    call Make_Score_max_msg
 
     ld hl,a10                                                ; "New Best Score!.".
     ld de,Line_16 + 9
@@ -37,20 +37,71 @@ New_best_msg:
 ;
 ;	Imprime en pantalla el marcador MAX. SCORE.
 
-Print_Score_max_msg:
+Make_Score_max_msg:
+
+;   Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b     
 
 ;   Necesito fabricar un msg. con la máxima puntuación.
 ;   Para ello necesitamos el ASCII CODE de cada dígito del marcador SCORE.
 
-    jr $
-
-    ld b,5                              ; Inicialmente 5 dígitos.
-    ld hl,Score_BCD_decenas_de_millar
+    ld bc,$0500                              ; El marcador SCORE consta de 5 dígitos decimales.
+    ld hl,Score_BCD_decenas_de_millar        ; Para evitar imprimir "0", crearemos el mensaje de izquierda a derecha.
+;                                            ; Inicialmente (Score_BCD_decenas_de_millar).
     ld de,Score_max_msg
+
+KEY_CODE_de_BCD:
 
 1 ld a,(hl)
     and a 
-    jr z,Next_digit
+    jr nz,3F
+
+;   El dígito es "0".
+
+    inc c
+    dec c
+    jr nz,3F
+
+    dec de                                   ; No queremos "0"´s delante de la cantidad.
+    jr Next_digit                            ; Aún no hemos impreso ningún dígito de mayor peso.
+
+3 push de                                    ; PUSH Score_max_msg.
+
+    ld de,Non_authorized_KEY_CODES+1         ; KEY_CODE numbers list.
+
+    and a
+    jr z,4F
+
+2 inc de
+    dec a
+    jr nz,2B                                 ; Nos situamos en el KEY_CODE correspondiente a este dígito.
+
+4 ld a,(de)                                  ; KEY_CODE en A.
+
+    pop de                                   ; Score_max_msg en DE.
+
+    call ASCII_CODE_de_KEYCODE
+
+    inc c                                    ; Indica que a partir de ahora se imprimen todos los "0".
+
+Next_digit:
+
+    inc de                                   ; Siguiente char del msg. que estamos creando.
+    dec hl                                   ; Siguiente díguito decimal a traducir, (centenas, decenas, ...).
+                                  
+    djnz 1B                                  ; Digit counter.
+
+    jr $
+
+    defm "16" 
+
+	ret
+
+; ---------------------------------------
+
+ASCII_CODE_de_KEYCODE:
+
+;   A contiene el código ASCII.  
+;   DE apunta al msg, (Score_max_msg).
 
     push hl
     push bc
@@ -58,25 +109,16 @@ Print_Score_max_msg:
     ld c,a
     ld b,0
 
-;   ld hl,Tabla_de_conversion_BCD_a_KEYCODE
-;    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
-
+    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
     add hl,bc
+
     ld a,(hl)                                               
     ld (de),a                                                 ; ASCII_code almacenado. 
 
     pop bc
     pop hl
 
-
-Next_digit:
-
-    inc de
-    dec hl
-    dec b
-    djnz 1B
-
-	ret
+    ret
 
 ; ----------------------------------------------------------
 ;

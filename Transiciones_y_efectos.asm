@@ -214,7 +214,7 @@ New_max_score:
 
 	ex de,hl
 
-	ld (Score_hex_max),hl
+	ld (Score_hex_max),hl 						; we´ve a new max.score.
 
 	call Clean_and_logo
 	call New_best_msg

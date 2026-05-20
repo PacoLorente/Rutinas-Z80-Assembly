@@ -865,14 +865,13 @@ Attr_big_counter db %01000110
 
 Score_hex defw 0
 Score_hex_max defw $5fc9
-;Score_max_msg_pointer defw 0
 Score_max_msg ds 5
 
-Score_BCD_unidades db 4
-Score_BCD_decenas db 3
+Score_BCD_unidades db 6
+Score_BCD_decenas db 1
 Score_BCD_centenas db 0
-Score_BCD_unidades_de_millar db 2
-Score_BCD_decenas_de_millar db 3
+Score_BCD_unidades_de_millar db 0
+Score_BCD_decenas_de_millar db 0
 
 ;Cero_Score equ $3d80
 ;Uno_Score equ $3d88
@@ -1039,7 +1038,6 @@ Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
 Sinclair_db_box ds 4
 Desplazamiento_level_msg db 0
 Counter_msg_char db 0
-
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
