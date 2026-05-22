@@ -779,7 +779,8 @@ Ctrl_6 db 0
 ; 															BIT 2, "1" Indica que vamos a utilizar el Kempston Joystick para jugar.
 ; 																   Este bit lo activa la rutina de teclado: [Active_kempstom_joystick] y su función es evitar_
 ; 																   _que la rutina [Press_START] escanee el teclado esperando disparo para comenzar la partida.
-
+; 															BIT 3, "1" Indica que hay que imprimir la máxima puntuación en el menú principal.
+;
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
@@ -864,14 +865,12 @@ Attr_big_counter db %01000110
 ; SCORE:
 
 Score_hex defw 0
-Score_hex_max defw $5fc9
-Score_max_msg ds 5
 
-Score_BCD_unidades db 4
-Score_BCD_decenas db 6
-Score_BCD_centenas db 0
-Score_BCD_unidades_de_millar db 1
-Score_BCD_decenas_de_millar db 2
+Score_BCD_unidades db 5
+Score_BCD_decenas db 5
+Score_BCD_centenas db 4
+Score_BCD_unidades_de_millar db 0
+Score_BCD_decenas_de_millar db 1
 
 Puntero_de_unidades_Score defw Cero_Score
 Puntero_de_decenas_Score defw Cero_Score
@@ -899,6 +898,42 @@ Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
 Temp_Amadeus_exit db 80										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
+
+; --------------------------------------------------
+;
+;	Estas variables no se inicializan:
+
+Score_hex_max defw 0
+Score_max_msg ds 6
+
+; Name NEW RECORD.!!!!!
+
+Champions_name_msg ds 6
+Name_ASCII_CODE_CHAR defw Champions_name_msg
+Char_NAME_COUNTER db 5
+
+Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b     
+
+; Key code BOX.
+; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
+; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
+
+Sinclair_db_box ds 4
+Desplazamiento_level_msg db 0
+Counter_msg_char db 0
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Tabla_de_conversion_KEYCODE_ASCII_CODE
 
@@ -1005,29 +1040,6 @@ Move_FIRE_ASCII_CODE db "5"
 Move_SHIELD_ASCII_CODE db " "
 	ds 5
 
-; Name Best Player:
-
-;CHAR_1 db 0
-;CHAR_2 db 0
-;CHAR_3 db 0
-;CHAR_4 db 0
-;CHAR_5 db 0
-
-CHAR_ASCII_CODE db 0,0,0,0,0
-
-Name_ASCII_CODE_CHAR defw CHAR_ASCII_CODE
-Char_NAME_COUNTER db 5
-
-Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b     
-
-; Key code BOX.
-; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
-; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
-
-Sinclair_db_box ds 4
-Desplazamiento_level_msg db 0
-Counter_msg_char db 0
-
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
 ;	19/7/25
@@ -1046,7 +1058,7 @@ Main_menu:
 	call Clean_and_logo
 
 
-	call New_max_score
+;	call New_max_score
 
 
 	call Print_Main_menu

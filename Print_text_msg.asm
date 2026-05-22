@@ -7,22 +7,77 @@ Print_New_Record:
 
     call Mide_msg
 
+;   Centramos el msg. en función del nº de dígitos.
 
+    ld de,Line_11 + 14
+    call Centra_New_Record_msg
 
+;   Print msg.
 
-
+    ld b,0
+    ld a,%01000111                                          ; attrs. Yellow ink.
+    ld hl,Score_max_msg                                            
+    call Print_text_msg
 
     ret
 
+; ----------------------------------------------------------
+;
+;   20/5/26
+;
+;   INPUTS: B contiene el nº de dígitos que tiene el msg a centrar.
+;           E nº de columna, (dirección de pantalla).
+
+;   4 y 5 dígitos E no varía.
+;   3 dígitos E+1
+;   2 dígitos E+2
+;   1 dígito E+2
+
+Centra_New_Record_msg:
+
+    ld a,5
+    cp b
+    ret z
+
+    dec a
+    cp b
+    ret z
+
+    inc e
+    dec a
+
+    cp b
+    ret z
+
+    dec a
+
+    cp b
+    ret z
+
+    inc e
+
+    ret
+
+; ----------------------------------------------------------
+;
+;   21/05/26
+;
+;   MODIFY: A,B y HL
+;   OUTPUT: B contiene el nº de dígitos, (chars) que tiene el msg. de la máx. puntuación.
+
 Mide_msg:
 
-    jr $
+    ld hl,Score_max_msg-1
+    ld b,$ff
 
-    ld hl,Score_max_msg
-    ld b,0
+1 inc hl
+    inc b
 
+    ld a,(hl)
+    and a
+    jr nz,1B
 
-
+    ret
 
 ; ----------------------------------------------------------
 ;
@@ -43,7 +98,7 @@ New_best_msg:
 
     ld hl,a10                                               ; "Enter your name".
     ld de,Line_16 + 9
-    ld a,%01000101                                          ; attrs. Yellow ink.
+    ld a,%01000110                                          ; attrs. Yellow ink.
     ld b,0
     call Print_text_msg
 

@@ -279,6 +279,10 @@ Carrusell:
 
 	call Enter_name
 
+	ld a,(Ctrl_6)
+	bit 3,a
+	ret nz
+
 	djnz 2B 								; Siguiente columna.
 
 ;	Todo el logo pintado con los attrs., (c).
@@ -290,10 +294,6 @@ Carrusell:
 	jr z,3B
 
 	jr Carrusell
-
-	ret
-
-
 
 ; ------------------------------------------------------------------------
 ;

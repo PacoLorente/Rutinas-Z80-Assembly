@@ -1,20 +1,20 @@
+
 ; ------------------------------------------------------------------------
 ;
 ;	18/05/26
 ;
+
+;CHAR_ASCII_CODE db 0,0,0,0,0
+;Name_ASCII_CODE_CHAR defw CHAR_ASCII_CODE
+;Char_NAME_COUNTER db 5
+
+;Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b     
 
 Enter_name:
 
 	push bc
     push hl
     push de
-
-    ld hl,Name_ASCII_CODE_CHAR
-    ld a,(Char_NAME_COUNTER)
-
-    push bc
-    push de
-    push hl
 
 	call KEY_SCAN 											  ; ROM, KEY-SCAN
 
@@ -48,51 +48,27 @@ Enter_name:
 
 ;	Tecla autorizada, recuperamos posicionamiento.
 
-	pop hl
-	pop de
-	pop bc
-
 ;	KEY_KODE en A
 
 ;	ENTER ???
 
 	cp $21
-	jr nz,3F
+	jr z,2F
 
-
-
+;	No introducimos más caracteres. ENTER da por concluido el INPUT del nombre. Si no hemos escrito ninguna letra,_
+;	_no aparecerá nombre alguno junto a la máxima puntuación.
 
 ;	Delete ???
 
 3 cp $27
-	jr nz,4F
-
-;	Si estamos en el 1er char. no ocurre nada.
-
-	push af
-	ld a,5
-	cp b
-   	pop af
-
-   	jr z,1F
-
-;	
-
-
-
-
-
-4 jr $
-
-
-
+	jr z,$
 
 ;    call BEEP
 
-    pop de
-    pop hl
+;    pop de
+;    pop hl
 
-    ld (hl),a                                                 ; Key_code de un caracter válido almacenado.
+;    ld (hl),a                                                 ; Key_code de un caracter válido almacenado.
 
 ;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
 
@@ -124,11 +100,11 @@ Enter_name:
 
 
 
-1 pop hl
-    pop de
-    pop bc
 
-    pop de
+2 ld hl,Ctrl_6 
+	set 3,(hl) 						; Hay que imprimir la ´puntuación máxima en el menú principal.
+
+1 pop de
     pop hl
     pop bc
 
