@@ -910,7 +910,7 @@ Score_max_msg ds 6
 
 Champions_name_msg ds 6
 Name_ASCII_CODE_CHAR defw Champions_name_msg
-Char_NAME_COUNTER db 5
+Char_NAME_COUNTER db 5 										; El nombre del ganador tiene 5 caracteres.
 
 Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b     
 
@@ -1058,7 +1058,7 @@ Main_menu:
 	call Clean_and_logo
 
 
-;	call New_max_score
+	call New_max_score
 
 
 	call Print_Main_menu

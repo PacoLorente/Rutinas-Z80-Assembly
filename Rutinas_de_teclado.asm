@@ -48,6 +48,11 @@ Enter_name:
 
 ;	Tecla autorizada, recuperamos posicionamiento.
 
+	ld hl,Char_NAME_COUNTER
+	ld b,(hl)
+	ld hl,(Name_ASCII_CODE_CHAR)
+	ld de,Line_19 + 14
+
 ;	KEY_KODE en A
 
 ;	ENTER ???
@@ -60,8 +65,36 @@ Enter_name:
 
 ;	Delete ???
 
-3 cp $27
+	cp $27
 	jr z,$
+
+;	KEY_CODE válido. Obtenemos su código ASCII y lo guardamos en el msg.
+
+	ex de,hl
+	call ASCII_CODE_de_KEYCODE
+
+;	También lo imprimimos.
+
+	ex de,hl
+
+    ld a,%01000111                                          ; attrs. Yellow ink.
+    ld b,0
+    call Print_text_msg
+
+
+	jr $
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;    call BEEP
 
@@ -103,6 +136,13 @@ Enter_name:
 
 2 ld hl,Ctrl_6 
 	set 3,(hl) 						; Hay que imprimir la ´puntuación máxima en el menú principal.
+
+
+3 
+
+
+
+
 
 1 pop de
     pop hl
