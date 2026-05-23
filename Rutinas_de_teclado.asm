@@ -4,11 +4,12 @@
 ;	18/05/26
 ;
 
-;CHAR_ASCII_CODE db 0,0,0,0,0
-;Name_ASCII_CODE_CHAR defw CHAR_ASCII_CODE
-;Char_NAME_COUNTER db 5
+; Nombre_del_campeon ds 6
+; Puntero_del_nombre_del_campeon defw Champions_name_msg
+; Contador_de_caracteres_del_nombre_del_campeon db 5 										; El nombre del ganador tiene 5 caracteres.
 
-;Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b     
+; Non_authorized_KEY_CODES db $27,$18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
+
 
 Enter_name:
 
@@ -20,17 +21,44 @@ Enter_name:
 
 ;	Si pulsamos 2 teclas el registro D y E contendrán el Key CODE de las teclas plsadas respectivamente.
 ;	Si sólo pulsamos una tecla el registro D contemdrá "$ff" y el registro E contendrá el KEY CODE de la tecla pulsada.
+;	Sólo admitimos la pulsación de dos teclas para BORRAR, ($27 en D y $23 en E).
+
+	ld a,$27
+	cp d
+	jr z,CAPS_SHIFT
+
+;	No hemos pulsado CAPS_SHIFT. RET si hay más de una tecla pulsada.
 
 	inc d
-	jr nz,1F 												  ; Más de 1 tecla pulsada, (RET).
+	jr nz,1F
 
-	inc e
-	jr z,1F 	 											  ; Ninguna tecla pelsada, (RET).
+;   NO ESTAMOS BORRANDO. TECLA PULSADA !!!!!
 
-;	TECLA PULSADA !!!!!
+Tecla_pulsada:
 
-	dec e
-	ld a,e                                                    ; KEY_code en A.
+	jr 1F
+
+
+
+
+
+
+CAPS_SHIFT
+
+;	Tecla CAPS_SHIFT pulsada. Para borrar tenemos que tener el KEY_CODE de "0" en E, RET si NO es así.
+
+	ld a,$23
+	cp e
+	jr nz,1F
+
+;	Hemos pulsado DELETE.
+
+	jr $
+
+
+
+
+
 
 ;	No Special KEYS & numbers in winner´s name.
 
@@ -38,51 +66,51 @@ Enter_name:
 ;	SPACE $20
 ;	ENTER $21
 
-	ld hl,Non_authorized_KEY_CODES-1
-	ld b,11
+;	ld hl,Non_authorized_KEY_CODES-1
+;	ld b,11
 
-2 inc hl
-	cp (hl)
-	jr z,1F
-	djnz 2B
+;2 inc hl
+;	cp (hl)
+;	jr z,1F
+;	djnz 2B
 
 ;	Tecla autorizada, recuperamos posicionamiento.
 
-	ld hl,Char_NAME_COUNTER
-	ld b,(hl)
-	ld hl,(Name_ASCII_CODE_CHAR)
-	ld de,Line_19 + 14
+;	ld hl,Char_NAME_COUNTER
+;	ld b,(hl)
+;	ld hl,(Name_ASCII_CODE_CHAR)
+;	ld de,Line_20 + 14
 
 ;	KEY_KODE en A
 
 ;	ENTER ???
 
-	cp $21
-	jr z,2F
+;	cp $21
+;	jr z,2F
 
 ;	No introducimos más caracteres. ENTER da por concluido el INPUT del nombre. Si no hemos escrito ninguna letra,_
 ;	_no aparecerá nombre alguno junto a la máxima puntuación.
 
 ;	Delete ???
 
-	cp $27
-	jr z,$
+;	cp $27
+;	jr z,$
 
 ;	KEY_CODE válido. Obtenemos su código ASCII y lo guardamos en el msg.
 
-	ex de,hl
-	call ASCII_CODE_de_KEYCODE
+;	ex de,hl
+;	call ASCII_CODE_de_KEYCODE
 
 ;	También lo imprimimos.
 
-	ex de,hl
+;	ex de,hl
 
-    ld a,%01000111                                          ; attrs. Yellow ink.
-    ld b,0
-    call Print_text_msg
+;    ld a,%01101000                                          ; attrs. Yellow ink.
+;    ld b,0
+;    call Print_text_msg
 
 
-	jr $
+;	jr $
 
 
 
@@ -105,14 +133,14 @@ Enter_name:
 
 ;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
 
-    ld c,a
-    ld b,0
+;    ld c,a
+;    ld b,0
 
-    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
-    add hl,bc
+;    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
+;    add hl,bc
 
-    ld a,(hl)
-    ld (de),a 												  ; ASCII code almacenado.
+;    ld a,(hl)
+;    ld (de),a 												  ; ASCII code almacenado.
 
  ;	Imprime caracter.
 
@@ -124,7 +152,7 @@ Enter_name:
 ;    ld b,0
 ;    call Print_text_msg
 
-    call BEEP
+;    call BEEP
 
 ;    jr $
 
@@ -134,11 +162,11 @@ Enter_name:
 
 
 
-2 ld hl,Ctrl_6 
-	set 3,(hl) 						; Hay que imprimir la ´puntuación máxima en el menú principal.
+;2 ld hl,Ctrl_6
+;	set 3,(hl) 						; Hay que imprimir la ´puntuación máxima en el menú principal.
 
 
-3 
+;3
 
 
 

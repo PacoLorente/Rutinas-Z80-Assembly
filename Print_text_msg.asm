@@ -9,13 +9,24 @@ Print_New_Record:
 
 ;   Centramos el msg. en función del nº de dígitos.
 
-    ld de,Line_11 + 14
+    ld de,Line_12 + 14
     call Centra_New_Record_msg
+
+;   Print attrs.
+
+    ld hl,Line_12 + 13
+    call Calcula_direccion_atributos
+    ld a,%01101000                                          ; attrs. white paper, black ink.
+
+    ld b,5
+
+1 inc l
+    ld (hl),a
+    djnz 1B
 
 ;   Print msg.
 
     ld b,0
-    ld a,%01000111                                          ; attrs. Yellow ink.
     ld hl,Score_max_msg                                            
     call Print_text_msg
 
@@ -25,53 +36,38 @@ Print_New_Record:
 ;
 ;   20/5/26
 ;
-;   INPUTS: B contiene el nº de dígitos que tiene el msg a centrar.
+;   INPUTS: C contiene el nº de dígitos que tiene el msg a centrar.
 ;           E nº de columna, (dirección de pantalla).
 
-;   4 y 5 dígitos E no varía.
-;   3 dígitos E+1
-;   2 dígitos E+2
-;   1 dígito E+2
 
 Centra_New_Record_msg:
 
     ld a,5
-    cp b
+    cp c
     ret z
 
+    ld b,4
+
+1 inc e
     dec a
-    cp b
+    cp c
     ret z
-
-    inc e
-    dec a
-
-    cp b
-    ret z
-
-    dec a
-
-    cp b
-    ret z
-
-    inc e
-
-    ret
+    djnz 1B
 
 ; ----------------------------------------------------------
 ;
 ;   21/05/26
 ;
-;   MODIFY: A,B y HL
-;   OUTPUT: B contiene el nº de dígitos, (chars) que tiene el msg. de la máx. puntuación.
+;   MODIFY: A,C y HL
+;   OUTPUT: C contiene el nº de dígitos, (chars) que tiene el msg. de la máx. puntuación.
 
 Mide_msg:
 
     ld hl,Score_max_msg-1
-    ld b,$ff
+    ld c,$ff
 
 1 inc hl
-    inc b
+    inc c
 
     ld a,(hl)
     and a
@@ -87,7 +83,7 @@ Mide_msg:
 New_best_msg:
 
     ld hl,a9                                                ; "New Best Score!.".
-    ld de,Line_8 + 9
+    ld de,Line_9 + 9
     ld a,%01000110                                          ; attrs. Yellow ink.
     ld b,0
     call Print_text_msg
@@ -97,10 +93,22 @@ New_best_msg:
     call Print_New_Record
 
     ld hl,a10                                               ; "Enter your name".
-    ld de,Line_16 + 9
+    ld de,Line_17 + 9
     ld a,%01000110                                          ; attrs. Yellow ink.
     ld b,0
     call Print_text_msg
+
+;   Attrs. en la zona del nombre.
+
+    ld hl,Line_20 + 13
+    call Calcula_direccion_atributos
+    ld b,5
+
+    ld a,%01101000
+
+1 inc l
+    ld (hl),a
+    djnz 1B
 
 	ret
 

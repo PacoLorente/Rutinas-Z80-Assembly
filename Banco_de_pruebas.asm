@@ -866,11 +866,11 @@ Attr_big_counter db %01000110
 
 Score_hex defw 0
 
-Score_BCD_unidades db 5
-Score_BCD_decenas db 5
-Score_BCD_centenas db 4
-Score_BCD_unidades_de_millar db 0
-Score_BCD_decenas_de_millar db 1
+Score_BCD_unidades db 0
+Score_BCD_decenas db 0
+Score_BCD_centenas db 0
+Score_BCD_unidades_de_millar db 4
+Score_BCD_decenas_de_millar db 5
 
 Puntero_de_unidades_Score defw Cero_Score
 Puntero_de_decenas_Score defw Cero_Score
@@ -908,11 +908,11 @@ Score_max_msg ds 6
 
 ; Name NEW RECORD.!!!!!
 
-Champions_name_msg ds 6
-Name_ASCII_CODE_CHAR defw Champions_name_msg
-Char_NAME_COUNTER db 5 										; El nombre del ganador tiene 5 caracteres.
+Nombre_del_campeon ds 6
+Puntero_del_nombre_del_campeon defw Nombre_del_campeon
+Contador_de_caracteres_del_nombre_del_campeon db 5 										; El nombre del ganador tiene 5 caracteres.
 
-Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b     
+Non_authorized_KEY_CODES db $27,$18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
 
 ; Key code BOX.
 ; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
@@ -921,18 +921,6 @@ Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
 Sinclair_db_box ds 4
 Desplazamiento_level_msg db 0
 Counter_msg_char db 0
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 Tabla_de_conversion_KEYCODE_ASCII_CODE
