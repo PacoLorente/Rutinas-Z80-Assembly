@@ -36,11 +36,21 @@ Enter_name:
 
 Tecla_pulsada:
 
+;	ENTER . !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	ld a,$21
+	cp e
+	jr z,2F
+
+;	SPACE . !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	dec a	;	($20), KEYCODE de SPACE.
+	cp e
+	jr z,$
+
+;	KEY. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 	jr 1F
-
-
-
-
 
 
 CAPS_SHIFT
@@ -51,20 +61,23 @@ CAPS_SHIFT
 	cp e
 	jr nz,1F
 
-;	Hemos pulsado DELETE.
+;	DELETE. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+;	Estamos en el 1er char. del nombre ???.
+
+	ld a,(Contador_de_caracteres_del_nombre_del_campeon)
+	cp 5
+	jr z,1F
+
+;	DEL char.
 
 	jr $
-
-
-
-
 
 
 ;	No Special KEYS & numbers in winner´s name.
 
 ;	DELETE $27
 ;	SPACE $20
-;	ENTER $21
 
 ;	ld hl,Non_authorized_KEY_CODES-1
 ;	ld b,11
@@ -156,36 +169,17 @@ CAPS_SHIFT
 
 ;    jr $
 
+2 ld hl,Ctrl_6
+	set 3,(hl) 												; Hay que imprimir puntuación máxima en el menú principal. También indica que hemos terminado de introducir nobre.
 
-
-
-
-
-
-;2 ld hl,Ctrl_6
-;	set 3,(hl) 						; Hay que imprimir la ´puntuación máxima en el menú principal.
-
-
-;3
-
-
-
-
+	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
+	call Cls
 
 1 pop de
     pop hl
     pop bc
 
     ret
-
-
-
-
-
-
-
-
-
 
 ; -----------------------------------------------------------------------------------------------
 

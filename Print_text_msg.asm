@@ -12,20 +12,9 @@ Print_New_Record:
     ld de,Line_12 + 14
     call Centra_New_Record_msg
 
-;   Print attrs.
-
-    ld hl,Line_12 + 13
-    call Calcula_direccion_atributos
-    ld a,%01101000                                          ; attrs. white paper, black ink.
-
-    ld b,5
-
-1 inc l
-    ld (hl),a
-    djnz 1B
-
 ;   Print msg.
 
+    ld a,%01000111
     ld b,0
     ld hl,Score_max_msg                                            
     call Print_text_msg
@@ -46,13 +35,24 @@ Centra_New_Record_msg:
     cp c
     ret z
 
-    ld b,4
+    dec a
 
-1 inc e
+    cp c
+    ret z
+
+    inc e
+
     dec a
     cp c
     ret z
-    djnz 1B
+
+    dec a
+    cp c
+    ret z
+
+    inc e
+
+    ret
 
 ; ----------------------------------------------------------
 ;
@@ -84,7 +84,7 @@ New_best_msg:
 
     ld hl,a9                                                ; "New Best Score!.".
     ld de,Line_9 + 9
-    ld a,%01000110                                          ; attrs. Yellow ink.
+    ld a,%01000101                                          ; attrs. black paper, cyan ink.
     ld b,0
     call Print_text_msg
 
@@ -94,7 +94,7 @@ New_best_msg:
 
     ld hl,a10                                               ; "Enter your name".
     ld de,Line_17 + 9
-    ld a,%01000110                                          ; attrs. Yellow ink.
+    ld a,%01000110                                          ; attrs. black paper, yellow ink.
     ld b,0
     call Print_text_msg
 
@@ -102,15 +102,11 @@ New_best_msg:
 
     ld hl,Line_20 + 13
     call Calcula_direccion_atributos
-    ld b,5
 
-    ld a,%01101000
-
-1 inc l
+    ld a,%11000111                                          ; Cursor 1er char. FLASH.
     ld (hl),a
-    djnz 1B
 
-	ret
+    ret
 
 ; ------------------------------------------------------------------------
 ;
@@ -148,7 +144,7 @@ KEY_CODE_de_BCD:
 
 3 push de                                    ; PUSH Score_max_msg.
 
-    ld de,Non_authorized_KEY_CODES+1         ; KEY_CODE numbers list.
+    ld de,Non_authorized_KEY_CODES+2         ; KEY_CODE numbers list.
 
     and a
     jr z,4F

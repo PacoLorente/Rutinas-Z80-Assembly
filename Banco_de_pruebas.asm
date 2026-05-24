@@ -779,7 +779,7 @@ Ctrl_6 db 0
 ; 															BIT 2, "1" Indica que vamos a utilizar el Kempston Joystick para jugar.
 ; 																   Este bit lo activa la rutina de teclado: [Active_kempstom_joystick] y su función es evitar_
 ; 																   _que la rutina [Press_START] escanee el teclado esperando disparo para comenzar la partida.
-; 															BIT 3, "1" Indica que hay que imprimir la máxima puntuación en el menú principal.
+; 															BIT 3, "1" Indica que hemos terminado de introducir nuestro nombre. Imprime Max. puntuación en el menú principal.
 ;
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
@@ -866,11 +866,11 @@ Attr_big_counter db %01000110
 
 Score_hex defw 0
 
-Score_BCD_unidades db 0
+Score_BCD_unidades db 1
 Score_BCD_decenas db 0
 Score_BCD_centenas db 0
-Score_BCD_unidades_de_millar db 4
-Score_BCD_decenas_de_millar db 5
+Score_BCD_unidades_de_millar db 0
+Score_BCD_decenas_de_millar db 0
 
 Puntero_de_unidades_Score defw Cero_Score
 Puntero_de_decenas_Score defw Cero_Score

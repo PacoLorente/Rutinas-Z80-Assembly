@@ -5,11 +5,14 @@
 ; *****************************************************************************************************************************************************************************************
 ; 010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
 
-calcula_tercio: ld a,h
+calcula_tercio:
+
+	ld a,h
 	and $18
 	sra a
 	sra a
 	sra a
+
 	ret
 
 ; -----------------------------------------------------------------------------------------
@@ -23,8 +26,12 @@ calcula_tercio: ld a,h
 ;
 ;   DESTRUYE: HL y A. !!!!! 
 
-Calcula_direccion_atributos: call calcula_tercio
-    ld h,$58
+Calcula_direccion_atributos:
+
+	call calcula_tercio
+
+	ld h,$58
     add h
     ld h,a
+
     ret
