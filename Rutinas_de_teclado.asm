@@ -32,9 +32,13 @@ Enter_name:
 	inc d
 	jr nz,1F
 
-;   NO ESTAMOS BORRANDO. TECLA PULSADA !!!!!
+;   NO ESTAMOS BORRANDO. TECLA PULSADA ?????
 
-Tecla_pulsada:
+Tecla_pulsada
+
+	inc e
+	jr z,1F 												  ; RET. No pressed key.
+	dec e
 
 ;	ENTER . !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -50,7 +54,96 @@ Tecla_pulsada:
 
 ;	KEY. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+;	key valida?
+;	No accept: SYMBOL SHIFT, CAPS SHIFT neither NUMBERS.
+
+;	No Special KEYS & numbers in winner´s name.
+
+Validando_pressed_key
+
+	ld a,e 														; KEYCODE de la tecla pulsada en A y E.
+
+	ld hl,Non_authorized_KEY_CODES-1
+	ld b,12
+
+3 inc hl
+	cp (hl)
+	jr z,1F
+	djnz 3B
+
+;	Tecla autorizada, recuperamos posicionamiento.
+
+	ld hl,Contador_de_caracteres_del_nombre_del_campeon
+	ld c,(hl)
+	ld hl,(Puntero_del_nombre_del_campeon)
+	ld de,Inicio_de_msg_de_nombre
+
+	push af 												; KEYCODE
+
+	ld a,5
+	sub c
+	jr z,Obtiene_ASCII
+
+4 ld b,a
+	inc e
+	djnz 4B
+
+;	KEY_KODE en A
+
+;	KEY_CODE válido. Obtenemos su código ASCII y lo guardamos en el msg.
+
+Obtiene_ASCII
+
+	pop af 													; KEYCODE en A.
+
+	ex de,hl
+	call ASCII_CODE_de_KEYCODE
+	ex de,hl
+
+;	Imprimimos caracter:
+
+    ld a,%01000111                                          ; attrs. Yellow ink.
+    ld b,0
+    call Print_text_msg
+
+;	Avanzamos carro de impresión y msg.
+
+    ld (Puntero_del_nombre_del_campeon),hl 					; Actualizamos puntero.
+
+;	Ahora el cursor parpadeando se encuentra en este char.
+
+	inc e
+
+	ex de,hl
+    call Flash
+	ex de,hl
+
+;	Decrementa contador de chars.
+
+    dec c
+
+    ld a,c
+	ld (Contador_de_caracteres_del_nombre_del_campeon),a
+
 	jr 1F
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 CAPS_SHIFT
@@ -59,7 +152,7 @@ CAPS_SHIFT
 
 	ld a,$23
 	cp e
-	jr nz,1F
+	jr nz,1F 										; RET. 2 key pressed and it's not DELETE.
 
 ;	DELETE. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -73,54 +166,6 @@ CAPS_SHIFT
 
 	jr $
 
-
-;	No Special KEYS & numbers in winner´s name.
-
-;	DELETE $27
-;	SPACE $20
-
-;	ld hl,Non_authorized_KEY_CODES-1
-;	ld b,11
-
-;2 inc hl
-;	cp (hl)
-;	jr z,1F
-;	djnz 2B
-
-;	Tecla autorizada, recuperamos posicionamiento.
-
-;	ld hl,Char_NAME_COUNTER
-;	ld b,(hl)
-;	ld hl,(Name_ASCII_CODE_CHAR)
-;	ld de,Line_20 + 14
-
-;	KEY_KODE en A
-
-;	ENTER ???
-
-;	cp $21
-;	jr z,2F
-
-;	No introducimos más caracteres. ENTER da por concluido el INPUT del nombre. Si no hemos escrito ninguna letra,_
-;	_no aparecerá nombre alguno junto a la máxima puntuación.
-
-;	Delete ???
-
-;	cp $27
-;	jr z,$
-
-;	KEY_CODE válido. Obtenemos su código ASCII y lo guardamos en el msg.
-
-;	ex de,hl
-;	call ASCII_CODE_de_KEYCODE
-
-;	También lo imprimimos.
-
-;	ex de,hl
-
-;    ld a,%01101000                                          ; attrs. Yellow ink.
-;    ld b,0
-;    call Print_text_msg
 
 
 ;	jr $

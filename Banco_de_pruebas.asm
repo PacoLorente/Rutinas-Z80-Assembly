@@ -47,6 +47,8 @@ Line_21 equ Line_20 + $20
 Line_22 equ Line_21 + $20
 Line_23 equ Line_22 + $20
 
+Inicio_de_msg_de_nombre equ Line_20 + 14  								; En esta dirección de pantalla se imprime el 1er caracter del nombre.
+
 ROM_ASCII equ $3c00 													; A esta dirección de memoria sumaremos el código ASCII correspondiente para situarnos en los 8 bytes que forman el char.
 KEY_SCAN equ $028e
 
@@ -238,7 +240,7 @@ Amadeus_Burst_sound_init_value equ $7000		;	Longitud de la explosión de Amadeus
 
 ;	Mensajes de texto.
 
-Fila_msg_de_nivel equ Line_9 + 6	;	Los mensajes de nivel se imprimen en la fila 9, columna 6, (antes del centrado).
+Fila_msg_de_nivel equ Line_9 + 6				;	Los mensajes de nivel se imprimen en la fila 9, columna 6, (antes del centrado).
 
 ;	Datos fijos de los álbumes de líneas de Amadeus:
 

@@ -100,7 +100,10 @@ New_best_msg:
 
 ;   Attrs. en la zona del nombre.
 
-    ld hl,Line_20 + 13
+    ld hl,Line_20 + 14
+
+Flash:
+
     call Calcula_direccion_atributos
 
     ld a,%11000111                                          ; Cursor 1er char. FLASH.
