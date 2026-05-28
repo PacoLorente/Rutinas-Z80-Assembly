@@ -93,7 +93,7 @@ New_best_msg:
     call Print_New_Record
 
     ld hl,a10                                               ; "Enter your name".
-    ld de,Line_17 + 9
+    ld de,Line_16 + 4
     ld a,%01000110                                          ; attrs. black paper, yellow ink.
     ld b,0
     call Print_text_msg

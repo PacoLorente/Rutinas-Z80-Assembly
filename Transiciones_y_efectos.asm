@@ -272,10 +272,10 @@ Carrusell:
 
 ;	Tiempo que tardamos en modificar los attrs. de la siguiente columna.
 
-;	push bc
-;	ld bc,$03ff
-;	call DELAY
-;	pop bc
+	push bc
+	ld bc,$03ff
+	call DELAY
+	pop bc
 
 	call Enter_name
 

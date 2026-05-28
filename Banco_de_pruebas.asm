@@ -995,7 +995,8 @@ a6 defm "Press FIRE to START",0
 a7 defm "CONTROLS:",0
 a8 defm "                 ",0
 a9 defm "New Best Score!",0
-a10 defm "Enter your name",0
+a10 defm "Enter name & press ENTER",0
+; a11 defm "and press ENTER",0
 
 ; DEFINE MENU.
 

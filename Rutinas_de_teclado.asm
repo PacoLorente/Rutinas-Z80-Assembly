@@ -5,7 +5,7 @@
 ;
 
 ; Nombre_del_campeon ds 6
-; Puntero_del_nombre_del_campeon defw Champions_name_msg
+; Puntero_del_nombre_del_campeon defw 
 ; Contador_de_caracteres_del_nombre_del_campeon db 5 										; El nombre del ganador tiene 5 caracteres.
 
 ; Non_authorized_KEY_CODES db $27,$18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
@@ -40,6 +40,11 @@ Tecla_pulsada
 	jr z,1F 												  ; RET. No pressed key.
 	dec e
 
+	call BEEP
+
+	ld bc,$6fff
+	call DELAY
+
 ;	ENTER . !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	ld a,$21
@@ -71,10 +76,17 @@ Validando_pressed_key
 	jr z,1F
 	djnz 3B
 
+;	jr $
+
 ;	Tecla autorizada, recuperamos posicionamiento.
 
 	ld hl,Contador_de_caracteres_del_nombre_del_campeon
 	ld c,(hl)
+
+	inc c
+	dec c
+	jr z,1F 												; Name completed. 5 chars. max.
+
 	ld hl,(Puntero_del_nombre_del_campeon)
 	ld de,Inicio_de_msg_de_nombre
 
@@ -83,9 +95,11 @@ Validando_pressed_key
 	ld a,5
 	sub c
 	jr z,Obtiene_ASCII
+										
+;	Posiciona carro de impresión.
 
-4 ld b,a
-	inc e
+	ld b,a
+4 inc e
 	djnz 4B
 
 ;	KEY_KODE en A
@@ -156,6 +170,8 @@ CAPS_SHIFT
 
 ;	DELETE. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+	call BEEP
+
 ;	Estamos en el 1er char. del nombre ???.
 
 	ld a,(Contador_de_caracteres_del_nombre_del_campeon)
@@ -167,55 +183,18 @@ CAPS_SHIFT
 	jr $
 
 
-
-;	jr $
-
-
-
-
-
-
-
-
-
-
-
-
-
-;    call BEEP
-
-;    pop de
-;    pop hl
-
-;    ld (hl),a                                                 ; Key_code de un caracter válido almacenado.
-
-;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
-
-;    ld c,a
-;    ld b,0
-
-;    ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
-;    add hl,bc
-
-;    ld a,(hl)
-;    ld (de),a 												  ; ASCII code almacenado.
-
- ;	Imprime caracter.
-
-; Imprime tecla pulsada, (LEFT).
-
-;    ld hl,CHAR_1_ASCII_CODE
-;	ld de,Line_20 + 14
-;    ld a,%01000110
-;    ld b,0
-;    call Print_text_msg
-
-;    call BEEP
-
-;    jr $
+; Name is done.
 
 2 ld hl,Ctrl_6
 	set 3,(hl) 												; Hay que imprimir puntuación máxima en el menú principal. También indica que hemos terminado de introducir nobre.
+
+;	Inicializa (Puntero_del_nombre_del_campeon) y (Contador_de_caracteres_del_nombre_del_campeon).
+
+	ld hl,Nombre_del_campeon
+	ld (Puntero_del_nombre_del_campeon),hl
+
+	ld a,5
+	ld (Contador_de_caracteres_del_nombre_del_campeon),a
 
 	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
 	call Cls
