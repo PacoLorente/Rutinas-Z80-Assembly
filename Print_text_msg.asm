@@ -104,12 +104,31 @@ New_best_msg:
 
 Flash:
 
-    call Calcula_direccion_atributos
+    ld h,$5a                                                ; Siempre FLASH en el 3er tercio de pantalla.
 
-    ld a,%11000111                                          ; Cursor 1er char. FLASH.
+    ld a,%11000111                                          ; FLASH, (next to char. printed).
     ld (hl),a
 
-    ret
+    ld a,(Ctrl_6)
+    bit 4,a                                                 ; FLAG. Indica DELETE a subrutina FLASH.
+    ret z
+
+;    jr $
+
+    res 4,a
+    ld (Ctrl_6),a
+
+    xor a
+    ld (hl),a
+
+    dec de
+    ld (de),a
+    ld (Puntero_del_nombre_del_campeon),de                  ; Actualizamos puntero.
+
+    inc c
+
+    dec l
+    jr Flash
 
 ; ------------------------------------------------------------------------
 ;

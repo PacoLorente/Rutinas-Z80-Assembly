@@ -10,7 +10,6 @@
 
 ; Non_authorized_KEY_CODES db $27,$18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
 
-
 Enter_name:
 
 	push bc
@@ -30,14 +29,14 @@ Enter_name:
 ;	No hemos pulsado CAPS_SHIFT. RET si hay más de una tecla pulsada.
 
 	inc d
-	jr nz,1F
+	jp nz,1F
 
 ;   NO ESTAMOS BORRANDO. TECLA PULSADA ?????
 
 Tecla_pulsada
 
 	inc e
-	jr z,1F 												  ; RET. No pressed key.
+	jp z,1F 												  ; RET. No pressed key.
 	dec e
 
 	call BEEP
@@ -45,17 +44,11 @@ Tecla_pulsada
 	ld bc,$6fff
 	call DELAY
 
-;	ENTER . !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+;	ENTER. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	ld a,$21
 	cp e
 	jr z,2F
-
-;	SPACE . !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	dec a	;	($20), KEYCODE de SPACE.
-	cp e
-	jr z,$
 
 ;	KEY. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -88,7 +81,7 @@ Validando_pressed_key
 	jr z,1F 												; Name completed. 5 chars. max.
 
 	ld hl,(Puntero_del_nombre_del_campeon)
-	ld de,Inicio_de_msg_de_nombre
+5 ld de,Inicio_de_msg_de_nombre
 
 	push af 												; KEYCODE
 
@@ -122,7 +115,7 @@ Obtiene_ASCII
 
 ;	Avanzamos carro de impresión y msg.
 
-    ld (Puntero_del_nombre_del_campeon),hl 					; Actualizamos puntero.
+	ld (Puntero_del_nombre_del_campeon),hl 					; Actualizamos puntero.
 
 ;	Ahora el cursor parpadeando se encuentra en este char.
 
@@ -141,47 +134,42 @@ Obtiene_ASCII
 
 	jr 1F
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 CAPS_SHIFT
 
 ;	Tecla CAPS_SHIFT pulsada. Para borrar tenemos que tener el KEY_CODE de "0" en E, RET si NO es así.
 
 	ld a,$23
 	cp e
-	jr nz,1F 										; RET. 2 key pressed and it's not DELETE.
+	jr nz,1F 												; RET. 2 key pressed and it's not DELETE.
 
 ;	DELETE. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	call BEEP
+	ld bc,$6fff
+	call DELAY
 
 ;	Estamos en el 1er char. del nombre ???.
 
-	ld a,(Contador_de_caracteres_del_nombre_del_campeon)
-	cp 5
+	ld a,5
+	ld hl,Contador_de_caracteres_del_nombre_del_campeon
+	cp (hl)
 	jr z,1F
 
 ;	DEL char.
 
-	jr $
+	inc (hl)
+	ld c,(hl) 												; INC counter.
 
+	ld hl,Ctrl_6
+	set 4,(hl) 												; FLAG. Indica DELETE a subrutina FLASH.
+
+	ld hl,(Puntero_del_nombre_del_campeon)
+	dec hl
+	ld (Puntero_del_nombre_del_campeon),hl 					; Retrocedemos de caracter.
+
+	ld de,$ff20 											; Cambio el KEYCODE "DELETE" por "SPACE" para borrar el char.
+	ld a,e
+
+	jr 5B
 
 ; Name is done.
 
