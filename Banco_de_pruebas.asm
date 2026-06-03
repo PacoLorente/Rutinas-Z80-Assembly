@@ -1049,7 +1049,7 @@ Main_menu:
 	call Clean_and_logo
 
 
-	call New_max_score
+;	call New_max_score
 
 
 	call Print_Main_menu

@@ -16,6 +16,8 @@ Enter_name:
     push hl
     push de
 
+    call Clean_champions_name 
+
 	call KEY_SCAN 											  ; ROM, KEY-SCAN
 
 ;	Si pulsamos 2 teclas el registro D y E contendrán el Key CODE de las teclas plsadas respectivamente.
@@ -193,6 +195,18 @@ CAPS_SHIFT
 
     ret
 
+Clean_champions_name:
+
+    ld hl,Nombre_del_campeon-1
+    ld b,5
+    xor a
+
+1 inc hl
+    ld (hl),a
+    djnz 1B
+
+    ret
+    
 ; -----------------------------------------------------------------------------------------------
 
 ROM_Key_Scan:
