@@ -1,3 +1,64 @@
+
+;Print_BIN
+
+;    ld b,8                                  ;   Nº de lineas que forman el caracter.
+
+;    push hl
+
+;1 ld a,(de)
+;    ld (hl),a                               ;   Print
+
+;    inc h                                   ;   INC scanline.
+;    inc e                                   ;   INC data address
+
+;    djnz 1B
+
+;    pop hl
+
+;    call Calcula_direccion_atributos
+
+;    ex af,af
+;    ld (hl),a
+
+;    ret
+
+Firma:
+
+;    ld a,2
+;    out($fe),a
+
+    ld hl,$50d7                 ; Dirección de pantalla.
+    ld de,Firma_Lorente_1       ; Data.
+
+    call rulo
+
+    ld de,Firma_Lorente_2       ; Data.
+
+    call rulo
+
+    jr $
+
+rulo
+
+    ld a,%01000101              ; Attr.
+    ld b,2                      ; Número de chars.
+
+1 ex af,af
+
+    inc l
+
+    push bc
+    push hl
+
+    call Print_BIN
+
+    pop hl
+    pop bc
+
+    djnz 1B
+
+    ret
+
 ; ---------------------------------------------------------------------------
 ;
 ;   11/05/26
@@ -601,31 +662,6 @@ Borra_escudo:
 
 ; ------------------------------------------------------------------------
 ;
-;	24/7/25
-;
-;	Restaura_attr_vida
-;
-;   Esta función evita que cambie el color del icono de vida que hay en el interior del escudo cuando lo eliminamos.
-;
-;   MODIFICA: A.
-
-;Restaura_attr_vida:
-
-;    call Calcula_direccion_atributos
-
-;    inc l
-
-;    ld a,l
-;    add $20
-;    ld l,a                                                          ; Dirección de attr de pantalla, (centro del escudo) donde se encuentra el icono de VIDA.
-
-;    ld a,%01000101                                                  ; Attr. de la vida.
-;    ld (hl),a
-
-;    ret
-
-; ------------------------------------------------------------------------
-;
 ;	26/9/25
 ;
 ;	Pinta_imagen.
@@ -639,6 +675,8 @@ Borra_escudo:
 ;			 C contiene el nº de Filas.
 ;
 ;	MODIFICA: AF,HL,DE y BC.
+
+;   Notas:  Utiliza esta rutina para ir borrando vidas. Por eso utilizamos la función XOR.
 
 Pinta_imagen:
 
