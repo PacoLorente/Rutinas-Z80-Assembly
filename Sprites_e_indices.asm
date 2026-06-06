@@ -250,9 +250,8 @@ Firma_Lorente_1:
 
 ;	2 Primeros bytes.
 
-	DEFB	$00,$01,$39,$29,$39,$21,$25,$00
-	DEFB	$00,$00,$00,$00,$76,$54,$f4,$00
-
+	DEFB	$00,$00,$79,$00,$49,$00,$79,$76
+	DEFB	$41,$54,$41,$54,$45,$F4,$00,$00
 
 Badplate_fe:
 
@@ -436,8 +435,8 @@ Badsat_der_fc:
 
 Firma_Lorente_2:
 
-	DEFB	$00,$01,$cf,$81,$dd,$95,$d5,$00
-	DEFB	$00,$00,$b0,$20,$30,$20,$b4,$00
+	DEFB	$00,$80,$FF,$F8,$00,$80,$EE,$B8
+	DEFB	$EA,$B8,$8A,$A0,$EA,$B8,$00,$00
 
 Badsat_der_fd:
 

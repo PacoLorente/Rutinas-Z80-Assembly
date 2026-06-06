@@ -1,61 +1,29 @@
-
-;Print_BIN
-
-;    ld b,8                                  ;   Nº de lineas que forman el caracter.
-
-;    push hl
-
-;1 ld a,(de)
-;    ld (hl),a                               ;   Print
-
-;    inc h                                   ;   INC scanline.
-;    inc e                                   ;   INC data address
-
-;    djnz 1B
-
-;    pop hl
-
-;    call Calcula_direccion_atributos
-
-;    ex af,af
-;    ld (hl),a
-
-;    ret
+; ---------------------------------------------------------------------------
+;
+;   7/6/26
+;
+;   Imprime Firma en pantalla.
+;
+;
 
 Firma:
 
-;    ld a,2
-;    out($fe),a
+    ld a,2
+    out($fe),a
 
     ld hl,$50d7                 ; Dirección de pantalla.
     ld de,Firma_Lorente_1       ; Data.
+    ld a,%01000110
+    ld bc,$0201
 
-    call rulo
+    call Pinta_imagen
 
+    ld hl,$50d9                 ; Dirección de pantalla.
     ld de,Firma_Lorente_2       ; Data.
+    ld a,%01000110
+    ld bc,$0201
 
-    call rulo
-
-    jr $
-
-rulo
-
-    ld a,%01000101              ; Attr.
-    ld b,2                      ; Número de chars.
-
-1 ex af,af
-
-    inc l
-
-    push bc
-    push hl
-
-    call Print_BIN
-
-    pop hl
-    pop bc
-
-    djnz 1B
+    call Pinta_imagen
 
     ret
 
@@ -566,7 +534,6 @@ Pintor:
     inc l
     ld (hl),a
 
-
     ret
 
 ; ------------------------------------------------------------------------
@@ -662,7 +629,7 @@ Borra_escudo:
 
 ; ------------------------------------------------------------------------
 ;
-;	26/9/25
+;	7/6/26
 ;
 ;	Pinta_imagen.
 ;
@@ -680,56 +647,58 @@ Borra_escudo:
 
 Pinta_imagen:
 
+    push hl
     push bc
-    push hl                                                         ; Guardamos datos para pintar más adelante.
 
 ;   Attrs.
-
-2 push bc
-    push hl
 
     ex af,af                                                        ; Salvo Attrs. [Calcula_direccion_atributos] destruye A.
     call Calcula_direccion_atributos
     ex af,af
 
+2 dec c
+
+    push bc
+
 1 ld (hl),a
     inc l
     djnz 1B
 
-    pop hl
+    inc c
+    dec c
+
+    jr nz,Next_attr_file                                            ; Sólo 1 Fila.
+
+    pop bc
+    jr Imprime_imagen
+
+Next_attr_file
+
+    pop bc
+
     ex af,af
 
-;   Siguiente Fila de Attrs.
-
     ld a,l
+    sub b
     add $20
     ld l,a
 
     ex af,af
 
-    pop bc
-    dec c
     jr nz,2B
 
-;   Imagen.
+Imprime_imagen
 
-    pop hl
     pop bc
+    pop hl
+
+7 ld a,8
+    ex af,af
+
+4 push hl
+    push bc
 
 ;   Generamos scanlines
-
-    dec c
-
-    ld a,8
-
-4 add 8
-    dec c
-    jr nz,4B
-
-    ld c,a                                                          ; Scanlines en C.
-
-5 push bc
-    push hl
 
 3 ld a,(de)
     xor (hl)
@@ -740,15 +709,28 @@ Pinta_imagen:
 
     djnz 3B
 
+    ex af,af
+    dec a
+    jr z,Next_file
+    ex af,af
+
+6 pop bc
     pop hl
+    call NextScan
+
+    jr 4B
+
+Next_file
+
     pop bc
+    pop hl
 
     dec c
     ret z
 
     call NextScan
 
-    jr 5B
+    jr 7B
 
 ; --------------------------------------------------------------------------------------
 ;

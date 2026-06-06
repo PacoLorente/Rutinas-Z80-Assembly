@@ -1051,11 +1051,7 @@ Main_menu:
 ;	call New_max_score
 
 	call Print_Main_menu
-
 	call Firma
-
-
-
 	call Main_menu_key										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
 	ld a,(Ctrl_6)
