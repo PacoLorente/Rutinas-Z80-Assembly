@@ -1415,6 +1415,32 @@ Gestion_de_Amadeus:
 
 ;	GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+;	En primer lugar reponemos los controles KEYBOARD en caso de haber seleccionado joystick SINCLAIR.
+;	Si la caja de 4 bytes (Sinclair_db_box) está vacía no habrá transvase de datos.
+
+	ld hl,Sinclair_db_box
+	ld a,(hl)
+	and a
+	jr z,Game_over_00
+
+;	Restaura los controles de teclado. Partida anterior con SINCLAIR JOYSTICK..
+
+	ld b,4
+	dec hl
+	ld de,Move_LEFT-1
+
+Restore_keyboard_controls
+
+	inc hl
+	inc de
+	ld a,(hl)
+	ld (de),a
+	xor a
+	ld (hl),a
+	djnz Restore_keyboard_controls
+
+Game_over_00
+
 	ld hl,(Entidad_sospechosa_de_colision)
 	dec hl
 
