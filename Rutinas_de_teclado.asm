@@ -175,8 +175,8 @@ CAPS_SHIFT
 
 ; Name is done.
 
-2 ld hl,Ctrl_6
-	set 3,(hl) 												; Hay que imprimir puntuación máxima en el menú principal. También indica que hemos terminado de introducir nobre.
+2 ld hl,Ctrl_7
+	set 0,(hl) 												; Hay que imprimir puntuación máxima en el menú principal. También indica que hemos terminado de introducir nobre.
 
 ;	Inicializa (Puntero_del_nombre_del_campeon) y (Contador_de_caracteres_del_nombre_del_campeon).
 

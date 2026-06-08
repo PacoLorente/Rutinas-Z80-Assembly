@@ -24,8 +24,6 @@ Enter_name_screen:
 
 ;	En 1er lugar limpiamos ((Scanlines_album)) y ((Scanlines_album_2)).
 
-
-
 	ld hl,Scanlines_album
 	ld bc,562
 	call Clean_mem
@@ -279,8 +277,8 @@ Carrusell:
 
 	call Enter_name
 
-	ld a,(Ctrl_6)
-	bit 3,a
+	ld a,(Ctrl_7)
+	bit 0,a
 	ret nz
 
 	djnz 2B 								; Siguiente columna.

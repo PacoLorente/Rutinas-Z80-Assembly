@@ -1,5 +1,23 @@
 ; ----------------------------------------------------------
 ;
+;   8/6/26
+;
+
+Print_new_best_score:
+
+    ld hl,Nombre_del_campeon                                
+    ld de,Line_22 + 2
+    ld a,%01000110                                          ; attrs. black paper, yellow ink.
+    ld b,0
+
+    jr $
+
+    call Print_text_msg
+
+    ret
+
+; ----------------------------------------------------------
+;
 ;   20/5/26
 ;
 
@@ -82,7 +100,7 @@ Mide_msg:
 
 New_best_msg:
 
-    ld hl,a9                                                ; "New Best Score!.".
+    ld hl,a8                                                ; "New Best Score!.".
     ld de,Line_9 + 9
     ld a,%01000101                                          ; attrs. black paper, cyan ink.
     ld b,0
@@ -92,7 +110,7 @@ New_best_msg:
 
     call Print_New_Record
 
-    ld hl,a10                                               ; "Enter your name".
+    ld hl,a9                                                ; "Enter your name".
     ld de,Line_16 + 4
     ld a,%01000110                                          ; attrs. black paper, yellow ink.
     ld b,0
@@ -845,29 +863,20 @@ Clean_Define_menu:
 
 Clean_main_menu: 
 
-    ld hl,a8
-    ld a,%01000000
-    ld b,0
-    ld de,Line_9 + 6
-    call Print_text_msg
+    ld hl,Line_9
+    call CLean_file
 
-    ld hl,a8
-    ld a,%01000000
-    ld b,0
-    ld de,Line_11 + 6
-    call Print_text_msg
+    ld hl,Line_11
+    call CLean_file
 
-    ld hl,a8
-    ld a,%01000000
-    ld b,0
-    ld de,Line_13 + 6
-    call Print_text_msg
+    ld hl,Line_13
+    call CLean_file
 
-    ld hl,a8
-    ld a,%01000000
-    ld b,0
-    ld de,Line_15 + 6
-    call Print_text_msg
+    ld hl,Line_15
+    call CLean_file
+
+    ld hl,Line_22
+    call CLean_file
 
     ret
 

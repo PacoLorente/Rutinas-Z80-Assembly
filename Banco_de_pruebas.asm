@@ -781,8 +781,6 @@ Ctrl_6 db 0
 ; 															BIT 2, "1" Indica que vamos a utilizar el Kempston Joystick para jugar.
 ; 																   Este bit lo activa la rutina de teclado: [Active_kempstom_joystick] y su función es evitar_
 ; 																   _que la rutina [Press_START] escanee el teclado esperando disparo para comenzar la partida.
-; 															BIT 3, "1" Indica que hemos terminado de introducir nuestro nombre. Imprime Max. puntuación en el menú principal.
-;
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
@@ -905,6 +903,8 @@ Temp_Amadeus_exit db 80										; Temporiza la secuencia de: "SALIDA DE AMADEUS
 ;
 ;	Estas variables no se inicializan:
 
+Ctrl_7 db 0
+
 Score_hex_max defw 0
 Score_max_msg ds 6
 
@@ -923,7 +923,6 @@ Non_authorized_KEY_CODES db $27,$18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
 Sinclair_db_box ds 4
 Desplazamiento_level_msg db 0
 Counter_msg_char db 0
-
 
 Tabla_de_conversion_KEYCODE_ASCII_CODE
 
@@ -993,9 +992,8 @@ a4 defm " to FIRE and ",0
 a5 defm "to SHIELD.",0
 a6 defm "Press FIRE to START",0
 a7 defm "CONTROLS:",0
-a8 defm "                 ",0
-a9 defm "New Best Score!",0
-a10 defm "Enter name & press ENTER",0
+a8 defm "New Best Score!",0
+a9 defm "Enter name & press ENTER",0
 ; a11 defm "and press ENTER",0
 
 ; DEFINE MENU.
@@ -1052,6 +1050,13 @@ Main_menu:
 
 	call Print_Main_menu
 	call Firma
+
+;	Print Best Score if it exist.
+
+	ld a,(Ctrl_7)
+	bit 0,a
+	call nz,Print_new_best_score
+
 	call Main_menu_key										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
 	ld a,(Ctrl_6)
