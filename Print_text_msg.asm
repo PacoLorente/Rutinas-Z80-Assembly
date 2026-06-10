@@ -1,18 +1,11 @@
 ; ----------------------------------------------------------
 ;
-;   8/6/26
+;   10/6/26
 ;
 
 Print_new_best_score:
 
-    ld hl,Nombre_del_campeon                                
-    ld de,Line_22 + 2
-    ld a,%01000110                                          ; attrs. black paper, yellow ink.
-    ld b,0
-
-    jr $
-
-    call Print_text_msg
+	call Cartel_Best_Score                     ; Imprime Cartel.
 
     ret
 

@@ -1,5 +1,65 @@
 ; ---------------------------------------------------------------------------
 ;
+;   10/6/26
+;
+;   Print "Best Score" in Main menu.
+;
+
+Cartel_Best_Score:
+
+    ld hl,Line_19+2              ; Dirección de pantalla.
+    ld de,Best_Score_1           ; Data.
+    ld a,%01000110
+    ld bc,$0101
+
+    call Pinta_imagen            ; Print Best_Score_1.
+
+    ld hl,Line_20+2              ; Dirección de pantalla.
+    ld de,Best_Score_2           ; Data.
+    ld a,%01000110
+    ld bc,$0101
+
+    call Pinta_imagen            ; Print Best_Score_2.
+
+    ld hl,Line_19+3              ; Dirección de pantalla.
+    ld de,Best_Score_3           ; Data.
+    ld a,%01000110
+    ld bc,$0101
+
+    call Pinta_imagen            ; Print Best_Score_3.
+
+    ld hl,Line_19+4              ; Dirección de pantalla.
+    ld de,Best_Score_4           ; Data.
+    ld a,%01000110
+    ld bc,$0102
+
+    call Pinta_imagen            ; Print Best_Score_4.
+
+    ld hl,Line_20+3              ; Dirección de pantalla.
+    ld de,Best_Score_5           ; Data.
+    ld a,%01000110
+    ld bc,$0101
+
+    call Pinta_imagen            ; Print Best_Score_5.
+
+    ld hl,Line_19+5              ; Dirección de pantalla.
+    ld de,Best_Score_6           ; Data.
+    ld a,%01000110
+    ld bc,$0102
+
+    call Pinta_imagen            ; Print Best_Score_6.
+
+    ld hl,Line_19+6              ; Dirección de pantalla.
+    ld de,Best_Score_7           ; Data.
+    ld a,%01000110
+    ld bc,$0202
+
+    call Pinta_imagen            ; Print Best_Score_7.
+
+    ret
+
+; ---------------------------------------------------------------------------
+;
 ;   7/6/26
 ;
 ;   Imprime Firma en pantalla.

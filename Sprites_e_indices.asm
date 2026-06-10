@@ -84,8 +84,23 @@ Tabla_de_puntuacion:
 	db 50
 	db 60
 
+; ASM source file created by SevenuP v1.20
+; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
+
+;GRAPHIC DATA:
+;Pixel Size:      (  8,   8)
+;Char Size:       (  1,   1)
+;Sort Priorities: Char line
+;Data Outputted:  Gfx
+;Interleave:      Line
+;Mask:            No
+
+Best_Score_1:
+
+	DEFB	$00,$E0,$F0,$B0,$90,$91,$D3,$E2 					; Char 1, (arriba-izquiera).
+
 ; --------------------------------------------------------------------------
-; FREE SPACE $0b, 11d ------------------------------------------------------
+; FREE SPACE $03,3d --------------------------------------------------------
 ; --------------------------------------------------------------------------
 
 	org $8500
@@ -195,8 +210,23 @@ Badplate_f8:
 	DEFB	$00,$66,$19,$80,$67,$F9,$80,$3E
 	DEFB	$1F,$00,$1E,$1E,$00,$07,$F8,$00
 
+; ASM source file created by SevenuP v1.20
+; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
+
+;GRAPHIC DATA:
+;Pixel Size:      (  8,   8)
+;Char Size:       (  1,   1)
+;Sort Priorities: Char line
+;Data Outputted:  Gfx
+;Interleave:      Line
+;Mask:            No
+
+Best_Score_2:
+
+	DEFB	$F6,$B5,$97,$96,$D6,$F3,$61,$00 		           ; Char 2, (abajo-izq).
+
 ; --------------------------------------------------------------------------
-; FREE SPACE $0a, 10d ------------------------------------------------------
+; FREE SPACE $02,2d --------------------------------------------------------
 ; --------------------------------------------------------------------------
 
 	org $8600
@@ -719,8 +749,24 @@ _e:
 	DEFB	$73,$80,$7F,$80,$70,$00,$79,$B8
 	DEFB	$3F,$38,$1E,$38,$00,$00,$00,$00
 
+
+; ASM source file created by SevenuP v1.20
+; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
+
+;GRAPHIC DATA:
+;Pixel Size:      (  8,   8)
+;Char Size:       (  1,   1)
+;Sort Priorities: Char line
+;Data Outputted:  Gfx
+;Interleave:      Line
+;Mask:            No
+
+Best_Score_3:
+
+	DEFB	$00,$00,$00,$00,$00,$8D,$DD,$70			; Char_3, (2ª Columna-arriba).
+
 ; --------------------------------------------------------------------------
-; FREE SPACE $0c, 12d ------------------------------------------------------
+; FREE SPACE $04,04d -------------------------------------------------------
 ; --------------------------------------------------------------------------
 
 	org $8d00
@@ -770,11 +816,21 @@ Cinco:
 	DEFB	$00,$0E,$00,$0E,$00,$0E,$00,$06
 	DEFB	$0F,$F2,$1F,$F8,$3F,$FC,$00,$00
 
-; --------------------------------------------------------------------------
-; FREE SPACE $10, 16d ------------------------------------------------------
-; --------------------------------------------------------------------------
+; ASM source file created by SevenuP v1.20
+; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
 
-	org $8e00
+;GRAPHIC DATA:
+;Pixel Size:      (  8,  16)
+;Char Size:       (  1,   2)
+;Sort Priorities: Char line, Y char
+;Data Outputted:  Gfx
+;Interleave:      Line
+;Mask:            No
+
+Best_Score_4: 											; Chars 5 y 6, (3ª Columna).
+
+	DEFB	$00,$80,$80,$81,$81,$F1,$F1,$80
+	DEFB	$80,$80,$80,$82,$83,$81,$80,$00
 
 Seis:
 
@@ -888,6 +944,38 @@ Moon:
 	DEFB	$00,$00,$07,$FF,$00,$00,$00,$00
 	DEFB	$01,$FF,$00,$00,$00,$00,$00,$1F
 
-	; --------------------------------------------------------------------------
-; FREE SPACE $??, ??d ------------------------------------------------------
+; ASM source file created by SevenuP v1.20
+; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
+
+;GRAPHIC DATA:
+;Pixel Size:      (  8,   8)
+;Char Size:       (  1,   1)
+;Sort Priorities: Char line
+;Data Outputted:  Gfx
+;Interleave:      Line
+;Mask:            No
+
+Best_Score_5:
+
+	DEFB	$B0,$98,$0C,$44,$E4,$BC,$98,$00 			; Char 4, (2ª Columna-abajo).
+
+
+; ASM source file created by SevenuP v1.20
+; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
+
+;GRAPHIC DATA:
+;Pixel Size:      (  8,  16)
+;Char Size:       (  1,   2)
+;Sort Priorities: Char line, Y char
+;Data Outputted:  Gfx
+;Interleave:      Line
+;Mask:            No
+
+Best_Score_6: 											; Chars 7 y 8, (4ª Columna).
+
+	DEFB	$00,$60,$F0,$B0,$00,$03,$C7,$E4
+	DEFB	$34,$14,$14,$14,$34,$E7,$C3,$00
+
+; --------------------------------------------------------------------------
+; FREE SPACE $04,04d -------------------------------------------------------
 ; --------------------------------------------------------------------------
