@@ -871,6 +871,12 @@ Clean_main_menu:
     ld hl,Line_22
     call CLean_file
 
+    ld hl,Line_19
+    call CLean_file
+
+    ld hl,Line_20
+    call CLean_file
+
     ret
 
 Clean_Show_controls_menu:
