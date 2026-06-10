@@ -1154,6 +1154,45 @@ Init_level:
 
 ;	Prepara cajas.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
 	call Prepara_Cajas_de_Entidades
 
@@ -1751,41 +1790,6 @@ Change_Disparos:
 
 	ld a,(Num_de_bytes_album_de_disparos)
 	ld (Num_de_bytes_album_de_disparos_borrado),a
-
-	ret
-
-; ------------------------------------
-;
-; 	18/11/25
-
-; 	Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
-; 	Si el puntero está situado en el último nº, lo volvemos a situar al principio.
-
-;	DESTRUYE: HL,DE,A
-;	OUTPUTS: A contiene un Nº aleatorio. Actualiza el puntero de nº aleatorios (RND_SP).
-
-;	Variables implicadas: (RND_SP).
-
-Extrae_numero_aleatorio_y_avanza:
-
-	ld hl,Numeros_aleatorios+7
-	ex de,hl
-	ld hl,(RND_SP)
-
-	ld a,e
-	sub l
-	jr nz,1F
-
-; Sitúa HL al principio de la tabla de nº aleatorios.
-
-	ld hl,Numeros_aleatorios
-	ld (RND_SP),HL
-
-; Coloca el nº aleatorio en A y mueve el puntero al siguiente nº.
-
-1 ld a,(hl)
-	inc l
-	ld (RND_SP),hl
 
 	ret
 

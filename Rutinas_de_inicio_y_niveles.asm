@@ -1,3 +1,38 @@
+; ------------------------------------
+;
+; 	18/11/25
+
+; 	Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
+; 	Si el puntero está situado en el último nº, lo volvemos a situar al principio.
+
+;	DESTRUYE: HL,DE,A
+;	OUTPUTS: A contiene un Nº aleatorio. Actualiza el puntero de nº aleatorios (RND_SP).
+
+;	Variables implicadas: (RND_SP).
+
+Extrae_numero_aleatorio_y_avanza:
+
+	ld hl,Numeros_aleatorios+7
+	ex de,hl
+	ld hl,(RND_SP)
+
+	ld a,e
+	sub l
+	jr nz,1F
+
+; Sitúa HL al principio de la tabla de nº aleatorios.
+
+	ld hl,Numeros_aleatorios
+	ld (RND_SP),HL
+
+; Coloca el nº aleatorio en A y mueve el puntero al siguiente nº.
+
+1 ld a,(hl)
+	inc l
+	ld (RND_SP),hl
+
+	ret
+
 ;------------------------------------------------------------------------
 ;
 ;	8/4/26
@@ -647,8 +682,8 @@ Inicializa_Nivel:
 
 ; Actualiza (Puntero_indice_NIVELES).
 
-	ld hl,(Puntero_indice_NIVELES)
-	call Extrae_address   						 					; Sitúa HL en el 1er byte que define el 1er nivel del juego, (Nº de entidades).
+	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
+	call Extrae_address   						 					; Sitúa HL en el 1er byte que define: (Max_time_to_appear_entities).
 
 	ld a,(hl)
 	ld (Max_time_to_appear_entities),a
