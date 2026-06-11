@@ -1126,9 +1126,15 @@ Init_level:
 	call Extrae_numero_aleatorio_y_avanza
 	ld (Clock_next_entity),a 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
 
-;	Inicia el 1er nivel del juego. ------------------------------------------------------------------------------------------
+;	Inicia el nivel del juego. ------------------------------------------------------------------------------------------
 
-	call Inicializa_Nivel
+	call Inicializa_Nivel 									; After [Inicializa_Nivel], BC contains:
+
+;					B contain (Numero_de_entidades).
+;					C contain (Tipo), (first level's entity).
+;
+; 					HL apunta al .db que define el (Tipo) de la primera entidad de este nivel.
+
 
 ;	Imprime Contador de entidades.
 
