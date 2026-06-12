@@ -205,7 +205,7 @@ Prepara_Cajas_Master:
 	ex af,af
 	ld a,c 															; (Clase) de la entidad en A y A´.
 
-	call Situa_en_Caja_Master										; A=Z indica que hemos de generar los movimientos masticados de esta (Clase) de entidad.
+	call Situa_en_Caja_Master										; A="0" Indica que hemos de generar los movimientos masticados de esta (Clase) de entidad.
 ; 																	; A=NZ indica que esta (Clase) de entidad ya tiene generados los mov_masticados.
 ; 																	; Saltaremos a la siguiente entidad del nivel.
 	and a
@@ -219,8 +219,6 @@ Prepara_Cajas_Master:
 	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
 
-;	ld (Puntero_de_almacen_de_mov_masticados),hl
-
 ;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
 ;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
 ;	coreografías distintas.
@@ -231,6 +229,72 @@ Prepara_Cajas_Master:
 
 	ld a,(Tipo)
 	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	jr $	;	(12/06/26)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	call Aplica_rnd_al_baile
 
 	pop bc
@@ -714,7 +778,7 @@ Inicializa_Nivel:
 
 ; ----------------------
 ;
-;	14/4/25
+;	12/06/26
 ;
 ;	INPUT: A, A' y C contienen la (Clase) de la entidad.
 ;	OUTPUT: Flag Z activo:
@@ -724,7 +788,7 @@ Inicializa_Nivel:
 Situa_en_Caja_Master
 
 	ld hl,Indice_de_cajas_master	
-	ld (Puntero_indice_master),hl
+	ld (Puntero_indice_master),hl 									; Sitúa (Puntero_indice_master) en la 1ª caja del índice.
 
 1 call Extrae_address
 	cp (hl) 																							
@@ -743,8 +807,8 @@ Situa_en_Caja_Master
 
 	ld a,c 		
 
-	inc e
-	inc e 	
+	inc de
+	inc de 	
 
 	ld (Puntero_indice_master),de
 
@@ -784,14 +848,17 @@ Obtiene_datos_de_Caja_Master
 
 ;	INPUTS: A contiene el (Tipo) de la entidad que estamos iniciando.
 
-Situa_en_Tabla_Random
+Situa_en_Tabla_Random:
 
     call Calcula_salto_en_BC
+
 	ld hl,Indice_de_tablas_Random
     and a
     adc hl,bc
   	ld (Puntero_tabla_Random),hl
+
 	call Extrae_address
+
 	ret
 
 ; -----------------------------------------------------------
@@ -958,11 +1025,14 @@ Construye_movimientos_masticados_Amadeus
 ;
 ;	INPUT: A contiene el TIPO de ENTIDAD que almacenaremos en la caja. 
 
-Definicion_segun_tipo 											
+Definicion_segun_tipo: 											
 
 	call Calcula_salto_en_BC										; Calcula el salto para situarnos en la definición de entidad correcta de indice de [Indice_de_definiciones_de_entidades].
+
 	ld hl,Indice_de_definiciones_de_entidades
+
 	call Situa_en_datos_de_definicion								; Sitúa HL en el 1er .db de la definición de entidad tipo que tenemos que volcar en DRAW.
+
 	ret
 
 ; ---------------------------------------------------------------------
@@ -1115,32 +1185,40 @@ Amarillo ld a,%01000110
 
 ;	------------------------------------------------------------------------------------
 ;
-;	09/11/24
+;	12/06/26
 ;
 ;	INPUTS:	A contiene el (Tipo) de entidad. 
 ;
 ;	Esta pequeña sub-rutina carga BC con 0,2,4,6,8 ... en función del tipo de entidad: (1,2,3,4,...). 
 ;	Calcula "el salto" para situarnos en los DATOS de la ENTIDAD correcta del índice de entidades según el tipo de entidad.
 
-Calcula_salto_en_BC and a
+Calcula_salto_en_BC 
+
+	and a
 	jr z,1F
+
 	sla a										
 	sub 2															; ("Tipo_de_entidad")*2-2.
+
 1 ld c,a
 	ld b,0 										
+
 	ret
 
 ; ------------------------------------------------------------------
 ;
-;	19/1/24
+;	12/06/26
 ;
 ;	Sitúa HL en el 1er .db de la definición de la entidad que tenemos que volcar en la bandeja DRAW.
 ;	Actualiza (Datos_de_entidad) con esa dirección.
 
-Situa_en_datos_de_definicion and a
+Situa_en_datos_de_definicion: 
+
+	and a
 	adc hl,bc
 	call Extrae_address   
     ld (Datos_de_entidad),hl					
+
 	ret
 
 ; ----------------------------------------------------------------------------------------------------------
