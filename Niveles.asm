@@ -109,12 +109,12 @@ Tabla_Random_BadSat
 	defw $0f01
 	defw Random_5_1_15
 
-	db 0,2
+	db 0,1
 	defw $0f01
 	defw Random_6_1_15	;	Igual
 	defw Random_7_1_15	;	Igual
 
-	defw 0
+	defw 0 				;	Indica FIN de la tabla RANDOM.
 
 Tabla_Random_Badplate
 
@@ -133,7 +133,7 @@ Tabla_Random_Badplate
 	defw $0301
 	defw Random_B_1_3
 
-	defw 0
+	defw 0				;	Indica FIN de la tabla RANDOM.
 
 ; ----------------------------------------------------------------------
 ;

@@ -230,78 +230,62 @@ Prepara_Cajas_Master:
 	ld a,(Tipo)
 	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	jr $	;	(12/06/26)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	call Aplica_rnd_al_baile
+	call Aplica_rnd_al_baile 										; Esta rutina es la encargada de aplicar aleatoriedad a la danza de esta (Clase) de enemigo.;
 
 	pop bc
 	pop hl
 
 	push hl															; Push (Puntero_de_entidades).
 	push bc															; Push (Numero_de_entidades)/(Clase).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;	jr $	;	12/6/26
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
@@ -479,7 +463,7 @@ Construye_movimientos_masticados_entidad
 
 ; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados). 
 
-   	call Situa_en_contador_general_de_mov_masticados
+	call Situa_en_contador_general_de_mov_masticados
 
 ; HL apunta al 1er byte del 1er (Contador_general_de_mov_masticados) vacío.
 ; Guardamos (Contador_de_mov_masticados) en el (Contador_general_de_mov_masticados) de esta entidad.
@@ -504,18 +488,18 @@ Guarda_movimiento_masticado:
 	ld (Stack),sp
 	ld sp,(Puntero_de_almacen_de_mov_masticados)					; Guardamos el movimiento masticado en el almacén.
 
-    push ix 														; Pushea el Puntero_de_impresión, (1er scanline).
-    push iy 														; Pushea Puntero_objeto.
- 
-    ld sp,(Stack)
+	push ix 														; Pushea el Puntero_de_impresión, (1er scanline).
+	push iy 														; Pushea Puntero_objeto.
 
-   	ld hl,(Contador_de_mov_masticados)								; Incrementa en una unidad el (Contador_de_mov_masticados).
+	ld sp,(Stack)
+
+	ld hl,(Contador_de_mov_masticados)								; Incrementa en una unidad el (Contador_de_mov_masticados).
 	inc hl
 	ld (Contador_de_mov_masticados),hl
 
-    call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
 ;																	; _ el (Contador_de_mov_masticados).
-    ret
+	ret
 
 ; ---------------------------------------------------------------------
 ;
@@ -552,21 +536,21 @@ Situa_en_contador_general_de_mov_masticados:
 
 ;   Sitúa en la 1ª de las tres variables.
 
-    ld hl,Contador_general_de_mov_masticados_1
+	ld hl,Contador_general_de_mov_masticados_1
 1 ld a,(hl)
-    and a    
-    ret z
+	and a
+	ret z
 
 ;	Avanzamos a la siguiente si esta ya contiene una cantidad.
 
-    inc hl
-    inc hl
+	inc hl
+	inc hl
 
-    jr 1B
+	jr 1B
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	6/3/25
+;	12/6/26
 ;
 ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
 ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio. 
@@ -583,7 +567,7 @@ Situa_en_contador_general_de_mov_masticados:
 ;	defw $0f01
 ;	defw Random_2_1_15
 
-;	db 0,2
+;	db 0,1
 ;	defw $0f01
 ;	defw Random_3_1_15	;	Igual
 ;	defw Random_4_1_15	;	Igual
@@ -610,12 +594,14 @@ Aplica_rnd_al_baile:
 ; Almacenamos en A' el nº de direcciones que compartiran nº RND y sitúamos HL en el .defw que indica los límites.
 
 	inc hl
-	ld a,(hl)	
+
+	ld a,(hl)
 	ex af,af
-	inc hl
+
+	inc hl 															; Sitúa HL en el defw que define los límites.
 	ld a,(hl)
 
-Load_limits
+Load_limits:
 
 	ld c,a
 	inc hl
@@ -627,6 +613,7 @@ Load_limits
 	inc hl
 
 	call Extrae_address_y_avanza
+
 	ret z  															; Z Indica: FIN de la Tabla_Random.
 
 ;	HL apunta a la dirección donde hemos de alojar el nº rnd.
@@ -667,10 +654,15 @@ Load_limits
 ;	Comenzamos por el último, (Numeros_aleatorios+6).
 ;	B actúa como contador, (7 nº aleatorios).	
 
-RND_ini	exx
-	ld hl,Numeros_aleatorios_baile+6
-	ld b,7
+RND_ini:
+
 	exx
+
+	ld hl,Numeros_aleatorios_baile+6                        		; HL apunta al 7° n° aleatorio de baile.
+	ld b,7
+
+	exx
+
 	ret
 
 ; ----- ----- -----
@@ -679,42 +671,64 @@ RND_ini	exx
 ;	Inicializamos HL y B cuando hemos terminado de introducir todos los nº., (call RND_ini).
 ;		
 
-Get_RND	
+Get_RND:
 
 	exx
+
 	ld a,(hl)
 	djnz 1F
+
 	exx
+
 	call RND_ini
+
 	ret
+
 1 dec hl
+
 	exx
+
 	ret
 
 ; ----- ----- -----
+;
+;	Límites que tendrá este nº RND en BC.
+;	B contiene lím.sup. y C contiene límite inf.
 
-Filtra_RND and %00111100											; Convertimos el byte, (RND), en Nibble, valores comprendidos entre (0-15).
-	srl a	 					
+Filtra_RND:
+
+	and %00111100													; Convertimos el byte, (RND), en Nibble, valores comprendidos entre (0-15).
+
+	srl a
 	srl a  															; % 00001111, nº RND (0-15).
 
 	cp b
-	ret z 															; RET, nº rnd = Límite sup.
-	jr c,1F
+	ret z 															; RET, nºrnd = Límite sup.
+
+	jr c,1F 														; Estamos por debajo del límite sup. Hemos de comprobar el límite inf.
+
+;	El n° aleatorio está por encima del límite superior. El n° RND adoptará el valor del límite sup.
 
 	ld a,b 															; RET, nº rnd = Límite sup.
+
 	ret
 
 ;	Comprobamos el límite inferior.
 
 1 cp c
 	ret z 															; RET, nº rnd = Límite inf.
+
 	ret nc 															; RET, nº rnd dentro de los límites.
+
 	ld a,c 															; RET, nº rnd = Límite inf.
+
 	ret
 
 ; ----- ----- -----
 
-Extrae_address_y_avanza call Extrae_address
+Extrae_address_y_avanza:
+
+	call Extrae_address
 
 	ld a,h 						
 	or l
@@ -813,7 +827,7 @@ Situa_en_Caja_Master
 	ld (Puntero_indice_master),de
 
 	ex de,hl 														; Esta caja está iniciada con otra (Clase) de entidad.
- 																										
+
 	jr 1B
 
 ; -------------------------------------------------------------------------------------------------
@@ -839,7 +853,7 @@ Obtiene_datos_de_Caja_Master
 
 	ld (Puntero_indice_master),de
 	ex de,hl 																						
- 																										
+
 	jr 1B
 
 ; -----------------------------------------------------------
@@ -850,12 +864,12 @@ Obtiene_datos_de_Caja_Master
 
 Situa_en_Tabla_Random:
 
-    call Calcula_salto_en_BC
+	call Calcula_salto_en_BC
 
 	ld hl,Indice_de_tablas_Random
-    and a
-    adc hl,bc
-  	ld (Puntero_tabla_Random),hl
+	and a
+	adc hl,bc
+	ld (Puntero_tabla_Random),hl
 
 	call Extrae_address
 
@@ -867,11 +881,11 @@ Situa_en_Tabla_Random:
 
 Situa_Puntero_indice_mov 
 
-    call Calcula_salto_en_BC
-    ld hl,Indice_de_mov_segun_tipo_de_entidad
-    and a
-    adc hl,bc
-    call Extrae_address
+	call Calcula_salto_en_BC
+	ld hl,Indice_de_mov_segun_tipo_de_entidad
+	and a
+	adc hl,bc
+	call Extrae_address
 
 ; Hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde el que se inicia la entidad.
 
@@ -887,8 +901,8 @@ Situa_Puntero_indice_mov
 
 1 call Extrae_address
 	ld (Puntero_indice_mov),hl
- 
-    ret
+
+	ret
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
@@ -1075,10 +1089,10 @@ Reinicia_entidad_maliciosa
 ;	Inicializamos (Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados).
 
 	ld a,l
-    add 8
-    ld l,a
+	add 8
+	ld l,a
 
-    call Extrae_address
+	call Extrae_address
 
 	ld (ix+8),l
 	ld (ix+9),h
@@ -1217,7 +1231,7 @@ Situa_en_datos_de_definicion:
 	and a
 	adc hl,bc
 	call Extrae_address   
-    ld (Datos_de_entidad),hl					
+	ld (Datos_de_entidad),hl
 
 	ret
 
