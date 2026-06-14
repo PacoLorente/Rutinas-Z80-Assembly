@@ -2171,21 +2171,6 @@ Ajusta_Puntero_objeto:
 
 	ret
 
-; --------------------------------------------------------------------------------------------------------------
-;
-;	12/1/24
-;
-;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
-
-Actualiza_Puntero_de_almacen_de_mov_masticados:
-
-	ld hl,(Puntero_de_almacen_de_mov_masticados)
-	ld bc,4
-	and a
-	adc hl,bc
-	ld (Puntero_de_almacen_de_mov_masticados),hl
-	ret
-
 ; ------------------------------------------
 ;
 ;	9/8/25

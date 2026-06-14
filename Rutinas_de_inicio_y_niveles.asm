@@ -267,7 +267,7 @@ Prepara_Cajas_Master:
 
 
 
-	jr $	;	14/6/26
+;	jr $	;	14/6/26
 
 
 
@@ -390,12 +390,31 @@ Determina_posicion_de_inicio
 
 Construye_movimientos_masticados_entidad
 
-	ld hl,(Puntero_indice_de_almacenes)
+	ld hl,(Puntero_indice_de_almacenes) 							; Inicialmente situado en el 1er .defw del índice, Almacen_de_movimientos_masticados_1.
 	call Extrae_address
 
-	ld (Puntero_de_almacen_de_mov_masticados),hl 					; $c1e6. Dirección de comienzo 1er almacén
-
+	ld (Puntero_de_almacen_de_mov_masticados),hl 					; $c9e6 es la dirección del 1er almacén de mov. masticados. (Puntero_de_almacen_de_mov_masticados) es el puntero que se irá desplazando por el almacén de movimientos masticados_
+; 																	; _para ir creando la coreografía de este (Tipo) de entidad.
 	push hl
+
+
+
+
+
+
+
+;	jr $
+
+
+
+
+
+
+
+
+
+
+
 
 	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
 ;																	; _ el (Contador_de_mov_masticados).
@@ -461,6 +480,24 @@ Construye_movimientos_masticados_entidad
 	inc hl
 	ld (hl),b
 
+	ret
+
+; --------------------------------------------------------------------------------------------------------------
+;
+;	12/1/24
+;
+;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
+
+Actualiza_Puntero_de_almacen_de_mov_masticados:
+
+
+	jr $
+
+	ld hl,(Puntero_de_almacen_de_mov_masticados)
+	ld bc,4
+	and a
+	adc hl,bc
+	ld (Puntero_de_almacen_de_mov_masticados),hl
 	ret
 
 ; -----------------------------------------------------------------------------------
