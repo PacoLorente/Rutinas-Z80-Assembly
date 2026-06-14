@@ -1160,46 +1160,43 @@ Init_level:
 
 ;	Prepara cajas.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	call Prepara_Cajas_de_Entidades
 
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
@@ -2351,49 +2348,6 @@ Extrae_address ld e,(hl)
 	ld d,(hl)
 	dec hl
 	ex de,hl
-	ret
-
-; *************************************************************************************************************************************************************
-;
-;	19/5/25
-;
-;	Iniciamos (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq). 
-;	Sitúa (Puntero_objeto) en el Sprite correspondiente en función de su (Posicion_inicio).
-;
-;   Destruye HL y BC !!!!!, 
-;
-;	BIT 7 (Ctrl_0). "1" ..... Derecha.
-;					"0" ..... Izquierda.
-
-Inicia_Puntero_objeto 
-
-	ld a,(Posicion_inicio)
-	and $1f
-	cp $10
-	jr c,Inicia_puntero_objeto_der
-
-; Arrancamos desde la parte derecha de la pantalla.
-; Iniciamos (Indice_Sprite_izq).  
-
-Inicia_puntero_objeto_izq ld hl,(Indice_Sprite_izq)			
-	ld (Puntero_DESPLZ_izq),hl
-	call Extrae_address
-	ld (Puntero_objeto),hl
-
-	ld hl,(Indice_Sprite_der)								; Cuando "Iniciamos el Sprite a izquierda",_
-	ld (Puntero_DESPLZ_der),hl								; _situamos (Puntero_DESPLZ_der) en el último defw_
-	ret
-
-; Arrancamos desde la parte izquierda de la pantalla.
-; Iniciamos (Indice_Sprite_der).  
-
-Inicia_puntero_objeto_der ld hl,(Indice_Sprite_der)			
-	ld (Puntero_DESPLZ_der),hl
-	call Extrae_address
-	ld (Puntero_objeto),hl
-
-	ld hl,(Indice_Sprite_izq)								; Cuando "Iniciamos el Sprite a derecha",_
-	ld (Puntero_DESPLZ_izq),hl
 	ret
 
 ; **************************************************************************************************

@@ -110,6 +110,11 @@ Inicializa_Bandeja_DRAW:
 
 Inicializa_Amadeus_scanline_album:
 
+;	Nota: No cambia el byte alto.
+
+; 	Amadeus_scanlines_album equ $8234	            ;	($8234 - $8256) 	; Inicialmente 34 bytes, $22.
+; 	Amadeus_scanlines_album_2 equ $8258	            ;	($8258 - $827a)
+
 ;	Encabezado:
 
 	xor a
@@ -248,9 +253,7 @@ Prepara_Cajas_Master:
 ;	Ya disponemos de una (Posicion_inicio) aleatoria y la definición de la entidad en la "Bandeja DRAW". 
 ;	Generamos "Movimientos masticados" de la entidad.
 
-
-
-
+	call Construye_movimientos_masticados_entidad
 
 
 
@@ -284,7 +287,8 @@ Prepara_Cajas_Master:
 
 
 
-	call Construye_movimientos_masticados_entidad
+
+
 
 Movimientos_masticados_construidos
 
@@ -349,7 +353,7 @@ Avanza_siguiente_entidad_del_nivel
 ;
 ;	
 
-Determina_posicion_de_inicio
+Determina_posicion_de_inicio:
 
 	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
@@ -382,13 +386,130 @@ Determina_posicion_de_inicio
 
 	ret
 
+; **********************************************************************************************************************************************************
+;
+;   13/6/25
+;
+;	Recompone_posicion_inicio
+;
+; 	La rutina hace una llamada a [Mov_right] o [Mov_left] según su posición de inicio.
+;	Así conseguimios que la entidad esté completamente oculta a la hora de aparecer por la izquierda_
+;	_ o derecha. Tomaremos la columna de (Posicion_inicio) como referencia para hacer la llamada_
+;	_ a una u otra rutina.
+
+Recompone_posicion_inicio:
+
+	jr $
+
+
+	ld a,1
+
+	ld hl,Vel_left
+	ld (hl),a
+	inc l
+	ld (hl),a
+
+;	El primer Sprite que se imprime en pantalla en cualquier patrón de movimientos será un "sprite vacío".
+;	El objeto "SIEMPRE" ha de aparecer `oculto'. Tanto si aparece de arriba a abajo como si lo hace por los extremos de la pantalla.
+
+	ld hl,Ctrl_2
+	set 0,(hl)														; Indica que fijamos un "sprite vacío" en (Puntero_objeto).
+
+	ld hl,(Posicion_inicio)
+	ld (Posicion_actual),hl
+
+	ld a,l
+	and $1f
+	jr z,1F
+
+	cp $1f
+	jr nz,2F
+
+;	Vamos a aparecer por la parte derecha de la pantalla.
+
+	call Mov_left
+
+; No vamos a aparecer por ningún extremo. Cargamos Sprite vacío pues vamos a ir apareciendo por la_
+; _parte alta de la pantalla.
+
+2 ld hl,(Puntero_objeto)
+	ld (Repone_puntero_objeto),hl
+
+	ld hl,Sprite_vacio
+	ld (Puntero_objeto),hl
+
+; Colocamos (Posicion_actual) a "$00" para que la rutina DRAW inicialice esta entidad.
+
+	ld hl,0
+	ld (Posicion_actual),hl
+
+	ret
+
+; Vamos a aparecer por la parte izquierda de la pantalla.
+
+1 call Mov_right
+	jr 2B
+
+; *************************************************************************************************************************************************************
+;
+;	14/6/26
+;
+;	Iniciamos (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+;	Sitúa (Puntero_objeto) en el Sprite correspondiente en función de su (Posicion_inicio).
+;
+;   Destruye HL y BC !!!!!,
+;
+;	BIT 7 (Ctrl_0). "1" ..... Derecha.
+;					"0" ..... Izquierda.
+
+Inicia_Puntero_objeto:
+
+	ld a,(Posicion_inicio)
+	and $1f
+	cp $10
+	jr c,Inicia_puntero_objeto_der
+
+; Arrancamos desde la parte derecha de la pantalla.
+; Iniciamos (Indice_Sprite_izq).
+
+Inicia_puntero_objeto_izq:
+
+	ld hl,(Indice_Sprite_izq) 								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
+	ld (Puntero_DESPLZ_izq),hl
+
+	call Extrae_address
+
+	ld (Puntero_objeto),hl
+
+	ld hl,(Indice_Sprite_der) 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
+	ld (Puntero_DESPLZ_der),hl
+
+	ret
+
+; Arrancamos desde la parte izquierda de la pantalla.
+; Iniciamos (Indice_Sprite_der).
+
+Inicia_puntero_objeto_der:
+
+	ld hl,(Indice_Sprite_der)
+	ld (Puntero_DESPLZ_der),hl 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
+
+	call Extrae_address
+
+	ld (Puntero_objeto),hl
+
+	ld hl,(Indice_Sprite_izq)								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
+	ld (Puntero_DESPLZ_izq),hl
+
+	ret
+
 ; -----------------------------------------------------------------------------------
 ;
 ;	20/01/24
 ;
 ;
 
-Construye_movimientos_masticados_entidad
+Construye_movimientos_masticados_entidad:
 
 	ld hl,(Puntero_indice_de_almacenes) 							; Inicialmente situado en el 1er .defw del índice, Almacen_de_movimientos_masticados_1.
 	call Extrae_address
@@ -396,6 +517,16 @@ Construye_movimientos_masticados_entidad
 	ld (Puntero_de_almacen_de_mov_masticados),hl 					; $c9e6 es la dirección del 1er almacén de mov. masticados. (Puntero_de_almacen_de_mov_masticados) es el puntero que se irá desplazando por el almacén de movimientos masticados_
 ; 																	; _para ir creando la coreografía de este (Tipo) de entidad.
 	push hl
+
+
+	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+;																	; _ el (Contador_de_mov_masticados).
+
+	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
+
+	call Recompone_posicion_inicio
+
 
 
 
@@ -414,15 +545,6 @@ Construye_movimientos_masticados_entidad
 
 
 
-
-
-	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-;																	; _ el (Contador_de_mov_masticados).
-
-	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
-;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
-
-	call Recompone_posicion_inicio
 
 1 call Draw
 
@@ -484,20 +606,18 @@ Construye_movimientos_masticados_entidad
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	12/1/24
+;	14/6/26
 ;
 ;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
 
 Actualiza_Puntero_de_almacen_de_mov_masticados:
-
-
-	jr $
 
 	ld hl,(Puntero_de_almacen_de_mov_masticados)
 	ld bc,4
 	and a
 	adc hl,bc
 	ld (Puntero_de_almacen_de_mov_masticados),hl
+
 	ret
 
 ; -----------------------------------------------------------------------------------
