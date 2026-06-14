@@ -3,7 +3,7 @@
 ; Índice de Patrón de movimiento para tipo de entidad.
 ; ---------------------------------------------------------------------
 
-; 30/05/24
+; 	14/06/26
 ;
 ;	En esta tabla iremos almacenando:
 ;
@@ -36,8 +36,8 @@ Contador_general_de_mov_masticados_3 defw 0
 
 ; -------------------------------------------------------------------------------------------------------
 
-Indice_de_mov_segun_tipo_de_entidad defw Indice_mov_Baile_de_BadSat
-	defw Indice_mov_Baile_de_Badplate
+Indice_de_mov_segun_tipo_de_entidad defw Indice_mov_Baile_de_BadSat			;	(Tipo)="$81"
+	defw Indice_mov_Baile_de_Badplate 										;	(Tipo)="$82"
 ; 	defw ...
 	defw 0
 

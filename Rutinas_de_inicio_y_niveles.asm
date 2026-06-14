@@ -238,55 +238,6 @@ Prepara_Cajas_Master:
 	push hl															; Push (Puntero_de_entidades).
 	push bc															; Push (Numero_de_entidades)/(Clase).
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;	jr $	;	12/6/26
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
 	call Determina_posicion_de_inicio
@@ -296,6 +247,42 @@ Prepara_Cajas_Master:
 
 ;	Ya disponemos de una (Posicion_inicio) aleatoria y la definición de la entidad en la "Bandeja DRAW". 
 ;	Generamos "Movimientos masticados" de la entidad.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	jr $	;	14/6/26
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	call Construye_movimientos_masticados_entidad
 
@@ -358,7 +345,7 @@ Avanza_siguiente_entidad_del_nivel
 
 ; -----------------------------------------------------------------------------------
 ;
-;	29/8/25
+;	14/06/26
 ;
 ;	
 
@@ -887,9 +874,9 @@ Situa_Puntero_indice_mov
 	adc hl,bc
 	call Extrae_address
 
-; Hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde el que se inicia la entidad.
+; 	Hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde el que se inicia la entidad.
 
-; Seleccionamos Danza.
+; 	Seleccionamos Danza.
 
 	ld a,(Posicion_inicio)
 	and $1f
@@ -1199,7 +1186,7 @@ Amarillo ld a,%01000110
 
 ;	------------------------------------------------------------------------------------
 ;
-;	12/06/26
+;	14/06/26
 ;
 ;	INPUTS:	A contiene el (Tipo) de entidad. 
 ;
