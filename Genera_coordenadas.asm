@@ -9,7 +9,9 @@
 ;
 ;	Modifica: A,B y E.
 
-Genera_coordenadas 
+Genera_coordenadas:
+
+	jr $
 
 	ld a,l
 	and $1f

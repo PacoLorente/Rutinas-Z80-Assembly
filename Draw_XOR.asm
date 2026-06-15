@@ -10,7 +10,7 @@ Draw:
 
 	ld a,h 						 					
 	or l 											
-	jr nz,1F 										; jr, entidad iniciada.
+	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
 
 ; --------------------------------------------------
 
@@ -18,14 +18,29 @@ Inicializacion:
 	
 	ld hl,(Posicion_inicio) 						
 	ld (Posicion_actual),hl										
+
 	call Calcula_Cuad_objeto
+
 	call Genera_coordenadas
+
+
+
+
+;	jr $
+
+
+
+
+
+
 	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
 	jr 3F
 
 ; --------------------------------------------------
 
-1 ld a,(Ctrl_0)
+Entidad_iniciada:
+
+	ld a,(Ctrl_0)
 	bit 5,a
 	jr nz,3F										
 ;													
@@ -62,54 +77,75 @@ Inicializacion:
 
 Calcula_Cuad_objeto:
 
-	call calcula_tercio																			
+	call calcula_tercio
 
 ;	Ahora tenemos "0", "1" o "2" en el acumulador en función del tercio de pantalla en el que nos encontremos.
 
 	jr z,Primer_tercio 													
+
 	dec a
+
 	jr z,Segundo_tercio
 
-Tercer_tercio
+Tercer_tercio:
 
 	call Determina_lado_de_pantalla
+
 	jr nz,1F
+
 	ld a,4
-	jr 2F
+	ld (Cuad_objeto),a
+
+	ret
 
 1 ld a,3
-2 ld (Cuad_objeto),a
+	ld (Cuad_objeto),a
 
 	ret	
 
-Primer_tercio
+Primer_tercio:
 
 	call Determina_lado_de_pantalla
+
 	jr nz,3F
+
 	ld a,2
-	jr 2B
+	ld (Cuad_objeto),a
+
+	ret
 
 3 ld a,1
-	jr 2B
+	ld (Cuad_objeto),a
 
-Segundo_tercio
+	ret
+
+Segundo_tercio:
 
 	ld a,l
 	cp $7f
 	jr c,Primer_tercio
 	jr z,Primer_tercio
+
 	jr Tercer_tercio
 
 ; ------------------------------------
+;
+;	OUTPUT: A contiene "0" si estamos en la mitad derecha de la pantalla y "1" si estamos en la mitad izquierda.
+;
 
-Determina_lado_de_pantalla ld a,l
+Determina_lado_de_pantalla:
+
+	ld a,l
 	and $1f
 	cp $10
 	jr c,1F
+
 	xor a
+
 	ret
 
 1 ld a,1
+
 	ret
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -557,11 +593,15 @@ Operandos:
 
 Prepara_draw:
 
-	ld hl,Filas 		 					; Prepara los registros BC, E y HL.
+	ld hl,Filas 		 							; Prepara los registros BC, E y HL.
 	ld b,(hl) 										; Carga Filas/Columns del objeto a pintar o inicializar en BC.
+
 	inc hl 											; Carga (Posicion_actual) en HL.
-	ld c,(hl) 											
+
+	ld c,(hl)
+
 	ld hl,(Posicion_actual)
+
 	ret
 
 ;----------------------------------------------------------------------------------------------------------------

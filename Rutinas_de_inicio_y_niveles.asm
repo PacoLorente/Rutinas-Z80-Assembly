@@ -388,7 +388,7 @@ Determina_posicion_de_inicio:
 
 ; **********************************************************************************************************************************************************
 ;
-;   13/6/25
+;   15/06/26
 ;
 ;	Recompone_posicion_inicio
 ;
@@ -399,15 +399,14 @@ Determina_posicion_de_inicio:
 
 Recompone_posicion_inicio:
 
-	jr $
-
-
 	ld a,1
 
 	ld hl,Vel_left
 	ld (hl),a
-	inc l
-	ld (hl),a
+
+	inc hl
+
+	ld (hl),a 														; (Vel_left) y (Vel_right) a "1".
 
 ;	El primer Sprite que se imprime en pantalla en cualquier patrón de movimientos será un "sprite vacío".
 ;	El objeto "SIEMPRE" ha de aparecer `oculto'. Tanto si aparece de arriba a abajo como si lo hace por los extremos de la pantalla.
@@ -416,7 +415,7 @@ Recompone_posicion_inicio:
 	set 0,(hl)														; Indica que fijamos un "sprite vacío" en (Puntero_objeto).
 
 	ld hl,(Posicion_inicio)
-	ld (Posicion_actual),hl
+	ld (Posicion_actual),hl 										; (Posicion_actual) no puede contener "0" para poder ejecutar (Mov_lef) o (Mov_right).
 
 	ld a,l
 	and $1f
@@ -448,6 +447,7 @@ Recompone_posicion_inicio:
 ; Vamos a aparecer por la parte izquierda de la pantalla.
 
 1 call Mov_right
+
 	jr 2B
 
 ; *************************************************************************************************************************************************************
@@ -528,25 +528,44 @@ Construye_movimientos_masticados_entidad:
 	call Recompone_posicion_inicio
 
 
-
-
-
-
-
-
-;	jr $
-
-
-
-
-
-
-
-
-
-
-
 1 call Draw
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;	jr $	;	15/06/26
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ; ****************************************************************************
 ; ****************************************************************************
