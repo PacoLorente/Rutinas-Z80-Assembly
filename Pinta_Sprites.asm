@@ -7,49 +7,49 @@
 
 Cartel_Best_Score:
 
-    ld hl,Line_19+2              ; Dirección de pantalla.
+    ld hl,Line_20+1              ; Dirección de pantalla. ($5063).
     ld de,Best_Score_1           ; Data.
     ld a,%01000110
     ld bc,$0101
 
     call Pinta_imagen            ; Print Best_Score_1.
 
-    ld hl,Line_20+2              ; Dirección de pantalla.
+    ld hl,Line_21+1              ; Dirección de pantalla.
     ld de,Best_Score_2           ; Data.
     ld a,%01000110
     ld bc,$0101
 
     call Pinta_imagen            ; Print Best_Score_2.
 
-    ld hl,Line_19+3              ; Dirección de pantalla.
+    ld hl,Line_20+2              ; Dirección de pantalla.
     ld de,Best_Score_3           ; Data.
     ld a,%01000110
     ld bc,$0101
 
     call Pinta_imagen            ; Print Best_Score_3.
 
-    ld hl,Line_19+4              ; Dirección de pantalla.
+    ld hl,Line_20+3              ; Dirección de pantalla.
     ld de,Best_Score_4           ; Data.
     ld a,%01000110
     ld bc,$0102
 
     call Pinta_imagen            ; Print Best_Score_4.
 
-    ld hl,Line_20+3              ; Dirección de pantalla.
+    ld hl,Line_21+2              ; Dirección de pantalla.
     ld de,Best_Score_5           ; Data.
     ld a,%01000110
     ld bc,$0101
 
     call Pinta_imagen            ; Print Best_Score_5.
 
-    ld hl,Line_19+5              ; Dirección de pantalla.
+    ld hl,Line_20+4              ; Dirección de pantalla.
     ld de,Best_Score_6           ; Data.
     ld a,%01000110
     ld bc,$0102
 
     call Pinta_imagen            ; Print Best_Score_6.
 
-    ld hl,Line_19+6              ; Dirección de pantalla.
+    ld hl,Line_20+5              ; Dirección de pantalla.
     ld de,Best_Score_7           ; Data.
     ld a,%01000110
     ld bc,$0202
@@ -68,20 +68,24 @@ Cartel_Best_Score:
 
 Firma:
 
-    ld a,2
-    out($fe),a
-
-    ld hl,$50d7                 ; Dirección de pantalla.
+    ld hl,$50da                 ; Dirección de pantalla.
     ld de,Firma_Lorente_1       ; Data.
     ld a,%01000110
     ld bc,$0201
 
     call Pinta_imagen
 
-    ld hl,$50d9                 ; Dirección de pantalla.
+    ld hl,$50dc                 ; Dirección de pantalla.
     ld de,Firma_Lorente_2       ; Data.
     ld a,%01000110
     ld bc,$0201
+
+    call Pinta_imagen
+
+    ld hl,$50de                 ; Dirección de pantalla.
+    ld de,Fecha_Firma           ; Data.
+    ld a,%01000110
+    ld bc,$0101
 
     call Pinta_imagen
 

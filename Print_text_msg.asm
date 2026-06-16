@@ -1,13 +1,52 @@
 ; ----------------------------------------------------------
 ;
-;   10/6/26
+;   16/6/26
 ;
 
 Print_new_best_score:
 
-	call Cartel_Best_Score                     ; Imprime Cartel.
+	call Cartel_Best_Score                      ; Imprime el Cartel "Best Score" en la esquina inferior izquierda de la pantalla_
+;                                               ; _del menú principal.
 
-    ret
+
+;   Print msg.
+
+    ld de,Line_22+1
+
+    ld a,%01000111
+    ld b,0
+    ld hl,Nombre_del_campeon
+    call Print_text_msg
+
+    inc e
+    inc e
+
+    ld a,%01000111
+    ld b,0
+    ld hl,a10
+    call Print_text_msg
+
+    inc e
+    inc e
+
+    ld a,%11000101
+    ld b,0
+    ld hl,Score_max_msg
+    call Print_text_msg
+
+;    inc e
+;    inc e
+
+;    ld a,%01000101
+;    ld b,0
+;    ld hl,a11
+;    call Print_text_msg
+
+
+
+    jr $
+
+	ret
 
 ; ----------------------------------------------------------
 ;

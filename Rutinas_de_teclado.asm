@@ -16,7 +16,7 @@ Enter_name:
     push hl
     push de
 
-    call Clean_champions_name 
+;    call Clean_champions_name
 
 	call KEY_SCAN 											  ; ROM, KEY-SCAN
 
@@ -43,7 +43,7 @@ Tecla_pulsada
 
 	call BEEP
 
-	ld bc,$6fff
+	ld bc,$4fff
 	call DELAY
 
 ;	ENTER. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -146,7 +146,7 @@ CAPS_SHIFT
 
 ;	DELETE. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-	ld bc,$6fff
+	ld bc,$4fff
 	call DELAY
 
 ;	Estamos en el 1er char. del nombre ???.
