@@ -292,6 +292,14 @@ Fila_msg_de_nivel equ Line_9 + 6				;	Los mensajes de nivel se imprimen en la fi
 ;
 	org $8310
 
+	ex af,af
+
+	ld a,(Ctrl_6)
+	bit 3,a
+	ret nz
+
+	ex af,af
+
 	push af
 	push hl
 
@@ -299,9 +307,11 @@ Fila_msg_de_nivel equ Line_9 + 6				;	Los mensajes de nivel se imprimen en la fi
 ;	_de estado).
 
  ;	-------------------- STOP si no hemos terminado de construir el FRAME.
-	ld hl,Ctrl_3				
+
+	ld hl,Ctrl_3
 	bit 0,(hl)
 	jr z,$
+
 ;	--------------------
 
 ; 	Disparos.
@@ -805,6 +815,9 @@ Ctrl_6 db 0
 ; 															BIT 2, "1" Indica que vamos a utilizar el Kempston Joystick para jugar.
 ; 																   Este bit lo activa la rutina de teclado: [Active_kempstom_joystick] y su función es evitar_
 ; 																   _que la rutina [Press_START] escanee el teclado esperando disparo para comenzar la partida.
+; 															BIT 3, "1" Indica que salimos de la rutina de IM nada más entrar. Este bit lo activa la rutina [Carrusell] tras habilitar las interrupciones.
+; 																   Necesitamos leer el teclado cada 20ms para facilitar que no se produzca la repetición de una misma tecla.
+; 															BIT 4, ???
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.

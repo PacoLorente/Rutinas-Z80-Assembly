@@ -8,7 +8,6 @@ Print_new_best_score:
 	call Cartel_Best_Score                      ; Imprime el Cartel "Best Score" en la esquina inferior izquierda de la pantalla_
 ;                                               ; _del menú principal.
 
-
 ;   Print msg.
 
     ld de,Line_22+1
@@ -33,16 +32,6 @@ Print_new_best_score:
     ld b,0
     ld hl,Score_max_msg
     call Print_text_msg
-
-;    inc e
-;    inc e
-
-;    ld a,%01000101
-;    ld b,0
-;    ld hl,a11
-;    call Print_text_msg
-
-
 
     jr $
 
@@ -162,8 +151,6 @@ Flash:
     ld a,(Ctrl_6)
     bit 4,a                                                 ; FLAG. Indica DELETE a subrutina FLASH.
     ret z
-
-;    jr $
 
     res 4,a
     ld (Ctrl_6),a

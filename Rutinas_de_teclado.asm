@@ -43,9 +43,6 @@ Tecla_pulsada
 
 	call BEEP
 
-	ld bc,$4fff
-	call DELAY
-
 ;	ENTER. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	ld a,$21
@@ -70,8 +67,6 @@ Validando_pressed_key
 	cp (hl)
 	jr z,1F
 	djnz 3B
-
-;	jr $
 
 ;	Tecla autorizada, recuperamos posicionamiento.
 
@@ -145,9 +140,6 @@ CAPS_SHIFT
 	jr nz,1F 												; RET. 2 key pressed and it's not DELETE.
 
 ;	DELETE. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-	ld bc,$4fff
-	call DELAY
 
 ;	Estamos en el 1er char. del nombre ???.
 

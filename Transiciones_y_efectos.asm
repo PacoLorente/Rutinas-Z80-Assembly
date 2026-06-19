@@ -19,6 +19,16 @@ Enter_name_screen:
 
 	call c, New_max_score
 
+
+
+
+
+
+
+
+
+
+
 ;	No hemos superado la puntuación máxima. 
 ;	Inicializamos partida.
 
@@ -101,6 +111,18 @@ Enter_name_screen:
 
 	ld hl,Amadeus_scanlines_album_2
 	call Inicializa_Amadeus_scanline_album
+
+
+
+
+
+
+
+
+
+
+
+
 
 ; --------------------------------------------------------------------------------------------
 
@@ -208,6 +230,13 @@ Enter_name_screen:
 
     ret
 
+
+
+
+
+
+
+
 New_max_score:
 
 	ex de,hl
@@ -216,7 +245,15 @@ New_max_score:
 
 	call Clean_and_logo
 	call New_best_msg
+
+	ld hl,Ctrl_6
+	set 3,(hl) 									; Activamos el modo "metrónomo".
+
+	push hl
 	call Carrusell
+	pop hl
+
+	res 3,(hl)
 
 	ld bc,$ffff
 	call DELAY
@@ -225,9 +262,9 @@ New_max_score:
 
 ; ------------------------------------------------------------------------
 ;
-;	13/5/26
+;	19/6/26
 ;
-;	Repone attrs. de las dos últimas líneas de pantalla.
+;	Imprime la pantalla de felicitaciones con la puntuación máxima. Recoge e imprime el nombre del nuevo champion.
 
 Carrusell:
 
@@ -244,36 +281,28 @@ Carrusell:
 ;
 ;			$4049 - $4057
 
+
 	ld c,$41 								; attrs. Arrancamos con: - BRIGHT, PAPER BLACK, INK BLUE -.
-
 3 ld hl,$5829                             	; Dirección inicial de atributos de pantalla, (esquina superior izquierda de la nave).
-	ld b,$0f								; Columns.
+	ld b,$0f								; N° de columnas que tiene el logo.
 
-2 push hl
-	push bc
+2 ei
+	halt
 
-	ld b,3 									; 3 Files.
+	call Colorea_columna_logo
 
-1 ld a,l
-	add 32
-	ld l,a 									; Situamos HL en la siguiente fila, (dirección de atributos de pantalla).
-
-	ld (hl),c
-	djnz 1B
-
-	pop bc
-	pop hl
-
-	inc l
+	inc l 									; Sitúa en siguiente columna.
 
 ;	Temporización:
 
 ;	Tiempo que tardamos en modificar los attrs. de la siguiente columna.
 
-	push bc
-	ld bc,$03ff
-	call DELAY
-	pop bc
+;	push bc
+;	ld bc,$03ff
+;	call DELAY
+;	pop bc
+
+	di
 
 	call Enter_name
 
@@ -288,10 +317,34 @@ Carrusell:
 	inc c 									; New color.
 
 	bit 3,c 								; Ya hemos pintado de blanco ???, si es así repetimos la secuencia.
-
 	jr z,3B
 
 	jr Carrusell
+
+; ------------------------------------------------------------------------
+;
+;	19/6/26
+;
+;	Colorea una de las 15 columnas que tiene el logo "Amadeus".
+
+Colorea_columna_logo:
+
+	push hl
+	push bc
+
+	ld b,3 									; 3 Files.
+
+1 ld a,l
+	add 32
+	ld l,a 									; Situamos HL en la siguiente fila, (dirección de atributos de pantalla).
+
+	ld (hl),c
+	djnz 1B
+
+	pop bc
+	pop hl
+
+	ret
 
 ; ------------------------------------------------------------------------
 ;
