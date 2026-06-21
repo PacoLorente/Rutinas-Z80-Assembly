@@ -19,15 +19,7 @@ Enter_name_screen:
 
 	call c, New_max_score
 
-
-
-
-
-
-
-
-
-
+Init_New_Game:
 
 ;	No hemos superado la puntuación máxima. 
 ;	Inicializamos partida.
@@ -246,8 +238,18 @@ New_max_score:
 	call Clean_and_logo
 	call New_best_msg
 
+; 	Reutilizamos variables para evitar la repetición de teclas.
+;
+;	Coordenada_X
+;	Coordenada_y
+
+	ld hl,Coordenada_X
+	ld (hl),a
+	inc hl
+	ld (hl),8
+
 	ld hl,Ctrl_6
-	set 3,(hl) 									; Activamos el modo "metrónomo".
+	set 3,(hl) 									; Activamos este bit para asegurarnos de SALIR de la rutina de interrupciones en cuanto entremos.
 
 	push hl
 	call Carrusell

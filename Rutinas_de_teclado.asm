@@ -41,7 +41,7 @@ Tecla_pulsada
 	jp z,1F 												  ; RET. No pressed key.
 	dec e
 
-	call BEEP
+;	call BEEP
 
 ;	ENTER. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -66,7 +66,13 @@ Validando_pressed_key
 3 inc hl
 	cp (hl)
 	jr z,1F
+
 	djnz 3B
+
+	call No_repeat_key
+	jr nz,1F
+
+	ld a,e 														; Recupera KeyCode en A.
 
 ;	Tecla autorizada, recuperamos posicionamiento.
 
@@ -75,12 +81,12 @@ Validando_pressed_key
 
 	inc c
 	dec c
-	jr z,1F 												; Name completed. 5 chars. max.
+	jr z,1F 													; Name completed. 5 chars. max.
 
 	ld hl,(Puntero_del_nombre_del_campeon)
 5 ld de,Inicio_de_msg_de_nombre
 
-	push af 												; KEYCODE
+	push af 													; KEYCODE
 
 	ld a,5
 	sub c
@@ -141,6 +147,9 @@ CAPS_SHIFT
 
 ;	DELETE. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+	call No_repeat_key
+	jr nz,1F
+
 ;	Estamos en el 1er char. del nombre ???.
 
 	ld a,5
@@ -190,7 +199,7 @@ CAPS_SHIFT
 Clean_champions_name:
 
     ld hl,Nombre_del_campeon-1
-    ld b,5
+    ld b,8
     xor a
 
 1 inc hl
@@ -199,6 +208,44 @@ Clean_champions_name:
 
     ret
     
+; --------------------------------------------
+;
+;	21/6/26
+;
+;	Memoriza el KeyCode de la tecla pulsada. Evita el rebote, (o repetición) de una pulsación.
+;	Necesitamos mantener la pulsación de una tecla 5 x 20ms para que no se considere rebote.
+
+; 	INPUT: A contiene el KEYCODE de la pulsación anterior.
+
+;	OUTPUT: Z Pulsación admitida. Almacena KeyCode em (Coordenada_X) e inicializa el temporizador: (Coordenada_y).
+;		   NZ Pulsación NO ADMITIDA, decrementa el temporizador (Coordenada_y).
+
+;	MODIFY HL.
+
+No_repeat_key:
+
+	ld hl,Coordenada_X
+	cp (hl)
+	jr nz,1F
+
+;	Key's pressed yet.
+
+	inc hl
+	dec (hl)
+	ret nz 													; NZ, pulsación no admitida.
+
+	dec hl
+
+;	Store_KeyCode in (Coordenada_X) and init. (Coordenada_y).
+
+1 ld (hl),a
+	inc hl
+	ld (hl),8
+
+	xor a 													; Z, pulsación admitida.
+
+	ret
+
 ; -----------------------------------------------------------------------------------------------
 
 ROM_Key_Scan:
