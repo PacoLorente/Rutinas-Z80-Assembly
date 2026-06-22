@@ -33,8 +33,6 @@ Print_new_best_score:
     ld hl,Score_max_msg
     call Print_text_msg
 
-    jr $
-
 	ret
 
 ; ----------------------------------------------------------
@@ -901,6 +899,9 @@ Clean_main_menu:
     call CLean_file
 
     ld hl,Line_20
+    call CLean_file
+
+    ld hl,Line_21
     call CLean_file
 
     ret
