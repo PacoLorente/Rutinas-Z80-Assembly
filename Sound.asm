@@ -139,7 +139,7 @@ BEEP:
 
     ld bc,$0002
     ld de,0
-    ld hl,$00d0         ;$019f
+    ld hl,$00d0         ;$00d0
 
     ld (Sound),hl
     call Sound_Generator

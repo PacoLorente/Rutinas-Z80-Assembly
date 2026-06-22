@@ -291,6 +291,8 @@ Carrusell:
 2 ei
 	halt
 
+	di
+
 	call Colorea_columna_logo
 
 	inc l 									; Sitúa en siguiente columna.
@@ -298,13 +300,6 @@ Carrusell:
 ;	Temporización:
 
 ;	Tiempo que tardamos en modificar los attrs. de la siguiente columna.
-
-;	push bc
-;	ld bc,$03ff
-;	call DELAY
-;	pop bc
-
-	di
 
 	call Enter_name
 

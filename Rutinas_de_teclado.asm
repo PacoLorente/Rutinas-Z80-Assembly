@@ -41,8 +41,6 @@ Tecla_pulsada
 	jp z,1F 												  ; RET. No pressed key.
 	dec e
 
-;	call BEEP
-
 ;	ENTER. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 	ld a,$21
@@ -82,6 +80,8 @@ Validando_pressed_key
 	inc c
 	dec c
 	jr z,1F 													; Name completed. 5 chars. max.
+
+	call BEEP
 
 	ld hl,(Puntero_del_nombre_del_campeon)
 5 ld de,Inicio_de_msg_de_nombre
@@ -158,6 +158,8 @@ CAPS_SHIFT
 	jr z,1F
 
 ;	DEL char.
+
+	call BEEP
 
 	inc (hl)
 	ld c,(hl) 												; INC counter.
