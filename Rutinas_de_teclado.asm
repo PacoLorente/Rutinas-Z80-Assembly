@@ -16,9 +16,7 @@ Enter_name:
     push hl
     push de
 
-;    call Clean_champions_name
-
-	call KEY_SCAN 											  ; ROM, KEY-SCAN
+ 	call KEY_SCAN 											  ; ROM, KEY-SCAN
 
 ;	Si pulsamos 2 teclas el registro D y E contendrán el Key CODE de las teclas plsadas respectivamente.
 ;	Si sólo pulsamos una tecla el registro D contemdrá "$ff" y el registro E contendrá el KEY CODE de la tecla pulsada.
@@ -201,7 +199,7 @@ CAPS_SHIFT
 Clean_champions_name:
 
     ld hl,Nombre_del_campeon-1
-    ld b,8
+    ld b,6
     xor a
 
 1 inc hl
@@ -723,3 +721,4 @@ Active_sinclair_joystick:
 
 
 
+; FLAG. Indica DELETE a subrutina FLASH.

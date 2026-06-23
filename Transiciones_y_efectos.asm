@@ -119,17 +119,10 @@ Init_New_Game:
 ; --------------------------------------------------------------------------------------------
 
 ;	Ahora vamos a inicializar las variables del juego.
-;	Toda la bandeja DRAW a "0", salvo (Score_hex_max).
-
-	ld hl,(Score_hex_max)
-	push hl
 
 	ld hl,Bandeja_DRAW
 	ld bc,Temp_Amadeus_exit-Clase
 	call Clean_mem
-
-	pop hl
-	ld (Score_hex_max),hl
 
 ;	Inicializamos las variables necesarias:
 
@@ -248,8 +241,13 @@ New_max_score:
 	inc hl
 	ld (hl),8
 
+	ld hl,Ctrl_7
+	res 0,(hl) 									; Restoring the bit is necessary to avoid being returned by the routine [Carrusell].
+
 	ld hl,Ctrl_6
 	set 3,(hl) 									; Activamos este bit para asegurarnos de SALIR de la rutina de interrupciones en cuanto entremos.
+
+	call Clean_champions_name
 
 	push hl
 	call Carrusell

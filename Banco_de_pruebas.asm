@@ -817,7 +817,7 @@ Ctrl_6 db 0
 ; 																   _que la rutina [Press_START] escanee el teclado esperando disparo para comenzar la partida.
 ; 															BIT 3, "1" Indica que salimos de la rutina de IM nada más entrar. Este bit lo activa la rutina [Carrusell] tras habilitar las interrupciones.
 ; 																   Necesitamos leer el teclado cada 20ms para facilitar que no se produzca la repetición de una misma tecla.
-; 															BIT 4, ???
+; 															BIT 4, "1" Indica DELETE a la subrutina FLASH. Lo activa la subrutina [Enter_name] cuando pulsamos CAPS SHIFT.
 
 Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
 Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
@@ -903,7 +903,7 @@ Attr_big_counter db %01000110
 
 Score_hex defw 0
 
-Score_BCD_unidades db 1
+Score_BCD_unidades db 0
 Score_BCD_decenas db 0
 Score_BCD_centenas db 0
 Score_BCD_unidades_de_millar db 0
@@ -3104,14 +3104,14 @@ Decrementa_techo:
 
 ; ------------------------------
 ;
-;	20/10/25
+;	23/6/26
 ;
 ;	INPUTS: IX apunta al prumer .db (Clase) de la caja de entidades.
 
 Incrementa_Score:
 
 	ld a,(ix+1)
-	ld b,a
+	ld b,a 									; (Tipo) de entidad en B. BadSat, Badplate, ...
 
 	ld hl,Tabla_de_puntuacion -1
 1 inc hl
@@ -3119,30 +3119,42 @@ Incrementa_Score:
 
 	ld c,(hl) 								; C contiene la puntuación BASE.
 
+;											; Tabla_de_puntuacion base, (1er tercio de pantalla).
+
+;											; db 20 ..... $14 Tipo BadSat
+;          									; db 30 ..... $1e Tipo Badplate
+;     										; db 40 .....
+;          	                                ; db 50 .....
+;                                           ; db 60 .....
+
 	ld l,(ix+6)
-	ld h,(ix+7)
+	ld h,(ix+7) 							; Carga HL con el (Puntero_de_impresion) de esta entidad para calcular en que tercio de la pantalla se encuentra.
 
 	call calcula_tercio
-	jr z,vel
+	jr z,vel                                ; Puntuación BASE en el 1er tercio de pantalla.
 
 	dec c
 	dec c
 	dec c
 
 	dec a
-	jr z,vel
+	jr z,vel 								; (Puntuación Base)-3 en el 2º tercio.
 
 	dec c
-	dec c
+	dec c 									; (Puntuación Base)-5 en el 3er tercio.
 
 vel
 
 	ld a,(ix+12)
 
 	add c
-	ld c,a
+	ld c,a 									; A la puntuación le sumamos el perfil de velocidad.
 
 suma 
+
+	di
+	jr $
+	ei
 
 	and a
 	ld hl,(Score_hex)
