@@ -3104,7 +3104,7 @@ Decrementa_techo:
 
 ; ------------------------------
 ;
-;	23/6/26
+;	24/6/26
 ;
 ;	INPUTS: IX apunta al prumer .db (Clase) de la caja de entidades.
 
@@ -3151,10 +3151,6 @@ vel
 	ld c,a 									; A la puntuación le sumamos el perfil de velocidad.
 
 suma 
-
-	di
-	jr $
-	ei
 
 	and a
 	ld hl,(Score_hex)

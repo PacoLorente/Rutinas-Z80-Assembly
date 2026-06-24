@@ -1607,6 +1607,10 @@ Score_a_BCD:
 
 	ld hl,(Score_hex)
 
+	di
+	jr $
+	ei
+
 	ld de,Score_Ctrl 								; DE apunta al byte de control de Score, (Score_Ctrl).
 
 	ld bc,$2710 									; 10000d.
@@ -1639,7 +1643,7 @@ No_decenas_de_millar
 	and a                                           ; Elimina la suma del Carry a ADC.
 	adc hl,bc 										; Recupera valor de HL.
 
-	ld bc,$03e8
+	ld bc,$03e8 									; 1000d
 
 	and a
 
@@ -1667,7 +1671,7 @@ No_unidades_de_millar
 	and a
 	adc hl,bc
 
-	ld bc,$0064
+	ld bc,$0064 									; 100d
 
 	and a
 
@@ -1695,10 +1699,9 @@ No_centenas
 	and a
 	adc hl,bc
 
-	ld bc,$000a
+	ld bc,$000a										; 10d
 
 	and a
-
 4 sbc hl,bc
 
 	jr c, No_decenas
@@ -1721,7 +1724,7 @@ No_centenas
 No_decenas
 
 	and a
-	adc hl,bc
+	adc hl,bc 										; Recupera valor de HL.
 
 	ld a,l
 	ld (Score_BCD_unidades),a
