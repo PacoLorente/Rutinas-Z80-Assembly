@@ -1611,6 +1611,8 @@ Score_a_BCD:
 	jr $
 	ei
 
+;	hl ... $00cf ..... 207d
+
 	ld de,Score_Ctrl 								; DE apunta al byte de control de Score, (Score_Ctrl).
 
 	ld bc,$2710 									; 10000d.
