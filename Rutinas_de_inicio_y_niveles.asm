@@ -1575,7 +1575,7 @@ Situa_en_indice_de_digitos_grandes:
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;	14/10/25
+;	25/06/26
 ;
 ;	Convierte el valor hexadecimal de (Score_hex) a 5 valores BCD que guardarán las variables:
 ;
@@ -1606,13 +1606,6 @@ Score_a_BCD:
 	ld (Score_BCD_decenas_de_millar),a
 
 	ld hl,(Score_hex)
-
-	di
-	jr $
-	ei
-
-;	hl ... $00cf ..... 207d
-
 	ld de,Score_Ctrl 								; DE apunta al byte de control de Score, (Score_Ctrl).
 
 	ld bc,$2710 									; 10000d.
@@ -1620,7 +1613,6 @@ Score_a_BCD:
 ;	Averigua cuantas decenas de millar contiene (Score_hex).
 
 	and a
-
 1 sbc hl,bc
 
 	jr c, No_decenas_de_millar
@@ -1648,7 +1640,6 @@ No_decenas_de_millar
 	ld bc,$03e8 									; 1000d
 
 	and a
-
 2 sbc hl,bc
 
 	jr c, No_unidades_de_millar
@@ -1676,7 +1667,6 @@ No_unidades_de_millar
 	ld bc,$0064 									; 100d
 
 	and a
-
 3 sbc hl,bc
 
 	jr c, No_centenas
@@ -1750,6 +1740,20 @@ Actualiza_Punteros_Score:
 	and a
 	ret z 														; RET si no hay incremento en el marcador.
 
+;	di
+;	jr $
+;	ei
+
+;	Hay que implementar una rutina que inicialice los punteros SCORE
+
+;	ld hl,Cero_Score
+;	ld (Puntero_de_unidades_Score),hl
+;	ld (Puntero_de_decenas_Score),hl 
+;	ld (Puntero_de_centenas_Score),hl 
+;	ld (Puntero_de_um_Score),hl
+;	ld (Puntero_de_dm_Score),hl
+
+
 	ld de,Score_BCD_unidades
 	ld hl,Puntero_de_unidades_Score
 	ld b,5
@@ -1763,7 +1767,6 @@ Actualiza_Punteros_Score:
 	ld hl, Indice_de_digitos_score
 
 	and a
-
 	call nz, Actualiza_puntero_score
 
 ; ---------------------
@@ -1789,8 +1792,8 @@ Actualiza_puntero_score
 
 	ld b,a
 
-1 inc l
-	inc l
+1 inc hl
+	inc hl
 
 	djnz 1B
 
