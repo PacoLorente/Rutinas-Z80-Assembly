@@ -1,3 +1,102 @@
+; -----------------------------------------------------------------------------------------
+;
+;	25/06/26
+;
+;	Reiniciamos partida.
+;
+;	Limpia Scanlines albums, cajas de disparos y de entidades, tablas de pintado/borrado y_
+;	_nº aleatorios y almacenes de movimientos masticados.
+;
+;	También limpia la bandeja DRAW.
+
+Clean_boxes_and_albums:
+
+;	En 1er lugar limpiamos ((Scanlines_album)) y ((Scanlines_album_2)).
+
+	ld hl,Scanlines_album
+	ld bc,562
+	call Clean_mem
+
+;	Limpiamos el álbum de disparos de las entidades.
+
+	ld hl,Entidades_disparos_scanlines_album
+	ld bc,100
+	call Clean_mem
+
+;	Limpiamos todas las cajas de disparos de las entidades.
+
+	ld hl,Disparo_7-5
+	ld bc,41
+	call Clean_mem
+
+;	Cajas 1 y 2 de Entidades.
+
+	ld hl,Caja_1
+	ld bc,27
+	call Clean_mem
+
+;	Cajas 3,4 y 5
+
+	ld hl,Caja_3
+	ld bc,41
+	call Clean_mem
+
+; --------------------------------------------------------------------------------------------
+
+;	Limpiamos:
+
+;	Numeros_aleatorios ds 7
+;	Numeros_aleatorios_baile ds 7
+
+;	Tabla_de_pintado ds 30
+;	Tabla_de_borrado ds 24
+
+	ld hl,Numeros_aleatorios
+	ld bc,67
+	call Clean_mem
+
+	ld hl,Almacen_de_movimientos_masticados_2
+	ld bc,(Contador_general_de_mov_masticados_3-Almacen_de_movimientos_masticados_2)+1
+	call Clean_mem
+
+;	Limpiamos las 3 cajas Master.
+
+	ld hl,Caja_master_1
+	ld bc,41
+	call Clean_mem
+
+;	Limpiamos la caja de Amadeus.
+
+	ld hl,Amadeus_BOX
+	push hl
+	ld bc,13
+	call Clean_mem
+	pop hl
+
+	inc hl
+	inc hl
+	inc hl
+
+	ld (hl),15
+
+;	Limpiamos Almacenes de movimientos masticados, (Amadeus y entidades).
+
+	ld hl,Almacen_de_movimientos_masticados_Amadeus
+	ld bc,$36fe
+	call Clean_mem
+
+	ld hl,Amadeus_scanlines_album
+	call Inicializa_Amadeus_scanline_album
+
+	ld hl,Amadeus_scanlines_album_2
+	call Inicializa_Amadeus_scanline_album
+
+	ld hl,Bandeja_DRAW
+	ld bc,Temp_Amadeus_exit-Clase
+	call Clean_mem
+
+	ret
+
 ; ------------------------------------
 ;
 ; 	18/11/25
@@ -1729,7 +1828,7 @@ No_decenas
 
 ; -------------------------------------------------------------------
 ;
-;	17/10/25
+;	25/06/26
 ;
 
 Actualiza_Punteros_Score:
@@ -1740,22 +1839,9 @@ Actualiza_Punteros_Score:
 	and a
 	ret z 														; RET si no hay incremento en el marcador.
 
-;	di
-;	jr $
-;	ei
-
-;	Hay que implementar una rutina que inicialice los punteros SCORE
-
-;	ld hl,Cero_Score
-;	ld (Puntero_de_unidades_Score),hl
-;	ld (Puntero_de_decenas_Score),hl 
-;	ld (Puntero_de_centenas_Score),hl 
-;	ld (Puntero_de_um_Score),hl
-;	ld (Puntero_de_dm_Score),hl
-
+	call Init_Score_Pointers 									; Inicializa los Punteros_Score.
 
 	ld de,Score_BCD_unidades
-	ld hl,Puntero_de_unidades_Score
 	ld b,5
 
 ; ---------------------
@@ -1771,7 +1857,7 @@ Actualiza_Punteros_Score:
 
 ; ---------------------
 
-Siguiente_puntero
+Next_Pointer
 
 	exx
 
@@ -1805,7 +1891,7 @@ Actualiza_puntero_score
 	exx
 
 	ld a,iyl
-	ld (hl),a	                                             ; Actualiza la dirección hacia la que debe apuntar el puntero correspondiente.
+	ld (hl),a	                                            	; Actualiza la dirección hacia la que debe apuntar el puntero correspondiente.
 
 	inc hl
 
@@ -1818,7 +1904,38 @@ Actualiza_puntero_score
 
 	ret
 
+; ----------------------------------------------------
+;
+;	25/06/26
+;
+;	Inicializa los cinco (Punteros_Score) con "Cero_Score", ($3d80).
+;
+;	MODIFY: A, HL
+;
+;	OUTPUT: (A)="0".
+;			HL = Puntero_de_unidades_Score
 
+Init_Score_Pointers:
+
+	ld hl,Cero_Score
+	ld (Stack),sp
+	ld sp,Score_Ctrl
+
+	push hl
+	push hl
+	push hl
+	push hl
+	push hl
+
+	xor a
+	ld l,a
+	ld h,l
+
+	add hl,sp
+
+	ld sp,(Stack)
+
+	ret
 
 
 
