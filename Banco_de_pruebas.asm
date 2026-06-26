@@ -1033,6 +1033,7 @@ a8 defm "New Best Score!",0
 a9 defm "Enter name & press ENTER",0
 a10 defm "--",0
 a11 defm "pts",0
+a12 defm "    ",0
 
 ; DEFINE MENU.
 

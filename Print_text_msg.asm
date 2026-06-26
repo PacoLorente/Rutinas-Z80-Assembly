@@ -1085,12 +1085,11 @@ Print_DONE:
 
 Clean_DONE
 
-    ld hl,b0-5
-    ld de,Line_11 + 14
-    ld b,0
-    ld a,%01000000
-
+    ld hl,a12                                               ; msg., "    ", 
+    ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
+    ld a,0                                                  ; attrs.
     call Print_text_msg
+    ret
 
     xor a
     inc a                                                   ; Fuerza NZ a la salida.
