@@ -280,15 +280,7 @@ Clean_and_logo:
 Print_level_msg:
 
     ld hl,(Puntero_de_mensajes_de_niveles)
-
     call Extrae_address
-
-;   Actualiza (Puntero_de_mensajes_de_niveles).
-
-    inc de
-    inc de
-
-    ld (Puntero_de_mensajes_de_niveles),de
 
 ;   HL apunta al 1er .db del mensaje de niveles, (centrado en pantalla del msg).
 

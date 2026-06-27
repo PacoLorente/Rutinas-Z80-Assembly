@@ -24,99 +24,10 @@ Enter_name_screen:
 Init_New_Game:
 
 	call Clean_boxes_and_albums
+	call Inicializa_Variables_DRAW
+	call Clean_and_initcialize_Draw1
 
-; --------------------------------------------------------------------------------------------
-
-;	Ahora vamos a inicializar las variables DRAW necesarias para construir una nueva partida:
-
-	ld a,7
-	ld (Numero_de_disparos_de_entidades),a
-
-	ld hl,Tabla_de_pintado
-	ld (India_SP),hl
-	ld hl,Tabla_de_borrado
-	ld (India_3_SP),hl
-
-	ld hl,Clock_explosion 									; (Clock_explosion)="4", (Clock_explosion_Amadeus)="5", (Temp_new_live)="100".
-	ld (hl),4
-	inc hl
-	ld (hl),5
-	inc hl
-	ld (hl),100
-
-	ld hl,Numeros_aleatorios
-	ld (RND_SP),hl
-	ld (Puntero_num_aleatorios_disparos),hl
-
-	ld a,$a0
-	ld hl,Repone_CLOCK_disparos 							; (Repone_CLOCK_disparos) y (CLOCK_disparos_de_entidades) con "$a0".
-	ld (hl),a
-	inc hl
-	ld (hl),a
-
-	inc hl
-	inc hl
-	inc hl
-
-	ld (hl),5 												; (Start_counter_2) con "$05".
-
-	ld hl,Indice_de_niveles
-	ld (Puntero_indice_NIVELES),hl
-
-	ld hl,Almacen_de_movimientos_masticados_1
-	ld (Puntero_indice_de_almacenes),hl
-
-	ld hl,Msg_level_index
-	ld (Puntero_de_mensajes_de_niveles),hl
-
-	ld hl,Lives
-	ld (hl),3
-	inc hl
-	ld (hl),3
-
-	inc hl
-	ld (hl),4
-	inc hl
-	ld (hl),1
-	inc hl
-	ld (hl),4
-	inc hl
-	ld (hl),1
-
-	inc hl
-	inc hl
-	inc hl
-
-	ld (hl),100
-
-	ld hl,Indice_de_escudos
-	ld (Puntero_de_escudos),hl
-	ld hl,Indice_de_vidas
-	ld (Puntero_de_vidas),hl
-
-	ld a,%01000110
-	ld (Attr_big_counter),a
-
-	ld hl,Cero_Score
-
-	ld (Puntero_de_unidades_Score),hl
-	ld (Puntero_de_decenas_Score),hl
-	ld (Puntero_de_centenas_Score),hl
-	ld (Puntero_de_um_Score),hl
-	ld (Puntero_de_dm_Score),hl
-
-	ld hl,$50cf
-	ld (Primer_scan_Amadeus),hl
-
-	ld hl,Laser_sound_init_value
-	ld (Laser_sound),hl
-
-	ld a,80
-	ld (Temp_Amadeus_exit),a
-
-    xor a
-
-    ret
+	ret
 
 New_max_score:
 

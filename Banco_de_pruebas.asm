@@ -197,6 +197,7 @@ Decenas_de_millar_Score_7 equ Decenas_de_millar_Score_6 + 256
 ; ----- ----- ----- ----- ----- ----- ----- -----
 
 Primer_scan_de_pantalla equ $4120										; Cuando (Puntero_de_impresion) se encuentra por debajo de esta dirección se generan "0" scanlines.
+Primer_scan_Amadeus equ $50cf
 Almacen_de_movimientos_masticados_Amadeus equ $c800 					; ($c800 - $c9e3), 483 bytes. $1e3. Movimientos masticados de Amadeus.
 
 ; Scanlines_album. 
@@ -863,20 +864,18 @@ Start_counter_2 db $05 										; 2º Temporizador, (3 bytes counter). Espera l
 
 ; Gestión de NIVELES.
 
-Nivel db 0													; Nivel actual del juego.
-Puntero_indice_NIVELES defw Indice_de_niveles
+
+
 Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1					
 																				
 Puntero_de_entidades defw 0									; Este puntero se va desplazando por los distintos bytes_
 ; 															; _ que definen el NIVEL.
-Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
+
 
 ; ---------------------------------------------------------------------------------------------------------------
 
 ; Temporizaciones Shield.
 
-Lives db 3 																
-Shields db 3 												; Nº de Shields
 
 ; Temporizaciones Shield.
 
@@ -887,6 +886,34 @@ Shield_2 db 0 												; Estado Shield, (tiempo encendido - tiempo apagado - 
 Shield_3 db 0
 
 ; HUB
+
+
+
+
+; Sounds:
+
+Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
+Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
+Laser_sound defw Laser_sound_init_value
+Shot_sound defw 0
+Burst_sound defw 0
+Shield_sound defw 0
+
+; Varios:
+
+Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
+Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
+Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
+Temp_Amadeus_exit db 80										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
+
+
+Variables_DRAW1: 											; Estas variables no se inicializan si avanzamos de nivel.
+
+Nivel db 1													; Nivel actual del juego.
+Puntero_indice_NIVELES defw Indice_de_niveles
+Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
+Lives db 3
+Shields db 3 												; Nº de Shields
 
 Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
 Puntero_de_vidas defw Indice_de_vidas
@@ -908,7 +935,6 @@ Score_BCD_decenas db 0
 Score_BCD_centenas db 0
 Score_BCD_unidades_de_millar db 0
 Score_BCD_decenas_de_millar db 0
-
 Puntero_de_unidades_Score defw Cero_Score
 Puntero_de_decenas_Score defw Cero_Score
 Puntero_de_centenas_Score defw Cero_Score
@@ -918,23 +944,7 @@ Puntero_de_dm_Score defw Cero_Score
 Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
 ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
 
-Primer_scan_Amadeus defw $50cf
-
-; Sounds:
-
-Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
-Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
-Laser_sound defw Laser_sound_init_value
-Shot_sound defw 0
-Burst_sound defw 0
-Shield_sound defw 0
-
-; Varios:
-
-Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
-Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
-Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
-Temp_Amadeus_exit db 80										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
+Variables_DRAW2:
 
 ; --------------------------------------------------
 ;
@@ -3201,89 +3211,13 @@ Next_level:
 
 	call Replace_Amadeus_attr_zone 					;	Repone los atributos de las 2 últimas líneas de pantalla para que la entrada de Amadeus del siguiente nivel sea azul.
 
+	call Clean_boxes_and_albums
 
-;	Vamos a empezar de nuevo. En primer lugar limpiamos los distintos álbumes de líneas.
-;	El álbum de líneas de Amadeus no está vacío. Para acelerar el proceso de pintado tiene almacenados los scanlines, ($00, $50, $00, $51, ..., $00, $57).
+	call Inicializa_Variables_DRAW
 
-;	Scanlines_album equ $8000	                    ;	($8000 - $8118) 	
-;	Scanlines_album_2 equ $811a	                    ;   ($811a - $8232)
+	call Actualiza_punteros_de_Nivel
 
-;	Amadeus_scanlines_album equ $8234	            ;	($8234 - $8256) 	
-;	Amadeus_scanlines_album_2 equ $8258	            ;	($8258 - $827a)
-
-;	Amadeus_disparos_scanlines_album equ $827c	    ;	($827c - $8281) 	
-;	Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
-
-;	Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		
-;	Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)
-
-;	Limpiamos Scanlines_album y Scanlines_album_2:
-;	Sólo limpiamos los primeros 35 bytes de cada álbum pues "eliminamos" a una última y única unidad para pasar de nivel.
-
-	ld hl,Scanlines_album
-	ld bc,34
-	call Clean_mem
-;
-	ld hl,Scanlines_album_2
-	ld bc,34
-	call Clean_mem
-
-;	Limpiamos:
-
-;	Numeros_aleatorios ds 7
-;	Numeros_aleatorios_baile ds 7
-
-;	Tabla_de_pintado ds 30								
-;	Tabla_de_borrado ds 24
-
-	ld hl,Numeros_aleatorios
-	ld bc,67
-	call Clean_mem
-
-;	Limpiamos las 3 cajas Master.
-
-	ld hl,Caja_master_1
-	ld bc,41
-	call Clean_mem
-
-;	Limpiamos la caja de Amadeus.
-
-	ld hl,Amadeus_BOX
-	push hl
-	ld bc,13
-	call Clean_mem
-	pop hl
-
-	inc hl
-	inc hl
-	inc hl
-
-	ld (hl),15
-
-;	Limpiamos Almacenes de movimientos masticados de Amadeus  entidades.
-
-	ld hl,Almacen_de_movimientos_masticados_Amadeus
-	ld bc,$36fe
-	call Clean_mem
-
-	call Inicializa_Bandeja_DRAW
-
-	ld hl,Amadeus_scanlines_album
-	call Inicializa_Amadeus_scanline_album
-
-	ld hl,Amadeus_scanlines_album_2
-	call Inicializa_Amadeus_scanline_album
-
-;	Actualiza (Puntero_indice_NIVELES).
-
-	ld hl,(Puntero_indice_NIVELES)
-
-	inc hl
-    inc hl
-
-    ld (Puntero_indice_NIVELES),hl
-
-    jp Init_level
+	jp Init_level
 
 ;	-----------------------------------------------------------------------------------------
 
