@@ -23,17 +23,8 @@ Inicializacion:
 
 	call Genera_coordenadas
 
-
-
-
-;	jr $
-
-
-
-
-
-
 	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
+
 	jr 3F
 
 ; --------------------------------------------------

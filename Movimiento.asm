@@ -216,17 +216,19 @@ Inicia_Repetimos_movimiento
 
 ; ---------- --------- --------- ---------- ----------
 ;
-;   26/6/23
+;   28/06/26
 ;
 ;   Inicia_Puntero_mov
 ;
 ;   
 
-Inicia_Puntero_mov 
+Inicia_Puntero_mov:
 
     ld hl,(Puntero_indice_mov)
     call Extrae_address
+
     ld (Puntero_mov),hl
+
     ret
     
 ; ---------- --------- --------- ---------- ----------

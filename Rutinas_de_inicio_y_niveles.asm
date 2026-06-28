@@ -430,42 +430,7 @@ Prepara_Cajas_Master:
 
 	call Construye_movimientos_masticados_entidad
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;	jr $	;	14/6/26
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Movimientos_masticados_construidos
+Movimientos_masticados_construidos:
 
 	ld hl,(Puntero_indice_master)
 	call Extrae_address
