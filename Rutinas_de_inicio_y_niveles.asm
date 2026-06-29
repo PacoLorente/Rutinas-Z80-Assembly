@@ -393,6 +393,54 @@ Prepara_Cajas_Master:
 
 ; Generamos movimientos masticados.
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;	En 1er lugar cargaremos la bandeja DRAW con la definición de esta (Clase) de entidad para poder generar todos los movimientos masticados.
 
 	ld a,c 															; (A) = (Clase).
@@ -460,9 +508,8 @@ Movimientos_masticados_construidos:
 	call Clean_mem
 
 ; Avanza a la siguiente entidad del nivel.
-; Generamos un nuevo set de nº aleatorios para poder generar un NUEVO baile distinto.
 
-Avanza_siguiente_entidad_del_nivel 
+Avanza_siguiente_entidad_del_nivel:
 
 	pop bc															; Pop (Numero_de_entidades)/(Tipo).
 	pop hl															; Pop (Puntero_de_entidades).
@@ -479,9 +526,10 @@ Avanza_siguiente_entidad_del_nivel
 	ld hl,(Puntero_indice_NIVELES)
 	call Extrae_address
 
-	ld a,4
-	add l
-	ld l,a
+	inc hl
+	inc hl
+	inc hl
+	inc hl
 
 	ld (Puntero_de_entidades),hl
 
@@ -1063,15 +1111,30 @@ Inicializa_Nivel:
 
 ; Actualiza (Puntero_indice_NIVELES).
 
+
+;	jr $
+
 	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
 	call Extrae_address   						 					; Sitúa HL en el 1er byte que define: (Max_time_to_appear_entities).
 
 	ld a,(hl)
 	ld (Max_time_to_appear_entities),a
+																	; La próxima vez que juguemos en este nivel, el tiempo máximo definido entre que aparece una entidad y la siguiente será menor, - ($3c). (Max_time_to_appear_entities).
 	inc hl
+
+
+
+
+
+
+
+
+
 	ld a,(hl)
 	ld (Decrease_top_time_entities),a
+
 	inc hl
+
 	ld a,(hl)
 	ld (Min_time_to_appear_entities),a
 
@@ -1095,16 +1158,16 @@ Inicializa_Nivel:
 
 ; ----------------------
 ;
-;	12/06/26
+;	29/06/26
 ;
 ;	INPUT: A, A' y C contienen la (Clase) de la entidad.
 ;	OUTPUT: Flag Z activo:
-;				   A = Z ..... Indica que tenemos que generar los movimientos masticados de esta (Clase) de entidad.
-;	 			   A = NZ ..... Indica que esta Caja_Master ya está iniciada con esta (Clase) de entidad. 
+;				   (A) = "0"     .....   Indica que tenemos que generar los movimientos masticados de esta (Clase) de entidad.
+;	 			   (A) = "1,2,3, ..... " Indica que esta Caja_Master ya está iniciada con esta (Clase) de entidad.
 
-Situa_en_Caja_Master
+Situa_en_Caja_Master:
 
-	ld hl,Indice_de_cajas_master	
+	ld hl,Indice_de_cajas_master
 	ld (Puntero_indice_master),hl 									; Sitúa (Puntero_indice_master) en la 1ª caja del índice.
 
 1 call Extrae_address
@@ -1114,8 +1177,10 @@ Situa_en_Caja_Master
 ; 	Esta Caja_Master no contiene una entidad de esta (Clase). RET si está vacía.
 
 	xor a
+
 	inc (hl)
 	dec (hl)
+
 	ret z 															; RET. Flag Z y A="$00". Indica que esta Caja_Master está vacía. Hay que generar los movimientos_
 ; 																	; _masticados de esta (Clase) de entidad.
 

@@ -1164,7 +1164,6 @@ Init_level:
 ;
 ; 					HL apunta al .db que define el (Tipo) de la primera entidad de este nivel.
 
-
 ;	Imprime Contador de entidades.
 
 	push hl
@@ -1190,6 +1189,41 @@ Init_level:
 ;	Prepara cajas.
 
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	call Prepara_Cajas_de_Entidades
 
@@ -3047,7 +3081,7 @@ Init_Burst_sound:
 
 ; ---------------------------------------------------------------
 ;
-;	21/11/25
+;	29/06/26
 ;
 ;	Decrementa el valor de (Max_time_to_appear_entities) en (Decrease_top_time_entities) unidades.
 ;	(Max_time_to_appear_entities) nunca será mayor que (Min_time_to_appear_entities).
@@ -3056,7 +3090,9 @@ Decrementa_techo:
 
 	ld hl, Max_time_to_appear_entities
 	ld a,(hl)
+
 	inc hl
+
 	sub (hl)
 
 ;	New TOP-time in A.
