@@ -440,7 +440,6 @@ Prepara_Cajas_Master:
 
 
 
-
 ;	En 1er lugar cargaremos la bandeja DRAW con la definición de esta (Clase) de entidad para poder generar todos los movimientos masticados.
 
 	ld a,c 															; (A) = (Clase).
@@ -927,6 +926,8 @@ Situa_en_contador_general_de_mov_masticados:
 
 Aplica_rnd_al_baile:
 
+	jr $
+
 	call RND_ini
 
 	xor a
@@ -1112,23 +1113,13 @@ Inicializa_Nivel:
 ; Actualiza (Puntero_indice_NIVELES).
 
 
-;	jr $
-
 	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
 	call Extrae_address   						 					; Sitúa HL en el 1er byte que define: (Max_time_to_appear_entities).
 
 	ld a,(hl)
 	ld (Max_time_to_appear_entities),a
-																	; La próxima vez que juguemos en este nivel, el tiempo máximo definido entre que aparece una entidad y la siguiente será menor, - ($3c). (Max_time_to_appear_entities).
+																	
 	inc hl
-
-
-
-
-
-
-
-
 
 	ld a,(hl)
 	ld (Decrease_top_time_entities),a
