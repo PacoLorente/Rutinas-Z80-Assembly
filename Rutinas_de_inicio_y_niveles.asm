@@ -393,53 +393,6 @@ Prepara_Cajas_Master:
 
 ; Generamos movimientos masticados.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;	En 1er lugar cargaremos la bandeja DRAW con la definición de esta (Clase) de entidad para poder generar todos los movimientos masticados.
 
 	ld a,c 															; (A) = (Clase).
@@ -900,7 +853,7 @@ Situa_en_contador_general_de_mov_masticados:
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	12/6/26
+;	2/7/26
 ;
 ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
 ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio. 
@@ -926,14 +879,11 @@ Situa_en_contador_general_de_mov_masticados:
 
 Aplica_rnd_al_baile:
 
-	jr $
-
 	call RND_ini
 
 	xor a
 
-2 ex af,af 															; A' contiene el .db que acompaña al byte de control, ($00).
-;																	; Inicializamos a $00, (no existe).
+2 ex af,af 															; Digito de control en A'. Inicialmente "0".
 
 ; 	digit ctrl ??
 ;   Yes if "$00".
@@ -941,64 +891,47 @@ Aplica_rnd_al_baile:
 
 	ld a,(hl)
 	and a
-	jr nz,Load_limits												; A es NZ. El nº RND sólo se aplica a una única dirección de mem.
+	jr nz,1F 														; NZ indica que este .defw contiene límites. El próximo nº RND que vamos a obtener sólo se introducirá en una unica dirección de memoria.
 
 ; Almacenamos en A' el nº de direcciones que compartiran nº RND y sitúamos HL en el .defw que indica los límites.
 
 	inc hl
 
 	ld a,(hl)
+	and a
+	ret z
+
 	ex af,af
 
 	inc hl 															; Sitúa HL en el defw que define los límites.
 	ld a,(hl)
 
-Load_limits:
-
-	ld c,a
-	inc hl
-	ld b,(hl)
-
-;	Límites que tendrá este nº RND en BC.
-;	B contiene lím.sup. y C contiene límite inf.
-
-	inc hl
-
-	call Extrae_address_y_avanza
-
-	ret z  															; Z Indica: FIN de la Tabla_Random.
-
-;	HL apunta a la dirección donde hemos de alojar el nº rnd.
-;	DE está situado en la siguiente línea de la Tabla.
-;	Obtenemos el nº RND.
-
-1 call Get_RND    													; Nº RND , (sin filtrar) en A.
+1 call Load_limits_and_place_registers
+	call Get_RND
 	call Filtra_RND
 
 ;	Introducimos nº rnd filtrado.
 
 3 ld (hl),a
-	ex de,hl
 
-;	Tenemos que seguir utilizando este nº RND con la siguiente .defw ???
-;	Para averiguarlo consultamos el byte de "Repeticiones", (A´).
+	ex de,hl 														; Siguiente .defw de la Tabla_Random en HL.
+
+;	Consulta dígito de control. Z pasamos a otro nº y otra dirección de memoria.
 
 	ex af,af
-	and a
 	jr z,2B
 
-; Más direcciones con el mismo mov.
+;	Siguiente dirección con el mismo nº RND.
 
 	dec a
 	ex af,af
 
-	push af
-	call Extrae_address_y_avanza
-	pop af
+	call Extrae_address
+
+	inc de
+	inc de
 
 	jr 3B
-
-	ret
 
 ; ----- ----- -----
 ;
@@ -1042,11 +975,6 @@ Get_RND:
 
 	ret
 
-; ----- ----- -----
-;
-;	Límites que tendrá este nº RND en BC.
-;	B contiene lím.sup. y C contiene límite inf.
-
 Filtra_RND:
 
 	and %00111100													; Convertimos el byte, (RND), en Nibble, valores comprendidos entre (0-15).
@@ -1077,18 +1005,30 @@ Filtra_RND:
 	ret
 
 ; ----- ----- -----
+;
+;	2/7/26
+;
+;	OUTPUT:
+;
+;	Límites que tendrá este nº RND en BC.
+;	B contiene lím.sup. y C contiene límite inf.
+;
+;	Sitúa HL en la dirección de memoria donde introduciremos el nº aleatorio, (que estará acotado por los límites).
+;	DE apunta al siguiente .defw de la Tabla_RANDOM del tipo de entidad correspondiente.
 
-Extrae_address_y_avanza:
+Load_limits_and_place_registers:
+
+	ld c,a
+
+	inc hl
+	ld b,(hl)
+
+	inc hl
 
 	call Extrae_address
 
-	ld a,h 						
-	or l
-	ret z 															; Detecta FIN de Tabla_Random.
-				
 	inc de
-	inc de 															; DE será el puntero que se irá desplazando por las distintas líneas de la Tabla_Random.
-	;																; Lo situamos en la siguiente línea de la tabla.
+	inc de
 
 	ret
 
@@ -1111,6 +1051,9 @@ Extrae_address_y_avanza:
 Inicializa_Nivel:
 
 ; Actualiza (Puntero_indice_NIVELES).
+
+
+;	jr $
 
 
 	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
