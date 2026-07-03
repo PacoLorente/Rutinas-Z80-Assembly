@@ -1826,7 +1826,7 @@ Change_Disparos:
 
 ; ------------------------------------
 ;
-; 	21/11/25
+; 	3/7/26
 ;
 ;	INPUTS: A contiene un nº aleatorio comprendido entre ($00 y $ff).
 ;
@@ -1845,16 +1845,17 @@ Change_Disparos:
 
 Define_Clock_next_entity:
 
-	ld hl,Max_time_to_appear_entities  										
+	ld hl,Max_time_to_appear_entities
 	cp (hl)
+
 	ld c,a 												; Nº aleatorio ($00 - $ff) en A.
 
 	jr c,1F
 
 ;	Por encima o igual que (Max_time_to_appear_entities).
-;	Siempre que el nº aleatorio se encuentra por debajo del límite inferior, decrementamos el límite en 10 unidades.
 
 	ld c,(hl)
+	jr 2F
 
 ;	El nº aleatorio no supera el valor de (Max_time_to_appear_entities).
 ;	Por debajo del mínimo?, (Min_time_to_appear_entities)??.
@@ -3094,6 +3095,9 @@ Decrementa_techo:
 	inc hl
 
 	sub (hl)
+
+	call z,Min_value
+	call c,Min_value
 
 ;	New TOP-time in A.
 

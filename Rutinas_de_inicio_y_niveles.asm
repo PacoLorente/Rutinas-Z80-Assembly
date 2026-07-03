@@ -1053,24 +1053,45 @@ Inicializa_Nivel:
 ; Actualiza (Puntero_indice_NIVELES).
 
 
-;	jr $
-
-
 	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
 	call Extrae_address   						 					; Sitúa HL en el 1er byte que define: (Max_time_to_appear_entities).
 
 	ld a,(hl)
 	ld (Max_time_to_appear_entities),a
-																	
+
+	sub $20
+
+	call z,Min_value
+	call c,Min_value
+
+	ld (hl),a
+
 	inc hl
 
 	ld a,(hl)
 	ld (Decrease_top_time_entities),a
 
+	add $0a
+
+	call z,Max_value
+	call c,Max_value
+
+	ld (hl),a
+
 	inc hl
 
 	ld a,(hl)
 	ld (Min_time_to_appear_entities),a
+
+	sub $30
+
+	call z,Min_value
+	call c,Min_value
+
+	ld (hl),a
+
+	jr z,$
+	jr c,$
 
 	inc hl
 
@@ -1089,6 +1110,25 @@ Inicializa_Nivel:
 	ld c,(hl)													
 
 	ret 										 
+
+
+Min_value:
+
+	xor a
+	inc a
+
+	ld a,$10
+
+	ret
+
+Max_value:
+
+	xor a
+	inc a
+
+	ld a,$fa
+
+	ret
 
 ; ----------------------
 ;
