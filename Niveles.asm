@@ -1,6 +1,9 @@
 ; ------------------------------------------------------------------
 ;
-; 25/3/26
+; 	5/7/26
+;
+
+;	Fila donde se imprimen los msg: $4826
 
 Msg_level_index:
 
@@ -12,16 +15,16 @@ Msg_level_index:
 	defw 0
 	defw 0
 
-Msg_1 db 8,5 									; Columna +5 , nº de chars del msg.
+Msg_1 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
 	defm "FLIES",0
 
-Msg_2 db 8,5 									; Columna +5 , nº de chars del msg.
+Msg_2 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
 	defm "FLIES",0
 
-Msg_3 db 8,5
-	defm "UFOS",0
+Msg_3 db 8,4
+	defm "UFOS",0								; El 2° .db indica la longitud del msg, 5 chars.
 
-Msg_4 db 8,5
+Msg_4 db 3,14
 	defm "FLIES AND UFOS",0
 
 ; --------------------------------------------------------------------------------------------------------------
@@ -166,11 +169,12 @@ Nivel_1 db $f0,$0a,$70 							; FLIES !!!
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 ;												; Nº de entidades que tiene el nivel.
-	db 15
+	db 5
 
 	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
-	db 3,2,1,2,2
-	db 1,3,1,3,2
+;	db 3,2,1,2,2
+;	db 1,3,1,3,2
+;	db 1,3,3,2,2
 
 ; ---------------------------------------------------------------------------------------
 
@@ -182,12 +186,12 @@ Nivel_2 db $d0,$10,$50 							; FLIES !!!
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 
-	db 20
+	db 5
 
 	db 3,2,1,3,2
-	db 1,3,2,2,1
-	db 2,3,1,2,3
-	db 1,2,2,3,1
+;	db 1,3,2,2,1
+;	db 2,3,1,2,3
+;	db 1,2,2,3,1
 
 ; ---------------------------------------------------------------------------------------
 
@@ -199,11 +203,11 @@ Nivel_3 db $C0,$15,$50 							; UFOS !!!
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 
-	db 15
+	db 5
 
 	db 4,5,6,4,5
-	db 5,5,6,4,6
-	db 4,5,6,5,4
+;	db 5,5,6,4,6
+;	db 4,5,6,5,4
 
 ; ---------------------------------------------------------------------------------------
 
@@ -215,12 +219,12 @@ Nivel_4 db $b0,$15,$50 							; UFOS !!!
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 
-	db 20
+	db 5
 
 	db 1,4,6,1,6
-	db 4,6,6,1,4
-	db 1,6,1,6,1
-	db 4,1,6,1,6
+;	db 4,6,6,1,4
+;	db 1,6,1,6,1
+;	db 4,1,6,1,6
 
 
 

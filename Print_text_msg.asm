@@ -284,10 +284,10 @@ Print_level_msg:
 
 ;   HL apunta al 1er .db del mensaje de niveles, (centrado en pantalla del msg).
 
-    ld de,Fila_msg_de_nivel                                     ; Línea de impresión.
+    ld de,Fila_msg_de_nivel                                     ; Línea de impresión de los mensajes de nivel $4826.
 
     ld b,(hl) 
-    ld c,b                                                      ; Incremento del carro de impresión en B y C.
+    ld c,b                                                      ; Columnas a incrementar el carro de impresión en B y C.
 
 1 inc e
     djnz 1B                                                     ; DE contiene la dirección donde imprimiremos el 1er char.
@@ -297,12 +297,14 @@ Print_level_msg:
     ld b,(hl)
     ld (Desplazamiento_level_msg),bc                            ; Guarda el desplazamiento del carro, (para centrar el mensage) y el nº de chars.  
 ;                                                               ; Estos datos son necesarios para borrar el mensaje más adelante.
+;                                                               ; (B) contiene la longitud del msg.
+;                                                               ; (C) contiene el n° de columnas a sumar a $4826.
     inc hl
 
 ;   HL apunta al "msg" a imprimir. Asignamos attrs. y temporización. 
 
     ld a,%01000111                                              ; attrs. Paper white, black ink.
-;    ld b,150                                                    ; Activa temporizador.
+;    ld b,150                                                   ; TEMPORIZADOR DE CARACTERES ON !!!
     ld b,1
 
     call Print_text_msg

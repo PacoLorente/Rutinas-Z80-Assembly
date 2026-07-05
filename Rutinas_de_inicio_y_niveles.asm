@@ -5,6 +5,7 @@
 
 Actualiza_punteros_de_Nivel:
 
+
 	ld hl,Nivel
 	inc (hl)
 
@@ -18,8 +19,9 @@ Actualiza_punteros_de_Nivel:
 	inc hl
     ld (Puntero_indice_NIVELES),hl
 
+    inc hl
     inc (hl)
-    dec (hl)
+	dec (hl)
 	ret nz
 
 	ld hl,Indice_de_niveles
@@ -491,15 +493,18 @@ Avanza_siguiente_entidad_del_nivel:
 ;
 ;	14/06/26
 ;
-;	
+;	Asigna una columna de inicio aleatoria y distinta a cada una de las 3 Clases como máximo que pueden aparecer en un nivel.
 
 Determina_posicion_de_inicio:
+
+	jr $
 
 	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
 	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
+; 	Lo almacenamos en
 
 	ld d,a
 
@@ -1089,9 +1094,6 @@ Inicializa_Nivel:
 	call c,Min_value
 
 	ld (hl),a
-
-	jr z,$
-	jr c,$
 
 	inc hl
 
