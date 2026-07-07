@@ -391,7 +391,7 @@ Prepara_Cajas_Master:
 ; 																	; A=NZ indica que esta (Clase) de entidad ya tiene generados los mov_masticados.
 ; 																	; Saltaremos a la siguiente entidad del nivel.
 	and a
-	jr nz, Avanza_siguiente_entidad_del_nivel 
+	jr nz, Avanza_siguiente_entidad_del_nivel
 
 ; Generamos movimientos masticados.
 
@@ -422,7 +422,7 @@ Prepara_Cajas_Master:
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
-	call Determina_posicion_de_inicio
+	call Determina_posicion_de_inicio 								; $941e ($78).
 
 	ld a,(Tipo)
 	call Situa_Puntero_indice_mov			 	 					; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
@@ -433,6 +433,10 @@ Prepara_Cajas_Master:
 	call Construye_movimientos_masticados_entidad
 
 Movimientos_masticados_construidos:
+
+
+	jr $
+
 
 	ld hl,(Puntero_indice_master)
 	call Extrae_address
@@ -450,18 +454,14 @@ Movimientos_masticados_construidos:
 	xor a
 	ld (Ctrl_3),a 													; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
 ;																	; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados.
-
 	ld hl,Clase
-	ld bc,37
+	ld bc,Gestion_de_ENTIDADES_y_CAJAS-Bandeja_DRAW
+
+	dec bc
 
 	call Clean_mem
 
-	ld hl,Puntero_tabla_Random
-	ld bc,17
-
-	call Clean_mem
-
-; Avanza a la siguiente entidad del nivel.
+; 	Avanza a la siguiente entidad del nivel.
 
 Avanza_siguiente_entidad_del_nivel:
 
@@ -496,8 +496,6 @@ Avanza_siguiente_entidad_del_nivel:
 ;	Asigna una columna de inicio aleatoria y distinta a cada una de las 3 Clases como máximo que pueden aparecer en un nivel.
 
 Determina_posicion_de_inicio:
-
-	jr $
 
 	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
@@ -655,6 +653,7 @@ Inicia_puntero_objeto_der:
 ;
 
 Construye_movimientos_masticados_entidad:
+
 
 	ld hl,(Puntero_indice_de_almacenes) 							; Inicialmente situado en el 1er .defw del índice, Almacen_de_movimientos_masticados_1.
 	call Extrae_address
@@ -1134,23 +1133,29 @@ Max_value:
 
 ; ----------------------
 ;
-;	29/06/26
+;	7/7/26
 ;
 ;	INPUT: A, A' y C contienen la (Clase) de la entidad.
+;		   (B) contiene el nº de entidades que tiene el nivel.
+;    	   (C) contiene la clase de la entidad en curso.
+
 ;	OUTPUT: Flag Z activo:
 ;				   (A) = "0"     .....   Indica que tenemos que generar los movimientos masticados de esta (Clase) de entidad.
 ;	 			   (A) = "1,2,3, ..... " Indica que esta Caja_Master ya está iniciada con esta (Clase) de entidad.
 
 Situa_en_Caja_Master:
 
+;	jr $
+
+
 	ld hl,Indice_de_cajas_master
 	ld (Puntero_indice_master),hl 									; Sitúa (Puntero_indice_master) en la 1ª caja del índice.
 
 1 call Extrae_address
 	cp (hl) 																							
-	ret z 															; RET Z. Indica que esta Caja_Master está iniciada y contiene una entidad de esta (Clase).
+	ret z 															; RET Z. Indica que esta Caja_Master ya está iniciada con una entidad de esta (Clase).
 
-; 	Esta Caja_Master no contiene una entidad de esta (Clase). RET si está vacía.
+; 	Esta Caja_Master no contiene una entidad de esta misma (Clase). RET si está vacía.
 
 	xor a
 
@@ -1221,9 +1226,9 @@ Situa_en_Tabla_Random:
 
 ; -----------------------------------------------------------
 ;
-;	6/3/25
+;	7/7/26
 
-Situa_Puntero_indice_mov 
+Situa_Puntero_indice_mov:
 
 	call Calcula_salto_en_BC
 	ld hl,Indice_de_mov_segun_tipo_de_entidad
@@ -1550,7 +1555,7 @@ Amarillo ld a,%01000110
 ;	Esta pequeña sub-rutina carga BC con 0,2,4,6,8 ... en función del tipo de entidad: (1,2,3,4,...). 
 ;	Calcula "el salto" para situarnos en los DATOS de la ENTIDAD correcta del índice de entidades según el tipo de entidad.
 
-Calcula_salto_en_BC 
+Calcula_salto_en_BC:
 
 	and a
 	jr z,1F
@@ -1626,14 +1631,15 @@ Definicion_de_entidad_a_bandeja_DRAW
 
 ; ----------------------------------------------------------------------------------------------------------
 ;
-;	26/3/25
+;	7/7/26
 ;
 
-Parametros_de_bandeja_DRAW_a_Caja_Master 
+Parametros_de_bandeja_DRAW_a_Caja_Master:
 
 	ld hl,Bandeja_DRAW
 	ld bc,14
 	ldir													 
+
 	ret
 
 ;---------------------------------------------------------------------------------------------------------------

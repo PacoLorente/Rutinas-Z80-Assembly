@@ -706,7 +706,7 @@ Repone_puntero_objeto defw 0								; Almacena (Puntero_objeto). Cuando el Sprit
 ;															; La rutina [Genera_cabecera] almacena la dirección del álbum de scanlines donde se inicia la cabecera para posteriormente_
 ;															; _guardar esta dirección en la (Tabla_de_pintado).
 
-; Gestión de ENTIDADES y CAJAS.
+Gestion_de_ENTIDADES_y_CAJAS:
 
 Puntero_store_caja defw 0
 Puntero_restore_caja defw 0
