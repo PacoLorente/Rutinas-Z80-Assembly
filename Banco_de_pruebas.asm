@@ -926,6 +926,8 @@ Puntero_decenas_grandes defw 0
 
 Attr_big_counter db %01000110
 
+Evita_repeticion_inicio db 0,0,0
+
 ; SCORE:
 
 Score_hex defw 0
@@ -1094,9 +1096,6 @@ START:
 Main_menu:
 
 	call Clean_and_logo
-
-;	call New_max_score
-
 	call Print_Main_menu
 	call Firma
 
@@ -1189,42 +1188,6 @@ Init_level:
 ;	Prepara cajas.
 
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
-
-;	jr $
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	call Prepara_Cajas_de_Entidades
 
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------

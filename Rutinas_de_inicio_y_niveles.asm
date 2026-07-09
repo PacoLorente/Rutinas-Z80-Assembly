@@ -422,7 +422,7 @@ Prepara_Cajas_Master:
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
-	call Determina_posicion_de_inicio 								; $941e ($78).
+	call Determina_posicion_de_inicio 								; $941e ($78),($76),($72)
 
 	ld a,(Tipo)
 	call Situa_Puntero_indice_mov			 	 					; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
@@ -433,10 +433,6 @@ Prepara_Cajas_Master:
 	call Construye_movimientos_masticados_entidad
 
 Movimientos_masticados_construidos:
-
-
-	jr $
-
 
 	ld hl,(Puntero_indice_master)
 	call Extrae_address
@@ -502,9 +498,13 @@ Determina_posicion_de_inicio:
 	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
-; 	Lo almacenamos en
+; 	No queremos que se repita la posición de inicio en dos clases distintas de entidades.
 
 	ld d,a
+
+	call Almacena_y_cp_rnd
+
+;	ld d,a 															; $08,$12,$0c --- $08,$02,$12 --- $18,$1c,$18 --- $1e,$1c,$18
 
 	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
 	and 2
@@ -525,6 +525,64 @@ Determina_posicion_de_inicio:
 
 1 ld hl,Posicion_inicio
 	add (hl)
+	ld (hl),a
+
+	ret
+
+; ----------------------------------------------
+;
+;	9/7/26
+
+Almacena_y_cp_rnd:
+
+	jr $										; $1e,
+
+	ld hl,Evita_repeticion_inicio
+1 cp (hl)
+	jr z,Repeticion
+
+	sub (hl)
+
+	cp d
+	jr z,Store
+
+	jr $
+
+	ld a,d
+	ld b,3
+
+2 dec a
+	cp (hl)
+	jr z,$
+	djnz 2B
+
+	ld a,d
+	ld b,3
+
+3 inc a
+	cp (hl)
+	jr z,$
+	djnz 3B
+
+
+
+
+
+	ld a,d
+	jr Store
+
+Next_num
+
+	inc hl
+	djnz 1B
+
+Repeticion
+
+	add 5
+	jr Almacena_y_cp_rnd
+
+Store
+
 	ld (hl),a
 
 	ret
@@ -1144,9 +1202,6 @@ Max_value:
 ;	 			   (A) = "1,2,3, ..... " Indica que esta Caja_Master ya está iniciada con esta (Clase) de entidad.
 
 Situa_en_Caja_Master:
-
-;	jr $
-
 
 	ld hl,Indice_de_cajas_master
 	ld (Puntero_indice_master),hl 									; Sitúa (Puntero_indice_master) en la 1ª caja del índice.
