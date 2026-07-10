@@ -926,8 +926,6 @@ Puntero_decenas_grandes defw 0
 
 Attr_big_counter db %01000110
 
-Evita_repeticion_inicio db 0,0,0
-
 ; SCORE:
 
 Score_hex defw 0

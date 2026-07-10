@@ -493,6 +493,8 @@ Avanza_siguiente_entidad_del_nivel:
 
 Determina_posicion_de_inicio:
 
+	jr $
+
 	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
 	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
@@ -500,11 +502,69 @@ Determina_posicion_de_inicio:
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 ; 	No queremos que se repita la posición de inicio en dos clases distintas de entidades.
 
-	ld d,a
+	ld d,a 															; $08,$12,$0c --- $08,$02,$12 --- $18,$1c,$18 --- $1e,$1c,$18
 
-	call Almacena_y_cp_rnd
+	call Comprueba_num_anterior
 
-;	ld d,a 															; $08,$12,$0c --- $08,$02,$12 --- $18,$1c,$18 --- $1e,$1c,$18
+; -----------------------------------------------------------------------------------
+;
+;	10/7/26
+;
+
+Comprueba_num_anterior:
+
+	ld hl,Cuad_objeto 												; Voy a utilizar esta variable para almacenar el nº aleatorio.
+; 																	; El motivo: Evitar que dos entidades de distinta clase tengan la misma posición de inicio.
+
+	ld b,3
+
+	cp (hl)
+	jr nz,Distinta_columna
+
+Misma_columna
+
+	jr $
+
+
+
+Distinta_columna
+
+1 inc (hl)
+	cp (hl)
+	jr z, Misma_columna
+	djnz 1B
+
+	ld b,3
+	ld hl,Cuad_objeto
+
+2 dec (hl)
+	cp (hl)
+	jr z,Misma_columna
+	djnz 2B
+
+Store_number
+
+	ld hl,Cuad_objeto
+	ld (hl),a
+
+	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
 	and 2
@@ -525,64 +585,6 @@ Determina_posicion_de_inicio:
 
 1 ld hl,Posicion_inicio
 	add (hl)
-	ld (hl),a
-
-	ret
-
-; ----------------------------------------------
-;
-;	9/7/26
-
-Almacena_y_cp_rnd:
-
-	jr $										; $1e,
-
-	ld hl,Evita_repeticion_inicio
-1 cp (hl)
-	jr z,Repeticion
-
-	sub (hl)
-
-	cp d
-	jr z,Store
-
-	jr $
-
-	ld a,d
-	ld b,3
-
-2 dec a
-	cp (hl)
-	jr z,$
-	djnz 2B
-
-	ld a,d
-	ld b,3
-
-3 inc a
-	cp (hl)
-	jr z,$
-	djnz 3B
-
-
-
-
-
-	ld a,d
-	jr Store
-
-Next_num
-
-	inc hl
-	djnz 1B
-
-Repeticion
-
-	add 5
-	jr Almacena_y_cp_rnd
-
-Store
-
 	ld (hl),a
 
 	ret
