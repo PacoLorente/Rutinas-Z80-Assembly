@@ -499,6 +499,9 @@ Determina_posicion_de_inicio:
 	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
 
 	jr z,$
+	cp 1
+	jr z,$
+
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 ; 	No queremos que se repita la posición de inicio en dos clases distintas de entidades.
@@ -578,9 +581,6 @@ Posicion_rep
 Almacena_pos
 
 	dec a
-
-	jr z,$				; DEBUGGGGG. Puede ser "0" ????
-	jr c,$
 
 ;	jr nc,1F
 

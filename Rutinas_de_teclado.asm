@@ -79,8 +79,6 @@ Validando_pressed_key
 	dec c
 	jr z,1F 													; Name completed. 5 chars. max.
 
-	call BEEP
-
 	ld hl,(Puntero_del_nombre_del_campeon)
 5 ld de,Inicio_de_msg_de_nombre
 
