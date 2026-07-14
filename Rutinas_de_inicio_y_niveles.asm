@@ -398,6 +398,7 @@ Prepara_Cajas_Master:
 ;	En 1er lugar cargaremos la bandeja DRAW con la definición de esta (Clase) de entidad para poder generar todos los movimientos masticados.
 
 	ld a,c 															; (A) = (Clase).
+
 	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
 
@@ -493,78 +494,18 @@ Avanza_siguiente_entidad_del_nivel:
 
 Determina_posicion_de_inicio:
 
-	jr $
-
 	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
 	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
+
+	jr z,$
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 ; 	No queremos que se repita la posición de inicio en dos clases distintas de entidades.
 
 	ld d,a 															; $08,$12,$0c --- $08,$02,$12 --- $18,$1c,$18 --- $1e,$1c,$18
 
-	call Comprueba_num_anterior
-
-; -----------------------------------------------------------------------------------
-;
-;	10/7/26
-;
-
-Comprueba_num_anterior:
-
-	ld hl,Cuad_objeto 												; Voy a utilizar esta variable para almacenar el nº aleatorio.
-; 																	; El motivo: Evitar que dos entidades de distinta clase tengan la misma posición de inicio.
-
-	ld b,3
-
-	cp (hl)
-	jr nz,Distinta_columna
-
-Misma_columna
-
-	jr $
-
-
-
-Distinta_columna
-
-1 inc (hl)
-	cp (hl)
-	jr z, Misma_columna
-	djnz 1B
-
-	ld b,3
-	ld hl,Cuad_objeto
-
-2 dec (hl)
-	cp (hl)
-	jr z,Misma_columna
-	djnz 2B
-
-Store_number
-
-	ld hl,Cuad_objeto
-	ld (hl),a
-
-	ret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	call No_repeat
 
 	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
 	and 2
@@ -586,6 +527,81 @@ Store_number
 1 ld hl,Posicion_inicio
 	add (hl)
 	ld (hl),a
+
+	ret
+
+; -------------------------------------------------------------------
+;
+;	14/07/26
+;
+
+No_repeat:
+
+;	jr $
+
+	ld e,0 													; Necesitamos retornar con "Z" de la rutina.
+1 ld hl, Almacen_de_movimientos_masticados_Amadeus        ; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
+
+2 cp (hl)
+	call z, Posicion_rep
+	jr z,1B
+
+	inc (hl)
+	dec (hl)
+	call z, Almacena_pos
+	ret z
+
+;	Siguiente posición almacenada.
+
+	inc hl
+	jr 2B
+
+; ------------------------------------------------
+
+Posicion_rep
+
+	cp $10
+	jr c,1F
+
+	dec a
+	jr 2F
+
+1 inc a
+
+2 inc e
+	dec e
+
+	ret
+
+; ------------------------------------------------
+
+Almacena_pos
+
+	dec a
+
+	jr z,$				; DEBUGGGGG. Puede ser "0" ????
+	jr c,$
+
+;	jr nc,1F
+
+;	jr 3F
+
+	cp $1e
+	jr nc,3F
+
+	ld (hl),a
+
+	inc a
+	inc hl
+
+3 ld (hl),a
+
+	inc a
+	inc hl
+
+	ld (hl),a
+
+	xor a
 
 	ret
 

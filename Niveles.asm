@@ -152,7 +152,7 @@ Indice_de_niveles:
 	defw Nivel_1 
 	defw Nivel_2
 	defw Nivel_3
-	defw Nivel_4
+;	defw Nivel_4
 
 ;	...
 ;	...
@@ -169,26 +169,25 @@ Nivel_1 db $f0,$0a,$70 							; FLIES !!!
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 ;												; Nº de entidades que tiene el nivel.
-	db 5
+	db 15
 
 	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
-;	db 3,2,1,2,2
-;	db 1,3,1,3,2
+	db 3,2,1,2,2
+	db 1,3,1,3,2
 ;	db 1,3,3,2,2
 
 ; ---------------------------------------------------------------------------------------
 
 ; Nivel_2. Tres clases de entidades tipo BadSat.
 
-Nivel_2 db $d0,$10,$50 							; FLIES !!!
-
+;
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 
-	db 5
+;	db 15
 
-	db 3,2,1,3,2
+;	db 3,2,1,3,2
 ;	db 1,3,2,2,1
 ;	db 2,3,1,2,3
 ;	db 1,2,2,3,1
@@ -197,34 +196,36 @@ Nivel_2 db $d0,$10,$50 							; FLIES !!!
 
 ; Nivel_3. Tres clases de entidades tipo Badplate.
 
-Nivel_3 db $C0,$15,$50 							; UFOS !!!
+Nivel_2 db $C0,$15,$50 							; UFOS !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 
-	db 5
+	db 20
 
 	db 4,5,6,4,5
-;	db 5,5,6,4,6
-;	db 4,5,6,5,4
+	db 5,5,6,4,6
+	db 4,5,6,5,4
+	db 4,6,6,4,5
+
 
 ; ---------------------------------------------------------------------------------------
 
 ; Nivel_3. Tres clases de entidades tipo Badplate.
 
-Nivel_4 db $b0,$15,$50 							; UFOS !!!
+Nivel_3 db $b0,$15,$50 							; UFOS !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
 
-	db 5
+	db 20
 
 	db 1,4,6,1,6
-;	db 4,6,6,1,4
-;	db 1,6,1,6,1
-;	db 4,1,6,1,6
+	db 4,6,6,1,4
+	db 1,6,1,6,1
+	db 4,1,6,1,6
 
 
 
