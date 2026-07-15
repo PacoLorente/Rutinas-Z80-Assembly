@@ -494,14 +494,11 @@ Avanza_siguiente_entidad_del_nivel:
 
 Determina_posicion_de_inicio:
 
+;	jr $
+
 	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
 	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
-
-	jr z,$
-	cp 1
-	jr z,$
-
 
 ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
 ; 	No queremos que se repita la posición de inicio en dos clases distintas de entidades.
@@ -543,7 +540,9 @@ No_repeat:
 ;	jr $
 
 	ld e,0 													; Necesitamos retornar con "Z" de la rutina.
-1 ld hl, Almacen_de_movimientos_masticados_Amadeus        ; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
+1 ld hl, Almacen_de_movimientos_masticados_Amadeus        	; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
+
+	call No_zeros
 
 2 cp (hl)
 	call z, Posicion_rep
@@ -551,6 +550,7 @@ No_repeat:
 
 	inc (hl)
 	dec (hl)
+
 	call z, Almacena_pos
 	ret z
 
@@ -562,6 +562,11 @@ No_repeat:
 ; ------------------------------------------------
 
 Posicion_rep
+
+;	Si el nº aleatorio es "0" y (hl) no contiene datos se tomará como nº aleatorio repetido.
+
+	and a
+	jr z,$	
 
 	cp $10
 	jr c,1F
@@ -602,6 +607,28 @@ Almacena_pos
 	ld (hl),a
 
 	xor a
+
+	ret
+
+; ------------------------------------------------
+;
+;	15/07/26
+;
+;	INPUTS: A y D contienen el nº aleatorio ($00 - $1f).
+;			HL apunta a Almacen_de_movimientos_masticados_Amadeus 
+;
+;			Vamos a sustituir los "0" de los nueve primeros .db del almacén por $ff.
+;			Evitamos así que cuando el nº aleatorio sea "0" y el byte del almacén también se detecte como_
+;			_repetición y no se almacene la posición "0".
+
+No_zeros
+
+	jr $
+
+	ld b,9
+
+	dec (hl)
+	inc hl
 
 	ret
 
