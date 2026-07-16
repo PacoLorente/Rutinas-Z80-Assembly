@@ -1179,6 +1179,7 @@ Init_level:
 ;	Imprime mensaje de nivel.
 
 	call Print_level_msg
+	call No_zeros
 
 	pop bc
 	pop hl
@@ -3061,8 +3062,8 @@ Decrementa_techo:
 
 	sub (hl)
 
-	call z,Min_value
-	call c,Min_value
+	call z,$
+	call c,$
 
 ;	New TOP-time in A.
 

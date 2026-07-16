@@ -537,44 +537,45 @@ Determina_posicion_de_inicio:
 
 No_repeat:
 
-;	jr $
+	jr $
 
 	ld e,0 													; Necesitamos retornar con "Z" de la rutina.
-1 ld hl, Almacen_de_movimientos_masticados_Amadeus        	; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
 
-;	call No_zeros
+1 ld hl, Almacen_de_movimientos_masticados_Amadeus        	; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
 
 2 cp (hl)
 	call z, Posicion_rep
 	jr z,1B
 
 	inc (hl)
-	dec (hl)
 
 	call z, Almacena_pos
 	ret z
 
+	dec (hl)
+
 ;	Siguiente posición almacenada.
 
 	inc hl
+
 	jr 2B
 
 ; ------------------------------------------------
 
-Posicion_rep
+Posicion_rep:
 
 ;	Si el nº aleatorio es "0" y (hl) no contiene datos se tomará como nº aleatorio repetido.
-
-	and a
-	jr z,$	
 
 	cp $10
 	jr c,1F
 
 	dec a
+	dec a
+
 	jr 2F
 
 1 inc a
+	inc a
 
 2 inc e
 	dec e
@@ -583,15 +584,16 @@ Posicion_rep
 
 ; ------------------------------------------------
 
-Almacena_pos
+Almacena_pos:
 
 	dec a
 
-;	jr nc,1F
+	jr nc,1F
 
-;	jr 3F
+	inc a
+	jr 3F
 
-	cp $1e
+1 cp $1e
 	jr nc,3F
 
 	ld (hl),a
@@ -610,25 +612,29 @@ Almacena_pos
 
 	ret
 
-; ------------------------------------------------
+; -------------------------------------------------------------------------------------------------------y
 ;
-;	15/07/26
+;	16/07/26
 ;
 ;	INPUTS: A y D contienen el nº aleatorio ($00 - $1f).
 ;			HL apunta a Almacen_de_movimientos_masticados_Amadeus 
+;
+;	MODIFY: HL y BC.
 ;
 ;			Vamos a sustituir los "0" de los nueve primeros .db del almacén por $ff.
 ;			Evitamos así que cuando el nº aleatorio sea "0" y el byte del almacén también se detecte como_
 ;			_repetición y no se almacene la posición "0".
 
-No_zeros
+No_zeros:
 
-	jr $
+	ld hl,Almacen_de_movimientos_masticados_Amadeus + 8
 
 	ld b,9
 
-	dec (hl)
-	inc hl
+1 dec (hl)
+	dec hl
+
+	djnz 1B
 
 	ret
 
@@ -1166,36 +1172,15 @@ Inicializa_Nivel:
 	ld a,(hl)
 	ld (Max_time_to_appear_entities),a
 
-	sub $20
-
-	call z,Min_value
-	call c,Min_value
-
-	ld (hl),a
-
 	inc hl
 
 	ld a,(hl)
 	ld (Decrease_top_time_entities),a
 
-	add $0a
-
-	call z,Max_value
-	call c,Max_value
-
-	ld (hl),a
-
 	inc hl
 
 	ld a,(hl)
 	ld (Min_time_to_appear_entities),a
-
-	sub $30
-
-	call z,Min_value
-	call c,Min_value
-
-	ld (hl),a
 
 	inc hl
 
@@ -1214,25 +1199,6 @@ Inicializa_Nivel:
 	ld c,(hl)													
 
 	ret 										 
-
-
-Min_value:
-
-	xor a
-	inc a
-
-	ld a,$10
-
-	ret
-
-Max_value:
-
-	xor a
-	inc a
-
-	ld a,$fa
-
-	ret
 
 ; ----------------------
 ;
