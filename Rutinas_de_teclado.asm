@@ -279,7 +279,7 @@ ROM_Key_Scan:
 
 Main_menu_key:
 
-    ld HL,Ctrl_6 											; Inicializa RETURN TO MAIN MENU.
+    ld hl,Ctrl_6 											; Inicializa RETURN TO MAIN MENU.
     res 1,(hl)
 
 	call ROM_Key_Scan 										; Scan keyboard.
@@ -334,8 +334,8 @@ Main_menu_key:
 
 Kempston_control:
 
-	ld a,(Ctrl_6)
-	bit 2,a
+	ld a,(Ctrl_7)
+	bit 1,a
 	ret z 													; Exit routine. We´re going to play with Keyboard.
 
 ;	Reading Port:
@@ -396,8 +396,8 @@ Kempston_control:
 
 Main_keyboard_routine:
 
-	ld a,(Ctrl_6)
-	bit 2,a
+	ld a,(Ctrl_7)
+	bit 1,a
 	ret nz 													; Exit routine. We´re going to play with Kempston joystick.
 
     call KEY_SCAN
@@ -571,8 +571,10 @@ Leave_menu_2
 	ld (hl),$05  											
 
 	ld hl,Ctrl_6
-	set 1,(hl)
-	res 2,(hl) 												; Indica más adelante que volvemos al menú principal.
+	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
+
+	ld hl,Ctrl_7
+	res 1,(hl) 												; Desactiva los controles KEMPSTON.
 
 ;	Clean Kempston menu.
 
@@ -656,8 +658,8 @@ Dec_START_counter:
 
 Active_kempstom_joystick:
 
-	ld hl,Ctrl_6
-	set 2,(hl) 												; Indica que activamos el Kempston joystick.
+	ld hl,Ctrl_7
+	set 1,(hl) 												; Indica que activamos el Kempston joystick.
 
 ;	Fijamos
 

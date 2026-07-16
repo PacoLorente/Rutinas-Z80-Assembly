@@ -813,9 +813,7 @@ Ctrl_6 db 0
 ; 																   El submenú CONTROLS se muestra en pantalla un tiempo definido por (Start_counter), pasado este tiempo_
 ;																   _la rutina activa `este bit´ y sale de la rutina. El menú está así diseñado para poder DEFINIR los controles si los
 ; 																   _actuales no nos agradan. 
-; 															BIT 2, "1" Indica que vamos a utilizar el Kempston Joystick para jugar.
-; 																   Este bit lo activa la rutina de teclado: [Active_kempstom_joystick] y su función es evitar_
-; 																   _que la rutina [Press_START] escanee el teclado esperando disparo para comenzar la partida.
+; 															BIT 2, -----------------------------------
 ; 															BIT 3, "1" Indica que salimos de la rutina de IM nada más entrar. Este bit lo activa la rutina [Carrusell] tras habilitar las interrupciones.
 ; 																   Necesitamos leer el teclado cada 20ms para facilitar que no se produzca la repetición de una misma tecla.
 ; 															BIT 4, "1" Indica DELETE a la subrutina FLASH. Lo activa la subrutina [Enter_name] cuando pulsamos CAPS SHIFT.
@@ -950,8 +948,10 @@ Variables_DRAW2:
 ;
 ;	Estas variables no se inicializan:
 
-Ctrl_7 db 0
-
+Ctrl_7 db 0 																			; Variable de Control que no se inicializa al superar nivel.
+;
+; 																						; BIT 0, "1" Hay que imprimir la puntuación máxima en el menú principal. También indica que hemos terminado de introducir el nombre.
+; 																						; BIT 1, "1" JOYSTICK KEMPSTON activado.
 Score_hex_max defw 0
 Score_max_msg ds 6
 
@@ -1470,8 +1470,12 @@ Gestion_de_Amadeus:
 
 ;	GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-;	En primer lugar reponemos los controles KEYBOARD en caso de haber seleccionado joystick SINCLAIR.
+;	Desactiva controles KEMPSTON.
+;	Reponemos los controles KEYBOARD en caso de haber seleccionado joystick SINCLAIR.
 ;	Si la caja de 4 bytes (Sinclair_db_box) está vacía no habrá transvase de datos.
+
+	ld hl,Ctrl_7
+	res 1,(hl)
 
 	ld hl,Sinclair_db_box
 	ld a,(hl)

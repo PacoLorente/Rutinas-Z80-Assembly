@@ -542,7 +542,7 @@ No_repeat:
 	ld e,0 													; Necesitamos retornar con "Z" de la rutina.
 1 ld hl, Almacen_de_movimientos_masticados_Amadeus        	; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
 
-	call No_zeros
+;	call No_zeros
 
 2 cp (hl)
 	call z, Posicion_rep
