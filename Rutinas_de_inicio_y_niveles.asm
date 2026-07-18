@@ -471,6 +471,8 @@ Avanza_siguiente_entidad_del_nivel:
 	ld c,(hl)														; (Tipo) de la siguiente entidad en C.
 	djnz Prepara_Cajas_Master 										; dec (Numero_de_entidades).
 
+	jr $
+
 ; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades, 
 ; _ inicializamos el puntero (Puntero_de_entidades), situándolo en la 1ª entidad.
 
@@ -537,7 +539,7 @@ Determina_posicion_de_inicio:
 
 No_repeat:
 
-	jr $
+;	jr $
 
 	ld e,0 													; Necesitamos retornar con "Z" de la rutina.
 
@@ -545,13 +547,14 @@ No_repeat:
 
 2 call Comparador
 
+	ld a,d 													; Recupera el n° rnd en A tras la comparación.
+
 	call z, Posicion_rep
 	jr z,1B
 
 	inc (hl)
 
-	call z, Almacena_pos
-	ret z
+	jr z, Almacena_pos
 
 	dec (hl)
 
@@ -560,6 +563,12 @@ No_repeat:
 	inc hl
 
 	jr 2B
+
+Almacena_pos:
+
+	ld (hl),a
+
+	ret
 
 ; ------------------------------------------------
 
@@ -580,34 +589,6 @@ Posicion_rep:
 
 2 inc e
 	dec e
-
-	ret
-
-; ------------------------------------------------
-
-Almacena_pos:
-
-; Siempre que entramos en esta rutina tenemos activado el flag C debido a la comparación $xx con $ff.
-
-	and a 				; Indica si A es "0" y pone NC.
-	jr z,3F
-
-1 cp $1e
-	jr nc,3F
-
-	ld (hl),a
-
-	inc a
-	inc hl
-
-3 ld (hl),a
-
-	inc a
-	inc hl
-
-	ld (hl),a
-
-	xor a
 
 	ret
 
@@ -640,13 +621,27 @@ No_zeros:
 
 Comparador:
 
+	and a
+	jr z,1F
+
+	cp $1e
+	jr nc,1F
+
+	dec a
+
+	cp (hl)
+	ret z 			; n - 1 = Repeat.
+
+	inc a
+
+1 cp (hl)
+	ret z           ; n = Repeat.
+
+	inc a
+
+	cp (hl)
 
 	ret
-
-
-
-
-
 
 ; **********************************************************************************************************************************************************
 ;
