@@ -543,7 +543,8 @@ No_repeat:
 
 1 ld hl, Almacen_de_movimientos_masticados_Amadeus        	; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
 
-2 cp (hl)
+2 call Comparador
+
 	call z, Posicion_rep
 	jr z,1B
 
@@ -634,6 +635,18 @@ No_zeros:
 	dec (hl)
 
 	ret
+
+
+
+Comparador:
+
+
+	ret
+
+
+
+
+
 
 ; **********************************************************************************************************************************************************
 ;
