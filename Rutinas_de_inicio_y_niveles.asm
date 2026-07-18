@@ -586,12 +586,10 @@ Posicion_rep:
 
 Almacena_pos:
 
-	dec a
+; Siempre que entramos en esta rutina tenemos activado el flag C debido a la comparación $xx con $ff.
 
-	jr nc,1F
-
-	inc a
-	jr 3F
+	and a 				; Indica si A es "0" y pone NC.
+	jr z,3F
 
 1 cp $1e
 	jr nc,3F
@@ -627,14 +625,13 @@ Almacena_pos:
 
 No_zeros:
 
-	ld hl,Almacen_de_movimientos_masticados_Amadeus + 8
+	ld hl,Almacen_de_movimientos_masticados_Amadeus + 2
 
-	ld b,9
-
-1 dec (hl)
+	dec (hl)
 	dec hl
-
-	djnz 1B
+	dec (hl)
+	dec hl
+	dec (hl)
 
 	ret
 
