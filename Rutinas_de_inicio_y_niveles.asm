@@ -471,9 +471,7 @@ Avanza_siguiente_entidad_del_nivel:
 	ld c,(hl)														; (Tipo) de la siguiente entidad en C.
 	djnz Prepara_Cajas_Master 										; dec (Numero_de_entidades).
 
-	jr $
-
-; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades, 
+; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades,
 ; _ inicializamos el puntero (Puntero_de_entidades), situándolo en la 1ª entidad.
 
 	ld hl,(Puntero_indice_NIVELES)
@@ -490,13 +488,11 @@ Avanza_siguiente_entidad_del_nivel:
 
 ; -----------------------------------------------------------------------------------
 ;
-;	14/06/26
+;	20/07/26
 ;
 ;	Asigna una columna de inicio aleatoria y distinta a cada una de las 3 Clases como máximo que pueden aparecer en un nivel.
 
 Determina_posicion_de_inicio:
-
-;	jr $
 
 	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
@@ -539,8 +535,6 @@ Determina_posicion_de_inicio:
 
 No_repeat:
 
-;	jr $
-
 	ld e,0 													; Necesitamos retornar con "Z" de la rutina.
 
 1 ld hl, Almacen_de_movimientos_masticados_Amadeus        	; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
@@ -571,10 +565,19 @@ Almacena_pos:
 	ret
 
 ; ------------------------------------------------
+;
+;	INPUT: A y D contienen un n° aleatorio ($00-$1f).
+;
+;	MODIFY: A y D
+;
+;	OUTPUT: A y D contienen un nuevo n° RND ($00-$1f).
+;
+;	Se generan tres n° aleatorios ($00-$1f) como máximo, (3 clases de entidades diferentes como máximo por nivel).
+;
+;	(N° RND)-1, (N° RND) y (N° RND)+1 no pueden coincidir con el n° anterior, (2 entidades por nivel) o con los n°s anteriores_
+;	_, (3 entidades por nivel).
 
 Posicion_rep:
-
-;	Si el nº aleatorio es "0" y (hl) no contiene datos se tomará como nº aleatorio repetido.
 
 	cp $10
 	jr c,1F
@@ -589,6 +592,8 @@ Posicion_rep:
 
 2 inc e
 	dec e
+
+	ld d,a
 
 	ret
 
@@ -617,25 +622,25 @@ No_zeros:
 
 	ret
 
-
+; ----------------------------------------------------------------------------------------------------
 
 Comparador:
 
 	and a
 	jr z,1F
 
+	dec a
+
 	cp $1e
 	jr nc,1F
 
-	dec a
-
 	cp (hl)
-	ret z 			; n - 1 = Repeat.
+	ret z
 
 	inc a
 
 1 cp (hl)
-	ret z           ; n = Repeat.
+	ret z
 
 	inc a
 
