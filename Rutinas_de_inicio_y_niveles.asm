@@ -481,6 +481,7 @@ Avanza_siguiente_entidad_del_nivel:
 	inc hl
 	inc hl
 	inc hl
+	inc hl
 
 	ld (Puntero_de_entidades),hl
 
@@ -1175,7 +1176,6 @@ Inicializa_Nivel:
 
 ; Actualiza (Puntero_indice_NIVELES).
 
-
 	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
 	call Extrae_address   						 					; Sitúa HL en el 1er byte que define: (Max_time_to_appear_entities).
 
@@ -1193,6 +1193,12 @@ Inicializa_Nivel:
 	ld (Min_time_to_appear_entities),a
 
 	inc hl
+
+	ld a,(hl)
+	ld (CLOCK_disparos_de_entidades),a
+	ld (Repone_CLOCK_disparos),a
+
+	inc hl 
 
 	ld a,(hl)
 	ld (Numero_de_entidades),a					 					; Inicializa (Numero_de_entidades).

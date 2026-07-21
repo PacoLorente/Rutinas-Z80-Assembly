@@ -1064,17 +1064,18 @@ Print_Main_menu:
 
 ; ----------------------------------------------------------
 ;
-;   31/3/26
+;   21/07/26
 ;
 
 Print_DONE:
 
-;   BC entra con valor "0" en la rutina.
-
+    ld bc,0
     ld hl,Done                                              ; msg.
     ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,%11100000                                          ; attrs.
+
     call Print_text_msg
+
     ret
 
 Clean_DONE
@@ -1082,7 +1083,9 @@ Clean_DONE
     ld hl,a12                                               ; msg., "    ", 
     ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
     ld a,0                                                  ; attrs.
+
     call Print_text_msg
+
     ret
 
     xor a

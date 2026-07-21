@@ -433,6 +433,10 @@ Incrementa_FRAMES
 	bit 6,a
 	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
 
+	ld a,(Ctrl_1)
+	bit 0,a
+	call nz,Print_DONE 												; Imprime "DONE" si hemos eliminado a la última entidad del nivel.
+
 	pop bc
 	pop de
 	pop hl
@@ -683,18 +687,8 @@ Ctrl_1 db 0 												; Byte de control de propósito general.
 
 ;																DESCRIPCIÓN:
 ;
-;															BIT 0, La rutina de generación de disparos, [Genera_disparo], pone este bit a "1" para indicar a la_
-;															_ rutina [Genera_datos_de_impresion] que los datos a guardar pertenecen a un disparo y no a una entidad,_
-;															_ por lo tanto hemos de almacenarlos en `Scanlines_album_disparos? en lugar de `Scanlines_album?.
-;															BIT 1, Este bit indica que el disparo sale de la pantalla, ($4000-$57ff).
-;															BIT 2, Este bit a "1" indica que un disparo de Amadeus ha alcanzado a una entidad. Como no sabemos cual,_
-;															_ hemos de comparar las coordenadas de (Coordenadas_disparo_certero) con las de cada entidad.
-
-;															BIT 3, Recarga de nueva oleada.
-;															BIT 4, Recarga de nueva oleada.
-;															BIT 5, FREEEEEEEEE !!!!!!!!!!!!!!!!!
-;															BIT 6, **** Frame completo.
-;															BIT 7, Indica que ya está tomada la foto de Amadeus. No tomaremos otra hasta el próximo FRAME.
+;															BIT 0, "1" Habilita la impresión del msg. DONE en pantalla. La llamada a [Print_DONE] se efectúa desde el Reloj del juego,_
+; 															_ Rutina de interrupciones IM2.
 
 Repone_puntero_objeto defw 0								; Almacena (Puntero_objeto). Cuando el Sprite se inicia por arriba o por abajo,_
 ; 															; _ hay que sustituirlo por un `sprite vacío' para que no se vea el 1er o último scanline.
@@ -852,8 +846,8 @@ Puntero_num_aleatorios_disparos defw Numeros_aleatorios		; Puntero que se irá d
 Numero_rnd_disparos db 0
 
 Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva entidad.
-Repone_CLOCK_disparos db $a0								; Reloj decreciente.
-CLOCK_disparos_de_entidades db $a0
+Repone_CLOCK_disparos db 0									; Reloj decreciente.
+CLOCK_disparos_de_entidades db 0
 
 Start_counter defw 0 										; Temporizador. Espera la pulsación de "FIRE" en los menús KEYBOARD y KEMPSTON. 
 Start_counter_2 db $05 										; 2º Temporizador, (3 bytes counter). Espera la pulsación "FIRE" en el menú KEMPSTON.

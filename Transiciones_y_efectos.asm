@@ -1,3 +1,11 @@
+Enable_Print_DONE:
+
+	ld a,(Ctrl_1)
+	set 0,a
+	ld (Ctrl_1),a
+
+	ret
+
 ; ------------------------------------------------------------------------
 ;
 ;	30/4/26
@@ -490,7 +498,7 @@ Dispara_salida_de_amadeus:
 	and a
 	ret nz
 
-	ld a,70
+	ld a,70 														; 	Tiempo que queremos que tarde el mensaje DONE en aparecer.
 
 	ld hl,Temp_Amadeus_exit
 	dec (hl) 														;	Inicialmente 60d
@@ -498,7 +506,7 @@ Dispara_salida_de_amadeus:
 	cp (hl)
 
 	push hl
-	call z,Print_DONE
+	call z,Enable_Print_DONE
 	pop hl
 
 	inc (hl)

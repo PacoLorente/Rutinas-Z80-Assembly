@@ -10,7 +10,7 @@ Msg_level_index:
 	defw Msg_1
 	defw Msg_2
 	defw Msg_3
-	defw Msg_4
+;	defw Msg_4
 
 	defw 0
 	defw 0
@@ -19,13 +19,10 @@ Msg_1 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la direcció
 	defm "FLIES",0
 
 Msg_2 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
-	defm "FLIES",0
+	defm "UFOS",0
 
-Msg_3 db 8,4
-	defm "UFOS",0								; El 2° .db indica la longitud del msg, 5 chars.
-
-Msg_4 db 3,14
-	defm "FLIES AND UFOS",0
+Msg_3 db 4,12
+	defm "FLIES & UFOS",0
 
 ; --------------------------------------------------------------------------------------------------------------
 
@@ -163,45 +160,31 @@ Indice_de_niveles:
 
 ; NIVEL_1. Tres clases de entidades tipo BadSat.
 
-Nivel_1 db $f0,$0a,$70 							; FLIES !!!
+Nivel_1 db $f0,$0a,$70,$a0 						; FLIES !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
-;												; Nº de entidades que tiene el nivel.
-	db 15
+; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+
+												
+	db 20 										; Nº de entidades que tiene el nivel.
 
 	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
 	db 3,2,1,2,2
 	db 1,3,1,3,2
-;	db 1,3,3,2,2
+	db 1,3,3,2,2
 
 ; ---------------------------------------------------------------------------------------
 
-; Nivel_2. Tres clases de entidades tipo BadSat.
+; Nivel_2. UFO´s
 
-;
-;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
-;												; 2º byte: Define el valor de (Decrease_top_time_entities).
-;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
-
-;	db 15
-
-;	db 3,2,1,3,2
-;	db 1,3,2,2,1
-;	db 2,3,1,2,3
-;	db 1,2,2,3,1
-
-; ---------------------------------------------------------------------------------------
-
-; Nivel_3. Tres clases de entidades tipo Badplate.
-
-Nivel_2 db $C0,$15,$50 							; UFOS !!!
+Nivel_2 db $C0,$15,$50,$a0 						; UFOS !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
-
+; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
 	db 20
 
 	db 4,5,6,4,5
@@ -212,13 +195,14 @@ Nivel_2 db $C0,$15,$50 							; UFOS !!!
 
 ; ---------------------------------------------------------------------------------------
 
-; Nivel_3. Tres clases de entidades tipo Badplate.
+; Nivel_3. Flies & UFOS.
 
-Nivel_3 db $b0,$15,$50 							; UFOS !!!
+Nivel_3 db $b0,$15,$50,$a0 						; UFOS !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
 ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
 
 	db 20
 
