@@ -160,7 +160,7 @@ Indice_de_niveles:
 
 ; NIVEL_1. Tres clases de entidades tipo BadSat.
 
-Nivel_1 db $f0,$0a,$70,$a0 						; FLIES !!!
+Nivel_1 db $f0,$0a,$70,$70 						; FLIES !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
@@ -179,7 +179,7 @@ Nivel_1 db $f0,$0a,$70,$a0 						; FLIES !!!
 
 ; Nivel_2. UFO´s
 
-Nivel_2 db $C0,$15,$50,$a0 						; UFOS !!!
+Nivel_2 db $C0,$15,$50,$70 						; UFOS !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
@@ -197,7 +197,7 @@ Nivel_2 db $C0,$15,$50,$a0 						; UFOS !!!
 
 ; Nivel_3. Flies & UFOS.
 
-Nivel_3 db $b0,$15,$50,$a0 						; UFOS !!!
+Nivel_3 db $b0,$15,$50,$70 						; UFOS !!!
 
 ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
 ;												; 2º byte: Define el valor de (Decrease_top_time_entities).

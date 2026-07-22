@@ -1,10 +1,11 @@
 ;------------------------------------------
 ;
-;	07/11/24
+;	22/07/26
+;
 
 Autoriza_disparo_de_entidades:
 
-	ld a,1
+    ld a,1
 	ld (Permiso_de_disparo_Entidades),a
 
 	ld a,(Repone_CLOCK_disparos)
@@ -13,14 +14,10 @@ Autoriza_disparo_de_entidades:
 	jr z,2F
     jr nc,1F
 
-;	Este valor marca la frecuencia con la que se generan los disparos de las entidades.
-;	Un valor alto hace que en muy poco tiempo las entidades generen muchos disparos.
-;	Un valor bajo hace que la curva de generación de disparos sea más lenta.
-
     ld a,25
     jr 2F
 
-1 sub 4													; Aumenta la cadencia del disparo.
+1 sub 2													    ; Aumenta la cadencia del disparo.
 
 2 ld (Repone_CLOCK_disparos),a
 	ld (CLOCK_disparos_de_entidades),a
@@ -29,14 +26,17 @@ Autoriza_disparo_de_entidades:
 
 ;------------------------------------------
 ;
-;	14/09/24
+;	22/7/26
 ;
 ;	Nota: en la bandeja DRAW se encuentran los datos de la entidad que va a disparar.
 
 Entidad_genera_disparo_si_procede:
 
-	ld hl,(Puntero_num_aleatorios_disparos)
-	rlc (hl)
+    ld hl,Numeros_aleatorios+2
+
+    xor a                                                   ; Carry a "0".
+
+    rlc (hl)
 
 	call c,Genera_disparo_de_entidad_maldosa
 
@@ -466,7 +466,7 @@ Borra_6_bytes
 ;   22/08/25
 ;
 
-Genera_disparo_de_entidad_maldosa
+Genera_disparo_de_entidad_maldosa:
 
 ;   Estructura de un disparo de entidades.
 
@@ -530,7 +530,7 @@ Genera_disparo_de_entidad_maldosa
 ;   (Puntero_objeto) del disparo inicial siempre será el mismo en cualquier caso, ( para que quede centrado ) en cualquier_
 ;   _ posición de cualquier entidad, (como ocurre con el puntero de impresión de las explosiones de entidades).
 
-    ld hl,Permiso_de_disparo_Entidades			         			
+    ld hl,Permiso_de_disparo_Entidades
     dec (hl)                                            ; No más disparos en este FRAME.
 
 ;   Decrementa el numero de disparos de entidades.   

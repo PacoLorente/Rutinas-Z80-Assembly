@@ -73,7 +73,7 @@ Inicializa_Variables_DRAW:
 
 	ld hl,Numeros_aleatorios
 	ld (RND_SP),hl
-	ld (Puntero_num_aleatorios_disparos),hl
+;	ld (Puntero_num_aleatorios_disparos),hl
 
 	ld a,$a0
 	ld hl,Repone_CLOCK_disparos 							; (Repone_CLOCK_disparos) y (CLOCK_disparos_de_entidades) con "$a0".

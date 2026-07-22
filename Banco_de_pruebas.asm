@@ -842,7 +842,7 @@ Clock_explosion_Amadeus db 5
 Temp_new_live db 100										; Tiempo que tarda en aparecer una nueva nave Amadeus tras ser destruida.
 
 RND_SP defw Numeros_aleatorios								; Puntero que se irá desplazando por el SET de nº aleatorios.
-Puntero_num_aleatorios_disparos defw Numeros_aleatorios		; Puntero que se irá desplazando por el SET de nº aleatorios, (para generar disparos de entidades).
+;Puntero_num_aleatorios_disparos defw Numeros_aleatorios		; Puntero que se irá desplazando por el SET de nº aleatorios, (para generar disparos de entidades).
 Numero_rnd_disparos db 0
 
 Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva entidad.
