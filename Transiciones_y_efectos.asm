@@ -258,24 +258,6 @@ make_stars:
 
 ; ------------------------------------------------------------------------
 ;
-;	27/11/25
-;
-;	Imprime en pantalla la Luna lunera.
-
-Print_Moon:
-
-	ld hl,$401a
-	ld de,$8ef4
-	ld a,%01000111
-	ld b,6
-	ld c,5
-
-	call Pinta_imagen
-
-	ret
-
-; ------------------------------------------------------------------------
-;
 ;	19/7/25
 ;
 ;	Imprime en pantalla la imagen del logo principal.

@@ -13,7 +13,7 @@
 
 ;	Free mem. $8cc6 - $8cff .....$39 / 57d Bytes.
 
-	org $9000
+	org $a000
 
 Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
@@ -24,13 +24,13 @@ Tabla_de_borrado ds 24
 ;	db 0, defw 0, db 0
 ;	.....
 
-Almacen_de_movimientos_masticados_1 defw $c9e6													
+Almacen_de_movimientos_masticados_1 defw $5fe6
 Almacen_de_movimientos_masticados_2 defw 0
 Almacen_de_movimientos_masticados_3 defw 0
 
 	defw 0
 
-Contador_general_de_mov_masticados_1 defw 0  	
+Contador_general_de_mov_masticados_1 defw 0
 Contador_general_de_mov_masticados_2 defw 0
 Contador_general_de_mov_masticados_3 defw 0
 
@@ -219,7 +219,7 @@ Caja_2
 ; FREE SPACE $04, 04d ------------------------------------------------------
 ; --------------------------------------------------------------------------
 
-	org $9100
+	org $a100
 
 Caja_3
 

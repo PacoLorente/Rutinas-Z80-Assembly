@@ -176,6 +176,12 @@ Clean_boxes_and_albums:
 	ld bc,100
 	call Clean_mem
 
+
+
+
+
+
+
 ;	Limpiamos todas las cajas de disparos de las entidades.
 
 	ld hl,Disparo_7-5
@@ -208,8 +214,13 @@ Clean_boxes_and_albums:
 	ld bc,67
 	call Clean_mem
 
-	ld hl,Almacen_de_movimientos_masticados_2
-	ld bc,(Contador_general_de_mov_masticados_3-Almacen_de_movimientos_masticados_2)+1
+;	jr $
+
+
+	ld bc,(Scanlines_album-1) - Almacen_de_movimientos_masticados_Amadeus
+
+	ld hl,Almacen_de_movimientos_masticados_Amadeus
+;	ld bc,(Contador_general_de_mov_masticados_3-Almacen_de_movimientos_masticados_2)+1
 	call Clean_mem
 
 ;	Limpiamos las 3 cajas Master.
@@ -234,9 +245,9 @@ Clean_boxes_and_albums:
 
 ;	Limpiamos Almacenes de movimientos masticados, (Amadeus y entidades).
 
-	ld hl,Almacen_de_movimientos_masticados_Amadeus
-	ld bc,$36fe
-	call Clean_mem
+;	ld hl,Almacen_de_movimientos_masticados_Amadeus
+;	ld bc,$36fe
+;	call Clean_mem
 
 	ld hl,Amadeus_scanlines_album
 	call Inicializa_Amadeus_scanline_album

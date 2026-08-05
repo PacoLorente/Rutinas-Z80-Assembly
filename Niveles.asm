@@ -170,10 +170,10 @@ Nivel_1 db $f0,$0a,$70,$70 						; FLIES !!!
 												
 	db 20 										; Nº de entidades que tiene el nivel.
 
-	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
-	db 3,2,1,2,2
-	db 1,3,1,3,2
-	db 1,3,3,2,2
+	db 1,2,3,1,2 								; Clases de entidades. (Irán apareciendo por este orden).
+	db 3,1,2,3,1
+	db 2,3,1,2,3
+	db 1,2,3,1,2
 
 ; ---------------------------------------------------------------------------------------
 
