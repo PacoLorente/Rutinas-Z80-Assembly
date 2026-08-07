@@ -1,6 +1,8 @@
 
 	DEVICE ZXSPECTRUM48
 
+;	Librerías.
+
 	include "Macros_y_herramientas.asm"
 	include "Constantes_Declaraciones.asm"
 
@@ -10,7 +12,24 @@
 	include "Cajas_y_disparos.asm"
 	include "Patrones_de_mov.asm"
 
-	; --------------------------------------------------------------------------------
+	include "Rutinas_de_teclado.asm"
+	include "RND_Derivando.asm"
+	include "Rutinas_de_inicio_y_niveles.asm"
+	include "calcula_tercio.asm"
+	include "Cls.asm"
+	include "Genera_coordenadas.asm"
+	include "Transiciones_y_efectos.asm"
+	include "Genera_datos_de_impresion.asm"
+	include "Pinta_Sprites.asm"
+	include "Draw_XOR.asm"
+	include "Direcciones.asm"
+	include "Movimiento.asm"
+	include "Disparo.asm"
+	include "Sound.asm"
+	include "Print_text_msg.asm"
+	include "Niveles.asm"
+
+; --------------------------------------------------------------------------------
 ;
 ; 05/05/26
 ;
@@ -2715,27 +2734,6 @@ Next_level:
 	call Actualiza_punteros_de_Nivel
 
 	jp Init_level
-
-;	-----------------------------------------------------------------------------------------
-
-;	Rutinas consecutivas, no hay bytes libres entre ellas.
-
-	include "Rutinas_de_teclado.asm"
-	include "RND_Derivando.asm"
-	include "Rutinas_de_inicio_y_niveles.asm"
-	include "calcula_tercio.asm"
-	include "Cls.asm"
-	include "Genera_coordenadas.asm"
-	include "Transiciones_y_efectos.asm"
-	include "Genera_datos_de_impresion.asm"
-	include "Pinta_Sprites.asm"
-	include "Draw_XOR.asm"
-	include "Direcciones.asm"
-	include "Movimiento.asm"
-	include "Disparo.asm"
-	include "Sound.asm"
-	include "Print_text_msg.asm"
-	include "Niveles.asm"
 
 
 	SAVESNA "Amadeus.sna", START
