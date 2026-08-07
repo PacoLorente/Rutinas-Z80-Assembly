@@ -337,7 +337,7 @@ Inicializa_Amadeus_scanline_album:
 
 ; ---------------------------------------------------------------------------------------------------------------------
 ;
-;	13/03/24
+;	7/8/26
 ;
 ;	Inicialización de los álbumes de líneas, (pintado/borrado).
 

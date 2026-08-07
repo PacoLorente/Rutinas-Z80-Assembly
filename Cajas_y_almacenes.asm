@@ -13,8 +13,6 @@
 
 ;	Free mem. $8cc6 - $8cff .....$39 / 57d Bytes.
 
-	org $a200
-
 Numeros_aleatorios: ds 7
 Numeros_aleatorios_baile: ds 7
 
@@ -147,8 +145,6 @@ Caja_2:
 	defw 0 											; (Contador_de_mov_masticados).
 	db 0											; (Velocidad).
 	db 0 											; Atributos.
-
-	org $a300
 
 Caja_3:
 

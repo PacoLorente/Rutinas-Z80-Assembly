@@ -96,6 +96,8 @@ Init_level:
 
 ;	Make 7 rnd numbers.
 
+	jr $
+
 	ld b,7										 			; Generamos 7 nº aleatorios.
 	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
 	call Derivando_RND
