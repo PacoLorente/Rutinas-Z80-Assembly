@@ -29,6 +29,18 @@
 	include "Print_text_msg.asm"
 	include "Niveles.asm"
 
+;	Variables de programa.
+
+Almacen_de_movimientos_masticados_1 defw $5fe6
+Almacen_de_movimientos_masticados_2 defw 0
+Almacen_de_movimientos_masticados_3 defw 0
+
+	defw 0
+
+Contador_general_de_mov_masticados_1 defw 0
+Contador_general_de_mov_masticados_2 defw 0
+Contador_general_de_mov_masticados_3 defw 0
+
 ; --------------------------------------------------------------------------------
 ;
 ; 05/05/26

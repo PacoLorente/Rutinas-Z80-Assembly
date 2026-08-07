@@ -22,19 +22,6 @@ Tabla_de_pintado ds 30								; No puede haber cambio de byte alto en la Tabla_d
 Tabla_de_borrado ds 24
 
 ;	db 0, defw 0, db 0
-;	.....
-
-Almacen_de_movimientos_masticados_1 defw $5fe6
-Almacen_de_movimientos_masticados_2 defw 0
-Almacen_de_movimientos_masticados_3 defw 0
-
-	defw 0
-
-Contador_general_de_mov_masticados_1 defw 0
-Contador_general_de_mov_masticados_2 defw 0
-Contador_general_de_mov_masticados_3 defw 0
-
-; -------------------------------------------------------------------------------------------------------
 
 Indice_de_mov_segun_tipo_de_entidad defw Indice_mov_Baile_de_BadSat			;	(Tipo)="$81"
 	defw Indice_mov_Baile_de_Badplate 										;	(Tipo)="$82"
