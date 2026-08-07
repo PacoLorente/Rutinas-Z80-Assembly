@@ -15,6 +15,17 @@
 
 	org $a000
 
+
+Almacen_de_movimientos_masticados_1 defw $5fe6
+Almacen_de_movimientos_masticados_2 defw 0
+Almacen_de_movimientos_masticados_3 defw 0
+
+	defw 0
+
+Contador_general_de_mov_masticados_1 defw 0
+Contador_general_de_mov_masticados_2 defw 0
+Contador_general_de_mov_masticados_3 defw 0
+
 Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
 
@@ -202,10 +213,6 @@ Caja_2
 	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
-; --------------------------------------------------------------------------
-; FREE SPACE $04, 04d ------------------------------------------------------
-; --------------------------------------------------------------------------
-
 	org $a100
 
 Caja_3
@@ -224,7 +231,7 @@ Caja_3
 
 ; ---------- ---------- ---------- ---------- ----------
 
-Caja_4 
+Caja_4
 
 	db 0 											; (Clase).
 	db 0 											; (Tipo).

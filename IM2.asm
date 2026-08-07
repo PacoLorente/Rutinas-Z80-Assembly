@@ -164,25 +164,3 @@ Incrementa_FRAMES
 	ei
 
 	ret
-
-; ASM source file created by SevenuP v1.20
-; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
-
-;GRAPHIC DATA:
-;Pixel Size:      ( 16,  16)
-;Char Size:       (  2,   2)
-;Sort Priorities: X char, Char line, Y char
-;Data Outputted:  Gfx
-;Interleave:      Line
-;Mask:            No
-
-Best_Score_7: 												; Chars 9,10,11,12, (Últimos 4 chars).
-
-	DEFB	$00,$00,$00,$00,$00,$00,$00,$00
-	DEFB	$00,$00,$12,$CC,$BA,$DE,$6D,$52
-	DEFB	$45,$56,$45,$1C,$45,$10,$45,$10
-	DEFB	$ED,$12,$B9,$1E,$11,$0C,$00,$00
-
-Fecha_Firma:
-
-	DEFB	$00,$EE,$22,$62,$84,$84,$E4,$00

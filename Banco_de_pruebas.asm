@@ -8,7 +8,9 @@
 
 	include "IM2.asm"
 
-	include "Sprites_e_indices.asm"
+	include "Graphics_&_Sprites.asm"
+	include "Indices_&_Tables.asm"
+
 	include "Cajas_y_disparos.asm"
 	include "Patrones_de_mov.asm"
 
@@ -31,15 +33,6 @@
 
 ;	Variables de programa.
 
-Almacen_de_movimientos_masticados_1 defw $5fe6
-Almacen_de_movimientos_masticados_2 defw 0
-Almacen_de_movimientos_masticados_3 defw 0
-
-	defw 0
-
-Contador_general_de_mov_masticados_1 defw 0
-Contador_general_de_mov_masticados_2 defw 0
-Contador_general_de_mov_masticados_3 defw 0
 
 ; --------------------------------------------------------------------------------
 ;
@@ -518,7 +511,7 @@ Nombre_del_campeon ds 6
 Puntero_del_nombre_del_campeon defw Nombre_del_campeon
 Contador_de_caracteres_del_nombre_del_campeon db 5 										; El nombre del ganador tiene 5 caracteres.
 
-Non_authorized_KEY_CODES db $27,$18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
+
 
 ; Key code BOX.
 ; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
@@ -528,52 +521,7 @@ Sinclair_db_box ds 4
 Desplazamiento_level_msg db 0
 Counter_msg_char db 0
 
-Tabla_de_conversion_KEYCODE_ASCII_CODE
 
-    defm "B"
-    defm "H"
-    defm "Y"
-    defm "6"
-    defm "5"
-    defm "T"
-    defm "G"
-    defm "V"
-
-    defm "N"
-    defm "J"
-    defm "U"
-    defm "7"
-    defm "4"
-    defm "R"
-    defm "F"
-    defm "C"
-
-    defm "M"
-    defm "K"
-    defm "I"
-    defm "8"
-    defm "3"
-    defm "E"
-    defm "D"
-    defm "X"
-
-    db $18													; SYMBOL SHIFT no dispone de código ASCII.
-    defm "L"
-    defm "O"
-    defm "9"
-    defm "2"
-    defm "W"
-    defm "S"
-    defm "Z"
-
-    db $20 													; SPACE ASCII CODE.
-    db $21 													; ENTER ASCII CODE.
-    defm "P"
-    defm "0"
-    defm "1"
-    defm "Q"
-    defm "A"
-	db $27 													; CAPS SHIFT no dispone de código ASCII.
 
 ; Mensajes:
 
