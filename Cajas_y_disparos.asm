@@ -13,7 +13,7 @@
 
 ;	Free mem. $8cc6 - $8cff .....$39 / 57d Bytes.
 
-	org $a000
+	org $a200
 
 
 Almacen_de_movimientos_masticados_1 defw $5fe6
@@ -213,7 +213,7 @@ Caja_2
 	db 0											; (Velocidad).
 	db 0 											; Atributos.
 
-	org $a100
+	org $a300
 
 Caja_3
 
