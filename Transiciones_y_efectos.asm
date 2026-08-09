@@ -182,6 +182,15 @@ Replace_Amadeus_attr_zone:
 
 make_stars:
 
+;	Genera 7 nº aleatorios.
+
+	ld bc,$0705										 		; Generamos 7 nº aleatorios.
+
+3 push bc
+
+	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
+	call Derivando_RND 										; Rutina de generación de nº aleatorios.
+
 ;	Datos iniciales.
 
 2 ld b,6 													; nº de estrellas.
