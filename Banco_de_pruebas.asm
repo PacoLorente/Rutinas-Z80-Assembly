@@ -84,7 +84,8 @@ INICIALIZACION:
 ;	Make Stars & moon.
 
 	call Print_Moon
-	call make_stars
+
+;	call make_stars
 
 Init_level:
 
@@ -96,10 +97,13 @@ Init_level:
 
 ;	Make 7 rnd numbers.
 
+
+
 	jr $
 
 	ld b,7										 			; Generamos 7 nº aleatorios.
 	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
+
 	call Derivando_RND
 
 	call Extrae_numero_aleatorio_y_avanza
