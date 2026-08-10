@@ -108,32 +108,33 @@ Init_level:
 	call Inicializa_Nivel 									; After [Inicializa_Nivel], BC contains:
 
 ;					B contain (Numero_de_entidades).
-;					C contain (Tipo), (first level's entity).
+;					C contain (Clase), (first level's entity).
 ;
-; 					HL apunta al .db que define el (Tipo) de la primera entidad de este nivel.
+; 					HL apunta al .db que define el (Tipo) de la entidad.
 
 ;	Imprime Contador de entidades.
 
-	push hl
-	call Print_enemy_counter
+	push hl 												; PUSH (Puntero_de_entidades).
+	call Print_enemy_counter 								; Imprime en contador de enemigos.
 
 ;	Imprime Puntuación.
 
-	push bc
-	call Print_Score_Counter
+	push bc 												; PUSH (Número de entidades / Clase).
+	call Print_Score_Counter 								; Imprime nuestra puntuación, inicialmente "0".
 
 	ld bc,$ffff
     call DELAY
 	ld bc,$afff
-    call DELAY
+    call DELAY 												; Retraso estético. Espera un poco antes de imprimir el msg. de nivel.
 
 ;	Imprime mensaje de nivel.
 
-	call Print_level_msg
-	call No_zeros
+	call Print_level_msg 									; Imprime el msg. temporizado de nivel.
 
-	pop bc
-	pop hl
+	call No_zeros 											; Coloca a ($ff) los tres primeros bytes del [Almacen_de_movimientos_masticados_Amadeus].
+
+	pop bc 													; POP (Número de entidades / Clase).
+	pop hl 													; POP (Puntero_de_entidades).
 
 ;	Prepara cajas.
 

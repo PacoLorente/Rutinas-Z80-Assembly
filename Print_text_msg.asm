@@ -274,8 +274,9 @@ Clean_and_logo:
 
 ; ----------------------------------------------------------
 ;
-;   25/3/26
+;   10/8/26
 ;
+;   MODIFY: A,BC,HL,DE
 
 Print_level_msg:
 
@@ -304,12 +305,12 @@ Print_level_msg:
 ;   HL apunta al "msg" a imprimir. Asignamos attrs. y temporización. 
 
     ld a,%01000111                                              ; attrs. Paper white, black ink.
-;    ld b,150                                                   ; TEMPORIZADOR DE CARACTERES ON !!!
-    ld b,1
+    ld b,1                                                      ; TEMPORIZADOR DE CARACTERES ON !!!
 
     call Print_text_msg
 
     ret
+
 
 ; -------------------------------------------------------
 ;
@@ -1120,16 +1121,12 @@ Modify_first_char_attr:
 
 ; ----------------------------------------------------------
 ;
-;   18/2/26
+;   10/8/26
 ;
 ;   INPUTS: HL apunta al mensage a imprimir, (msg).
 ;           DE indica la fila de pantalla donde queremos imprimir el msg.
-;            A contiene los attrs. del msg.
+;            A contiene los attrs. del msg. % FBPPPIII
 ;            B Actúa como temporizador, ralentiza la impresión de caracteres. No actúa cuando es "0".
-
-
-;
-;           % FBPPPIII
 
 Print_text_msg:
 
@@ -1137,17 +1134,17 @@ Print_text_msg:
 
     ex af,af                                ;   Attr. en A´.
 
-    push hl
-    push de
+    push hl                                 ;   PUSH (HL) actúa como puntero del msg.
+    push de                                 ;   PUSH (DE) dirección de pantalla donde se imprime el msg.
 
-    call Find_address
+    call Find_address                       ;   Entrega en HL la dirección ROM donde se encuentran los datas que forman el char. del msg.
 
     ex de,hl                                ;   BIN en DE - Fila en HL.
 
     call Print_BIN                          ;   Imprime caracter con atributos.
 
-    pop de
-    pop hl
+    pop de                                  ;   POP (DE) dirección de pantalla donde se imprime el msg.
+    pop hl                                  ;   POP (HL) actúa como puntero del msg.
 
 ;   Suiguiente char.
 
@@ -1158,37 +1155,45 @@ Print_text_msg:
 
     jr z,Exit_01                            ;   RET, fin de msg.
 
-    inc e
+    inc e                                   ;   Siguiente columna de pantalla.
 
 ;   TEMPORIZADOR.
 
-    pop bc                                  ;   Carga el temporizador en B.
+    pop bc                                  ;   POP temporización en B.
 
     inc b
     dec b
 
-    jr z,Print_text_msg                     ;   Mensaje NO TEMPORIZADO. Siguiente char.
+    jr z,Print_text_msg                     ;   Mensaje NO TEMPORIZADO. Imprime char.
 
     ex af,af                                ;   attrs. del msg en AF´.
 
+;   Imprime cierta aleatoriedad a la temporización del mensaje.
+;   (Se pretende que la impresión de los caracteres en pantalla no sea uniforme, sea similar a la impresión de una máquina de escribir).
+
+;   Si el bit(0) de la muestra (r) es "0" el bucle de retardo antes de imprimir el char. descontará sobre (BC)=$82ff.
+;   Si el bit(0) de la muestra (r) es "1" "    "    "     "     "    "     "    "   "         "        "  (BC)=$5aff.
+
     ld a,r
     srl a 
-    bit 0,a
 
+    bit 0,a
     jr z,3F
 
     ld b,90
     jr 1F
+
 3 ld b,130
+
+;   Bucle de retardo.
 
 1 ld c,$ff
 2 dec c
     jr nz,2B
+
     djnz 1B                                 ;   Aplica temporización.
 
     call BEEP
-
-;    pop bc
 
     ld b,1                                  ;   Activa retardo RND en el próximo char. a imprimir.
 
@@ -1196,8 +1201,7 @@ Print_text_msg:
 
     jr Print_text_msg
 
-
-Exit_01
+Exit_01:
 
     pop bc
 
@@ -1207,7 +1211,7 @@ Exit_01
 
 ;   Find char. data.
 
-Find_address
+Find_address:
 
     ld bc,ROM_ASCII
 
@@ -1219,12 +1223,11 @@ Find_address
     add hl,hl                               ;   ASCII * 8
 
     xor a
-
     adc hl,bc
 
     ret
 
-Print_BIN
+Print_BIN:
 
     ld b,8                                  ;   Nº de lineas que forman el caracter.
 
@@ -1242,7 +1245,7 @@ Print_BIN
 
     call Calcula_direccion_atributos
 
-    ex af,af
+    ex af,af                                ;   attrs. en A.
     ld (hl),a
 
     ret

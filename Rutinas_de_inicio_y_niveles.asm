@@ -263,7 +263,7 @@ Clean_boxes_and_albums:
 
 ; ------------------------------------
 ;
-; 	18/11/25
+; 	10/8/26
 
 ; 	Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
 ; 	Si el puntero está situado en el último nº, lo volvemos a situar al principio.
@@ -276,17 +276,17 @@ Clean_boxes_and_albums:
 Extrae_numero_aleatorio_y_avanza:
 
 	ld hl,Numeros_aleatorios+7
-	ex de,hl
-	ld hl,(RND_SP)
+	ld de,(RND_SP)
 
-	ld a,e
-	sub l
+	xor a
+	sbc hl,de
+
+	ex de,hl
 	jr nz,1F
 
 ; Sitúa HL al principio de la tabla de nº aleatorios.
 
 	ld hl,Numeros_aleatorios
-	ld (RND_SP),HL
 
 ; Coloca el nº aleatorio en A y mueve el puntero al siguiente nº.
 
@@ -388,6 +388,8 @@ Inicia_albumes_de_disparos:
 ; 				HL contiene (Puntero_de_entidades).
 
 Prepara_Cajas_Master:
+
+	jr $
 
 	push hl															; Push (Puntero_de_entidades).
 	push bc															; Push (Numero_de_entidades)/(Clase).
@@ -614,20 +616,20 @@ Posicion_rep:
 
 ; -------------------------------------------------------------------------------------------------------y
 ;
-;	16/07/26
+;	10/8/26
 ;
-;	INPUTS: A y D contienen el nº aleatorio ($00 - $1f).
-;			HL apunta a Almacen_de_movimientos_masticados_Amadeus 
+;	Modifica de "0" a "$ff" los 3 primeros bytes del [Almacen_de_movimientos_masticados_Amadeus].
 ;
-;	MODIFY: HL y BC.
+;	Vamos a utilizar estos bytes, (antes de generar los movimientos de nuestra nave) para almacenar los n° rnd que van a determinar_
+;	_las posiciones de inicio de las 3 clases distintas de entidad que puede haber simultaneamente en un nivel.
 ;
-;			Vamos a sustituir los "0" de los nueve primeros .db del almacén por $ff.
-;			Evitamos así que cuando el nº aleatorio sea "0" y el byte del almacén también se detecte como_
-;			_repetición y no se almacene la posición "0".
+;	Estos bytes se almacenan para que 2 clases diferentes de entidad no tengan la misma posición de inicio.
+;
+;	MODIFY: HL
 
 No_zeros:
 
-	ld hl,Almacen_de_movimientos_masticados_Amadeus + 2
+	ld hl,Almacen_de_movimientos_masticados_Amadeus + 2 			; $5e00 + 2
 
 	dec (hl)
 	dec hl
@@ -1172,17 +1174,37 @@ Load_limits_and_place_registers:
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   4/4/26
+;   10/8/26
 ;
-;	Inicializa Nivel del juego.
+;	Inicializa Nivel del juego y el contador de entidades del nivel.
 ;	
-;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
-;									(Numero_de_entidades) ... Contiene el nº de entidades del nivel, (.db).
-;									(Puntero_de_entidades) ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
-; 									(Puntero_indice_master)	... Se sitúa en la 1ª de las 3 Cajas_Master.
+;	Nota:
+;	(Puntero_indice_NIVELES) ... Inicialmente situado en el 1er Nivel del Índice de Niveles, (.defw).
 ;
-;					B contiene (Numero_de_entidades).
-;					C contiene el (Tipo) de la 1ª entidad del nivel.
+;	OUTPUT:
+;
+;	Inicializa las variables de Nivel:
+;
+;									(Max_time_to_appear_entities) ... Valor máximo que tarda una entidad en aparecer en pantalla.
+;									(Decrease_top_time_entities) ... Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
+; 									(Min_time_to_appear_entitiesr) ... Valor mínimo que puede tardar una entidad en aparecer en pantalla.
+; 									(CLOCK_disparos_de_entidades) ... Contador decreciente. Cuando su valor es "0" habilita el disparo de las entidades.
+; 									(Repone_CLOCK_disparos) ... Repone el valor del contador (CLOCK_disparos_de_entidades) cuando este llega a "0".
+; 									(Numero_de_entidades) ... N° total de entidades que tiene el nivel.
+;
+;	Inicializa las variables del contador de enemigos del nivel:
+;
+;	(Entidades_BCD_unidades) ..... Valor de las unidades del contador, representación decimal, (0-9).
+;	(Entidades_BCD_decenas) .....  Valor de las decenas del contador, 		"           "        "
+;	(Puntero_unidades_grandes) ..... Situado en los .db que forman el n° grande, (unidades).
+;	(Puntero_decenas_grandes) ..... Situado en los .db que forman el n° grande, (decenas).
+;
+;
+;
+;	Inicializa (Puntero_de_entidades). Este puntero se irá desplazando por las distintas entidades que tiene el nivel indicando su CLASE.
+;
+;	B contiene (Numero_de_entidades).
+;	C contiene la (Clase) de la entidad hacia la que apunta (Puntero_de_entidades).
 ;
 ;	MODIFY: A,HL,BC y DE.
 
@@ -1783,7 +1805,7 @@ Inicializa_Numero_parcial_de_entidades
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;	04/10/25
+;	10/8/26
 ;
 ;	Convierte el valor hexadecimal de (Numero_de_entidades) a dos valores BCD que guardarán las variables:
 ;

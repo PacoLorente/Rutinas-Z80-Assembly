@@ -148,28 +148,25 @@ Force_Amd_attr:
 
 ; ---------------------------------------------------------------------------
 ;
-;   16/10/25
+;   10/8/26
 ;
-;   Imprime el contador de 16 bits SCORE.
-
+;   Imprime el contador de 16 bits SCORE, (nuestra puntuación).
 
 Print_Score_Counter:
 
-;   En 1er lugar fijamos los attr.
-
-;   Attr.
+;   En 1er lugar fijamos los attr. del marcador.
 
     ld hl,Unidades_Score                                           ; $4057
     call Calcula_direccion_atributos
 
-    ld a,%01000111
-    ld b,5
+    ld a,%01000111                                                 ; attrs. Bright, Paper BLACK, ink WHITE.
+    ld b,5                                                         ; El marcador SCORE consta de 5 dígitos.
 
 1 ld (hl),a
     dec l
     djnz 1B
 
-;   Utilizamos la pila.
+;   Imprimimos el marcador extrayendo los datas de los dígitos de la ROM utilizando la pila.
 
     ld (Stack),sp
 
@@ -177,7 +174,7 @@ Print_Score_Counter:
 
 ;   Extraemos los binarios que forman el cdígito popeando con la pila.
 
-    ld sp,(Puntero_de_unidades_Score)
+    ld sp,(Puntero_de_unidades_Score)                               ; Inicialmente apunta a $3d80, (datas ROM que forman el "0").
 
     pop hl
 
@@ -378,7 +375,7 @@ Print_Score_Counter:
     ld a,h
     ld (Decenas_de_millar_Score_7),a
 
-Exit_1
+Exit_1:
 
     xor a
     ld (Score_Ctrl),a
@@ -419,9 +416,10 @@ bp push hl
     ret
 
 ;---------------------------------------------------------------------
+;
 ;   Imprime el contador: ENEMIGOS RESTANTES.
 ;
-;   4/10/25
+;   10/8/26
 ;
 ;   MODIFY:HL
 ;
