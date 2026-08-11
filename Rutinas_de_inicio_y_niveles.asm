@@ -413,18 +413,17 @@ Prepara_Cajas_Master:
 	ld a,c 															; (A) = (Clase).
 
 	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
+	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
 
 	jr $
-
-	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
 
 ;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
 ;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
 ;	coreografías distintas.
 
-	ld b,7   											 						
-	ld hl,Numeros_aleatorios_baile 							
-	call Derivando_RND 										 		; Generamos 7 nº RND para construir los mov. masticados.
+;	ld b,7
+;	ld hl,Numeros_aleatorios_baile
+;	call Derivando_RND 										 		; Generamos 7 nº RND para construir los mov. masticados.
 
 ;> Comentando las 3 siguientes líneas eliminamos la aleatoriedad de la danza de la entidad.	---------------------------------------------------------------------------------
 
@@ -514,7 +513,7 @@ Avanza_siguiente_entidad_del_nivel:
 
 Determina_posicion_de_inicio:
 
-	ld hl,Numeros_aleatorios_baile+3
+	ld hl,Numeros_aleatorios+3
 	ld a,(hl)
 	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
 
@@ -1086,7 +1085,7 @@ RND_ini:
 
 	exx
 
-	ld hl,Numeros_aleatorios_baile+6                        		; HL apunta al 7° n° aleatorio de baile.
+	ld hl,Numeros_aleatorios+6                        		; HL apunta al 7° n° aleatorio de baile.
 	ld b,7
 
 	exx
@@ -1455,7 +1454,7 @@ Prepara_Cajas_de_Entidades:
 ; 	Cargamos la definición de Amadeus en DRAW.
 ;	Nos situamos en el 1er .db, (Tipo), de la definición de Amadeus.
 
-Inicia_Amadeus 
+Inicia_Amadeus:
 
 	ld hl,Definicion_Amadeus
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
@@ -1708,46 +1707,51 @@ Situa_en_datos_de_definicion:
 
 ; ----------------------------------------------------------------------------------------------------------
 ;
-;	15/4/25
+;	11/8/26
 ;
 ;	Introduce una definición de entidad en la bandeja DRAW para generar sus "movimientos masticados".
 ;
-;	INPUTS: HL apunta al 1er .db de datos de la definición de la entidad.
-;			
+;	INPUTS: HL  Apunta al 1er .db de datos de la definición de la entidad.
+;	 		 A' Contiene la (Clase) de la entidad.
 ; 
-;	MODIFICA: HL,DE y BC
+;	MODIFICA: A,HL,DE y BC
 
 
-Definicion_de_entidad_a_bandeja_DRAW 	
+Definicion_de_entidad_a_bandeja_DRAW:
+
+	ex af,af 														; (clase) en A.
 
 	ld de,Bandeja_DRAW   	 										; DE apunta al 1er .db de la bandeja_DRAW, (Clase).
-	ld bc,2
-	ldir 															; Volcamos (Clase) y (Tipo).
+	ld (de),a 														; (Clase).
 
-	ld de,Filas														; Volcamos (Filas) y (Columns).
-	ld bc,2
-	ldir															; Hemos volcado (Contador_de_vueltas), (Indice_Sprite_der) y (Indice_Sprite_izq).
-;																	; HL, (origen), apunta ahora al .db (Posicion_inicio), hay que situar DE.
-	ld de,Contador_de_vueltas 
+	inc de
+
 	ld a,(hl)
-	ld (de),a
-	inc hl															; Hemos volcado (Posicion_inicio) y (Cuad_objeto).
+	ld (de),a  														; (Tipo).
+
+	inc hl
+
+	ld de,Filas
+	ld bc,2
+	ldir		 													; (Filas)/(Columnas).
+
+	ld de,Contador_de_vueltas
+	ld a,(hl)
+	ld (de),a 														; (Contador_de_vueltas).
+
+	inc hl
 
 	ld de,Indice_Sprite_der
 	ld bc,4
-	ldir 															; Hemos volcado (Puntero_de_almacen_de_mov_masticados).
+	ldir 															; (Indice_Sprite_der)/(Indice_Sprite_izq).
 
 	ld de,Posicion_inicio
-	ld bc,3															; 3 FRAMES de explosión.!!!!!!!!!!!!!!
-	ldir 															; Vuelco (Frames_explosion).
-
-	ld de,Puntero_de_almacen_de_mov_masticados
 	ld bc,2
-	ldir
+	ldir 															; (Posicion_inicio).
 
 	ld de,Attr
-	ld a,(hl) 														; Volcamos (Attr).
-	ld (de),a
+	ld a,(hl)
+	ld (de),a 														; (Attr).
 
 	ret
 

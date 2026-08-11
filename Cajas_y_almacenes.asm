@@ -14,7 +14,7 @@
 ;	Free mem. $8cc6 - $8cff .....$39 / 57d Bytes.
 
 Numeros_aleatorios: ds 7
-Numeros_aleatorios_baile: ds 7
+; Numeros_aleatorios_baile: ds 7
 
 Score_max_msg: ds 6
 Nombre_del_campeon: ds 6

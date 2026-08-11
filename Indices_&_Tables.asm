@@ -1,4 +1,5 @@
-
+;	11/8/26
+;
 ;   Índices.
 
 Almacen_de_movimientos_masticados_1 defw $5fe6
@@ -69,12 +70,12 @@ Indice_de_cajas_de_entidades:
 
 Indice_de_definiciones_de_entidades:
 
-	defw Entidad_Clase_1
-	defw Entidad_Clase_2
-	defw Entidad_Clase_3
-	defw Entidad_Clase_4
-	defw Entidad_Clase_5
-	defw Entidad_Clase_6
+	defw Tipo_BadSat
+	defw Tipo_BadSat
+	defw Tipo_BadSat
+	defw Tipo_BadPlate
+	defw Tipo_BadPlate
+	defw Tipo_BadPlate
 
 Indice_de_disparos_entidades:
 
