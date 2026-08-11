@@ -389,16 +389,16 @@ Inicia_albumes_de_disparos:
 
 Prepara_Cajas_Master:
 
-	jr $
+;	jr $
 
-	push hl															; Push (Puntero_de_entidades).
-	push bc															; Push (Numero_de_entidades)/(Clase).
+	push hl															; PUSH (Puntero_de_entidades).
+	push bc															; PUSH (Numero_de_entidades)/(Clase).
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
 	ld a,c														
 	ex af,af
-	ld a,c 															; (Clase) de la entidad en A y A´.
+	ld a,c 															; (Clase) de la entidad en C, A y A´.
 
 	call Situa_en_Caja_Master										; A="0" Indica que hemos de generar los movimientos masticados de esta (Clase) de entidad.
 ; 																	; A=NZ indica que esta (Clase) de entidad ya tiene generados los mov_masticados.
@@ -413,6 +413,9 @@ Prepara_Cajas_Master:
 	ld a,c 															; (A) = (Clase).
 
 	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
+
+	jr $
+
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
 
 ;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
@@ -1261,6 +1264,7 @@ Inicializa_Nivel:
 ;    	   (C) contiene la clase de la entidad en curso.
 
 ;	OUTPUT: Flag Z activo:
+;
 ;				   (A) = "0"     .....   Indica que tenemos que generar los movimientos masticados de esta (Clase) de entidad.
 ;	 			   (A) = "1,2,3, ..... " Indica que esta Caja_Master ya está iniciada con esta (Clase) de entidad.
 
@@ -1500,7 +1504,7 @@ Construye_movimientos_masticados_Amadeus
 
 ; ---------------------------------------------------------------------
 ;
-;	10/02/24
+;	11/8/26
 ;
 ;	Nos situamos en el 1er .db de datos de la definición de este tipo de entidad.
 ;
@@ -1666,7 +1670,7 @@ Amarillo ld a,%01000110
 
 ;	------------------------------------------------------------------------------------
 ;
-;	14/06/26
+;	11/8/26
 ;
 ;	INPUTS:	A contiene el (Tipo) de entidad. 
 ;
@@ -1688,7 +1692,7 @@ Calcula_salto_en_BC:
 
 ; ------------------------------------------------------------------
 ;
-;	12/06/26
+;	11/8/26
 ;
 ;	Sitúa HL en el 1er .db de la definición de la entidad que tenemos que volcar en la bandeja DRAW.
 ;	Actualiza (Datos_de_entidad) con esa dirección.
@@ -1698,7 +1702,7 @@ Situa_en_datos_de_definicion:
 	and a
 	adc hl,bc
 	call Extrae_address   
-	ld (Datos_de_entidad),hl
+;	ld (Datos_de_entidad),hl
 
 	ret
 

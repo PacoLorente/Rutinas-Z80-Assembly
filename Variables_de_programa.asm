@@ -227,8 +227,7 @@ Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de 
 Entidades_en_curso db 0										; Entidades en pantalla.
 
 Puntero_indice_ENTIDADES defw 0 							; Se desplazará por el índice de entidades para `meterlas' en cajas.
-Datos_de_entidad defw 0										; Contiene los bytes de información de la entidad hacia la que apunta el
-;															; _ puntero (Indice_entidades).
+; Datos_de_entidad defw 0										; Situado en el .db de la definición correspondiente.
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
