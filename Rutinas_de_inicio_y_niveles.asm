@@ -389,8 +389,6 @@ Inicia_albumes_de_disparos:
 
 Prepara_Cajas_Master:
 
-;	jr $
-
 	push hl															; PUSH (Puntero_de_entidades).
 	push bc															; PUSH (Numero_de_entidades)/(Clase).
 
@@ -415,17 +413,17 @@ Prepara_Cajas_Master:
 	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
 
-	jr $
-
 ;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
 ;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
 ;	coreografías distintas.
 
-;	ld b,7
-;	ld hl,Numeros_aleatorios_baile
-;	call Derivando_RND 										 		; Generamos 7 nº RND para construir los mov. masticados.
+	ld b,7
+	ld hl,Numeros_aleatorios_baile
+	call Derivando_RND 										 		; Generamos 7 nº RND para construir los mov. masticados.
 
 ;> Comentando las 3 siguientes líneas eliminamos la aleatoriedad de la danza de la entidad.	---------------------------------------------------------------------------------
+
+	jr $
 
 	ld a,(Tipo)
 	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
@@ -513,7 +511,7 @@ Avanza_siguiente_entidad_del_nivel:
 
 Determina_posicion_de_inicio:
 
-	ld hl,Numeros_aleatorios+3
+	ld hl,Numeros_aleatorios_baile+3
 	ld a,(hl)
 	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
 
@@ -1085,7 +1083,7 @@ RND_ini:
 
 	exx
 
-	ld hl,Numeros_aleatorios+6                        		; HL apunta al 7° n° aleatorio de baile.
+	ld hl,Numeros_aleatorios_baile+6                        		; HL apunta al 7° n° aleatorio de baile.
 	ld b,7
 
 	exx
