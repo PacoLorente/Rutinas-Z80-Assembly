@@ -4621,7 +4621,7 @@
  402+ AC97              ; 																	; A=NZ indica que esta (Clase) de entidad ya tiene generados los mov_masticados.
  403+ AC97              ; 																	; Saltaremos a la siguiente entidad del nivel.
  404+ AC97 A7           	and a
- 405+ AC98 20 43        	jr nz, Avanza_siguiente_entidad_del_nivel
+ 405+ AC98 20 41        	jr nz, Avanza_siguiente_entidad_del_nivel
  406+ AC9A
  407+ AC9A              ; Generamos movimientos masticados.
  408+ AC9A
@@ -4642,400 +4642,400 @@
  423+ ACA9
  424+ ACA9              ;> Comentando las 3 siguientes líneas eliminamos la aleatoriedad de la danza de la entidad.	---------------------------------------------------------------------------------
  425+ ACA9
- 426+ ACA9 18 FE        	jr $
- 427+ ACAB
- 428+ ACAB 3A F4 A4     	ld a,(Tipo)
- 429+ ACAE CD E4 AE     	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
- 430+ ACB1 CD 36 AE     	call Aplica_rnd_al_baile 										; Esta rutina es la encargada de aplicar aleatoriedad a la danza de esta (Clase) de enemigo.;
- 431+ ACB4
- 432+ ACB4              ;> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- 433+ ACB4
- 434+ ACB4 C1           	pop bc
- 435+ ACB5 E1           	pop hl
- 436+ ACB6
- 437+ ACB6 E5           	push hl															; Push (Puntero_de_entidades).
- 438+ ACB7 C5           	push bc															; Push (Numero_de_entidades)/(Clase).
- 439+ ACB8
- 440+ ACB8              ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
- 441+ ACB8
- 442+ ACB8 CD F5 AC     	call Determina_posicion_de_inicio 								; $941e ($78),($76),($72)
- 443+ ACBB
- 444+ ACBB 3A F4 A4     	ld a,(Tipo)
- 445+ ACBE CD F4 AE     	call Situa_Puntero_indice_mov			 	 					; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
- 446+ ACC1
- 447+ ACC1              ;	Ya disponemos de una (Posicion_inicio) aleatoria y la definición de la entidad en la "Bandeja DRAW".
- 448+ ACC1              ;	Generamos "Movimientos masticados" de la entidad.
- 449+ ACC1
- 450+ ACC1 CD BA AD     	call Construye_movimientos_masticados_entidad
- 451+ ACC4
- 452+ ACC4              Movimientos_masticados_construidos:
- 453+ ACC4
- 454+ ACC4 2A 33 A5     	ld hl,(Puntero_indice_master)
- 455+ ACC7 CD 89 D4     	call Extrae_address
- 456+ ACCA
- 457+ ACCA 5D           	ld e,l
- 458+ ACCB 54           	ld d,h
- 459+ ACCC
- 460+ ACCC CD 3A B0     	call Parametros_de_bandeja_DRAW_a_Caja_Master	 				; Caja de entidades Master completa.
- 461+ ACCF
- 462+ ACCF              ;	Limpiamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
- 463+ ACCF              ;	_de otro (Tipo) de entidad.
- 464+ ACCF              ;
- 465+ ACCF              ;	Limpiamos bandeja y variables.
- 466+ ACCF
- 467+ ACCF AF           	xor a
- 468+ ACD0 32 64 A5     	ld (Ctrl_3),a 													; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
- 469+ ACD3              ;																	; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados.
- 470+ ACD3 21 F3 A4     	ld hl,Clase
- 471+ ACD6 01 3A 00     	ld bc,Gestion_de_ENTIDADES_y_CAJAS-Bandeja_DRAW
- 472+ ACD9
- 473+ ACD9 0B           	dec bc
- 474+ ACDA
- 475+ ACDA CD B8 BF     	call Clean_mem
- 476+ ACDD
- 477+ ACDD              ; 	Avanza a la siguiente entidad del nivel.
- 478+ ACDD
- 479+ ACDD              Avanza_siguiente_entidad_del_nivel:
- 480+ ACDD
- 481+ ACDD C1           	pop bc															; Pop (Numero_de_entidades)/(Tipo).
- 482+ ACDE E1           	pop hl															; Pop (Puntero_de_entidades).
- 483+ ACDF
- 484+ ACDF 23           	inc hl															; Puntero_de_entidades +1 en HL.
- 485+ ACE0 22 85 A5     	ld (Puntero_de_entidades),hl 									; Actualizamos (Puntero_de_entidades).
- 486+ ACE3
- 487+ ACE3 4E           	ld c,(hl)														; (Tipo) de la siguiente entidad en C.
- 488+ ACE4 10 A9        	djnz Prepara_Cajas_Master 										; dec (Numero_de_entidades).
- 489+ ACE6
- 490+ ACE6              ; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades,
- 491+ ACE6              ; _ inicializamos el puntero (Puntero_de_entidades), situándolo en la 1ª entidad.
- 492+ ACE6
- 493+ ACE6 2A A0 A5     	ld hl,(Puntero_indice_NIVELES)
- 494+ ACE9 CD 89 D4     	call Extrae_address
- 495+ ACEC
+ 426+ ACA9 3A F4 A4     	ld a,(Tipo)
+ 427+ ACAC CD E4 AE     	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+ 428+ ACAF CD 36 AE     	call Aplica_rnd_al_baile 										; Esta rutina es la encargada de aplicar aleatoriedad a la danza de esta (Clase) de enemigo.;
+ 429+ ACB2
+ 430+ ACB2              ;> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 431+ ACB2
+ 432+ ACB2 C1           	pop bc 															; POP (Numero_de_entidades)/(Clase).
+ 433+ ACB3 E1           	pop hl 															; POP (Puntero_de_entidades).
+ 434+ ACB4
+ 435+ ACB4 E5           	push hl															; PUSH (Puntero_de_entidades).
+ 436+ ACB5 C5           	push bc															; PUSH (Numero_de_entidades)/(Clase).
+ 437+ ACB6
+ 438+ ACB6              ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
+ 439+ ACB6
+ 440+ ACB6 CD F3 AC     	call Determina_posicion_de_inicio 								; $941e ($78),($76),($72)
+ 441+ ACB9
+ 442+ ACB9 3A F4 A4     	ld a,(Tipo)
+ 443+ ACBC CD F4 AE     	call Situa_Puntero_indice_mov			 	 					; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
+ 444+ ACBF
+ 445+ ACBF              ;	Ya disponemos de una (Posicion_inicio) aleatoria y la definición de la entidad en la "Bandeja DRAW".
+ 446+ ACBF              ;	Generamos "Movimientos masticados" de la entidad.
+ 447+ ACBF
+ 448+ ACBF CD B8 AD     	call Construye_movimientos_masticados_entidad
+ 449+ ACC2
+ 450+ ACC2              Movimientos_masticados_construidos:
+ 451+ ACC2
+ 452+ ACC2 2A 33 A5     	ld hl,(Puntero_indice_master)
+ 453+ ACC5 CD 89 D4     	call Extrae_address
+ 454+ ACC8
+ 455+ ACC8 5D           	ld e,l
+ 456+ ACC9 54           	ld d,h
+ 457+ ACCA
+ 458+ ACCA CD 3A B0     	call Parametros_de_bandeja_DRAW_a_Caja_Master	 				; Caja de entidades Master completa.
+ 459+ ACCD
+ 460+ ACCD              ;	Limpiamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
+ 461+ ACCD              ;	_de otro (Tipo) de entidad.
+ 462+ ACCD              ;
+ 463+ ACCD              ;	Limpiamos bandeja y variables.
+ 464+ ACCD
+ 465+ ACCD AF           	xor a
+ 466+ ACCE 32 64 A5     	ld (Ctrl_3),a 													; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
+ 467+ ACD1              ;																	; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados.
+ 468+ ACD1 21 F3 A4     	ld hl,Clase
+ 469+ ACD4 01 3A 00     	ld bc,Gestion_de_ENTIDADES_y_CAJAS-Bandeja_DRAW
+ 470+ ACD7
+ 471+ ACD7 0B           	dec bc
+ 472+ ACD8
+ 473+ ACD8 CD B8 BF     	call Clean_mem
+ 474+ ACDB
+ 475+ ACDB              ; 	Avanza a la siguiente entidad del nivel.
+ 476+ ACDB
+ 477+ ACDB              Avanza_siguiente_entidad_del_nivel:
+ 478+ ACDB
+ 479+ ACDB C1           	pop bc															; Pop (Numero_de_entidades)/(Tipo).
+ 480+ ACDC E1           	pop hl															; Pop (Puntero_de_entidades).
+ 481+ ACDD
+ 482+ ACDD 23           	inc hl															; Puntero_de_entidades +1 en HL.
+ 483+ ACDE 22 85 A5     	ld (Puntero_de_entidades),hl 									; Actualizamos (Puntero_de_entidades).
+ 484+ ACE1
+ 485+ ACE1 4E           	ld c,(hl)														; (Tipo) de la siguiente entidad en C.
+ 486+ ACE2 10 AB        	djnz Prepara_Cajas_Master 										; dec (Numero_de_entidades).
+ 487+ ACE4
+ 488+ ACE4              ; Una vez terminados los movimientos masticados de los distintos TIPOS de entidades,
+ 489+ ACE4              ; _ inicializamos el puntero (Puntero_de_entidades), situándolo en la 1ª entidad.
+ 490+ ACE4
+ 491+ ACE4 2A A0 A5     	ld hl,(Puntero_indice_NIVELES)
+ 492+ ACE7 CD 89 D4     	call Extrae_address
+ 493+ ACEA
+ 494+ ACEA 23           	inc hl
+ 495+ ACEB 23           	inc hl
  496+ ACEC 23           	inc hl
  497+ ACED 23           	inc hl
  498+ ACEE 23           	inc hl
- 499+ ACEF 23           	inc hl
- 500+ ACF0 23           	inc hl
- 501+ ACF1
- 502+ ACF1 22 85 A5     	ld (Puntero_de_entidades),hl
- 503+ ACF4
- 504+ ACF4 C9           	ret
- 505+ ACF5
- 506+ ACF5              ; -----------------------------------------------------------------------------------
- 507+ ACF5              ;
- 508+ ACF5              ;	20/07/26
- 509+ ACF5              ;
- 510+ ACF5              ;	Asigna una columna de inicio aleatoria y distinta a cada una de las 3 Clases como máximo que pueden aparecer en un nivel.
- 511+ ACF5
- 512+ ACF5              Determina_posicion_de_inicio:
- 513+ ACF5
- 514+ ACF5 21 8F A2     	ld hl,Numeros_aleatorios_baile+3
- 515+ ACF8 7E           	ld a,(hl)
- 516+ ACF9 E6 1F        	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
- 517+ ACFB
- 518+ ACFB              ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
- 519+ ACFB              ; 	No queremos que se repita la posición de inicio en dos clases distintas de entidades.
- 520+ ACFB
- 521+ ACFB 57           	ld d,a 															; $08,$12,$0c --- $08,$02,$12 --- $18,$1c,$18 --- $1e,$1c,$18
- 522+ ACFC
- 523+ ACFC CD 16 AD     	call No_repeat
- 524+ ACFF
- 525+ ACFF 3A F4 A4     	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
- 526+ AD02 E6 02        	and 2
- 527+ AD04 7A           	ld a,d
- 528+ AD05 28 09        	jr z,1F
- 529+ AD07
- 530+ AD07              ; 	Entidad tipo Badplate. Si nuestro nº RND es "<= $0f" aparecerá por la izquierda. Si es superior iniciará por la derecha.
- 531+ AD07
- 532+ AD07 FE 0F        	cp $0f
- 533+ AD09 38 04        	jr c,2F
- 534+ AD0B
- 535+ AD0B 3E 1F        	ld a,$1f
- 536+ AD0D 18 01        	jr 1F
- 537+ AD0F
- 538+ AD0F AF           2 xor a
- 539+ AD10
- 540+ AD10              ;	Entidad (Tipo)="$81", BadSat. Puede iniciar su baile desde cualquier columna.
- 541+ AD10
- 542+ AD10 21 12 A5     1 ld hl,Posicion_inicio
- 543+ AD13 86           	add (hl)
- 544+ AD14 77           	ld (hl),a
- 545+ AD15
- 546+ AD15 C9           	ret
- 547+ AD16
- 548+ AD16              ; -------------------------------------------------------------------
- 549+ AD16              ;
- 550+ AD16              ;	14/07/26
- 551+ AD16              ;
- 552+ AD16
- 553+ AD16              No_repeat:
+ 499+ ACEF
+ 500+ ACEF 22 85 A5     	ld (Puntero_de_entidades),hl
+ 501+ ACF2
+ 502+ ACF2 C9           	ret
+ 503+ ACF3
+ 504+ ACF3              ; -----------------------------------------------------------------------------------
+ 505+ ACF3              ;
+ 506+ ACF3              ;	12/8/26
+ 507+ ACF3              ;
+ 508+ ACF3              ;	Asigna una columna de inicio aleatoria y distinta a cada una de las 3 Clases como máximo que pueden aparecer en un nivel.
+ 509+ ACF3
+ 510+ ACF3              Determina_posicion_de_inicio:
+ 511+ ACF3
+ 512+ ACF3 21 8F A2     	ld hl,Numeros_aleatorios_baile+3
+ 513+ ACF6 7E           	ld a,(hl)
+ 514+ ACF7 E6 1F        	and $1f															; Define el nº de columna por el que va a aparecer la entidad.
+ 515+ ACF9
+ 516+ ACF9              ;	Tenemos un nº aleatorio, (Columna de inicio) en A.
+ 517+ ACF9              ; 	No queremos que se repita la posición de inicio en dos clases distintas de entidades.
+ 518+ ACF9
+ 519+ ACF9 57           	ld d,a 															; $08,$12,$0c --- $08,$02,$12 --- $18,$1c,$18 --- $1e,$1c,$18
+ 520+ ACFA
+ 521+ ACFA CD 14 AD     	call No_repeat
+ 522+ ACFD
+ 523+ ACFD 3A F4 A4     	ld a,(Tipo)														; (Tipo) $81 Badsat, $82 Badplate.
+ 524+ AD00 E6 02        	and 2
+ 525+ AD02 7A           	ld a,d
+ 526+ AD03 28 09        	jr z,1F
+ 527+ AD05
+ 528+ AD05              ; 	Entidad tipo Badplate. Si nuestro nº RND es "<= $0f" aparecerá por la izquierda. Si es superior iniciará por la derecha.
+ 529+ AD05
+ 530+ AD05 FE 0F        	cp $0f
+ 531+ AD07 38 04        	jr c,2F
+ 532+ AD09
+ 533+ AD09 3E 1F        	ld a,$1f
+ 534+ AD0B 18 01        	jr 1F
+ 535+ AD0D
+ 536+ AD0D AF           2 xor a
+ 537+ AD0E
+ 538+ AD0E              ;	Entidad (Tipo)="$81", BadSat. Puede iniciar su baile desde cualquier columna.
+ 539+ AD0E
+ 540+ AD0E 21 12 A5     1 ld hl,Posicion_inicio
+ 541+ AD11 86           	add (hl)
+ 542+ AD12 77           	ld (hl),a
+ 543+ AD13
+ 544+ AD13 C9           	ret
+ 545+ AD14
+ 546+ AD14              ; -------------------------------------------------------------------
+ 547+ AD14              ;
+ 548+ AD14              ;	12/8/26
+ 549+ AD14              ;
+ 550+ AD14
+ 551+ AD14              No_repeat:
+ 552+ AD14
+ 553+ AD14 1E 00        	ld e,0 													; Necesitamos retornar con "Z" de la rutina.
  554+ AD16
- 555+ AD16 1E 00        	ld e,0 													; Necesitamos retornar con "Z" de la rutina.
- 556+ AD18
- 557+ AD18 21 00 5E     1 ld hl, Almacen_de_movimientos_masticados_Amadeus        	; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
- 558+ AD1B
- 559+ AD1B CD 44 AD     2 call Comparador
- 560+ AD1E
- 561+ AD1E 7A           	ld a,d 													; Recupera el n° rnd en A tras la comparación.
- 562+ AD1F
- 563+ AD1F CC 2D AD     	call z, Posicion_rep
- 564+ AD22 28 F4        	jr z,1B
- 565+ AD24
- 566+ AD24 34           	inc (hl)
+ 555+ AD16 21 00 5E     1 ld hl, Almacen_de_movimientos_masticados_Amadeus        	; Utilizamos el almacén de mov. de Amadeus pués aún no está inicializado.
+ 556+ AD19
+ 557+ AD19 CD 42 AD     2 call Comparador
+ 558+ AD1C
+ 559+ AD1C 7A           	ld a,d 													; Recupera el n° rnd en A tras la comparación.
+ 560+ AD1D
+ 561+ AD1D CC 2B AD     	call z, Posicion_rep
+ 562+ AD20 28 F4        	jr z,1B
+ 563+ AD22
+ 564+ AD22 34           	inc (hl)
+ 565+ AD23
+ 566+ AD23 28 04        	jr z, Almacena_pos
  567+ AD25
- 568+ AD25 28 04        	jr z, Almacena_pos
- 569+ AD27
- 570+ AD27 35           	dec (hl)
- 571+ AD28
- 572+ AD28              ;	Siguiente posición almacenada.
- 573+ AD28
- 574+ AD28 23           	inc hl
+ 568+ AD25 35           	dec (hl)
+ 569+ AD26
+ 570+ AD26              ;	Siguiente posición almacenada.
+ 571+ AD26
+ 572+ AD26 23           	inc hl
+ 573+ AD27
+ 574+ AD27 18 F0        	jr 2B
  575+ AD29
- 576+ AD29 18 F0        	jr 2B
- 577+ AD2B
- 578+ AD2B              Almacena_pos:
- 579+ AD2B
- 580+ AD2B 77           	ld (hl),a
- 581+ AD2C
- 582+ AD2C C9           	ret
- 583+ AD2D
- 584+ AD2D              ; ------------------------------------------------
- 585+ AD2D              ;
- 586+ AD2D              ;	INPUT: A y D contienen un n° aleatorio ($00-$1f).
- 587+ AD2D              ;
- 588+ AD2D              ;	MODIFY: A y D
- 589+ AD2D              ;
- 590+ AD2D              ;	OUTPUT: A y D contienen un nuevo n° RND ($00-$1f).
- 591+ AD2D              ;
- 592+ AD2D              ;	Se generan tres n° aleatorios ($00-$1f) como máximo, (3 clases de entidades diferentes como máximo por nivel).
- 593+ AD2D              ;
- 594+ AD2D              ;	(N° RND)-1, (N° RND) y (N° RND)+1 no pueden coincidir con el n° anterior, (2 entidades por nivel) o con los n°s anteriores_
- 595+ AD2D              ;	_, (3 entidades por nivel).
- 596+ AD2D
- 597+ AD2D              Posicion_rep:
- 598+ AD2D
- 599+ AD2D FE 10        	cp $10
- 600+ AD2F 38 04        	jr c,1F
- 601+ AD31
- 602+ AD31 3D           	dec a
- 603+ AD32 3D           	dec a
+ 576+ AD29              Almacena_pos:
+ 577+ AD29
+ 578+ AD29 77           	ld (hl),a
+ 579+ AD2A
+ 580+ AD2A C9           	ret
+ 581+ AD2B
+ 582+ AD2B              ; ------------------------------------------------
+ 583+ AD2B              ;
+ 584+ AD2B              ;	INPUT: A y D contienen un n° aleatorio ($00-$1f).
+ 585+ AD2B              ;
+ 586+ AD2B              ;	MODIFY: A y D
+ 587+ AD2B              ;
+ 588+ AD2B              ;	OUTPUT: A y D contienen un nuevo n° RND ($00-$1f).
+ 589+ AD2B              ;
+ 590+ AD2B              ;	Se generan tres n° aleatorios ($00-$1f) como máximo, (3 clases de entidades diferentes como máximo por nivel).
+ 591+ AD2B              ;
+ 592+ AD2B              ;	(N° RND)-1, (N° RND) y (N° RND)+1 no pueden coincidir con el n° anterior, (2 entidades por nivel) o con los n°s anteriores_
+ 593+ AD2B              ;	_, (3 entidades por nivel).
+ 594+ AD2B
+ 595+ AD2B              Posicion_rep:
+ 596+ AD2B
+ 597+ AD2B FE 10        	cp $10
+ 598+ AD2D 38 04        	jr c,1F
+ 599+ AD2F
+ 600+ AD2F 3D           	dec a
+ 601+ AD30 3D           	dec a
+ 602+ AD31
+ 603+ AD31 18 02        	jr 2F
  604+ AD33
- 605+ AD33 18 02        	jr 2F
- 606+ AD35
- 607+ AD35 3C           1 inc a
- 608+ AD36 3C           	inc a
- 609+ AD37
- 610+ AD37 1C           2 inc e
- 611+ AD38 1D           	dec e
- 612+ AD39
- 613+ AD39 57           	ld d,a
- 614+ AD3A
- 615+ AD3A C9           	ret
- 616+ AD3B
- 617+ AD3B              ; -------------------------------------------------------------------------------------------------------y
- 618+ AD3B              ;
- 619+ AD3B              ;	10/8/26
- 620+ AD3B              ;
- 621+ AD3B              ;	Modifica de "0" a "$ff" los 3 primeros bytes del [Almacen_de_movimientos_masticados_Amadeus].
- 622+ AD3B              ;
- 623+ AD3B              ;	Vamos a utilizar estos bytes, (antes de generar los movimientos de nuestra nave) para almacenar los n° rnd que van a determinar_
- 624+ AD3B              ;	_las posiciones de inicio de las 3 clases distintas de entidad que puede haber simultaneamente en un nivel.
- 625+ AD3B              ;
- 626+ AD3B              ;	Estos bytes se almacenan para que 2 clases diferentes de entidad no tengan la misma posición de inicio.
- 627+ AD3B              ;
- 628+ AD3B              ;	MODIFY: HL
- 629+ AD3B
- 630+ AD3B              No_zeros:
- 631+ AD3B
- 632+ AD3B 21 02 5E     	ld hl,Almacen_de_movimientos_masticados_Amadeus + 2 			; $5e00 + 2
- 633+ AD3E
+ 605+ AD33 3C           1 inc a
+ 606+ AD34 3C           	inc a
+ 607+ AD35
+ 608+ AD35 1C           2 inc e
+ 609+ AD36 1D           	dec e
+ 610+ AD37
+ 611+ AD37 57           	ld d,a
+ 612+ AD38
+ 613+ AD38 C9           	ret
+ 614+ AD39
+ 615+ AD39              ; -------------------------------------------------------------------------------------------------------y
+ 616+ AD39              ;
+ 617+ AD39              ;	10/8/26
+ 618+ AD39              ;
+ 619+ AD39              ;	Modifica de "0" a "$ff" los 3 primeros bytes del [Almacen_de_movimientos_masticados_Amadeus].
+ 620+ AD39              ;
+ 621+ AD39              ;	Vamos a utilizar estos bytes, (antes de generar los movimientos de nuestra nave) para almacenar los n° rnd que van a determinar_
+ 622+ AD39              ;	_las posiciones de inicio de las 3 clases distintas de entidad que puede haber simultaneamente en un nivel.
+ 623+ AD39              ;
+ 624+ AD39              ;	Estos bytes se almacenan para que 2 clases diferentes de entidad no tengan la misma posición de inicio.
+ 625+ AD39              ;
+ 626+ AD39              ;	MODIFY: HL
+ 627+ AD39
+ 628+ AD39              No_zeros:
+ 629+ AD39
+ 630+ AD39 21 02 5E     	ld hl,Almacen_de_movimientos_masticados_Amadeus + 2 			; $5e00 + 2
+ 631+ AD3C
+ 632+ AD3C 35           	dec (hl)
+ 633+ AD3D 2B           	dec hl
  634+ AD3E 35           	dec (hl)
  635+ AD3F 2B           	dec hl
  636+ AD40 35           	dec (hl)
- 637+ AD41 2B           	dec hl
- 638+ AD42 35           	dec (hl)
- 639+ AD43
- 640+ AD43 C9           	ret
- 641+ AD44
- 642+ AD44              ; ----------------------------------------------------------------------------------------------------
- 643+ AD44
- 644+ AD44              Comparador:
- 645+ AD44
- 646+ AD44 A7           	and a
- 647+ AD45 28 08        	jr z,1F
- 648+ AD47
- 649+ AD47 3D           	dec a
- 650+ AD48
- 651+ AD48 FE 1E        	cp $1e
- 652+ AD4A 30 03        	jr nc,1F
- 653+ AD4C
- 654+ AD4C BE           	cp (hl)
- 655+ AD4D C8           	ret z
- 656+ AD4E
- 657+ AD4E 3C           	inc a
- 658+ AD4F
- 659+ AD4F BE           1 cp (hl)
- 660+ AD50 C8           	ret z
- 661+ AD51
- 662+ AD51 3C           	inc a
- 663+ AD52
- 664+ AD52 BE           	cp (hl)
- 665+ AD53
- 666+ AD53 C9           	ret
- 667+ AD54
- 668+ AD54              ; **********************************************************************************************************************************************************
- 669+ AD54              ;
- 670+ AD54              ;   15/06/26
- 671+ AD54              ;
- 672+ AD54              ;	Recompone_posicion_inicio
- 673+ AD54              ;
- 674+ AD54              ; 	La rutina hace una llamada a [Mov_right] o [Mov_left] según su posición de inicio.
- 675+ AD54              ;	Así conseguimios que la entidad esté completamente oculta a la hora de aparecer por la izquierda_
- 676+ AD54              ;	_ o derecha. Tomaremos la columna de (Posicion_inicio) como referencia para hacer la llamada_
- 677+ AD54              ;	_ a una u otra rutina.
- 678+ AD54
- 679+ AD54              Recompone_posicion_inicio:
- 680+ AD54
- 681+ AD54 3E 01        	ld a,1
- 682+ AD56
- 683+ AD56 21 18 A5     	ld hl,Vel_left
- 684+ AD59 77           	ld (hl),a
- 685+ AD5A
- 686+ AD5A 23           	inc hl
- 687+ AD5B
- 688+ AD5B 77           	ld (hl),a 														; (Vel_left) y (Vel_right) a "1".
- 689+ AD5C
- 690+ AD5C              ;	El primer Sprite que se imprime en pantalla en cualquier patrón de movimientos será un "sprite vacío".
- 691+ AD5C              ;	El objeto "SIEMPRE" ha de aparecer `oculto'. Tanto si aparece de arriba a abajo como si lo hace por los extremos de la pantalla.
- 692+ AD5C
- 693+ AD5C 21 01 A5     	ld hl,Ctrl_2
- 694+ AD5F CB C6        	set 0,(hl)														; Indica que fijamos un "sprite vacío" en (Puntero_objeto).
- 695+ AD61
- 696+ AD61 2A 12 A5     	ld hl,(Posicion_inicio)
- 697+ AD64 22 05 A5     	ld (Posicion_actual),hl 										; (Posicion_actual) no puede contener "0" para poder ejecutar (Mov_lef) o (Mov_right).
- 698+ AD67
- 699+ AD67 7D           	ld a,l
- 700+ AD68 E6 1F        	and $1f
- 701+ AD6A 28 1A        	jr z,1F
- 702+ AD6C
- 703+ AD6C FE 1F        	cp $1f
- 704+ AD6E 20 03        	jr nz,2F
- 705+ AD70
- 706+ AD70              ;	Vamos a aparecer por la parte derecha de la pantalla.
- 707+ AD70
- 708+ AD70 CD 43 C1     	call Mov_left
- 709+ AD73
- 710+ AD73              ; No vamos a aparecer por ningún extremo. Cargamos Sprite vacío pues vamos a ir apareciendo por la_
- 711+ AD73              ; _parte alta de la pantalla.
- 712+ AD73
- 713+ AD73 2A 07 A5     2 ld hl,(Puntero_objeto)
- 714+ AD76 22 2B A5     	ld (Repone_puntero_objeto),hl
- 715+ AD79
- 716+ AD79 21 F0 92     	ld hl,Sprite_vacio
- 717+ AD7C 22 07 A5     	ld (Puntero_objeto),hl
- 718+ AD7F
- 719+ AD7F              ; Colocamos (Posicion_actual) a "$00" para que la rutina DRAW inicialice esta entidad.
- 720+ AD7F
- 721+ AD7F 21 00 00     	ld hl,0
- 722+ AD82 22 05 A5     	ld (Posicion_actual),hl
- 723+ AD85
- 724+ AD85 C9           	ret
- 725+ AD86
- 726+ AD86              ; Vamos a aparecer por la parte izquierda de la pantalla.
- 727+ AD86
- 728+ AD86 CD 38 C0     1 call Mov_right
- 729+ AD89
- 730+ AD89 18 E8        	jr 2B
- 731+ AD8B
- 732+ AD8B              ; *************************************************************************************************************************************************************
- 733+ AD8B              ;
- 734+ AD8B              ;	14/6/26
- 735+ AD8B              ;
- 736+ AD8B              ;	Iniciamos (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
- 737+ AD8B              ;	Sitúa (Puntero_objeto) en el Sprite correspondiente en función de su (Posicion_inicio).
- 738+ AD8B              ;
- 739+ AD8B              ;   Destruye HL y BC !!!!!,
- 740+ AD8B              ;
- 741+ AD8B              ;	BIT 7 (Ctrl_0). "1" ..... Derecha.
- 742+ AD8B              ;					"0" ..... Izquierda.
- 743+ AD8B
- 744+ AD8B              Inicia_Puntero_objeto:
- 745+ AD8B
- 746+ AD8B 3A 12 A5     	ld a,(Posicion_inicio)
- 747+ AD8E E6 1F        	and $1f
- 748+ AD90 FE 10        	cp $10
- 749+ AD92 38 13        	jr c,Inicia_puntero_objeto_der
- 750+ AD94
- 751+ AD94              ; Arrancamos desde la parte derecha de la pantalla.
- 752+ AD94              ; Iniciamos (Indice_Sprite_izq).
- 753+ AD94
- 754+ AD94              Inicia_puntero_objeto_izq:
- 755+ AD94
- 756+ AD94 2A 0C A5     	ld hl,(Indice_Sprite_izq) 								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
- 757+ AD97 22 10 A5     	ld (Puntero_DESPLZ_izq),hl
- 758+ AD9A
- 759+ AD9A CD 89 D4     	call Extrae_address
- 760+ AD9D
- 761+ AD9D 22 07 A5     	ld (Puntero_objeto),hl
- 762+ ADA0
- 763+ ADA0 2A 0A A5     	ld hl,(Indice_Sprite_der) 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
- 764+ ADA3 22 0E A5     	ld (Puntero_DESPLZ_der),hl
- 765+ ADA6
- 766+ ADA6 C9           	ret
- 767+ ADA7
- 768+ ADA7              ; Arrancamos desde la parte izquierda de la pantalla.
- 769+ ADA7              ; Iniciamos (Indice_Sprite_der).
- 770+ ADA7
- 771+ ADA7              Inicia_puntero_objeto_der:
- 772+ ADA7
- 773+ ADA7 2A 0A A5     	ld hl,(Indice_Sprite_der)
- 774+ ADAA 22 0E A5     	ld (Puntero_DESPLZ_der),hl 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
- 775+ ADAD
- 776+ ADAD CD 89 D4     	call Extrae_address
- 777+ ADB0
- 778+ ADB0 22 07 A5     	ld (Puntero_objeto),hl
- 779+ ADB3
- 780+ ADB3 2A 0C A5     	ld hl,(Indice_Sprite_izq)								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
- 781+ ADB6 22 10 A5     	ld (Puntero_DESPLZ_izq),hl
- 782+ ADB9
- 783+ ADB9 C9           	ret
- 784+ ADBA
- 785+ ADBA              ; -----------------------------------------------------------------------------------
- 786+ ADBA              ;
- 787+ ADBA              ;	20/01/24
- 788+ ADBA              ;
- 789+ ADBA              ;
- 790+ ADBA
- 791+ ADBA              Construye_movimientos_masticados_entidad:
- 792+ ADBA
- 793+ ADBA
- 794+ ADBA 2A 83 A5     	ld hl,(Puntero_indice_de_almacenes) 							; Inicialmente situado en el 1er .defw del índice, Almacen_de_movimientos_masticados_1.
- 795+ ADBD CD 89 D4     	call Extrae_address
- 796+ ADC0
- 797+ ADC0 22 FB A4     	ld (Puntero_de_almacen_de_mov_masticados),hl 					; $c9e6 es la dirección del 1er almacén de mov. masticados. (Puntero_de_almacen_de_mov_masticados) es el puntero que se irá desplazando por el almacén de movimientos masticados_
- 798+ ADC3              ; 																	; _para ir creando la coreografía de este (Tipo) de entidad.
- 799+ ADC3 E5           	push hl
- 800+ ADC4
- 801+ ADC4
- 802+ ADC4 CD F2 AD     	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
- 803+ ADC7              ;																	; _ el (Contador_de_mov_masticados).
- 804+ ADC7
- 805+ ADC7 CD 8B AD     	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
- 806+ ADCA              ;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
- 807+ ADCA
- 808+ ADCA CD 54 AD     	call Recompone_posicion_inicio
- 809+ ADCD
- 810+ ADCD
- 811+ ADCD CD 94 BD     1 call Draw
- 812+ ADD0
- 813+ ADD0
- 814+ ADD0
- 815+ ADD0
- 816+ ADD0
- 817+ ADD0
- 818+ ADD0
- 819+ ADD0
+ 637+ AD41
+ 638+ AD41 C9           	ret
+ 639+ AD42
+ 640+ AD42              ; ----------------------------------------------------------------------------------------------------
+ 641+ AD42              ;
+ 642+ AD42              ;	El N° aleatorio no puede ser igual al n° guardado en (hl).
+ 643+ AD42
+ 644+ AD42              ;	INPUTS: A contiene el n° aleatorio extraido de (Numeros_aleatorios_baile+3).
+ 645+ AD42              ;   		HL apunta al 1er, 2° o 3er .db de [Almacen_de_movimientos_masticados_Amadeus].
+ 646+ AD42              ;
+ 647+ AD42              ;	OUTPUT: "Z" indica: Número NO VÁLIDO.
+ 648+ AD42
+ 649+ AD42              Comparador:
+ 650+ AD42
+ 651+ AD42 A7           	and a
+ 652+ AD43 28 08        	jr z,1F
+ 653+ AD45
+ 654+ AD45 3D           	dec a
+ 655+ AD46
+ 656+ AD46 FE 1E        	cp $1e
+ 657+ AD48 30 03        	jr nc,1F
+ 658+ AD4A
+ 659+ AD4A BE           	cp (hl)
+ 660+ AD4B C8           	ret z
+ 661+ AD4C
+ 662+ AD4C 3C           	inc a
+ 663+ AD4D
+ 664+ AD4D BE           1 cp (hl)
+ 665+ AD4E C8           	ret z
+ 666+ AD4F
+ 667+ AD4F 3C           	inc a
+ 668+ AD50
+ 669+ AD50 BE           	cp (hl)
+ 670+ AD51
+ 671+ AD51 C9           	ret
+ 672+ AD52
+ 673+ AD52              ; **********************************************************************************************************************************************************
+ 674+ AD52              ;
+ 675+ AD52              ;   15/06/26
+ 676+ AD52              ;
+ 677+ AD52              ;	Recompone_posicion_inicio
+ 678+ AD52              ;
+ 679+ AD52              ; 	La rutina hace una llamada a [Mov_right] o [Mov_left] según su posición de inicio.
+ 680+ AD52              ;	Así conseguimios que la entidad esté completamente oculta a la hora de aparecer por la izquierda_
+ 681+ AD52              ;	_ o derecha. Tomaremos la columna de (Posicion_inicio) como referencia para hacer la llamada_
+ 682+ AD52              ;	_ a una u otra rutina.
+ 683+ AD52
+ 684+ AD52              Recompone_posicion_inicio:
+ 685+ AD52
+ 686+ AD52 3E 01        	ld a,1
+ 687+ AD54
+ 688+ AD54 21 18 A5     	ld hl,Vel_left
+ 689+ AD57 77           	ld (hl),a
+ 690+ AD58
+ 691+ AD58 23           	inc hl
+ 692+ AD59
+ 693+ AD59 77           	ld (hl),a 														; (Vel_left) y (Vel_right) a "1".
+ 694+ AD5A
+ 695+ AD5A              ;	El primer Sprite que se imprime en pantalla en cualquier patrón de movimientos será un "sprite vacío".
+ 696+ AD5A              ;	El objeto "SIEMPRE" ha de aparecer `oculto'. Tanto si aparece de arriba a abajo como si lo hace por los extremos de la pantalla.
+ 697+ AD5A
+ 698+ AD5A 21 01 A5     	ld hl,Ctrl_2
+ 699+ AD5D CB C6        	set 0,(hl)														; Indica que fijamos un "sprite vacío" en (Puntero_objeto).
+ 700+ AD5F
+ 701+ AD5F 2A 12 A5     	ld hl,(Posicion_inicio)
+ 702+ AD62 22 05 A5     	ld (Posicion_actual),hl 										; (Posicion_actual) no puede contener "0" para poder ejecutar (Mov_lef) o (Mov_right).
+ 703+ AD65
+ 704+ AD65 7D           	ld a,l
+ 705+ AD66 E6 1F        	and $1f
+ 706+ AD68 28 1A        	jr z,1F
+ 707+ AD6A
+ 708+ AD6A FE 1F        	cp $1f
+ 709+ AD6C 20 03        	jr nz,2F
+ 710+ AD6E
+ 711+ AD6E              ;	Vamos a aparecer por la parte derecha de la pantalla.
+ 712+ AD6E
+ 713+ AD6E CD 43 C1     	call Mov_left
+ 714+ AD71
+ 715+ AD71              ; No vamos a aparecer por ningún extremo. Cargamos Sprite vacío pues vamos a ir apareciendo por la_
+ 716+ AD71              ; _parte alta de la pantalla.
+ 717+ AD71
+ 718+ AD71 2A 07 A5     2 ld hl,(Puntero_objeto)
+ 719+ AD74 22 2B A5     	ld (Repone_puntero_objeto),hl
+ 720+ AD77
+ 721+ AD77 21 F0 92     	ld hl,Sprite_vacio
+ 722+ AD7A 22 07 A5     	ld (Puntero_objeto),hl
+ 723+ AD7D
+ 724+ AD7D              ; Colocamos (Posicion_actual) a "$00" para que la rutina DRAW inicialice esta entidad.
+ 725+ AD7D
+ 726+ AD7D 21 00 00     	ld hl,0
+ 727+ AD80 22 05 A5     	ld (Posicion_actual),hl
+ 728+ AD83
+ 729+ AD83 C9           	ret
+ 730+ AD84
+ 731+ AD84              ; Vamos a aparecer por la parte izquierda de la pantalla.
+ 732+ AD84
+ 733+ AD84 CD 38 C0     1 call Mov_right
+ 734+ AD87
+ 735+ AD87 18 E8        	jr 2B
+ 736+ AD89
+ 737+ AD89              ; *************************************************************************************************************************************************************
+ 738+ AD89              ;
+ 739+ AD89              ;	14/6/26
+ 740+ AD89              ;
+ 741+ AD89              ;	Iniciamos (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+ 742+ AD89              ;	Sitúa (Puntero_objeto) en el Sprite correspondiente en función de su (Posicion_inicio).
+ 743+ AD89              ;
+ 744+ AD89              ;   Destruye HL y BC !!!!!,
+ 745+ AD89              ;
+ 746+ AD89              ;	BIT 7 (Ctrl_0). "1" ..... Derecha.
+ 747+ AD89              ;					"0" ..... Izquierda.
+ 748+ AD89
+ 749+ AD89              Inicia_Puntero_objeto:
+ 750+ AD89
+ 751+ AD89 3A 12 A5     	ld a,(Posicion_inicio)
+ 752+ AD8C E6 1F        	and $1f
+ 753+ AD8E FE 10        	cp $10
+ 754+ AD90 38 13        	jr c,Inicia_puntero_objeto_der
+ 755+ AD92
+ 756+ AD92              ; Arrancamos desde la parte derecha de la pantalla.
+ 757+ AD92              ; Iniciamos (Indice_Sprite_izq).
+ 758+ AD92
+ 759+ AD92              Inicia_puntero_objeto_izq:
+ 760+ AD92
+ 761+ AD92 2A 0C A5     	ld hl,(Indice_Sprite_izq) 								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
+ 762+ AD95 22 10 A5     	ld (Puntero_DESPLZ_izq),hl
+ 763+ AD98
+ 764+ AD98 CD 89 D4     	call Extrae_address
+ 765+ AD9B
+ 766+ AD9B 22 07 A5     	ld (Puntero_objeto),hl
+ 767+ AD9E
+ 768+ AD9E 2A 0A A5     	ld hl,(Indice_Sprite_der) 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
+ 769+ ADA1 22 0E A5     	ld (Puntero_DESPLZ_der),hl
+ 770+ ADA4
+ 771+ ADA4 C9           	ret
+ 772+ ADA5
+ 773+ ADA5              ; Arrancamos desde la parte izquierda de la pantalla.
+ 774+ ADA5              ; Iniciamos (Indice_Sprite_der).
+ 775+ ADA5
+ 776+ ADA5              Inicia_puntero_objeto_der:
+ 777+ ADA5
+ 778+ ADA5 2A 0A A5     	ld hl,(Indice_Sprite_der)
+ 779+ ADA8 22 0E A5     	ld (Puntero_DESPLZ_der),hl 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
+ 780+ ADAB
+ 781+ ADAB CD 89 D4     	call Extrae_address
+ 782+ ADAE
+ 783+ ADAE 22 07 A5     	ld (Puntero_objeto),hl
+ 784+ ADB1
+ 785+ ADB1 2A 0C A5     	ld hl,(Indice_Sprite_izq)								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
+ 786+ ADB4 22 10 A5     	ld (Puntero_DESPLZ_izq),hl
+ 787+ ADB7
+ 788+ ADB7 C9           	ret
+ 789+ ADB8
+ 790+ ADB8              ; -----------------------------------------------------------------------------------
+ 791+ ADB8              ;
+ 792+ ADB8              ;	20/01/24
+ 793+ ADB8              ;
+ 794+ ADB8              ;
+ 795+ ADB8
+ 796+ ADB8              Construye_movimientos_masticados_entidad:
+ 797+ ADB8
+ 798+ ADB8
+ 799+ ADB8 18 FE        	jr $
+ 800+ ADBA
+ 801+ ADBA
+ 802+ ADBA 2A 83 A5     	ld hl,(Puntero_indice_de_almacenes) 							; Inicialmente situado en el 1er .defw del índice, Almacen_de_movimientos_masticados_1.
+ 803+ ADBD CD 89 D4     	call Extrae_address
+ 804+ ADC0
+ 805+ ADC0 22 FB A4     	ld (Puntero_de_almacen_de_mov_masticados),hl 					; $c9e6 es la dirección del 1er almacén de mov. masticados. (Puntero_de_almacen_de_mov_masticados) es el puntero que se irá desplazando por el almacén de movimientos masticados_
+ 806+ ADC3              ; 																	; _para ir creando la coreografía de este (Tipo) de entidad.
+ 807+ ADC3 E5           	push hl
+ 808+ ADC4
+ 809+ ADC4
+ 810+ ADC4 CD F2 AD     	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+ 811+ ADC7              ;																	; _ el (Contador_de_mov_masticados).
+ 812+ ADC7
+ 813+ ADC7 CD 89 AD     	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+ 814+ ADCA              ;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
+ 815+ ADCA
+ 816+ ADCA CD 52 AD     	call Recompone_posicion_inicio
+ 817+ ADCD
+ 818+ ADCD
+ 819+ ADCD CD 94 BD     1 call Draw
  820+ ADD0
  821+ ADD0
  822+ ADD0
@@ -5045,7 +5045,7 @@
  826+ ADD0
  827+ ADD0
  828+ ADD0
- 829+ ADD0              ;	jr $	;	15/06/26
+ 829+ ADD0
  830+ ADD0
  831+ ADD0
  832+ ADD0
@@ -5053,7 +5053,7 @@
  834+ ADD0
  835+ ADD0
  836+ ADD0
- 837+ ADD0
+ 837+ ADD0              ;	jr $	;	15/06/26
  838+ ADD0
  839+ ADD0
  840+ ADD0
@@ -5066,1311 +5066,1319 @@
  847+ ADD0
  848+ ADD0
  849+ ADD0
- 850+ ADD0              ; ****************************************************************************
- 851+ ADD0              ; ****************************************************************************
- 852+ ADD0              ; ****************************************************************************
- 853+ ADD0              ; ****************************************************************************
- 854+ ADD0              ; ****************************************************************************
- 855+ ADD0              ; ****************************************************************************
- 856+ ADD0              ; ****************************************************************************
- 857+ ADD0              ; ****************************************************************************
- 858+ ADD0
- 859+ ADD0              ;	Depurador_de_danzas_v01	;	--- macro ---
- 860+ ADD0
+ 850+ ADD0
+ 851+ ADD0
+ 852+ ADD0
+ 853+ ADD0
+ 854+ ADD0
+ 855+ ADD0
+ 856+ ADD0
+ 857+ ADD0
+ 858+ ADD0              ; ****************************************************************************
+ 859+ ADD0              ; ****************************************************************************
+ 860+ ADD0              ; ****************************************************************************
  861+ ADD0              ; ****************************************************************************
  862+ ADD0              ; ****************************************************************************
  863+ ADD0              ; ****************************************************************************
  864+ ADD0              ; ****************************************************************************
  865+ ADD0              ; ****************************************************************************
- 866+ ADD0              ; ****************************************************************************
- 867+ ADD0              ; ****************************************************************************
- 868+ ADD0              ; ****************************************************************************
- 869+ ADD0
- 870+ ADD0
- 871+ ADD0 CD BA D3     	call Codifica_Puntero_de_impresion
- 872+ ADD3 CD FF AD     	call Guarda_movimiento_masticado
- 873+ ADD6 CD 3B C3     	call Movimiento
- 874+ ADD9
- 875+ ADD9 3A 64 A5     	ld a,(Ctrl_3)													; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
- 876+ ADDC CB 4F        	bit 1,a 														; _ que corresponde a esta entidad.
- 877+ ADDE 28 ED        	jr z,1B
- 878+ ADE0
- 879+ ADE0              ; Hemos completado un ^ Almacén_de_mov_masticados ^.
- 880+ ADE0              ; Vamos a asignar una dirección de comienzo al almacén siguiente.
- 881+ ADE0
- 882+ ADE0 CD 1A AE     	call Prepara_nuevo_almacen 										; DE contiene (Puntero_de_almacen_de_mov_masticados).
- 883+ ADE3
- 884+ ADE3              ;	Hemos completado el almacén de movimientos masticados de la entidad.
- 885+ ADE3              ;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
- 886+ ADE3
- 887+ ADE3 E1           	pop hl 															; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
- 888+ ADE4
- 889+ ADE4 22 FB A4     	ld (Puntero_de_almacen_de_mov_masticados),hl
- 890+ ADE7
- 891+ ADE7              ; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados).
- 892+ ADE7
- 893+ ADE7 CD 2C AE     	call Situa_en_contador_general_de_mov_masticados
- 894+ ADEA
- 895+ ADEA              ; HL apunta al 1er byte del 1er (Contador_general_de_mov_masticados) vacío.
- 896+ ADEA              ; Guardamos (Contador_de_mov_masticados) en el (Contador_general_de_mov_masticados) de esta entidad.
- 897+ ADEA
- 898+ ADEA ED 4B FD A4  	ld bc,(Contador_de_mov_masticados)
- 899+ ADEE
- 900+ ADEE 71           	ld (hl),c
- 901+ ADEF 23           	inc hl
- 902+ ADF0 70           	ld (hl),b
- 903+ ADF1
- 904+ ADF1 C9           	ret
- 905+ ADF2
- 906+ ADF2              ; --------------------------------------------------------------------------------------------------------------
- 907+ ADF2              ;
- 908+ ADF2              ;	14/6/26
- 909+ ADF2              ;
- 910+ ADF2              ;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
- 911+ ADF2
- 912+ ADF2              Actualiza_Puntero_de_almacen_de_mov_masticados:
+ 866+ ADD0
+ 867+ ADD0              ;	Depurador_de_danzas_v01	;	--- macro ---
+ 868+ ADD0
+ 869+ ADD0              ; ****************************************************************************
+ 870+ ADD0              ; ****************************************************************************
+ 871+ ADD0              ; ****************************************************************************
+ 872+ ADD0              ; ****************************************************************************
+ 873+ ADD0              ; ****************************************************************************
+ 874+ ADD0              ; ****************************************************************************
+ 875+ ADD0              ; ****************************************************************************
+ 876+ ADD0              ; ****************************************************************************
+ 877+ ADD0
+ 878+ ADD0
+ 879+ ADD0 CD BA D3     	call Codifica_Puntero_de_impresion
+ 880+ ADD3 CD FF AD     	call Guarda_movimiento_masticado
+ 881+ ADD6 CD 3B C3     	call Movimiento
+ 882+ ADD9
+ 883+ ADD9 3A 64 A5     	ld a,(Ctrl_3)													; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
+ 884+ ADDC CB 4F        	bit 1,a 														; _ que corresponde a esta entidad.
+ 885+ ADDE 28 ED        	jr z,1B
+ 886+ ADE0
+ 887+ ADE0              ; Hemos completado un ^ Almacén_de_mov_masticados ^.
+ 888+ ADE0              ; Vamos a asignar una dirección de comienzo al almacén siguiente.
+ 889+ ADE0
+ 890+ ADE0 CD 1A AE     	call Prepara_nuevo_almacen 										; DE contiene (Puntero_de_almacen_de_mov_masticados).
+ 891+ ADE3
+ 892+ ADE3              ;	Hemos completado el almacén de movimientos masticados de la entidad.
+ 893+ ADE3              ;	Reinicializamos (Puntero_de_almacen_de_mov_masticados).
+ 894+ ADE3
+ 895+ ADE3 E1           	pop hl 															; Recuperamos la dirección inicial de (Puntero_de_almacen_de_mov_masticados).
+ 896+ ADE4
+ 897+ ADE4 22 FB A4     	ld (Puntero_de_almacen_de_mov_masticados),hl
+ 898+ ADE7
+ 899+ ADE7              ; Guardamos el nº total de movimientos masticados de esta entidad en su (Contador_general_de_mov_masticados).
+ 900+ ADE7
+ 901+ ADE7 CD 2C AE     	call Situa_en_contador_general_de_mov_masticados
+ 902+ ADEA
+ 903+ ADEA              ; HL apunta al 1er byte del 1er (Contador_general_de_mov_masticados) vacío.
+ 904+ ADEA              ; Guardamos (Contador_de_mov_masticados) en el (Contador_general_de_mov_masticados) de esta entidad.
+ 905+ ADEA
+ 906+ ADEA ED 4B FD A4  	ld bc,(Contador_de_mov_masticados)
+ 907+ ADEE
+ 908+ ADEE 71           	ld (hl),c
+ 909+ ADEF 23           	inc hl
+ 910+ ADF0 70           	ld (hl),b
+ 911+ ADF1
+ 912+ ADF1 C9           	ret
  913+ ADF2
- 914+ ADF2 2A FB A4     	ld hl,(Puntero_de_almacen_de_mov_masticados)
- 915+ ADF5 01 04 00     	ld bc,4
- 916+ ADF8 A7           	and a
- 917+ ADF9 ED 4A        	adc hl,bc
- 918+ ADFB 22 FB A4     	ld (Puntero_de_almacen_de_mov_masticados),hl
- 919+ ADFE
- 920+ ADFE C9           	ret
- 921+ ADFF
- 922+ ADFF              ; -----------------------------------------------------------------------------------
- 923+ ADFF              ;
- 924+ ADFF              ;	28/12/23
- 925+ ADFF              ;
- 926+ ADFF              ;	Guarda el "movimiento_masticado" en el {Almacen_de_movimientos_masticados} de la entidad.
- 927+ ADFF              ;	Actualiza el (Puntero_de_almacen_de_mov_masticados) tras el guardado.
- 928+ ADFF
- 929+ ADFF              Guarda_movimiento_masticado:
- 930+ ADFF
- 931+ ADFF ED 73 3A A5  	ld (Stack),sp
- 932+ AE03 ED 7B FB A4  	ld sp,(Puntero_de_almacen_de_mov_masticados)					; Guardamos el movimiento masticado en el almacén.
- 933+ AE07
- 934+ AE07 DD E5        	push ix 														; Pushea el Puntero_de_impresión, (1er scanline).
- 935+ AE09 FD E5        	push iy 														; Pushea Puntero_objeto.
- 936+ AE0B
- 937+ AE0B ED 7B 3A A5  	ld sp,(Stack)
- 938+ AE0F
- 939+ AE0F 2A FD A4     	ld hl,(Contador_de_mov_masticados)								; Incrementa en una unidad el (Contador_de_mov_masticados).
- 940+ AE12 23           	inc hl
- 941+ AE13 22 FD A4     	ld (Contador_de_mov_masticados),hl
- 942+ AE16
- 943+ AE16 CD F2 AD     	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
- 944+ AE19              ;																	; _ el (Contador_de_mov_masticados).
- 945+ AE19 C9           	ret
- 946+ AE1A
- 947+ AE1A              ; ---------------------------------------------------------------------
- 948+ AE1A              ;
- 949+ AE1A              ;	15/4/25
- 950+ AE1A
- 951+ AE1A              Prepara_nuevo_almacen:
- 952+ AE1A
- 953+ AE1A 2A FB A4     	ld hl,(Puntero_de_almacen_de_mov_masticados)
- 954+ AE1D
- 955+ AE1D 2B           	dec hl
- 956+ AE1E 2B           	dec hl
- 957+ AE1F
- 958+ AE1F EB           	ex de,hl
- 959+ AE20
- 960+ AE20 2A 83 A5     	ld hl,(Puntero_indice_de_almacenes)
- 961+ AE23 23           	inc hl
- 962+ AE24 23           	inc hl
- 963+ AE25 22 83 A5     	ld (Puntero_indice_de_almacenes),hl
- 964+ AE28
- 965+ AE28 73           	ld (hl),e
- 966+ AE29 23           	inc hl
- 967+ AE2A 72           	ld (hl),d
- 968+ AE2B
- 969+ AE2B C9           	ret
- 970+ AE2C
- 971+ AE2C              ; ----------------------------------------------------------------------
- 972+ AE2C              ;
- 973+ AE2C              ;   14/4/25
- 974+ AE2C              ;
- 975+ AE2C              ;   Sitúa HL en el .defw del 1er (Contador_general_de_mov_masticados) vacío.
- 976+ AE2C              ;
- 977+ AE2C
- 978+ AE2C              Situa_en_contador_general_de_mov_masticados:
- 979+ AE2C
- 980+ AE2C              ;   Sitúa en la 1ª de las tres variables.
- 981+ AE2C
- 982+ AE2C 21 C8 A0     	ld hl,Contador_general_de_mov_masticados_1
- 983+ AE2F 7E           1 ld a,(hl)
- 984+ AE30 A7           	and a
- 985+ AE31 C8           	ret z
- 986+ AE32
- 987+ AE32              ;	Avanzamos a la siguiente si esta ya contiene una cantidad.
- 988+ AE32
- 989+ AE32 23           	inc hl
- 990+ AE33 23           	inc hl
- 991+ AE34
- 992+ AE34 18 F9        	jr 1B
- 993+ AE36
- 994+ AE36              ; --------------------------------------------------------------------------------------------------------------
- 995+ AE36              ;
- 996+ AE36              ;	2/7/26
- 997+ AE36              ;
- 998+ AE36              ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
- 999+ AE36              ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio.
-1000+ AE36              ;
-1001+ AE36              ;	El siguiente .defw indica:
-1002+ AE36              ;
-1003+ AE36              ;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
-1004+ AE36              ;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
+ 914+ ADF2              ; --------------------------------------------------------------------------------------------------------------
+ 915+ ADF2              ;
+ 916+ ADF2              ;	14/6/26
+ 917+ ADF2              ;
+ 918+ ADF2              ;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
+ 919+ ADF2
+ 920+ ADF2              Actualiza_Puntero_de_almacen_de_mov_masticados:
+ 921+ ADF2
+ 922+ ADF2 2A FB A4     	ld hl,(Puntero_de_almacen_de_mov_masticados)
+ 923+ ADF5 01 04 00     	ld bc,4
+ 924+ ADF8 A7           	and a
+ 925+ ADF9 ED 4A        	adc hl,bc
+ 926+ ADFB 22 FB A4     	ld (Puntero_de_almacen_de_mov_masticados),hl
+ 927+ ADFE
+ 928+ ADFE C9           	ret
+ 929+ ADFF
+ 930+ ADFF              ; -----------------------------------------------------------------------------------
+ 931+ ADFF              ;
+ 932+ ADFF              ;	28/12/23
+ 933+ ADFF              ;
+ 934+ ADFF              ;	Guarda el "movimiento_masticado" en el {Almacen_de_movimientos_masticados} de la entidad.
+ 935+ ADFF              ;	Actualiza el (Puntero_de_almacen_de_mov_masticados) tras el guardado.
+ 936+ ADFF
+ 937+ ADFF              Guarda_movimiento_masticado:
+ 938+ ADFF
+ 939+ ADFF ED 73 3A A5  	ld (Stack),sp
+ 940+ AE03 ED 7B FB A4  	ld sp,(Puntero_de_almacen_de_mov_masticados)					; Guardamos el movimiento masticado en el almacén.
+ 941+ AE07
+ 942+ AE07 DD E5        	push ix 														; Pushea el Puntero_de_impresión, (1er scanline).
+ 943+ AE09 FD E5        	push iy 														; Pushea Puntero_objeto.
+ 944+ AE0B
+ 945+ AE0B ED 7B 3A A5  	ld sp,(Stack)
+ 946+ AE0F
+ 947+ AE0F 2A FD A4     	ld hl,(Contador_de_mov_masticados)								; Incrementa en una unidad el (Contador_de_mov_masticados).
+ 948+ AE12 23           	inc hl
+ 949+ AE13 22 FD A4     	ld (Contador_de_mov_masticados),hl
+ 950+ AE16
+ 951+ AE16 CD F2 AD     	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+ 952+ AE19              ;																	; _ el (Contador_de_mov_masticados).
+ 953+ AE19 C9           	ret
+ 954+ AE1A
+ 955+ AE1A              ; ---------------------------------------------------------------------
+ 956+ AE1A              ;
+ 957+ AE1A              ;	15/4/25
+ 958+ AE1A
+ 959+ AE1A              Prepara_nuevo_almacen:
+ 960+ AE1A
+ 961+ AE1A 2A FB A4     	ld hl,(Puntero_de_almacen_de_mov_masticados)
+ 962+ AE1D
+ 963+ AE1D 2B           	dec hl
+ 964+ AE1E 2B           	dec hl
+ 965+ AE1F
+ 966+ AE1F EB           	ex de,hl
+ 967+ AE20
+ 968+ AE20 2A 83 A5     	ld hl,(Puntero_indice_de_almacenes)
+ 969+ AE23 23           	inc hl
+ 970+ AE24 23           	inc hl
+ 971+ AE25 22 83 A5     	ld (Puntero_indice_de_almacenes),hl
+ 972+ AE28
+ 973+ AE28 73           	ld (hl),e
+ 974+ AE29 23           	inc hl
+ 975+ AE2A 72           	ld (hl),d
+ 976+ AE2B
+ 977+ AE2B C9           	ret
+ 978+ AE2C
+ 979+ AE2C              ; ----------------------------------------------------------------------
+ 980+ AE2C              ;
+ 981+ AE2C              ;   14/4/25
+ 982+ AE2C              ;
+ 983+ AE2C              ;   Sitúa HL en el .defw del 1er (Contador_general_de_mov_masticados) vacío.
+ 984+ AE2C              ;
+ 985+ AE2C
+ 986+ AE2C              Situa_en_contador_general_de_mov_masticados:
+ 987+ AE2C
+ 988+ AE2C              ;   Sitúa en la 1ª de las tres variables.
+ 989+ AE2C
+ 990+ AE2C 21 C8 A0     	ld hl,Contador_general_de_mov_masticados_1
+ 991+ AE2F 7E           1 ld a,(hl)
+ 992+ AE30 A7           	and a
+ 993+ AE31 C8           	ret z
+ 994+ AE32
+ 995+ AE32              ;	Avanzamos a la siguiente si esta ya contiene una cantidad.
+ 996+ AE32
+ 997+ AE32 23           	inc hl
+ 998+ AE33 23           	inc hl
+ 999+ AE34
+1000+ AE34 18 F9        	jr 1B
+1001+ AE36
+1002+ AE36              ; --------------------------------------------------------------------------------------------------------------
+1003+ AE36              ;
+1004+ AE36              ;	12/8/26
 1005+ AE36              ;
-1006+ AE36              ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
-1007+ AE36              ;
-1008+ AE36              ;	Tabla_Random_Entidad_tipo_1
-1009+ AE36
-1010+ AE36              ;	defw $0f01
-1011+ AE36              ;	defw Random_2_1_15
-1012+ AE36
-1013+ AE36              ;	db 0,1
-1014+ AE36              ;	defw $0f01
-1015+ AE36              ;	defw Random_3_1_15	;	Igual
-1016+ AE36              ;	defw Random_4_1_15	;	Igual
+1006+ AE36              ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
+1007+ AE36              ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio.
+1008+ AE36              ;
+1009+ AE36              ;	El siguiente .defw indica:
+1010+ AE36              ;
+1011+ AE36              ;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
+1012+ AE36              ;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
+1013+ AE36              ;
+1014+ AE36              ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
+1015+ AE36              ;
+1016+ AE36              ;	Tabla_Random_Entidad_tipo_1
 1017+ AE36
-1018+ AE36              ;	defw 0
-1019+ AE36
-1020+ AE36              Aplica_rnd_al_baile:
-1021+ AE36
-1022+ AE36 CD 5D AE     	call RND_ini
-1023+ AE39
-1024+ AE39 AF           	xor a
-1025+ AE3A
-1026+ AE3A 08           2 ex af,af 															; Digito de control en A'. Inicialmente "0".
-1027+ AE3B
-1028+ AE3B              ; 	digit ctrl ??
-1029+ AE3B              ;   Yes if "$00".
-1030+ AE3B              ;	HL se encuentra en el 1er .db de la Tabla_Random de la entidad correspondiente.
-1031+ AE3B
-1032+ AE3B 7E           	ld a,(hl)
-1033+ AE3C A7           	and a
-1034+ AE3D 20 07        	jr nz,1F 														; NZ indica que este .defw contiene límites. El próximo nº RND que vamos a obtener sólo se introducirá en una unica dirección de memoria.
-1035+ AE3F
-1036+ AE3F              ; Almacenamos en A' el nº de direcciones que compartiran nº RND y sitúamos HL en el .defw que indica los límites.
-1037+ AE3F
-1038+ AE3F 23           	inc hl
-1039+ AE40
-1040+ AE40 7E           	ld a,(hl)
-1041+ AE41 A7           	and a
-1042+ AE42 C8           	ret z
-1043+ AE43
-1044+ AE43 08           	ex af,af
-1045+ AE44
-1046+ AE44 23           	inc hl 															; Sitúa HL en el defw que define los límites.
-1047+ AE45 7E           	ld a,(hl)
-1048+ AE46
-1049+ AE46 CD 82 AE     1 call Load_limits_and_place_registers
-1050+ AE49 CD 65 AE     	call Get_RND
-1051+ AE4C CD 71 AE     	call Filtra_RND
-1052+ AE4F
-1053+ AE4F              ;	Introducimos nº rnd filtrado.
-1054+ AE4F
-1055+ AE4F 77           3 ld (hl),a
-1056+ AE50
-1057+ AE50 EB           	ex de,hl 														; Siguiente .defw de la Tabla_Random en HL.
-1058+ AE51
-1059+ AE51              ;	Consulta dígito de control. Z pasamos a otro nº y otra dirección de memoria.
-1060+ AE51
-1061+ AE51 08           	ex af,af
-1062+ AE52 28 E6        	jr z,2B
-1063+ AE54
-1064+ AE54              ;	Siguiente dirección con el mismo nº RND.
-1065+ AE54
-1066+ AE54 3D           	dec a
-1067+ AE55 08           	ex af,af
-1068+ AE56
-1069+ AE56 CD 89 D4     	call Extrae_address
-1070+ AE59
-1071+ AE59 13           	inc de
-1072+ AE5A 13           	inc de
-1073+ AE5B
-1074+ AE5B 18 F2        	jr 3B
-1075+ AE5D
-1076+ AE5D              ; ----- ----- -----
-1077+ AE5D              ;
-1078+ AE5D              ;	HL' será el puntero que se irá desplazando por los distintos nº aleatorios.
-1079+ AE5D              ;	Comenzamos por el último, (Numeros_aleatorios+6).
-1080+ AE5D              ;	B actúa como contador, (7 nº aleatorios).
-1081+ AE5D
-1082+ AE5D              RND_ini:
+1018+ AE36              ;	defw $0f01
+1019+ AE36              ;	defw Random_2_1_15
+1020+ AE36
+1021+ AE36              ;	db 0,1
+1022+ AE36              ;	defw $0f01
+1023+ AE36              ;	defw Random_3_1_15	;	Igual
+1024+ AE36              ;	defw Random_4_1_15	;	Igual
+1025+ AE36
+1026+ AE36              ;	defw 0
+1027+ AE36
+1028+ AE36              Aplica_rnd_al_baile:
+1029+ AE36
+1030+ AE36 CD 5D AE     	call RND_ini
+1031+ AE39
+1032+ AE39 AF           	xor a
+1033+ AE3A
+1034+ AE3A 08           2 ex af,af 															; Digito de control en A'. Inicialmente "0".
+1035+ AE3B
+1036+ AE3B              ; 	digit ctrl ??
+1037+ AE3B              ;   Yes if "$00".
+1038+ AE3B              ;	HL se encuentra en el 1er .db de la Tabla_Random de la entidad correspondiente.
+1039+ AE3B
+1040+ AE3B 7E           	ld a,(hl)
+1041+ AE3C A7           	and a
+1042+ AE3D 20 07        	jr nz,1F 														; NZ indica que este .defw contiene límites. El próximo nº RND que vamos a obtener sólo se introducirá en una unica dirección de memoria.
+1043+ AE3F
+1044+ AE3F              ; Almacenamos en A' el nº de direcciones que compartiran nº RND y sitúamos HL en el .defw que indica los límites.
+1045+ AE3F
+1046+ AE3F 23           	inc hl
+1047+ AE40
+1048+ AE40 7E           	ld a,(hl)
+1049+ AE41 A7           	and a
+1050+ AE42 C8           	ret z
+1051+ AE43
+1052+ AE43 08           	ex af,af
+1053+ AE44
+1054+ AE44 23           	inc hl 															; Sitúa HL en el defw que define los límites.
+1055+ AE45 7E           	ld a,(hl)
+1056+ AE46
+1057+ AE46 CD 82 AE     1 call Load_limits_and_place_registers
+1058+ AE49 CD 65 AE     	call Get_RND
+1059+ AE4C CD 71 AE     	call Filtra_RND
+1060+ AE4F
+1061+ AE4F              ;	Introducimos nº rnd filtrado.
+1062+ AE4F
+1063+ AE4F 77           3 ld (hl),a
+1064+ AE50
+1065+ AE50 EB           	ex de,hl 														; Siguiente .defw de la Tabla_Random en HL.
+1066+ AE51
+1067+ AE51              ;	Consulta dígito de control. Z pasamos a otro nº y otra dirección de memoria.
+1068+ AE51
+1069+ AE51 08           	ex af,af
+1070+ AE52 28 E6        	jr z,2B
+1071+ AE54
+1072+ AE54              ;	Siguiente dirección con el mismo nº RND.
+1073+ AE54
+1074+ AE54 3D           	dec a
+1075+ AE55 08           	ex af,af
+1076+ AE56
+1077+ AE56 CD 89 D4     	call Extrae_address
+1078+ AE59
+1079+ AE59 13           	inc de
+1080+ AE5A 13           	inc de
+1081+ AE5B
+1082+ AE5B 18 F2        	jr 3B
 1083+ AE5D
-1084+ AE5D D9           	exx
-1085+ AE5E
-1086+ AE5E 21 92 A2     	ld hl,Numeros_aleatorios_baile+6                        		; HL apunta al 7° n° aleatorio de baile.
-1087+ AE61 06 07        	ld b,7
-1088+ AE63
-1089+ AE63 D9           	exx
-1090+ AE64
-1091+ AE64 C9           	ret
-1092+ AE65
-1093+ AE65              ; ----- ----- -----
-1094+ AE65              ;
-1095+ AE65              ;	Extrae el nº aleatorio, decrementa el contador de nº RND, (B) y actualiza el puntero HL' situándolo en el siguiente nº.
-1096+ AE65              ;	Inicializamos HL y B cuando hemos terminado de introducir todos los nº., (call RND_ini).
-1097+ AE65              ;
-1098+ AE65
-1099+ AE65              Get_RND:
+1084+ AE5D              ; ----- ----- -----
+1085+ AE5D              ;
+1086+ AE5D              ;	HL' será el puntero que se irá desplazando por los distintos nº aleatorios.
+1087+ AE5D              ;	Comenzamos por el último, (Numeros_aleatorios+6).
+1088+ AE5D              ;	B actúa como contador, (7 nº aleatorios).
+1089+ AE5D
+1090+ AE5D              RND_ini:
+1091+ AE5D
+1092+ AE5D D9           	exx
+1093+ AE5E
+1094+ AE5E 21 92 A2     	ld hl,Numeros_aleatorios_baile+6                        		; HL apunta al 7° n° aleatorio de baile.
+1095+ AE61 06 07        	ld b,7
+1096+ AE63
+1097+ AE63 D9           	exx
+1098+ AE64
+1099+ AE64 C9           	ret
 1100+ AE65
-1101+ AE65 D9           	exx
-1102+ AE66
-1103+ AE66 7E           	ld a,(hl)
-1104+ AE67 10 05        	djnz 1F
-1105+ AE69
-1106+ AE69 D9           	exx
-1107+ AE6A
-1108+ AE6A CD 5D AE     	call RND_ini
-1109+ AE6D
-1110+ AE6D C9           	ret
-1111+ AE6E
-1112+ AE6E 2B           1 dec hl
-1113+ AE6F
-1114+ AE6F D9           	exx
-1115+ AE70
-1116+ AE70 C9           	ret
-1117+ AE71
-1118+ AE71              Filtra_RND:
-1119+ AE71
-1120+ AE71 E6 3C        	and %00111100													; Convertimos el byte, (RND), en Nibble, valores comprendidos entre (0-15).
-1121+ AE73
-1122+ AE73 CB 3F        	srl a
-1123+ AE75 CB 3F        	srl a  															; % 00001111, nº RND (0-15).
-1124+ AE77
-1125+ AE77 B8           	cp b
-1126+ AE78 C8           	ret z 															; RET, nºrnd = Límite sup.
-1127+ AE79
-1128+ AE79 38 02        	jr c,1F 														; Estamos por debajo del límite sup. Hemos de comprobar el límite inf.
-1129+ AE7B
-1130+ AE7B              ;	El n° aleatorio está por encima del límite superior. El n° RND adoptará el valor del límite sup.
-1131+ AE7B
-1132+ AE7B 78           	ld a,b 															; RET, nº rnd = Límite sup.
-1133+ AE7C
-1134+ AE7C C9           	ret
-1135+ AE7D
-1136+ AE7D              ;	Comprobamos el límite inferior.
-1137+ AE7D
-1138+ AE7D B9           1 cp c
-1139+ AE7E C8           	ret z 															; RET, nº rnd = Límite inf.
-1140+ AE7F
-1141+ AE7F D0           	ret nc 															; RET, nº rnd dentro de los límites.
-1142+ AE80
-1143+ AE80 79           	ld a,c 															; RET, nº rnd = Límite inf.
-1144+ AE81
-1145+ AE81 C9           	ret
-1146+ AE82
-1147+ AE82              ; ----- ----- -----
-1148+ AE82              ;
-1149+ AE82              ;	2/7/26
-1150+ AE82              ;
-1151+ AE82              ;	OUTPUT:
-1152+ AE82              ;
-1153+ AE82              ;	Límites que tendrá este nº RND en BC.
-1154+ AE82              ;	B contiene lím.sup. y C contiene límite inf.
-1155+ AE82              ;
-1156+ AE82              ;	Sitúa HL en la dirección de memoria donde introduciremos el nº aleatorio, (que estará acotado por los límites).
-1157+ AE82              ;	DE apunta al siguiente .defw de la Tabla_RANDOM del tipo de entidad correspondiente.
-1158+ AE82
-1159+ AE82              Load_limits_and_place_registers:
-1160+ AE82
-1161+ AE82 4F           	ld c,a
-1162+ AE83
-1163+ AE83 23           	inc hl
-1164+ AE84 46           	ld b,(hl)
-1165+ AE85
-1166+ AE85 23           	inc hl
-1167+ AE86
-1168+ AE86 CD 89 D4     	call Extrae_address
-1169+ AE89
-1170+ AE89 13           	inc de
-1171+ AE8A 13           	inc de
-1172+ AE8B
-1173+ AE8B C9           	ret
-1174+ AE8C
-1175+ AE8C              ;---------------------------------------------------------------------------------------------------------------
-1176+ AE8C              ;
-1177+ AE8C              ;   10/8/26
-1178+ AE8C              ;
-1179+ AE8C              ;	Inicializa Nivel del juego y el contador de entidades del nivel.
-1180+ AE8C              ;
-1181+ AE8C              ;	Nota:
-1182+ AE8C              ;	(Puntero_indice_NIVELES) ... Inicialmente situado en el 1er Nivel del Índice de Niveles, (.defw).
-1183+ AE8C              ;
-1184+ AE8C              ;	OUTPUT:
-1185+ AE8C              ;
-1186+ AE8C              ;	Inicializa las variables de Nivel:
-1187+ AE8C              ;
-1188+ AE8C              ;									(Max_time_to_appear_entities) ... Valor máximo que tarda una entidad en aparecer en pantalla.
-1189+ AE8C              ;									(Decrease_top_time_entities) ... Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
-1190+ AE8C              ; 									(Min_time_to_appear_entitiesr) ... Valor mínimo que puede tardar una entidad en aparecer en pantalla.
-1191+ AE8C              ; 									(CLOCK_disparos_de_entidades) ... Contador decreciente. Cuando su valor es "0" habilita el disparo de las entidades.
-1192+ AE8C              ; 									(Repone_CLOCK_disparos) ... Repone el valor del contador (CLOCK_disparos_de_entidades) cuando este llega a "0".
-1193+ AE8C              ; 									(Numero_de_entidades) ... N° total de entidades que tiene el nivel.
-1194+ AE8C              ;
-1195+ AE8C              ;	Inicializa las variables del contador de enemigos del nivel:
-1196+ AE8C              ;
-1197+ AE8C              ;	(Entidades_BCD_unidades) ..... Valor de las unidades del contador, representación decimal, (0-9).
-1198+ AE8C              ;	(Entidades_BCD_decenas) .....  Valor de las decenas del contador, 		"           "        "
-1199+ AE8C              ;	(Puntero_unidades_grandes) ..... Situado en los .db que forman el n° grande, (unidades).
-1200+ AE8C              ;	(Puntero_decenas_grandes) ..... Situado en los .db que forman el n° grande, (decenas).
-1201+ AE8C              ;
+1101+ AE65              ; ----- ----- -----
+1102+ AE65              ;
+1103+ AE65              ;	Extrae el nº aleatorio, decrementa el contador de nº RND, (B) y actualiza el puntero HL' situándolo en el siguiente nº.
+1104+ AE65              ;	Inicializamos HL y B cuando hemos terminado de introducir todos los nº., (call RND_ini).
+1105+ AE65              ;
+1106+ AE65
+1107+ AE65              Get_RND:
+1108+ AE65
+1109+ AE65 D9           	exx
+1110+ AE66
+1111+ AE66 7E           	ld a,(hl)
+1112+ AE67 10 05        	djnz 1F
+1113+ AE69
+1114+ AE69 D9           	exx
+1115+ AE6A
+1116+ AE6A CD 5D AE     	call RND_ini
+1117+ AE6D
+1118+ AE6D C9           	ret
+1119+ AE6E
+1120+ AE6E 2B           1 dec hl
+1121+ AE6F
+1122+ AE6F D9           	exx
+1123+ AE70
+1124+ AE70 C9           	ret
+1125+ AE71
+1126+ AE71              Filtra_RND:
+1127+ AE71
+1128+ AE71 E6 3C        	and %00111100													; Convertimos el byte, (RND), en Nibble, valores comprendidos entre (0-15).
+1129+ AE73
+1130+ AE73 CB 3F        	srl a
+1131+ AE75 CB 3F        	srl a  															; % 00001111, nº RND (0-15).
+1132+ AE77
+1133+ AE77 B8           	cp b
+1134+ AE78 C8           	ret z 															; RET, nºrnd = Límite sup.
+1135+ AE79
+1136+ AE79 38 02        	jr c,1F 														; Estamos por debajo del límite sup. Hemos de comprobar el límite inf.
+1137+ AE7B
+1138+ AE7B              ;	El n° aleatorio está por encima del límite superior. El n° RND adoptará el valor del límite sup.
+1139+ AE7B
+1140+ AE7B 78           	ld a,b 															; RET, nº rnd = Límite sup.
+1141+ AE7C
+1142+ AE7C C9           	ret
+1143+ AE7D
+1144+ AE7D              ;	Comprobamos el límite inferior.
+1145+ AE7D
+1146+ AE7D B9           1 cp c
+1147+ AE7E C8           	ret z 															; RET, nº rnd = Límite inf.
+1148+ AE7F
+1149+ AE7F D0           	ret nc 															; RET, nº rnd dentro de los límites.
+1150+ AE80
+1151+ AE80 79           	ld a,c 															; RET, nº rnd = Límite inf.
+1152+ AE81
+1153+ AE81 C9           	ret
+1154+ AE82
+1155+ AE82              ; ----- ----- -----
+1156+ AE82              ;
+1157+ AE82              ;	12/8/26
+1158+ AE82              ;
+1159+ AE82              ;	OUTPUT:
+1160+ AE82              ;
+1161+ AE82              ;	Límites que tendrá este nº RND en BC.
+1162+ AE82              ;	B contiene lím.sup. y C contiene límite inf.
+1163+ AE82              ;
+1164+ AE82              ;	Sitúa HL en la dirección de memoria donde introduciremos el nº aleatorio, (que estará acotado por los límites).
+1165+ AE82              ;	DE apunta al siguiente .defw de la Tabla_RANDOM del tipo de entidad correspondiente.
+1166+ AE82
+1167+ AE82              Load_limits_and_place_registers:
+1168+ AE82
+1169+ AE82 4F           	ld c,a
+1170+ AE83
+1171+ AE83 23           	inc hl
+1172+ AE84 46           	ld b,(hl)
+1173+ AE85
+1174+ AE85 23           	inc hl
+1175+ AE86
+1176+ AE86 CD 89 D4     	call Extrae_address
+1177+ AE89
+1178+ AE89 13           	inc de
+1179+ AE8A 13           	inc de
+1180+ AE8B
+1181+ AE8B C9           	ret
+1182+ AE8C
+1183+ AE8C              ;---------------------------------------------------------------------------------------------------------------
+1184+ AE8C              ;
+1185+ AE8C              ;   10/8/26
+1186+ AE8C              ;
+1187+ AE8C              ;	Inicializa Nivel del juego y el contador de entidades del nivel.
+1188+ AE8C              ;
+1189+ AE8C              ;	Nota:
+1190+ AE8C              ;	(Puntero_indice_NIVELES) ... Inicialmente situado en el 1er Nivel del Índice de Niveles, (.defw).
+1191+ AE8C              ;
+1192+ AE8C              ;	OUTPUT:
+1193+ AE8C              ;
+1194+ AE8C              ;	Inicializa las variables de Nivel:
+1195+ AE8C              ;
+1196+ AE8C              ;									(Max_time_to_appear_entities) ... Valor máximo que tarda una entidad en aparecer en pantalla.
+1197+ AE8C              ;									(Decrease_top_time_entities) ... Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
+1198+ AE8C              ; 									(Min_time_to_appear_entitiesr) ... Valor mínimo que puede tardar una entidad en aparecer en pantalla.
+1199+ AE8C              ; 									(CLOCK_disparos_de_entidades) ... Contador decreciente. Cuando su valor es "0" habilita el disparo de las entidades.
+1200+ AE8C              ; 									(Repone_CLOCK_disparos) ... Repone el valor del contador (CLOCK_disparos_de_entidades) cuando este llega a "0".
+1201+ AE8C              ; 									(Numero_de_entidades) ... N° total de entidades que tiene el nivel.
 1202+ AE8C              ;
-1203+ AE8C              ;
-1204+ AE8C              ;	Inicializa (Puntero_de_entidades). Este puntero se irá desplazando por las distintas entidades que tiene el nivel indicando su CLASE.
-1205+ AE8C              ;
-1206+ AE8C              ;	B contiene (Numero_de_entidades).
-1207+ AE8C              ;	C contiene la (Clase) de la entidad hacia la que apunta (Puntero_de_entidades).
-1208+ AE8C              ;
-1209+ AE8C              ;	MODIFY: A,HL,BC y DE.
-1210+ AE8C
-1211+ AE8C              Inicializa_Nivel:
-1212+ AE8C
-1213+ AE8C              ; Actualiza (Puntero_indice_NIVELES).
-1214+ AE8C
-1215+ AE8C 2A A0 A5     	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
-1216+ AE8F CD 89 D4     	call Extrae_address   						 					; Sitúa HL en el 1er byte que define: (Max_time_to_appear_entities).
-1217+ AE92
-1218+ AE92 7E           	ld a,(hl)
-1219+ AE93 32 9B A5     	ld (Max_time_to_appear_entities),a
-1220+ AE96
-1221+ AE96 23           	inc hl
-1222+ AE97
-1223+ AE97 7E           	ld a,(hl)
-1224+ AE98 32 9C A5     	ld (Decrease_top_time_entities),a
-1225+ AE9B
-1226+ AE9B 23           	inc hl
-1227+ AE9C
-1228+ AE9C 7E           	ld a,(hl)
-1229+ AE9D 32 9D A5     	ld (Min_time_to_appear_entities),a
-1230+ AEA0
-1231+ AEA0 23           	inc hl
-1232+ AEA1
-1233+ AEA1 7E           	ld a,(hl)
-1234+ AEA2 32 7F A5     	ld (CLOCK_disparos_de_entidades),a
-1235+ AEA5 32 7E A5     	ld (Repone_CLOCK_disparos),a
-1236+ AEA8
-1237+ AEA8 23           	inc hl
-1238+ AEA9
-1239+ AEA9 7E           	ld a,(hl)
-1240+ AEAA 32 35 A5     	ld (Numero_de_entidades),a					 					; Inicializa (Numero_de_entidades).
-1241+ AEAD
-1242+ AEAD 47           	ld b,a
-1243+ AEAE
-1244+ AEAE              ;	Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
-1245+ AEAE
-1246+ AEAE CD 61 B0     	call M_entidades_a_BCD											; Inicializa:	Entidades_BCD_unidades db 0
-1247+ AEB1              ;																					Entidades_BCD_decenas db 0
-1248+ AEB1 23           	inc hl
-1249+ AEB2
-1250+ AEB2 22 85 A5     	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
-1251+ AEB5 4E           	ld c,(hl)
-1252+ AEB6
-1253+ AEB6 C9           	ret
-1254+ AEB7
-1255+ AEB7              ; ----------------------
-1256+ AEB7              ;
-1257+ AEB7              ;	7/7/26
-1258+ AEB7              ;
-1259+ AEB7              ;	INPUT: A, A' y C contienen la (Clase) de la entidad.
-1260+ AEB7              ;		   (B) contiene el nº de entidades que tiene el nivel.
-1261+ AEB7              ;    	   (C) contiene la clase de la entidad en curso.
+1203+ AE8C              ;	Inicializa las variables del contador de enemigos del nivel:
+1204+ AE8C              ;
+1205+ AE8C              ;	(Entidades_BCD_unidades) ..... Valor de las unidades del contador, representación decimal, (0-9).
+1206+ AE8C              ;	(Entidades_BCD_decenas) .....  Valor de las decenas del contador, 		"           "        "
+1207+ AE8C              ;	(Puntero_unidades_grandes) ..... Situado en los .db que forman el n° grande, (unidades).
+1208+ AE8C              ;	(Puntero_decenas_grandes) ..... Situado en los .db que forman el n° grande, (decenas).
+1209+ AE8C              ;
+1210+ AE8C              ;
+1211+ AE8C              ;
+1212+ AE8C              ;	Inicializa (Puntero_de_entidades). Este puntero se irá desplazando por las distintas entidades que tiene el nivel indicando su CLASE.
+1213+ AE8C              ;
+1214+ AE8C              ;	B contiene (Numero_de_entidades).
+1215+ AE8C              ;	C contiene la (Clase) de la entidad hacia la que apunta (Puntero_de_entidades).
+1216+ AE8C              ;
+1217+ AE8C              ;	MODIFY: A,HL,BC y DE.
+1218+ AE8C
+1219+ AE8C              Inicializa_Nivel:
+1220+ AE8C
+1221+ AE8C              ; Actualiza (Puntero_indice_NIVELES).
+1222+ AE8C
+1223+ AE8C 2A A0 A5     	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
+1224+ AE8F CD 89 D4     	call Extrae_address   						 					; Sitúa HL en el 1er byte que define: (Max_time_to_appear_entities).
+1225+ AE92
+1226+ AE92 7E           	ld a,(hl)
+1227+ AE93 32 9B A5     	ld (Max_time_to_appear_entities),a
+1228+ AE96
+1229+ AE96 23           	inc hl
+1230+ AE97
+1231+ AE97 7E           	ld a,(hl)
+1232+ AE98 32 9C A5     	ld (Decrease_top_time_entities),a
+1233+ AE9B
+1234+ AE9B 23           	inc hl
+1235+ AE9C
+1236+ AE9C 7E           	ld a,(hl)
+1237+ AE9D 32 9D A5     	ld (Min_time_to_appear_entities),a
+1238+ AEA0
+1239+ AEA0 23           	inc hl
+1240+ AEA1
+1241+ AEA1 7E           	ld a,(hl)
+1242+ AEA2 32 7F A5     	ld (CLOCK_disparos_de_entidades),a
+1243+ AEA5 32 7E A5     	ld (Repone_CLOCK_disparos),a
+1244+ AEA8
+1245+ AEA8 23           	inc hl
+1246+ AEA9
+1247+ AEA9 7E           	ld a,(hl)
+1248+ AEAA 32 35 A5     	ld (Numero_de_entidades),a					 					; Inicializa (Numero_de_entidades).
+1249+ AEAD
+1250+ AEAD 47           	ld b,a
+1251+ AEAE
+1252+ AEAE              ;	Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
+1253+ AEAE
+1254+ AEAE CD 61 B0     	call M_entidades_a_BCD											; Inicializa:	Entidades_BCD_unidades db 0
+1255+ AEB1              ;																					Entidades_BCD_decenas db 0
+1256+ AEB1 23           	inc hl
+1257+ AEB2
+1258+ AEB2 22 85 A5     	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
+1259+ AEB5 4E           	ld c,(hl)
+1260+ AEB6
+1261+ AEB6 C9           	ret
 1262+ AEB7
-1263+ AEB7              ;	OUTPUT: Flag Z activo:
+1263+ AEB7              ; ----------------------
 1264+ AEB7              ;
-1265+ AEB7              ;				   (A) = "0"     .....   Indica que tenemos que generar los movimientos masticados de esta (Clase) de entidad.
-1266+ AEB7              ;	 			   (A) = "1,2,3, ..... " Indica que esta Caja_Master ya está iniciada con esta (Clase) de entidad.
-1267+ AEB7
-1268+ AEB7              Situa_en_Caja_Master:
-1269+ AEB7
-1270+ AEB7 21 04 A1     	ld hl,Indice_de_cajas_master
-1271+ AEBA 22 33 A5     	ld (Puntero_indice_master),hl 									; Sitúa (Puntero_indice_master) en la 1ª caja del índice.
-1272+ AEBD
-1273+ AEBD CD 89 D4     1 call Extrae_address
-1274+ AEC0 BE           	cp (hl)
-1275+ AEC1 C8           	ret z 															; RET Z. Indica que esta Caja_Master ya está iniciada con una entidad de esta (Clase).
-1276+ AEC2
-1277+ AEC2              ; 	Esta Caja_Master no contiene una entidad de esta misma (Clase). RET si está vacía.
-1278+ AEC2
-1279+ AEC2 AF           	xor a
-1280+ AEC3
-1281+ AEC3 34           	inc (hl)
-1282+ AEC4 35           	dec (hl)
-1283+ AEC5
-1284+ AEC5 C8           	ret z 															; RET. Flag Z y A="$00". Indica que esta Caja_Master está vacía. Hay que generar los movimientos_
-1285+ AEC6              ; 																	; _masticados de esta (Clase) de entidad.
-1286+ AEC6
-1287+ AEC6              ; Caja_Master iniciada con otra (Clase) de entidad.
-1288+ AEC6              ; Saltamos a la siguiente:
-1289+ AEC6
-1290+ AEC6 79           	ld a,c
-1291+ AEC7
-1292+ AEC7 13           	inc de
-1293+ AEC8 13           	inc de
-1294+ AEC9
-1295+ AEC9 ED 53 33 A5  	ld (Puntero_indice_master),de
-1296+ AECD
-1297+ AECD EB           	ex de,hl 														; Esta caja está iniciada con otra (Clase) de entidad.
-1298+ AECE
-1299+ AECE 18 ED        	jr 1B
-1300+ AED0
-1301+ AED0              ; -------------------------------------------------------------------------------------------------
-1302+ AED0              ;
-1303+ AED0              ;	17/4/25
-1304+ AED0              ;
-1305+ AED0              ;	Busca en las tres Cajas_Master una entidad de la (Clase) que contiene el registro A_
-1306+ AED0              ;	_para completar las Cajas_de_entidades.
-1307+ AED0              ;
-1308+ AED0              ;	INPUT: A contiene la (Clase) de entidad.
-1309+ AED0
-1310+ AED0              Obtiene_datos_de_Caja_Master
-1311+ AED0
-1312+ AED0 21 04 A1     	ld hl,Indice_de_cajas_master
-1313+ AED3 22 33 A5     	ld (Puntero_indice_master),hl
-1314+ AED6
-1315+ AED6 CD 89 D4     1 call Extrae_address
-1316+ AED9 BE           	cp (hl)
-1317+ AEDA C8           	ret z 															; RET pues esta Caja_Master es de la (Clase) que necesitamos.
-1318+ AEDB
-1319+ AEDB 1C           	inc e
-1320+ AEDC 1C           	inc e
-1321+ AEDD
-1322+ AEDD ED 53 33 A5  	ld (Puntero_indice_master),de
-1323+ AEE1 EB           	ex de,hl
-1324+ AEE2
-1325+ AEE2 18 F2        	jr 1B
-1326+ AEE4
-1327+ AEE4              ; -----------------------------------------------------------
-1328+ AEE4              ;
-1329+ AEE4              ;	7/3/25
-1330+ AEE4
-1331+ AEE4              ;	INPUTS: A contiene el (Tipo) de la entidad que estamos iniciando.
-1332+ AEE4
-1333+ AEE4              Situa_en_Tabla_Random:
+1265+ AEB7              ;	7/7/26
+1266+ AEB7              ;
+1267+ AEB7              ;	INPUT: A, A' y C contienen la (Clase) de la entidad.
+1268+ AEB7              ;		   (B) contiene el nº de entidades que tiene el nivel.
+1269+ AEB7              ;    	   (C) contiene la clase de la entidad en curso.
+1270+ AEB7
+1271+ AEB7              ;	OUTPUT: Flag Z activo:
+1272+ AEB7              ;
+1273+ AEB7              ;				   (A) = "0"     .....   Indica que tenemos que generar los movimientos masticados de esta (Clase) de entidad.
+1274+ AEB7              ;	 			   (A) = "1,2,3, ..... " Indica que esta Caja_Master ya está iniciada con esta (Clase) de entidad.
+1275+ AEB7
+1276+ AEB7              Situa_en_Caja_Master:
+1277+ AEB7
+1278+ AEB7 21 04 A1     	ld hl,Indice_de_cajas_master
+1279+ AEBA 22 33 A5     	ld (Puntero_indice_master),hl 									; Sitúa (Puntero_indice_master) en la 1ª caja del índice.
+1280+ AEBD
+1281+ AEBD CD 89 D4     1 call Extrae_address
+1282+ AEC0 BE           	cp (hl)
+1283+ AEC1 C8           	ret z 															; RET Z. Indica que esta Caja_Master ya está iniciada con una entidad de esta (Clase).
+1284+ AEC2
+1285+ AEC2              ; 	Esta Caja_Master no contiene una entidad de esta misma (Clase). RET si está vacía.
+1286+ AEC2
+1287+ AEC2 AF           	xor a
+1288+ AEC3
+1289+ AEC3 34           	inc (hl)
+1290+ AEC4 35           	dec (hl)
+1291+ AEC5
+1292+ AEC5 C8           	ret z 															; RET. Flag Z y A="$00". Indica que esta Caja_Master está vacía. Hay que generar los movimientos_
+1293+ AEC6              ; 																	; _masticados de esta (Clase) de entidad.
+1294+ AEC6
+1295+ AEC6              ; Caja_Master iniciada con otra (Clase) de entidad.
+1296+ AEC6              ; Saltamos a la siguiente:
+1297+ AEC6
+1298+ AEC6 79           	ld a,c
+1299+ AEC7
+1300+ AEC7 13           	inc de
+1301+ AEC8 13           	inc de
+1302+ AEC9
+1303+ AEC9 ED 53 33 A5  	ld (Puntero_indice_master),de
+1304+ AECD
+1305+ AECD EB           	ex de,hl 														; Esta caja está iniciada con otra (Clase) de entidad.
+1306+ AECE
+1307+ AECE 18 ED        	jr 1B
+1308+ AED0
+1309+ AED0              ; -------------------------------------------------------------------------------------------------
+1310+ AED0              ;
+1311+ AED0              ;	17/4/25
+1312+ AED0              ;
+1313+ AED0              ;	Busca en las tres Cajas_Master una entidad de la (Clase) que contiene el registro A_
+1314+ AED0              ;	_para completar las Cajas_de_entidades.
+1315+ AED0              ;
+1316+ AED0              ;	INPUT: A contiene la (Clase) de entidad.
+1317+ AED0
+1318+ AED0              Obtiene_datos_de_Caja_Master
+1319+ AED0
+1320+ AED0 21 04 A1     	ld hl,Indice_de_cajas_master
+1321+ AED3 22 33 A5     	ld (Puntero_indice_master),hl
+1322+ AED6
+1323+ AED6 CD 89 D4     1 call Extrae_address
+1324+ AED9 BE           	cp (hl)
+1325+ AEDA C8           	ret z 															; RET pues esta Caja_Master es de la (Clase) que necesitamos.
+1326+ AEDB
+1327+ AEDB 1C           	inc e
+1328+ AEDC 1C           	inc e
+1329+ AEDD
+1330+ AEDD ED 53 33 A5  	ld (Puntero_indice_master),de
+1331+ AEE1 EB           	ex de,hl
+1332+ AEE2
+1333+ AEE2 18 F2        	jr 1B
 1334+ AEE4
-1335+ AEE4 CD FB AF     	call Calcula_salto_en_BC
-1336+ AEE7
-1337+ AEE7 21 38 A1     	ld hl,Indice_de_tablas_Random
-1338+ AEEA A7           	and a
-1339+ AEEB ED 4A        	adc hl,bc
-1340+ AEED 22 1C A5     	ld (Puntero_tabla_Random),hl
-1341+ AEF0
-1342+ AEF0 CD 89 D4     	call Extrae_address
-1343+ AEF3
-1344+ AEF3 C9           	ret
-1345+ AEF4
-1346+ AEF4              ; -----------------------------------------------------------
-1347+ AEF4              ;
-1348+ AEF4              ;	7/7/26
-1349+ AEF4
-1350+ AEF4              Situa_Puntero_indice_mov:
-1351+ AEF4
-1352+ AEF4 CD FB AF     	call Calcula_salto_en_BC
-1353+ AEF7 21 32 A1     	ld hl,Indice_de_mov_segun_tipo_de_entidad
-1354+ AEFA A7           	and a
-1355+ AEFB ED 4A        	adc hl,bc
-1356+ AEFD CD 89 D4     	call Extrae_address
-1357+ AF00
-1358+ AF00              ; 	Hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde el que se inicia la entidad.
-1359+ AF00
-1360+ AF00              ; 	Seleccionamos Danza.
-1361+ AF00
-1362+ AF00 3A 12 A5     	ld a,(Posicion_inicio)
-1363+ AF03 E6 1F        	and $1f
-1364+ AF05 FE 10        	cp $10
-1365+ AF07 38 02        	jr c,1F
-1366+ AF09
-1367+ AF09 23           	inc hl
-1368+ AF0A 23           	inc hl
-1369+ AF0B
-1370+ AF0B CD 89 D4     1 call Extrae_address
-1371+ AF0E 22 1E A5     	ld (Puntero_indice_mov),hl
-1372+ AF11
-1373+ AF11 C9           	ret
-1374+ AF12
-1375+ AF12              ;---------------------------------------------------------------------------------------------------------------
-1376+ AF12              ;
-1377+ AF12              ;   23/6/25
-1378+ AF12              ;
-1379+ AF12              ;	Esta rutina se encarga de prepara todas las cajas de entidades. Cuando comienza un nivel han de estar todas completas.
-1380+ AF12
-1381+ AF12
-1382+ AF12              Prepara_Cajas_de_Entidades:
-1383+ AF12
-1384+ AF12              ; Preparamos los punteros de las cajas de entidades:
-1385+ AF12
-1386+ AF12 CD 73 D4     	call Inicia_punteros_de_cajas									; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
-1387+ AF15              ;																	; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
-1388+ AF15 CD 43 B0     	call Inicializa_Numero_parcial_de_entidades						; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
-1389+ AF18
-1390+ AF18 2A 85 A5     	ld hl,(Puntero_de_entidades)									; (Puntero_de_entidades) contiene la dirección de mem. donde se encuentra la (Clase) de la 1ª entidad del nivel.
-1391+ AF1B
-1392+ AF1B              ; En este punto:
-1393+ AF1B
-1394+ AF1B              ;
-1395+ AF1B              ; HL está situado en el 1er .db del Nivel que indica la `Clase´ de entidad a volcar en la 1ª caja de entidades.
-1396+ AF1B              ; B contiene (Numero_parcial_de_entidades).
-1397+ AF1B
-1398+ AF1B C5           1 push bc 															; Push (Numero_parcial_de_entidades).
-1399+ AF1C
-1400+ AF1C 7E           	ld a,(hl)
-1401+ AF1D
-1402+ AF1D CD D0 AE     	call Obtiene_datos_de_Caja_Master								; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
-1403+ AF20
-1404+ AF20 ED 5B 2D A5  	ld de,(Puntero_store_caja)										; DE apunta al 1er .db de la "Caja de entidades" en curso.
-1405+ AF24
-1406+ AF24 D5           	push de
-1407+ AF25 DD E1        	pop ix 															; ! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
-1408+ AF27
-1409+ AF27 01 0E 00     	ld bc,14
-1410+ AF2A ED B0        	ldir															; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
-1411+ AF2C
-1412+ AF2C              ;																	; DE apunta ahora al 1er .db de la siguiente caja de entidades.
-1413+ AF2C
-1414+ AF2C CD E6 B3     	call Scanlines_generator
-1415+ AF2F
-1416+ AF2F              ;	Borramos las variables DRAW que hemos utilizado para preparar la Tabla_de_pintado y los scanlines_
-1417+ AF2F              ;	_en el álbum_de_pintado.
-1418+ AF2F
-1419+ AF2F              ; Variables DRAW utilizadas:
-1420+ AF2F
-1421+ AF2F              ;	(Columnas).
-1422+ AF2F              ;	(Puntero_de_impresion).
-1423+ AF2F              ;	(Coordenada_X).
-1424+ AF2F              ;	(Coordenada_Y).
-1425+ AF2F
-1426+ AF2F 21 00 00     	ld hl,0
-1427+ AF32 22 F5 A4     	ld (Coordenada_X),hl
-1428+ AF35 22 F9 A4     	ld (Puntero_de_impresion),hl
-1429+ AF38 22 15 A5     	ld (Columnas),hl
-1430+ AF3B
-1431+ AF3B CD 9E D4     	call Incrementa_punteros_de_cajas
-1432+ AF3E
-1433+ AF3E              ; Siguiente entidad del Nivel.
-1434+ AF3E
-1435+ AF3E 2A 85 A5     	ld hl,(Puntero_de_entidades)									; (Clase) de la siguiente entidad del nivel.
-1436+ AF41 23           	inc hl
-1437+ AF42 22 85 A5     	ld (Puntero_de_entidades),hl
-1438+ AF45
-1439+ AF45 C1           	pop bc 															; Recuperamos (Numero_parcial_de_entidades), (nº de cajas que vamos a rellenar)
-1440+ AF46
-1441+ AF46 10 D3        	djnz 1B
-1442+ AF48
-1443+ AF48 C9           	ret
-1444+ AF49
-1445+ AF49              ; -------------------------------------------------------------------------------------------------------------------
-1446+ AF49              ;
-1447+ AF49              ;	27/5/24
-1448+ AF49              ;
-1449+ AF49              ;	Inicia,genera mov. masticados y sitúa en el centro de la pantalla a Amadeus.
-1450+ AF49              ;
-1451+ AF49
-1452+ AF49              ; 	Cargamos la definición de Amadeus en DRAW.
-1453+ AF49              ;	Nos situamos en el 1er .db, (Tipo), de la definición de Amadeus.
-1454+ AF49
-1455+ AF49              Inicia_Amadeus:
-1456+ AF49
-1457+ AF49 21 65 A3     	ld hl,Definicion_Amadeus
-1458+ AF4C CD 0D B0     	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
-1459+ AF4F
-1460+ AF4F              ;	Inicializamos los perfiles de velocidad antes de crear la danza de Amadeus.
-1461+ AF4F              ;	(Vel_left), (Vel_right), (Vel_up) y (Vel_down) a "1".
-1462+ AF4F
-1463+ AF4F 21 01 01     	ld hl,257
-1464+ AF52 22 18 A5     	ld (Vel_left),hl
-1465+ AF55 22 1A A5     	ld (Vel_up),hl
-1466+ AF58
-1467+ AF58              Construye_movimientos_masticados_Amadeus
-1468+ AF58
-1469+ AF58 2A FB A4     	ld hl,(Puntero_de_almacen_de_mov_masticados)					; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
-1470+ AF5B CD F2 AD     	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
-1471+ AF5E              ;																	; _ el (Contador_de_mov_masticados).
-1472+ AF5E CD 8B AD     	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
-1473+ AF61              ;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
-1474+ AF61
-1475+ AF61              ; Generamos movimientos masticados de Amadeus.
-1476+ AF61
-1477+ AF61 06 79        	ld b,121														; $0079, 121d.
-1478+ AF63
-1479+ AF63 C5           1 push bc
-1480+ AF64 CD 94 BD     	call Draw
-1481+ AF67 CD FF AD     	call Guarda_movimiento_masticado
-1482+ AF6A
-1483+ AF6A CD 38 C0     	call Mov_right
-1484+ AF6D CD 38 C0     	call Mov_right													; Amadeus se mueve x2 pixel.
-1485+ AF70
-1486+ AF70 C1           	pop bc
-1487+ AF71 10 F0        	djnz 1B
-1488+ AF73
-1489+ AF73              ; Todos los movimientos masticados de Amadeus se han creado.
-1490+ AF73
-1491+ AF73              ;	(Contador_de_mov_masticados) de Amadeus ="$0079", 121d movimientos en total. Amadeus se encuentra ahora en el extremo derecho de la pantalla.
-1492+ AF73              ;	Ahora hay que modificar la posición del (Puntero_de_almacen_de_mov_masticados), (está 4 posiciones de memoria adelantado para seguir creando desplazamientos).
-1493+ AF73
-1494+ AF73 2A FB A4     	ld hl,(Puntero_de_almacen_de_mov_masticados)
-1495+ AF76 01 08 00     	ld bc,8
-1496+ AF79 A7           	and a
-1497+ AF7A ED 42        	sbc hl,bc
-1498+ AF7C 22 FB A4     	ld (Puntero_de_almacen_de_mov_masticados),hl
-1499+ AF7F
-1500+ AF7F C9           	ret
-1501+ AF80
-1502+ AF80              ; ---------------------------------------------------------------------
-1503+ AF80              ;
-1504+ AF80              ;	11/8/26
-1505+ AF80              ;
-1506+ AF80              ;	Nos situamos en el 1er .db de datos de la definición de este tipo de entidad.
-1507+ AF80              ;
-1508+ AF80              ;	INPUT: A contiene el TIPO de ENTIDAD que almacenaremos en la caja.
+1335+ AEE4              ; -----------------------------------------------------------
+1336+ AEE4              ;
+1337+ AEE4              ;	12/8/26
+1338+ AEE4
+1339+ AEE4              ;	INPUTS: A contiene el (Tipo) de la entidad que estamos iniciando, ($81), ($82), etc ...
+1340+ AEE4
+1341+ AEE4              Situa_en_Tabla_Random:
+1342+ AEE4
+1343+ AEE4 CD FB AF     	call Calcula_salto_en_BC
+1344+ AEE7
+1345+ AEE7 21 38 A1     	ld hl,Indice_de_tablas_Random
+1346+ AEEA A7           	and a
+1347+ AEEB ED 4A        	adc hl,bc
+1348+ AEED 22 1C A5     	ld (Puntero_tabla_Random),hl
+1349+ AEF0
+1350+ AEF0 CD 89 D4     	call Extrae_address
+1351+ AEF3
+1352+ AEF3 C9           	ret
+1353+ AEF4
+1354+ AEF4              ; -----------------------------------------------------------
+1355+ AEF4              ;
+1356+ AEF4              ;	12/8/26
+1357+ AEF4
+1358+ AEF4              Situa_Puntero_indice_mov:
+1359+ AEF4
+1360+ AEF4 CD FB AF     	call Calcula_salto_en_BC
+1361+ AEF7 21 32 A1     	ld hl,Indice_de_mov_segun_tipo_de_entidad
+1362+ AEFA A7           	and a
+1363+ AEFB ED 4A        	adc hl,bc
+1364+ AEFD CD 89 D4     	call Extrae_address
+1365+ AF00
+1366+ AF00              ; 	Hay que seleccionar una "danza izq. o derecha", dependiendo del lado de la pantalla desde el que se inicia la entidad.
+1367+ AF00
+1368+ AF00              ; 	Seleccionamos Danza.
+1369+ AF00
+1370+ AF00 3A 12 A5     	ld a,(Posicion_inicio)
+1371+ AF03 E6 1F        	and $1f
+1372+ AF05 FE 10        	cp $10
+1373+ AF07 38 02        	jr c,1F
+1374+ AF09
+1375+ AF09 23           	inc hl
+1376+ AF0A 23           	inc hl
+1377+ AF0B
+1378+ AF0B CD 89 D4     1 call Extrae_address
+1379+ AF0E 22 1E A5     	ld (Puntero_indice_mov),hl
+1380+ AF11
+1381+ AF11 C9           	ret
+1382+ AF12
+1383+ AF12              ;---------------------------------------------------------------------------------------------------------------
+1384+ AF12              ;
+1385+ AF12              ;   23/6/25
+1386+ AF12              ;
+1387+ AF12              ;	Esta rutina se encarga de prepara todas las cajas de entidades. Cuando comienza un nivel han de estar todas completas.
+1388+ AF12
+1389+ AF12
+1390+ AF12              Prepara_Cajas_de_Entidades:
+1391+ AF12
+1392+ AF12              ; Preparamos los punteros de las cajas de entidades:
+1393+ AF12
+1394+ AF12 CD 73 D4     	call Inicia_punteros_de_cajas									; Situa (Puntero_store_caja) en el 1er .db de la 1ª caja del índice de entidades.
+1395+ AF15              ;																	; Situa (Puntero_restore_caja) en el 1er .db de la 2ª caja del índice de cajas de entidades.
+1396+ AF15 CD 43 B0     	call Inicializa_Numero_parcial_de_entidades						; Actualiza (Numero_de_entidades) y (Numero_parcial_de_entidades).
+1397+ AF18
+1398+ AF18 2A 85 A5     	ld hl,(Puntero_de_entidades)									; (Puntero_de_entidades) contiene la dirección de mem. donde se encuentra la (Clase) de la 1ª entidad del nivel.
+1399+ AF1B
+1400+ AF1B              ; En este punto:
+1401+ AF1B
+1402+ AF1B              ;
+1403+ AF1B              ; HL está situado en el 1er .db del Nivel que indica la `Clase´ de entidad a volcar en la 1ª caja de entidades.
+1404+ AF1B              ; B contiene (Numero_parcial_de_entidades).
+1405+ AF1B
+1406+ AF1B C5           1 push bc 															; Push (Numero_parcial_de_entidades).
+1407+ AF1C
+1408+ AF1C 7E           	ld a,(hl)
+1409+ AF1D
+1410+ AF1D CD D0 AE     	call Obtiene_datos_de_Caja_Master								; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
+1411+ AF20
+1412+ AF20 ED 5B 2D A5  	ld de,(Puntero_store_caja)										; DE apunta al 1er .db de la "Caja de entidades" en curso.
+1413+ AF24
+1414+ AF24 D5           	push de
+1415+ AF25 DD E1        	pop ix 															; ! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
+1416+ AF27
+1417+ AF27 01 0E 00     	ld bc,14
+1418+ AF2A ED B0        	ldir															; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
+1419+ AF2C
+1420+ AF2C              ;																	; DE apunta ahora al 1er .db de la siguiente caja de entidades.
+1421+ AF2C
+1422+ AF2C CD E6 B3     	call Scanlines_generator
+1423+ AF2F
+1424+ AF2F              ;	Borramos las variables DRAW que hemos utilizado para preparar la Tabla_de_pintado y los scanlines_
+1425+ AF2F              ;	_en el álbum_de_pintado.
+1426+ AF2F
+1427+ AF2F              ; Variables DRAW utilizadas:
+1428+ AF2F
+1429+ AF2F              ;	(Columnas).
+1430+ AF2F              ;	(Puntero_de_impresion).
+1431+ AF2F              ;	(Coordenada_X).
+1432+ AF2F              ;	(Coordenada_Y).
+1433+ AF2F
+1434+ AF2F 21 00 00     	ld hl,0
+1435+ AF32 22 F5 A4     	ld (Coordenada_X),hl
+1436+ AF35 22 F9 A4     	ld (Puntero_de_impresion),hl
+1437+ AF38 22 15 A5     	ld (Columnas),hl
+1438+ AF3B
+1439+ AF3B CD 9E D4     	call Incrementa_punteros_de_cajas
+1440+ AF3E
+1441+ AF3E              ; Siguiente entidad del Nivel.
+1442+ AF3E
+1443+ AF3E 2A 85 A5     	ld hl,(Puntero_de_entidades)									; (Clase) de la siguiente entidad del nivel.
+1444+ AF41 23           	inc hl
+1445+ AF42 22 85 A5     	ld (Puntero_de_entidades),hl
+1446+ AF45
+1447+ AF45 C1           	pop bc 															; Recuperamos (Numero_parcial_de_entidades), (nº de cajas que vamos a rellenar)
+1448+ AF46
+1449+ AF46 10 D3        	djnz 1B
+1450+ AF48
+1451+ AF48 C9           	ret
+1452+ AF49
+1453+ AF49              ; -------------------------------------------------------------------------------------------------------------------
+1454+ AF49              ;
+1455+ AF49              ;	27/5/24
+1456+ AF49              ;
+1457+ AF49              ;	Inicia,genera mov. masticados y sitúa en el centro de la pantalla a Amadeus.
+1458+ AF49              ;
+1459+ AF49
+1460+ AF49              ; 	Cargamos la definición de Amadeus en DRAW.
+1461+ AF49              ;	Nos situamos en el 1er .db, (Tipo), de la definición de Amadeus.
+1462+ AF49
+1463+ AF49              Inicia_Amadeus:
+1464+ AF49
+1465+ AF49 21 65 A3     	ld hl,Definicion_Amadeus
+1466+ AF4C CD 0D B0     	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
+1467+ AF4F
+1468+ AF4F              ;	Inicializamos los perfiles de velocidad antes de crear la danza de Amadeus.
+1469+ AF4F              ;	(Vel_left), (Vel_right), (Vel_up) y (Vel_down) a "1".
+1470+ AF4F
+1471+ AF4F 21 01 01     	ld hl,257
+1472+ AF52 22 18 A5     	ld (Vel_left),hl
+1473+ AF55 22 1A A5     	ld (Vel_up),hl
+1474+ AF58
+1475+ AF58              Construye_movimientos_masticados_Amadeus
+1476+ AF58
+1477+ AF58 2A FB A4     	ld hl,(Puntero_de_almacen_de_mov_masticados)					; Guardamos en la pila la dirección inicial del puntero, (para reiniciarlo más tarde).
+1478+ AF5B CD F2 AD     	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
+1479+ AF5E              ;																	; _ el (Contador_de_mov_masticados).
+1480+ AF5E CD 89 AD     	call Inicia_Puntero_objeto										; Inicializa (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
+1481+ AF61              ;																	; Inicializa (Puntero_objeto) en función de la (Posicion_inicio) de la entidad.
+1482+ AF61
+1483+ AF61              ; Generamos movimientos masticados de Amadeus.
+1484+ AF61
+1485+ AF61 06 79        	ld b,121														; $0079, 121d.
+1486+ AF63
+1487+ AF63 C5           1 push bc
+1488+ AF64 CD 94 BD     	call Draw
+1489+ AF67 CD FF AD     	call Guarda_movimiento_masticado
+1490+ AF6A
+1491+ AF6A CD 38 C0     	call Mov_right
+1492+ AF6D CD 38 C0     	call Mov_right													; Amadeus se mueve x2 pixel.
+1493+ AF70
+1494+ AF70 C1           	pop bc
+1495+ AF71 10 F0        	djnz 1B
+1496+ AF73
+1497+ AF73              ; Todos los movimientos masticados de Amadeus se han creado.
+1498+ AF73
+1499+ AF73              ;	(Contador_de_mov_masticados) de Amadeus ="$0079", 121d movimientos en total. Amadeus se encuentra ahora en el extremo derecho de la pantalla.
+1500+ AF73              ;	Ahora hay que modificar la posición del (Puntero_de_almacen_de_mov_masticados), (está 4 posiciones de memoria adelantado para seguir creando desplazamientos).
+1501+ AF73
+1502+ AF73 2A FB A4     	ld hl,(Puntero_de_almacen_de_mov_masticados)
+1503+ AF76 01 08 00     	ld bc,8
+1504+ AF79 A7           	and a
+1505+ AF7A ED 42        	sbc hl,bc
+1506+ AF7C 22 FB A4     	ld (Puntero_de_almacen_de_mov_masticados),hl
+1507+ AF7F
+1508+ AF7F C9           	ret
 1509+ AF80
-1510+ AF80              Definicion_segun_tipo:
-1511+ AF80
-1512+ AF80 CD FB AF     	call Calcula_salto_en_BC										; Calcula el salto para situarnos en la definición de entidad correcta de indice de [Indice_de_definiciones_de_entidades].
-1513+ AF83
-1514+ AF83 21 18 A1     	ld hl,Indice_de_definiciones_de_entidades
-1515+ AF86
-1516+ AF86 CD 06 B0     	call Situa_en_datos_de_definicion								; Sitúa HL en el 1er .db de la definición de entidad tipo que tenemos que volcar en DRAW.
-1517+ AF89
-1518+ AF89 C9           	ret
-1519+ AF8A
-1520+ AF8A              ; ---------------------------------------------------------------------
-1521+ AF8A              ;
-1522+ AF8A              ;	23/11/24
-1523+ AF8A              ;
-1524+ AF8A              ;	Actualiza el (Contador_de_mov_masticados) de la entidad.
-1525+ AF8A
-1526+ AF8A              Decrementa_Contador_de_mov_masticados
+1510+ AF80              ; ---------------------------------------------------------------------
+1511+ AF80              ;
+1512+ AF80              ;	11/8/26
+1513+ AF80              ;
+1514+ AF80              ;	Nos situamos en el 1er .db de datos de la definición de este tipo de entidad.
+1515+ AF80              ;
+1516+ AF80              ;	INPUT: A contiene el TIPO de ENTIDAD que almacenaremos en la caja.
+1517+ AF80
+1518+ AF80              Definicion_segun_tipo:
+1519+ AF80
+1520+ AF80 CD FB AF     	call Calcula_salto_en_BC										; Calcula el salto para situarnos en la definición de entidad correcta de indice de [Indice_de_definiciones_de_entidades].
+1521+ AF83
+1522+ AF83 21 18 A1     	ld hl,Indice_de_definiciones_de_entidades
+1523+ AF86
+1524+ AF86 CD 06 B0     	call Situa_en_datos_de_definicion								; Sitúa HL en el 1er .db de la definición de entidad tipo que tenemos que volcar en DRAW.
+1525+ AF89
+1526+ AF89 C9           	ret
 1527+ AF8A
-1528+ AF8A DD 6E 0A     	ld l,(ix+10)
-1529+ AF8D DD 66 0B     	ld h,(ix+11)
-1530+ AF90
-1531+ AF90 2B           	dec hl
-1532+ AF91
-1533+ AF91 DD 75 0A     	ld (ix+10),l
-1534+ AF94 DD 74 0B     	ld (ix+11),h
-1535+ AF97
-1536+ AF97 C9           	ret
-1537+ AF98
-1538+ AF98              ; ---------------------------------------------------------------------
-1539+ AF98              ;
-1540+ AF98              ;	7/9/25
-1541+ AF98
-1542+ AF98              Reinicia_entidad_maliciosa
-1543+ AF98
-1544+ AF98 DD 7E 00     	ld a,(ix)
-1545+ AF9B
-1546+ AF9B              ;	(Clase) de la entidad en A.
-1547+ AF9B              ;	Hemos completado todos los movimientos masticados de la entidad.
-1548+ AF9B              ;	Inicializamos el contador de mov_masticados de la Caja_Master correspondiente.
-1549+ AF9B
-1550+ AF9B CD D0 AE     	call Obtiene_datos_de_Caja_Master
-1551+ AF9E
-1552+ AF9E              ;	En este punto:
-1553+ AF9E              ;
-1554+ AF9E              ;	HL apunta al 1er .db de la CAJA MASTER correspondiente.
-1555+ AF9E              ;	IX apunta al 1er .db de la CAJA DE ENTIDADES correspondiente.
-1556+ AF9E
-1557+ AF9E              ;	Inicializamos (Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados).
-1558+ AF9E
-1559+ AF9E 7D           	ld a,l
-1560+ AF9F C6 08        	add 8
-1561+ AFA1 6F           	ld l,a
-1562+ AFA2
-1563+ AFA2 CD 89 D4     	call Extrae_address
-1564+ AFA5
-1565+ AFA5 DD 75 08     	ld (ix+8),l
-1566+ AFA8 DD 74 09     	ld (ix+9),h
-1567+ AFAB
-1568+ AFAB 1C           	inc e
-1569+ AFAC 1C           	inc e
-1570+ AFAD
-1571+ AFAD EB           	ex de,hl
-1572+ AFAE
-1573+ AFAE CD 89 D4     	call Extrae_address
-1574+ AFB1
-1575+ AFB1 23           	inc hl 																		;	(Contador_de_mov_masticados)+1. Cuando regresemos, [Take_movement] le restará una unidad.
-1576+ AFB2
-1577+ AFB2 DD 75 0A     	ld (ix+10),l
-1578+ AFB5 DD 74 0B     	ld (ix+11),h
-1579+ AFB8
-1580+ AFB8              ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
-1581+ AFB8              ;
-1582+ AFB8              ;	COLORES: 0 ..... NEGRO
-1583+ AFB8              ;    		 1 ..... AZUL
-1584+ AFB8              ; 			 2 ..... ROJO  ..... "20".
-1585+ AFB8              ;			 3 ..... MAGENTA .... "10".
-1586+ AFB8              ; 			 4 ..... VERDE .....
-1587+ AFB8              ; 			 5 ..... CIAN ..... "8".
-1588+ AFB8              ;			 6 ..... AMARILLO ..... "4".
-1589+ AFB8              ; 			 7 ..... BLANCO
-1590+ AFB8              ;
-1591+ AFB8
-1592+ AFB8              ; Incrementa (Contador_de_vueltas)x2.
-1593+ AFB8              ; (Velocidad) de la entidad será: (Contador_de_vueltas)/4.
-1594+ AFB8
-1595+ AFB8              ;	1ª vuelta: (Contador_de_vueltas)="$02" --- (Velocidad)="0".
-1596+ AFB8              ;	2ª vuelta: 	""	""	""	""	""  ="$04" ---   ""	 ""	  ="1".
-1597+ AFB8              ;	3ª vuelta: 	""	""	""	""	""  ="$08" ---   ""	 ""	  ="2".
-1598+ AFB8              ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
-1599+ AFB8              ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".
-1600+ AFB8
-1601+ AFB8 DD CB 04 26  	sla (ix+4)														; sla x2 (Contador_de_vueltas). Inicialmente es "1".
-1602+ AFBC
-1603+ AFBC DD 7E 04     	ld a,(ix+4)   													; ld a,(Contador_de_vueltas)
-1604+ AFBF CB 2F        	sra a
-1605+ AFC1 CB 2F        	sra a
-1606+ AFC3
-1607+ AFC3 DD 77 0C     	ld (ix+12),a 													; ld (Velocidad),a
-1608+ AFC6 A7           	and a
-1609+ AFC7
-1610+ AFC7              ; Attr.
-1611+ AFC7
-1612+ AFC7              ; A contiene (Velocidad).
-1613+ AFC7
-1614+ AFC7 C4 DD AF     	call nz, Define_attr 											; No modificamos attr. si no hay cambio de velocidad.
-1615+ AFCA
-1616+ AFCA              ; Límitador.
-1617+ AFCA
-1618+ AFCA 3E 40        	ld a,$40
-1619+ AFCC DD BE 04     	cp (ix+4)
-1620+ AFCF 28 02        	jr z,1F
-1621+ AFD1
-1622+ AFD1 AF           	xor a															; Siempre salimos de esta rutina con un "Z".
-1623+ AFD2 C9           	ret
-1624+ AFD3
-1625+ AFD3
-1626+ AFD3              ;	Limita el valor de (Contador_de_vueltas) a "$40" y de (Velocidad) a "$08".
-1627+ AFD3
-1628+ AFD3 DD CB 04 2E  1 sra (ix+4)
-1629+ AFD7 DD CB 0C 2E  	sra (ix+12)
-1630+ AFDB
-1631+ AFDB AF           	xor a															; Siempre salimos de esta rutina con un "Z".
-1632+ AFDC C9           	ret
-1633+ AFDD
-1634+ AFDD              ; ----- ----- ----- ----- -----
-1635+ AFDD              ;
-1636+ AFDD              ;	27/3/25
-1637+ AFDD              ;
-1638+ AFDD              ;	Define (Attr) en función de la (Velocidad).
-1639+ AFDD              ;
-1640+ AFDD
-1641+ AFDD              Define_attr
-1642+ AFDD
-1643+ AFDD 3D           	dec a
-1644+ AFDE 28 15        	jr z,Amarillo
-1645+ AFE0 3C           	inc a
-1646+ AFE1
-1647+ AFE1 FE 02        	cp 2
-1648+ AFE3 28 0C        	jr z,Blanco
-1649+ AFE5
-1650+ AFE5 FE 04        	cp 4
-1651+ AFE7 28 04        	jr z,Magenta
-1652+ AFE9
-1653+ AFE9 3E 42        Rojo ld a,%01000010
-1654+ AFEB 18 0A        	jr 2F
-1655+ AFED
-1656+ AFED 3E 43        Magenta ld a,%01000011
-1657+ AFEF 18 06        	jr 2F
-1658+ AFF1
-1659+ AFF1 3E 47        Blanco ld a,%01000111
-1660+ AFF3 18 02        	jr 2F
-1661+ AFF5
-1662+ AFF5 3E 46        Amarillo ld a,%01000110
-1663+ AFF7
-1664+ AFF7 DD 77 0D     2 ld (ix+13),a
-1665+ AFFA
-1666+ AFFA C9           	ret
-1667+ AFFB
-1668+ AFFB              ;	------------------------------------------------------------------------------------
-1669+ AFFB              ;
-1670+ AFFB              ;	11/8/26
-1671+ AFFB              ;
-1672+ AFFB              ;	INPUTS:	A contiene el (Tipo) de entidad.
-1673+ AFFB              ;
-1674+ AFFB              ;	Esta pequeña sub-rutina carga BC con 0,2,4,6,8 ... en función del tipo de entidad: (1,2,3,4,...).
-1675+ AFFB              ;	Calcula "el salto" para situarnos en los DATOS de la ENTIDAD correcta del índice de entidades según el tipo de entidad.
-1676+ AFFB
-1677+ AFFB              Calcula_salto_en_BC:
-1678+ AFFB
-1679+ AFFB A7           	and a
-1680+ AFFC 28 04        	jr z,1F
-1681+ AFFE
-1682+ AFFE CB 27        	sla a
-1683+ B000 D6 02        	sub 2															; ("Tipo_de_entidad")*2-2.
-1684+ B002
-1685+ B002 4F           1 ld c,a
-1686+ B003 06 00        	ld b,0
-1687+ B005
-1688+ B005 C9           	ret
-1689+ B006
-1690+ B006              ; ------------------------------------------------------------------
-1691+ B006              ;
-1692+ B006              ;	11/8/26
-1693+ B006              ;
-1694+ B006              ;	Sitúa HL en el 1er .db de la definición de la entidad que tenemos que volcar en la bandeja DRAW.
-1695+ B006              ;	Actualiza (Datos_de_entidad) con esa dirección.
-1696+ B006
-1697+ B006              Situa_en_datos_de_definicion:
-1698+ B006
-1699+ B006 A7           	and a
-1700+ B007 ED 4A        	adc hl,bc
-1701+ B009 CD 89 D4     	call Extrae_address
-1702+ B00C              ;	ld (Datos_de_entidad),hl
-1703+ B00C
-1704+ B00C C9           	ret
-1705+ B00D
-1706+ B00D              ; ----------------------------------------------------------------------------------------------------------
-1707+ B00D              ;
-1708+ B00D              ;	11/8/26
-1709+ B00D              ;
-1710+ B00D              ;	Introduce una definición de entidad en la bandeja DRAW para generar sus "movimientos masticados".
-1711+ B00D              ;
-1712+ B00D              ;	INPUTS: HL  Apunta al 1er .db de datos de la definición de la entidad.
-1713+ B00D              ;	 		 A' Contiene la (Clase) de la entidad.
-1714+ B00D              ;
-1715+ B00D              ;	MODIFICA: A,HL,DE y BC
-1716+ B00D
-1717+ B00D
-1718+ B00D              Definicion_de_entidad_a_bandeja_DRAW:
-1719+ B00D
-1720+ B00D 08           	ex af,af 														; (clase) en A.
-1721+ B00E
-1722+ B00E 11 F3 A4     	ld de,Bandeja_DRAW   	 										; DE apunta al 1er .db de la bandeja_DRAW, (Clase).
-1723+ B011 12           	ld (de),a 														; (Clase).
-1724+ B012
-1725+ B012 13           	inc de
-1726+ B013
-1727+ B013 7E           	ld a,(hl)
-1728+ B014 12           	ld (de),a  														; (Tipo).
-1729+ B015
-1730+ B015 23           	inc hl
-1731+ B016
-1732+ B016 11 03 A5     	ld de,Filas
-1733+ B019 01 02 00     	ld bc,2
-1734+ B01C ED B0        	ldir		 													; (Filas)/(Columnas).
-1735+ B01E
-1736+ B01E 11 F7 A4     	ld de,Contador_de_vueltas
-1737+ B021 7E           	ld a,(hl)
-1738+ B022 12           	ld (de),a 														; (Contador_de_vueltas).
-1739+ B023
-1740+ B023 23           	inc hl
-1741+ B024
-1742+ B024 11 0A A5     	ld de,Indice_Sprite_der
-1743+ B027 01 04 00     	ld bc,4
-1744+ B02A ED B0        	ldir 															; (Indice_Sprite_der)/(Indice_Sprite_izq).
-1745+ B02C
-1746+ B02C 11 12 A5     	ld de,Posicion_inicio
-1747+ B02F 01 02 00     	ld bc,2
-1748+ B032 ED B0        	ldir 															; (Posicion_inicio).
-1749+ B034
-1750+ B034 11 00 A5     	ld de,Attr
-1751+ B037 7E           	ld a,(hl)
-1752+ B038 12           	ld (de),a 														; (Attr).
-1753+ B039
-1754+ B039 C9           	ret
-1755+ B03A
-1756+ B03A              ; ----------------------------------------------------------------------------------------------------------
-1757+ B03A              ;
-1758+ B03A              ;	7/7/26
-1759+ B03A              ;
-1760+ B03A
-1761+ B03A              Parametros_de_bandeja_DRAW_a_Caja_Master:
-1762+ B03A
-1763+ B03A 21 F3 A4     	ld hl,Bandeja_DRAW
-1764+ B03D 01 0E 00     	ld bc,14
-1765+ B040 ED B0        	ldir
-1766+ B042
-1767+ B042 C9           	ret
-1768+ B043
-1769+ B043              ;---------------------------------------------------------------------------------------------------------------
-1770+ B043              ;
-1771+ B043              ;	13/11/24
-1772+ B043              ;
-1773+ B043              ;	INICIALIZA (Numero_parcial_de_entidades).
-1774+ B043              ;
-1775+ B043              ;	Si el nº total de entidades del nivel, (Numero_de_entidades) > 6, (Numero_parcial_de_entidades)="6".
-1776+ B043              ;	Si el nº total de entidades del nivel, (Numero_de_entidades) < 6, (Numero_parcial_de_entidades)=(Numero_de_entidades).
-1777+ B043
-1778+ B043              ;	OUTPUT: B contiene (Numero_parcial_de_entidades). Nº de cajas que vamos a preparar o rellenar.
-1779+ B043              ;			- Actualiza (Numero_de_entidades).
-1780+ B043
-1781+ B043              ;	MODIFICA: A y B.
-1782+ B043
-1783+ B043              ;> Aumentaremos el nº de entidades en pantalla !!!!!!!!!!!!!!!!!!!!!!!!!!
-1784+ B043              ;> !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+1528+ AF8A              ; ---------------------------------------------------------------------
+1529+ AF8A              ;
+1530+ AF8A              ;	23/11/24
+1531+ AF8A              ;
+1532+ AF8A              ;	Actualiza el (Contador_de_mov_masticados) de la entidad.
+1533+ AF8A
+1534+ AF8A              Decrementa_Contador_de_mov_masticados
+1535+ AF8A
+1536+ AF8A DD 6E 0A     	ld l,(ix+10)
+1537+ AF8D DD 66 0B     	ld h,(ix+11)
+1538+ AF90
+1539+ AF90 2B           	dec hl
+1540+ AF91
+1541+ AF91 DD 75 0A     	ld (ix+10),l
+1542+ AF94 DD 74 0B     	ld (ix+11),h
+1543+ AF97
+1544+ AF97 C9           	ret
+1545+ AF98
+1546+ AF98              ; ---------------------------------------------------------------------
+1547+ AF98              ;
+1548+ AF98              ;	7/9/25
+1549+ AF98
+1550+ AF98              Reinicia_entidad_maliciosa
+1551+ AF98
+1552+ AF98 DD 7E 00     	ld a,(ix)
+1553+ AF9B
+1554+ AF9B              ;	(Clase) de la entidad en A.
+1555+ AF9B              ;	Hemos completado todos los movimientos masticados de la entidad.
+1556+ AF9B              ;	Inicializamos el contador de mov_masticados de la Caja_Master correspondiente.
+1557+ AF9B
+1558+ AF9B CD D0 AE     	call Obtiene_datos_de_Caja_Master
+1559+ AF9E
+1560+ AF9E              ;	En este punto:
+1561+ AF9E              ;
+1562+ AF9E              ;	HL apunta al 1er .db de la CAJA MASTER correspondiente.
+1563+ AF9E              ;	IX apunta al 1er .db de la CAJA DE ENTIDADES correspondiente.
+1564+ AF9E
+1565+ AF9E              ;	Inicializamos (Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados).
+1566+ AF9E
+1567+ AF9E 7D           	ld a,l
+1568+ AF9F C6 08        	add 8
+1569+ AFA1 6F           	ld l,a
+1570+ AFA2
+1571+ AFA2 CD 89 D4     	call Extrae_address
+1572+ AFA5
+1573+ AFA5 DD 75 08     	ld (ix+8),l
+1574+ AFA8 DD 74 09     	ld (ix+9),h
+1575+ AFAB
+1576+ AFAB 1C           	inc e
+1577+ AFAC 1C           	inc e
+1578+ AFAD
+1579+ AFAD EB           	ex de,hl
+1580+ AFAE
+1581+ AFAE CD 89 D4     	call Extrae_address
+1582+ AFB1
+1583+ AFB1 23           	inc hl 																		;	(Contador_de_mov_masticados)+1. Cuando regresemos, [Take_movement] le restará una unidad.
+1584+ AFB2
+1585+ AFB2 DD 75 0A     	ld (ix+10),l
+1586+ AFB5 DD 74 0B     	ld (ix+11),h
+1587+ AFB8
+1588+ AFB8              ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+1589+ AFB8              ;
+1590+ AFB8              ;	COLORES: 0 ..... NEGRO
+1591+ AFB8              ;    		 1 ..... AZUL
+1592+ AFB8              ; 			 2 ..... ROJO  ..... "20".
+1593+ AFB8              ;			 3 ..... MAGENTA .... "10".
+1594+ AFB8              ; 			 4 ..... VERDE .....
+1595+ AFB8              ; 			 5 ..... CIAN ..... "8".
+1596+ AFB8              ;			 6 ..... AMARILLO ..... "4".
+1597+ AFB8              ; 			 7 ..... BLANCO
+1598+ AFB8              ;
+1599+ AFB8
+1600+ AFB8              ; Incrementa (Contador_de_vueltas)x2.
+1601+ AFB8              ; (Velocidad) de la entidad será: (Contador_de_vueltas)/4.
+1602+ AFB8
+1603+ AFB8              ;	1ª vuelta: (Contador_de_vueltas)="$02" --- (Velocidad)="0".
+1604+ AFB8              ;	2ª vuelta: 	""	""	""	""	""  ="$04" ---   ""	 ""	  ="1".
+1605+ AFB8              ;	3ª vuelta: 	""	""	""	""	""  ="$08" ---   ""	 ""	  ="2".
+1606+ AFB8              ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
+1607+ AFB8              ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".
+1608+ AFB8
+1609+ AFB8 DD CB 04 26  	sla (ix+4)														; sla x2 (Contador_de_vueltas). Inicialmente es "1".
+1610+ AFBC
+1611+ AFBC DD 7E 04     	ld a,(ix+4)   													; ld a,(Contador_de_vueltas)
+1612+ AFBF CB 2F        	sra a
+1613+ AFC1 CB 2F        	sra a
+1614+ AFC3
+1615+ AFC3 DD 77 0C     	ld (ix+12),a 													; ld (Velocidad),a
+1616+ AFC6 A7           	and a
+1617+ AFC7
+1618+ AFC7              ; Attr.
+1619+ AFC7
+1620+ AFC7              ; A contiene (Velocidad).
+1621+ AFC7
+1622+ AFC7 C4 DD AF     	call nz, Define_attr 											; No modificamos attr. si no hay cambio de velocidad.
+1623+ AFCA
+1624+ AFCA              ; Límitador.
+1625+ AFCA
+1626+ AFCA 3E 40        	ld a,$40
+1627+ AFCC DD BE 04     	cp (ix+4)
+1628+ AFCF 28 02        	jr z,1F
+1629+ AFD1
+1630+ AFD1 AF           	xor a															; Siempre salimos de esta rutina con un "Z".
+1631+ AFD2 C9           	ret
+1632+ AFD3
+1633+ AFD3
+1634+ AFD3              ;	Limita el valor de (Contador_de_vueltas) a "$40" y de (Velocidad) a "$08".
+1635+ AFD3
+1636+ AFD3 DD CB 04 2E  1 sra (ix+4)
+1637+ AFD7 DD CB 0C 2E  	sra (ix+12)
+1638+ AFDB
+1639+ AFDB AF           	xor a															; Siempre salimos de esta rutina con un "Z".
+1640+ AFDC C9           	ret
+1641+ AFDD
+1642+ AFDD              ; ----- ----- ----- ----- -----
+1643+ AFDD              ;
+1644+ AFDD              ;	27/3/25
+1645+ AFDD              ;
+1646+ AFDD              ;	Define (Attr) en función de la (Velocidad).
+1647+ AFDD              ;
+1648+ AFDD
+1649+ AFDD              Define_attr
+1650+ AFDD
+1651+ AFDD 3D           	dec a
+1652+ AFDE 28 15        	jr z,Amarillo
+1653+ AFE0 3C           	inc a
+1654+ AFE1
+1655+ AFE1 FE 02        	cp 2
+1656+ AFE3 28 0C        	jr z,Blanco
+1657+ AFE5
+1658+ AFE5 FE 04        	cp 4
+1659+ AFE7 28 04        	jr z,Magenta
+1660+ AFE9
+1661+ AFE9 3E 42        Rojo ld a,%01000010
+1662+ AFEB 18 0A        	jr 2F
+1663+ AFED
+1664+ AFED 3E 43        Magenta ld a,%01000011
+1665+ AFEF 18 06        	jr 2F
+1666+ AFF1
+1667+ AFF1 3E 47        Blanco ld a,%01000111
+1668+ AFF3 18 02        	jr 2F
+1669+ AFF5
+1670+ AFF5 3E 46        Amarillo ld a,%01000110
+1671+ AFF7
+1672+ AFF7 DD 77 0D     2 ld (ix+13),a
+1673+ AFFA
+1674+ AFFA C9           	ret
+1675+ AFFB
+1676+ AFFB              ;	------------------------------------------------------------------------------------
+1677+ AFFB              ;
+1678+ AFFB              ;	11/8/26
+1679+ AFFB              ;
+1680+ AFFB              ;	INPUTS:	A contiene el (Tipo) de entidad.
+1681+ AFFB              ;
+1682+ AFFB              ;	Esta pequeña sub-rutina carga BC con 0,2,4,6,8 ... en función del tipo de entidad: (1,2,3,4,...).
+1683+ AFFB              ;	Calcula "el salto" para situarnos en los DATOS de la ENTIDAD correcta del índice de entidades según el tipo de entidad.
+1684+ AFFB
+1685+ AFFB              Calcula_salto_en_BC:
+1686+ AFFB
+1687+ AFFB A7           	and a
+1688+ AFFC 28 04        	jr z,1F
+1689+ AFFE
+1690+ AFFE CB 27        	sla a
+1691+ B000 D6 02        	sub 2															; ("Tipo_de_entidad")*2-2.
+1692+ B002
+1693+ B002 4F           1 ld c,a
+1694+ B003 06 00        	ld b,0
+1695+ B005
+1696+ B005 C9           	ret
+1697+ B006
+1698+ B006              ; ------------------------------------------------------------------
+1699+ B006              ;
+1700+ B006              ;	11/8/26
+1701+ B006              ;
+1702+ B006              ;	Sitúa HL en el 1er .db de la definición de la entidad que tenemos que volcar en la bandeja DRAW.
+1703+ B006              ;	Actualiza (Datos_de_entidad) con esa dirección.
+1704+ B006
+1705+ B006              Situa_en_datos_de_definicion:
+1706+ B006
+1707+ B006 A7           	and a
+1708+ B007 ED 4A        	adc hl,bc
+1709+ B009 CD 89 D4     	call Extrae_address
+1710+ B00C              ;	ld (Datos_de_entidad),hl
+1711+ B00C
+1712+ B00C C9           	ret
+1713+ B00D
+1714+ B00D              ; ----------------------------------------------------------------------------------------------------------
+1715+ B00D              ;
+1716+ B00D              ;	11/8/26
+1717+ B00D              ;
+1718+ B00D              ;	Introduce una definición de entidad en la bandeja DRAW para generar sus "movimientos masticados".
+1719+ B00D              ;
+1720+ B00D              ;	INPUTS: HL  Apunta al 1er .db de datos de la definición de la entidad.
+1721+ B00D              ;	 		 A' Contiene la (Clase) de la entidad.
+1722+ B00D              ;
+1723+ B00D              ;	MODIFICA: A,HL,DE y BC
+1724+ B00D
+1725+ B00D
+1726+ B00D              Definicion_de_entidad_a_bandeja_DRAW:
+1727+ B00D
+1728+ B00D 08           	ex af,af 														; (clase) en A.
+1729+ B00E
+1730+ B00E 11 F3 A4     	ld de,Bandeja_DRAW   	 										; DE apunta al 1er .db de la bandeja_DRAW, (Clase).
+1731+ B011 12           	ld (de),a 														; (Clase).
+1732+ B012
+1733+ B012 13           	inc de
+1734+ B013
+1735+ B013 7E           	ld a,(hl)
+1736+ B014 12           	ld (de),a  														; (Tipo).
+1737+ B015
+1738+ B015 23           	inc hl
+1739+ B016
+1740+ B016 11 03 A5     	ld de,Filas
+1741+ B019 01 02 00     	ld bc,2
+1742+ B01C ED B0        	ldir		 													; (Filas)/(Columnas).
+1743+ B01E
+1744+ B01E 11 F7 A4     	ld de,Contador_de_vueltas
+1745+ B021 7E           	ld a,(hl)
+1746+ B022 12           	ld (de),a 														; (Contador_de_vueltas).
+1747+ B023
+1748+ B023 23           	inc hl
+1749+ B024
+1750+ B024 11 0A A5     	ld de,Indice_Sprite_der
+1751+ B027 01 04 00     	ld bc,4
+1752+ B02A ED B0        	ldir 															; (Indice_Sprite_der)/(Indice_Sprite_izq).
+1753+ B02C
+1754+ B02C 11 12 A5     	ld de,Posicion_inicio
+1755+ B02F 01 02 00     	ld bc,2
+1756+ B032 ED B0        	ldir 															; (Posicion_inicio).
+1757+ B034
+1758+ B034 11 00 A5     	ld de,Attr
+1759+ B037 7E           	ld a,(hl)
+1760+ B038 12           	ld (de),a 														; (Attr).
+1761+ B039
+1762+ B039 C9           	ret
+1763+ B03A
+1764+ B03A              ; ----------------------------------------------------------------------------------------------------------
+1765+ B03A              ;
+1766+ B03A              ;	7/7/26
+1767+ B03A              ;
+1768+ B03A
+1769+ B03A              Parametros_de_bandeja_DRAW_a_Caja_Master:
+1770+ B03A
+1771+ B03A 21 F3 A4     	ld hl,Bandeja_DRAW
+1772+ B03D 01 0E 00     	ld bc,14
+1773+ B040 ED B0        	ldir
+1774+ B042
+1775+ B042 C9           	ret
+1776+ B043
+1777+ B043              ;---------------------------------------------------------------------------------------------------------------
+1778+ B043              ;
+1779+ B043              ;	13/11/24
+1780+ B043              ;
+1781+ B043              ;	INICIALIZA (Numero_parcial_de_entidades).
+1782+ B043              ;
+1783+ B043              ;	Si el nº total de entidades del nivel, (Numero_de_entidades) > 6, (Numero_parcial_de_entidades)="6".
+1784+ B043              ;	Si el nº total de entidades del nivel, (Numero_de_entidades) < 6, (Numero_parcial_de_entidades)=(Numero_de_entidades).
 1785+ B043
-1786+ B043              Inicializa_Numero_parcial_de_entidades
-1787+ B043
-1788+ B043 3A 35 A5     	ld a,(Numero_de_entidades)										; Nº TOTAL de las entidades del NIVEL.
-1789+ B046 FE 04        	cp 4												 			; "5" es el nº total de cajas de entidades de las que disponemos.
-1790+ B048 38 0E        	jr c,1F
-1791+ B04A 28 0C        	jr z,1F
-1792+ B04C
-1793+ B04C              ; El nº de entidades es superior al que cabe en las cajas DRAW.
-1794+ B04C              ; Actualizamos variables.
-1795+ B04C
-1796+ B04C D6 04        	sub 4
-1797+ B04E 32 35 A5     	ld (Numero_de_entidades),a
-1798+ B051 3E 04        	ld a,4
-1799+ B053 32 36 A5     	ld (Numero_parcial_de_entidades),a
-1800+ B056 47           	ld b,a
-1801+ B057 C9           	ret
-1802+ B058
-1803+ B058              ; El nº total de entidades no supera el nº de cajas de entidades.
-1804+ B058              ; (Numero_de_entidades)="0".
-1805+ B058
-1806+ B058 32 36 A5     1 ld (Numero_parcial_de_entidades),a
-1807+ B05B 47           	ld b,a
-1808+ B05C AF           	xor a
-1809+ B05D 32 35 A5     	ld (Numero_de_entidades),a
-1810+ B060 C9           	ret
-1811+ B061
-1812+ B061              ;---------------------------------------------------------------------------------------------------------------
-1813+ B061              ;
-1814+ B061              ;	10/8/26
-1815+ B061              ;
-1816+ B061              ;	Convierte el valor hexadecimal de (Numero_de_entidades) a dos valores BCD que guardarán las variables:
-1817+ B061              ;
-1818+ B061              ;   Entidades_BCD_unidades
-1819+ B061              ;	Entidades_BCD_decenas
-1820+ B061              ;
-1821+ B061              ;	Utilizaremos estas variables para construir el marcador de dos dígitos digital que muestra el nº de entidades del nivel.
-1822+ B061
-1823+ B061              M_entidades_a_BCD:
-1824+ B061
-1825+ B061 E5           	push hl
-1826+ B062 C5           	push bc
-1827+ B063
-1828+ B063 21 AA A5     	ld hl,Entidades_BCD_unidades
-1829+ B066 06 09        	ld b,9
-1830+ B068 0E 00        	ld c,0
-1831+ B06A
-1832+ B06A B8           2 cp b
-1833+ B06B
-1834+ B06B 28 07        	jr z,1F
-1835+ B06D 38 05        	jr c,1F
-1836+ B06F
-1837+ B06F D6 0A        	sub 10
-1838+ B071
-1839+ B071 0C           	inc c
-1840+ B072
-1841+ B072 18 F6        	jr 2B
-1842+ B074
-1843+ B074 77           1 ld (hl),a
-1844+ B075 23           	inc hl
-1845+ B076 71           	ld (hl),c
-1846+ B077
-1847+ B077              ;	Inicializa los punteros de dígitos.
-1848+ B077
-1849+ B077              ;	Unidades:
-1850+ B077
-1851+ B077 3A AA A5     	ld a,(Entidades_BCD_unidades)
-1852+ B07A CD 92 B0     	call Situa_en_indice_de_digitos_grandes
-1853+ B07D CD 89 D4     	call Extrae_address
-1854+ B080 22 AC A5     	ld (Puntero_unidades_grandes),hl
-1855+ B083
-1856+ B083              ;	Decenas:
-1857+ B083
-1858+ B083 3A AB A5     	ld a,(Entidades_BCD_decenas)
-1859+ B086 CD 92 B0     	call Situa_en_indice_de_digitos_grandes
-1860+ B089 CD 89 D4     	call Extrae_address
-1861+ B08C 22 AE A5     	ld (Puntero_decenas_grandes),hl
-1862+ B08F
-1863+ B08F C1           	pop bc
-1864+ B090 E1           	pop hl
-1865+ B091
-1866+ B091 C9           	ret
-1867+ B092
-1868+ B092              ; -----------------------------------------------
-1869+ B092
-1870+ B092              Situa_en_indice_de_digitos_grandes:
-1871+ B092
-1872+ B092 A7           	and a 												; Identifica si el dígito BCD es "0".
-1873+ B093
-1874+ B093 47           	ld b,a
-1875+ B094
-1876+ B094 21 40 A1     	ld hl,Index_big_numbers
-1877+ B097
-1878+ B097 C8           	ret z
-1879+ B098
-1880+ B098 23           1 inc hl
-1881+ B099 23           	inc hl
-1882+ B09A
-1883+ B09A 10 FC        	djnz 1B
-1884+ B09C
-1885+ B09C C9           	ret
-1886+ B09D
-1887+ B09D              ;---------------------------------------------------------------------------------------------------------------
-1888+ B09D              ;
-1889+ B09D              ;	25/06/26
-1890+ B09D              ;
-1891+ B09D              ;	Convierte el valor hexadecimal de (Score_hex) a 5 valores BCD que guardarán las variables:
-1892+ B09D              ;
-1893+ B09D              ;	Score_BCD_unidades
-1894+ B09D              ;	Score_BCD_decenas
-1895+ B09D              ;	Score_BCD_centenas
-1896+ B09D              ;	Score_BCD_unidades_de_millar
-1897+ B09D              ;	Score_BCD_decenas_de_millar
+1786+ B043              ;	OUTPUT: B contiene (Numero_parcial_de_entidades). Nº de cajas que vamos a preparar o rellenar.
+1787+ B043              ;			- Actualiza (Numero_de_entidades).
+1788+ B043
+1789+ B043              ;	MODIFICA: A y B.
+1790+ B043
+1791+ B043              ;> Aumentaremos el nº de entidades en pantalla !!!!!!!!!!!!!!!!!!!!!!!!!!
+1792+ B043              ;> !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+1793+ B043
+1794+ B043              Inicializa_Numero_parcial_de_entidades
+1795+ B043
+1796+ B043 3A 35 A5     	ld a,(Numero_de_entidades)										; Nº TOTAL de las entidades del NIVEL.
+1797+ B046 FE 04        	cp 4												 			; "5" es el nº total de cajas de entidades de las que disponemos.
+1798+ B048 38 0E        	jr c,1F
+1799+ B04A 28 0C        	jr z,1F
+1800+ B04C
+1801+ B04C              ; El nº de entidades es superior al que cabe en las cajas DRAW.
+1802+ B04C              ; Actualizamos variables.
+1803+ B04C
+1804+ B04C D6 04        	sub 4
+1805+ B04E 32 35 A5     	ld (Numero_de_entidades),a
+1806+ B051 3E 04        	ld a,4
+1807+ B053 32 36 A5     	ld (Numero_parcial_de_entidades),a
+1808+ B056 47           	ld b,a
+1809+ B057 C9           	ret
+1810+ B058
+1811+ B058              ; El nº total de entidades no supera el nº de cajas de entidades.
+1812+ B058              ; (Numero_de_entidades)="0".
+1813+ B058
+1814+ B058 32 36 A5     1 ld (Numero_parcial_de_entidades),a
+1815+ B05B 47           	ld b,a
+1816+ B05C AF           	xor a
+1817+ B05D 32 35 A5     	ld (Numero_de_entidades),a
+1818+ B060 C9           	ret
+1819+ B061
+1820+ B061              ;---------------------------------------------------------------------------------------------------------------
+1821+ B061              ;
+1822+ B061              ;	10/8/26
+1823+ B061              ;
+1824+ B061              ;	Convierte el valor hexadecimal de (Numero_de_entidades) a dos valores BCD que guardarán las variables:
+1825+ B061              ;
+1826+ B061              ;   Entidades_BCD_unidades
+1827+ B061              ;	Entidades_BCD_decenas
+1828+ B061              ;
+1829+ B061              ;	Utilizaremos estas variables para construir el marcador de dos dígitos digital que muestra el nº de entidades del nivel.
+1830+ B061
+1831+ B061              M_entidades_a_BCD:
+1832+ B061
+1833+ B061 E5           	push hl
+1834+ B062 C5           	push bc
+1835+ B063
+1836+ B063 21 AA A5     	ld hl,Entidades_BCD_unidades
+1837+ B066 06 09        	ld b,9
+1838+ B068 0E 00        	ld c,0
+1839+ B06A
+1840+ B06A B8           2 cp b
+1841+ B06B
+1842+ B06B 28 07        	jr z,1F
+1843+ B06D 38 05        	jr c,1F
+1844+ B06F
+1845+ B06F D6 0A        	sub 10
+1846+ B071
+1847+ B071 0C           	inc c
+1848+ B072
+1849+ B072 18 F6        	jr 2B
+1850+ B074
+1851+ B074 77           1 ld (hl),a
+1852+ B075 23           	inc hl
+1853+ B076 71           	ld (hl),c
+1854+ B077
+1855+ B077              ;	Inicializa los punteros de dígitos.
+1856+ B077
+1857+ B077              ;	Unidades:
+1858+ B077
+1859+ B077 3A AA A5     	ld a,(Entidades_BCD_unidades)
+1860+ B07A CD 92 B0     	call Situa_en_indice_de_digitos_grandes
+1861+ B07D CD 89 D4     	call Extrae_address
+1862+ B080 22 AC A5     	ld (Puntero_unidades_grandes),hl
+1863+ B083
+1864+ B083              ;	Decenas:
+1865+ B083
+1866+ B083 3A AB A5     	ld a,(Entidades_BCD_decenas)
+1867+ B086 CD 92 B0     	call Situa_en_indice_de_digitos_grandes
+1868+ B089 CD 89 D4     	call Extrae_address
+1869+ B08C 22 AE A5     	ld (Puntero_decenas_grandes),hl
+1870+ B08F
+1871+ B08F C1           	pop bc
+1872+ B090 E1           	pop hl
+1873+ B091
+1874+ B091 C9           	ret
+1875+ B092
+1876+ B092              ; -----------------------------------------------
+1877+ B092
+1878+ B092              Situa_en_indice_de_digitos_grandes:
+1879+ B092
+1880+ B092 A7           	and a 												; Identifica si el dígito BCD es "0".
+1881+ B093
+1882+ B093 47           	ld b,a
+1883+ B094
+1884+ B094 21 40 A1     	ld hl,Index_big_numbers
+1885+ B097
+1886+ B097 C8           	ret z
+1887+ B098
+1888+ B098 23           1 inc hl
+1889+ B099 23           	inc hl
+1890+ B09A
+1891+ B09A 10 FC        	djnz 1B
+1892+ B09C
+1893+ B09C C9           	ret
+1894+ B09D
+1895+ B09D              ;---------------------------------------------------------------------------------------------------------------
+1896+ B09D              ;
+1897+ B09D              ;	25/06/26
 1898+ B09D              ;
-1899+ B09D              ;	10000d ..... $2710 ..... set (4) (Score_Ctrl)
-1900+ B09D              ;	 1000d ..... $03e8 .....  "  (3)
-1901+ B09D              ;	  100d ..... $0064 .....     (2)
-1902+ B09D              ;	   10d ..... $000a .....     (1)
-1903+ B09D              ;
-1904+ B09D              ;	Utilizaremos estas variables para construir el marcador de 5 dígitos digital que muestra nuestra puntuación.
-1905+ B09D              ;
-1906+ B09D
-1907+ B09D              Score_a_BCD:
-1908+ B09D
-1909+ B09D              ; En 1er lugar inicializamos la variable de Ctrl, (Score_hex) y todos los dígitos BCD del marcador SCORE.
-1910+ B09D
-1911+ B09D AF           	xor a
-1912+ B09E
-1913+ B09E 32 B3 A5     	ld (Score_BCD_unidades),a
-1914+ B0A1 32 B4 A5     	ld (Score_BCD_decenas),a
-1915+ B0A4 32 B5 A5     	ld (Score_BCD_centenas),a
-1916+ B0A7 32 B6 A5     	ld (Score_BCD_unidades_de_millar),a
-1917+ B0AA 32 B7 A5     	ld (Score_BCD_decenas_de_millar),a
-1918+ B0AD
-1919+ B0AD 2A B1 A5     	ld hl,(Score_hex)
-1920+ B0B0 11 C2 A5     	ld de,Score_Ctrl 								; DE apunta al byte de control de Score, (Score_Ctrl).
-1921+ B0B3
-1922+ B0B3 01 10 27     	ld bc,$2710 									; 10000d.
-1923+ B0B6
-1924+ B0B6              ;	Averigua cuantas decenas de millar contiene (Score_hex).
-1925+ B0B6
-1926+ B0B6 A7           	and a
-1927+ B0B7 ED 42        1 sbc hl,bc
-1928+ B0B9
-1929+ B0B9 38 0C        	jr c, No_decenas_de_millar
-1930+ B0BB
-1931+ B0BB E5           	push hl
-1932+ B0BC
-1933+ B0BC 21 B7 A5     	ld hl, Score_BCD_decenas_de_millar
-1934+ B0BF 34           	inc (hl)
-1935+ B0C0
-1936+ B0C0 E1           	pop hl
-1937+ B0C1
-1938+ B0C1              ; Activamos FLAG. Permiso para imprimir todos los dígitos BCD de Score.
-1939+ B0C1
-1940+ B0C1 EB           	ex de,hl
-1941+ B0C2 CB E6        	set 4,(hl)
-1942+ B0C4 EB           	ex de,hl
-1943+ B0C5
-1944+ B0C5 18 F0        	jr 1B
-1945+ B0C7
-1946+ B0C7              No_decenas_de_millar
-1947+ B0C7
-1948+ B0C7 A7           	and a                                           ; Elimina la suma del Carry a ADC.
-1949+ B0C8 ED 4A        	adc hl,bc 										; Recupera valor de HL.
-1950+ B0CA
-1951+ B0CA 01 E8 03     	ld bc,$03e8 									; 1000d
-1952+ B0CD
-1953+ B0CD A7           	and a
-1954+ B0CE ED 42        2 sbc hl,bc
-1955+ B0D0
-1956+ B0D0 38 0C        	jr c, No_unidades_de_millar
-1957+ B0D2
-1958+ B0D2 E5           	push hl
-1959+ B0D3
-1960+ B0D3 21 B6 A5     	ld hl, Score_BCD_unidades_de_millar
-1961+ B0D6 34           	inc (hl)
-1962+ B0D7
-1963+ B0D7 E1           	pop hl
-1964+ B0D8
-1965+ B0D8              ; Activamos FLAG. Permiso para imprimir los 4 últimos dígitos BCD de Score.
-1966+ B0D8
-1967+ B0D8 EB           	ex de,hl
-1968+ B0D9 CB DE        	set 3,(hl)
-1969+ B0DB EB           	ex de,hl
-1970+ B0DC
-1971+ B0DC 18 F0        	jr 2B
-1972+ B0DE
-1973+ B0DE              No_unidades_de_millar
-1974+ B0DE
-1975+ B0DE A7           	and a
-1976+ B0DF ED 4A        	adc hl,bc
-1977+ B0E1
-1978+ B0E1 01 64 00     	ld bc,$0064 									; 100d
-1979+ B0E4
-1980+ B0E4 A7           	and a
-1981+ B0E5 ED 42        3 sbc hl,bc
-1982+ B0E7
-1983+ B0E7 38 0C        	jr c, No_centenas
-1984+ B0E9
-1985+ B0E9 E5           	push hl
-1986+ B0EA
-1987+ B0EA 21 B5 A5     	ld hl, Score_BCD_centenas
-1988+ B0ED 34           	inc (hl)
-1989+ B0EE
-1990+ B0EE E1           	pop hl
-1991+ B0EF
-1992+ B0EF              ; Activamos FLAG. Permiso para imprimir los 3 últimos dígitos BCD de Score.
-1993+ B0EF
-1994+ B0EF EB           	ex de,hl
-1995+ B0F0 CB D6        	set 2,(hl)
-1996+ B0F2 EB           	ex de,hl
-1997+ B0F3
-1998+ B0F3 18 F0        	jr 3B
-1999+ B0F5
-2000+ B0F5              No_centenas
-2001+ B0F5
-2002+ B0F5 A7           	and a
-2003+ B0F6 ED 4A        	adc hl,bc
-2004+ B0F8
-2005+ B0F8 01 0A 00     	ld bc,$000a										; 10d
-2006+ B0FB
-2007+ B0FB A7           	and a
-2008+ B0FC ED 42        4 sbc hl,bc
-2009+ B0FE
-2010+ B0FE 38 0C        	jr c, No_decenas
-2011+ B100
-2012+ B100 E5           	push hl
-2013+ B101
-2014+ B101 21 B4 A5     	ld hl, Score_BCD_decenas
-2015+ B104 34           	inc (hl)
-2016+ B105
-2017+ B105 E1           	pop hl
-2018+ B106
-2019+ B106              ; Activamos FLAG. Permiso para imprimir los 2 últimos dígitos BCD de Score.
-2020+ B106
-2021+ B106 EB           	ex de,hl
-2022+ B107 CB CE        	set 1,(hl)
-2023+ B109 EB           	ex de,hl
-2024+ B10A
-2025+ B10A 18 F0        	jr 4B
-2026+ B10C
-2027+ B10C              No_decenas
-2028+ B10C
-2029+ B10C A7           	and a
-2030+ B10D ED 4A        	adc hl,bc 										; Recupera valor de HL.
-2031+ B10F
-2032+ B10F 7D           	ld a,l
-2033+ B110 32 B3 A5     	ld (Score_BCD_unidades),a
-2034+ B113
-2035+ B113 EB           	ex de,hl
-2036+ B114 CB C6        	set 0,(hl)
-2037+ B116 EB           	ex de,hl
-2038+ B117
-2039+ B117 C9           	ret
-2040+ B118
-2041+ B118              ; -------------------------------------------------------------------
-2042+ B118              ;
-2043+ B118              ;	25/06/26
-2044+ B118              ;
-2045+ B118
-2046+ B118              Actualiza_Punteros_Score:
-2047+ B118
-2048+ B118              ;	Exclusiones:
-2049+ B118
-2050+ B118 3A C2 A5     	ld a,(Score_Ctrl)
-2051+ B11B A7           	and a
-2052+ B11C C8           	ret z 														; RET si no hay incremento en el marcador.
-2053+ B11D
-2054+ B11D CD 4C B1     	call Init_Score_Pointers 									; Inicializa los Punteros_Score.
-2055+ B120
-2056+ B120 11 B3 A5     	ld de,Score_BCD_unidades
-2057+ B123 06 05        	ld b,5
-2058+ B125
-2059+ B125              ; ---------------------
-2060+ B125
-2061+ B125 1A           1 ld a,(de)
-2062+ B126
-2063+ B126 D9           	exx
-2064+ B127
-2065+ B127 21 54 A1     	ld hl, Indice_de_digitos_score
-2066+ B12A
-2067+ B12A A7           	and a
-2068+ B12B C4 36 B1     	call nz, Actualiza_puntero_score
-2069+ B12E
-2070+ B12E              ; ---------------------
-2071+ B12E
-2072+ B12E              Next_Pointer
-2073+ B12E
-2074+ B12E D9           	exx
-2075+ B12F
-2076+ B12F 13           	inc de 														; Siguiente byte BCD de Score.
-2077+ B130
-2078+ B130 23           	inc hl
-2079+ B131 23           	inc hl 														; Siguiente puntero.
-2080+ B132
-2081+ B132 10 F1        	djnz 1B
-2082+ B134
-2083+ B134 D9           	exx
-2084+ B135
-2085+ B135 C9           	ret
-2086+ B136
-2087+ B136              ; ---------------------
-2088+ B136
-2089+ B136              Actualiza_puntero_score
-2090+ B136
-2091+ B136 47           	ld b,a
-2092+ B137
-2093+ B137 23           1 inc hl
-2094+ B138 23           	inc hl
-2095+ B139
-2096+ B139 10 FC        	djnz 1B
-2097+ B13B
-2098+ B13B CD 89 D4     	call Extrae_address
-2099+ B13E
-2100+ B13E E5           	push hl
-2101+ B13F FD E1        	pop iy
-2102+ B141
-2103+ B141 D9           	exx
-2104+ B142
-2105+ B142 FD 7D        	ld a,iyl
-2106+ B144 77           	ld (hl),a	                                            	; Actualiza la dirección hacia la que debe apuntar el puntero correspondiente.
-2107+ B145
-2108+ B145 23           	inc hl
-2109+ B146
-2110+ B146 FD 7C        	ld a,iyh
-2111+ B148 77           	ld (hl),a
-2112+ B149
-2113+ B149 2B           	dec hl
-2114+ B14A
-2115+ B14A D9           	exx
-2116+ B14B
-2117+ B14B C9           	ret
-2118+ B14C
-2119+ B14C              ; ----------------------------------------------------
-2120+ B14C              ;
-2121+ B14C              ;	25/06/26
-2122+ B14C              ;
-2123+ B14C              ;	Inicializa los cinco (Punteros_Score) con "Cero_Score", ($3d80).
-2124+ B14C              ;
-2125+ B14C              ;	MODIFY: A, HL
-2126+ B14C              ;
-2127+ B14C              ;	OUTPUT: (A)="0".
-2128+ B14C              ;			HL = Puntero_de_unidades_Score
-2129+ B14C
-2130+ B14C              Init_Score_Pointers:
-2131+ B14C
-2132+ B14C 21 80 3D     	ld hl,Cero_Score
-2133+ B14F ED 73 3A A5  	ld (Stack),sp
-2134+ B153 31 C2 A5     	ld sp,Score_Ctrl
-2135+ B156
-2136+ B156 E5           	push hl
-2137+ B157 E5           	push hl
-2138+ B158 E5           	push hl
-2139+ B159 E5           	push hl
-2140+ B15A E5           	push hl
-2141+ B15B
-2142+ B15B AF           	xor a
-2143+ B15C 6F           	ld l,a
-2144+ B15D 65           	ld h,l
-2145+ B15E
-2146+ B15E 39           	add hl,sp
-2147+ B15F
-2148+ B15F ED 7B 3A A5  	ld sp,(Stack)
-2149+ B163
-2150+ B163 C9           	ret
-2151+ B164
-2152+ B164
-2153+ B164
-2154+ B164
+1899+ B09D              ;	Convierte el valor hexadecimal de (Score_hex) a 5 valores BCD que guardarán las variables:
+1900+ B09D              ;
+1901+ B09D              ;	Score_BCD_unidades
+1902+ B09D              ;	Score_BCD_decenas
+1903+ B09D              ;	Score_BCD_centenas
+1904+ B09D              ;	Score_BCD_unidades_de_millar
+1905+ B09D              ;	Score_BCD_decenas_de_millar
+1906+ B09D              ;
+1907+ B09D              ;	10000d ..... $2710 ..... set (4) (Score_Ctrl)
+1908+ B09D              ;	 1000d ..... $03e8 .....  "  (3)
+1909+ B09D              ;	  100d ..... $0064 .....     (2)
+1910+ B09D              ;	   10d ..... $000a .....     (1)
+1911+ B09D              ;
+1912+ B09D              ;	Utilizaremos estas variables para construir el marcador de 5 dígitos digital que muestra nuestra puntuación.
+1913+ B09D              ;
+1914+ B09D
+1915+ B09D              Score_a_BCD:
+1916+ B09D
+1917+ B09D              ; En 1er lugar inicializamos la variable de Ctrl, (Score_hex) y todos los dígitos BCD del marcador SCORE.
+1918+ B09D
+1919+ B09D AF           	xor a
+1920+ B09E
+1921+ B09E 32 B3 A5     	ld (Score_BCD_unidades),a
+1922+ B0A1 32 B4 A5     	ld (Score_BCD_decenas),a
+1923+ B0A4 32 B5 A5     	ld (Score_BCD_centenas),a
+1924+ B0A7 32 B6 A5     	ld (Score_BCD_unidades_de_millar),a
+1925+ B0AA 32 B7 A5     	ld (Score_BCD_decenas_de_millar),a
+1926+ B0AD
+1927+ B0AD 2A B1 A5     	ld hl,(Score_hex)
+1928+ B0B0 11 C2 A5     	ld de,Score_Ctrl 								; DE apunta al byte de control de Score, (Score_Ctrl).
+1929+ B0B3
+1930+ B0B3 01 10 27     	ld bc,$2710 									; 10000d.
+1931+ B0B6
+1932+ B0B6              ;	Averigua cuantas decenas de millar contiene (Score_hex).
+1933+ B0B6
+1934+ B0B6 A7           	and a
+1935+ B0B7 ED 42        1 sbc hl,bc
+1936+ B0B9
+1937+ B0B9 38 0C        	jr c, No_decenas_de_millar
+1938+ B0BB
+1939+ B0BB E5           	push hl
+1940+ B0BC
+1941+ B0BC 21 B7 A5     	ld hl, Score_BCD_decenas_de_millar
+1942+ B0BF 34           	inc (hl)
+1943+ B0C0
+1944+ B0C0 E1           	pop hl
+1945+ B0C1
+1946+ B0C1              ; Activamos FLAG. Permiso para imprimir todos los dígitos BCD de Score.
+1947+ B0C1
+1948+ B0C1 EB           	ex de,hl
+1949+ B0C2 CB E6        	set 4,(hl)
+1950+ B0C4 EB           	ex de,hl
+1951+ B0C5
+1952+ B0C5 18 F0        	jr 1B
+1953+ B0C7
+1954+ B0C7              No_decenas_de_millar
+1955+ B0C7
+1956+ B0C7 A7           	and a                                           ; Elimina la suma del Carry a ADC.
+1957+ B0C8 ED 4A        	adc hl,bc 										; Recupera valor de HL.
+1958+ B0CA
+1959+ B0CA 01 E8 03     	ld bc,$03e8 									; 1000d
+1960+ B0CD
+1961+ B0CD A7           	and a
+1962+ B0CE ED 42        2 sbc hl,bc
+1963+ B0D0
+1964+ B0D0 38 0C        	jr c, No_unidades_de_millar
+1965+ B0D2
+1966+ B0D2 E5           	push hl
+1967+ B0D3
+1968+ B0D3 21 B6 A5     	ld hl, Score_BCD_unidades_de_millar
+1969+ B0D6 34           	inc (hl)
+1970+ B0D7
+1971+ B0D7 E1           	pop hl
+1972+ B0D8
+1973+ B0D8              ; Activamos FLAG. Permiso para imprimir los 4 últimos dígitos BCD de Score.
+1974+ B0D8
+1975+ B0D8 EB           	ex de,hl
+1976+ B0D9 CB DE        	set 3,(hl)
+1977+ B0DB EB           	ex de,hl
+1978+ B0DC
+1979+ B0DC 18 F0        	jr 2B
+1980+ B0DE
+1981+ B0DE              No_unidades_de_millar
+1982+ B0DE
+1983+ B0DE A7           	and a
+1984+ B0DF ED 4A        	adc hl,bc
+1985+ B0E1
+1986+ B0E1 01 64 00     	ld bc,$0064 									; 100d
+1987+ B0E4
+1988+ B0E4 A7           	and a
+1989+ B0E5 ED 42        3 sbc hl,bc
+1990+ B0E7
+1991+ B0E7 38 0C        	jr c, No_centenas
+1992+ B0E9
+1993+ B0E9 E5           	push hl
+1994+ B0EA
+1995+ B0EA 21 B5 A5     	ld hl, Score_BCD_centenas
+1996+ B0ED 34           	inc (hl)
+1997+ B0EE
+1998+ B0EE E1           	pop hl
+1999+ B0EF
+2000+ B0EF              ; Activamos FLAG. Permiso para imprimir los 3 últimos dígitos BCD de Score.
+2001+ B0EF
+2002+ B0EF EB           	ex de,hl
+2003+ B0F0 CB D6        	set 2,(hl)
+2004+ B0F2 EB           	ex de,hl
+2005+ B0F3
+2006+ B0F3 18 F0        	jr 3B
+2007+ B0F5
+2008+ B0F5              No_centenas
+2009+ B0F5
+2010+ B0F5 A7           	and a
+2011+ B0F6 ED 4A        	adc hl,bc
+2012+ B0F8
+2013+ B0F8 01 0A 00     	ld bc,$000a										; 10d
+2014+ B0FB
+2015+ B0FB A7           	and a
+2016+ B0FC ED 42        4 sbc hl,bc
+2017+ B0FE
+2018+ B0FE 38 0C        	jr c, No_decenas
+2019+ B100
+2020+ B100 E5           	push hl
+2021+ B101
+2022+ B101 21 B4 A5     	ld hl, Score_BCD_decenas
+2023+ B104 34           	inc (hl)
+2024+ B105
+2025+ B105 E1           	pop hl
+2026+ B106
+2027+ B106              ; Activamos FLAG. Permiso para imprimir los 2 últimos dígitos BCD de Score.
+2028+ B106
+2029+ B106 EB           	ex de,hl
+2030+ B107 CB CE        	set 1,(hl)
+2031+ B109 EB           	ex de,hl
+2032+ B10A
+2033+ B10A 18 F0        	jr 4B
+2034+ B10C
+2035+ B10C              No_decenas
+2036+ B10C
+2037+ B10C A7           	and a
+2038+ B10D ED 4A        	adc hl,bc 										; Recupera valor de HL.
+2039+ B10F
+2040+ B10F 7D           	ld a,l
+2041+ B110 32 B3 A5     	ld (Score_BCD_unidades),a
+2042+ B113
+2043+ B113 EB           	ex de,hl
+2044+ B114 CB C6        	set 0,(hl)
+2045+ B116 EB           	ex de,hl
+2046+ B117
+2047+ B117 C9           	ret
+2048+ B118
+2049+ B118              ; -------------------------------------------------------------------
+2050+ B118              ;
+2051+ B118              ;	25/06/26
+2052+ B118              ;
+2053+ B118
+2054+ B118              Actualiza_Punteros_Score:
+2055+ B118
+2056+ B118              ;	Exclusiones:
+2057+ B118
+2058+ B118 3A C2 A5     	ld a,(Score_Ctrl)
+2059+ B11B A7           	and a
+2060+ B11C C8           	ret z 														; RET si no hay incremento en el marcador.
+2061+ B11D
+2062+ B11D CD 4C B1     	call Init_Score_Pointers 									; Inicializa los Punteros_Score.
+2063+ B120
+2064+ B120 11 B3 A5     	ld de,Score_BCD_unidades
+2065+ B123 06 05        	ld b,5
+2066+ B125
+2067+ B125              ; ---------------------
+2068+ B125
+2069+ B125 1A           1 ld a,(de)
+2070+ B126
+2071+ B126 D9           	exx
+2072+ B127
+2073+ B127 21 54 A1     	ld hl, Indice_de_digitos_score
+2074+ B12A
+2075+ B12A A7           	and a
+2076+ B12B C4 36 B1     	call nz, Actualiza_puntero_score
+2077+ B12E
+2078+ B12E              ; ---------------------
+2079+ B12E
+2080+ B12E              Next_Pointer
+2081+ B12E
+2082+ B12E D9           	exx
+2083+ B12F
+2084+ B12F 13           	inc de 														; Siguiente byte BCD de Score.
+2085+ B130
+2086+ B130 23           	inc hl
+2087+ B131 23           	inc hl 														; Siguiente puntero.
+2088+ B132
+2089+ B132 10 F1        	djnz 1B
+2090+ B134
+2091+ B134 D9           	exx
+2092+ B135
+2093+ B135 C9           	ret
+2094+ B136
+2095+ B136              ; ---------------------
+2096+ B136
+2097+ B136              Actualiza_puntero_score
+2098+ B136
+2099+ B136 47           	ld b,a
+2100+ B137
+2101+ B137 23           1 inc hl
+2102+ B138 23           	inc hl
+2103+ B139
+2104+ B139 10 FC        	djnz 1B
+2105+ B13B
+2106+ B13B CD 89 D4     	call Extrae_address
+2107+ B13E
+2108+ B13E E5           	push hl
+2109+ B13F FD E1        	pop iy
+2110+ B141
+2111+ B141 D9           	exx
+2112+ B142
+2113+ B142 FD 7D        	ld a,iyl
+2114+ B144 77           	ld (hl),a	                                            	; Actualiza la dirección hacia la que debe apuntar el puntero correspondiente.
+2115+ B145
+2116+ B145 23           	inc hl
+2117+ B146
+2118+ B146 FD 7C        	ld a,iyh
+2119+ B148 77           	ld (hl),a
+2120+ B149
+2121+ B149 2B           	dec hl
+2122+ B14A
+2123+ B14A D9           	exx
+2124+ B14B
+2125+ B14B C9           	ret
+2126+ B14C
+2127+ B14C              ; ----------------------------------------------------
+2128+ B14C              ;
+2129+ B14C              ;	25/06/26
+2130+ B14C              ;
+2131+ B14C              ;	Inicializa los cinco (Punteros_Score) con "Cero_Score", ($3d80).
+2132+ B14C              ;
+2133+ B14C              ;	MODIFY: A, HL
+2134+ B14C              ;
+2135+ B14C              ;	OUTPUT: (A)="0".
+2136+ B14C              ;			HL = Puntero_de_unidades_Score
+2137+ B14C
+2138+ B14C              Init_Score_Pointers:
+2139+ B14C
+2140+ B14C 21 80 3D     	ld hl,Cero_Score
+2141+ B14F ED 73 3A A5  	ld (Stack),sp
+2142+ B153 31 C2 A5     	ld sp,Score_Ctrl
+2143+ B156
+2144+ B156 E5           	push hl
+2145+ B157 E5           	push hl
+2146+ B158 E5           	push hl
+2147+ B159 E5           	push hl
+2148+ B15A E5           	push hl
+2149+ B15B
+2150+ B15B AF           	xor a
+2151+ B15C 6F           	ld l,a
+2152+ B15D 65           	ld h,l
+2153+ B15E
+2154+ B15E 39           	add hl,sp
+2155+ B15F
+2156+ B15F ED 7B 3A A5  	ld sp,(Stack)
+2157+ B163
+2158+ B163 C9           	ret
+2159+ B164
+2160+ B164
+2161+ B164
+2162+ B164
 # file closed: Rutinas_de_inicio_y_niveles.asm
   23  B164              	include "calcula_tercio.asm"
 # file opened: calcula_tercio.asm
@@ -11002,7 +11010,7 @@
  379+ C13F
  380+ C13F              ;	ret
  381+ C13F
- 382+ C13F CD A7 AD     3 call Inicia_puntero_objeto_der
+ 382+ C13F CD A5 AD     3 call Inicia_puntero_objeto_der
  383+ C142
  384+ C142 C9           	ret
  385+ C143
@@ -11236,7 +11244,7 @@
  613+ C250
  614+ C250              ; Inicia (Puntero_DESPLZ_izq) y (Puntero_objeto).
  615+ C250
- 616+ C250 CD 94 AD     2 call Inicia_puntero_objeto_izq
+ 616+ C250 CD 92 AD     2 call Inicia_puntero_objeto_izq
  617+ C253
  618+ C253 C9           	ret
  619+ C254
@@ -15097,7 +15105,7 @@
  131  D020
  132  D020 CD A3 CB     	call Print_level_msg 									; Imprime el msg. temporizado de nivel.
  133  D023
- 134  D023 CD 3B AD     	call No_zeros 											; Coloca a ($ff) los tres primeros bytes del [Almacen_de_movimientos_masticados_Amadeus].
+ 134  D023 CD 39 AD     	call No_zeros 											; Coloca a ($ff) los tres primeros bytes del [Almacen_de_movimientos_masticados_Amadeus].
  135  D026
  136  D026 C1           	pop bc 													; POP (Número de entidades / Clase).
  137  D027 E1           	pop hl 													; POP (Puntero_de_entidades).

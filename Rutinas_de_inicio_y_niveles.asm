@@ -423,19 +423,17 @@ Prepara_Cajas_Master:
 
 ;> Comentando las 3 siguientes líneas eliminamos la aleatoriedad de la danza de la entidad.	---------------------------------------------------------------------------------
 
-	jr $
-
 	ld a,(Tipo)
 	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
 	call Aplica_rnd_al_baile 										; Esta rutina es la encargada de aplicar aleatoriedad a la danza de esta (Clase) de enemigo.;
 
 ;> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-	pop bc
-	pop hl
+	pop bc 															; POP (Numero_de_entidades)/(Clase).
+	pop hl 															; POP (Puntero_de_entidades).
 
-	push hl															; Push (Puntero_de_entidades).
-	push bc															; Push (Numero_de_entidades)/(Clase).
+	push hl															; PUSH (Puntero_de_entidades).
+	push bc															; PUSH (Numero_de_entidades)/(Clase).
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
@@ -505,7 +503,7 @@ Avanza_siguiente_entidad_del_nivel:
 
 ; -----------------------------------------------------------------------------------
 ;
-;	20/07/26
+;	12/8/26
 ;
 ;	Asigna una columna de inicio aleatoria y distinta a cada una de las 3 Clases como máximo que pueden aparecer en un nivel.
 
@@ -547,7 +545,7 @@ Determina_posicion_de_inicio:
 
 ; -------------------------------------------------------------------
 ;
-;	14/07/26
+;	12/8/26
 ;
 
 No_repeat:
@@ -640,6 +638,13 @@ No_zeros:
 	ret
 
 ; ----------------------------------------------------------------------------------------------------
+;
+;	El N° aleatorio no puede ser igual al n° guardado en (hl).
+
+;	INPUTS: A contiene el n° aleatorio extraido de (Numeros_aleatorios_baile+3).
+;   		HL apunta al 1er, 2° o 3er .db de [Almacen_de_movimientos_masticados_Amadeus].
+;
+;	OUTPUT: "Z" indica: Número NO VÁLIDO.
 
 Comparador:
 
@@ -789,6 +794,9 @@ Inicia_puntero_objeto_der:
 ;
 
 Construye_movimientos_masticados_entidad:
+
+
+	jr $
 
 
 	ld hl,(Puntero_indice_de_almacenes) 							; Inicialmente situado en el 1er .defw del índice, Almacen_de_movimientos_masticados_1.
@@ -993,7 +1001,7 @@ Situa_en_contador_general_de_mov_masticados:
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	2/7/26
+;	12/8/26
 ;
 ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
 ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio. 
@@ -1146,7 +1154,7 @@ Filtra_RND:
 
 ; ----- ----- -----
 ;
-;	2/7/26
+;	12/8/26
 ;
 ;	OUTPUT:
 ;
@@ -1326,9 +1334,9 @@ Obtiene_datos_de_Caja_Master
 
 ; -----------------------------------------------------------
 ;
-;	7/3/25
+;	12/8/26
 
-;	INPUTS: A contiene el (Tipo) de la entidad que estamos iniciando.
+;	INPUTS: A contiene el (Tipo) de la entidad que estamos iniciando, ($81), ($82), etc ...
 
 Situa_en_Tabla_Random:
 
@@ -1345,7 +1353,7 @@ Situa_en_Tabla_Random:
 
 ; -----------------------------------------------------------
 ;
-;	7/7/26
+;	12/8/26
 
 Situa_Puntero_indice_mov:
 
