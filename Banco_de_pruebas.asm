@@ -139,6 +139,28 @@ Init_level:
 ;	Prepara cajas.
 
 	call Prepara_Cajas_Master	 							; Generamos las distintas coreografías de la entidades que componen el nivel. También se inicializan las cajas "Master".
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	call Prepara_Cajas_de_Entidades
 
 ;	Inicia Amadeus. -----------------------------------------------------------------------------------------------------------
