@@ -672,34 +672,34 @@ Comparador:
 
 ; **********************************************************************************************************************************************************
 ;
-;   15/06/26
+;   13/8/26
 ;
 ;	Recompone_posicion_inicio
 ;
 ; 	La rutina hace una llamada a [Mov_right] o [Mov_left] según su posición de inicio.
 ;	Así conseguimios que la entidad esté completamente oculta a la hora de aparecer por la izquierda_
-;	_ o derecha. Tomaremos la columna de (Posicion_inicio) como referencia para hacer la llamada_
-;	_ a una u otra rutina.
+;	_ o derecha.
+;
+;	Tomaremos la columna de (Posicion_inicio) como referencia para hacer la llamada a una u otra rutina.
+;
+;	Inicialmente (Vel_left), (Vel_right), (Vel_up) y (Vel_down) están a "0".
 
 Recompone_posicion_inicio:
 
-	ld a,1
+	ld hl,$0101
+	ld (Vel_left),hl 												; (Vel_left) y (Vel_right) a "1".
 
-	ld hl,Vel_left
-	ld (hl),a
-
-	inc hl
-
-	ld (hl),a 														; (Vel_left) y (Vel_right) a "1".
-
-;	El primer Sprite que se imprime en pantalla en cualquier patrón de movimientos será un "sprite vacío".
-;	El objeto "SIEMPRE" ha de aparecer `oculto'. Tanto si aparece de arriba a abajo como si lo hace por los extremos de la pantalla.
+;	El primer Sprite que se imprime en pantalla es un "sprite vacío".
+;	El objeto "SIEMPRE" ha de aparecer `oculto', tanto si aparece por arriba, abajo como si lo hace por los extremos de la pantalla.
 
 	ld hl,Ctrl_2
-	set 0,(hl)														; Indica que fijamos un "sprite vacío" en (Puntero_objeto).
+	set 0,(hl)														; Este FLAG Indica que fijamos un "sprite vacío" en (Puntero_objeto).
 
 	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl 										; (Posicion_actual) no puede contener "0" para poder ejecutar (Mov_lef) o (Mov_right).
+
+;	En función de si el sprite aparece por el extremo izquerdo o derecho de la pantalla, desplazaremos el sprite llamando a las rutinas [Mov_left] o [Mov_right]_
+;	_para conseguir que tras el Sprite_vacio el sprite aparezca poco a poco.
 
 	ld a,l
 	and $1f
@@ -708,12 +708,7 @@ Recompone_posicion_inicio:
 	cp $1f
 	jr nz,2F
 
-;	Vamos a aparecer por la parte derecha de la pantalla.
-
-	call Mov_left
-
-; No vamos a aparecer por ningún extremo. Cargamos Sprite vacío pues vamos a ir apareciendo por la_
-; _parte alta de la pantalla.
+	call Mov_left 													; Aparecemos por la parte derecha de la pantalla.
 
 2 ld hl,(Puntero_objeto)
 	ld (Repone_puntero_objeto),hl
@@ -721,30 +716,25 @@ Recompone_posicion_inicio:
 	ld hl,Sprite_vacio
 	ld (Puntero_objeto),hl
 
-; Colocamos (Posicion_actual) a "$00" para que la rutina DRAW inicialice esta entidad.
-
 	ld hl,0
-	ld (Posicion_actual),hl
+	ld (Posicion_actual),hl 										; (Posicion_actual) a "$00" para que la rutina DRAW inicialice esta entidad.
 
 	ret
 
-; Vamos a aparecer por la parte izquierda de la pantalla.
-
-1 call Mov_right
+1 call Mov_right 													; Aparecemos por la parte izquierda de la pantalla.
 
 	jr 2B
 
 ; *************************************************************************************************************************************************************
 ;
-;	14/6/26
+;	13/8/26
 ;
 ;	Iniciamos (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq).
-;	Sitúa (Puntero_objeto) en el Sprite correspondiente en función de su (Posicion_inicio).
+;	Sitúa (Puntero_objeto) en el 1er .db, (arriba-izq) del Sprite de la entidad correspondiente.
 ;
-;   Destruye HL y BC !!!!!,
+;   DESTROY:A, HL, DE y BC !!!!!.
 ;
-;	BIT 7 (Ctrl_0). "1" ..... Derecha.
-;					"0" ..... Izquierda.
+
 
 Inicia_Puntero_objeto:
 
@@ -753,8 +743,8 @@ Inicia_Puntero_objeto:
 	cp $10
 	jr c,Inicia_puntero_objeto_der
 
-; Arrancamos desde la parte derecha de la pantalla.
-; Iniciamos (Indice_Sprite_izq).
+; 	Arrancamos desde la parte derecha de la pantalla.
+; 	Iniciamos (Indice_Sprite_izq).
 
 Inicia_puntero_objeto_izq:
 
@@ -770,8 +760,8 @@ Inicia_puntero_objeto_izq:
 
 	ret
 
-; Arrancamos desde la parte izquierda de la pantalla.
-; Iniciamos (Indice_Sprite_der).
+; 	Arrancamos desde la parte izquierda de la pantalla.
+; 	Iniciamos (Indice_Sprite_der).
 
 Inicia_puntero_objeto_der:
 
@@ -791,20 +781,17 @@ Inicia_puntero_objeto_der:
 ;
 ;	20/01/24
 ;
-;
 
 Construye_movimientos_masticados_entidad:
 
 
-	jr $
-
-
-	ld hl,(Puntero_indice_de_almacenes) 							; Inicialmente situado en el 1er .defw del índice, Almacen_de_movimientos_masticados_1.
+	ld hl,(Puntero_indice_de_almacenes) 							; Inicialmente situado en el 1er .defw del índice, Almacen_de_movimientos_masticados_1. $5fe6
 	call Extrae_address
 
-	ld (Puntero_de_almacen_de_mov_masticados),hl 					; $c9e6 es la dirección del 1er almacén de mov. masticados. (Puntero_de_almacen_de_mov_masticados) es el puntero que se irá desplazando por el almacén de movimientos masticados_
+	ld (Puntero_de_almacen_de_mov_masticados),hl 					; $5fe6 es la dirección del 1er almacén de mov. masticados. (Puntero_de_almacen_de_mov_masticados) es el puntero que se irá desplazando por el almacén de movimientos masticados_
 ; 																	; _para ir creando la coreografía de este (Tipo) de entidad.
-	push hl
+
+	push hl 														; PUSH (Puntero_de_almacen_de_mov_masticados).
 
 
 	call Actualiza_Puntero_de_almacen_de_mov_masticados 			; Actualizamos (Puntero_de_almacen_de_mov_masticados) e incrementa_
@@ -913,16 +900,20 @@ Construye_movimientos_masticados_entidad:
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	14/6/26
+;	13/8/26
 ;
 ;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
+;
 
 Actualiza_Puntero_de_almacen_de_mov_masticados:
 
 	ld hl,(Puntero_de_almacen_de_mov_masticados)
-	ld bc,4
-	and a
-	adc hl,bc
+
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+
 	ld (Puntero_de_almacen_de_mov_masticados),hl
 
 	ret

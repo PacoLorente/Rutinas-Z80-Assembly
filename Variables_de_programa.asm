@@ -56,13 +56,8 @@ Attr db 0 													; Atributos de la entidad.
 
 
 Ctrl_2 db 0
-;															BIT 0, Los sprites se inician con un `sprite vacío', (sprite formado por "ceros"), cuando la rutina_
-;															_ [Genera_datos_de_impresion] guarda su 1ª imagen.
-;															_ Más adelante las rutinas [Mov_left] y [Mov_right] restauraran (Puntero_objeto). Si el 1er movimiento
-; 															_ que hace la entidad después de iniciarse es hacia arriba/abajo no se restaurará (Puntero_objeto), pués_
-; 															_ las rutinas [Mov_up] y [Mov_down] no necesitan modificar el sprite.
-;															_ El bit5 a "1" nos indica que el sprite se inicia por arriba o por abajo y por lo tanto hay que restaurar_
-;															_ (Puntero_objeto) con (Repone_puntero_objeto) una vez iniciado y realizada su 1ª `foto'.
+
+; 															BIT 0, Este bit a "1" Indica que (Puntero_objeto) apuntará a un Sprite vacío, [Recompone_posicion_inicio].
 ;
 ;															BIT 1, Este bit a "1" indica que se ha iniciado el proceso de EXPLOSIÓN en una entidad.
 ;															BIT 2, Este bit es activado por [Movimiento]. Indica que hemos `iniciado un desplazamiento'._

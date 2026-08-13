@@ -6,6 +6,10 @@
 
 Draw:
 
+
+	jr $
+
+
 	call Prepara_draw
 
 	ld a,h 						 					
