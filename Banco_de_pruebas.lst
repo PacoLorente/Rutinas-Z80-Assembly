@@ -10034,596 +10034,596 @@
    6+ BDAC
    7+ BDAC              Draw:
    8+ BDAC
-   9+ BDAC 2A 05 A5     	ld hl,(Posicion_actual)
-  10+ BDAF
-  11+ BDAF 7C           	ld a,h
-  12+ BDB0 B5           	or l
-  13+ BDB1 20 13        	jr nz,Entidad_iniciada 							; Si (Posicion_actual) es distinto de "0" la entidad ya está iniciada.
-  14+ BDB3
-  15+ BDB3
-  16+ BDB3              Inicializacion:
-  17+ BDB3
-  18+ BDB3 2A 03 A5     	ld hl,(Filas)
-  19+ BDB6 45           	ld b,l
-  20+ BDB7 4C           	ld c,h 											; (Filas)/(Columnas) en BC.
-  21+ BDB8
-  22+ BDB8 2A 12 A5     	ld hl,(Posicion_inicio)
-  23+ BDBB 22 05 A5     	ld (Posicion_actual),hl
-  24+ BDBE
-  25+ BDBE CD E4 BD     	call Calcula_Cuad_objeto 						; Inicializa (Cuad_objeto). (Cuad_objeto) en A.
-  26+ BDC1 CD CF C3     	call Inicia_Puntero_mov
-  27+ BDC4
-  28+ BDC4 18 0D        	jr 3F
-  29+ BDC6
-  30+ BDC6              ; --------------------------------------------------
-  31+ BDC6
-  32+ BDC6              Entidad_iniciada:
-  33+ BDC6
-  34+ BDC6 3A 02 A5     	ld a,(Ctrl_0)
-  35+ BDC9 CB 6F        	bit 5,a
-  36+ BDCB 20 06        	jr nz,3F
-  37+ BDCD              ;
-  38+ BDCD CD 23 BE     	call Comprueba_limite_horizontal
-  39+ BDD0 CD 63 BE     	call Comprueba_limite_vertical
-  40+ BDD3
-  41+ BDD3              ; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A´.
+   9+ BDAC              Inicializacion:
+  10+ BDAC
+  11+ BDAC 2A 03 A5     	ld hl,(Filas)
+  12+ BDAF 45           	ld b,l
+  13+ BDB0 4C           	ld c,h
+  14+ BDB1
+  15+ BDB1 2A 05 A5     	ld hl,(Posicion_actual)
+  16+ BDB4
+  17+ BDB4 7C           	ld a,h
+  18+ BDB5 B5           	or l
+  19+ BDB6 20 0E        	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
+  20+ BDB8
+  21+ BDB8 2A 12 A5     	ld hl,(Posicion_inicio)
+  22+ BDBB 22 05 A5     	ld (Posicion_actual),hl
+  23+ BDBE
+  24+ BDBE CD E4 BD     	call Calcula_Cuad_objeto
+  25+ BDC1 CD CF C3     	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
+  26+ BDC4
+  27+ BDC4 18 0D        	jr 3F
+  28+ BDC6
+  29+ BDC6              ; --------------------------------------------------
+  30+ BDC6
+  31+ BDC6              Entidad_iniciada:
+  32+ BDC6
+  33+ BDC6 3A 02 A5     	ld a,(Ctrl_0)
+  34+ BDC9 CB 6F        	bit 5,a
+  35+ BDCB 20 06        	jr nz,3F
+  36+ BDCD              ;
+  37+ BDCD CD 23 BE     	call Comprueba_limite_horizontal
+  38+ BDD0 CD 63 BE     	call Comprueba_limite_vertical
+  39+ BDD3
+  40+ BDD3              ; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A´.
+  41+ BDD3              ; -----------------------
   42+ BDD3              ; -----------------------
   43+ BDD3              ; -----------------------
-  44+ BDD3              ; -----------------------
-  45+ BDD3
-  46+ BDD3              3
-  47+ BDD3
-  48+ BDD3 18 FE        	jr $
+  44+ BDD3
+  45+ BDD3              3
+  46+ BDD3
+  47+ BDD3 18 FE        	jr $
+  48+ BDD5
   49+ BDD5
-  50+ BDD5
-  51+ BDD5 CD 28 BF     	call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
-  52+ BDD8 CD 4C BF     	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
-  53+ BDDB
-  54+ BDDB 3A 02 A5     	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
-  55+ BDDE E6 D0        	and $d0
-  56+ BDE0 32 02 A5     	ld (Ctrl_0),a
-  57+ BDE3
-  58+ BDE3 C9           	ret
-  59+ BDE4
-  60+ BDE4              ; *******************************************************************************************************************************************************************************************
-  61+ BDE4              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  62+ BDE4              ;
-  63+ BDE4              ;   14/02/25
-  64+ BDE4              ;
-  65+ BDE4              ;	Calcula el cuadrante de pantalla donde se encuentra la entidad: (Cuad_objeto), "1", "2", "3" o "4".
-  66+ BDE4              ;	Esta información es necesaria para poder calcular el (Puntero_de_impresion) de la entidad.
-  67+ BDE4              ;
-  68+ BDE4              ;	INPUT:  HL contiene (Posicion_actual).
-  69+ BDE4              ;	OUTPUT: (Cuad_objeto) y A contienen "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.
-  70+ BDE4              ;
-  71+ BDE4              ;	MODIFY: A.
+  50+ BDD5 CD 28 BF     	call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+  51+ BDD8 CD 4C BF     	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
+  52+ BDDB
+  53+ BDDB 3A 02 A5     	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
+  54+ BDDE E6 D0        	and $d0
+  55+ BDE0 32 02 A5     	ld (Ctrl_0),a
+  56+ BDE3
+  57+ BDE3 C9           	ret
+  58+ BDE4
+  59+ BDE4              ; *******************************************************************************************************************************************************************************************
+  60+ BDE4              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  61+ BDE4              ;
+  62+ BDE4              ;   14/02/25
+  63+ BDE4              ;
+  64+ BDE4              ;	Calcula el cuadrante de pantalla donde se encuentra la entidad: (Cuad_objeto), "1", "2", "3" o "4".
+  65+ BDE4              ;	Esta información es necesaria para poder calcular el (Puntero_de_impresion) de la entidad.
+  66+ BDE4              ;
+  67+ BDE4              ;	INPUT:  HL contiene (Posicion_actual).
+  68+ BDE4              ;	OUTPUT: (Cuad_objeto) y A contienen "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.
+  69+ BDE4              ;
+  70+ BDE4              ;	MODIFY: A.
+  71+ BDE4
   72+ BDE4
-  73+ BDE4
-  74+ BDE4              Calcula_Cuad_objeto:
-  75+ BDE4
-  76+ BDE4 CD 7C B1     	call calcula_tercio
-  77+ BDE7
-  78+ BDE7              ;	Ahora tenemos "0", "1" o "2" en el acumulador en función del tercio de pantalla en el que nos encontremos.
-  79+ BDE7
-  80+ BDE7 28 14        	jr z,Primer_tercio
-  81+ BDE9
-  82+ BDE9 3D           	dec a
-  83+ BDEA
-  84+ BDEA 28 22        	jr z,Segundo_tercio
-  85+ BDEC
-  86+ BDEC              Tercer_tercio:
-  87+ BDEC
-  88+ BDEC CD 17 BE     	call Determina_lado_de_pantalla
-  89+ BDEF
-  90+ BDEF 20 06        	jr nz,1F
-  91+ BDF1
-  92+ BDF1 3E 04        	ld a,4
-  93+ BDF3 32 14 A5     	ld (Cuad_objeto),a
-  94+ BDF6
-  95+ BDF6 C9           	ret
-  96+ BDF7
-  97+ BDF7 3E 03        1 ld a,3
-  98+ BDF9 32 14 A5     	ld (Cuad_objeto),a
-  99+ BDFC
- 100+ BDFC C9           	ret
- 101+ BDFD
- 102+ BDFD              Primer_tercio:
- 103+ BDFD
- 104+ BDFD CD 17 BE     	call Determina_lado_de_pantalla
- 105+ BE00
- 106+ BE00 20 06        	jr nz,3F
- 107+ BE02
- 108+ BE02 3E 02        	ld a,2
- 109+ BE04 32 14 A5     	ld (Cuad_objeto),a
- 110+ BE07
- 111+ BE07 C9           	ret
- 112+ BE08
- 113+ BE08 3E 01        3 ld a,1
- 114+ BE0A 32 14 A5     	ld (Cuad_objeto),a
- 115+ BE0D
- 116+ BE0D C9           	ret
- 117+ BE0E
- 118+ BE0E              Segundo_tercio:
- 119+ BE0E
- 120+ BE0E 7D           	ld a,l
- 121+ BE0F FE 7F        	cp $7f
- 122+ BE11 38 EA        	jr c,Primer_tercio
- 123+ BE13 28 E8        	jr z,Primer_tercio
- 124+ BE15
- 125+ BE15 18 D5        	jr Tercer_tercio
- 126+ BE17
- 127+ BE17              ; ------------------------------------
- 128+ BE17              ;
- 129+ BE17              ;	OUTPUT: A contiene "0" si estamos en la mitad derecha de la pantalla y "1" si estamos en la mitad izquierda.
- 130+ BE17              ;
- 131+ BE17
- 132+ BE17              Determina_lado_de_pantalla:
- 133+ BE17
- 134+ BE17 7D           	ld a,l
- 135+ BE18 E6 1F        	and $1f
- 136+ BE1A FE 10        	cp $10
- 137+ BE1C 38 02        	jr c,1F
- 138+ BE1E
- 139+ BE1E AF           	xor a
- 140+ BE1F
- 141+ BE1F C9           	ret
- 142+ BE20
- 143+ BE20 3E 01        1 ld a,1
- 144+ BE22
- 145+ BE22 C9           	ret
- 146+ BE23
- 147+ BE23              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- 148+ BE23              ;
- 149+ BE23              ;	25/02/25
- 150+ BE23              ;
- 151+ BE23              ; 	Comprueba_limite_horizontal.
- 152+ BE23              ;
- 153+ BE23              ;	INPUT: HL contiene (Posicion_actual).
- 154+ BE23
- 155+ BE23              Comprueba_limite_horizontal:
- 156+ BE23
- 157+ BE23 1E 00        	ld e,0											; Inicializamos E.
- 158+ BE25
- 159+ BE25              ;	Exclusiones !!!
- 160+ BE25
- 161+ BE25 CD 7C B1     	call calcula_tercio  							; RET cuando no estamos en el centro de la pantalla, (2º tercio).
- 162+ BE28 C8           	ret z
- 163+ BE29
- 164+ BE29 3D           	dec a
- 165+ BE2A 3D           	dec a
- 166+ BE2B C8           	ret z
- 167+ BE2C
- 168+ BE2C              ; ----------------------------------- Comprobamos límite.
- 169+ BE2C
- 170+ BE2C              ;	HL (Posicion_actual).
- 171+ BE2C              ;	E=0
- 172+ BE2C
- 173+ BE2C 3A 14 A5     	ld a,(Cuad_objeto)
- 174+ BE2F FE 02        	cp 2
- 175+ BE31 28 19        	jr z,1F
- 176+ BE33 38 17        	jr c,1F
- 177+ BE35
- 178+ BE35              ;	Nos encontramos en la parte INFERIOR de la pantalla.
- 179+ BE35              ;	En este caso superamos el CENTRO de la pantalla cuando L < $80
- 180+ BE35
- 181+ BE35 3E 7F        	ld a,$7f
- 182+ BE37 95           	sub l
- 183+ BE38 D8           	ret c			 								; RET no hemos llegado al centro de la pantalla, E=0.
- 184+ BE39
- 185+ BE39 1E 02        	ld e,2											; Zona NEBULOSA que no es poca cosa.
- 186+ BE3B
- 187+ BE3B 3E 3F        	ld a,$3f 										; (Limite_horizontal) = "$3f".
- 188+ BE3D 95           	sub l
- 189+ BE3E D8           	ret c											; RET con E=2.
- 190+ BE3F
- 191+ BE3F CD C4 BE     	call Modificaccionne
- 192+ BE42
- 193+ BE42 3A 14 A5     	ld a,(Cuad_objeto)
- 194+ BE45 3C           	inc a
- 195+ BE46 3C           	inc a
- 196+ BE47 32 14 A5     	ld (Cuad_objeto),a
- 197+ BE4A
- 198+ BE4A 1D           	dec e
- 199+ BE4B
- 200+ BE4B C9           	ret												; RET con E=1.
- 201+ BE4C
- 202+ BE4C              ;	Nos encontramos en la parte SUPERIOR de la pantalla.
- 203+ BE4C              ;	En este caso superamos el CENTRO de la pantalla cuando L => $80.
- 204+ BE4C
- 205+ BE4C 3E 80        1 ld a,$80
- 206+ BE4E 95           	sub l
- 207+ BE4F D0           	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
- 208+ BE50
- 209+ BE50 1E 02        	ld e,2											; Zona NEBULOSA que no es poca cosa.
- 210+ BE52
- 211+ BE52              ;
- 212+ BE52 3E C0        	ld a,$c0 				 						; (Limite_horizontal) = "$c0".
- 213+ BE54 95           	sub l
- 214+ BE55 D0           	ret nc 											; RET Estamos en zona nebulosa horizontal, no hemos superado (Limite_horizontal). E=2.
- 215+ BE56
- 216+ BE56 CD C4 BE     	call Modificaccionne
- 217+ BE59
- 218+ BE59 3A 14 A5     	ld a,(Cuad_objeto)
- 219+ BE5C 3D           	dec a
- 220+ BE5D 3D           	dec a
- 221+ BE5E 32 14 A5     	ld (Cuad_objeto),a
- 222+ BE61
- 223+ BE61 1D           	dec e 											; Hemos modificado (Posicion_actual) debido a que hemos superado el (Limite_horizontal). E=1.
- 224+ BE62
- 225+ BE62 C9           	ret
- 226+ BE63
- 227+ BE63              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- 228+ BE63              ;
- 229+ BE63              ;   13/3/25
- 230+ BE63              ;
- 231+ BE63              ;	Comprueba_limite_vertical
- 232+ BE63              ;
- 233+ BE63              ;	Modifica el registro L del puntero de pantalla cuando se sobrepasa la columna límite, (Limite2).
- 234+ BE63              ;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L.
- 235+ BE63              ;
- 236+ BE63              ;	INPUT: HL contiene (Posicion_actual).
- 237+ BE63
- 238+ BE63              Comprueba_limite_vertical:
- 239+ BE63
- 240+ BE63 3A 14 A5     	ld a,(Cuad_objeto)
- 241+ BE66 E6 01        	and 1
- 242+ BE68 28 19        	jr z,2F
- 243+ BE6A
- 244+ BE6A              ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
- 245+ BE6A              ;	-----------------------------------------------------
- 246+ BE6A
- 247+ BE6A 3E 13        	ld a,$13
- 248+ BE6C 32 16 A5     	ld (Limite_vertical),a
- 249+ BE6F
- 250+ BE6F CD A4 BE     	call Comprobacion
- 251+ BE72 30 39        	jr nc,Comprueba_centro_vertical_izquierdo
- 252+ BE74
- 253+ BE74              ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
- 254+ BE74              ;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
- 255+ BE74
- 256+ BE74 0D           	dec c											; (Columns-1) en C.
- 257+ BE75 7D           	ld a,l
- 258+ BE76 91           	sub c
- 259+ BE77 32 05 A5     	ld (Posicion_actual),a
- 260+ BE7A
- 261+ BE7A 3A 14 A5     	ld a,(Cuad_objeto)
- 262+ BE7D 3C           	inc a
- 263+ BE7E 32 14 A5     	ld (Cuad_objeto),a
- 264+ BE81
- 265+ BE81 18 17        	jr Consulta_E
- 266+ BE83
- 267+ BE83              ;	Nos encontramos en la parte DERECHA de la pantalla.
- 268+ BE83              ;	-----------------------------------------------------
- 269+ BE83
- 270+ BE83 3E 0C        2 ld a,$0c
- 271+ BE85 32 16 A5     	ld (Limite_vertical),a
- 272+ BE88
- 273+ BE88 CD A4 BE     	call Comprobacion
- 274+ BE8B 38 26        	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
- 275+ BE8D
- 276+ BE8D              ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
- 277+ BE8D              ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
- 278+ BE8D
- 279+ BE8D 0D           	dec c											; (Columns-1) en C.
- 280+ BE8E 7D           	ld a,l
- 281+ BE8F 81           	add c
- 282+ BE90 32 05 A5     	ld (Posicion_actual),a
- 283+ BE93
- 284+ BE93 3A 14 A5     	ld a,(Cuad_objeto)
- 285+ BE96 3D           	dec a
- 286+ BE97 32 14 A5     	ld (Cuad_objeto),a
- 287+ BE9A
- 288+ BE9A              ;	Consultamos E.
- 289+ BE9A
- 290+ BE9A              Consulta_E
- 291+ BE9A
- 292+ BE9A 1D           	dec e
- 293+ BE9B 1D           	dec e
- 294+ BE9C C8           	ret z
- 295+ BE9D
- 296+ BE9D CD E4 BD     	call Calcula_Cuad_objeto
- 297+ BEA0 CD A3 B1     	call Genera_coordenadas
- 298+ BEA3
- 299+ BEA3 C9           	ret
- 300+ BEA4
- 301+ BEA4              ; ----- ----- ----- ----- -----
- 302+ BEA4
- 303+ BEA4 7D           Comprobacion ld a,l
- 304+ BEA5 E6 1F        	and $1f
- 305+ BEA7 57           	ld d,a
- 306+ BEA8 3A 16 A5     	ld a,(Limite_vertical)
- 307+ BEAB 92           	sub d
- 308+ BEAC C9           	ret
- 309+ BEAD
- 310+ BEAD 3E 10        Comprueba_centro_vertical_izquierdo ld a,$10
- 311+ BEAF 92           	sub d
- 312+ BEB0 30 07        	jr nc,Centro_no_alcanzado
- 313+ BEB2 C9           	ret
- 314+ BEB3
- 315+ BEB3 3E 0F        Comprueba_centro_vertical_derecho ld a,$0f
- 316+ BEB5 92           	sub d
- 317+ BEB6 38 01        	jr c,Centro_no_alcanzado
- 318+ BEB8 C9           	ret
- 319+ BEB9
- 320+ BEB9              Centro_no_alcanzado
- 321+ BEB9
- 322+ BEB9              ;	No hemos alcanzado el centro de la pantalla.
- 323+ BEB9              ;	Consultamos E.
- 324+ BEB9
- 325+ BEB9 7B           	ld a,e
- 326+ BEBA E6 01        	and 1
- 327+ BEBC C8           	ret z
- 328+ BEBD
- 329+ BEBD CD E4 BD     	call Calcula_Cuad_objeto
- 330+ BEC0 CD A3 B1     	call Genera_coordenadas
- 331+ BEC3 C9           	ret
- 332+ BEC4
- 333+ BEC4              ; --------------------------------------------------------------------------
- 334+ BEC4              ;
- 335+ BEC4              ;	13/3/25
- 336+ BEC4              ;
- 337+ BEC4              ;	Modifica (Posicion_actual).
- 338+ BEC4              ;
- 339+ BEC4              ;	En función de la mitad de pantalla de la que partamos:
- 340+ BEC4              ;
- 341+ BEC4              ;	CALL [Modifica_Pos_actual], si partimos de la mitad superior de la pantalla.
- 342+ BEC4              ;	CALL [Modifica_Pos_actual2], si partimos de la mitad inferior de la pantalla.
- 343+ BEC4              ;
- 344+ BEC4              ;	INPUTS: HL contiene (Posicion_actual).
- 345+ BEC4              ;	OUTPUT: Actualiza (Posicion_actual).
- 346+ BEC4              ;	MODIFY: A y HL.
+  73+ BDE4              Calcula_Cuad_objeto:
+  74+ BDE4
+  75+ BDE4 CD 7C B1     	call calcula_tercio
+  76+ BDE7
+  77+ BDE7              ;	Ahora tenemos "0", "1" o "2" en el acumulador en función del tercio de pantalla en el que nos encontremos.
+  78+ BDE7
+  79+ BDE7 28 14        	jr z,Primer_tercio
+  80+ BDE9
+  81+ BDE9 3D           	dec a
+  82+ BDEA
+  83+ BDEA 28 22        	jr z,Segundo_tercio
+  84+ BDEC
+  85+ BDEC              Tercer_tercio:
+  86+ BDEC
+  87+ BDEC CD 17 BE     	call Determina_lado_de_pantalla
+  88+ BDEF
+  89+ BDEF 20 06        	jr nz,1F
+  90+ BDF1
+  91+ BDF1 3E 04        	ld a,4
+  92+ BDF3 32 14 A5     	ld (Cuad_objeto),a
+  93+ BDF6
+  94+ BDF6 C9           	ret
+  95+ BDF7
+  96+ BDF7 3E 03        1 ld a,3
+  97+ BDF9 32 14 A5     	ld (Cuad_objeto),a
+  98+ BDFC
+  99+ BDFC C9           	ret
+ 100+ BDFD
+ 101+ BDFD              Primer_tercio:
+ 102+ BDFD
+ 103+ BDFD CD 17 BE     	call Determina_lado_de_pantalla
+ 104+ BE00
+ 105+ BE00 20 06        	jr nz,3F
+ 106+ BE02
+ 107+ BE02 3E 02        	ld a,2
+ 108+ BE04 32 14 A5     	ld (Cuad_objeto),a
+ 109+ BE07
+ 110+ BE07 C9           	ret
+ 111+ BE08
+ 112+ BE08 3E 01        3 ld a,1
+ 113+ BE0A 32 14 A5     	ld (Cuad_objeto),a
+ 114+ BE0D
+ 115+ BE0D C9           	ret
+ 116+ BE0E
+ 117+ BE0E              Segundo_tercio:
+ 118+ BE0E
+ 119+ BE0E 7D           	ld a,l
+ 120+ BE0F FE 7F        	cp $7f
+ 121+ BE11 38 EA        	jr c,Primer_tercio
+ 122+ BE13 28 E8        	jr z,Primer_tercio
+ 123+ BE15
+ 124+ BE15 18 D5        	jr Tercer_tercio
+ 125+ BE17
+ 126+ BE17              ; ------------------------------------
+ 127+ BE17              ;
+ 128+ BE17              ;	OUTPUT: A contiene "0" si estamos en la mitad derecha de la pantalla y "1" si estamos en la mitad izquierda.
+ 129+ BE17              ;
+ 130+ BE17
+ 131+ BE17              Determina_lado_de_pantalla:
+ 132+ BE17
+ 133+ BE17 7D           	ld a,l
+ 134+ BE18 E6 1F        	and $1f
+ 135+ BE1A FE 10        	cp $10
+ 136+ BE1C 38 02        	jr c,1F
+ 137+ BE1E
+ 138+ BE1E AF           	xor a
+ 139+ BE1F
+ 140+ BE1F C9           	ret
+ 141+ BE20
+ 142+ BE20 3E 01        1 ld a,1
+ 143+ BE22
+ 144+ BE22 C9           	ret
+ 145+ BE23
+ 146+ BE23              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 147+ BE23              ;
+ 148+ BE23              ;	25/02/25
+ 149+ BE23              ;
+ 150+ BE23              ; 	Comprueba_limite_horizontal.
+ 151+ BE23              ;
+ 152+ BE23              ;	INPUT: HL contiene (Posicion_actual).
+ 153+ BE23
+ 154+ BE23              Comprueba_limite_horizontal:
+ 155+ BE23
+ 156+ BE23 1E 00        	ld e,0											; Inicializamos E.
+ 157+ BE25
+ 158+ BE25              ;	Exclusiones !!!
+ 159+ BE25
+ 160+ BE25 CD 7C B1     	call calcula_tercio  							; RET cuando no estamos en el centro de la pantalla, (2º tercio).
+ 161+ BE28 C8           	ret z
+ 162+ BE29
+ 163+ BE29 3D           	dec a
+ 164+ BE2A 3D           	dec a
+ 165+ BE2B C8           	ret z
+ 166+ BE2C
+ 167+ BE2C              ; ----------------------------------- Comprobamos límite.
+ 168+ BE2C
+ 169+ BE2C              ;	HL (Posicion_actual).
+ 170+ BE2C              ;	E=0
+ 171+ BE2C
+ 172+ BE2C 3A 14 A5     	ld a,(Cuad_objeto)
+ 173+ BE2F FE 02        	cp 2
+ 174+ BE31 28 19        	jr z,1F
+ 175+ BE33 38 17        	jr c,1F
+ 176+ BE35
+ 177+ BE35              ;	Nos encontramos en la parte INFERIOR de la pantalla.
+ 178+ BE35              ;	En este caso superamos el CENTRO de la pantalla cuando L < $80
+ 179+ BE35
+ 180+ BE35 3E 7F        	ld a,$7f
+ 181+ BE37 95           	sub l
+ 182+ BE38 D8           	ret c			 								; RET no hemos llegado al centro de la pantalla, E=0.
+ 183+ BE39
+ 184+ BE39 1E 02        	ld e,2											; Zona NEBULOSA que no es poca cosa.
+ 185+ BE3B
+ 186+ BE3B 3E 3F        	ld a,$3f 										; (Limite_horizontal) = "$3f".
+ 187+ BE3D 95           	sub l
+ 188+ BE3E D8           	ret c											; RET con E=2.
+ 189+ BE3F
+ 190+ BE3F CD C4 BE     	call Modificaccionne
+ 191+ BE42
+ 192+ BE42 3A 14 A5     	ld a,(Cuad_objeto)
+ 193+ BE45 3C           	inc a
+ 194+ BE46 3C           	inc a
+ 195+ BE47 32 14 A5     	ld (Cuad_objeto),a
+ 196+ BE4A
+ 197+ BE4A 1D           	dec e
+ 198+ BE4B
+ 199+ BE4B C9           	ret												; RET con E=1.
+ 200+ BE4C
+ 201+ BE4C              ;	Nos encontramos en la parte SUPERIOR de la pantalla.
+ 202+ BE4C              ;	En este caso superamos el CENTRO de la pantalla cuando L => $80.
+ 203+ BE4C
+ 204+ BE4C 3E 80        1 ld a,$80
+ 205+ BE4E 95           	sub l
+ 206+ BE4F D0           	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
+ 207+ BE50
+ 208+ BE50 1E 02        	ld e,2											; Zona NEBULOSA que no es poca cosa.
+ 209+ BE52
+ 210+ BE52              ;
+ 211+ BE52 3E C0        	ld a,$c0 				 						; (Limite_horizontal) = "$c0".
+ 212+ BE54 95           	sub l
+ 213+ BE55 D0           	ret nc 											; RET Estamos en zona nebulosa horizontal, no hemos superado (Limite_horizontal). E=2.
+ 214+ BE56
+ 215+ BE56 CD C4 BE     	call Modificaccionne
+ 216+ BE59
+ 217+ BE59 3A 14 A5     	ld a,(Cuad_objeto)
+ 218+ BE5C 3D           	dec a
+ 219+ BE5D 3D           	dec a
+ 220+ BE5E 32 14 A5     	ld (Cuad_objeto),a
+ 221+ BE61
+ 222+ BE61 1D           	dec e 											; Hemos modificado (Posicion_actual) debido a que hemos superado el (Limite_horizontal). E=1.
+ 223+ BE62
+ 224+ BE62 C9           	ret
+ 225+ BE63
+ 226+ BE63              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 227+ BE63              ;
+ 228+ BE63              ;   13/3/25
+ 229+ BE63              ;
+ 230+ BE63              ;	Comprueba_limite_vertical
+ 231+ BE63              ;
+ 232+ BE63              ;	Modifica el registro L del puntero de pantalla cuando se sobrepasa la columna límite, (Limite2).
+ 233+ BE63              ;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L.
+ 234+ BE63              ;
+ 235+ BE63              ;	INPUT: HL contiene (Posicion_actual).
+ 236+ BE63
+ 237+ BE63              Comprueba_limite_vertical:
+ 238+ BE63
+ 239+ BE63 3A 14 A5     	ld a,(Cuad_objeto)
+ 240+ BE66 E6 01        	and 1
+ 241+ BE68 28 19        	jr z,2F
+ 242+ BE6A
+ 243+ BE6A              ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
+ 244+ BE6A              ;	-----------------------------------------------------
+ 245+ BE6A
+ 246+ BE6A 3E 13        	ld a,$13
+ 247+ BE6C 32 16 A5     	ld (Limite_vertical),a
+ 248+ BE6F
+ 249+ BE6F CD A4 BE     	call Comprobacion
+ 250+ BE72 30 39        	jr nc,Comprueba_centro_vertical_izquierdo
+ 251+ BE74
+ 252+ BE74              ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
+ 253+ BE74              ;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
+ 254+ BE74
+ 255+ BE74 0D           	dec c											; (Columns-1) en C.
+ 256+ BE75 7D           	ld a,l
+ 257+ BE76 91           	sub c
+ 258+ BE77 32 05 A5     	ld (Posicion_actual),a
+ 259+ BE7A
+ 260+ BE7A 3A 14 A5     	ld a,(Cuad_objeto)
+ 261+ BE7D 3C           	inc a
+ 262+ BE7E 32 14 A5     	ld (Cuad_objeto),a
+ 263+ BE81
+ 264+ BE81 18 17        	jr Consulta_E
+ 265+ BE83
+ 266+ BE83              ;	Nos encontramos en la parte DERECHA de la pantalla.
+ 267+ BE83              ;	-----------------------------------------------------
+ 268+ BE83
+ 269+ BE83 3E 0C        2 ld a,$0c
+ 270+ BE85 32 16 A5     	ld (Limite_vertical),a
+ 271+ BE88
+ 272+ BE88 CD A4 BE     	call Comprobacion
+ 273+ BE8B 38 26        	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
+ 274+ BE8D
+ 275+ BE8D              ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
+ 276+ BE8D              ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
+ 277+ BE8D
+ 278+ BE8D 0D           	dec c											; (Columns-1) en C.
+ 279+ BE8E 7D           	ld a,l
+ 280+ BE8F 81           	add c
+ 281+ BE90 32 05 A5     	ld (Posicion_actual),a
+ 282+ BE93
+ 283+ BE93 3A 14 A5     	ld a,(Cuad_objeto)
+ 284+ BE96 3D           	dec a
+ 285+ BE97 32 14 A5     	ld (Cuad_objeto),a
+ 286+ BE9A
+ 287+ BE9A              ;	Consultamos E.
+ 288+ BE9A
+ 289+ BE9A              Consulta_E
+ 290+ BE9A
+ 291+ BE9A 1D           	dec e
+ 292+ BE9B 1D           	dec e
+ 293+ BE9C C8           	ret z
+ 294+ BE9D
+ 295+ BE9D CD E4 BD     	call Calcula_Cuad_objeto
+ 296+ BEA0 CD A3 B1     	call Genera_coordenadas
+ 297+ BEA3
+ 298+ BEA3 C9           	ret
+ 299+ BEA4
+ 300+ BEA4              ; ----- ----- ----- ----- -----
+ 301+ BEA4
+ 302+ BEA4 7D           Comprobacion ld a,l
+ 303+ BEA5 E6 1F        	and $1f
+ 304+ BEA7 57           	ld d,a
+ 305+ BEA8 3A 16 A5     	ld a,(Limite_vertical)
+ 306+ BEAB 92           	sub d
+ 307+ BEAC C9           	ret
+ 308+ BEAD
+ 309+ BEAD 3E 10        Comprueba_centro_vertical_izquierdo ld a,$10
+ 310+ BEAF 92           	sub d
+ 311+ BEB0 30 07        	jr nc,Centro_no_alcanzado
+ 312+ BEB2 C9           	ret
+ 313+ BEB3
+ 314+ BEB3 3E 0F        Comprueba_centro_vertical_derecho ld a,$0f
+ 315+ BEB5 92           	sub d
+ 316+ BEB6 38 01        	jr c,Centro_no_alcanzado
+ 317+ BEB8 C9           	ret
+ 318+ BEB9
+ 319+ BEB9              Centro_no_alcanzado
+ 320+ BEB9
+ 321+ BEB9              ;	No hemos alcanzado el centro de la pantalla.
+ 322+ BEB9              ;	Consultamos E.
+ 323+ BEB9
+ 324+ BEB9 7B           	ld a,e
+ 325+ BEBA E6 01        	and 1
+ 326+ BEBC C8           	ret z
+ 327+ BEBD
+ 328+ BEBD CD E4 BD     	call Calcula_Cuad_objeto
+ 329+ BEC0 CD A3 B1     	call Genera_coordenadas
+ 330+ BEC3 C9           	ret
+ 331+ BEC4
+ 332+ BEC4              ; --------------------------------------------------------------------------
+ 333+ BEC4              ;
+ 334+ BEC4              ;	13/3/25
+ 335+ BEC4              ;
+ 336+ BEC4              ;	Modifica (Posicion_actual).
+ 337+ BEC4              ;
+ 338+ BEC4              ;	En función de la mitad de pantalla de la que partamos:
+ 339+ BEC4              ;
+ 340+ BEC4              ;	CALL [Modifica_Pos_actual], si partimos de la mitad superior de la pantalla.
+ 341+ BEC4              ;	CALL [Modifica_Pos_actual2], si partimos de la mitad inferior de la pantalla.
+ 342+ BEC4              ;
+ 343+ BEC4              ;	INPUTS: HL contiene (Posicion_actual).
+ 344+ BEC4              ;	OUTPUT: Actualiza (Posicion_actual).
+ 345+ BEC4              ;	MODIFY: A y HL.
+ 346+ BEC4
  347+ BEC4
  348+ BEC4
- 349+ BEC4
- 350+ BEC4              Modificaccionne:
- 351+ BEC4
- 352+ BEC4 3A 14 A5     	ld a,(Cuad_objeto)
- 353+ BEC7 FE 02        	cp 2
- 354+ BEC9 CC D5 BE         call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
- 355+ BECC C8               ret z
- 356+ BECD DC D5 BE         call c,Modifica_Pos_actual
- 357+ BED0 C8           	ret z
- 358+ BED1 CD E1 BE         call Modifica_Pos_actual2
- 359+ BED4 C9               ret
- 360+ BED5
- 361+ BED5 06 0F        Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
- 362+ BED7 CD 6D B1     1 call PreviousScan
- 363+ BEDA 10 FB        	djnz 1B
- 364+ BEDC 22 05 A5     	ld (Posicion_actual),hl
- 365+ BEDF AF           	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
- 366+ BEE0 C9           	ret
- 367+ BEE1
- 368+ BEE1 06 0F        Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
- 369+ BEE3 CD 5E B1     1 call NextScan
- 370+ BEE6 10 FB        	djnz 1B
- 371+ BEE8 22 05 A5     	ld (Posicion_actual),hl
- 372+ BEEB AF           	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
- 373+ BEEC C9           	ret
- 374+ BEED
- 375+ BEED              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
- 376+ BEED
- 377+ BEED              Salida_nebulosamente_por_la_derecha
- 378+ BEED
- 379+ BEED              ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
- 380+ BEED
- 381+ BEED 3A 05 A5     	ld a,(Posicion_actual)
- 382+ BEF0 E6 1F        	and $1f
- 383+ BEF2 FE 1E        	cp $1e
- 384+ BEF4 D8           	ret c
- 385+ BEF5
- 386+ BEF5              ; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
- 387+ BEF5              ;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa.
- 388+ BEF5
- 389+ BEF5 3A 14 A5     	ld a,(Cuad_objeto)
- 390+ BEF8 E6 01        	and 1
- 391+ BEFA C8           	ret z 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
- 392+ BEFB
- 393+ BEFB 3A 14 A5     	ld a,(Cuad_objeto)
- 394+ BEFE 3C           	inc a
- 395+ BEFF 32 14 A5     	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
- 396+ BF02
- 397+ BF02 0D           	dec c											; (Columns-1) en C.
- 398+ BF03 7D           	ld a,l
- 399+ BF04 91           	sub c
- 400+ BF05 32 05 A5     	ld (Posicion_actual),a
- 401+ BF08
- 402+ BF08 1D           	dec e
- 403+ BF09 1D           	dec e 											; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
- 404+ BF0A
- 405+ BF0A C9           	ret
- 406+ BF0B
- 407+ BF0B              Salida_nebulosamente_por_la_izquierda
- 408+ BF0B
- 409+ BF0B              ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado izquierdo ???.
- 410+ BF0B
- 411+ BF0B 3A 05 A5     	ld a,(Posicion_actual)
- 412+ BF0E E6 1F        	and $1f
- 413+ BF10 FE 01        	cp $01
- 414+ BF12 D0           	ret nc
- 415+ BF13 C0           	ret nz
- 416+ BF14
- 417+ BF14              ; 	Existe posibilidad de desaparecer por el lado izquierdo de la pantalla. Si (Cuad_objeto) indica que_
- 418+ BF14              ;	_estamos en la parte derecha de la pantalla, (2/4), la salida será defectuosa.
- 419+ BF14
- 420+ BF14 3A 14 A5     	ld a,(Cuad_objeto)
- 421+ BF17 E6 01        	and 1
- 422+ BF19 C0           	ret nz 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
- 423+ BF1A
- 424+ BF1A 3A 14 A5     	ld a,(Cuad_objeto)
- 425+ BF1D 3D           	dec a
- 426+ BF1E 32 14 A5     	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
- 427+ BF21
- 428+ BF21 0D           	dec c											 				; (Columns-1) en C.
- 429+ BF22 7D           	ld a,l
- 430+ BF23 0C           	inc c
- 431+ BF24 32 05 A5     	ld (Posicion_actual),a
- 432+ BF27
- 433+ BF27 C9           	ret
- 434+ BF28
- 435+ BF28              ; --------------------------------------------------------------------------------------------------------------------
- 436+ BF28              ;
- 437+ BF28              ; 	3/2/25
- 438+ BF28              ;
- 439+ BF28              ;	Modify: A.
- 440+ BF28              ;
- 441+ BF28              ;	INPUT: A contiene el byte bajo de (Posicion_actual).
- 442+ BF28              ;	OUTPUT: (Columnas).
- 443+ BF28              ;
- 444+ BF28
- 445+ BF28              calcula_CColumnass:
- 446+ BF28
- 447+ BF28 3A 05 A5     	ld a,(Posicion_actual)
- 448+ BF2B E6 1F        	and $1f
- 449+ BF2D 28 17        	jr z,One_CColumna
- 450+ BF2F 3D           	dec a
- 451+ BF30 28 10        	jr z,Due_CColumna
- 452+ BF32 3C           	inc a
- 453+ BF33 FE 1E        	cp $1e
- 454+ BF35 38 04        	jr c,one_or_due_ccolumnas
- 455+ BF37 28 09        	jr z,Due_CColumna
- 456+ BF39 18 0B        	jr One_CColumna
- 457+ BF3B
- 458+ BF3B 3A 04 A5     one_or_due_ccolumnas ld a,(Columns)
- 459+ BF3E 32 15 A5     	ld (Columnas),a
- 460+ BF41 C9           	ret
- 461+ BF42
- 462+ BF42 3E 02        Due_CColumna ld a,2
- 463+ BF44 18 02        	jr 1F
- 464+ BF46 3E 01        One_CColumna ld a,1
- 465+ BF48 32 15 A5     1 ld (Columnas),a
- 466+ BF4B C9           	ret
- 467+ BF4C
- 468+ BF4C              ; --------------------------------------------------------------------------------------------------------------------
- 469+ BF4C              ;
- 470+ BF4C              ;   2/3/25
- 471+ BF4C              ;
- 472+ BF4C              ;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
- 473+ BF4C              ;
- 474+ BF4C              ;	OUTPUT: IX Contienen el puntero de impresión.
- 475+ BF4C              ;			HL e IY Contienen (Puntero_objeto).
- 476+ BF4C              ;
- 477+ BF4C              ;	DESTRUYE: HL,B Y A.
- 478+ BF4C
- 479+ BF4C              Calcula_puntero_de_impresion:
- 480+ BF4C
- 481+ BF4C 3A 14 A5     	ld a,(Cuad_objeto)
- 482+ BF4F E6 01        	and 1
- 483+ BF51 20 09        	jr nz,Lado_izquierdo
- 484+ BF53
- 485+ BF53              Lado_derecho
- 486+ BF53
- 487+ BF53 3A 14 A5     	ld a,(Cuad_objeto)
- 488+ BF56 3D           	dec a
- 489+ BF57 3D           	dec a
- 490+ BF58 28 2F        	jr z,Cuadrante_dos
- 491+ BF5A 18 14        	jr Cuadrante_cuatro
- 492+ BF5C
- 493+ BF5C              Lado_izquierdo
- 494+ BF5C
- 495+ BF5C 3A 14 A5     	ld a,(Cuad_objeto)
- 496+ BF5F CB 3F        	srl a
- 497+ BF61 28 12        	jr z,Cuadrante_uno
- 498+ BF63
- 499+ BF63              ; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
- 500+ BF63
- 501+ BF63 CD A0 BF     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
- 502+ BF66
- 503+ BF66 7D           	ld a,l
- 504+ BF67 E6 1F        	and $1f
- 505+ BF69 28 28        	jr z,4F
- 506+ BF6B
- 507+ BF6B 2B           6 dec hl
- 508+ BF6C 10 FD        	djnz 6B
- 509+ BF6E
- 510+ BF6E 18 23        	jr 4F
- 511+ BF70
- 512+ BF70              Cuadrante_cuatro
- 513+ BF70
- 514+ BF70 2A 05 A5     	ld hl,(Posicion_actual)
- 515+ BF73 18 1E        	jr 4F
- 516+ BF75
- 517+ BF75              Cuadrante_uno
- 518+ BF75
- 519+ BF75 CD A0 BF     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
- 520+ BF78
- 521+ BF78 7D           	ld a,l
- 522+ BF79 E6 1F        	and $1f
- 523+ BF7B 28 03        	jr z,3F
- 524+ BF7D
- 525+ BF7D 2B           1 dec hl
- 526+ BF7E 10 FD        	djnz 1B
- 527+ BF80
- 528+ BF80 06 0F        3 ld b,15
- 529+ BF82 CD 6D B1     2 call PreviousScan
- 530+ BF85 10 FB        	djnz 2B
- 531+ BF87
- 532+ BF87 18 0A        	jr 4F
- 533+ BF89
- 534+ BF89              Cuadrante_dos
- 535+ BF89
- 536+ BF89 CD A0 BF     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
- 537+ BF8C 06 0F        	ld b,15
- 538+ BF8E CD 6D B1     5 call PreviousScan
- 539+ BF91 10 FB        	djnz 5B
- 540+ BF93
- 541+ BF93 22 F9 A4     4 ld (Puntero_de_impresion),hl
- 542+ BF96
- 543+ BF96 E5           	push hl
- 544+ BF97 DD E1        	pop ix
- 545+ BF99
- 546+ BF99 2A 07 A5     	ld hl,(Puntero_objeto)
- 547+ BF9C
- 548+ BF9C E5           	push hl
- 549+ BF9D FD E1        	pop iy
- 550+ BF9F
- 551+ BF9F C9           	ret
- 552+ BFA0
- 553+ BFA0              ; --------------------------------------------------------------------------------------------------------------------
- 554+ BFA0              ;
- 555+ BFA0              ;	2/1/23
- 556+ BFA0              ;
- 557+ BFA0              ;	Sub-rutina de [Calcula_puntero_de_impresion].
- 558+ BFA0              ;
- 559+ BFA0              ;	Tras esta rutina tenemos:
- 560+ BFA0              ;
- 561+ BFA0              ;	OUTPUT: HL contiene (Posicion_actual).
- 562+ BFA0              ;			B contiene (Columnas)-1. Nota: Este valor `nunca' será "0". El valor mínimo es "1".
- 563+ BFA0              ;
- 564+ BFA0              ;	DESTRUYE!!!!! HL,B y A.
- 565+ BFA0
- 566+ BFA0              Operandos:
- 567+ BFA0
- 568+ BFA0 2A 05 A5     	ld hl,(Posicion_actual)
- 569+ BFA3 3A 15 A5     	ld a,(Columnas)
- 570+ BFA6 3D           	dec a
- 571+ BFA7 20 01        	jr nz,1F
- 572+ BFA9 3C           	inc a
- 573+ BFAA 47           1 ld b,a
- 574+ BFAB C9           	ret
- 575+ BFAC
- 576+ BFAC              ; -----------------------------------------------------------------
- 577+ BFAC              ;
- 578+ BFAC              ;	4/4/25
- 579+ BFAC              ;
- 580+ BFAC              ;	Limpia un espacio de la memoria.
- 581+ BFAC              ;
- 582+ BFAC              ;	INPUTS:  HL apunta al 1er byte del espacio de memoria que queremos limpiar.
- 583+ BFAC              ;				   BC indica el nº de bytes que vamos a poner a "0".
- 584+ BFAC              ;
- 585+ BFAC              ;	MODIFY: HL,DE,BC
- 586+ BFAC
- 587+ BFAC              Clean_mem:
- 588+ BFAC
- 589+ BFAC 36 00        	ld (hl),0
- 590+ BFAE
- 591+ BFAE E5           	push hl
- 592+ BFAF D1           	pop de
- 593+ BFB0
- 594+ BFB0 13           	inc de
- 595+ BFB1
- 596+ BFB1 ED B0        	ldir
- 597+ BFB3
- 598+ BFB3 C9           	ret
+ 349+ BEC4              Modificaccionne:
+ 350+ BEC4
+ 351+ BEC4 3A 14 A5     	ld a,(Cuad_objeto)
+ 352+ BEC7 FE 02        	cp 2
+ 353+ BEC9 CC D5 BE         call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
+ 354+ BECC C8               ret z
+ 355+ BECD DC D5 BE         call c,Modifica_Pos_actual
+ 356+ BED0 C8           	ret z
+ 357+ BED1 CD E1 BE         call Modifica_Pos_actual2
+ 358+ BED4 C9               ret
+ 359+ BED5
+ 360+ BED5 06 0F        Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
+ 361+ BED7 CD 6D B1     1 call PreviousScan
+ 362+ BEDA 10 FB        	djnz 1B
+ 363+ BEDC 22 05 A5     	ld (Posicion_actual),hl
+ 364+ BEDF AF           	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
+ 365+ BEE0 C9           	ret
+ 366+ BEE1
+ 367+ BEE1 06 0F        Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
+ 368+ BEE3 CD 5E B1     1 call NextScan
+ 369+ BEE6 10 FB        	djnz 1B
+ 370+ BEE8 22 05 A5     	ld (Posicion_actual),hl
+ 371+ BEEB AF           	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
+ 372+ BEEC C9           	ret
+ 373+ BEED
+ 374+ BEED              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+ 375+ BEED
+ 376+ BEED              Salida_nebulosamente_por_la_derecha
+ 377+ BEED
+ 378+ BEED              ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
+ 379+ BEED
+ 380+ BEED 3A 05 A5     	ld a,(Posicion_actual)
+ 381+ BEF0 E6 1F        	and $1f
+ 382+ BEF2 FE 1E        	cp $1e
+ 383+ BEF4 D8           	ret c
+ 384+ BEF5
+ 385+ BEF5              ; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
+ 386+ BEF5              ;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa.
+ 387+ BEF5
+ 388+ BEF5 3A 14 A5     	ld a,(Cuad_objeto)
+ 389+ BEF8 E6 01        	and 1
+ 390+ BEFA C8           	ret z 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+ 391+ BEFB
+ 392+ BEFB 3A 14 A5     	ld a,(Cuad_objeto)
+ 393+ BEFE 3C           	inc a
+ 394+ BEFF 32 14 A5     	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+ 395+ BF02
+ 396+ BF02 0D           	dec c											; (Columns-1) en C.
+ 397+ BF03 7D           	ld a,l
+ 398+ BF04 91           	sub c
+ 399+ BF05 32 05 A5     	ld (Posicion_actual),a
+ 400+ BF08
+ 401+ BF08 1D           	dec e
+ 402+ BF09 1D           	dec e 											; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
+ 403+ BF0A
+ 404+ BF0A C9           	ret
+ 405+ BF0B
+ 406+ BF0B              Salida_nebulosamente_por_la_izquierda
+ 407+ BF0B
+ 408+ BF0B              ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado izquierdo ???.
+ 409+ BF0B
+ 410+ BF0B 3A 05 A5     	ld a,(Posicion_actual)
+ 411+ BF0E E6 1F        	and $1f
+ 412+ BF10 FE 01        	cp $01
+ 413+ BF12 D0           	ret nc
+ 414+ BF13 C0           	ret nz
+ 415+ BF14
+ 416+ BF14              ; 	Existe posibilidad de desaparecer por el lado izquierdo de la pantalla. Si (Cuad_objeto) indica que_
+ 417+ BF14              ;	_estamos en la parte derecha de la pantalla, (2/4), la salida será defectuosa.
+ 418+ BF14
+ 419+ BF14 3A 14 A5     	ld a,(Cuad_objeto)
+ 420+ BF17 E6 01        	and 1
+ 421+ BF19 C0           	ret nz 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+ 422+ BF1A
+ 423+ BF1A 3A 14 A5     	ld a,(Cuad_objeto)
+ 424+ BF1D 3D           	dec a
+ 425+ BF1E 32 14 A5     	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+ 426+ BF21
+ 427+ BF21 0D           	dec c											 				; (Columns-1) en C.
+ 428+ BF22 7D           	ld a,l
+ 429+ BF23 0C           	inc c
+ 430+ BF24 32 05 A5     	ld (Posicion_actual),a
+ 431+ BF27
+ 432+ BF27 C9           	ret
+ 433+ BF28
+ 434+ BF28              ; --------------------------------------------------------------------------------------------------------------------
+ 435+ BF28              ;
+ 436+ BF28              ; 	3/2/25
+ 437+ BF28              ;
+ 438+ BF28              ;	Modify: A.
+ 439+ BF28              ;
+ 440+ BF28              ;	INPUT: A contiene el byte bajo de (Posicion_actual).
+ 441+ BF28              ;	OUTPUT: (Columnas).
+ 442+ BF28              ;
+ 443+ BF28
+ 444+ BF28              calcula_CColumnass:
+ 445+ BF28
+ 446+ BF28 3A 05 A5     	ld a,(Posicion_actual)
+ 447+ BF2B E6 1F        	and $1f
+ 448+ BF2D 28 17        	jr z,One_CColumna
+ 449+ BF2F 3D           	dec a
+ 450+ BF30 28 10        	jr z,Due_CColumna
+ 451+ BF32 3C           	inc a
+ 452+ BF33 FE 1E        	cp $1e
+ 453+ BF35 38 04        	jr c,one_or_due_ccolumnas
+ 454+ BF37 28 09        	jr z,Due_CColumna
+ 455+ BF39 18 0B        	jr One_CColumna
+ 456+ BF3B
+ 457+ BF3B 3A 04 A5     one_or_due_ccolumnas ld a,(Columns)
+ 458+ BF3E 32 15 A5     	ld (Columnas),a
+ 459+ BF41 C9           	ret
+ 460+ BF42
+ 461+ BF42 3E 02        Due_CColumna ld a,2
+ 462+ BF44 18 02        	jr 1F
+ 463+ BF46 3E 01        One_CColumna ld a,1
+ 464+ BF48 32 15 A5     1 ld (Columnas),a
+ 465+ BF4B C9           	ret
+ 466+ BF4C
+ 467+ BF4C              ; --------------------------------------------------------------------------------------------------------------------
+ 468+ BF4C              ;
+ 469+ BF4C              ;   2/3/25
+ 470+ BF4C              ;
+ 471+ BF4C              ;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
+ 472+ BF4C              ;
+ 473+ BF4C              ;	OUTPUT: IX Contienen el puntero de impresión.
+ 474+ BF4C              ;			HL e IY Contienen (Puntero_objeto).
+ 475+ BF4C              ;
+ 476+ BF4C              ;	DESTRUYE: HL,B Y A.
+ 477+ BF4C
+ 478+ BF4C              Calcula_puntero_de_impresion:
+ 479+ BF4C
+ 480+ BF4C 3A 14 A5     	ld a,(Cuad_objeto)
+ 481+ BF4F E6 01        	and 1
+ 482+ BF51 20 09        	jr nz,Lado_izquierdo
+ 483+ BF53
+ 484+ BF53              Lado_derecho
+ 485+ BF53
+ 486+ BF53 3A 14 A5     	ld a,(Cuad_objeto)
+ 487+ BF56 3D           	dec a
+ 488+ BF57 3D           	dec a
+ 489+ BF58 28 2F        	jr z,Cuadrante_dos
+ 490+ BF5A 18 14        	jr Cuadrante_cuatro
+ 491+ BF5C
+ 492+ BF5C              Lado_izquierdo
+ 493+ BF5C
+ 494+ BF5C 3A 14 A5     	ld a,(Cuad_objeto)
+ 495+ BF5F CB 3F        	srl a
+ 496+ BF61 28 12        	jr z,Cuadrante_uno
+ 497+ BF63
+ 498+ BF63              ; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
+ 499+ BF63
+ 500+ BF63 CD A0 BF     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 501+ BF66
+ 502+ BF66 7D           	ld a,l
+ 503+ BF67 E6 1F        	and $1f
+ 504+ BF69 28 28        	jr z,4F
+ 505+ BF6B
+ 506+ BF6B 2B           6 dec hl
+ 507+ BF6C 10 FD        	djnz 6B
+ 508+ BF6E
+ 509+ BF6E 18 23        	jr 4F
+ 510+ BF70
+ 511+ BF70              Cuadrante_cuatro
+ 512+ BF70
+ 513+ BF70 2A 05 A5     	ld hl,(Posicion_actual)
+ 514+ BF73 18 1E        	jr 4F
+ 515+ BF75
+ 516+ BF75              Cuadrante_uno
+ 517+ BF75
+ 518+ BF75 CD A0 BF     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 519+ BF78
+ 520+ BF78 7D           	ld a,l
+ 521+ BF79 E6 1F        	and $1f
+ 522+ BF7B 28 03        	jr z,3F
+ 523+ BF7D
+ 524+ BF7D 2B           1 dec hl
+ 525+ BF7E 10 FD        	djnz 1B
+ 526+ BF80
+ 527+ BF80 06 0F        3 ld b,15
+ 528+ BF82 CD 6D B1     2 call PreviousScan
+ 529+ BF85 10 FB        	djnz 2B
+ 530+ BF87
+ 531+ BF87 18 0A        	jr 4F
+ 532+ BF89
+ 533+ BF89              Cuadrante_dos
+ 534+ BF89
+ 535+ BF89 CD A0 BF     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 536+ BF8C 06 0F        	ld b,15
+ 537+ BF8E CD 6D B1     5 call PreviousScan
+ 538+ BF91 10 FB        	djnz 5B
+ 539+ BF93
+ 540+ BF93 22 F9 A4     4 ld (Puntero_de_impresion),hl
+ 541+ BF96
+ 542+ BF96 E5           	push hl
+ 543+ BF97 DD E1        	pop ix
+ 544+ BF99
+ 545+ BF99 2A 07 A5     	ld hl,(Puntero_objeto)
+ 546+ BF9C
+ 547+ BF9C E5           	push hl
+ 548+ BF9D FD E1        	pop iy
+ 549+ BF9F
+ 550+ BF9F C9           	ret
+ 551+ BFA0
+ 552+ BFA0              ; --------------------------------------------------------------------------------------------------------------------
+ 553+ BFA0              ;
+ 554+ BFA0              ;	2/1/23
+ 555+ BFA0              ;
+ 556+ BFA0              ;	Sub-rutina de [Calcula_puntero_de_impresion].
+ 557+ BFA0              ;
+ 558+ BFA0              ;	Tras esta rutina tenemos:
+ 559+ BFA0              ;
+ 560+ BFA0              ;	OUTPUT: HL contiene (Posicion_actual).
+ 561+ BFA0              ;			B contiene (Columnas)-1. Nota: Este valor `nunca' será "0". El valor mínimo es "1".
+ 562+ BFA0              ;
+ 563+ BFA0              ;	DESTRUYE!!!!! HL,B y A.
+ 564+ BFA0
+ 565+ BFA0              Operandos:
+ 566+ BFA0
+ 567+ BFA0 2A 05 A5     	ld hl,(Posicion_actual)
+ 568+ BFA3 3A 15 A5     	ld a,(Columnas)
+ 569+ BFA6 3D           	dec a
+ 570+ BFA7 20 01        	jr nz,1F
+ 571+ BFA9 3C           	inc a
+ 572+ BFAA 47           1 ld b,a
+ 573+ BFAB C9           	ret
+ 574+ BFAC
+ 575+ BFAC              ; -----------------------------------------------------------------
+ 576+ BFAC              ;
+ 577+ BFAC              ;	4/4/25
+ 578+ BFAC              ;
+ 579+ BFAC              ;	Limpia un espacio de la memoria.
+ 580+ BFAC              ;
+ 581+ BFAC              ;	INPUTS:  HL apunta al 1er byte del espacio de memoria que queremos limpiar.
+ 582+ BFAC              ;				   BC indica el nº de bytes que vamos a poner a "0".
+ 583+ BFAC              ;
+ 584+ BFAC              ;	MODIFY: HL,DE,BC
+ 585+ BFAC
+ 586+ BFAC              Clean_mem:
+ 587+ BFAC
+ 588+ BFAC 36 00        	ld (hl),0
+ 589+ BFAE
+ 590+ BFAE E5           	push hl
+ 591+ BFAF D1           	pop de
+ 592+ BFB0
+ 593+ BFB0 13           	inc de
+ 594+ BFB1
+ 595+ BFB1 ED B0        	ldir
+ 596+ BFB3
+ 597+ BFB3 C9           	ret
+ 598+ BFB4
  599+ BFB4
  600+ BFB4
  601+ BFB4
@@ -10631,7 +10631,6 @@
  603+ BFB4
  604+ BFB4
  605+ BFB4
- 606+ BFB4
 # file closed: Draw_XOR.asm
   30  BFB4              	include "Direcciones.asm"
 # file opened: Direcciones.asm

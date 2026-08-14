@@ -6,24 +6,23 @@
 
 Draw:
 
-	ld hl,(Posicion_actual)
-
-	ld a,h 						 					
-	or l 											
-	jr nz,Entidad_iniciada 							; Si (Posicion_actual) es distinto de "0" la entidad ya está iniciada.
-
-
 Inicializacion:
 
 	ld hl,(Filas)
 	ld b,l
-	ld c,h 											; (Filas)/(Columnas) en BC.
+	ld c,h
+
+	ld hl,(Posicion_actual)
+
+	ld a,h
+	or l
+	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
 
 	ld hl,(Posicion_inicio)
-	ld (Posicion_actual),hl										
+	ld (Posicion_actual),hl
 
-	call Calcula_Cuad_objeto 						; Inicializa (Cuad_objeto). (Cuad_objeto) en A.
-	call Inicia_Puntero_mov
+	call Calcula_Cuad_objeto
+	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
 
 	jr 3F
 
