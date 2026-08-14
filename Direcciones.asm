@@ -10,7 +10,7 @@
 ;
 ;
 
-Mov_down 
+Mov_down:
 
 	call Reponne_punntero_objeto
 
@@ -32,12 +32,8 @@ Mov_down
 	add $20
 	jr nc,1F 														
 
-; ------------------------------
-;
-;	12/01/24
-
-;	call Reaparece_arriba
-	call Reinicio
+	call Reaparece_arriba
+;	call Reinicio
 
 ;	Homos generado todos los movimientos posibles de esta "Entidad_guía".
 
@@ -45,15 +41,13 @@ Mov_down
 	set 1,a
 	ld (Ctrl_3),a
 
-	jr 3F
-;																	; El bit2 de (Ctrl_3) evita que la rutina [Main], (cuando gestione entidades), coloque_
-;																	; _a la siguiente entidad como "Entidad_guía".
-; ------------------------------
+	ret
 
 1 call NextScan
 	ld (Posicion_actual),hl
-    djnz 2B
-3 call Genera_coordenadas
+
+	djnz 2B
+
 	ret
 
 ; ******************************************************************************************************************************************************************************************
@@ -65,13 +59,15 @@ Mov_down
 ; 	Mueve el Sprite hacia arriba.
 ;
 ;
-Mov_up 
+Mov_up:
 
 	call Reponne_punntero_objeto
 
 	ld a,(Vel_up)
 	ld b,a
-	ld hl,(Posicion_actual)	
+
+	ld hl,(Posicion_actual)
+
 3 call calcula_tercio 													; Si no estamos en el 1er tercio de la pantalla no nos preocupamos de la reaparición.
 	and a
 	jr nz,1F
@@ -87,16 +83,15 @@ Mov_up
     jr nc,1F
     dec h
 
-; -----------------------------
-    call Reaparece_abajo                                                ; El objeto ha desaparecido por la parte superior de la pantalla, H="$3f". Hacemos llamada a _
-;	call Reinicio
-; -----------------------------
+;    call Reaparece_abajo                                                ; El objeto ha desaparecido por la parte superior de la pantalla, H="$3f". Hacemos llamada a _
+	call Reinicio
 
-    jr 2F                                                               ; _ [Reaparece_abajo] para preparar la `reaparición´ por la parte inferior.
+	ret
+
 1 call PreviousScan
 	ld (Posicion_actual),hl
     djnz 3B
-2 call Genera_coordenadas
+
 	ret
 
 ; -----------------------------
@@ -106,7 +101,7 @@ Mov_up
 ;	Si la rutina [Recompone_posicion_inicio] no inició la entidad en la 1ª o última columna de pantalla,_
 ;	_restaurará (Puntero_objeto) con el contenido de (Repone_puntero_objeto).
 
-Reponne_punntero_objeto
+Reponne_punntero_objeto:
 
 	ld hl,Ctrl_2
 	bit 0,(hl)
@@ -134,7 +129,9 @@ Reponne_punntero_objeto
 ; 	Desplaza el Sprite (x)Pixels a la derecha.
 ;
 
-Mov_right ld a,(Ctrl_0)
+Mov_right:
+
+	ld a,(Ctrl_0)
 	bit 6,a
 	jr z,4F 														; Amadeus o Entidad ???																								
 
@@ -181,8 +178,6 @@ Mov_right ld a,(Ctrl_0)
 	cp $fb
 	jr c,8F
 
-; ---------- ---------- ----------
-
 3 call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
 ;	call Reinicio
 
@@ -197,13 +192,12 @@ Mov_right ld a,(Ctrl_0)
 	djnz 5B
 	ld hl,Posicion_actual											; Decrementamos su posición actual, pués al desplazarlo a la derecha, volvemos a incrementar el nº de (Columns) y _
 	dec (hl)														; _ (Posicion_actual) ha pasado de $00 a $01.
-2 call Genera_coordenadas
-	ret  															; Salimos para pintar la nueva posición.
 
-; ---------- ---------- ----------
+	ret
 
 8 ld hl,(Posicion_actual)
 	call DESPLZ_DER
+
 	ret
 
 ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -211,20 +205,22 @@ Mov_right ld a,(Ctrl_0)
 ;	22/9/22
 ;
 
-DESPLZ_DER
+DESPLZ_DER:
 
 	call Desplaza_derecha
     call modifica_parametros_1er_DESPLZ_2
     call Ciclo_completo
-	ld hl,Ctrl_0 													; Indica que nos hemos desplazado a la derecha.
+
+    ld hl,Ctrl_0 													; Indica que nos hemos desplazado a la derecha.
 	set 7,(hl)
+
 	ret
 
 ; ******************************************************************************************************************************************************************************************
 ;	15/02/23
 ;
 
-Desplaza_derecha
+Desplaza_derecha:
 
 	ld a,(Vel_right)
 	ld b,a
@@ -233,6 +229,7 @@ Desplaza_derecha
 1 inc hl
 	inc hl
 	djnz 1B 														; (Vel_right) indica cuantas posiciones desplazaremos el (Puntero_DESPLZ)_
+
 	ld (Puntero_DESPLZ_der),hl 										; _por el índice del Sprite.
 	call Extrae_address
 	ld (Puntero_objeto),hl
@@ -286,6 +283,7 @@ Desplaza_derecha
 	inc hl
 	djnz 2B 													 	
 	ld (Puntero_DESPLZ_izq),hl
+
 8 ret
 
 ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -298,7 +296,7 @@ Desplaza_derecha
 ; 	También incrementa el byte de control de desplazamiento, (desplz. a derecha) y modifica la posición de (Puntero_datas) en función del cuadrante de pantalla en el que nos encontremos.
 ; 	Si el desplazamiento se produce en el 2º o 4º cuadrante, la rutina decrementará (Posicion_actual).
 
-modifica_parametros_1er_DESPLZ_2
+modifica_parametros_1er_DESPLZ_2:
 
 	ld a,(CTRL_DESPLZ)		 		  ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
 	and a
@@ -317,7 +315,7 @@ modifica_parametros_1er_DESPLZ_2
 	ld hl,Posicion_actual 										  ; Incrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _	
 	inc (hl) 													  ; _ cuadrantes 1 y 3 de pantalla.
 
-	call Genera_coordenadas
+;	call Genera_coordenadas
 
 1 call Inc_CTRL_DESPLZ
 
@@ -337,7 +335,7 @@ modifica_parametros_1er_DESPLZ_2
 ;	Borramos la caja de desplazamientos, call Limpia_caja_de_DESPLZ.		 
 
 
-Ciclo_completo
+Ciclo_completo:
 
 	ld a,(CTRL_DESPLZ)
 	cp $ff
@@ -369,16 +367,6 @@ Ciclo_completo
 	ld hl,Posicion_actual                                        ; Incrementamos (Posicion_actual) en los cuadrantes 2º y 4º.
 	inc (hl)
 
-	call Genera_coordenadas
-
-; Inicia el puntero de Sprite.
-
-;2 ld a,(Clase)
-;	cp 4
-;	jr nz,3F
-
-;	ret
-
 3 call Inicia_puntero_objeto_der
 
 	ret
@@ -391,7 +379,7 @@ Ciclo_completo
 ;
 ; 	Desplaza el Sprite (x)Pixels a la izquierda.
 ;
-Mov_left 
+Mov_left:
 
 	ld a,(Ctrl_0)
 	bit 6,a
@@ -451,8 +439,8 @@ Mov_left
 	djnz 5B
 	ld hl,Posicion_actual 											; Incrementamos su posición actual, pués al desplazarlo a la izquierda, volvemos a incrementar el nº de (Columns) y _
 	inc (hl) 														; _ (Posicion_actual) ha pasado de $1f a $1e.
-	call Genera_coordenadas
-	jr 2F 															; Salimos para pintar la nueva posición.
+
+	ret
 
 ; ---------- ---------- ----------
 
@@ -461,22 +449,24 @@ Mov_left
 8 ld hl,(Posicion_actual)
 	call DESPLZ_IZQ
 
-2 ret
+	ret
 
 ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ;	22/9/22
 
-DESPLZ_IZQ 
+DESPLZ_IZQ:
 
 	call Desplaza_izquierda
     call modifica_parametros_1er_DESPLZ
 	call Ciclo_completo_2
+
 	ld hl,Ctrl_0 													; Indica que nos hemos desplazado a la izquierda
 	res 7,(hl)
+
 	ret
 
-Desplaza_izquierda 
+Desplaza_izquierda:
 
 	ld a,(Vel_left)
 	ld b,a
@@ -485,6 +475,7 @@ Desplaza_izquierda
 1 inc hl
 	inc hl
 	djnz 1B 														; Seleccionamos FRAME en función de la velocidad del Sprite.
+
 	ld (Puntero_DESPLZ_izq),hl
 	call Extrae_address
 	ld (Puntero_objeto),hl		
@@ -538,6 +529,7 @@ Desplaza_izquierda
 	inc hl
 	djnz 2B 													 	
 	ld (Puntero_DESPLZ_der),hl
+
 8 ret
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -550,7 +542,7 @@ Desplaza_izquierda
 ; 	También decrementa el byte de control de desplazamiento, (desplz. a izq) y modifica la posición de (Puntero_datas) en función del cuadrante de pantalla en el que nos encontremos.
 ; 	Si el desplazamiento se produce en el 2º o 4º cuadrante, la rutina decrementará (Posicion_actual).
 
-modifica_parametros_1er_DESPLZ
+modifica_parametros_1er_DESPLZ:
 
 	ld a,(CTRL_DESPLZ) 				    ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
 	and a
@@ -569,15 +561,15 @@ modifica_parametros_1er_DESPLZ
 	ld hl,Posicion_actual 									    ; Decrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _
 	dec (hl) 														    ; _ cuadrantes 2 y 4 de pantalla.
 
-	call Genera_coordenadas
-
 1 call Dec_CTRL_DESPLZ
 
 	ret
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Ciclo_completo_2 ld a,(CTRL_DESPLZ)
+Ciclo_completo_2
+
+	ld a,(CTRL_DESPLZ)
 	cp $f7
 	jr z,1F 												   		; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
 	ret nc
@@ -609,8 +601,6 @@ Ciclo_completo_2 ld a,(CTRL_DESPLZ)
 	ld hl,Posicion_actual                                         ; Decrementamos (Posicion_actual) en los cuadrantes 1º y 3º.
 	dec (hl)
 
-	call Genera_coordenadas
-
 ; Inicia (Puntero_DESPLZ_izq) y (Puntero_objeto).
 
 2 call Inicia_puntero_objeto_izq 
@@ -624,8 +614,11 @@ Ciclo_completo_2 ld a,(CTRL_DESPLZ)
 ;	(cp 29) para un Amadeus de 3 Columns.
 ;	(cp 30)   ""  ""    ""     2 Columns.
 
-Stop_Amadeus_right ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.							
+Stop_Amadeus_right:
+
+	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
 	cp 30																			 ; Hemos llegado al límite derecho de la pantalla??.
+
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
@@ -635,8 +628,11 @@ Stop_Amadeus_right ld a,(Coordenada_X)	 	  										 ; Posición horizontal de 
 ;	(cp 2) para un Amadeus de 3 Columns.
 ;	(cp 1)   ""  ""    ""     2 Columns.
 
-Stop_Amadeus_left ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.							
+Stop_Amadeus_left:
+
+	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
 	cp 1																			 ; Hemos llegado al límite izquierdo de la pantalla??. 
+
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
@@ -648,7 +644,7 @@ Stop_Amadeus_left ld a,(Coordenada_X)	 	  										 ; Posición horizontal de A
 ;
 ;   Incrementa el valor del byte de control, (CTRL_DESPLZ) en función del nº de veces que hayamos desplazado el objeto, (Vel_right).	
 
-Inc_CTRL_DESPLZ
+Inc_CTRL_DESPLZ:
 
 	ld hl,CTRL_DESPLZ
 	ld a,(Vel_right)
@@ -657,18 +653,13 @@ Inc_CTRL_DESPLZ
 
 	ld b,a
 
-; 	Badplate (*2 px).
-
-;	ld a,(Clase)
-;	cp 4
-;	jr nz,3F
-;	rl b
-
 3 inc (hl)
 	djnz 3B
+
 	ret
 
 1 inc (hl)
+
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
@@ -680,49 +671,58 @@ Inc_CTRL_DESPLZ
 ;
 ;   Decrementa el valor del byte de control, (CTRL_DESPLZ) en función del nº de veces que hayamos desplazado el objeto, (Vel_right).	
 
-Dec_CTRL_DESPLZ ld hl,CTRL_DESPLZ													
+Dec_CTRL_DESPLZ:
+
+	ld hl,CTRL_DESPLZ
 	ld a,(Vel_left)
 	and a
 	jr z,1F
 	ld b,a
 3 dec (hl)	 								 						 
 	djnz 3B
-	jr 2F
+
+	ret
+
 1 dec (hl)
-2 ret
+
+	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
 ;
 ;	25/02/25
 
-Reaparece_derecha 
+Reaparece_derecha:
 
 	ld a,(Posicion_actual)	 					
 	add $1f
 	ld (Posicion_actual),a
-	ld hl,Ctrl_0														
+
+	ld hl,Ctrl_0
 	set 0,(hl)
 	set 5,(hl)
+
 	ld hl,(Posicion_actual)
 	call Calcula_Cuad_objeto
-	call Genera_coordenadas
+
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
 ;
 ;	25/02/25
 
-Reaparece_izquierda 
+Reaparece_izquierda:
 
 	ld a,(Posicion_actual)	 					
 	sub $1f
 	ld (Posicion_actual),a 											
+
 	ld hl,Ctrl_0
 	set 1,(hl)
 	set 5,(hl)
+
 	ld hl,(Posicion_actual)
 	call Calcula_Cuad_objeto
-	call Genera_coordenadas
+
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
@@ -730,42 +730,52 @@ Reaparece_izquierda
 ;	25/02/25
 
 
-Reaparece_abajo inc h
+Reaparece_abajo:
+
+	inc h
+
 	ld bc,$17e0
 	and a
 	adc hl,bc
+
 	ld (Posicion_actual),hl
 	call Calcula_Cuad_objeto
-	call Genera_coordenadas
+
 	ld hl,Ctrl_0
 	set 2,(hl)
 	set 5,(hl)
+
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
 ;
 ;	25/02/25
 
-Reaparece_arriba ld bc,$17e0
+Reaparece_arriba:
+
+	ld bc,$17e0
 	and a
 	sbc hl,bc
+
 	ld (Posicion_actual),hl
 	call Calcula_Cuad_objeto
-	call Genera_coordenadas
+
 	ld hl,Ctrl_0
 	set 3,(hl)
 	set 5,(hl)
+
 	ret
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ;	15/07/23
 
-Reinicio 
+Reinicio:
 
 ; Vamos a reiniciar los punteros y variables de movimiento.
 
 	xor a
+
 	ld hl,Puntero_indice_mov_bucle
 	call Limpia_contenido_hl
 
@@ -786,7 +796,7 @@ Reinicio
 
 	ret
 
-Limpia_contenido_hl	
+Limpia_contenido_hl:
 
 	ld (hl),a
 	inc hl
@@ -799,7 +809,7 @@ Limpia_contenido_hl
 ;	18/6/24
 ;
 
-Amadeus_a_izquierda
+Amadeus_a_izquierda:
 
 ;	Actualiza contador de movimientos.
 
@@ -808,10 +818,12 @@ Amadeus_a_izquierda
 	jr z,1F 								; 	Estamos en el extremo izquierdo de la pantalla.
 
 	ld hl,(Pamm_Amadeus)					;	Actualiza variable de 16 bits.
+
 	dec hl
 	dec hl
 	dec hl
 	dec hl		
+
 	ld (Pamm_Amadeus),hl					;	Actualiza variable de 8 bits.
 
 	ld hl,Ctrl_3
@@ -823,26 +835,32 @@ Amadeus_a_izquierda
 	ret
 
 
-Amadeus_a_derecha
+Amadeus_a_derecha:
 
 ;	Actualiza contador de movimientos.
 
 	ld hl,Comm_Amadeus
 	inc (hl)
+
 	ld a,$7a
 	cp (hl)
 	jr z,1F									; 	Estamos en el extremo derecho de la pantalla.
 
 	ld hl,(Pamm_Amadeus)					;	Actualiza variable de 16 bits.
+
 	inc hl
 	inc hl
 	inc hl
 	inc hl		
+
 	ld (Pamm_Amadeus),hl					;	Actualiza variable de 8 bits.
 
 	ld hl,Ctrl_3
 	set 5,(hl)
+
 	ret
 
 1 dec (hl)									; 	Salimos. No hay movimiento. No pintamos la nave.
+
 	ret
+

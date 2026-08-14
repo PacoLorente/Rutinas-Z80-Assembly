@@ -22,7 +22,7 @@ Inicializacion:
 	ld (Posicion_actual),hl
 
 	call Calcula_Cuad_objeto
-	call Genera_coordenadas
+;	call Genera_coordenadas
 	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
 
 	jr 3F
