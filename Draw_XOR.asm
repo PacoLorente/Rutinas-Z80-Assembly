@@ -22,7 +22,8 @@ Inicializacion:
 	ld (Posicion_actual),hl
 
 	call Calcula_Cuad_objeto
-	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
+
+	call Inicia_Puntero_mov 									; Inicializa (Puntero_mov) y lo coloca en el 1er mov. de su danza.
 
 	jr 3F
 
