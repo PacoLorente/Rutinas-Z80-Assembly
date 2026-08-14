@@ -12006,668 +12006,668 @@
   22+ B3B0 22 11 94     	ld (Posicion_actual),hl
   23+ B3B3
   24+ B3B3 CD D7 B3     	call Calcula_Cuad_objeto
-  25+ B3B6              ;	call Genera_coordenadas
-  26+ B3B6 CD EA B9     	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
-  27+ B3B9
-  28+ B3B9 18 0D        	jr 3F
-  29+ B3BB
-  30+ B3BB              Entidad_iniciada:
-  31+ B3BB
-  32+ B3BB 3A 0E 94     	ld a,(Ctrl_0)
-  33+ B3BE CB 6F        	bit 5,a
-  34+ B3C0 20 06        	jr nz,3F
-  35+ B3C2              ;
-  36+ B3C2 CD 16 B4     	call Comprueba_limite_horizontal
-  37+ B3C5 CD 56 B4     	call Comprueba_limite_vertical
-  38+ B3C8
-  39+ B3C8              ; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A´.
+  25+ B3B6 CD EA B9     	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
+  26+ B3B9
+  27+ B3B9 18 0D        	jr 3F
+  28+ B3BB
+  29+ B3BB              Entidad_iniciada:
+  30+ B3BB
+  31+ B3BB 3A 0E 94     	ld a,(Ctrl_0)
+  32+ B3BE CB 6F        	bit 5,a
+  33+ B3C0 20 06        	jr nz,3F
+  34+ B3C2              ;
+  35+ B3C2 CD 16 B4     	call Comprueba_limite_horizontal
+  36+ B3C5 CD 56 B4     	call Comprueba_limite_vertical
+  37+ B3C8
+  38+ B3C8              ; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A´.
+  39+ B3C8              ; -----------------------
   40+ B3C8              ; -----------------------
   41+ B3C8              ; -----------------------
-  42+ B3C8              ; -----------------------
-  43+ B3C8
-  44+ B3C8 CD 1B B5     3 call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
-  45+ B3CB CD 3F B5     	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
-  46+ B3CE
-  47+ B3CE 3A 0E 94     	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
-  48+ B3D1 E6 D0        	and $d0
-  49+ B3D3 32 0E 94     	ld (Ctrl_0),a
-  50+ B3D6
-  51+ B3D6 C9           	ret
-  52+ B3D7
-  53+ B3D7              ; *******************************************************************************************************************************************************************************************
-  54+ B3D7              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  55+ B3D7              ;
-  56+ B3D7              ;   14/02/25
-  57+ B3D7              ;
-  58+ B3D7              ;	Calcula el cuadrante de pantalla donde se encuentra la entidad: (Cuad_objeto), "1", "2", "3" o "4".
-  59+ B3D7              ;	Esta información es necesaria para poder calcular el (Puntero_de_impresion) de la entidad.
-  60+ B3D7              ;
-  61+ B3D7              ;	INPUT:  HL contiene (Posicion_actual).
-  62+ B3D7              ;	OUTPUT: (Cuad_objeto) y A contienen "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.
-  63+ B3D7              ;
-  64+ B3D7              ;	MODIFY: A.
+  42+ B3C8
+  43+ B3C8 CD 1B B5     3 call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+  44+ B3CB CD 3F B5     	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
+  45+ B3CE
+  46+ B3CE 3A 0E 94     	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
+  47+ B3D1 E6 D0        	and $d0
+  48+ B3D3 32 0E 94     	ld (Ctrl_0),a
+  49+ B3D6
+  50+ B3D6 C9           	ret
+  51+ B3D7
+  52+ B3D7              ; *******************************************************************************************************************************************************************************************
+  53+ B3D7              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  54+ B3D7              ;
+  55+ B3D7              ;   14/02/25
+  56+ B3D7              ;
+  57+ B3D7              ;	Calcula el cuadrante de pantalla donde se encuentra la entidad: (Cuad_objeto), "1", "2", "3" o "4".
+  58+ B3D7              ;	Esta información es necesaria para poder calcular el (Puntero_de_impresion) de la entidad.
+  59+ B3D7              ;
+  60+ B3D7              ;	INPUT:  HL contiene (Posicion_actual).
+  61+ B3D7              ;	OUTPUT: (Cuad_objeto) y A contienen "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.
+  62+ B3D7              ;
+  63+ B3D7              ;	MODIFY: A.
+  64+ B3D7
   65+ B3D7
-  66+ B3D7
-  67+ B3D7              Calcula_Cuad_objeto:
-  68+ B3D7
-  69+ B3D7 CD 71 A7     	call calcula_tercio
-  70+ B3DA
-  71+ B3DA              ;	Ahora tenemos "0", "1" o "2" en el acumulador en función del tercio de pantalla en el que nos encontremos.
-  72+ B3DA
-  73+ B3DA 28 14        	jr z,Primer_tercio
-  74+ B3DC
-  75+ B3DC 3D           	dec a
-  76+ B3DD
-  77+ B3DD 28 22        	jr z,Segundo_tercio
-  78+ B3DF
-  79+ B3DF              Tercer_tercio:
-  80+ B3DF
-  81+ B3DF CD 0A B4     	call Determina_lado_de_pantalla
-  82+ B3E2
-  83+ B3E2 20 06        	jr nz,1F
-  84+ B3E4
-  85+ B3E4 3E 04        	ld a,4
-  86+ B3E6 32 20 94     	ld (Cuad_objeto),a
-  87+ B3E9
-  88+ B3E9 C9           	ret
-  89+ B3EA
-  90+ B3EA 3E 03        1 ld a,3
-  91+ B3EC 32 20 94     	ld (Cuad_objeto),a
-  92+ B3EF
-  93+ B3EF C9           	ret
-  94+ B3F0
-  95+ B3F0              Primer_tercio:
-  96+ B3F0
-  97+ B3F0 CD 0A B4     	call Determina_lado_de_pantalla
-  98+ B3F3
-  99+ B3F3 20 06        	jr nz,3F
- 100+ B3F5
- 101+ B3F5 3E 02        	ld a,2
- 102+ B3F7 32 20 94     	ld (Cuad_objeto),a
- 103+ B3FA
- 104+ B3FA C9           	ret
- 105+ B3FB
- 106+ B3FB 3E 01        3 ld a,1
- 107+ B3FD 32 20 94     	ld (Cuad_objeto),a
- 108+ B400
- 109+ B400 C9           	ret
- 110+ B401
- 111+ B401              Segundo_tercio:
- 112+ B401
- 113+ B401 7D           	ld a,l
- 114+ B402 FE 7F        	cp $7f
- 115+ B404 38 EA        	jr c,Primer_tercio
- 116+ B406 28 E8        	jr z,Primer_tercio
- 117+ B408
- 118+ B408 18 D5        	jr Tercer_tercio
- 119+ B40A
- 120+ B40A              ; ------------------------------------
- 121+ B40A              ;
- 122+ B40A              ;	OUTPUT: A contiene "0" si estamos en la mitad derecha de la pantalla y "1" si estamos en la mitad izquierda.
- 123+ B40A              ;
- 124+ B40A
- 125+ B40A              Determina_lado_de_pantalla:
- 126+ B40A
- 127+ B40A 7D           	ld a,l
- 128+ B40B E6 1F        	and $1f
- 129+ B40D FE 10        	cp $10
- 130+ B40F 38 02        	jr c,1F
- 131+ B411
- 132+ B411 AF           	xor a
- 133+ B412
- 134+ B412 C9           	ret
- 135+ B413
- 136+ B413 3E 01        1 ld a,1
- 137+ B415
- 138+ B415 C9           	ret
- 139+ B416
- 140+ B416              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- 141+ B416              ;
- 142+ B416              ;	25/02/25
- 143+ B416              ;
- 144+ B416              ; 	Comprueba_limite_horizontal.
- 145+ B416              ;
- 146+ B416              ;	INPUT: HL contiene (Posicion_actual).
- 147+ B416
- 148+ B416              Comprueba_limite_horizontal:
- 149+ B416
- 150+ B416 1E 00        	ld e,0											; Inicializamos E.
- 151+ B418
- 152+ B418              ;	Exclusiones !!!
- 153+ B418
- 154+ B418 CD 71 A7     	call calcula_tercio  							; RET cuando no estamos en el centro de la pantalla, (2º tercio).
- 155+ B41B C8           	ret z
- 156+ B41C
- 157+ B41C 3D           	dec a
- 158+ B41D 3D           	dec a
- 159+ B41E C8           	ret z
- 160+ B41F
- 161+ B41F              ; ----------------------------------- Comprobamos límite.
- 162+ B41F
- 163+ B41F              ;	HL (Posicion_actual).
- 164+ B41F              ;	E=0
- 165+ B41F
- 166+ B41F 3A 20 94     	ld a,(Cuad_objeto)
- 167+ B422 FE 02        	cp 2
- 168+ B424 28 19        	jr z,1F
- 169+ B426 38 17        	jr c,1F
- 170+ B428
- 171+ B428              ;	Nos encontramos en la parte INFERIOR de la pantalla.
- 172+ B428              ;	En este caso superamos el CENTRO de la pantalla cuando L < $80
- 173+ B428
- 174+ B428 3E 7F        	ld a,$7f
- 175+ B42A 95           	sub l
- 176+ B42B D8           	ret c			 								; RET no hemos llegado al centro de la pantalla, E=0.
- 177+ B42C
- 178+ B42C 1E 02        	ld e,2											; Zona NEBULOSA que no es poca cosa.
- 179+ B42E
- 180+ B42E 3E 3F        	ld a,$3f 										; (Limite_horizontal) = "$3f".
- 181+ B430 95           	sub l
- 182+ B431 D8           	ret c											; RET con E=2.
- 183+ B432
- 184+ B432 CD B7 B4     	call Modificaccionne
- 185+ B435
- 186+ B435 3A 20 94     	ld a,(Cuad_objeto)
- 187+ B438 3C           	inc a
- 188+ B439 3C           	inc a
- 189+ B43A 32 20 94     	ld (Cuad_objeto),a
- 190+ B43D
- 191+ B43D 1D           	dec e
- 192+ B43E
- 193+ B43E C9           	ret												; RET con E=1.
- 194+ B43F
- 195+ B43F              ;	Nos encontramos en la parte SUPERIOR de la pantalla.
- 196+ B43F              ;	En este caso superamos el CENTRO de la pantalla cuando L => $80.
- 197+ B43F
- 198+ B43F 3E 80        1 ld a,$80
- 199+ B441 95           	sub l
- 200+ B442 D0           	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
- 201+ B443
- 202+ B443 1E 02        	ld e,2											; Zona NEBULOSA que no es poca cosa.
- 203+ B445
- 204+ B445              ;
- 205+ B445 3E C0        	ld a,$c0 				 						; (Limite_horizontal) = "$c0".
- 206+ B447 95           	sub l
- 207+ B448 D0           	ret nc 											; RET Estamos en zona nebulosa horizontal, no hemos superado (Limite_horizontal). E=2.
- 208+ B449
- 209+ B449 CD B7 B4     	call Modificaccionne
- 210+ B44C
- 211+ B44C 3A 20 94     	ld a,(Cuad_objeto)
- 212+ B44F 3D           	dec a
- 213+ B450 3D           	dec a
- 214+ B451 32 20 94     	ld (Cuad_objeto),a
- 215+ B454
- 216+ B454 1D           	dec e 											; Hemos modificado (Posicion_actual) debido a que hemos superado el (Limite_horizontal). E=1.
- 217+ B455
- 218+ B455 C9           	ret
- 219+ B456
- 220+ B456              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- 221+ B456              ;
- 222+ B456              ;   13/3/25
- 223+ B456              ;
- 224+ B456              ;	Comprueba_limite_vertical
- 225+ B456              ;
- 226+ B456              ;	Modifica el registro L del puntero de pantalla cuando se sobrepasa la columna límite, (Limite2).
- 227+ B456              ;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L.
- 228+ B456              ;
- 229+ B456              ;	INPUT: HL contiene (Posicion_actual).
- 230+ B456
- 231+ B456              Comprueba_limite_vertical:
- 232+ B456
- 233+ B456 3A 20 94     	ld a,(Cuad_objeto)
- 234+ B459 E6 01        	and 1
- 235+ B45B 28 19        	jr z,2F
- 236+ B45D
- 237+ B45D              ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
- 238+ B45D              ;	-----------------------------------------------------
- 239+ B45D
- 240+ B45D 3E 13        	ld a,$13
- 241+ B45F 32 22 94     	ld (Limite_vertical),a
- 242+ B462
- 243+ B462 CD 97 B4     	call Comprobacion
- 244+ B465 30 39        	jr nc,Comprueba_centro_vertical_izquierdo
- 245+ B467
- 246+ B467              ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
- 247+ B467              ;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
- 248+ B467
- 249+ B467 0D           	dec c											; (Columns-1) en C.
- 250+ B468 7D           	ld a,l
- 251+ B469 91           	sub c
- 252+ B46A 32 11 94     	ld (Posicion_actual),a
- 253+ B46D
- 254+ B46D 3A 20 94     	ld a,(Cuad_objeto)
- 255+ B470 3C           	inc a
- 256+ B471 32 20 94     	ld (Cuad_objeto),a
- 257+ B474
- 258+ B474 18 17        	jr Consulta_E
- 259+ B476
- 260+ B476              ;	Nos encontramos en la parte DERECHA de la pantalla.
- 261+ B476              ;	-----------------------------------------------------
- 262+ B476
- 263+ B476 3E 0C        2 ld a,$0c
- 264+ B478 32 22 94     	ld (Limite_vertical),a
- 265+ B47B
- 266+ B47B CD 97 B4     	call Comprobacion
- 267+ B47E 38 26        	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
- 268+ B480
- 269+ B480              ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
- 270+ B480              ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
- 271+ B480
- 272+ B480 0D           	dec c											; (Columns-1) en C.
- 273+ B481 7D           	ld a,l
- 274+ B482 81           	add c
- 275+ B483 32 11 94     	ld (Posicion_actual),a
- 276+ B486
- 277+ B486 3A 20 94     	ld a,(Cuad_objeto)
- 278+ B489 3D           	dec a
- 279+ B48A 32 20 94     	ld (Cuad_objeto),a
- 280+ B48D
- 281+ B48D              ;	Consultamos E.
- 282+ B48D
- 283+ B48D              Consulta_E
- 284+ B48D
- 285+ B48D 1D           	dec e
- 286+ B48E 1D           	dec e
- 287+ B48F C8           	ret z
- 288+ B490
- 289+ B490 CD D7 B3     	call Calcula_Cuad_objeto
- 290+ B493 CD 98 A7     	call Genera_coordenadas
- 291+ B496
- 292+ B496 C9           	ret
- 293+ B497
- 294+ B497              ; ----- ----- ----- ----- -----
- 295+ B497
- 296+ B497 7D           Comprobacion ld a,l
- 297+ B498 E6 1F        	and $1f
- 298+ B49A 57           	ld d,a
- 299+ B49B 3A 22 94     	ld a,(Limite_vertical)
- 300+ B49E 92           	sub d
- 301+ B49F C9           	ret
- 302+ B4A0
- 303+ B4A0 3E 10        Comprueba_centro_vertical_izquierdo ld a,$10
- 304+ B4A2 92           	sub d
- 305+ B4A3 30 07        	jr nc,Centro_no_alcanzado
- 306+ B4A5 C9           	ret
- 307+ B4A6
- 308+ B4A6 3E 0F        Comprueba_centro_vertical_derecho ld a,$0f
- 309+ B4A8 92           	sub d
- 310+ B4A9 38 01        	jr c,Centro_no_alcanzado
- 311+ B4AB C9           	ret
- 312+ B4AC
- 313+ B4AC              Centro_no_alcanzado
- 314+ B4AC
- 315+ B4AC              ;	No hemos alcanzado el centro de la pantalla.
- 316+ B4AC              ;	Consultamos E.
- 317+ B4AC
- 318+ B4AC 7B           	ld a,e
- 319+ B4AD E6 01        	and 1
- 320+ B4AF C8           	ret z
- 321+ B4B0
- 322+ B4B0 CD D7 B3     	call Calcula_Cuad_objeto
- 323+ B4B3 CD 98 A7     	call Genera_coordenadas
- 324+ B4B6 C9           	ret
- 325+ B4B7
- 326+ B4B7              ; --------------------------------------------------------------------------
- 327+ B4B7              ;
- 328+ B4B7              ;	13/3/25
- 329+ B4B7              ;
- 330+ B4B7              ;	Modifica (Posicion_actual).
- 331+ B4B7              ;
- 332+ B4B7              ;	En función de la mitad de pantalla de la que partamos:
- 333+ B4B7              ;
- 334+ B4B7              ;	CALL [Modifica_Pos_actual], si partimos de la mitad superior de la pantalla.
- 335+ B4B7              ;	CALL [Modifica_Pos_actual2], si partimos de la mitad inferior de la pantalla.
- 336+ B4B7              ;
- 337+ B4B7              ;	INPUTS: HL contiene (Posicion_actual).
- 338+ B4B7              ;	OUTPUT: Actualiza (Posicion_actual).
- 339+ B4B7              ;	MODIFY: A y HL.
+  66+ B3D7              Calcula_Cuad_objeto:
+  67+ B3D7
+  68+ B3D7 CD 71 A7     	call calcula_tercio
+  69+ B3DA
+  70+ B3DA              ;	Ahora tenemos "0", "1" o "2" en el acumulador en función del tercio de pantalla en el que nos encontremos.
+  71+ B3DA
+  72+ B3DA 28 14        	jr z,Primer_tercio
+  73+ B3DC
+  74+ B3DC 3D           	dec a
+  75+ B3DD
+  76+ B3DD 28 22        	jr z,Segundo_tercio
+  77+ B3DF
+  78+ B3DF              Tercer_tercio:
+  79+ B3DF
+  80+ B3DF CD 0A B4     	call Determina_lado_de_pantalla
+  81+ B3E2
+  82+ B3E2 20 06        	jr nz,1F
+  83+ B3E4
+  84+ B3E4 3E 04        	ld a,4
+  85+ B3E6 32 20 94     	ld (Cuad_objeto),a
+  86+ B3E9
+  87+ B3E9 C9           	ret
+  88+ B3EA
+  89+ B3EA 3E 03        1 ld a,3
+  90+ B3EC 32 20 94     	ld (Cuad_objeto),a
+  91+ B3EF
+  92+ B3EF C9           	ret
+  93+ B3F0
+  94+ B3F0              Primer_tercio:
+  95+ B3F0
+  96+ B3F0 CD 0A B4     	call Determina_lado_de_pantalla
+  97+ B3F3
+  98+ B3F3 20 06        	jr nz,3F
+  99+ B3F5
+ 100+ B3F5 3E 02        	ld a,2
+ 101+ B3F7 32 20 94     	ld (Cuad_objeto),a
+ 102+ B3FA
+ 103+ B3FA C9           	ret
+ 104+ B3FB
+ 105+ B3FB 3E 01        3 ld a,1
+ 106+ B3FD 32 20 94     	ld (Cuad_objeto),a
+ 107+ B400
+ 108+ B400 C9           	ret
+ 109+ B401
+ 110+ B401              Segundo_tercio:
+ 111+ B401
+ 112+ B401 7D           	ld a,l
+ 113+ B402 FE 7F        	cp $7f
+ 114+ B404 38 EA        	jr c,Primer_tercio
+ 115+ B406 28 E8        	jr z,Primer_tercio
+ 116+ B408
+ 117+ B408 18 D5        	jr Tercer_tercio
+ 118+ B40A
+ 119+ B40A              ; ------------------------------------
+ 120+ B40A              ;
+ 121+ B40A              ;	OUTPUT: A contiene "0" si estamos en la mitad derecha de la pantalla y "1" si estamos en la mitad izquierda.
+ 122+ B40A              ;
+ 123+ B40A
+ 124+ B40A              Determina_lado_de_pantalla:
+ 125+ B40A
+ 126+ B40A 7D           	ld a,l
+ 127+ B40B E6 1F        	and $1f
+ 128+ B40D FE 10        	cp $10
+ 129+ B40F 38 02        	jr c,1F
+ 130+ B411
+ 131+ B411 AF           	xor a
+ 132+ B412
+ 133+ B412 C9           	ret
+ 134+ B413
+ 135+ B413 3E 01        1 ld a,1
+ 136+ B415
+ 137+ B415 C9           	ret
+ 138+ B416
+ 139+ B416              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 140+ B416              ;
+ 141+ B416              ;	25/02/25
+ 142+ B416              ;
+ 143+ B416              ; 	Comprueba_limite_horizontal.
+ 144+ B416              ;
+ 145+ B416              ;	INPUT: HL contiene (Posicion_actual).
+ 146+ B416
+ 147+ B416              Comprueba_limite_horizontal:
+ 148+ B416
+ 149+ B416 1E 00        	ld e,0											; Inicializamos E.
+ 150+ B418
+ 151+ B418              ;	Exclusiones !!!
+ 152+ B418
+ 153+ B418 CD 71 A7     	call calcula_tercio  							; RET cuando no estamos en el centro de la pantalla, (2º tercio).
+ 154+ B41B C8           	ret z
+ 155+ B41C
+ 156+ B41C 3D           	dec a
+ 157+ B41D 3D           	dec a
+ 158+ B41E C8           	ret z
+ 159+ B41F
+ 160+ B41F              ; ----------------------------------- Comprobamos límite.
+ 161+ B41F
+ 162+ B41F              ;	HL (Posicion_actual).
+ 163+ B41F              ;	E=0
+ 164+ B41F
+ 165+ B41F 3A 20 94     	ld a,(Cuad_objeto)
+ 166+ B422 FE 02        	cp 2
+ 167+ B424 28 19        	jr z,1F
+ 168+ B426 38 17        	jr c,1F
+ 169+ B428
+ 170+ B428              ;	Nos encontramos en la parte INFERIOR de la pantalla.
+ 171+ B428              ;	En este caso superamos el CENTRO de la pantalla cuando L < $80
+ 172+ B428
+ 173+ B428 3E 7F        	ld a,$7f
+ 174+ B42A 95           	sub l
+ 175+ B42B D8           	ret c			 								; RET no hemos llegado al centro de la pantalla, E=0.
+ 176+ B42C
+ 177+ B42C 1E 02        	ld e,2											; Zona NEBULOSA que no es poca cosa.
+ 178+ B42E
+ 179+ B42E 3E 3F        	ld a,$3f 										; (Limite_horizontal) = "$3f".
+ 180+ B430 95           	sub l
+ 181+ B431 D8           	ret c											; RET con E=2.
+ 182+ B432
+ 183+ B432 CD B7 B4     	call Modificaccionne
+ 184+ B435
+ 185+ B435 3A 20 94     	ld a,(Cuad_objeto)
+ 186+ B438 3C           	inc a
+ 187+ B439 3C           	inc a
+ 188+ B43A 32 20 94     	ld (Cuad_objeto),a
+ 189+ B43D
+ 190+ B43D 1D           	dec e
+ 191+ B43E
+ 192+ B43E C9           	ret												; RET con E=1.
+ 193+ B43F
+ 194+ B43F              ;	Nos encontramos en la parte SUPERIOR de la pantalla.
+ 195+ B43F              ;	En este caso superamos el CENTRO de la pantalla cuando L => $80.
+ 196+ B43F
+ 197+ B43F 3E 80        1 ld a,$80
+ 198+ B441 95           	sub l
+ 199+ B442 D0           	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
+ 200+ B443
+ 201+ B443 1E 02        	ld e,2											; Zona NEBULOSA que no es poca cosa.
+ 202+ B445
+ 203+ B445              ;
+ 204+ B445 3E C0        	ld a,$c0 				 						; (Limite_horizontal) = "$c0".
+ 205+ B447 95           	sub l
+ 206+ B448 D0           	ret nc 											; RET Estamos en zona nebulosa horizontal, no hemos superado (Limite_horizontal). E=2.
+ 207+ B449
+ 208+ B449 CD B7 B4     	call Modificaccionne
+ 209+ B44C
+ 210+ B44C 3A 20 94     	ld a,(Cuad_objeto)
+ 211+ B44F 3D           	dec a
+ 212+ B450 3D           	dec a
+ 213+ B451 32 20 94     	ld (Cuad_objeto),a
+ 214+ B454
+ 215+ B454 1D           	dec e 											; Hemos modificado (Posicion_actual) debido a que hemos superado el (Limite_horizontal). E=1.
+ 216+ B455
+ 217+ B455 C9           	ret
+ 218+ B456
+ 219+ B456              ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 220+ B456              ;
+ 221+ B456              ;   13/3/25
+ 222+ B456              ;
+ 223+ B456              ;	Comprueba_limite_vertical
+ 224+ B456              ;
+ 225+ B456              ;	Modifica el registro L del puntero de pantalla cuando se sobrepasa la columna límite, (Limite2).
+ 226+ B456              ;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L.
+ 227+ B456              ;
+ 228+ B456              ;	INPUT: HL contiene (Posicion_actual).
+ 229+ B456
+ 230+ B456              Comprueba_limite_vertical:
+ 231+ B456
+ 232+ B456 3A 20 94     	ld a,(Cuad_objeto)
+ 233+ B459 E6 01        	and 1
+ 234+ B45B 28 19        	jr z,2F
+ 235+ B45D
+ 236+ B45D              ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
+ 237+ B45D              ;	-----------------------------------------------------
+ 238+ B45D
+ 239+ B45D 3E 13        	ld a,$13
+ 240+ B45F 32 22 94     	ld (Limite_vertical),a
+ 241+ B462
+ 242+ B462 CD 97 B4     	call Comprobacion
+ 243+ B465 30 39        	jr nc,Comprueba_centro_vertical_izquierdo
+ 244+ B467
+ 245+ B467              ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
+ 246+ B467              ;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
+ 247+ B467
+ 248+ B467 0D           	dec c											; (Columns-1) en C.
+ 249+ B468 7D           	ld a,l
+ 250+ B469 91           	sub c
+ 251+ B46A 32 11 94     	ld (Posicion_actual),a
+ 252+ B46D
+ 253+ B46D 3A 20 94     	ld a,(Cuad_objeto)
+ 254+ B470 3C           	inc a
+ 255+ B471 32 20 94     	ld (Cuad_objeto),a
+ 256+ B474
+ 257+ B474 18 17        	jr Consulta_E
+ 258+ B476
+ 259+ B476              ;	Nos encontramos en la parte DERECHA de la pantalla.
+ 260+ B476              ;	-----------------------------------------------------
+ 261+ B476
+ 262+ B476 3E 0C        2 ld a,$0c
+ 263+ B478 32 22 94     	ld (Limite_vertical),a
+ 264+ B47B
+ 265+ B47B CD 97 B4     	call Comprobacion
+ 266+ B47E 38 26        	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
+ 267+ B480
+ 268+ B480              ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
+ 269+ B480              ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
+ 270+ B480
+ 271+ B480 0D           	dec c											; (Columns-1) en C.
+ 272+ B481 7D           	ld a,l
+ 273+ B482 81           	add c
+ 274+ B483 32 11 94     	ld (Posicion_actual),a
+ 275+ B486
+ 276+ B486 3A 20 94     	ld a,(Cuad_objeto)
+ 277+ B489 3D           	dec a
+ 278+ B48A 32 20 94     	ld (Cuad_objeto),a
+ 279+ B48D
+ 280+ B48D              ;	Consultamos E.
+ 281+ B48D
+ 282+ B48D              Consulta_E
+ 283+ B48D
+ 284+ B48D 1D           	dec e
+ 285+ B48E 1D           	dec e
+ 286+ B48F C8           	ret z
+ 287+ B490
+ 288+ B490 CD D7 B3     	call Calcula_Cuad_objeto
+ 289+ B493 CD 98 A7     	call Genera_coordenadas
+ 290+ B496
+ 291+ B496 C9           	ret
+ 292+ B497
+ 293+ B497              ; ----- ----- ----- ----- -----
+ 294+ B497
+ 295+ B497 7D           Comprobacion ld a,l
+ 296+ B498 E6 1F        	and $1f
+ 297+ B49A 57           	ld d,a
+ 298+ B49B 3A 22 94     	ld a,(Limite_vertical)
+ 299+ B49E 92           	sub d
+ 300+ B49F C9           	ret
+ 301+ B4A0
+ 302+ B4A0 3E 10        Comprueba_centro_vertical_izquierdo ld a,$10
+ 303+ B4A2 92           	sub d
+ 304+ B4A3 30 07        	jr nc,Centro_no_alcanzado
+ 305+ B4A5 C9           	ret
+ 306+ B4A6
+ 307+ B4A6 3E 0F        Comprueba_centro_vertical_derecho ld a,$0f
+ 308+ B4A8 92           	sub d
+ 309+ B4A9 38 01        	jr c,Centro_no_alcanzado
+ 310+ B4AB C9           	ret
+ 311+ B4AC
+ 312+ B4AC              Centro_no_alcanzado
+ 313+ B4AC
+ 314+ B4AC              ;	No hemos alcanzado el centro de la pantalla.
+ 315+ B4AC              ;	Consultamos E.
+ 316+ B4AC
+ 317+ B4AC 7B           	ld a,e
+ 318+ B4AD E6 01        	and 1
+ 319+ B4AF C8           	ret z
+ 320+ B4B0
+ 321+ B4B0 CD D7 B3     	call Calcula_Cuad_objeto
+ 322+ B4B3 CD 98 A7     	call Genera_coordenadas
+ 323+ B4B6 C9           	ret
+ 324+ B4B7
+ 325+ B4B7              ; --------------------------------------------------------------------------
+ 326+ B4B7              ;
+ 327+ B4B7              ;	13/3/25
+ 328+ B4B7              ;
+ 329+ B4B7              ;	Modifica (Posicion_actual).
+ 330+ B4B7              ;
+ 331+ B4B7              ;	En función de la mitad de pantalla de la que partamos:
+ 332+ B4B7              ;
+ 333+ B4B7              ;	CALL [Modifica_Pos_actual], si partimos de la mitad superior de la pantalla.
+ 334+ B4B7              ;	CALL [Modifica_Pos_actual2], si partimos de la mitad inferior de la pantalla.
+ 335+ B4B7              ;
+ 336+ B4B7              ;	INPUTS: HL contiene (Posicion_actual).
+ 337+ B4B7              ;	OUTPUT: Actualiza (Posicion_actual).
+ 338+ B4B7              ;	MODIFY: A y HL.
+ 339+ B4B7
  340+ B4B7
  341+ B4B7
- 342+ B4B7
- 343+ B4B7              Modificaccionne:
- 344+ B4B7
- 345+ B4B7 3A 20 94     	ld a,(Cuad_objeto)
- 346+ B4BA FE 02        	cp 2
- 347+ B4BC CC C8 B4         call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
- 348+ B4BF C8               ret z
- 349+ B4C0 DC C8 B4         call c,Modifica_Pos_actual
- 350+ B4C3 C8           	ret z
- 351+ B4C4 CD D4 B4         call Modifica_Pos_actual2
- 352+ B4C7 C9               ret
- 353+ B4C8
- 354+ B4C8 06 0F        Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
- 355+ B4CA CD B8 B5     1 call PreviousScan
- 356+ B4CD 10 FB        	djnz 1B
- 357+ B4CF 22 11 94     	ld (Posicion_actual),hl
- 358+ B4D2 AF           	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
- 359+ B4D3 C9           	ret
- 360+ B4D4
- 361+ B4D4 06 0F        Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
- 362+ B4D6 CD A9 B5     1 call NextScan
- 363+ B4D9 10 FB        	djnz 1B
- 364+ B4DB 22 11 94     	ld (Posicion_actual),hl
- 365+ B4DE AF           	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
- 366+ B4DF C9           	ret
- 367+ B4E0
- 368+ B4E0              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
- 369+ B4E0
- 370+ B4E0              Salida_nebulosamente_por_la_derecha
- 371+ B4E0
- 372+ B4E0              ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
- 373+ B4E0
- 374+ B4E0 3A 11 94     	ld a,(Posicion_actual)
- 375+ B4E3 E6 1F        	and $1f
- 376+ B4E5 FE 1E        	cp $1e
- 377+ B4E7 D8           	ret c
- 378+ B4E8
- 379+ B4E8              ; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
- 380+ B4E8              ;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa.
- 381+ B4E8
- 382+ B4E8 3A 20 94     	ld a,(Cuad_objeto)
- 383+ B4EB E6 01        	and 1
- 384+ B4ED C8           	ret z 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
- 385+ B4EE
- 386+ B4EE 3A 20 94     	ld a,(Cuad_objeto)
- 387+ B4F1 3C           	inc a
- 388+ B4F2 32 20 94     	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
- 389+ B4F5
- 390+ B4F5 0D           	dec c											; (Columns-1) en C.
- 391+ B4F6 7D           	ld a,l
- 392+ B4F7 91           	sub c
- 393+ B4F8 32 11 94     	ld (Posicion_actual),a
- 394+ B4FB
- 395+ B4FB 1D           	dec e
- 396+ B4FC 1D           	dec e 											; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
- 397+ B4FD
- 398+ B4FD C9           	ret
- 399+ B4FE
- 400+ B4FE              Salida_nebulosamente_por_la_izquierda
- 401+ B4FE
- 402+ B4FE              ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado izquierdo ???.
- 403+ B4FE
- 404+ B4FE 3A 11 94     	ld a,(Posicion_actual)
- 405+ B501 E6 1F        	and $1f
- 406+ B503 FE 01        	cp $01
- 407+ B505 D0           	ret nc
- 408+ B506 C0           	ret nz
- 409+ B507
- 410+ B507              ; 	Existe posibilidad de desaparecer por el lado izquierdo de la pantalla. Si (Cuad_objeto) indica que_
- 411+ B507              ;	_estamos en la parte derecha de la pantalla, (2/4), la salida será defectuosa.
- 412+ B507
- 413+ B507 3A 20 94     	ld a,(Cuad_objeto)
- 414+ B50A E6 01        	and 1
- 415+ B50C C0           	ret nz 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
- 416+ B50D
- 417+ B50D 3A 20 94     	ld a,(Cuad_objeto)
- 418+ B510 3D           	dec a
- 419+ B511 32 20 94     	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
- 420+ B514
- 421+ B514 0D           	dec c											 				; (Columns-1) en C.
- 422+ B515 7D           	ld a,l
- 423+ B516 0C           	inc c
- 424+ B517 32 11 94     	ld (Posicion_actual),a
- 425+ B51A
- 426+ B51A C9           	ret
- 427+ B51B
- 428+ B51B              ; --------------------------------------------------------------------------------------------------------------------
- 429+ B51B              ;
- 430+ B51B              ; 	3/2/25
- 431+ B51B              ;
- 432+ B51B              ;	Modify: A.
- 433+ B51B              ;
- 434+ B51B              ;	INPUT: A contiene el byte bajo de (Posicion_actual).
- 435+ B51B              ;	OUTPUT: (Columnas).
- 436+ B51B              ;
- 437+ B51B
- 438+ B51B              calcula_CColumnass:
- 439+ B51B
- 440+ B51B 3A 11 94     	ld a,(Posicion_actual)
- 441+ B51E E6 1F        	and $1f
- 442+ B520 28 17        	jr z,One_CColumna
- 443+ B522 3D           	dec a
- 444+ B523 28 10        	jr z,Due_CColumna
- 445+ B525 3C           	inc a
- 446+ B526 FE 1E        	cp $1e
- 447+ B528 38 04        	jr c,one_or_due_ccolumnas
- 448+ B52A 28 09        	jr z,Due_CColumna
- 449+ B52C 18 0B        	jr One_CColumna
- 450+ B52E
- 451+ B52E 3A 10 94     one_or_due_ccolumnas ld a,(Columns)
- 452+ B531 32 21 94     	ld (Columnas),a
- 453+ B534 C9           	ret
- 454+ B535
- 455+ B535 3E 02        Due_CColumna ld a,2
- 456+ B537 18 02        	jr 1F
- 457+ B539 3E 01        One_CColumna ld a,1
- 458+ B53B 32 21 94     1 ld (Columnas),a
- 459+ B53E C9           	ret
- 460+ B53F
- 461+ B53F              ; --------------------------------------------------------------------------------------------------------------------
- 462+ B53F              ;
- 463+ B53F              ;   2/3/25
- 464+ B53F              ;
- 465+ B53F              ;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
- 466+ B53F              ;
- 467+ B53F              ;	OUTPUT: IX Contienen el puntero de impresión.
- 468+ B53F              ;			HL e IY Contienen (Puntero_objeto).
- 469+ B53F              ;
- 470+ B53F              ;	DESTRUYE: HL,B Y A.
- 471+ B53F
- 472+ B53F              Calcula_puntero_de_impresion:
- 473+ B53F
- 474+ B53F 3A 20 94     	ld a,(Cuad_objeto)
- 475+ B542 E6 01        	and 1
- 476+ B544 20 09        	jr nz,Lado_izquierdo
- 477+ B546
- 478+ B546              Lado_derecho
- 479+ B546
- 480+ B546 3A 20 94     	ld a,(Cuad_objeto)
- 481+ B549 3D           	dec a
- 482+ B54A 3D           	dec a
- 483+ B54B 28 2F        	jr z,Cuadrante_dos
- 484+ B54D 18 14        	jr Cuadrante_cuatro
- 485+ B54F
- 486+ B54F              Lado_izquierdo
- 487+ B54F
- 488+ B54F 3A 20 94     	ld a,(Cuad_objeto)
- 489+ B552 CB 3F        	srl a
- 490+ B554 28 12        	jr z,Cuadrante_uno
- 491+ B556
- 492+ B556              ; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
- 493+ B556
- 494+ B556 CD 93 B5     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
- 495+ B559
- 496+ B559 7D           	ld a,l
- 497+ B55A E6 1F        	and $1f
- 498+ B55C 28 28        	jr z,4F
- 499+ B55E
- 500+ B55E 2B           6 dec hl
- 501+ B55F 10 FD        	djnz 6B
- 502+ B561
- 503+ B561 18 23        	jr 4F
- 504+ B563
- 505+ B563              Cuadrante_cuatro
- 506+ B563
- 507+ B563 2A 11 94     	ld hl,(Posicion_actual)
- 508+ B566 18 1E        	jr 4F
- 509+ B568
- 510+ B568              Cuadrante_uno
- 511+ B568
- 512+ B568 CD 93 B5     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
- 513+ B56B
- 514+ B56B 7D           	ld a,l
- 515+ B56C E6 1F        	and $1f
- 516+ B56E 28 03        	jr z,3F
- 517+ B570
- 518+ B570 2B           1 dec hl
- 519+ B571 10 FD        	djnz 1B
- 520+ B573
- 521+ B573 06 0F        3 ld b,15
- 522+ B575 CD B8 B5     2 call PreviousScan
- 523+ B578 10 FB        	djnz 2B
- 524+ B57A
- 525+ B57A 18 0A        	jr 4F
- 526+ B57C
- 527+ B57C              Cuadrante_dos
- 528+ B57C
- 529+ B57C CD 93 B5     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
- 530+ B57F 06 0F        	ld b,15
- 531+ B581 CD B8 B5     5 call PreviousScan
- 532+ B584 10 FB        	djnz 5B
- 533+ B586
- 534+ B586 22 05 94     4 ld (Puntero_de_impresion),hl
- 535+ B589
- 536+ B589 E5           	push hl
- 537+ B58A DD E1        	pop ix
- 538+ B58C
- 539+ B58C 2A 13 94     	ld hl,(Puntero_objeto)
- 540+ B58F
- 541+ B58F E5           	push hl
- 542+ B590 FD E1        	pop iy
- 543+ B592
- 544+ B592 C9           	ret
- 545+ B593
- 546+ B593              ; --------------------------------------------------------------------------------------------------------------------
- 547+ B593              ;
- 548+ B593              ;	2/1/23
- 549+ B593              ;
- 550+ B593              ;	Sub-rutina de [Calcula_puntero_de_impresion].
- 551+ B593              ;
- 552+ B593              ;	Tras esta rutina tenemos:
- 553+ B593              ;
- 554+ B593              ;	OUTPUT: HL contiene (Posicion_actual).
- 555+ B593              ;			B contiene (Columnas)-1. Nota: Este valor `nunca' será "0". El valor mínimo es "1".
- 556+ B593              ;
- 557+ B593              ;	DESTRUYE!!!!! HL,B y A.
- 558+ B593
- 559+ B593              Operandos:
- 560+ B593
- 561+ B593 2A 11 94     	ld hl,(Posicion_actual)
- 562+ B596 3A 21 94     	ld a,(Columnas)
- 563+ B599 3D           	dec a
- 564+ B59A 20 01        	jr nz,1F
- 565+ B59C 3C           	inc a
- 566+ B59D 47           1 ld b,a
- 567+ B59E C9           	ret
- 568+ B59F
- 569+ B59F              ; --------------------------------------------------------------------------------------------------------------------
- 570+ B59F              ;
- 571+ B59F              ;	Prepara_draw
- 572+ B59F              ;
- 573+ B59F              ;	Es una rutina de carga.
- 574+ B59F              ;	Carga los registros BC,HL y E para posteriormente llamar a la rutina de pintado [DRAW].
- 575+ B59F              ;
- 576+ B59F              ;	OUTPUT:
- 577+ B59F              ;
- 578+ B59F              ;	- LD (Filas/Columns) del objeto a pintar en [BC].
- 579+ B59F              ;	- LD (Posicion_actual) del objeto en [HL].
- 580+ B59F              ;
- 581+ B59F              ;	MODIFY: HL y BC.
- 582+ B59F
- 583+ B59F              Prepara_draw:
- 584+ B59F
- 585+ B59F 21 0F 94     	ld hl,Filas 		 							; Prepara los registros BC, E y HL.
- 586+ B5A2 46           	ld b,(hl) 										; Carga Filas/Columns del objeto a pintar o inicializar en BC.
- 587+ B5A3
- 588+ B5A3 23           	inc hl 											; Carga (Posicion_actual) en HL.
- 589+ B5A4
- 590+ B5A4 4E           	ld c,(hl)
- 591+ B5A5
- 592+ B5A5 2A 11 94     	ld hl,(Posicion_actual)
- 593+ B5A8
- 594+ B5A8 C9           	ret
- 595+ B5A9
- 596+ B5A9              ;----------------------------------------------------------------------------------------------------------------
- 597+ B5A9              ;
- 598+ B5A9              ;	5/08/22
- 599+ B5A9              ;
- 600+ B5A9              ;   NextScan.
- 601+ B5A9              ;
- 602+ B5A9              ;   Calcula la dirección de mem. de pantalla donde se sitúa el siguiente scanline. (Inc H, línea abajo).
- 603+ B5A9              ;
- 604+ B5A9              ;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el siguiente scanline.
- 605+ B5A9              ;
- 606+ B5A9              ;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
- 607+ B5A9              ;
- 608+ B5A9              ;       DESTRUIDOS: AF y HL !!!
- 609+ B5A9              ;
- 610+ B5A9              ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
- 611+ B5A9              ;
- 612+ B5A9
- 613+ B5A9              NextScan:
- 614+ B5A9
- 615+ B5A9 24           	inc h          							; Incrementamos el scanline.
- 616+ B5AA 7C               ld a,h
- 617+ B5AB E6 07            and 7
- 618+ B5AD C0               ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
- 619+ B5AE
- 620+ B5AE 7D           	ld a,l              							; Scanlines a "0", cambiamos de tercio. (Siempre que estemos en la última línea, LLL).
- 621+ B5AF C6 20            add a,$20           							; Vamos a comprobarlo...
- 622+ B5B1 6F               ld l,a
- 623+ B5B2 D8               ret c               							; Salimos si se produce el cambio de tercio.
- 624+ B5B3
- 625+ B5B3 7C               ld a,h              							; No estamos en la última línea del tercio, por lo que inicializamos H restando una_
- 626+ B5B4 D6 08            sub 8               							; _unidad a los bits que definen el tercio TT, (sub $08).
- 627+ B5B6 67               ld h,a
- 628+ B5B7 C9               ret
- 629+ B5B8
- 630+ B5B8              ;----------------------------------------------------------------------------------------------------------------
- 631+ B5B8              ;
- 632+ B5B8              ;	5/08/22
- 633+ B5B8              ;
- 634+ B5B8              ;   PreviousScan.
- 635+ B5B8              ;
- 636+ B5B8              ;   Calcula la dirección de mem. de pantalla donde se sitúa el scanline anterior. (Dec H, línea arriba).
- 637+ B5B8              ;
- 638+ B5B8              ;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el scanline anterior.
- 639+ B5B8              ;
- 640+ B5B8              ;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
- 641+ B5B8              ;
- 642+ B5B8              ;       DESTRUIDOS: AF y HL !!!
- 643+ B5B8              ;
- 644+ B5B8              ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
- 645+ B5B8              ;
- 646+ B5B8
- 647+ B5B8              PreviousScan:
- 648+ B5B8
- 649+ B5B8 7C           	ld a,h
- 650+ B5B9 25               dec h               							; Dec H.
- 651+ B5BA E6 07            and 7
- 652+ B5BC C0               ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
- 653+ B5BD
- 654+ B5BD 7D               ld a,l              							; Estabamos en el scanline "0" y al decrementar nos situamos en el "7" y cambiamos de tercio.
- 655+ B5BE D6 20            sub $20             							; Vamos a comprobarlo...
- 656+ B5C0 6F               ld l,a
- 657+ B5C1 D8               ret c               							; Salimos si estábamos en la primera línea y se produce el cambio de tercio.
- 658+ B5C2
- 659+ B5C2 7C               ld a,h              							; No estamos en la primera línea del tercio, por lo que inicializamos H sumando una_
- 660+ B5C3 C6 08            add a,8             							; _unidad a los bits que definen el tercio TT, (add a,$08).
- 661+ B5C5 67               ld h,a
- 662+ B5C6 C9               ret
- 663+ B5C7
- 664+ B5C7              ; -----------------------------------------------------------------
- 665+ B5C7              ;
- 666+ B5C7              ;	4/4/25
- 667+ B5C7              ;
- 668+ B5C7              ;	Limpia un espacio de la memoria.
- 669+ B5C7              ;
- 670+ B5C7              ;	INPUTS:  HL apunta al 1er byte del espacio de memoria que queremos limpiar.
- 671+ B5C7              ;				   BC indica el nº de bytes que vamos a poner a "0".
- 672+ B5C7              ;
- 673+ B5C7              ;	MODIFY: HL,DE,BC
- 674+ B5C7
- 675+ B5C7              Clean_mem:
- 676+ B5C7
- 677+ B5C7 36 00        	ld (hl),0
- 678+ B5C9
- 679+ B5C9 E5           	push hl
- 680+ B5CA D1           	pop de
- 681+ B5CB
- 682+ B5CB 13           	inc de
- 683+ B5CC
- 684+ B5CC ED B0        	ldir
- 685+ B5CE
- 686+ B5CE C9           	ret
+ 342+ B4B7              Modificaccionne:
+ 343+ B4B7
+ 344+ B4B7 3A 20 94     	ld a,(Cuad_objeto)
+ 345+ B4BA FE 02        	cp 2
+ 346+ B4BC CC C8 B4         call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
+ 347+ B4BF C8               ret z
+ 348+ B4C0 DC C8 B4         call c,Modifica_Pos_actual
+ 349+ B4C3 C8           	ret z
+ 350+ B4C4 CD D4 B4         call Modifica_Pos_actual2
+ 351+ B4C7 C9               ret
+ 352+ B4C8
+ 353+ B4C8 06 0F        Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
+ 354+ B4CA CD B8 B5     1 call PreviousScan
+ 355+ B4CD 10 FB        	djnz 1B
+ 356+ B4CF 22 11 94     	ld (Posicion_actual),hl
+ 357+ B4D2 AF           	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
+ 358+ B4D3 C9           	ret
+ 359+ B4D4
+ 360+ B4D4 06 0F        Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
+ 361+ B4D6 CD A9 B5     1 call NextScan
+ 362+ B4D9 10 FB        	djnz 1B
+ 363+ B4DB 22 11 94     	ld (Posicion_actual),hl
+ 364+ B4DE AF           	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
+ 365+ B4DF C9           	ret
+ 366+ B4E0
+ 367+ B4E0              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+ 368+ B4E0
+ 369+ B4E0              Salida_nebulosamente_por_la_derecha
+ 370+ B4E0
+ 371+ B4E0              ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
+ 372+ B4E0
+ 373+ B4E0 3A 11 94     	ld a,(Posicion_actual)
+ 374+ B4E3 E6 1F        	and $1f
+ 375+ B4E5 FE 1E        	cp $1e
+ 376+ B4E7 D8           	ret c
+ 377+ B4E8
+ 378+ B4E8              ; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
+ 379+ B4E8              ;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa.
+ 380+ B4E8
+ 381+ B4E8 3A 20 94     	ld a,(Cuad_objeto)
+ 382+ B4EB E6 01        	and 1
+ 383+ B4ED C8           	ret z 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+ 384+ B4EE
+ 385+ B4EE 3A 20 94     	ld a,(Cuad_objeto)
+ 386+ B4F1 3C           	inc a
+ 387+ B4F2 32 20 94     	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+ 388+ B4F5
+ 389+ B4F5 0D           	dec c											; (Columns-1) en C.
+ 390+ B4F6 7D           	ld a,l
+ 391+ B4F7 91           	sub c
+ 392+ B4F8 32 11 94     	ld (Posicion_actual),a
+ 393+ B4FB
+ 394+ B4FB 1D           	dec e
+ 395+ B4FC 1D           	dec e 											; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
+ 396+ B4FD
+ 397+ B4FD C9           	ret
+ 398+ B4FE
+ 399+ B4FE              Salida_nebulosamente_por_la_izquierda
+ 400+ B4FE
+ 401+ B4FE              ;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado izquierdo ???.
+ 402+ B4FE
+ 403+ B4FE 3A 11 94     	ld a,(Posicion_actual)
+ 404+ B501 E6 1F        	and $1f
+ 405+ B503 FE 01        	cp $01
+ 406+ B505 D0           	ret nc
+ 407+ B506 C0           	ret nz
+ 408+ B507
+ 409+ B507              ; 	Existe posibilidad de desaparecer por el lado izquierdo de la pantalla. Si (Cuad_objeto) indica que_
+ 410+ B507              ;	_estamos en la parte derecha de la pantalla, (2/4), la salida será defectuosa.
+ 411+ B507
+ 412+ B507 3A 20 94     	ld a,(Cuad_objeto)
+ 413+ B50A E6 01        	and 1
+ 414+ B50C C0           	ret nz 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
+ 415+ B50D
+ 416+ B50D 3A 20 94     	ld a,(Cuad_objeto)
+ 417+ B510 3D           	dec a
+ 418+ B511 32 20 94     	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
+ 419+ B514
+ 420+ B514 0D           	dec c											 				; (Columns-1) en C.
+ 421+ B515 7D           	ld a,l
+ 422+ B516 0C           	inc c
+ 423+ B517 32 11 94     	ld (Posicion_actual),a
+ 424+ B51A
+ 425+ B51A C9           	ret
+ 426+ B51B
+ 427+ B51B              ; --------------------------------------------------------------------------------------------------------------------
+ 428+ B51B              ;
+ 429+ B51B              ; 	3/2/25
+ 430+ B51B              ;
+ 431+ B51B              ;	Modify: A.
+ 432+ B51B              ;
+ 433+ B51B              ;	INPUT: A contiene el byte bajo de (Posicion_actual).
+ 434+ B51B              ;	OUTPUT: (Columnas).
+ 435+ B51B              ;
+ 436+ B51B
+ 437+ B51B              calcula_CColumnass:
+ 438+ B51B
+ 439+ B51B 3A 11 94     	ld a,(Posicion_actual)
+ 440+ B51E E6 1F        	and $1f
+ 441+ B520 28 17        	jr z,One_CColumna
+ 442+ B522 3D           	dec a
+ 443+ B523 28 10        	jr z,Due_CColumna
+ 444+ B525 3C           	inc a
+ 445+ B526 FE 1E        	cp $1e
+ 446+ B528 38 04        	jr c,one_or_due_ccolumnas
+ 447+ B52A 28 09        	jr z,Due_CColumna
+ 448+ B52C 18 0B        	jr One_CColumna
+ 449+ B52E
+ 450+ B52E 3A 10 94     one_or_due_ccolumnas ld a,(Columns)
+ 451+ B531 32 21 94     	ld (Columnas),a
+ 452+ B534 C9           	ret
+ 453+ B535
+ 454+ B535 3E 02        Due_CColumna ld a,2
+ 455+ B537 18 02        	jr 1F
+ 456+ B539 3E 01        One_CColumna ld a,1
+ 457+ B53B 32 21 94     1 ld (Columnas),a
+ 458+ B53E C9           	ret
+ 459+ B53F
+ 460+ B53F              ; --------------------------------------------------------------------------------------------------------------------
+ 461+ B53F              ;
+ 462+ B53F              ;   2/3/25
+ 463+ B53F              ;
+ 464+ B53F              ;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
+ 465+ B53F              ;
+ 466+ B53F              ;	OUTPUT: IX Contienen el puntero de impresión.
+ 467+ B53F              ;			HL e IY Contienen (Puntero_objeto).
+ 468+ B53F              ;
+ 469+ B53F              ;	DESTRUYE: HL,B Y A.
+ 470+ B53F
+ 471+ B53F              Calcula_puntero_de_impresion:
+ 472+ B53F
+ 473+ B53F 3A 20 94     	ld a,(Cuad_objeto)
+ 474+ B542 E6 01        	and 1
+ 475+ B544 20 09        	jr nz,Lado_izquierdo
+ 476+ B546
+ 477+ B546              Lado_derecho
+ 478+ B546
+ 479+ B546 3A 20 94     	ld a,(Cuad_objeto)
+ 480+ B549 3D           	dec a
+ 481+ B54A 3D           	dec a
+ 482+ B54B 28 2F        	jr z,Cuadrante_dos
+ 483+ B54D 18 14        	jr Cuadrante_cuatro
+ 484+ B54F
+ 485+ B54F              Lado_izquierdo
+ 486+ B54F
+ 487+ B54F 3A 20 94     	ld a,(Cuad_objeto)
+ 488+ B552 CB 3F        	srl a
+ 489+ B554 28 12        	jr z,Cuadrante_uno
+ 490+ B556
+ 491+ B556              ; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
+ 492+ B556
+ 493+ B556 CD 93 B5     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 494+ B559
+ 495+ B559 7D           	ld a,l
+ 496+ B55A E6 1F        	and $1f
+ 497+ B55C 28 28        	jr z,4F
+ 498+ B55E
+ 499+ B55E 2B           6 dec hl
+ 500+ B55F 10 FD        	djnz 6B
+ 501+ B561
+ 502+ B561 18 23        	jr 4F
+ 503+ B563
+ 504+ B563              Cuadrante_cuatro
+ 505+ B563
+ 506+ B563 2A 11 94     	ld hl,(Posicion_actual)
+ 507+ B566 18 1E        	jr 4F
+ 508+ B568
+ 509+ B568              Cuadrante_uno
+ 510+ B568
+ 511+ B568 CD 93 B5     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 512+ B56B
+ 513+ B56B 7D           	ld a,l
+ 514+ B56C E6 1F        	and $1f
+ 515+ B56E 28 03        	jr z,3F
+ 516+ B570
+ 517+ B570 2B           1 dec hl
+ 518+ B571 10 FD        	djnz 1B
+ 519+ B573
+ 520+ B573 06 0F        3 ld b,15
+ 521+ B575 CD B8 B5     2 call PreviousScan
+ 522+ B578 10 FB        	djnz 2B
+ 523+ B57A
+ 524+ B57A 18 0A        	jr 4F
+ 525+ B57C
+ 526+ B57C              Cuadrante_dos
+ 527+ B57C
+ 528+ B57C CD 93 B5     	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+ 529+ B57F 06 0F        	ld b,15
+ 530+ B581 CD B8 B5     5 call PreviousScan
+ 531+ B584 10 FB        	djnz 5B
+ 532+ B586
+ 533+ B586 22 05 94     4 ld (Puntero_de_impresion),hl
+ 534+ B589
+ 535+ B589 E5           	push hl
+ 536+ B58A DD E1        	pop ix
+ 537+ B58C
+ 538+ B58C 2A 13 94     	ld hl,(Puntero_objeto)
+ 539+ B58F
+ 540+ B58F E5           	push hl
+ 541+ B590 FD E1        	pop iy
+ 542+ B592
+ 543+ B592 C9           	ret
+ 544+ B593
+ 545+ B593              ; --------------------------------------------------------------------------------------------------------------------
+ 546+ B593              ;
+ 547+ B593              ;	2/1/23
+ 548+ B593              ;
+ 549+ B593              ;	Sub-rutina de [Calcula_puntero_de_impresion].
+ 550+ B593              ;
+ 551+ B593              ;	Tras esta rutina tenemos:
+ 552+ B593              ;
+ 553+ B593              ;	OUTPUT: HL contiene (Posicion_actual).
+ 554+ B593              ;			B contiene (Columnas)-1. Nota: Este valor `nunca' será "0". El valor mínimo es "1".
+ 555+ B593              ;
+ 556+ B593              ;	DESTRUYE!!!!! HL,B y A.
+ 557+ B593
+ 558+ B593              Operandos:
+ 559+ B593
+ 560+ B593 2A 11 94     	ld hl,(Posicion_actual)
+ 561+ B596 3A 21 94     	ld a,(Columnas)
+ 562+ B599 3D           	dec a
+ 563+ B59A 20 01        	jr nz,1F
+ 564+ B59C 3C           	inc a
+ 565+ B59D 47           1 ld b,a
+ 566+ B59E C9           	ret
+ 567+ B59F
+ 568+ B59F              ; --------------------------------------------------------------------------------------------------------------------
+ 569+ B59F              ;
+ 570+ B59F              ;	Prepara_draw
+ 571+ B59F              ;
+ 572+ B59F              ;	Es una rutina de carga.
+ 573+ B59F              ;	Carga los registros BC,HL y E para posteriormente llamar a la rutina de pintado [DRAW].
+ 574+ B59F              ;
+ 575+ B59F              ;	OUTPUT:
+ 576+ B59F              ;
+ 577+ B59F              ;	- LD (Filas/Columns) del objeto a pintar en [BC].
+ 578+ B59F              ;	- LD (Posicion_actual) del objeto en [HL].
+ 579+ B59F              ;
+ 580+ B59F              ;	MODIFY: HL y BC.
+ 581+ B59F
+ 582+ B59F              Prepara_draw:
+ 583+ B59F
+ 584+ B59F 21 0F 94     	ld hl,Filas 		 							; Prepara los registros BC, E y HL.
+ 585+ B5A2 46           	ld b,(hl) 										; Carga Filas/Columns del objeto a pintar o inicializar en BC.
+ 586+ B5A3
+ 587+ B5A3 23           	inc hl 											; Carga (Posicion_actual) en HL.
+ 588+ B5A4
+ 589+ B5A4 4E           	ld c,(hl)
+ 590+ B5A5
+ 591+ B5A5 2A 11 94     	ld hl,(Posicion_actual)
+ 592+ B5A8
+ 593+ B5A8 C9           	ret
+ 594+ B5A9
+ 595+ B5A9              ;----------------------------------------------------------------------------------------------------------------
+ 596+ B5A9              ;
+ 597+ B5A9              ;	5/08/22
+ 598+ B5A9              ;
+ 599+ B5A9              ;   NextScan.
+ 600+ B5A9              ;
+ 601+ B5A9              ;   Calcula la dirección de mem. de pantalla donde se sitúa el siguiente scanline. (Inc H, línea abajo).
+ 602+ B5A9              ;
+ 603+ B5A9              ;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el siguiente scanline.
+ 604+ B5A9              ;
+ 605+ B5A9              ;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
+ 606+ B5A9              ;
+ 607+ B5A9              ;       DESTRUIDOS: AF y HL !!!
+ 608+ B5A9              ;
+ 609+ B5A9              ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
+ 610+ B5A9              ;
+ 611+ B5A9
+ 612+ B5A9              NextScan:
+ 613+ B5A9
+ 614+ B5A9 24           	inc h          							; Incrementamos el scanline.
+ 615+ B5AA 7C               ld a,h
+ 616+ B5AB E6 07            and 7
+ 617+ B5AD C0               ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
+ 618+ B5AE
+ 619+ B5AE 7D           	ld a,l              							; Scanlines a "0", cambiamos de tercio. (Siempre que estemos en la última línea, LLL).
+ 620+ B5AF C6 20            add a,$20           							; Vamos a comprobarlo...
+ 621+ B5B1 6F               ld l,a
+ 622+ B5B2 D8               ret c               							; Salimos si se produce el cambio de tercio.
+ 623+ B5B3
+ 624+ B5B3 7C               ld a,h              							; No estamos en la última línea del tercio, por lo que inicializamos H restando una_
+ 625+ B5B4 D6 08            sub 8               							; _unidad a los bits que definen el tercio TT, (sub $08).
+ 626+ B5B6 67               ld h,a
+ 627+ B5B7 C9               ret
+ 628+ B5B8
+ 629+ B5B8              ;----------------------------------------------------------------------------------------------------------------
+ 630+ B5B8              ;
+ 631+ B5B8              ;	5/08/22
+ 632+ B5B8              ;
+ 633+ B5B8              ;   PreviousScan.
+ 634+ B5B8              ;
+ 635+ B5B8              ;   Calcula la dirección de mem. de pantalla donde se sitúa el scanline anterior. (Dec H, línea arriba).
+ 636+ B5B8              ;
+ 637+ B5B8              ;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el scanline anterior.
+ 638+ B5B8              ;
+ 639+ B5B8              ;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
+ 640+ B5B8              ;
+ 641+ B5B8              ;       DESTRUIDOS: AF y HL !!!
+ 642+ B5B8              ;
+ 643+ B5B8              ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
+ 644+ B5B8              ;
+ 645+ B5B8
+ 646+ B5B8              PreviousScan:
+ 647+ B5B8
+ 648+ B5B8 7C           	ld a,h
+ 649+ B5B9 25               dec h               							; Dec H.
+ 650+ B5BA E6 07            and 7
+ 651+ B5BC C0               ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
+ 652+ B5BD
+ 653+ B5BD 7D               ld a,l              							; Estabamos en el scanline "0" y al decrementar nos situamos en el "7" y cambiamos de tercio.
+ 654+ B5BE D6 20            sub $20             							; Vamos a comprobarlo...
+ 655+ B5C0 6F               ld l,a
+ 656+ B5C1 D8               ret c               							; Salimos si estábamos en la primera línea y se produce el cambio de tercio.
+ 657+ B5C2
+ 658+ B5C2 7C               ld a,h              							; No estamos en la primera línea del tercio, por lo que inicializamos H sumando una_
+ 659+ B5C3 C6 08            add a,8             							; _unidad a los bits que definen el tercio TT, (add a,$08).
+ 660+ B5C5 67               ld h,a
+ 661+ B5C6 C9               ret
+ 662+ B5C7
+ 663+ B5C7              ; -----------------------------------------------------------------
+ 664+ B5C7              ;
+ 665+ B5C7              ;	4/4/25
+ 666+ B5C7              ;
+ 667+ B5C7              ;	Limpia un espacio de la memoria.
+ 668+ B5C7              ;
+ 669+ B5C7              ;	INPUTS:  HL apunta al 1er byte del espacio de memoria que queremos limpiar.
+ 670+ B5C7              ;				   BC indica el nº de bytes que vamos a poner a "0".
+ 671+ B5C7              ;
+ 672+ B5C7              ;	MODIFY: HL,DE,BC
+ 673+ B5C7
+ 674+ B5C7              Clean_mem:
+ 675+ B5C7
+ 676+ B5C7 36 00        	ld (hl),0
+ 677+ B5C9
+ 678+ B5C9 E5           	push hl
+ 679+ B5CA D1           	pop de
+ 680+ B5CB
+ 681+ B5CB 13           	inc de
+ 682+ B5CC
+ 683+ B5CC ED B0        	ldir
+ 684+ B5CE
+ 685+ B5CE C9           	ret
+ 686+ B5CF
  687+ B5CF
  688+ B5CF
  689+ B5CF
@@ -12675,876 +12675,873 @@
  691+ B5CF
  692+ B5CF
  693+ B5CF
- 694+ B5CF
 # file closed: Draw_XOR.asm
 3201  B5CF              	include "Direcciones.asm"
 # file opened: Direcciones.asm
-   1+ B5CF
-   2+ B5CF
-   3+ B5CF              ; ******************************************************************************************************************************************************************************************
+   1+ B5CF              ; ******************************************************************************************************************************************************************************************
+   2+ B5CF              ;
+   3+ B5CF              ;   27/05/23
    4+ B5CF              ;
-   5+ B5CF              ;   27/05/23
+   5+ B5CF              ;	Mov_down
    6+ B5CF              ;
-   7+ B5CF              ;	Mov_down
+   7+ B5CF              ; 	Mueve el Sprite X px hacia abajo.
    8+ B5CF              ;
-   9+ B5CF              ; 	Mueve el Sprite X px hacia abajo.
-  10+ B5CF              ;
-  11+ B5CF              ;
+   9+ B5CF              ;
+  10+ B5CF
+  11+ B5CF              Mov_down:
   12+ B5CF
-  13+ B5CF              Mov_down:
-  14+ B5CF
-  15+ B5CF CD 27 B6     	call Reponne_punntero_objeto
-  16+ B5D2
-  17+ B5D2 3A 27 94     	ld a,(Vel_down)
-  18+ B5D5 47           	ld b,a
-  19+ B5D6 2A 11 94         ld hl,(Posicion_actual)
-  20+ B5D9 CD 71 A7     2 call calcula_tercio 												; Averiguamos el tercio de pantalla en el que nos encontramos.
-  21+ B5DC E6 02        	and 2
-  22+ B5DE 28 16        	jr z,1F
-  23+ B5E0
-  24+ B5E0              ; Nos encontramos en el último tercio de pantalla.
-  25+ B5E0              ; Averiguamos si estamos en el último scanline de la última línea de pantalla.
-  26+ B5E0
-  27+ B5E0 7C           	ld a,h
-  28+ B5E1 FE 57        	cp $57
-  29+ B5E3 20 11        	jr nz,1F
-  30+ B5E5
-  31+ B5E5 7D           	ld a,l
-  32+ B5E6 C6 20        	add $20
-  33+ B5E8 30 0C        	jr nc,1F
-  34+ B5EA
-  35+ B5EA CD B5 B8     	call Reaparece_arriba
-  36+ B5ED              ;	call Reinicio
+  13+ B5CF CD 27 B6     	call Reponne_punntero_objeto
+  14+ B5D2
+  15+ B5D2 3A 27 94     	ld a,(Vel_down)
+  16+ B5D5 47           	ld b,a
+  17+ B5D6 2A 11 94         ld hl,(Posicion_actual)
+  18+ B5D9 CD 71 A7     2 call calcula_tercio 												; Averiguamos el tercio de pantalla en el que nos encontramos.
+  19+ B5DC E6 02        	and 2
+  20+ B5DE 28 16        	jr z,1F
+  21+ B5E0
+  22+ B5E0              ; Nos encontramos en el último tercio de pantalla.
+  23+ B5E0              ; Averiguamos si estamos en el último scanline de la última línea de pantalla.
+  24+ B5E0
+  25+ B5E0 7C           	ld a,h
+  26+ B5E1 FE 57        	cp $57
+  27+ B5E3 20 11        	jr nz,1F
+  28+ B5E5
+  29+ B5E5 7D           	ld a,l
+  30+ B5E6 C6 20        	add $20
+  31+ B5E8 30 0C        	jr nc,1F
+  32+ B5EA
+  33+ B5EA CD B5 B8     	call Reaparece_arriba
+  34+ B5ED              ;	call Reinicio
+  35+ B5ED
+  36+ B5ED              ;	Homos generado todos los movimientos posibles de esta "Entidad_guía".
   37+ B5ED
-  38+ B5ED              ;	Homos generado todos los movimientos posibles de esta "Entidad_guía".
-  39+ B5ED
-  40+ B5ED 3A 72 94     	ld a,(Ctrl_3)
-  41+ B5F0 CB CF        	set 1,a
-  42+ B5F2 32 72 94     	ld (Ctrl_3),a
-  43+ B5F5
-  44+ B5F5 C9           	ret
-  45+ B5F6
-  46+ B5F6 CD A9 B5     1 call NextScan
-  47+ B5F9 22 11 94     	ld (Posicion_actual),hl
-  48+ B5FC
-  49+ B5FC 10 DB        	djnz 2B
-  50+ B5FE
-  51+ B5FE C9           	ret
-  52+ B5FF
-  53+ B5FF              ; ******************************************************************************************************************************************************************************************
+  38+ B5ED 3A 72 94     	ld a,(Ctrl_3)
+  39+ B5F0 CB CF        	set 1,a
+  40+ B5F2 32 72 94     	ld (Ctrl_3),a
+  41+ B5F5
+  42+ B5F5 C9           	ret
+  43+ B5F6
+  44+ B5F6 CD A9 B5     1 call NextScan
+  45+ B5F9 22 11 94     	ld (Posicion_actual),hl
+  46+ B5FC
+  47+ B5FC 10 DB        	djnz 2B
+  48+ B5FE
+  49+ B5FE C9           	ret
+  50+ B5FF
+  51+ B5FF              ; ******************************************************************************************************************************************************************************************
+  52+ B5FF              ;
+  53+ B5FF              ;   27/05/23
   54+ B5FF              ;
-  55+ B5FF              ;   27/05/23
+  55+ B5FF              ;	Mov_up
   56+ B5FF              ;
-  57+ B5FF              ;	Mov_up
+  57+ B5FF              ; 	Mueve el Sprite hacia arriba.
   58+ B5FF              ;
-  59+ B5FF              ; 	Mueve el Sprite hacia arriba.
-  60+ B5FF              ;
-  61+ B5FF              ;
-  62+ B5FF              Mov_up:
-  63+ B5FF
-  64+ B5FF CD 27 B6     	call Reponne_punntero_objeto
-  65+ B602
-  66+ B602 3A 26 94     	ld a,(Vel_up)
-  67+ B605 47           	ld b,a
-  68+ B606
-  69+ B606 2A 11 94     	ld hl,(Posicion_actual)
-  70+ B609
-  71+ B609 CD 71 A7     3 call calcula_tercio 													; Si no estamos en el 1er tercio de la pantalla no nos preocupamos de la reaparición.
-  72+ B60C A7           	and a
-  73+ B60D 20 0F        	jr nz,1F
-  74+ B60F
-  75+ B60F              ; Nos encontramos en el 1er tercio de pantalla.
-  76+ B60F              ; Averiguamos si estamos en el primer scanline de la primera línea de pantalla.
-  77+ B60F
-  78+ B60F 7C               ld a,h 																; Si estamos en el 1er tercio de pantalla pero no nos encontramos en el 1er scanline_
-  79+ B610 FE 40            cp $40 																; _del mismo, podemos seguir subiendo.
-  80+ B612 20 0A            jr nz,1F
-  81+ B614 7D               ld a,l
-  82+ B615 D6 20            sub $20
-  83+ B617 30 05            jr nc,1F
-  84+ B619 25               dec h
-  85+ B61A
-  86+ B61A              ;    call Reaparece_abajo                                                ; El objeto ha desaparecido por la parte superior de la pantalla, H="$3f". Hacemos llamada a _
-  87+ B61A CD C9 B8     	call Reinicio
-  88+ B61D
-  89+ B61D C9           	ret
-  90+ B61E
-  91+ B61E CD B8 B5     1 call PreviousScan
-  92+ B621 22 11 94     	ld (Posicion_actual),hl
-  93+ B624 10 E3            djnz 3B
-  94+ B626
-  95+ B626 C9           	ret
-  96+ B627
-  97+ B627              ; -----------------------------
+  59+ B5FF              ;
+  60+ B5FF              Mov_up:
+  61+ B5FF
+  62+ B5FF CD 27 B6     	call Reponne_punntero_objeto
+  63+ B602
+  64+ B602 3A 26 94     	ld a,(Vel_up)
+  65+ B605 47           	ld b,a
+  66+ B606
+  67+ B606 2A 11 94     	ld hl,(Posicion_actual)
+  68+ B609
+  69+ B609 CD 71 A7     3 call calcula_tercio 													; Si no estamos en el 1er tercio de la pantalla no nos preocupamos de la reaparición.
+  70+ B60C A7           	and a
+  71+ B60D 20 0F        	jr nz,1F
+  72+ B60F
+  73+ B60F              ; Nos encontramos en el 1er tercio de pantalla.
+  74+ B60F              ; Averiguamos si estamos en el primer scanline de la primera línea de pantalla.
+  75+ B60F
+  76+ B60F 7C               ld a,h 																; Si estamos en el 1er tercio de pantalla pero no nos encontramos en el 1er scanline_
+  77+ B610 FE 40            cp $40 																; _del mismo, podemos seguir subiendo.
+  78+ B612 20 0A            jr nz,1F
+  79+ B614 7D               ld a,l
+  80+ B615 D6 20            sub $20
+  81+ B617 30 05            jr nc,1F
+  82+ B619 25               dec h
+  83+ B61A
+  84+ B61A              ;    call Reaparece_abajo                                                ; El objeto ha desaparecido por la parte superior de la pantalla, H="$3f". Hacemos llamada a _
+  85+ B61A CD C9 B8     	call Reinicio
+  86+ B61D
+  87+ B61D C9           	ret
+  88+ B61E
+  89+ B61E CD B8 B5     1 call PreviousScan
+  90+ B621 22 11 94     	ld (Posicion_actual),hl
+  91+ B624 10 E3            djnz 3B
+  92+ B626
+  93+ B626 C9           	ret
+  94+ B627
+  95+ B627              ; -----------------------------
+  96+ B627              ;
+  97+ B627              ;	12/6/25
   98+ B627              ;
-  99+ B627              ;	12/6/25
- 100+ B627              ;
- 101+ B627              ;	Si la rutina [Recompone_posicion_inicio] no inició la entidad en la 1ª o última columna de pantalla,_
- 102+ B627              ;	_restaurará (Puntero_objeto) con el contenido de (Repone_puntero_objeto).
+  99+ B627              ;	Si la rutina [Recompone_posicion_inicio] no inició la entidad en la 1ª o última columna de pantalla,_
+ 100+ B627              ;	_restaurará (Puntero_objeto) con el contenido de (Repone_puntero_objeto).
+ 101+ B627
+ 102+ B627              Reponne_punntero_objeto:
  103+ B627
- 104+ B627              Reponne_punntero_objeto:
- 105+ B627
- 106+ B627 21 0D 94     	ld hl,Ctrl_2
- 107+ B62A CB 46        	bit 0,(hl)
- 108+ B62C C8           	ret z
- 109+ B62D
- 110+ B62D 3A 1E 94     	ld a,(Posicion_inicio)
- 111+ B630 E6 1F        	and $1f
- 112+ B632 C8           	ret z
- 113+ B633 FE 1F        	cp $1f
- 114+ B635 C8           	ret z
- 115+ B636
- 116+ B636 CB 86        	res 0,(hl)
- 117+ B638
- 118+ B638 2A 37 94     	ld hl,(Repone_puntero_objeto)
- 119+ B63B 22 13 94     	ld (Puntero_objeto),hl
- 120+ B63E
- 121+ B63E C9           	ret
- 122+ B63F
- 123+ B63F              ; ******************************************************************************************************************************************************************************************
+ 104+ B627 21 0D 94     	ld hl,Ctrl_2
+ 105+ B62A CB 46        	bit 0,(hl)
+ 106+ B62C C8           	ret z
+ 107+ B62D
+ 108+ B62D 3A 1E 94     	ld a,(Posicion_inicio)
+ 109+ B630 E6 1F        	and $1f
+ 110+ B632 C8           	ret z
+ 111+ B633 FE 1F        	cp $1f
+ 112+ B635 C8           	ret z
+ 113+ B636
+ 114+ B636 CB 86        	res 0,(hl)
+ 115+ B638
+ 116+ B638 2A 37 94     	ld hl,(Repone_puntero_objeto)
+ 117+ B63B 22 13 94     	ld (Puntero_objeto),hl
+ 118+ B63E
+ 119+ B63E C9           	ret
+ 120+ B63F
+ 121+ B63F              ; ******************************************************************************************************************************************************************************************
+ 122+ B63F              ;
+ 123+ B63F              ;	19/10/22
  124+ B63F              ;
- 125+ B63F              ;	19/10/22
+ 125+ B63F              ;	Mov_right.
  126+ B63F              ;
- 127+ B63F              ;	Mov_right.
+ 127+ B63F              ; 	Desplaza el Sprite (x)Pixels a la derecha.
  128+ B63F              ;
- 129+ B63F              ; 	Desplaza el Sprite (x)Pixels a la derecha.
- 130+ B63F              ;
+ 129+ B63F
+ 130+ B63F              Mov_right:
  131+ B63F
- 132+ B63F              Mov_right:
- 133+ B63F
- 134+ B63F 3A 0E 94     	ld a,(Ctrl_0)
- 135+ B642 CB 77        	bit 6,a
- 136+ B644 28 06        	jr z,4F 														; Amadeus o Entidad ???
- 137+ B646
- 138+ B646 CD 48 B8     	call Stop_Amadeus_right											; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que no hemos llegado al char.30 de la línea, [Stop_Amadeus].
- 139+ B649 C8           	ret z 															; Salimos de Mov_right si hemos llegado al char.30.
- 140+ B64A
- 141+ B64A 18 48        	jr 8F
- 142+ B64C
- 143+ B64C 3A 11 94     4 ld a,(Posicion_actual)	 	  									; Estamos en el char. 31?
- 144+ B64F E6 1F        	and $1f
- 145+ B651 FE 1F        	cp $1f															; Si no es así, saltamos a [3] para seguir con el desplazamiento progrmado.
- 146+ B653 20 3F        	jr nz,8F
- 147+ B655
- 148+ B655 3A 15 94     	ld a,(CTRL_DESPLZ) 		 										; Estamos en el último char. de la línea. Si (CTRL_DESPLZ)="0" saltamos a_
- 149+ B658 A7           	and a 															; _[3] para continuar con el DESPLZ.
- 150+ B659 28 39        	jr z,8F
- 151+ B65B
- 152+ B65B              ; ---------- ---------- ----------
- 153+ B65B              ;
- 154+ B65B              ;	Estamos en el último char. de la fila y (CTRL_DESPLZ) es distinto de "0".
- 155+ B65B
- 156+ B65B 3A 25 94     	ld a,(Vel_right) 												; En función del factor de velocidad, iniciaremos la salida de la pantalla,_									;
- 157+ B65E FE 02        	cp 2 															; _(Reaparece_izquierda), cuando (CTRL_DESPLZ) alcance un valor determinado.
- 158+ B660 28 11        	jr z,1F
- 159+ B662 38 06        	jr c,6F
- 160+ B664 FE 04        	cp 4
- 161+ B666 28 14        	jr z,7F
- 162+ B668 18 FE        	jr $ 															; Sólo se permite velocidad 1,2,4 y 8.
- 163+ B66A
- 164+ B66A              ; ---------- ---------- ----------
+ 132+ B63F 3A 0E 94     	ld a,(Ctrl_0)
+ 133+ B642 CB 77        	bit 6,a
+ 134+ B644 28 06        	jr z,4F 														; Amadeus o Entidad ???
+ 135+ B646
+ 136+ B646 CD 48 B8     	call Stop_Amadeus_right											; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que no hemos llegado al char.30 de la línea, [Stop_Amadeus].
+ 137+ B649 C8           	ret z 															; Salimos de Mov_right si hemos llegado al char.30.
+ 138+ B64A
+ 139+ B64A 18 48        	jr 8F
+ 140+ B64C
+ 141+ B64C 3A 11 94     4 ld a,(Posicion_actual)	 	  									; Estamos en el char. 31?
+ 142+ B64F E6 1F        	and $1f
+ 143+ B651 FE 1F        	cp $1f															; Si no es así, saltamos a [3] para seguir con el desplazamiento progrmado.
+ 144+ B653 20 3F        	jr nz,8F
+ 145+ B655
+ 146+ B655 3A 15 94     	ld a,(CTRL_DESPLZ) 		 										; Estamos en el último char. de la línea. Si (CTRL_DESPLZ)="0" saltamos a_
+ 147+ B658 A7           	and a 															; _[3] para continuar con el DESPLZ.
+ 148+ B659 28 39        	jr z,8F
+ 149+ B65B
+ 150+ B65B              ; ---------- ---------- ----------
+ 151+ B65B              ;
+ 152+ B65B              ;	Estamos en el último char. de la fila y (CTRL_DESPLZ) es distinto de "0".
+ 153+ B65B
+ 154+ B65B 3A 25 94     	ld a,(Vel_right) 												; En función del factor de velocidad, iniciaremos la salida de la pantalla,_									;
+ 155+ B65E FE 02        	cp 2 															; _(Reaparece_izquierda), cuando (CTRL_DESPLZ) alcance un valor determinado.
+ 156+ B660 28 11        	jr z,1F
+ 157+ B662 38 06        	jr c,6F
+ 158+ B664 FE 04        	cp 4
+ 159+ B666 28 14        	jr z,7F
+ 160+ B668 18 FE        	jr $ 															; Sólo se permite velocidad 1,2,4 y 8.
+ 161+ B66A
+ 162+ B66A              ; ---------- ---------- ----------
+ 163+ B66A              ;
+ 164+ B66A              ; Perfiles de velocidad
  165+ B66A              ;
- 166+ B66A              ; Perfiles de velocidad
- 167+ B66A              ;
- 168+ B66A
- 169+ B66A 3A 15 94     6 ld a,(CTRL_DESPLZ) 												; Velocidad 1
- 170+ B66D FE FE        	cp $fe
- 171+ B66F 38 23        	jr c,8F
- 172+ B671 18 10        	jr 3F
- 173+ B673 3A 15 94     1 ld a,(CTRL_DESPLZ) 												; Velocidad 2
- 174+ B676 FE FD        	cp $fd
- 175+ B678 38 1A        	jr c,8F
- 176+ B67A 18 07        	jr 3F
- 177+ B67C 3A 15 94     7 ld a,(CTRL_DESPLZ) 												; Velocidad 4
- 178+ B67F FE FB        	cp $fb
- 179+ B681 38 11        	jr c,8F
- 180+ B683
- 181+ B683 CD 8A B8     3 call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
- 182+ B686              ;	call Reinicio
- 183+ B686
- 184+ B686              ; ---------- ---------- ----------
- 185+ B686              ;
- 186+ B686              ;	Esta parte de la rutina se encarga de hacer que el Sprite aparezca pixel a pixel por la izquierda.
- 187+ B686
- 188+ B686 06 02        	ld b,2 															; Para hacer que el objeto aparezca poco a poco, hemos de desplazarlo 2 veces: El primer desplazamiento_
- 189+ B688 C5           5 push bc 															; _pone (CTRL_DESPLZ) a "0" y el segundo a "$ff". Con esto hacemos que el Sprite tenga espacio en blanco delante_
- 190+ B689 CD 9B B6     	call DESPLZ_DER
- 191+ B68C C1           	pop bc
- 192+ B68D 10 F9        	djnz 5B
- 193+ B68F 21 11 94     	ld hl,Posicion_actual											; Decrementamos su posición actual, pués al desplazarlo a la derecha, volvemos a incrementar el nº de (Columns) y _
- 194+ B692 35           	dec (hl)														; _ (Posicion_actual) ha pasado de $00 a $01.
- 195+ B693
- 196+ B693 C9           	ret
- 197+ B694
- 198+ B694 2A 11 94     8 ld hl,(Posicion_actual)
- 199+ B697 CD 9B B6     	call DESPLZ_DER
- 200+ B69A
- 201+ B69A C9           	ret
- 202+ B69B
- 203+ B69B              ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 166+ B66A
+ 167+ B66A 3A 15 94     6 ld a,(CTRL_DESPLZ) 												; Velocidad 1
+ 168+ B66D FE FE        	cp $fe
+ 169+ B66F 38 23        	jr c,8F
+ 170+ B671 18 10        	jr 3F
+ 171+ B673 3A 15 94     1 ld a,(CTRL_DESPLZ) 												; Velocidad 2
+ 172+ B676 FE FD        	cp $fd
+ 173+ B678 38 1A        	jr c,8F
+ 174+ B67A 18 07        	jr 3F
+ 175+ B67C 3A 15 94     7 ld a,(CTRL_DESPLZ) 												; Velocidad 4
+ 176+ B67F FE FB        	cp $fb
+ 177+ B681 38 11        	jr c,8F
+ 178+ B683
+ 179+ B683 CD 8A B8     3 call Reaparece_izquierda 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+ 180+ B686              ;	call Reinicio
+ 181+ B686
+ 182+ B686              ; ---------- ---------- ----------
+ 183+ B686              ;
+ 184+ B686              ;	Esta parte de la rutina se encarga de hacer que el Sprite aparezca pixel a pixel por la izquierda.
+ 185+ B686
+ 186+ B686 06 02        	ld b,2 															; Para hacer que el objeto aparezca poco a poco, hemos de desplazarlo 2 veces: El primer desplazamiento_
+ 187+ B688 C5           5 push bc 															; _pone (CTRL_DESPLZ) a "0" y el segundo a "$ff". Con esto hacemos que el Sprite tenga espacio en blanco delante_
+ 188+ B689 CD 9B B6     	call DESPLZ_DER
+ 189+ B68C C1           	pop bc
+ 190+ B68D 10 F9        	djnz 5B
+ 191+ B68F 21 11 94     	ld hl,Posicion_actual											; Decrementamos su posición actual, pués al desplazarlo a la derecha, volvemos a incrementar el nº de (Columns) y _
+ 192+ B692 35           	dec (hl)														; _ (Posicion_actual) ha pasado de $00 a $01.
+ 193+ B693
+ 194+ B693 C9           	ret
+ 195+ B694
+ 196+ B694 2A 11 94     8 ld hl,(Posicion_actual)
+ 197+ B697 CD 9B B6     	call DESPLZ_DER
+ 198+ B69A
+ 199+ B69A C9           	ret
+ 200+ B69B
+ 201+ B69B              ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 202+ B69B              ;
+ 203+ B69B              ;	22/9/22
  204+ B69B              ;
- 205+ B69B              ;	22/9/22
- 206+ B69B              ;
+ 205+ B69B
+ 206+ B69B              DESPLZ_DER:
  207+ B69B
- 208+ B69B              DESPLZ_DER:
- 209+ B69B
- 210+ B69B CD AA B6     	call Desplaza_derecha
- 211+ B69E CD F7 B6         call modifica_parametros_1er_DESPLZ_2
- 212+ B6A1 CD 15 B7         call Ciclo_completo
- 213+ B6A4
- 214+ B6A4 21 0E 94         ld hl,Ctrl_0 													; Indica que nos hemos desplazado a la derecha.
- 215+ B6A7 CB FE        	set 7,(hl)
- 216+ B6A9
- 217+ B6A9 C9           	ret
- 218+ B6AA
- 219+ B6AA              ; ******************************************************************************************************************************************************************************************
- 220+ B6AA              ;	15/02/23
- 221+ B6AA              ;
+ 208+ B69B CD AA B6     	call Desplaza_derecha
+ 209+ B69E CD F7 B6         call modifica_parametros_1er_DESPLZ_2
+ 210+ B6A1 CD 15 B7         call Ciclo_completo
+ 211+ B6A4
+ 212+ B6A4 21 0E 94         ld hl,Ctrl_0 													; Indica que nos hemos desplazado a la derecha.
+ 213+ B6A7 CB FE        	set 7,(hl)
+ 214+ B6A9
+ 215+ B6A9 C9           	ret
+ 216+ B6AA
+ 217+ B6AA              ; ******************************************************************************************************************************************************************************************
+ 218+ B6AA              ;	15/02/23
+ 219+ B6AA              ;
+ 220+ B6AA
+ 221+ B6AA              Desplaza_derecha:
  222+ B6AA
- 223+ B6AA              Desplaza_derecha:
- 224+ B6AA
- 225+ B6AA 3A 25 94     	ld a,(Vel_right)
- 226+ B6AD 47           	ld b,a
- 227+ B6AE
- 228+ B6AE 2A 1A 94     9 ld hl,(Puntero_DESPLZ_der)
- 229+ B6B1 23           1 inc hl
- 230+ B6B2 23           	inc hl
- 231+ B6B3 10 FC        	djnz 1B 														; (Vel_right) indica cuantas posiciones desplazaremos el (Puntero_DESPLZ)_
- 232+ B6B5
- 233+ B6B5 22 1A 94     	ld (Puntero_DESPLZ_der),hl 										; _por el índice del Sprite.
- 234+ B6B8 CD 2C 9B     	call Extrae_address
- 235+ B6BB 22 13 94     	ld (Puntero_objeto),hl
+ 223+ B6AA 3A 25 94     	ld a,(Vel_right)
+ 224+ B6AD 47           	ld b,a
+ 225+ B6AE
+ 226+ B6AE 2A 1A 94     9 ld hl,(Puntero_DESPLZ_der)
+ 227+ B6B1 23           1 inc hl
+ 228+ B6B2 23           	inc hl
+ 229+ B6B3 10 FC        	djnz 1B 														; (Vel_right) indica cuantas posiciones desplazaremos el (Puntero_DESPLZ)_
+ 230+ B6B5
+ 231+ B6B5 22 1A 94     	ld (Puntero_DESPLZ_der),hl 										; _por el índice del Sprite.
+ 232+ B6B8 CD 2C 9B     	call Extrae_address
+ 233+ B6BB 22 13 94     	ld (Puntero_objeto),hl
+ 234+ B6BE
+ 235+ B6BE              ; Modifica (Puntero_DESPLZ_izq).
  236+ B6BE
- 237+ B6BE              ; Modifica (Puntero_DESPLZ_izq).
- 238+ B6BE
- 239+ B6BE              ; Vamos a descontar a "8" el nº de movimientos que hemos efectuado a la derecha.
- 240+ B6BE              ; Cuántos movimientos hemos hecho ??
- 241+ B6BE              ; DE contiene (Puntero_DESPLZ_der).
- 242+ B6BE
- 243+ B6BE 2A 16 94     7 ld hl,(Indice_Sprite_der)
- 244+ B6C1 EB           	ex de,hl
- 245+ B6C2 A7           	and a
- 246+ B6C3 ED 52        	sbc hl,de
- 247+ B6C5 CB 3D        	srl l
- 248+ B6C7 3E 08        6 ld a,8
- 249+ B6C9 95           	sub l
- 250+ B6CA C8           	ret z
- 251+ B6CB 30 1E        	jr nc,3F
- 252+ B6CD
- 253+ B6CD              ; Hemos salido del índice. Hay que ajustar (Puntero_DESPLZ_der) dentro del mismo.
- 254+ B6CD              ; B="0".
- 255+ B6CD
- 256+ B6CD 04           4 inc b
- 257+ B6CE 3C           	inc a
- 258+ B6CF 20 FC        	jr nz,4B
- 259+ B6D1 78           	ld a,b
- 260+ B6D2 08           	ex af,af
- 261+ B6D3 2A 16 94     	ld hl,(Indice_Sprite_der)
- 262+ B6D6 23           5 inc hl
- 263+ B6D7 23           	inc hl
- 264+ B6D8 10 FC        	djnz 5B
- 265+ B6DA 22 1A 94     	ld (Puntero_DESPLZ_der),hl
- 266+ B6DD CD 2C 9B     	call Extrae_address
- 267+ B6E0 22 13 94     	ld (Puntero_objeto),hl
- 268+ B6E3
- 269+ B6E3              ; Si nos hemos salido del índice es porque hemos completado un ciclo completo. Habrá que actualizar_
- 270+ B6E3              ; _(Posicion_actual).
- 271+ B6E3
- 272+ B6E3 21 11 94     	ld hl,Posicion_actual
- 273+ B6E6 34           	inc (hl)
- 274+ B6E7 08               ex af,af
- 275+ B6E8 6F           	ld l,a
- 276+ B6E9 18 DC        	jr 6B
+ 237+ B6BE              ; Vamos a descontar a "8" el nº de movimientos que hemos efectuado a la derecha.
+ 238+ B6BE              ; Cuántos movimientos hemos hecho ??
+ 239+ B6BE              ; DE contiene (Puntero_DESPLZ_der).
+ 240+ B6BE
+ 241+ B6BE 2A 16 94     7 ld hl,(Indice_Sprite_der)
+ 242+ B6C1 EB           	ex de,hl
+ 243+ B6C2 A7           	and a
+ 244+ B6C3 ED 52        	sbc hl,de
+ 245+ B6C5 CB 3D        	srl l
+ 246+ B6C7 3E 08        6 ld a,8
+ 247+ B6C9 95           	sub l
+ 248+ B6CA C8           	ret z
+ 249+ B6CB 30 1E        	jr nc,3F
+ 250+ B6CD
+ 251+ B6CD              ; Hemos salido del índice. Hay que ajustar (Puntero_DESPLZ_der) dentro del mismo.
+ 252+ B6CD              ; B="0".
+ 253+ B6CD
+ 254+ B6CD 04           4 inc b
+ 255+ B6CE 3C           	inc a
+ 256+ B6CF 20 FC        	jr nz,4B
+ 257+ B6D1 78           	ld a,b
+ 258+ B6D2 08           	ex af,af
+ 259+ B6D3 2A 16 94     	ld hl,(Indice_Sprite_der)
+ 260+ B6D6 23           5 inc hl
+ 261+ B6D7 23           	inc hl
+ 262+ B6D8 10 FC        	djnz 5B
+ 263+ B6DA 22 1A 94     	ld (Puntero_DESPLZ_der),hl
+ 264+ B6DD CD 2C 9B     	call Extrae_address
+ 265+ B6E0 22 13 94     	ld (Puntero_objeto),hl
+ 266+ B6E3
+ 267+ B6E3              ; Si nos hemos salido del índice es porque hemos completado un ciclo completo. Habrá que actualizar_
+ 268+ B6E3              ; _(Posicion_actual).
+ 269+ B6E3
+ 270+ B6E3 21 11 94     	ld hl,Posicion_actual
+ 271+ B6E6 34           	inc (hl)
+ 272+ B6E7 08               ex af,af
+ 273+ B6E8 6F           	ld l,a
+ 274+ B6E9 18 DC        	jr 6B
+ 275+ B6EB
+ 276+ B6EB              ; Permanecemos en el índice. No hay que reajustar (Puntero_DESPLZ_izq).
  277+ B6EB
- 278+ B6EB              ; Permanecemos en el índice. No hay que reajustar (Puntero_DESPLZ_izq).
- 279+ B6EB
- 280+ B6EB 47           3 ld b,a
- 281+ B6EC 2A 18 94     	ld hl,(Indice_Sprite_izq)
- 282+ B6EF 23           2 inc hl
- 283+ B6F0 23           	inc hl
- 284+ B6F1 10 FC        	djnz 2B
- 285+ B6F3 22 1C 94     	ld (Puntero_DESPLZ_izq),hl
- 286+ B6F6
- 287+ B6F6 C9           8 ret
- 288+ B6F7
- 289+ B6F7              ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 278+ B6EB 47           3 ld b,a
+ 279+ B6EC 2A 18 94     	ld hl,(Indice_Sprite_izq)
+ 280+ B6EF 23           2 inc hl
+ 281+ B6F0 23           	inc hl
+ 282+ B6F1 10 FC        	djnz 2B
+ 283+ B6F3 22 1C 94     	ld (Puntero_DESPLZ_izq),hl
+ 284+ B6F6
+ 285+ B6F6 C9           8 ret
+ 286+ B6F7
+ 287+ B6F7              ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 288+ B6F7              ;
+ 289+ B6F7              ;	7/6/25
  290+ B6F7              ;
- 291+ B6F7              ;	7/6/25
+ 291+ B6F7              ;	modifica_parametros_1er_DESPLZ_2
  292+ B6F7              ;
- 293+ B6F7              ;	modifica_parametros_1er_DESPLZ_2
- 294+ B6F7              ;
- 295+ B6F7              ;	La rutina modifica el nº de columnas del objeto en el 1er desplazamiento.
- 296+ B6F7              ; 	También incrementa el byte de control de desplazamiento, (desplz. a derecha) y modifica la posición de (Puntero_datas) en función del cuadrante de pantalla en el que nos encontremos.
- 297+ B6F7              ; 	Si el desplazamiento se produce en el 2º o 4º cuadrante, la rutina decrementará (Posicion_actual).
+ 293+ B6F7              ;	La rutina modifica el nº de columnas del objeto en el 1er desplazamiento.
+ 294+ B6F7              ; 	También incrementa el byte de control de desplazamiento, (desplz. a derecha) y modifica la posición de (Puntero_datas) en función del cuadrante de pantalla en el que nos encontremos.
+ 295+ B6F7              ; 	Si el desplazamiento se produce en el 2º o 4º cuadrante, la rutina decrementará (Posicion_actual).
+ 296+ B6F7
+ 297+ B6F7              modifica_parametros_1er_DESPLZ_2:
  298+ B6F7
- 299+ B6F7              modifica_parametros_1er_DESPLZ_2:
- 300+ B6F7
- 301+ B6F7 3A 15 94     	ld a,(CTRL_DESPLZ)		 		  ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
- 302+ B6FA A7           	and a
- 303+ B6FB 20 14        	jr nz,1F
- 304+ B6FD
- 305+ B6FD D6 09        	sub 9                							              ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento.
- 306+ B6FF 32 15 94         ld (CTRL_DESPLZ),a
- 307+ B702
- 308+ B702 21 10 94     	ld hl,Columns
- 309+ B705 34           	inc (hl)
- 310+ B706
- 311+ B706 3A 20 94     	ld a,(Cuad_objeto)
- 312+ B709 E6 01        	and 1
- 313+ B70B 28 04        	jr z,1F
- 314+ B70D
- 315+ B70D 21 11 94     	ld hl,Posicion_actual 										  ; Incrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _
- 316+ B710 34           	inc (hl) 													  ; _ cuadrantes 1 y 3 de pantalla.
+ 299+ B6F7 3A 15 94     	ld a,(CTRL_DESPLZ)		 		  ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
+ 300+ B6FA A7           	and a
+ 301+ B6FB 20 14        	jr nz,1F
+ 302+ B6FD
+ 303+ B6FD D6 09        	sub 9                							              ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento.
+ 304+ B6FF 32 15 94         ld (CTRL_DESPLZ),a
+ 305+ B702
+ 306+ B702 21 10 94     	ld hl,Columns
+ 307+ B705 34           	inc (hl)
+ 308+ B706
+ 309+ B706 3A 20 94     	ld a,(Cuad_objeto)
+ 310+ B709 E6 01        	and 1
+ 311+ B70B 28 04        	jr z,1F
+ 312+ B70D
+ 313+ B70D 21 11 94     	ld hl,Posicion_actual 										  ; Incrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _
+ 314+ B710 34           	inc (hl) 													  ; _ cuadrantes 1 y 3 de pantalla.
+ 315+ B711
+ 316+ B711              ;	call Genera_coordenadas
  317+ B711
- 318+ B711              ;	call Genera_coordenadas
- 319+ B711
- 320+ B711 CD 54 B8     1 call Inc_CTRL_DESPLZ
- 321+ B714
- 322+ B714 C9           	ret
- 323+ B715
- 324+ B715              ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 318+ B711 CD 54 B8     1 call Inc_CTRL_DESPLZ
+ 319+ B714
+ 320+ B714 C9           	ret
+ 321+ B715
+ 322+ B715              ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 323+ B715              ;
+ 324+ B715              ;	24/7/22
  325+ B715              ;
- 326+ B715              ;	24/7/22
+ 326+ B715              ;	Ciclo_completo.
  327+ B715              ;
- 328+ B715              ;	Ciclo_completo.
+ 328+ B715              ;	FUNCIONAMIENTO: Si (CTRL_DESPLZ)="$ff" significa que nos hemos desplazado 1 char.
  329+ B715              ;
- 330+ B715              ;	FUNCIONAMIENTO: Si (CTRL_DESPLZ)="$ff" significa que nos hemos desplazado 1 char.
- 331+ B715              ;
- 332+ B715              ;	En ese caso, inicializamos (CTRL_DESPLZ). (CTRL_DESPLZ)="0".
- 333+ B715              ; 	Decrementamos (Columns).
- 334+ B715              ;	Modificamos (Posicion_actual) en función del cuadrante en el que nos encontremos.
- 335+ B715              ;	Borramos la caja de desplazamientos, call Limpia_caja_de_DESPLZ.
- 336+ B715
+ 330+ B715              ;	En ese caso, inicializamos (CTRL_DESPLZ). (CTRL_DESPLZ)="0".
+ 331+ B715              ; 	Decrementamos (Columns).
+ 332+ B715              ;	Modificamos (Posicion_actual) en función del cuadrante en el que nos encontremos.
+ 333+ B715              ;	Borramos la caja de desplazamientos, call Limpia_caja_de_DESPLZ.
+ 334+ B715
+ 335+ B715
+ 336+ B715              Ciclo_completo:
  337+ B715
- 338+ B715              Ciclo_completo:
- 339+ B715
- 340+ B715 3A 15 94     	ld a,(CTRL_DESPLZ)
- 341+ B718 FE FF        	cp $ff
- 342+ B71A 28 0E        	jr z,1F 												     ; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
- 343+ B71C
- 344+ B71C E6 F0        	and $f0
- 345+ B71E C0           	ret nz
+ 338+ B715 3A 15 94     	ld a,(CTRL_DESPLZ)
+ 339+ B718 FE FF        	cp $ff
+ 340+ B71A 28 0E        	jr z,1F 												     ; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
+ 341+ B71C
+ 342+ B71C E6 F0        	and $f0
+ 343+ B71E C0           	ret nz
+ 344+ B71F
+ 345+ B71F              ; (CTRL_DESPLZ) fuera de rango, (por encima de $ff), hay que reajustar.
  346+ B71F
- 347+ B71F              ; (CTRL_DESPLZ) fuera de rango, (por encima de $ff), hay que reajustar.
- 348+ B71F
- 349+ B71F 3A 15 94     	ld a,(CTRL_DESPLZ)
- 350+ B722 47           	ld b,a
- 351+ B723 3E F8        	ld a,$f8
- 352+ B725 80           	add b
- 353+ B726 32 15 94     	ld (CTRL_DESPLZ),a
- 354+ B729
- 355+ B729 C9           	ret
- 356+ B72A
- 357+ B72A 21 10 94     1 ld hl,Columns													 ; Tras 8 desplazamientos el objeto desplazado es igual al original.
- 358+ B72D 35           	dec (hl) 													 ; Decrementamos el nº de (Columns).
- 359+ B72E
- 360+ B72E AF           	xor a 														 ; Reiniciamos (CTRL_DESPLZ).
- 361+ B72F 32 15 94     	ld (CTRL_DESPLZ),a
- 362+ B732
- 363+ B732 3A 20 94     	ld a,(Cuad_objeto) 											 ; Si estamos situados en el cuadrante 1º o 3º de la pantalla no modificamos_
- 364+ B735 E6 01        	and 1 														 ; _(Posicion_actual). Limpiamos la (Caja_de_DESPLZ) y salimos.
- 365+ B737 20 04        	jr nz,3F
- 366+ B739
- 367+ B739 21 11 94     	ld hl,Posicion_actual                                        ; Incrementamos (Posicion_actual) en los cuadrantes 2º y 4º.
- 368+ B73C 34           	inc (hl)
- 369+ B73D
- 370+ B73D CD AA A3     3 call Inicia_puntero_objeto_der
- 371+ B740
- 372+ B740 C9           	ret
- 373+ B741
- 374+ B741              ; ---------------------------------------------------------
+ 347+ B71F 3A 15 94     	ld a,(CTRL_DESPLZ)
+ 348+ B722 47           	ld b,a
+ 349+ B723 3E F8        	ld a,$f8
+ 350+ B725 80           	add b
+ 351+ B726 32 15 94     	ld (CTRL_DESPLZ),a
+ 352+ B729
+ 353+ B729 C9           	ret
+ 354+ B72A
+ 355+ B72A 21 10 94     1 ld hl,Columns													 ; Tras 8 desplazamientos el objeto desplazado es igual al original.
+ 356+ B72D 35           	dec (hl) 													 ; Decrementamos el nº de (Columns).
+ 357+ B72E
+ 358+ B72E AF           	xor a 														 ; Reiniciamos (CTRL_DESPLZ).
+ 359+ B72F 32 15 94     	ld (CTRL_DESPLZ),a
+ 360+ B732
+ 361+ B732 3A 20 94     	ld a,(Cuad_objeto) 											 ; Si estamos situados en el cuadrante 1º o 3º de la pantalla no modificamos_
+ 362+ B735 E6 01        	and 1 														 ; _(Posicion_actual). Limpiamos la (Caja_de_DESPLZ) y salimos.
+ 363+ B737 20 04        	jr nz,3F
+ 364+ B739
+ 365+ B739 21 11 94     	ld hl,Posicion_actual                                        ; Incrementamos (Posicion_actual) en los cuadrantes 2º y 4º.
+ 366+ B73C 34           	inc (hl)
+ 367+ B73D
+ 368+ B73D CD AA A3     3 call Inicia_puntero_objeto_der
+ 369+ B740
+ 370+ B740 C9           	ret
+ 371+ B741
+ 372+ B741              ; ---------------------------------------------------------
+ 373+ B741              ;
+ 374+ B741              ;	15/02/23
  375+ B741              ;
- 376+ B741              ;	15/02/23
+ 376+ B741              ;	Mov_left.
  377+ B741              ;
- 378+ B741              ;	Mov_left.
+ 378+ B741              ; 	Desplaza el Sprite (x)Pixels a la izquierda.
  379+ B741              ;
- 380+ B741              ; 	Desplaza el Sprite (x)Pixels a la izquierda.
- 381+ B741              ;
- 382+ B741              Mov_left:
- 383+ B741
- 384+ B741 3A 0E 94     	ld a,(Ctrl_0)
- 385+ B744 CB 77        	bit 6,a
- 386+ B746 28 06        	jr z,3F 														; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que que no hemos llegado al char.1 de la línea, [Stop_Amadeus].
- 387+ B748
- 388+ B748 CD 4E B8     	call Stop_Amadeus_left
- 389+ B74B C8           	ret z
- 390+ B74C 20 4C        	jr nz,8F
- 391+ B74E
- 392+ B74E 3A 11 94     3 ld a,(Posicion_actual)
- 393+ B751 E6 1F        	and $1f
- 394+ B753 20 45        	jr nz,8F
- 395+ B755
- 396+ B755 3A 15 94     	ld a,(CTRL_DESPLZ) 			 									; Si el Sprite no está en el 1er char de la línea, (desaparece por la izquierda), o estando en este, _
- 397+ B758 A7           	and a 															; _ (CTRL_DESPLZ)="0", cargamos HL con la (Posicion_actual) y ejecutamos la rutina de desplazamiento, _
- 398+ B759 28 3F        	jr z,8F 														; _ pués aún podemos desplazarlo antes de desaparecer.
+ 380+ B741              Mov_left:
+ 381+ B741
+ 382+ B741 3A 0E 94     	ld a,(Ctrl_0)
+ 383+ B744 CB 77        	bit 6,a
+ 384+ B746 28 06        	jr z,3F 														; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que que no hemos llegado al char.1 de la línea, [Stop_Amadeus].
+ 385+ B748
+ 386+ B748 CD 4E B8     	call Stop_Amadeus_left
+ 387+ B74B C8           	ret z
+ 388+ B74C 20 4C        	jr nz,8F
+ 389+ B74E
+ 390+ B74E 3A 11 94     3 ld a,(Posicion_actual)
+ 391+ B751 E6 1F        	and $1f
+ 392+ B753 20 45        	jr nz,8F
+ 393+ B755
+ 394+ B755 3A 15 94     	ld a,(CTRL_DESPLZ) 			 									; Si el Sprite no está en el 1er char de la línea, (desaparece por la izquierda), o estando en este, _
+ 395+ B758 A7           	and a 															; _ (CTRL_DESPLZ)="0", cargamos HL con la (Posicion_actual) y ejecutamos la rutina de desplazamiento, _
+ 396+ B759 28 3F        	jr z,8F 														; _ pués aún podemos desplazarlo antes de desaparecer.
+ 397+ B75B
+ 398+ B75B              ; ---------- ---------- ----------
  399+ B75B
- 400+ B75B              ; ---------- ---------- ----------
- 401+ B75B
- 402+ B75B 3A 24 94     	ld a,(Vel_left)
- 403+ B75E FE 02        	cp 2
- 404+ B760 28 11        	jr z,1F
- 405+ B762 38 04        	jr c,6F
- 406+ B764 FE 04        	cp 4
- 407+ B766 28 16        	jr z,7F
+ 400+ B75B 3A 24 94     	ld a,(Vel_left)
+ 401+ B75E FE 02        	cp 2
+ 402+ B760 28 11        	jr z,1F
+ 403+ B762 38 04        	jr c,6F
+ 404+ B764 FE 04        	cp 4
+ 405+ B766 28 16        	jr z,7F
+ 406+ B768
+ 407+ B768              ; ---------- ---------- ----------
  408+ B768
- 409+ B768              ; ---------- ---------- ----------
- 410+ B768
- 411+ B768 3A 15 94     6 ld a,(CTRL_DESPLZ)
- 412+ B76B FE F8        	cp $f8
- 413+ B76D 38 1A        	jr c,4F
- 414+ B76F 28 18        	jr z,4F
- 415+ B771 18 27        	jr 8F
- 416+ B773 3A 15 94     1 ld a,(CTRL_DESPLZ)
- 417+ B776 FE F9        	cp $f9
- 418+ B778 38 0F        	jr c,4F
- 419+ B77A 28 0D        	jr z,4F
- 420+ B77C 18 1C        	jr 8F
- 421+ B77E 3A 15 94     7 ld a,(CTRL_DESPLZ)
- 422+ B781 FE FB        	cp $fb
- 423+ B783 38 04        	jr c,4F
- 424+ B785 28 02        	jr z,4F
- 425+ B787 18 11        	jr 8F
+ 409+ B768 3A 15 94     6 ld a,(CTRL_DESPLZ)
+ 410+ B76B FE F8        	cp $f8
+ 411+ B76D 38 1A        	jr c,4F
+ 412+ B76F 28 18        	jr z,4F
+ 413+ B771 18 27        	jr 8F
+ 414+ B773 3A 15 94     1 ld a,(CTRL_DESPLZ)
+ 415+ B776 FE F9        	cp $f9
+ 416+ B778 38 0F        	jr c,4F
+ 417+ B77A 28 0D        	jr z,4F
+ 418+ B77C 18 1C        	jr 8F
+ 419+ B77E 3A 15 94     7 ld a,(CTRL_DESPLZ)
+ 420+ B781 FE FB        	cp $fb
+ 421+ B783 38 04        	jr c,4F
+ 422+ B785 28 02        	jr z,4F
+ 423+ B787 18 11        	jr 8F
+ 424+ B789
+ 425+ B789              ; ---------- ---------- ----------
  426+ B789
- 427+ B789              ; ---------- ---------- ----------
- 428+ B789
- 429+ B789 CD 74 B8     4 call Reaparece_derecha 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
- 430+ B78C              ;	call Reinicio
+ 427+ B789 CD 74 B8     4 call Reaparece_derecha 											; Despues de haber actualizado la coordenada X del Sprite, (de 0 a 31). Si el movimiento es al char. _
+ 428+ B78C              ;	call Reinicio
+ 429+ B78C
+ 430+ B78C              ; ---------- ---------- ----------
  431+ B78C
- 432+ B78C              ; ---------- ---------- ----------
- 433+ B78C
- 434+ B78C 06 02        	ld b,2 															; Para hacer que el objeto aparezca poco a poco, hemos de desplazarlo 2 veces: El primer desplazamiento_
- 435+ B78E C5           5 push bc 															; _pone (CTRL_DESPLZ) a "0" y el segundo a "$ff". Con esto hacemos que el Sprite tenga espacio en blanco delante_
- 436+ B78F
- 437+ B78F CD A1 B7     	call DESPLZ_IZQ
- 438+ B792 C1           	pop bc
- 439+ B793 10 F9        	djnz 5B
- 440+ B795 21 11 94     	ld hl,Posicion_actual 											; Incrementamos su posición actual, pués al desplazarlo a la izquierda, volvemos a incrementar el nº de (Columns) y _
- 441+ B798 34           	inc (hl) 														; _ (Posicion_actual) ha pasado de $1f a $1e.
- 442+ B799
- 443+ B799 C9           	ret
+ 432+ B78C 06 02        	ld b,2 															; Para hacer que el objeto aparezca poco a poco, hemos de desplazarlo 2 veces: El primer desplazamiento_
+ 433+ B78E C5           5 push bc 															; _pone (CTRL_DESPLZ) a "0" y el segundo a "$ff". Con esto hacemos que el Sprite tenga espacio en blanco delante_
+ 434+ B78F
+ 435+ B78F CD A1 B7     	call DESPLZ_IZQ
+ 436+ B792 C1           	pop bc
+ 437+ B793 10 F9        	djnz 5B
+ 438+ B795 21 11 94     	ld hl,Posicion_actual 											; Incrementamos su posición actual, pués al desplazarlo a la izquierda, volvemos a incrementar el nº de (Columns) y _
+ 439+ B798 34           	inc (hl) 														; _ (Posicion_actual) ha pasado de $1f a $1e.
+ 440+ B799
+ 441+ B799 C9           	ret
+ 442+ B79A
+ 443+ B79A              ; ---------- ---------- ----------
  444+ B79A
- 445+ B79A              ; ---------- ---------- ----------
+ 445+ B79A              ; Movemos, no hay recolocación.
  446+ B79A
- 447+ B79A              ; Movemos, no hay recolocación.
- 448+ B79A
- 449+ B79A 2A 11 94     8 ld hl,(Posicion_actual)
- 450+ B79D CD A1 B7     	call DESPLZ_IZQ
- 451+ B7A0
- 452+ B7A0 C9           	ret
- 453+ B7A1
- 454+ B7A1              ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- 455+ B7A1              ;
- 456+ B7A1              ;	22/9/22
+ 447+ B79A 2A 11 94     8 ld hl,(Posicion_actual)
+ 448+ B79D CD A1 B7     	call DESPLZ_IZQ
+ 449+ B7A0
+ 450+ B7A0 C9           	ret
+ 451+ B7A1
+ 452+ B7A1              ; ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 453+ B7A1              ;
+ 454+ B7A1              ;	22/9/22
+ 455+ B7A1
+ 456+ B7A1              DESPLZ_IZQ:
  457+ B7A1
- 458+ B7A1              DESPLZ_IZQ:
- 459+ B7A1
- 460+ B7A1 CD B0 B7     	call Desplaza_izquierda
- 461+ B7A4 CD FD B7         call modifica_parametros_1er_DESPLZ
- 462+ B7A7 CD 1A B8     	call Ciclo_completo_2
- 463+ B7AA
- 464+ B7AA 21 0E 94     	ld hl,Ctrl_0 													; Indica que nos hemos desplazado a la izquierda
- 465+ B7AD CB BE        	res 7,(hl)
- 466+ B7AF
- 467+ B7AF C9           	ret
+ 458+ B7A1 CD B0 B7     	call Desplaza_izquierda
+ 459+ B7A4 CD FD B7         call modifica_parametros_1er_DESPLZ
+ 460+ B7A7 CD 1A B8     	call Ciclo_completo_2
+ 461+ B7AA
+ 462+ B7AA 21 0E 94     	ld hl,Ctrl_0 													; Indica que nos hemos desplazado a la izquierda
+ 463+ B7AD CB BE        	res 7,(hl)
+ 464+ B7AF
+ 465+ B7AF C9           	ret
+ 466+ B7B0
+ 467+ B7B0              Desplaza_izquierda:
  468+ B7B0
- 469+ B7B0              Desplaza_izquierda:
- 470+ B7B0
- 471+ B7B0 3A 24 94     	ld a,(Vel_left)
- 472+ B7B3 47           	ld b,a
- 473+ B7B4
- 474+ B7B4 2A 1C 94     	ld hl,(Puntero_DESPLZ_izq)
- 475+ B7B7 23           1 inc hl
- 476+ B7B8 23           	inc hl
- 477+ B7B9 10 FC        	djnz 1B 														; Seleccionamos FRAME en función de la velocidad del Sprite.
- 478+ B7BB
- 479+ B7BB 22 1C 94     	ld (Puntero_DESPLZ_izq),hl
- 480+ B7BE CD 2C 9B     	call Extrae_address
- 481+ B7C1 22 13 94     	ld (Puntero_objeto),hl
+ 469+ B7B0 3A 24 94     	ld a,(Vel_left)
+ 470+ B7B3 47           	ld b,a
+ 471+ B7B4
+ 472+ B7B4 2A 1C 94     	ld hl,(Puntero_DESPLZ_izq)
+ 473+ B7B7 23           1 inc hl
+ 474+ B7B8 23           	inc hl
+ 475+ B7B9 10 FC        	djnz 1B 														; Seleccionamos FRAME en función de la velocidad del Sprite.
+ 476+ B7BB
+ 477+ B7BB 22 1C 94     	ld (Puntero_DESPLZ_izq),hl
+ 478+ B7BE CD 2C 9B     	call Extrae_address
+ 479+ B7C1 22 13 94     	ld (Puntero_objeto),hl
+ 480+ B7C4
+ 481+ B7C4              ; Modifica (Puntero_DESPLZ_der).
  482+ B7C4
- 483+ B7C4              ; Modifica (Puntero_DESPLZ_der).
- 484+ B7C4
- 485+ B7C4              ; Vamos a descontar a "8" el nº de movimientos que hemos efectuado a la izq.
- 486+ B7C4              ; Cuántos movimientos hemos hecho ??
- 487+ B7C4              ; DE contiene (Puntero_DESPLZ_izq).
- 488+ B7C4
- 489+ B7C4 2A 18 94     7 ld hl,(Indice_Sprite_izq)
- 490+ B7C7 EB           	ex de,hl
- 491+ B7C8 A7           	and a
- 492+ B7C9 ED 52        	sbc hl,de
- 493+ B7CB CB 3D        	srl l
- 494+ B7CD 3E 08        6 ld a,8
- 495+ B7CF 95           	sub l
- 496+ B7D0 C8           	ret z
- 497+ B7D1 30 1E        	jr nc,3F
- 498+ B7D3
- 499+ B7D3              ; Hemos salido del índice. Hay que ajustar (Puntero_DESPLZ_izq) dentro del mismo.
- 500+ B7D3              ; B="0".
- 501+ B7D3
- 502+ B7D3 04           4 inc b
- 503+ B7D4 3C           	inc a
- 504+ B7D5 20 FC        	jr nz,4B
- 505+ B7D7 78           	ld a,b
- 506+ B7D8 08           	ex af,af
- 507+ B7D9 2A 18 94     	ld hl,(Indice_Sprite_izq)
- 508+ B7DC 23           5 inc hl
- 509+ B7DD 23           	inc hl
- 510+ B7DE 10 FC        	djnz 5B
- 511+ B7E0 22 1C 94     	ld (Puntero_DESPLZ_izq),hl
- 512+ B7E3 CD 2C 9B     	call Extrae_address
- 513+ B7E6 22 13 94     	ld (Puntero_objeto),hl
- 514+ B7E9
- 515+ B7E9              ; Si nos hemos salido del índice es porque hemos completado un ciclo completo. Habrá que actualizar_
- 516+ B7E9              ; _(Posicion_actual).
- 517+ B7E9
- 518+ B7E9 21 11 94     	ld hl,Posicion_actual
- 519+ B7EC 35           	dec (hl)
- 520+ B7ED 08           	ex af,af
- 521+ B7EE 6F           	ld l,a
- 522+ B7EF 18 DC        	jr 6B
+ 483+ B7C4              ; Vamos a descontar a "8" el nº de movimientos que hemos efectuado a la izq.
+ 484+ B7C4              ; Cuántos movimientos hemos hecho ??
+ 485+ B7C4              ; DE contiene (Puntero_DESPLZ_izq).
+ 486+ B7C4
+ 487+ B7C4 2A 18 94     7 ld hl,(Indice_Sprite_izq)
+ 488+ B7C7 EB           	ex de,hl
+ 489+ B7C8 A7           	and a
+ 490+ B7C9 ED 52        	sbc hl,de
+ 491+ B7CB CB 3D        	srl l
+ 492+ B7CD 3E 08        6 ld a,8
+ 493+ B7CF 95           	sub l
+ 494+ B7D0 C8           	ret z
+ 495+ B7D1 30 1E        	jr nc,3F
+ 496+ B7D3
+ 497+ B7D3              ; Hemos salido del índice. Hay que ajustar (Puntero_DESPLZ_izq) dentro del mismo.
+ 498+ B7D3              ; B="0".
+ 499+ B7D3
+ 500+ B7D3 04           4 inc b
+ 501+ B7D4 3C           	inc a
+ 502+ B7D5 20 FC        	jr nz,4B
+ 503+ B7D7 78           	ld a,b
+ 504+ B7D8 08           	ex af,af
+ 505+ B7D9 2A 18 94     	ld hl,(Indice_Sprite_izq)
+ 506+ B7DC 23           5 inc hl
+ 507+ B7DD 23           	inc hl
+ 508+ B7DE 10 FC        	djnz 5B
+ 509+ B7E0 22 1C 94     	ld (Puntero_DESPLZ_izq),hl
+ 510+ B7E3 CD 2C 9B     	call Extrae_address
+ 511+ B7E6 22 13 94     	ld (Puntero_objeto),hl
+ 512+ B7E9
+ 513+ B7E9              ; Si nos hemos salido del índice es porque hemos completado un ciclo completo. Habrá que actualizar_
+ 514+ B7E9              ; _(Posicion_actual).
+ 515+ B7E9
+ 516+ B7E9 21 11 94     	ld hl,Posicion_actual
+ 517+ B7EC 35           	dec (hl)
+ 518+ B7ED 08           	ex af,af
+ 519+ B7EE 6F           	ld l,a
+ 520+ B7EF 18 DC        	jr 6B
+ 521+ B7F1
+ 522+ B7F1              ; Permanecemos en el índice. No hay que reajustar (Puntero_DESPLZ_izq).
  523+ B7F1
- 524+ B7F1              ; Permanecemos en el índice. No hay que reajustar (Puntero_DESPLZ_izq).
- 525+ B7F1
- 526+ B7F1 47           3 ld b,a
- 527+ B7F2 2A 16 94     	ld hl,(Indice_Sprite_der)
- 528+ B7F5 23           2 inc hl
- 529+ B7F6 23           	inc hl
- 530+ B7F7 10 FC        	djnz 2B
- 531+ B7F9 22 1A 94     	ld (Puntero_DESPLZ_der),hl
- 532+ B7FC
- 533+ B7FC C9           8 ret
- 534+ B7FD
- 535+ B7FD              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 524+ B7F1 47           3 ld b,a
+ 525+ B7F2 2A 16 94     	ld hl,(Indice_Sprite_der)
+ 526+ B7F5 23           2 inc hl
+ 527+ B7F6 23           	inc hl
+ 528+ B7F7 10 FC        	djnz 2B
+ 529+ B7F9 22 1A 94     	ld (Puntero_DESPLZ_der),hl
+ 530+ B7FC
+ 531+ B7FC C9           8 ret
+ 532+ B7FD
+ 533+ B7FD              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 534+ B7FD              ;
+ 535+ B7FD              ;	7/6/25
  536+ B7FD              ;
- 537+ B7FD              ;	7/6/25
+ 537+ B7FD              ;	modifica_parametros_1er_DESPLZ
  538+ B7FD              ;
- 539+ B7FD              ;	modifica_parametros_1er_DESPLZ
- 540+ B7FD              ;
- 541+ B7FD              ;	La rutina modifica el nº de columnas del objeto en el 1er desplazamiento.
- 542+ B7FD              ; 	También decrementa el byte de control de desplazamiento, (desplz. a izq) y modifica la posición de (Puntero_datas) en función del cuadrante de pantalla en el que nos encontremos.
- 543+ B7FD              ; 	Si el desplazamiento se produce en el 2º o 4º cuadrante, la rutina decrementará (Posicion_actual).
+ 539+ B7FD              ;	La rutina modifica el nº de columnas del objeto en el 1er desplazamiento.
+ 540+ B7FD              ; 	También decrementa el byte de control de desplazamiento, (desplz. a izq) y modifica la posición de (Puntero_datas) en función del cuadrante de pantalla en el que nos encontremos.
+ 541+ B7FD              ; 	Si el desplazamiento se produce en el 2º o 4º cuadrante, la rutina decrementará (Posicion_actual).
+ 542+ B7FD
+ 543+ B7FD              modifica_parametros_1er_DESPLZ:
  544+ B7FD
- 545+ B7FD              modifica_parametros_1er_DESPLZ:
- 546+ B7FD
- 547+ B7FD 3A 15 94     	ld a,(CTRL_DESPLZ) 				    ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
- 548+ B800 A7           	and a
- 549+ B801 20 13        	jr nz,1F
- 550+ B803
- 551+ B803 3D           	dec a              							            	    ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento.
- 552+ B804 32 15 94         ld (CTRL_DESPLZ),a
- 553+ B807
- 554+ B807 21 10 94         ld hl,Columns
- 555+ B80A 34           	inc (hl)
- 556+ B80B
- 557+ B80B 3A 20 94     	ld a,(Cuad_objeto)
- 558+ B80E E6 01        	and 1
- 559+ B810 20 04        	jr nz,1F
- 560+ B812
- 561+ B812 21 11 94     	ld hl,Posicion_actual 									    ; Decrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _
- 562+ B815 35           	dec (hl) 														    ; _ cuadrantes 2 y 4 de pantalla.
- 563+ B816
- 564+ B816 CD 64 B8     1 call Dec_CTRL_DESPLZ
- 565+ B819
- 566+ B819 C9           	ret
+ 545+ B7FD 3A 15 94     	ld a,(CTRL_DESPLZ) 				    ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
+ 546+ B800 A7           	and a
+ 547+ B801 20 13        	jr nz,1F
+ 548+ B803
+ 549+ B803 3D           	dec a              							            	    ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento.
+ 550+ B804 32 15 94         ld (CTRL_DESPLZ),a
+ 551+ B807
+ 552+ B807 21 10 94         ld hl,Columns
+ 553+ B80A 34           	inc (hl)
+ 554+ B80B
+ 555+ B80B 3A 20 94     	ld a,(Cuad_objeto)
+ 556+ B80E E6 01        	and 1
+ 557+ B810 20 04        	jr nz,1F
+ 558+ B812
+ 559+ B812 21 11 94     	ld hl,Posicion_actual 									    ; Decrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _
+ 560+ B815 35           	dec (hl) 														    ; _ cuadrantes 2 y 4 de pantalla.
+ 561+ B816
+ 562+ B816 CD 64 B8     1 call Dec_CTRL_DESPLZ
+ 563+ B819
+ 564+ B819 C9           	ret
+ 565+ B81A
+ 566+ B81A              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  567+ B81A
- 568+ B81A              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 568+ B81A              Ciclo_completo_2
  569+ B81A
- 570+ B81A              Ciclo_completo_2
- 571+ B81A
- 572+ B81A 3A 15 94     	ld a,(CTRL_DESPLZ)
- 573+ B81D FE F7        	cp $f7
- 574+ B81F 28 10        	jr z,1F 												   		; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
- 575+ B821 D0           	ret nc
+ 570+ B81A 3A 15 94     	ld a,(CTRL_DESPLZ)
+ 571+ B81D FE F7        	cp $f7
+ 572+ B81F 28 10        	jr z,1F 												   		; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
+ 573+ B821 D0           	ret nc
+ 574+ B822
+ 575+ B822              ; (CTRL_DESPLZ) fuera de rango, (por debajo de $f7), hay que reajustar.
  576+ B822
- 577+ B822              ; (CTRL_DESPLZ) fuera de rango, (por debajo de $f7), hay que reajustar.
- 578+ B822
- 579+ B822 06 00        	ld b,0
- 580+ B824 04           4 inc b
- 581+ B825 3C           	inc a
- 582+ B826 FE F7        	cp $f7
- 583+ B828 20 FA        	jr nz,4B
- 584+ B82A 3E FF        	ld a,$ff
- 585+ B82C 90           	sub b
- 586+ B82D 32 15 94     	ld (CTRL_DESPLZ),a
- 587+ B830 C9           	ret
+ 577+ B822 06 00        	ld b,0
+ 578+ B824 04           4 inc b
+ 579+ B825 3C           	inc a
+ 580+ B826 FE F7        	cp $f7
+ 581+ B828 20 FA        	jr nz,4B
+ 582+ B82A 3E FF        	ld a,$ff
+ 583+ B82C 90           	sub b
+ 584+ B82D 32 15 94     	ld (CTRL_DESPLZ),a
+ 585+ B830 C9           	ret
+ 586+ B831
+ 587+ B831              ; Se completa el ciclo de movimiento. (CTRL_DESPLZ)="0", se generan coordenadas y se corrige (Posicion_actual).
  588+ B831
- 589+ B831              ; Se completa el ciclo de movimiento. (CTRL_DESPLZ)="0", se generan coordenadas y se corrige (Posicion_actual).
- 590+ B831
- 591+ B831 21 10 94     1 ld hl,Columns
- 592+ B834 35           	dec (hl)
- 593+ B835
- 594+ B835 AF           	xor a
- 595+ B836 32 15 94     	ld (CTRL_DESPLZ),a
- 596+ B839
- 597+ B839 3A 20 94     	ld a,(Cuad_objeto)
- 598+ B83C E6 01        	and 1
- 599+ B83E 28 04        	jr z,2F
- 600+ B840
- 601+ B840 21 11 94     	ld hl,Posicion_actual                                         ; Decrementamos (Posicion_actual) en los cuadrantes 1º y 3º.
- 602+ B843 35           	dec (hl)
+ 589+ B831 21 10 94     1 ld hl,Columns
+ 590+ B834 35           	dec (hl)
+ 591+ B835
+ 592+ B835 AF           	xor a
+ 593+ B836 32 15 94     	ld (CTRL_DESPLZ),a
+ 594+ B839
+ 595+ B839 3A 20 94     	ld a,(Cuad_objeto)
+ 596+ B83C E6 01        	and 1
+ 597+ B83E 28 04        	jr z,2F
+ 598+ B840
+ 599+ B840 21 11 94     	ld hl,Posicion_actual                                         ; Decrementamos (Posicion_actual) en los cuadrantes 1º y 3º.
+ 600+ B843 35           	dec (hl)
+ 601+ B844
+ 602+ B844              ; Inicia (Puntero_DESPLZ_izq) y (Puntero_objeto).
  603+ B844
- 604+ B844              ; Inicia (Puntero_DESPLZ_izq) y (Puntero_objeto).
- 605+ B844
- 606+ B844 CD 97 A3     2 call Inicia_puntero_objeto_izq
- 607+ B847
- 608+ B847 C9           	ret
- 609+ B848
- 610+ B848              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 604+ B844 CD 97 A3     2 call Inicia_puntero_objeto_izq
+ 605+ B847
+ 606+ B847 C9           	ret
+ 607+ B848
+ 608+ B848              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 609+ B848              ;
+ 610+ B848              ;	19/10/22
  611+ B848              ;
- 612+ B848              ;	19/10/22
- 613+ B848              ;
- 614+ B848              ;	(cp 29) para un Amadeus de 3 Columns.
- 615+ B848              ;	(cp 30)   ""  ""    ""     2 Columns.
+ 612+ B848              ;	(cp 29) para un Amadeus de 3 Columns.
+ 613+ B848              ;	(cp 30)   ""  ""    ""     2 Columns.
+ 614+ B848
+ 615+ B848              Stop_Amadeus_right:
  616+ B848
- 617+ B848              Stop_Amadeus_right:
- 618+ B848
- 619+ B848 3A 01 94     	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
- 620+ B84B FE 1E        	cp 30																			 ; Hemos llegado al límite derecho de la pantalla??.
- 621+ B84D
- 622+ B84D C9           	ret
- 623+ B84E
- 624+ B84E              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 617+ B848 3A 01 94     	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
+ 618+ B84B FE 1E        	cp 30																			 ; Hemos llegado al límite derecho de la pantalla??.
+ 619+ B84D
+ 620+ B84D C9           	ret
+ 621+ B84E
+ 622+ B84E              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 623+ B84E              ;
+ 624+ B84E              ;	19/10/22
  625+ B84E              ;
- 626+ B84E              ;	19/10/22
- 627+ B84E              ;
- 628+ B84E              ;	(cp 2) para un Amadeus de 3 Columns.
- 629+ B84E              ;	(cp 1)   ""  ""    ""     2 Columns.
+ 626+ B84E              ;	(cp 2) para un Amadeus de 3 Columns.
+ 627+ B84E              ;	(cp 1)   ""  ""    ""     2 Columns.
+ 628+ B84E
+ 629+ B84E              Stop_Amadeus_left:
  630+ B84E
- 631+ B84E              Stop_Amadeus_left:
- 632+ B84E
- 633+ B84E 3A 01 94     	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
- 634+ B851 FE 01        	cp 1																			 ; Hemos llegado al límite izquierdo de la pantalla??.
- 635+ B853
- 636+ B853 C9           	ret
- 637+ B854
- 638+ B854              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 631+ B84E 3A 01 94     	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
+ 632+ B851 FE 01        	cp 1																			 ; Hemos llegado al límite izquierdo de la pantalla??.
+ 633+ B853
+ 634+ B853 C9           	ret
+ 635+ B854
+ 636+ B854              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 637+ B854              ;
+ 638+ B854              ;	7/6/25
  639+ B854              ;
- 640+ B854              ;	7/6/25
+ 640+ B854              ;	Inc_CTRL_DESPLZ
  641+ B854              ;
- 642+ B854              ;	Inc_CTRL_DESPLZ
- 643+ B854              ;
- 644+ B854              ;
- 645+ B854              ;   Incrementa el valor del byte de control, (CTRL_DESPLZ) en función del nº de veces que hayamos desplazado el objeto, (Vel_right).
+ 642+ B854              ;
+ 643+ B854              ;   Incrementa el valor del byte de control, (CTRL_DESPLZ) en función del nº de veces que hayamos desplazado el objeto, (Vel_right).
+ 644+ B854
+ 645+ B854              Inc_CTRL_DESPLZ:
  646+ B854
- 647+ B854              Inc_CTRL_DESPLZ:
- 648+ B854
- 649+ B854 21 15 94     	ld hl,CTRL_DESPLZ
- 650+ B857 3A 25 94     	ld a,(Vel_right)
- 651+ B85A A7           	and a
- 652+ B85B 28 05        	jr z,1F
- 653+ B85D
- 654+ B85D 47           	ld b,a
- 655+ B85E
- 656+ B85E 34           3 inc (hl)
- 657+ B85F 10 FD        	djnz 3B
- 658+ B861
- 659+ B861 C9           	ret
- 660+ B862
- 661+ B862 34           1 inc (hl)
- 662+ B863
- 663+ B863 C9           	ret
- 664+ B864
- 665+ B864              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 647+ B854 21 15 94     	ld hl,CTRL_DESPLZ
+ 648+ B857 3A 25 94     	ld a,(Vel_right)
+ 649+ B85A A7           	and a
+ 650+ B85B 28 05        	jr z,1F
+ 651+ B85D
+ 652+ B85D 47           	ld b,a
+ 653+ B85E
+ 654+ B85E 34           3 inc (hl)
+ 655+ B85F 10 FD        	djnz 3B
+ 656+ B861
+ 657+ B861 C9           	ret
+ 658+ B862
+ 659+ B862 34           1 inc (hl)
+ 660+ B863
+ 661+ B863 C9           	ret
+ 662+ B864
+ 663+ B864              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 664+ B864              ;
+ 665+ B864              ;	25/02/25
  666+ B864              ;
- 667+ B864              ;	25/02/25
+ 667+ B864              ;	Dec_CTRL_DESPLZ
  668+ B864              ;
- 669+ B864              ;	Dec_CTRL_DESPLZ
- 670+ B864              ;
- 671+ B864              ;
- 672+ B864              ;   Decrementa el valor del byte de control, (CTRL_DESPLZ) en función del nº de veces que hayamos desplazado el objeto, (Vel_right).
+ 669+ B864              ;
+ 670+ B864              ;   Decrementa el valor del byte de control, (CTRL_DESPLZ) en función del nº de veces que hayamos desplazado el objeto, (Vel_right).
+ 671+ B864
+ 672+ B864              Dec_CTRL_DESPLZ:
  673+ B864
- 674+ B864              Dec_CTRL_DESPLZ:
- 675+ B864
- 676+ B864 21 15 94     	ld hl,CTRL_DESPLZ
- 677+ B867 3A 24 94     	ld a,(Vel_left)
- 678+ B86A A7           	and a
- 679+ B86B 28 05        	jr z,1F
- 680+ B86D 47           	ld b,a
- 681+ B86E 35           3 dec (hl)
- 682+ B86F 10 FD        	djnz 3B
- 683+ B871
- 684+ B871 C9           	ret
- 685+ B872
- 686+ B872 35           1 dec (hl)
- 687+ B873
- 688+ B873 C9           	ret
- 689+ B874
- 690+ B874              ; ---------- ---------- ---------- ---------- ---------- ----------
- 691+ B874              ;
- 692+ B874              ;	25/02/25
+ 674+ B864 21 15 94     	ld hl,CTRL_DESPLZ
+ 675+ B867 3A 24 94     	ld a,(Vel_left)
+ 676+ B86A A7           	and a
+ 677+ B86B 28 05        	jr z,1F
+ 678+ B86D 47           	ld b,a
+ 679+ B86E 35           3 dec (hl)
+ 680+ B86F 10 FD        	djnz 3B
+ 681+ B871
+ 682+ B871 C9           	ret
+ 683+ B872
+ 684+ B872 35           1 dec (hl)
+ 685+ B873
+ 686+ B873 C9           	ret
+ 687+ B874
+ 688+ B874              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 689+ B874              ;
+ 690+ B874              ;	25/02/25
+ 691+ B874
+ 692+ B874              Reaparece_derecha:
  693+ B874
- 694+ B874              Reaparece_derecha:
- 695+ B874
- 696+ B874 3A 11 94     	ld a,(Posicion_actual)
- 697+ B877 C6 1F        	add $1f
- 698+ B879 32 11 94     	ld (Posicion_actual),a
- 699+ B87C
- 700+ B87C 21 0E 94     	ld hl,Ctrl_0
- 701+ B87F CB C6        	set 0,(hl)
- 702+ B881 CB EE        	set 5,(hl)
- 703+ B883
- 704+ B883 2A 11 94     	ld hl,(Posicion_actual)
- 705+ B886 CD D7 B3     	call Calcula_Cuad_objeto
- 706+ B889
- 707+ B889 C9           	ret
- 708+ B88A
- 709+ B88A              ; ---------- ---------- ---------- ---------- ---------- ----------
- 710+ B88A              ;
- 711+ B88A              ;	25/02/25
+ 694+ B874 3A 11 94     	ld a,(Posicion_actual)
+ 695+ B877 C6 1F        	add $1f
+ 696+ B879 32 11 94     	ld (Posicion_actual),a
+ 697+ B87C
+ 698+ B87C 21 0E 94     	ld hl,Ctrl_0
+ 699+ B87F CB C6        	set 0,(hl)
+ 700+ B881 CB EE        	set 5,(hl)
+ 701+ B883
+ 702+ B883 2A 11 94     	ld hl,(Posicion_actual)
+ 703+ B886 CD D7 B3     	call Calcula_Cuad_objeto
+ 704+ B889
+ 705+ B889 C9           	ret
+ 706+ B88A
+ 707+ B88A              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 708+ B88A              ;
+ 709+ B88A              ;	25/02/25
+ 710+ B88A
+ 711+ B88A              Reaparece_izquierda:
  712+ B88A
- 713+ B88A              Reaparece_izquierda:
- 714+ B88A
- 715+ B88A 3A 11 94     	ld a,(Posicion_actual)
- 716+ B88D D6 1F        	sub $1f
- 717+ B88F 32 11 94     	ld (Posicion_actual),a
- 718+ B892
- 719+ B892 21 0E 94     	ld hl,Ctrl_0
- 720+ B895 CB CE        	set 1,(hl)
- 721+ B897 CB EE        	set 5,(hl)
- 722+ B899
- 723+ B899 2A 11 94     	ld hl,(Posicion_actual)
- 724+ B89C CD D7 B3     	call Calcula_Cuad_objeto
- 725+ B89F
- 726+ B89F C9           	ret
- 727+ B8A0
- 728+ B8A0              ; ---------- ---------- ---------- ---------- ---------- ----------
- 729+ B8A0              ;
- 730+ B8A0              ;	25/02/25
- 731+ B8A0
+ 713+ B88A 3A 11 94     	ld a,(Posicion_actual)
+ 714+ B88D D6 1F        	sub $1f
+ 715+ B88F 32 11 94     	ld (Posicion_actual),a
+ 716+ B892
+ 717+ B892 21 0E 94     	ld hl,Ctrl_0
+ 718+ B895 CB CE        	set 1,(hl)
+ 719+ B897 CB EE        	set 5,(hl)
+ 720+ B899
+ 721+ B899 2A 11 94     	ld hl,(Posicion_actual)
+ 722+ B89C CD D7 B3     	call Calcula_Cuad_objeto
+ 723+ B89F
+ 724+ B89F C9           	ret
+ 725+ B8A0
+ 726+ B8A0              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 727+ B8A0              ;
+ 728+ B8A0              ;	25/02/25
+ 729+ B8A0
+ 730+ B8A0
+ 731+ B8A0              Reaparece_abajo:
  732+ B8A0
- 733+ B8A0              Reaparece_abajo:
- 734+ B8A0
- 735+ B8A0 24           	inc h
- 736+ B8A1
- 737+ B8A1 01 E0 17     	ld bc,$17e0
- 738+ B8A4 A7           	and a
- 739+ B8A5 ED 4A        	adc hl,bc
- 740+ B8A7
- 741+ B8A7 22 11 94     	ld (Posicion_actual),hl
- 742+ B8AA CD D7 B3     	call Calcula_Cuad_objeto
- 743+ B8AD
- 744+ B8AD 21 0E 94     	ld hl,Ctrl_0
- 745+ B8B0 CB D6        	set 2,(hl)
- 746+ B8B2 CB EE        	set 5,(hl)
- 747+ B8B4
- 748+ B8B4 C9           	ret
- 749+ B8B5
- 750+ B8B5              ; ---------- ---------- ---------- ---------- ---------- ----------
- 751+ B8B5              ;
- 752+ B8B5              ;	25/02/25
+ 733+ B8A0 24           	inc h
+ 734+ B8A1
+ 735+ B8A1 01 E0 17     	ld bc,$17e0
+ 736+ B8A4 A7           	and a
+ 737+ B8A5 ED 4A        	adc hl,bc
+ 738+ B8A7
+ 739+ B8A7 22 11 94     	ld (Posicion_actual),hl
+ 740+ B8AA CD D7 B3     	call Calcula_Cuad_objeto
+ 741+ B8AD
+ 742+ B8AD 21 0E 94     	ld hl,Ctrl_0
+ 743+ B8B0 CB D6        	set 2,(hl)
+ 744+ B8B2 CB EE        	set 5,(hl)
+ 745+ B8B4
+ 746+ B8B4 C9           	ret
+ 747+ B8B5
+ 748+ B8B5              ; ---------- ---------- ---------- ---------- ---------- ----------
+ 749+ B8B5              ;
+ 750+ B8B5              ;	25/02/25
+ 751+ B8B5
+ 752+ B8B5              Reaparece_arriba:
  753+ B8B5
- 754+ B8B5              Reaparece_arriba:
- 755+ B8B5
- 756+ B8B5 01 E0 17     	ld bc,$17e0
- 757+ B8B8 A7           	and a
- 758+ B8B9 ED 42        	sbc hl,bc
- 759+ B8BB
- 760+ B8BB 22 11 94     	ld (Posicion_actual),hl
- 761+ B8BE CD D7 B3     	call Calcula_Cuad_objeto
- 762+ B8C1
- 763+ B8C1 21 0E 94     	ld hl,Ctrl_0
- 764+ B8C4 CB DE        	set 3,(hl)
- 765+ B8C6 CB EE        	set 5,(hl)
- 766+ B8C8
- 767+ B8C8 C9           	ret
- 768+ B8C9
- 769+ B8C9              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
- 770+ B8C9              ;
- 771+ B8C9              ;	15/07/23
+ 754+ B8B5 01 E0 17     	ld bc,$17e0
+ 755+ B8B8 A7           	and a
+ 756+ B8B9 ED 42        	sbc hl,bc
+ 757+ B8BB
+ 758+ B8BB 22 11 94     	ld (Posicion_actual),hl
+ 759+ B8BE CD D7 B3     	call Calcula_Cuad_objeto
+ 760+ B8C1
+ 761+ B8C1 21 0E 94     	ld hl,Ctrl_0
+ 762+ B8C4 CB DE        	set 3,(hl)
+ 763+ B8C6 CB EE        	set 5,(hl)
+ 764+ B8C8
+ 765+ B8C8 C9           	ret
+ 766+ B8C9
+ 767+ B8C9              ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 768+ B8C9              ;
+ 769+ B8C9              ;	15/07/23
+ 770+ B8C9
+ 771+ B8C9              Reinicio:
  772+ B8C9
- 773+ B8C9              Reinicio:
+ 773+ B8C9              ; Vamos a reiniciar los punteros y variables de movimiento.
  774+ B8C9
- 775+ B8C9              ; Vamos a reiniciar los punteros y variables de movimiento.
- 776+ B8C9
- 777+ B8C9 AF           	xor a
- 778+ B8CA
- 779+ B8CA 21 2E 94     	ld hl,Puntero_indice_mov_bucle
- 780+ B8CD CD EB B8     	call Limpia_contenido_hl
- 781+ B8D0
- 782+ B8D0 21 11 94     	ld hl,Posicion_actual
- 783+ B8D3 CD EB B8     	call Limpia_contenido_hl
- 784+ B8D6
- 785+ B8D6 CD F7 A4     	call Situa_Puntero_indice_mov
- 786+ B8D9 CD EA B9     	call Inicia_Puntero_mov
- 787+ B8DC
- 788+ B8DC 21 30 94     	ld hl,Incrementa_puntero
- 789+ B8DF 06 05        	ld b,5
- 790+ B8E1 77           1 ld (hl),a
- 791+ B8E2 23           	inc hl
- 792+ B8E3 10 FC        	djnz 1B
- 793+ B8E5
- 794+ B8E5 21 0D 94     	ld hl,Ctrl_2
- 795+ B8E8 CB 96        	res 2,(hl)							; El movimiento de la entidad, deja de estar iniciado.
- 796+ B8EA
- 797+ B8EA C9           	ret
+ 775+ B8C9 AF           	xor a
+ 776+ B8CA
+ 777+ B8CA 21 2E 94     	ld hl,Puntero_indice_mov_bucle
+ 778+ B8CD CD EB B8     	call Limpia_contenido_hl
+ 779+ B8D0
+ 780+ B8D0 21 11 94     	ld hl,Posicion_actual
+ 781+ B8D3 CD EB B8     	call Limpia_contenido_hl
+ 782+ B8D6
+ 783+ B8D6 CD F7 A4     	call Situa_Puntero_indice_mov
+ 784+ B8D9 CD EA B9     	call Inicia_Puntero_mov
+ 785+ B8DC
+ 786+ B8DC 21 30 94     	ld hl,Incrementa_puntero
+ 787+ B8DF 06 05        	ld b,5
+ 788+ B8E1 77           1 ld (hl),a
+ 789+ B8E2 23           	inc hl
+ 790+ B8E3 10 FC        	djnz 1B
+ 791+ B8E5
+ 792+ B8E5 21 0D 94     	ld hl,Ctrl_2
+ 793+ B8E8 CB 96        	res 2,(hl)							; El movimiento de la entidad, deja de estar iniciado.
+ 794+ B8EA
+ 795+ B8EA C9           	ret
+ 796+ B8EB
+ 797+ B8EB              Limpia_contenido_hl:
  798+ B8EB
- 799+ B8EB              Limpia_contenido_hl:
- 800+ B8EB
- 801+ B8EB 77           	ld (hl),a
- 802+ B8EC 23           	inc hl
- 803+ B8ED 77           	ld (hl),a
- 804+ B8EE
- 805+ B8EE C9           	ret
- 806+ B8EF
- 807+ B8EF              ; ----------------------------------------------------------------------------------------------------------------
+ 799+ B8EB 77           	ld (hl),a
+ 800+ B8EC 23           	inc hl
+ 801+ B8ED 77           	ld (hl),a
+ 802+ B8EE
+ 803+ B8EE C9           	ret
+ 804+ B8EF
+ 805+ B8EF              ; ----------------------------------------------------------------------------------------------------------------
+ 806+ B8EF              ;
+ 807+ B8EF              ;	18/6/24
  808+ B8EF              ;
- 809+ B8EF              ;	18/6/24
- 810+ B8EF              ;
+ 809+ B8EF
+ 810+ B8EF              Amadeus_a_izquierda:
  811+ B8EF
- 812+ B8EF              Amadeus_a_izquierda:
+ 812+ B8EF              ;	Actualiza contador de movimientos.
  813+ B8EF
- 814+ B8EF              ;	Actualiza contador de movimientos.
- 815+ B8EF
- 816+ B8EF 21 DC 90     	ld hl,Comm_Amadeus
- 817+ B8F2 35           	dec (hl)
- 818+ B8F3 28 10        	jr z,1F 								; 	Estamos en el extremo izquierdo de la pantalla.
- 819+ B8F5
- 820+ B8F5 2A DA 90     	ld hl,(Pamm_Amadeus)					;	Actualiza variable de 16 bits.
- 821+ B8F8
- 822+ B8F8 2B           	dec hl
- 823+ B8F9 2B           	dec hl
- 824+ B8FA 2B           	dec hl
- 825+ B8FB 2B           	dec hl
- 826+ B8FC
- 827+ B8FC 22 DA 90     	ld (Pamm_Amadeus),hl					;	Actualiza variable de 8 bits.
- 828+ B8FF
- 829+ B8FF 21 72 94     	ld hl,Ctrl_3
- 830+ B902 CB EE        	set 5,(hl)
- 831+ B904
- 832+ B904 C9           	ret
- 833+ B905
- 834+ B905 34           1 inc (hl)                                  ; 	Salimos. Damos orden de no imprimir la nave. No habrá movimiento.
- 835+ B906 C9           	ret
- 836+ B907
+ 814+ B8EF 21 DC 90     	ld hl,Comm_Amadeus
+ 815+ B8F2 35           	dec (hl)
+ 816+ B8F3 28 10        	jr z,1F 								; 	Estamos en el extremo izquierdo de la pantalla.
+ 817+ B8F5
+ 818+ B8F5 2A DA 90     	ld hl,(Pamm_Amadeus)					;	Actualiza variable de 16 bits.
+ 819+ B8F8
+ 820+ B8F8 2B           	dec hl
+ 821+ B8F9 2B           	dec hl
+ 822+ B8FA 2B           	dec hl
+ 823+ B8FB 2B           	dec hl
+ 824+ B8FC
+ 825+ B8FC 22 DA 90     	ld (Pamm_Amadeus),hl					;	Actualiza variable de 8 bits.
+ 826+ B8FF
+ 827+ B8FF 21 72 94     	ld hl,Ctrl_3
+ 828+ B902 CB EE        	set 5,(hl)
+ 829+ B904
+ 830+ B904 C9           	ret
+ 831+ B905
+ 832+ B905 34           1 inc (hl)                                  ; 	Salimos. Damos orden de no imprimir la nave. No habrá movimiento.
+ 833+ B906 C9           	ret
+ 834+ B907
+ 835+ B907
+ 836+ B907              Amadeus_a_derecha:
  837+ B907
- 838+ B907              Amadeus_a_derecha:
+ 838+ B907              ;	Actualiza contador de movimientos.
  839+ B907
- 840+ B907              ;	Actualiza contador de movimientos.
- 841+ B907
- 842+ B907 21 DC 90     	ld hl,Comm_Amadeus
- 843+ B90A 34           	inc (hl)
- 844+ B90B
- 845+ B90B 3E 7A        	ld a,$7a
- 846+ B90D BE           	cp (hl)
- 847+ B90E 28 10        	jr z,1F									; 	Estamos en el extremo derecho de la pantalla.
- 848+ B910
- 849+ B910 2A DA 90     	ld hl,(Pamm_Amadeus)					;	Actualiza variable de 16 bits.
- 850+ B913
- 851+ B913 23           	inc hl
- 852+ B914 23           	inc hl
- 853+ B915 23           	inc hl
- 854+ B916 23           	inc hl
- 855+ B917
- 856+ B917 22 DA 90     	ld (Pamm_Amadeus),hl					;	Actualiza variable de 8 bits.
- 857+ B91A
- 858+ B91A 21 72 94     	ld hl,Ctrl_3
- 859+ B91D CB EE        	set 5,(hl)
- 860+ B91F
- 861+ B91F C9           	ret
- 862+ B920
- 863+ B920 35           1 dec (hl)									; 	Salimos. No hay movimiento. No pintamos la nave.
- 864+ B921
- 865+ B921 C9           	ret
- 866+ B922
+ 840+ B907 21 DC 90     	ld hl,Comm_Amadeus
+ 841+ B90A 34           	inc (hl)
+ 842+ B90B
+ 843+ B90B 3E 7A        	ld a,$7a
+ 844+ B90D BE           	cp (hl)
+ 845+ B90E 28 10        	jr z,1F									; 	Estamos en el extremo derecho de la pantalla.
+ 846+ B910
+ 847+ B910 2A DA 90     	ld hl,(Pamm_Amadeus)					;	Actualiza variable de 16 bits.
+ 848+ B913
+ 849+ B913 23           	inc hl
+ 850+ B914 23           	inc hl
+ 851+ B915 23           	inc hl
+ 852+ B916 23           	inc hl
+ 853+ B917
+ 854+ B917 22 DA 90     	ld (Pamm_Amadeus),hl					;	Actualiza variable de 8 bits.
+ 855+ B91A
+ 856+ B91A 21 72 94     	ld hl,Ctrl_3
+ 857+ B91D CB EE        	set 5,(hl)
+ 858+ B91F
+ 859+ B91F C9           	ret
+ 860+ B920
+ 861+ B920 35           1 dec (hl)									; 	Salimos. No hay movimiento. No pintamos la nave.
+ 862+ B921
+ 863+ B921 C9           	ret
+ 864+ B922
 # file closed: Direcciones.asm
 3202  B922              	include "Movimiento.asm"
 # file opened: Movimiento.asm
