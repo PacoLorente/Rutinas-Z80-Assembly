@@ -803,6 +803,36 @@ Construye_movimientos_masticados_entidad:
 	call Recompone_posicion_inicio
 
 
+; 	Situación en este punto:
+
+;	La rutina Inicializa_Nivel a inicializado las variables de nivel, (DRAW):
+;
+; 	(Max_time_to_appear_entities)
+;	(Decrease_top_time_entities)
+;	(Min_time_to_appear_entities)
+;	(CLOCK_disparos_de_entidades).
+;
+;	Tenemos situado (Puntero_de_entidades) en la entidad del nivel de la que vamos a crear sus movimientos masticados.
+;
+;	La definición del tipo de entidad, (del que vamos a crear los mov. está en la bandeja DRAW):
+;
+;	(Tipo) / (Filas) / (Columns).
+;   (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
+;   (Indice_Sprite_der).
+;   (Indice_Sprite_izq).
+;   (Posicion_inicio).
+;   (Attr).
+;
+;	Tenemos una (Posicion_inicio) aleatoria y (Puntero_indice_mov) está situado en la coreografía correspondiente a este tipo de entidad.
+;
+;	(Puntero_de_almacen_de_mov_masticados) está situado en el 1er almacén vacío de los tres existentes.
+;
+;	(Puntero_objeto) apunta a: Sprite_vacio y (Repone_puntero_objeto) apunta a los .db del Sprite, "desplazado, o no" según su posición de inicio.
+;
+;	Los punteros: (Puntero_DESPLZ_der) y (Puntero_DESPLZ_izq) están situados en los correspondientes .defw de los índices derecha/izq. del tipo de sprite correspondiente.
+
+
+
 1 call Draw
 
 

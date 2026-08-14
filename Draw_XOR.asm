@@ -6,27 +6,25 @@
 
 Draw:
 
+;	Inicialización:
 
 	jr $
 
+	ld hl,(Filas)
+	ld b,l
+	ld c,h
 
-	call Prepara_draw
+	ld hl,(Posicion_actual)
 
 	ld a,h 						 					
 	or l 											
 	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
 
-; --------------------------------------------------
-
-Inicializacion:
-	
-	ld hl,(Posicion_inicio) 						
+	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl										
 
 	call Calcula_Cuad_objeto
-
 	call Genera_coordenadas
-
 	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
 
 	jr 3F
@@ -570,33 +568,6 @@ Operandos:
 	jr nz,1F
 	inc a
 1 ld b,a
-	ret
-
-; --------------------------------------------------------------------------------------------------------------------
-;
-;	Prepara_draw
-;
-;	Es una rutina de carga.
-;	Carga los registros BC,HL y E para posteriormente llamar a la rutina de pintado [DRAW].
-;	
-;	OUTPUT:
-;
-;	- LD (Filas/Columns) del objeto a pintar en [BC].
-;	- LD (Posicion_actual) del objeto en [HL].
-;
-;	MODIFY: HL y BC.
-
-Prepara_draw:
-
-	ld hl,Filas 		 							; Prepara los registros BC, E y HL.
-	ld b,(hl) 										; Carga Filas/Columns del objeto a pintar o inicializar en BC.
-
-	inc hl 											; Carga (Posicion_actual) en HL.
-
-	ld c,(hl)
-
-	ld hl,(Posicion_actual)
-
 	ret
 
 ;----------------------------------------------------------------------------------------------------------------
