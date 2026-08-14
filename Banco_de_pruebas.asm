@@ -20,7 +20,7 @@
 	include "Rutinas_de_teclado.asm"
 	include "RND_Derivando.asm"
 	include "Rutinas_de_inicio_y_niveles.asm"
-	include "calcula_tercio.asm"
+	include "Funciones_prestadas.asm"
 	include "Cls.asm"
 	include "Genera_coordenadas.asm"
 	include "Transiciones_y_efectos.asm"

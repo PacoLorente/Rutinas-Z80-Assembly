@@ -134,7 +134,9 @@ Reponne_punntero_objeto
 ; 	Desplaza el Sprite (x)Pixels a la derecha.
 ;
 
-Mov_right ld a,(Ctrl_0)
+Mov_right:
+
+	ld a,(Ctrl_0)
 	bit 6,a
 	jr z,4F 														; Amadeus o Entidad ???																								
 
@@ -195,9 +197,12 @@ Mov_right ld a,(Ctrl_0)
 	call DESPLZ_DER
 	pop bc
 	djnz 5B
-	ld hl,Posicion_actual											; Decrementamos su posición actual, pués al desplazarlo a la derecha, volvemos a incrementar el nº de (Columns) y _
+
+	ld hl, Posicion_actual											; Decrementamos su posición actual, pués al desplazarlo a la derecha, volvemos a incrementar el nº de (Columns) y _
 	dec (hl)														; _ (Posicion_actual) ha pasado de $00 a $01.
+
 2 call Genera_coordenadas
+
 	ret  															; Salimos para pintar la nueva posición.
 
 ; ---------- ---------- ----------
@@ -391,7 +396,7 @@ Ciclo_completo
 ;
 ; 	Desplaza el Sprite (x)Pixels a la izquierda.
 ;
-Mov_left 
+Mov_left:
 
 	ld a,(Ctrl_0)
 	bit 6,a
@@ -449,10 +454,13 @@ Mov_left
 	call DESPLZ_IZQ
 	pop bc
 	djnz 5B
-	ld hl,Posicion_actual 											; Incrementamos su posición actual, pués al desplazarlo a la izquierda, volvemos a incrementar el nº de (Columns) y _
+
+	ld hl, Posicion_actual 											; Incrementamos su posición actual, pués al desplazarlo a la izquierda, volvemos a incrementar el nº de (Columns) y _
 	inc (hl) 														; _ (Posicion_actual) ha pasado de $1f a $1e.
+
 	call Genera_coordenadas
-	jr 2F 															; Salimos para pintar la nueva posición.
+
+	ret 															; Salimos para pintar la nueva posición.
 
 ; ---------- ---------- ----------
 

@@ -1,3 +1,8 @@
+; --------------------------------------------------
+;
+;	14/8/26
+;
+
 ;	Variables de programa.
 
 Bandeja_DRAW:
@@ -9,8 +14,9 @@ Clase db 0  												; A cada entidad se le asigna un nº o (Clase) para pode
 
 Tipo db 0													; Cada `tipo? de Entidad tiene unas características únicas que lo distinguen de otros tipos.
 ; 															; Las entidades del mismo (Tipo) comparte el MISMO PATRÓN DE MOVIMIENTO.
-Coordenada_X db 0 											; Coordenada X del objeto. (En chars.)
-Coordenada_y db 0 											; Coordenada Y del objeto. (En chars.)
+
+Coordenada_X db 0 											; Coordenada X del objeto. (En chars.), (Columna).
+Coordenada_y db 0 											; Coordenada Y del objeto. (En chars.), (Fila).
 
 Contador_de_vueltas db 0									; Contador de vueltas de entidades. Inicialmente su valor es "1". El bit se desplaza una posición_
 ; 															  _a la izquierda cada vez que la entidaddesaparece por la parte baja de la pantalla.

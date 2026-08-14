@@ -5,6 +5,8 @@
 ;
 
 ;	Filas de pantalla. 													; Utilizaremos estas constantes para colocar el texto en pantalla.
+;
+;	1er Tercio:
 
 Line_0 equ $4000
 Line_1 equ Line_0 + $20
@@ -15,6 +17,8 @@ Line_5 equ Line_4 + $20
 Line_6 equ Line_5 + $20
 Line_7 equ Line_6 + $20
 
+;	2° Tercio:
+
 Line_8 equ $4800
 Line_9 equ Line_8 + $20
 Line_10 equ Line_9 + $20
@@ -23,6 +27,8 @@ Line_12 equ Line_11 + $20
 Line_13 equ Line_12 + $20
 Line_14 equ Line_13 + $20
 Line_15 equ Line_14 + $20
+
+;	3er Tercio.
 
 Line_16 equ $5000
 Line_17 equ Line_16 + $20

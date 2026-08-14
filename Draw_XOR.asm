@@ -8,8 +8,6 @@ Draw:
 
 ;	Inicialización:
 
-	jr $
-
 	ld hl,(Filas)
 	ld b,l
 	ld c,h 											; (Filas)/(Columnas) en BC.
@@ -23,7 +21,7 @@ Draw:
 	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl										
 
-	call Calcula_Cuad_objeto
+	call Calcula_Cuad_objeto 						; Inicializa (Cuad_objeto). (Cuad_objeto) en A.
 	call Genera_coordenadas
 	call Inicia_Puntero_mov
 
@@ -569,74 +567,6 @@ Operandos:
 	inc a
 1 ld b,a
 	ret
-
-;----------------------------------------------------------------------------------------------------------------
-;
-;	5/08/22
-;
-;   NextScan. 
-;
-;   Calcula la dirección de mem. de pantalla donde se sitúa el siguiente scanline. (Inc H, línea abajo).
-;
-;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el siguiente scanline.
-;
-;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
-;
-;       DESTRUIDOS: AF y HL !!!
-;
-;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
-;
-
-NextScan:
-
-	inc h          							; Incrementamos el scanline.
-    ld a,h
-    and 7
-    ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
-
-	ld a,l              							; Scanlines a "0", cambiamos de tercio. (Siempre que estemos en la última línea, LLL).
-    add a,$20           							; Vamos a comprobarlo...
-    ld l,a
-    ret c               							; Salimos si se produce el cambio de tercio.
-
-    ld a,h              							; No estamos en la última línea del tercio, por lo que inicializamos H restando una_
-    sub 8               							; _unidad a los bits que definen el tercio TT, (sub $08).
-    ld h,a
-    ret
-
-;----------------------------------------------------------------------------------------------------------------     
-;
-;	5/08/22
-;
-;   PreviousScan.
-;
-;   Calcula la dirección de mem. de pantalla donde se sitúa el scanline anterior. (Dec H, línea arriba).
-;
-;   INPUT: HL contendra la dirección de mem. de video sobre la que queremos calcular el scanline anterior.
-;
-;   OUTPUT: HL contendrá la nueva dirección de memoria de pantalla.
-;
-;       DESTRUIDOS: AF y HL !!!
-;
-;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
-;
-
-PreviousScan:
-
-	ld a,h
-    dec h               							; Dec H.
-    and 7
-    ret nz              							; Salimos de la rutina si el scanline se encuentra entre (1-7).
-
-    ld a,l              							; Estabamos en el scanline "0" y al decrementar nos situamos en el "7" y cambiamos de tercio.
-    sub $20             							; Vamos a comprobarlo...
-    ld l,a
-    ret c               							; Salimos si estábamos en la primera línea y se produce el cambio de tercio.
-
-    ld a,h              							; No estamos en la primera línea del tercio, por lo que inicializamos H sumando una_
-    add a,8             							; _unidad a los bits que definen el tercio TT, (add a,$08).
-    ld h,a
-    ret
 
 ; -----------------------------------------------------------------
 ;

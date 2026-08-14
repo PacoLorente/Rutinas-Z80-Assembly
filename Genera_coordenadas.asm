@@ -11,21 +11,22 @@
 
 Genera_coordenadas:
 
-;	jr $
+	jr $
 
 	ld a,l
 	and $1f
 
-	ld (Coordenada_X),a 								; Coordenada Y del sprite, (0-$1f). Columnas.
+	ld (Coordenada_X),a 								; Coordenada X del sprite, (0-$1f). Columnas.
 
-	ld a,h 												; (Coordenada_y) = "0" si estamos por debajo del 1er scanline de pantalla, (ROM).
-	cp $40
-	jr c,4F
+;	ld a,h 												; (Coordenada_y) = "0" si estamos por debajo del 1er scanline de pantalla, (ROM).
+;	cp $40
+;	jr c,4F
 
 	call calcula_tercio
 	ld b,a 												; "0", "1" o "1" en función del tercio de pantalla.
 
 	ld e,0
+
 	ld a,l
 	and $e0
 	jr z,1F
@@ -44,6 +45,6 @@ Genera_coordenadas:
 	ld (Coordenada_y),a
 	ret
 
-4 xor a
-	ld (Coordenada_y),a
-	ret
+;4 xor a
+;	ld (Coordenada_y),a
+;	ret
