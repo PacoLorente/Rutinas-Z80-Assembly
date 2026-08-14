@@ -216,9 +216,9 @@ Inicia_Repetimos_movimiento
 
 ; ---------- --------- --------- ---------- ----------
 ;
-;   28/06/26
+;   14/8/26
 ;
-;   Inicia_Puntero_mov
+;   Inicia_Puntero_mov siempre que la entidad NO ESTÉ INICIADA.
 ;
 ;   
 
