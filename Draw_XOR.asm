@@ -12,20 +12,20 @@ Draw:
 
 	ld hl,(Filas)
 	ld b,l
-	ld c,h
+	ld c,h 											; (Filas)/(Columnas) en BC.
 
 	ld hl,(Posicion_actual)
 
 	ld a,h 						 					
 	or l 											
-	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
+	jr nz,Entidad_iniciada 							; Si (Posicion_actual) es distinto de "0" la entidad ya está iniciada.
 
 	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl										
 
 	call Calcula_Cuad_objeto
 	call Genera_coordenadas
-	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
+	call Inicia_Puntero_mov
 
 	jr 3F
 
