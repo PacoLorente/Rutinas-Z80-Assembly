@@ -22,7 +22,6 @@ Inicializacion:
 	ld (Posicion_actual),hl
 
 	call Calcula_Cuad_objeto
-
 	call Inicia_Puntero_mov 									; Inicializa (Puntero_mov) y lo coloca en el 1er mov. de su danza.
 
 	jr 3F
@@ -38,17 +37,12 @@ Entidad_iniciada:
 	call Comprueba_limite_horizontal   				
 	call Comprueba_limite_vertical
 
-; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A´.
+; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A.
 ; -----------------------
 ; -----------------------
 ; -----------------------
 
-3
-
-	jr $
-
-
-	call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+3 call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar del Sprite de la entidad.
 	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
 
 	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
@@ -91,12 +85,10 @@ Tercer_tercio:
 
 	ld a,4
 	ld (Cuad_objeto),a
-
 	ret
 
 1 ld a,3
 	ld (Cuad_objeto),a
-
 	ret	
 
 Primer_tercio:
@@ -107,12 +99,10 @@ Primer_tercio:
 
 	ld a,2
 	ld (Cuad_objeto),a
-
 	ret
 
 3 ld a,1
 	ld (Cuad_objeto),a
-
 	ret
 
 Segundo_tercio:
@@ -434,11 +424,13 @@ Salida_nebulosamente_por_la_izquierda
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
-; 	3/2/25
+; 	15/8/26
 ;
-;	Modify: A.
+;	Inicializa (Columnas), N° de columnas que se imprimirán del Sprite.
+;	Esta variable determina que rutina de pintado vamos a utilizar.
+;
+;	MODIFY: A.
 ;	
-;	INPUT: A contiene el byte bajo de (Posicion_actual).
 ;	OUTPUT: (Columnas).
 ;	
 
@@ -447,22 +439,32 @@ calcula_CColumnass:
 	ld a,(Posicion_actual)
 	and $1f
 	jr z,One_CColumna
+
 	dec a
-	jr z,Due_CColumna
+	jr z,Two_CColumna
+
 	inc a
 	cp $1e
-	jr c,one_or_due_ccolumnas
-	jr z,Due_CColumna
+	jr c,Three_CColumna
+	jr z,Two_CColumna
 	jr One_CColumna
 
-one_or_due_ccolumnas ld a,(Columns)
-	ld (Columnas),a
-	ret
+Three_CColumna:
 
-Due_CColumna ld a,2
+	ld a,(Columns)
 	jr 1F
-One_CColumna ld a,1
+
+Two_CColumna:
+
+	ld a,2
+	jr 1F
+
+One_CColumna:
+
+	ld a,1
+
 1 ld (Columnas),a
+
 	ret
 
 ; --------------------------------------------------------------------------------------------------------------------
@@ -477,6 +479,8 @@ One_CColumna ld a,1
 ;	DESTRUYE: HL,B Y A.	
 
 Calcula_puntero_de_impresion:
+
+	jr $
 
 	ld a,(Cuad_objeto)
 	and 1

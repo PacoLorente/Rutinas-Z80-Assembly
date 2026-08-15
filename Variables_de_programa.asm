@@ -144,7 +144,7 @@ Cuad_objeto db 0											; Almacena el cuadrante de pantalla donde se encuentr
 ;															; 2ª FUNCIÓN: Temporizador, define la velocidad de la animación de Amadeus por la parte_
 ;															; _baja de la pantalla cuando hemos superado el nivel.
 
-Columnas db 0
+Columnas db 0 												; N° de columnas que se van a imprimir del Sprite.
 Limite_vertical db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
 ;															; 2ª Función de (Limite_vertical):
 ;															; Se inicializa a "0" cada vez que ejecutamos el bucle de entidades. Se utiliza como contador; se incrementa (+1) cada vez que se añade una_
