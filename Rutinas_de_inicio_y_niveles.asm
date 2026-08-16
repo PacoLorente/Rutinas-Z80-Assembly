@@ -835,42 +835,13 @@ Construye_movimientos_masticados_entidad:
 
 1 call Draw
 
+;	Inicializa la entidad cuando (Posicion_actual)="$0000".
 
+;	(Posicion_actual)=(Posicion_inicio)
+;	Inicializa (Cuad_objeto)
+;	Inicializa (Puntero_mov)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;	jr $	;	15/06/26
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+;	Actualiza (Columnas) según su (Posicion_actual), vRAM donde vamos a imprimir el byte arriba-izq del Sprite.
 
 ; ****************************************************************************
 ; ****************************************************************************
@@ -892,6 +863,7 @@ Construye_movimientos_masticados_entidad:
 ; ****************************************************************************
 ; ****************************************************************************
 
+	jr $
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado

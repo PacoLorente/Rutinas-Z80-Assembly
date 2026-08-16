@@ -93,6 +93,7 @@ Ctrl_0 db 0 												; Byte de control. A través de este byte de control. La
 ; 															_parte superior de la pantalla y ha de `reaparecer? por el inferior. ([Comprueba_limite_horizontal]).
 ; 															SET 3, [Reaparece_arriba]. El bit 3 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_down] detecta que el objeto ha `desaparecido? por la_
 ; 															_parte inferior de la pantalla y ha de `reaparecer? por la superior. ([Comprueba_limite_horizontal]).
+
 ; 															SET 4, El Bit4 a "1", indica que hubo movimiento de la entidad. Necesitamos esta información
 ;												            _para "NO BORRAR/PINTAR" en objeto si NO hubo MOVIMIENTO.
 ;															SET 5, La rutina [Inicializacion] de Draw_XOR.asm, pone este bit a "1". Con esta información evitamos ejecutar las

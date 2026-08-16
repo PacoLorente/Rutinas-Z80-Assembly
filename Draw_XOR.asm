@@ -8,9 +8,9 @@ Draw:
 
 Inicializacion:
 
-	ld hl,(Filas)
-	ld b,l
-	ld c,h
+;	ld hl,(Filas)
+;	ld b,l
+;	ld c,h
 
 	ld hl,(Posicion_actual)
 
@@ -24,30 +24,33 @@ Inicializacion:
 	call Calcula_Cuad_objeto
 	call Inicia_Puntero_mov 									; Inicializa (Puntero_mov) y lo coloca en el 1er mov. de su danza.
 
-	jr 3F
+;	jr 3F
 
 ; --------------------------------------------------
 
 Entidad_iniciada:
 
-	ld a,(Ctrl_0)
-	bit 5,a
-	jr nz,3F										
+;	ld a,(Ctrl_0)
+;	bit 5,a
+;	jr nz,3F
 ;													
-	call Comprueba_limite_horizontal   				
-	call Comprueba_limite_vertical
+;	call Comprueba_limite_horizontal
+;	call Comprueba_limite_vertical
 
 ; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A.
 ; -----------------------
 ; -----------------------
 ; -----------------------
 
-3 call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar del Sprite de la entidad.
-	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
+;3
 
-	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
-	and $d0									
-	ld (Ctrl_0),a
+	call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar del Sprite de la entidad.
+
+	;	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
+
+;	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
+;	and $d0 										; %11010000
+;	ld (Ctrl_0),a
 
 	ret
 
@@ -480,8 +483,6 @@ One_CColumna:
 
 Calcula_puntero_de_impresion:
 
-	jr $
-
 	ld a,(Cuad_objeto)
 	and 1
 	jr nz,Lado_izquierdo
@@ -570,11 +571,15 @@ Cuadrante_dos
 Operandos:
 
 	ld hl,(Posicion_actual)
+
 	ld a,(Columnas)
 	dec a
 	jr nz,1F
+
 	inc a
+
 1 ld b,a
+
 	ret
 
 ; -----------------------------------------------------------------
