@@ -700,7 +700,7 @@ Reaparece_derecha:
 	set 5,(hl)
 
 	ld hl,(Posicion_actual)
-	call Calcula_Cuad_objeto
+;	call Calcula_Cuad_objeto
 
 	ret
 
@@ -719,7 +719,7 @@ Reaparece_izquierda:
 	set 5,(hl)
 
 	ld hl,(Posicion_actual)
-	call Calcula_Cuad_objeto
+;	call Calcula_Cuad_objeto
 
 	ret
 
@@ -737,7 +737,7 @@ Reaparece_abajo:
 	adc hl,bc
 
 	ld (Posicion_actual),hl
-	call Calcula_Cuad_objeto
+;	call Calcula_Cuad_objeto
 
 	ld hl,Ctrl_0
 	set 2,(hl)
@@ -756,7 +756,7 @@ Reaparece_arriba:
 	sbc hl,bc
 
 	ld (Posicion_actual),hl
-	call Calcula_Cuad_objeto
+;	call Calcula_Cuad_objeto
 
 	ld hl,Ctrl_0
 	set 3,(hl)

@@ -4,13 +4,7 @@
 ;
 ; DRAW. ************************************************************************************************************************************************************************************
 
-Draw:
-
-Inicializacion:
-
-;	ld hl,(Filas)
-;	ld b,l
-;	ld c,h
+Drive:
 
 	ld hl,(Posicion_actual)
 
@@ -18,39 +12,16 @@ Inicializacion:
 	or l
 	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
 
-	ld hl,(Posicion_inicio)
-	ld (Posicion_actual),hl
-
-	call Calcula_Cuad_objeto
 	call Inicia_Puntero_mov 									; Inicializa (Puntero_mov) y lo coloca en el 1er mov. de su danza.
 
-;	jr 3F
+	ld hl,(Posicion_inicio)
+	ld (Posicion_actual),hl
 
 ; --------------------------------------------------
 
 Entidad_iniciada:
 
-;	ld a,(Ctrl_0)
-;	bit 5,a
-;	jr nz,3F
-;													
-;	call Comprueba_limite_horizontal
-;	call Comprueba_limite_vertical
-
-; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A.
-; -----------------------
-; -----------------------
-; -----------------------
-
-;3
-
-	call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar del Sprite de la entidad.
-
-	;	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
-
-;	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
-;	and $d0 										; %11010000
-;	ld (Ctrl_0),a
+	call Drive_00
 
 	ret
 
@@ -88,6 +59,7 @@ Tercer_tercio:
 
 	ld a,4
 	ld (Cuad_objeto),a
+
 	ret
 
 1 ld a,3
@@ -102,10 +74,16 @@ Primer_tercio:
 
 	ld a,2
 	ld (Cuad_objeto),a
+
+	call calcula_Puntero_objeto_2
+
 	ret
 
 3 ld a,1
 	ld (Cuad_objeto),a
+
+	call calcula_Puntero_objeto_1
+
 	ret
 
 Segundo_tercio:
@@ -117,7 +95,7 @@ Segundo_tercio:
 
 	jr Tercer_tercio
 
-; ------------------------------------
+; --------------------------------------------------------
 ;
 ;	OUTPUT: A contiene "0" si estamos en la mitad derecha de la pantalla y "1" si estamos en la mitad izquierda.
 ;
@@ -136,6 +114,68 @@ Determina_lado_de_pantalla:
 1 ld a,1
 
 	ret
+
+; --------------------------------------------------------
+;
+;	17/8/26
+;
+
+calcula_Puntero_objeto_1:
+
+	jr $
+
+	ld de,$4060
+
+	and a
+	sbc hl,de
+
+	ex de,hl 							;	DE contiene la información que necesitamos para averiguar si la entidad es COMPLETA o INCOMPLETA.
+
+;	En 1er lugar comprobamos el n° de columnas a imprimir:
+;	El nibble bajo de E cotiene la columna donde se imprimirá la entidad. Por lo tanto a partir de la columna 2 imprimiremos las tres columnas de la entidad.
+
+	ld a,e
+	and $0f
+	cp 2
+
+	jr z, Tres_columnas
+	jr nc, Tres_columnas
+
+
+
+
+
+
+
+
+
+
+
+
+
+	ret
+
+calcula_Puntero_objeto_2:
+
+	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;

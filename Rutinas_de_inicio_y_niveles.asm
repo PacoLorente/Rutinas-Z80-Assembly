@@ -833,7 +833,7 @@ Construye_movimientos_masticados_entidad:
 
 
 
-1 call Draw
+1 call Drive
 
 ;	Inicializa la entidad cuando (Posicion_actual)="$0000".
 
@@ -1478,7 +1478,7 @@ Construye_movimientos_masticados_Amadeus
 	ld b,121														; $0079, 121d.
 
 1 push bc
-	call Draw
+	call Drive
 	call Guarda_movimiento_masticado
 
 	call Mov_right

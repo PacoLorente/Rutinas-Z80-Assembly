@@ -26,7 +26,7 @@
 	include "Transiciones_y_efectos.asm"
 	include "Genera_datos_de_impresion.asm"
 	include "Pinta_Sprites.asm"
-	include "Draw_XOR.asm"
+	include "Drive.asm"
 	include "Direcciones.asm"
 	include "Movimiento.asm"
 	include "Disparo.asm"
