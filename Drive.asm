@@ -128,6 +128,11 @@ calcula_Puntero_objeto_1:
 
 	ld a,l
 	and $f0
+	cp $20
+	jr z,
+
+
+
 
 
 	ld a,l
