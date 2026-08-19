@@ -81,8 +81,8 @@ Mov_up:
     jr nc,1F
     dec h
 
-;    call Reaparece_abajo                                                ; El objeto ha desaparecido por la parte superior de la pantalla, H="$3f". Hacemos llamada a _
-	call Reinicio
+    call Reaparece_abajo                                                ; El objeto ha desaparecido por la parte superior de la pantalla, H="$3f". Hacemos llamada a _
+;	call Reinicio
 
 	ret
 

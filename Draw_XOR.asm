@@ -1,28 +1,27 @@
-; ******************************************************************************************************************************************************************************************
+; ------------------------------------------------------------------
 ;
-; 13/3/25
+; 19/8/26
 ;
-; DRAW. ************************************************************************************************************************************************************************************
 
 Draw:
 
 Inicializacion:
 
-	ld hl,(Filas)
-	ld b,l
+	ld hl,(Filas) 		 										; (Filas) en B.
+	ld b,l 														; (Columns) en C.
 	ld c,h
 
 	ld hl,(Posicion_actual)
-
 	ld a,h
 	or l
 	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
+
+	call Inicia_Puntero_mov
 
 	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl
 
 	call Calcula_Cuad_objeto
-	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
 
 	jr 3F
 
@@ -30,12 +29,13 @@ Entidad_iniciada:
 
 	ld a,(Ctrl_0)
 	bit 5,a
-	jr nz,3F										
-;													
-	call Comprueba_limite_horizontal   				
+	jr nz,3F	 												; El bit(5) de (Ctrl_0) indica que hemos "reaparecido" por algún lado de la pantalla_
+; 																; _y por lo tanto estamos lejos de los límites. No loscomprobamos.
+
+	call Comprueba_limite_horizontal
 	call Comprueba_limite_vertical
 
-; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A´.
+; Llegados a este punto, tengo Filas/Columns en BC y (Cuad_objeto) en A´.
 ; -----------------------
 ; -----------------------
 ; -----------------------
@@ -138,7 +138,7 @@ Determina_lado_de_pantalla:
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	25/02/25
+;	19/8/26
 ;
 ; 	Comprueba_limite_horizontal.
 ;
@@ -146,7 +146,24 @@ Determina_lado_de_pantalla:
 
 Comprueba_limite_horizontal:
 
-	ld e,0											; Inicializamos E.
+	ld e,0											; Inicializamos E. El registro actuará como un byte de control indicando:
+;
+;													; (E) = "0". Indica que no llegamos al centro HORIZONTAL de la pantalla.
+; 													; (E) = "1". Indica que hemos MODIFICADO la (Posicion_actual) y (Cuad_objeto) de la entidad.
+; 													;            Hemos superado el LÍMITE HORIZONTAL.
+; 													; 			 Pasamos del cuadrante (1) al (3) o viceversa.
+; 													; 			 Pasamos del cuadrante (2) al (4) o viceversa.
+;
+; 													;            (Posicion_actual) pasará de señalar las esquinas inferiores del Sprite a las superiores o viceversa.
+;
+; 													; 			 (call PreviousScan) 15 rep.
+; 													;  			 (call NextScan) 15 rep.
+; 													;
+; 													; (E) = "2". Indica que Hemos superado el centro de la pantalla pero NO HEMOS superado el LÍMITE HORIZONTAL.
+;													; 			 Mantenemos (Cuad_objeto) y (Posicion_actual).
+; 													; 			 Esta información es indispensable a la hora de modificar la situación del Sprite cuando superamos_
+; 													;            _el LÍMITE VERTICAL , [Comprueba_limite_vertical].
+
 
 ;	Exclusiones !!!
 
@@ -174,18 +191,21 @@ Comprueba_limite_horizontal:
 	sub l
 	ret c			 								; RET no hemos llegado al centro de la pantalla, E=0.								
 										
-	ld e,2											; Zona NEBULOSA que no es poca cosa.
+	ld e,2											; Indica que hemos superado el centro de la pantalla.
 
 	ld a,$3f 										; (Limite_horizontal) = "$3f".
 	sub l
-	ret c											; RET con E=2.
+	ret c											; RET con E=2. E2 indica que estamos en la zona NEBULOSA de la pantalla pero no superamos el límite horizontal.
 
-	call Modificaccionne
+	call Modificaccionne 							; Modificamos (Posicion_actual).
+;
+;													; (Posicion_actual) pasa de indicar el byte de la esquina inferior, (izq. o derecha), a indicar_
+; 													; _el byte de la esquina superior, (izq. o derecha). (call PreviousScan 15 rep.).
 
 	ld a,(Cuad_objeto)
 	inc a
 	inc a
-	ld (Cuad_objeto),a
+	ld (Cuad_objeto),a 								; Pasamos del cuadrante (1 o 2) al cuadrante (3 o 4).
 
 	dec e
 
@@ -201,7 +221,7 @@ Comprueba_limite_horizontal:
 	ld e,2											; Zona NEBULOSA que no es poca cosa.
 
 ;	
-	ld a,$c0 				 						; (Limite_horizontal) = "$c0".
+	ld a,$c0 					 					; (Limite_horizontal) = "$c0".
 	sub l
 	ret nc 											; RET Estamos en zona nebulosa horizontal, no hemos superado (Limite_horizontal). E=2.
 
@@ -229,6 +249,8 @@ Comprueba_limite_horizontal:
 
 Comprueba_limite_vertical:
 
+	jr $
+
 	ld a,(Cuad_objeto)
 	and 1
 	jr z,2F
@@ -236,7 +258,7 @@ Comprueba_limite_vertical:
 ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
 ;	-----------------------------------------------------
 
-	ld a,$13
+	ld a,$12
 	ld (Limite_vertical),a
 
 	call Comprobacion
@@ -259,7 +281,7 @@ Comprueba_limite_vertical:
 ;	Nos encontramos en la parte DERECHA de la pantalla.
 ;	-----------------------------------------------------
 
-2 ld a,$0c
+2 ld a,$0d
 	ld (Limite_vertical),a
 
 	call Comprobacion
@@ -324,7 +346,7 @@ Centro_no_alcanzado
 
 ; --------------------------------------------------------------------------
 ;
-;	13/3/25
+;	19/8/26
 ;
 ;	Modifica (Posicion_actual). 
 ;
@@ -345,23 +367,33 @@ Modificaccionne:
 	cp 2
     call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
     ret z
+
     call c,Modifica_Pos_actual
 	ret z
-    call Modifica_Pos_actual2
+
+	call Modifica_Pos_actual2
     ret
 
-Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
+Modifica_Pos_actual:
+
+	ld b,15                         				; Scanlines-1 en B.
 1 call PreviousScan
 	djnz 1B
+
 	ld (Posicion_actual),hl
 	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
+
 	ret
 
-Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
+Modifica_Pos_actual2:
+
+	ld b,15                        					; Scanlines-1 en B.
 1 call NextScan
 	djnz 1B
+
 	ld (Posicion_actual),hl
 	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
+
 	ret
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
