@@ -40,16 +40,15 @@ Entidad_iniciada:
 ; -----------------------
 ; -----------------------
 
-3 call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
-	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
+3 call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+	call Calcula_puntero_de_impresion							; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
 
-	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
+	ld a,(Ctrl_0)												; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
 	and $d0									
 	ld (Ctrl_0),a
 
 	ret
 
-; *******************************************************************************************************************************************************************************************
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ;   14/02/25
@@ -238,7 +237,7 @@ Comprueba_limite_horizontal:
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   13/3/25
+;   20/8/26
 ;
 ;	Comprueba_limite_vertical
 ;
@@ -249,7 +248,7 @@ Comprueba_limite_horizontal:
 
 Comprueba_limite_vertical:
 
-	jr $
+;	jr $
 
 	ld a,(Cuad_objeto)
 	and 1
@@ -259,89 +258,100 @@ Comprueba_limite_vertical:
 ;	-----------------------------------------------------
 
 	ld a,$12
-	ld (Limite_vertical),a
+	ex af,af 										; Límite vertical en AF'.
 
 	call Comprobacion
-	jr nc,Comprueba_centro_vertical_izquierdo
+	ret nc
 
-;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
+;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
 ;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
 
 	dec c											; (Columns-1) en C.
+
 	ld a,l
 	sub c
+
 	ld (Posicion_actual),a
 
 	ld a,(Cuad_objeto)
 	inc a
 	ld (Cuad_objeto),a
 
-	jr Consulta_E 
+	dec e
+	dec e
+	ret nz
+
+	ld hl,Cuad_objeto
+	srl (hl)
+
+	ret
+
 
 ;	Nos encontramos en la parte DERECHA de la pantalla.
 ;	-----------------------------------------------------
 
-2 ld a,$0d
-	ld (Limite_vertical),a
+2 ld a,$0d			;$0d
+	ex af,af
 
 	call Comprobacion
-	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
+	ret c
 
-;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
+;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
 ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
 
 	dec c											; (Columns-1) en C.
+
 	ld a,l
 	add c
+
 	ld (Posicion_actual),a
 
 	ld a,(Cuad_objeto)
 	dec a
 	ld (Cuad_objeto),a
 
-;	Consultamos E.
-
-Consulta_E 
-
 	dec e
 	dec e
-	ret z
+	ret nz
 
-	call Calcula_Cuad_objeto
-	call Genera_coordenadas
+	jr $
+
+	ld hl,Cuad_objeto
+	srl (hl)
+
+
 
 	ret
 
 ; ----- ----- ----- ----- ----- 
+;
+;	20/8/26.
+;
 
-Comprobacion ld a,l							
+Comprobacion:
+
+	ld a,l
 	and $1f
 	ld d,a
-	ld a,(Limite_vertical)  
+
+	ex af,af 										; Recupera (Limite_vertical).
+
 	sub d
+
 	ret
 
-Comprueba_centro_vertical_izquierdo ld a,$10		
+; ----- ----- ----- ----- -----
+
+Comprueba_centro_vertical_izquierdo:
+
+	ld a,$10
 	sub d
-	jr nc,Centro_no_alcanzado
-	ret 
+	ret
 	
-Comprueba_centro_vertical_derecho ld a,$0f
+Comprueba_centro_vertical_derecho:
+
+	ld a,$0f
 	sub d
-	jr c,Centro_no_alcanzado
-	ret
-
-Centro_no_alcanzado
-
-;	No hemos alcanzado el centro de la pantalla.
-;	Consultamos E.
-
-	ld a,e
-	and 1
-	ret z
-
-	call Calcula_Cuad_objeto
-	call Genera_coordenadas
 	ret
 
 ; --------------------------------------------------------------------------
