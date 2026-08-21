@@ -237,122 +237,146 @@ Comprueba_limite_horizontal:
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   20/8/26
+;   13/3/25
 ;
 ;	Comprueba_limite_vertical
 ;
+; 	Si (E)="1" significa que en la anterior rutina [Comprueba_limite_horizontal] hemos actualizado (Posicion_actual) y (Cuad_objeto) porque hemos pasado_
+;	_de la parte alta de pantalla a la parte baja o viceversa.
+;
+;	Si (E)="0" No ha habido cambio de zona de pantalla por lo que (Posicion_actual) y (Cuad_objeto) están actualizados.
+;
+;	(E)="2". (Cuad_objeto) no está actualizado pues estamos en el centro de pantalla pero no hemos sobrepasado el límite horizontal.
+;
+;	FUNCIONAMIENTO:
+;
+;	Si superamos el límite vertical:
+;
+;	Si (E)="0" o "1" actualizaremos (Posicion_actual) y (Cuad_objeto) sin modificar (E).
+;	Si (E)="2" actualizaremos (Posicion_actual) y sumaremos +1 a (E), ((E) = "3").
+;
+;	Esta información, (E) = "3" indica a [Calcula_puntero_de_impresion]:
+;
+;	(Cuad_objeto) = "1": El puntero de impresión se obtiene actualizando (Posicion_actual), (-15 Scanlines).
+;	(Cuad_objeto) = "2": El puntero de impresión se obtendrá restando (Columnas-1) a L y actualizando (Posicion_actual), (-15 Scanlines).
+;	(Cuad_objeto) = "3": El puntero de impresión está actualizado.
+;	(Cuad_objeto) = "4": El puntero de impresión está actualizado.
+
+
 ;	Modifica el registro L del puntero de pantalla cuando se sobrepasa la columna límite, (Limite2).
-;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L. 
-;	
+;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L.
+;
 ;	INPUT: HL contiene (Posicion_actual).
 
 Comprueba_limite_vertical:
-
-;	jr $
 
 	ld a,(Cuad_objeto)
 	and 1
 	jr z,2F
 
+; 	Si (E)="1" significa que en la anterior rutina [Comprueba_limite_horizontal] hemos actualizado (Posicion_actual) y (Cuad_objeto) porque hemos pasado_
+;	_de la parte alta de pantalla a la parte baja o viceversa.
+
+;	Si (E)="0" No ha habido cambio de zona de pantalla por lo que (Posicion_actual) y (Cuad_objeto) están actualizados.
+
+;	(E)="2". (Cuad_objeto) no está actualizado pues estamos en el centro de pantalla pero no hemos sobrepasado el límite horizontal.
+
+
+
+
+
+
+
+
 ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
 ;	-----------------------------------------------------
 
-	ld a,$12
-	ex af,af 										; Límite vertical en AF'.
+	ld a,$13
+	ld (Limite_vertical),a
 
 	call Comprobacion
-	ret nc
+	jr nc,Comprueba_centro_vertical_izquierdo
 
 ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
 ;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
 
 	dec c											; (Columns-1) en C.
-
 	ld a,l
 	sub c
-
 	ld (Posicion_actual),a
 
 	ld a,(Cuad_objeto)
 	inc a
 	ld (Cuad_objeto),a
 
-	dec e
-	dec e
-	ret nz
-
-	ld hl,Cuad_objeto
-	srl (hl)
-
-	ret
-
+	jr Consulta_E
 
 ;	Nos encontramos en la parte DERECHA de la pantalla.
 ;	-----------------------------------------------------
 
-2 ld a,$0d			;$0d
-	ex af,af
+2 ld a,$0c
+	ld (Limite_vertical),a
 
 	call Comprobacion
-	ret c
+	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
 
 ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
 ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
 
 	dec c											; (Columns-1) en C.
-
 	ld a,l
 	add c
-
 	ld (Posicion_actual),a
 
 	ld a,(Cuad_objeto)
 	dec a
 	ld (Cuad_objeto),a
 
+;	Consultamos E.
+
+Consulta_E
+
 	dec e
 	dec e
-	ret nz
+	ret z
 
-	jr $
-
-	ld hl,Cuad_objeto
-	srl (hl)
-
-
-
-	ret
-
-; ----- ----- ----- ----- ----- 
-;
-;	20/8/26.
-;
-
-Comprobacion:
-
-	ld a,l
-	and $1f
-	ld d,a
-
-	ex af,af 										; Recupera (Limite_vertical).
-
-	sub d
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
 
 	ret
 
 ; ----- ----- ----- ----- -----
 
-Comprueba_centro_vertical_izquierdo:
-
-	ld a,$10
+Comprobacion ld a,l
+	and $1f
+	ld d,a
+	ld a,(Limite_vertical)
 	sub d
 	ret
-	
-Comprueba_centro_vertical_derecho:
 
-	ld a,$0f
+Comprueba_centro_vertical_izquierdo ld a,$10
 	sub d
+	jr nc,Centro_no_alcanzado
 	ret
+
+Comprueba_centro_vertical_derecho ld a,$0f
+	sub d
+	jr c,Centro_no_alcanzado
+	ret
+
+Centro_no_alcanzado
+
+;	No hemos alcanzado el centro de la pantalla.
+;	Consultamos E.
+
+	ld a,e
+	and 1
+	ret z
+
+	call Calcula_Cuad_objeto
+	call Genera_coordenadas
+	ret
+
 
 ; --------------------------------------------------------------------------
 ;
