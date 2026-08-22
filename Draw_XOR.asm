@@ -237,7 +237,7 @@ Comprueba_limite_horizontal:
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   13/3/25
+;   22/8/26
 ;
 ;	Comprueba_limite_vertical
 ;
@@ -281,102 +281,78 @@ Comprueba_limite_vertical:
 
 ;	(E)="2". (Cuad_objeto) no está actualizado pues estamos en el centro de pantalla pero no hemos sobrepasado el límite horizontal.
 
-
-
-
-
-
-
-
 ;	Nos encontramos en la parte IZQUIERDA de la pantalla.
 ;	-----------------------------------------------------
 
 	ld a,$13
-	ld (Limite_vertical),a
+	ex af,af
 
 	call Comprobacion
-	jr nc,Comprueba_centro_vertical_izquierdo
+	ret nc
 
 ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
 ;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
 
 	dec c											; (Columns-1) en C.
+
 	ld a,l
 	sub c
 	ld (Posicion_actual),a
+
+	ld a,e
+	and 2
+	jr nz,3F
 
 	ld a,(Cuad_objeto)
 	inc a
 	ld (Cuad_objeto),a
 
-	jr Consulta_E
+	ret
 
 ;	Nos encontramos en la parte DERECHA de la pantalla.
 ;	-----------------------------------------------------
 
 2 ld a,$0c
-	ld (Limite_vertical),a
+	ex af,af
 
 	call Comprobacion
-	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
+	ret c
 
 ;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
 ;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
 
 	dec c											; (Columns-1) en C.
+
 	ld a,l
 	add c
 	ld (Posicion_actual),a
+
+	ld a,e
+	and 2
+	jr nz,3F
 
 	ld a,(Cuad_objeto)
 	dec a
 	ld (Cuad_objeto),a
 
-;	Consultamos E.
+	ret
 
-Consulta_E
-
-	dec e
-	dec e
-	ret z
-
-	call Calcula_Cuad_objeto
-	call Genera_coordenadas
+3 inc e
 
 	ret
 
 ; ----- ----- ----- ----- -----
 
-Comprobacion ld a,l
+Comprobacion:
+
+	ld a,l
 	and $1f
 	ld d,a
-	ld a,(Limite_vertical)
+
+	ex af,af
 	sub d
+
 	ret
-
-Comprueba_centro_vertical_izquierdo ld a,$10
-	sub d
-	jr nc,Centro_no_alcanzado
-	ret
-
-Comprueba_centro_vertical_derecho ld a,$0f
-	sub d
-	jr c,Centro_no_alcanzado
-	ret
-
-Centro_no_alcanzado
-
-;	No hemos alcanzado el centro de la pantalla.
-;	Consultamos E.
-
-	ld a,e
-	and 1
-	ret z
-
-	call Calcula_Cuad_objeto
-	call Genera_coordenadas
-	ret
-
 
 ; --------------------------------------------------------------------------
 ;
