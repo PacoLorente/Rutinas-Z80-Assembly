@@ -11,8 +11,6 @@
 
 Genera_coordenadas:
 
-;	jr $
-
 	ld a,l
 	and $1f
 

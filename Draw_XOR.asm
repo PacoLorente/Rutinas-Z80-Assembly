@@ -21,27 +21,15 @@ Inicializacion:
 	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl
 
-	call Calcula_Cuad_objeto
-
-	jr 3F
-
 Entidad_iniciada:
 
-	ld a,(Ctrl_0)
-	bit 5,a
-	jr nz,3F	 												; El bit(5) de (Ctrl_0) indica que hemos "reaparecido" por algún lado de la pantalla_
-; 																; _y por lo tanto estamos lejos de los límites. No loscomprobamos.
+	ld hl,$4580
+	ld (Posicion_actual),hl
 
-	call Comprueba_limite_horizontal
-	call Comprueba_limite_vertical
+	call Calcula_Cuad_objeto
 
-; Llegados a este punto, tengo Filas/Columns en BC y (Cuad_objeto) en A´.
-; -----------------------
-; -----------------------
-; -----------------------
-
-3 call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
-	call Calcula_puntero_de_impresion							; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
+1 call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+	call Drive													; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
 
 	ld a,(Ctrl_0)												; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
 	and $d0									
@@ -51,13 +39,14 @@ Entidad_iniciada:
 
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   14/02/25
+;   23/8/26
 ;
 ;	Calcula el cuadrante de pantalla donde se encuentra la entidad: (Cuad_objeto), "1", "2", "3" o "4".
 ;	Esta información es necesaria para poder calcular el (Puntero_de_impresion) de la entidad.
 ;
 ;	INPUT:  HL contiene (Posicion_actual).
 ;	OUTPUT: (Cuad_objeto) y A contienen "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.		
+;			HL contiene (Posicion_actual).
 ;
 ;	MODIFY: A.	
 
@@ -93,15 +82,14 @@ Tercer_tercio:
 Primer_tercio:
 
 	call Determina_lado_de_pantalla
-
-	jr nz,3F
+	jr nz,2F
 
 	ld a,2
 	ld (Cuad_objeto),a
 
 	ret
 
-3 ld a,1
+2 ld a,1
 	ld (Cuad_objeto),a
 
 	ret
@@ -109,15 +97,13 @@ Primer_tercio:
 Segundo_tercio:
 
 	ld a,l
-	cp $7f
+	cp $80
 	jr c,Primer_tercio
-	jr z,Primer_tercio
-
 	jr Tercer_tercio
 
 ; ------------------------------------
 ;
-;	OUTPUT: A contiene "0" si estamos en la mitad derecha de la pantalla y "1" si estamos en la mitad izquierda.
+;	OUTPUT: Z si estamos en la mitad derecha de la pantalla y NZ si estamos en la mitad izquierda.
 ;
 
 Determina_lado_de_pantalla:
@@ -125,354 +111,28 @@ Determina_lado_de_pantalla:
 	ld a,l
 	and $1f
 	cp $10
+
 	jr c,1F
 
 	xor a
-
 	ret
 
 1 ld a,1
-
-	ret
-
-; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-;
-;	19/8/26
-;
-; 	Comprueba_limite_horizontal.
-;
-;	INPUT: HL contiene (Posicion_actual).
-
-Comprueba_limite_horizontal:
-
-	ld e,0											; Inicializamos E. El registro actuará como un byte de control indicando:
-;
-;													; (E) = "0". Indica que no llegamos al centro HORIZONTAL de la pantalla.
-; 													; (E) = "1". Indica que hemos MODIFICADO la (Posicion_actual) y (Cuad_objeto) de la entidad.
-; 													;            Hemos superado el LÍMITE HORIZONTAL.
-; 													; 			 Pasamos del cuadrante (1) al (3) o viceversa.
-; 													; 			 Pasamos del cuadrante (2) al (4) o viceversa.
-;
-; 													;            (Posicion_actual) pasará de señalar las esquinas inferiores del Sprite a las superiores o viceversa.
-;
-; 													; 			 (call PreviousScan) 15 rep.
-; 													;  			 (call NextScan) 15 rep.
-; 													;
-; 													; (E) = "2". Indica que Hemos superado el centro de la pantalla pero NO HEMOS superado el LÍMITE HORIZONTAL.
-;													; 			 Mantenemos (Cuad_objeto) y (Posicion_actual).
-; 													; 			 Esta información es indispensable a la hora de modificar la situación del Sprite cuando superamos_
-; 													;            _el LÍMITE VERTICAL , [Comprueba_limite_vertical].
-
-
-;	Exclusiones !!!
-
-	call calcula_tercio  							; RET cuando no estamos en el centro de la pantalla, (2º tercio).
-	ret z
-
-	dec a
-	dec a
-	ret z
-
-; ----------------------------------- Comprobamos límite.
-
-;	HL (Posicion_actual).
-;	E=0
-
-	ld a,(Cuad_objeto)
-	cp 2
-	jr z,1F
-	jr c,1F
-
-;	Nos encontramos en la parte INFERIOR de la pantalla.
-;	En este caso superamos el CENTRO de la pantalla cuando L < $80
-
-	ld a,$7f 
-	sub l
-	ret c			 								; RET no hemos llegado al centro de la pantalla, E=0.								
-										
-	ld e,2											; Indica que hemos superado el centro de la pantalla.
-
-	ld a,$3f 										; (Limite_horizontal) = "$3f".
-	sub l
-	ret c											; RET con E=2. E2 indica que estamos en la zona NEBULOSA de la pantalla pero no superamos el límite horizontal.
-
-	call Modificaccionne 							; Modificamos (Posicion_actual).
-;
-;													; (Posicion_actual) pasa de indicar el byte de la esquina inferior, (izq. o derecha), a indicar_
-; 													; _el byte de la esquina superior, (izq. o derecha). (call PreviousScan 15 rep.).
-
-	ld a,(Cuad_objeto)
-	inc a
-	inc a
-	ld (Cuad_objeto),a 								; Pasamos del cuadrante (1 o 2) al cuadrante (3 o 4).
-
-	dec e
-
-	ret												; RET con E=1.
-
-;	Nos encontramos en la parte SUPERIOR de la pantalla.
-;	En este caso superamos el CENTRO de la pantalla cuando L => $80.
-
-1 ld a,$80
-	sub l
-	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
-
-	ld e,2											; Zona NEBULOSA que no es poca cosa.
-
-;	
-	ld a,$c0 					 					; (Limite_horizontal) = "$c0".
-	sub l
-	ret nc 											; RET Estamos en zona nebulosa horizontal, no hemos superado (Limite_horizontal). E=2.
-
-	call Modificaccionne
-
-	ld a,(Cuad_objeto)
-	dec a
-	dec a
-	ld (Cuad_objeto),a
-
-	dec e 											; Hemos modificado (Posicion_actual) debido a que hemos superado el (Limite_horizontal). E=1.
-
-	ret												
-
-; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-;
-;   22/8/26
-;
-;	Comprueba_limite_vertical
-;
-; 	Si (E)="1" significa que en la anterior rutina [Comprueba_limite_horizontal] hemos actualizado (Posicion_actual) y (Cuad_objeto) porque hemos pasado_
-;	_de la parte alta de pantalla a la parte baja o viceversa.
-;
-;	Si (E)="0" No ha habido cambio de zona de pantalla por lo que (Posicion_actual) y (Cuad_objeto) están actualizados.
-;
-;	(E)="2". (Cuad_objeto) no está actualizado pues estamos en el centro de pantalla pero no hemos sobrepasado el límite horizontal.
-;
-;	FUNCIONAMIENTO:
-;
-;	Si superamos el límite vertical:
-;
-;	Si (E)="0" o "1" actualizaremos (Posicion_actual) y (Cuad_objeto) sin modificar (E).
-;	Si (E)="2" actualizaremos (Posicion_actual) y sumaremos +1 a (E), ((E) = "3").
-;
-;	Esta información, (E) = "3" indica a [Calcula_puntero_de_impresion]:
-;
-;	(Cuad_objeto) = "1": El puntero de impresión se obtiene actualizando (Posicion_actual), (-15 Scanlines).
-;	(Cuad_objeto) = "2": El puntero de impresión se obtendrá restando (Columnas-1) a L y actualizando (Posicion_actual), (-15 Scanlines).
-;	(Cuad_objeto) = "3": El puntero de impresión está actualizado.
-;	(Cuad_objeto) = "4": El puntero de impresión está actualizado.
-
-
-;	Modifica el registro L del puntero de pantalla cuando se sobrepasa la columna límite, (Limite2).
-;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L.
-;
-;	INPUT: HL contiene (Posicion_actual).
-
-Comprueba_limite_vertical:
-
-	ld a,(Cuad_objeto)
-	and 1
-	jr z,2F
-
-; 	Si (E)="1" significa que en la anterior rutina [Comprueba_limite_horizontal] hemos actualizado (Posicion_actual) y (Cuad_objeto) porque hemos pasado_
-;	_de la parte alta de pantalla a la parte baja o viceversa.
-
-;	Si (E)="0" No ha habido cambio de zona de pantalla por lo que (Posicion_actual) y (Cuad_objeto) están actualizados.
-
-;	(E)="2". (Cuad_objeto) no está actualizado pues estamos en el centro de pantalla pero no hemos sobrepasado el límite horizontal.
-
-;	Nos encontramos en la parte IZQUIERDA de la pantalla.
-;	-----------------------------------------------------
-
-	ld a,$13
-	ex af,af
-
-	call Comprobacion
-	ret nc
-
-;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
-;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
-
-	dec c											; (Columns-1) en C.
-
-	ld a,l
-	sub c
-	ld (Posicion_actual),a
-
-	ld a,e
-	and 2
-	jr nz,3F
-
-	ld a,(Cuad_objeto)
-	inc a
-	ld (Cuad_objeto),a
-
-	ret
-
-;	Nos encontramos en la parte DERECHA de la pantalla.
-;	-----------------------------------------------------
-
-2 ld a,$0c
-	ex af,af
-
-	call Comprobacion
-	ret c
-
-;	Cambiamos de cuadrante, hemos superado (Limite_vertical).
-;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
-
-	dec c											; (Columns-1) en C.
-
-	ld a,l
-	add c
-	ld (Posicion_actual),a
-
-	ld a,e
-	and 2
-	jr nz,3F
-
-	ld a,(Cuad_objeto)
-	dec a
-	ld (Cuad_objeto),a
-
-	ret
-
-3 inc e
-
-	ret
-
-; ----- ----- ----- ----- -----
-
-Comprobacion:
-
-	ld a,l
-	and $1f
-	ld d,a
-
-	ex af,af
-	sub d
-
-	ret
-
-; --------------------------------------------------------------------------
-;
-;	19/8/26
-;
-;	Modifica (Posicion_actual). 
-;
-;	En función de la mitad de pantalla de la que partamos:
-;
-;	CALL [Modifica_Pos_actual], si partimos de la mitad superior de la pantalla. 
-;	CALL [Modifica_Pos_actual2], si partimos de la mitad inferior de la pantalla.
-;
-;	INPUTS: HL contiene (Posicion_actual).
-;	OUTPUT: Actualiza (Posicion_actual).
-;	MODIFY: A y HL.
-
-
-
-Modificaccionne:
-	
-	ld a,(Cuad_objeto)
-	cp 2
-    call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
-    ret z
-
-    call c,Modifica_Pos_actual
-	ret z
-
-	call Modifica_Pos_actual2
-    ret
-
-Modifica_Pos_actual:
-
-	ld b,15                         				; Scanlines-1 en B.
-1 call PreviousScan
-	djnz 1B
-
-	ld (Posicion_actual),hl
-	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
-
-	ret
-
-Modifica_Pos_actual2:
-
-	ld b,15                        					; Scanlines-1 en B.
-1 call NextScan
-	djnz 1B
-
-	ld (Posicion_actual),hl
-	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
-
-	ret
-
-; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
-Salida_nebulosamente_por_la_derecha
-
-;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
-
-	ld a,(Posicion_actual)
-	and $1f
-	cp $1e
-	ret c
-
-; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
-;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa. 
-
-	ld a,(Cuad_objeto)
-	and 1
-	ret z 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
-
-	ld a,(Cuad_objeto)
-	inc a
-	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
-
-	dec c											; (Columns-1) en C.
-	ld a,l
-	sub c
-	ld (Posicion_actual),a
-
-	dec e
-	dec e 											; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
-
-	ret
-
-Salida_nebulosamente_por_la_izquierda
-
-;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado izquierdo ???.
-
-	ld a,(Posicion_actual)
-	and $1f
-	cp $01
-	ret nc
-	ret nz
-
-; 	Existe posibilidad de desaparecer por el lado izquierdo de la pantalla. Si (Cuad_objeto) indica que_
-;	_estamos en la parte derecha de la pantalla, (2/4), la salida será defectuosa. 
-
-	ld a,(Cuad_objeto)
-	and 1
-	ret nz 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
-
-	ld a,(Cuad_objeto)
-	dec a 
-	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
-
-	dec c											 				; (Columns-1) en C.
-	ld a,l
-	inc c
-	ld (Posicion_actual),a
-
+	and a
 	ret
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
-; 	3/2/25
+; 	23/8/26
 ;
 ;	Modify: A.
 ;	
-;	INPUT: A contiene el byte bajo de (Posicion_actual).
+;	Inicializa la variable (Columnas), n° de columnas que podemos imprimir del Sprite.
+
+;	INPUT: (HL) contiene (Posicion_actual).
+;		   (A) contiene (Cuad_objeto).
+;
+;
 ;	OUTPUT: (Columnas).
 ;	
 
@@ -481,98 +141,184 @@ calcula_CColumnass:
 	ld a,(Posicion_actual)
 	and $1f
 	jr z,One_CColumna
+
 	dec a
-	jr z,Due_CColumna
+	jr z,Two_CColumna
+
 	inc a
+
 	cp $1e
-	jr c,one_or_due_ccolumnas
-	jr z,Due_CColumna
+	jr c,Two_or_Three_ccolumnas
+
+	jr z,Two_CColumna
+
 	jr One_CColumna
 
-one_or_due_ccolumnas ld a,(Columns)
+Two_or_Three_ccolumnas:
+
+	ld a,(Columns)
 	ld (Columnas),a
+
 	ret
 
-Due_CColumna ld a,2
-	jr 1F
-One_CColumna ld a,1
-1 ld (Columnas),a
+Two_CColumna:
+
+	ld a,2
+	ld (Columnas),a
+
+	ret
+
+One_CColumna:
+
+	ld a,1
+	ld (Columnas),a
+
 	ret
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
 ;   2/3/25
 ;
-;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
+;	INPUT: (HL) contiene (Posicion_actual).
+;		   (BC)    "     (Filas)/(Columns).
+; 		    (A)    "     (Columnas).
 ;
-;	OUTPUT: IX Contienen el puntero de impresión.
-;			HL e IY Contienen (Puntero_objeto).
 ;
-;	DESTRUYE: HL,B Y A.	
+;	OUTPUT:	(Puntero_de_impresion).
+;		   	(IX) contiene (Puntero_de_impresion).
+;			(IY)    "     (Puntero_objeto).
 
-Calcula_puntero_de_impresion:
+Drive:
 
-	ld a,(Cuad_objeto)
-	and 1
-	jr nz,Lado_izquierdo
+	ld e,a 									; (E) contiene (Columnas).
 
-Lado_derecho
+;	Selecciona rutina en función de (Cuad_objeto).
 
 	ld a,(Cuad_objeto)
 	dec a
+	jr z, Cuadrante_uno
+
 	dec a
-	jr z,Cuadrante_dos
-	jr Cuadrante_cuatro
+	jr z, Cuadrante_dos
 
-Lado_izquierdo
+	dec a
+	jr z, Cuadrante_tres
 
-	ld a,(Cuad_objeto)
-	srl a
-	jr z,Cuadrante_uno 
+Cuadrante_cuatro:
 
-; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
+	jr $
 
-	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+
+Cuadrante_tres:
+
+	jr $
+
+
+Cuadrante_dos:
+
+	jr $
+
+
+Cuadrante_uno:
+
+;	En el 1er cuadrante, (Posicion_actual) estará señalando la esquina inferior derecha, (Sprite incompleto), o la esquina sup. izq., (Sprite completo).
+;
+	ld a,(Sprite_completo)
+	and a
+	jr nz, Sprite_completo_01
+
+Sprite_incompleto_01:
+
+;	Calculamos (Puntero_de_impresion) y preparamos salida:
+;
+;		   	(IX) contiene (Puntero_de_impresion).
+;			(IY)    "     (Puntero_objeto).
+
+	call PreviousScan_00
+	call Modifica_columna_a_izq
+	call Prepara_punteros
+	call Comprueba_completo_01
+
+	jr c, Sprite_incompleto
+
+Sprite_entero:
+
+	ld a,(Sprite_completo)
+	and a
+	ret nz 												; El Sprite estaba completo y continuará COMPLETO.
+
+;	El Sprite pasa de modo INCOMPLETO a COMPLETO.
+
+	inc a
+	ld (Sprite_completo),a
+
+;	Modificamos (Posicion_actual).
+
+	ld (Posicion_actual),hl
+
+	ret
+
+Sprite_incompleto:
+
+;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
+
+	ld a,(Sprite_completo)
+	and a
+	ret z 												; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
+
+;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
+
+	xor a
+	ld (Sprite_completo),a
+
+;	Modifica_(Posicion_actual).
+
+	call NextScan_00
+	call Modifica_columna_a_der
+
+	ld (Posicion_actual),hl
+
+	ret
+
+Sprite_completo_01:
+
+;	(HL) contiene (Posicion_actual).
+
+	ld (Puntero_de_impresion),hl
+	call Comprueba_completo_01
+
+	jr c, Sprite_incompleto
+	jr Sprite_entero
+
+
+Comprueba_completo_01:
+
+	ld hl, (Puntero_de_impresion)
+
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la cuarta columna de pantalla, ($03).
 
 	ld a,l
 	and $1f
-	jr z,4F
+	cp 3
 
-6 dec hl
-	djnz 6B
+	ret c
 
-	jr 4F
-
-Cuadrante_cuatro
-
-	ld hl,(Posicion_actual) 
-	jr 4F
-
-Cuadrante_uno
-
-	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la sexta fila de pantalla, ($a0).
 
 	ld a,l
-	and $1f
-	jr z,3F
+	cp $a0
 
-1 dec hl
-	djnz 1B
+	ret
 
-3 ld b,15
-2 call PreviousScan
-	djnz 2B
+; ---------------------------------------------------------------------------
+;
+;	Subrutinas DRIVE.
+;
+; ---------------------------------------------------------------------------
 
-	jr 4F
+Prepara_punteros:
 
-Cuadrante_dos
-
-	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
-	ld b,15
-5 call PreviousScan
-	djnz 5B
-
-4 ld (Puntero_de_impresion),hl
+	ld (Puntero_de_impresion),hl
 
 	push hl
 	pop ix
@@ -584,53 +330,39 @@ Cuadrante_dos
 
 	ret
 
-; --------------------------------------------------------------------------------------------------------------------
-;
-;	2/1/23
-;
-;	Sub-rutina de [Calcula_puntero_de_impresion].
-;	
-;	Tras esta rutina tenemos:
-;
-;	OUTPUT: HL contiene (Posicion_actual).
-;			B contiene (Columnas)-1. Nota: Este valor `nunca' será "0". El valor mínimo es "1".
-;
-;	DESTRUYE!!!!! HL,B y A.
+NextScan_00:
 
-Operandos:
+	ld b,15
+1 call NextScan
+	djnz 1B
 
-	ld hl,(Posicion_actual)
-	ld a,(Columnas)
-	dec a
-	jr nz,1F
-	inc a
-1 ld b,a
 	ret
 
-; --------------------------------------------------------------------------------------------------------------------
-;
-;	Prepara_draw
-;
-;	Es una rutina de carga.
-;	Carga los registros BC,HL y E para posteriormente llamar a la rutina de pintado [DRAW].
-;	
-;	OUTPUT:
-;
-;	- LD (Filas/Columns) del objeto a pintar en [BC].
-;	- LD (Posicion_actual) del objeto en [HL].
-;
-;	MODIFY: HL y BC.
+PreviousScan_00:
 
-Prepara_draw:
+	ld b,15
+1 call PreviousScan
+	djnz 1B
 
-	ld hl,Filas 		 							; Prepara los registros BC, E y HL.
-	ld b,(hl) 										; Carga Filas/Columns del objeto a pintar o inicializar en BC.
+	ret
 
-	inc hl 											; Carga (Posicion_actual) en HL.
+Modifica_columna_a_izq:
 
-	ld c,(hl)
+	dec e 									; (E) contiene (Columnas).
 
-	ld hl,(Posicion_actual)
+	ld a,l
+	sub e
+	ld l,a
+
+	ret
+
+Modifica_columna_a_der:
+
+	dec e 									; (E) contiene (Columnas).
+
+	ld a,l
+	inc e
+	ld l,a
 
 	ret
 
