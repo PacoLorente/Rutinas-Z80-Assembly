@@ -7,9 +7,9 @@ Draw:
 
 Inicializacion:
 
-	ld hl,(Filas) 		 										; (Filas) en B.
-	ld b,l 														; (Columns) en C.
-	ld c,h
+;	ld hl,(Filas) 		 										; (Filas) en B.
+;	ld b,l 														; (Columns) en C.
+;	ld c,h
 
 	ld hl,(Posicion_actual)
 	ld a,h
@@ -22,9 +22,6 @@ Inicializacion:
 	ld (Posicion_actual),hl
 
 Entidad_iniciada:
-
-	ld hl,$4580
-	ld (Posicion_actual),hl
 
 	call Calcula_Cuad_objeto
 
@@ -190,7 +187,12 @@ One_CColumna:
 
 Drive:
 
+	jr $
+
 	ld e,a 									; (E) contiene (Columnas).
+
+	ld a,(Sprite_completo)
+	ld d,a 									; (Sprite_completo) en (D).
 
 ;	Selecciona rutina en función de (Cuad_objeto).
 
@@ -208,23 +210,74 @@ Cuadrante_cuatro:
 
 	jr $
 
-
 Cuadrante_tres:
 
 	jr $
 
-
 Cuadrante_dos:
 
-	jr $
+;	En el 2° cuadrante, (Posicion_actual) estará señalando la esquina inferior izquierda, (Sprite incompleto), o la esquina sup. izq., (Sprite completo).
 
+	inc d
+	dec d
+	jr nz, Sprite_completo_02
+
+Sprite_incompleto_02:
+
+;	Calculamos (Puntero_de_impresion) y preparamos salida:
+;
+;		   	(IX) contiene (Puntero_de_impresion).
+;			(IY)    "     (Puntero_objeto).
+
+	call PreviousScan_00
+	call Prepara_punteros
+	call Comprueba_completo_02
+
+	jr c, Sprite_incompleto_002
+	jp Sprite_entero
+
+Sprite_incompleto_002:
+
+;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
+
+	inc d
+	dec d
+	ret z											; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
+
+;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
+
+	xor a
+	ld (Sprite_completo),a
+
+;	Modifica_(Posicion_actual).
+
+	call NextScan_00
+
+	ld (Posicion_actual),hl
+
+	ret
+
+
+Sprite_completo_02:
+
+;	(HL) contiene (Posicion_actual).
+
+	ld (Puntero_de_impresion),hl
+	call Comprueba_completo_02
+
+	jr c, Sprite_incompleto_002
+	jr Sprite_entero
+
+; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
 
 Cuadrante_uno:
 
 ;	En el 1er cuadrante, (Posicion_actual) estará señalando la esquina inferior derecha, (Sprite incompleto), o la esquina sup. izq., (Sprite completo).
-;
-	ld a,(Sprite_completo)
-	and a
+
+	inc d
+	dec d
 	jr nz, Sprite_completo_01
 
 Sprite_incompleto_01:
@@ -239,32 +292,16 @@ Sprite_incompleto_01:
 	call Prepara_punteros
 	call Comprueba_completo_01
 
-	jr c, Sprite_incompleto
+	jr c, Sprite_incompleto_001
+	jp Sprite_entero
 
-Sprite_entero:
-
-	ld a,(Sprite_completo)
-	and a
-	ret nz 												; El Sprite estaba completo y continuará COMPLETO.
-
-;	El Sprite pasa de modo INCOMPLETO a COMPLETO.
-
-	inc a
-	ld (Sprite_completo),a
-
-;	Modificamos (Posicion_actual).
-
-	ld (Posicion_actual),hl
-
-	ret
-
-Sprite_incompleto:
+Sprite_incompleto_001:
 
 ;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
 
-	ld a,(Sprite_completo)
-	and a
-	ret z 												; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
+	inc d
+	dec d
+	ret z											; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
 
 ;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
 
@@ -287,9 +324,40 @@ Sprite_completo_01:
 	ld (Puntero_de_impresion),hl
 	call Comprueba_completo_01
 
-	jr c, Sprite_incompleto
+	jr c, Sprite_incompleto_001
 	jr Sprite_entero
 
+; ---------------------------------------------------------------------------
+;
+;	Subrutinas DRIVE.
+;
+; ---------------------------------------------------------------------------
+
+Comprueba_completo_02:
+
+	ld hl, (Puntero_de_impresion)
+
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como máximo en la columna ($1a).
+
+	ld a,l
+	and $1f
+	cp $1a
+
+	jr c,1F
+	jr z,1F
+
+;	Sprite incompleto, RET con Carry activo:
+
+	ccf 									; Invertimos el FLAG Carry del registro F, RET con "C".
+
+	ret
+
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la sexta fila de pantalla, ($a0).
+
+1 ld a,l
+	cp $a0
+
+	ret
 
 Comprueba_completo_01:
 
@@ -310,11 +378,22 @@ Comprueba_completo_01:
 
 	ret
 
-; ---------------------------------------------------------------------------
-;
-;	Subrutinas DRIVE.
-;
-; ---------------------------------------------------------------------------
+Sprite_entero:
+
+	ld a,(Sprite_completo)
+	and a
+	ret nz 												; El Sprite estaba completo y continuará COMPLETO.
+
+;	El Sprite pasa de modo INCOMPLETO a COMPLETO.
+
+	inc a
+	ld (Sprite_completo),a
+
+;	Modificamos (Posicion_actual).
+
+	ld (Posicion_actual),hl
+
+	ret
 
 Prepara_punteros:
 
