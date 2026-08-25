@@ -412,9 +412,9 @@ Prepara_Cajas_Master:
 
 ;> Comentando las 3 siguientes líneas eliminamos la aleatoriedad de la danza de la entidad.	---------------------------------------------------------------------------------
 
-	ld a,(Tipo)
-	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
-	call Aplica_rnd_al_baile 										; Esta rutina es la encargada de aplicar aleatoriedad a la danza de esta (Clase) de enemigo.;
+;	ld a,(Tipo)
+;	call Situa_en_Tabla_Random 										; Sitúa HL en el 1er .db de la `Tabla_Random´ del (Tipo) de entidad correspondiente.
+;	call Aplica_rnd_al_baile 										; Esta rutina es la encargada de aplicar aleatoriedad a la danza de esta (Clase) de enemigo.;
 
 ;> --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -426,7 +426,7 @@ Prepara_Cajas_Master:
 
 ; 	Antes de empezar a generar los "movimientos masticados" de esta entidad necesitamos determinar su (Posicion_inicio).
 
-	call Determina_posicion_de_inicio 								; $941e ($78),($76),($72)
+;	call Determina_posicion_de_inicio 								; $941e ($78),($76),($72)
 
 	ld a,(Tipo)
 	call Situa_Puntero_indice_mov			 	 					; Sitúa (Puntero_indice_mov) según el (Tipo) de entidad en el 1er .defw del índice de su coreogradía.
@@ -862,6 +862,9 @@ Construye_movimientos_masticados_entidad:
 	ld a,(Ctrl_3)													; El bit1 de (Ctrl_3) a "1" indica que hemos completado todo el patrón de movimiento_
 	bit 1,a 														; _ que corresponde a esta entidad.
 	jr z,1B
+
+	xor a
+	ld (Sprite_completo),a
 
 ; Hemos completado un ^ Almacén_de_mov_masticados ^.
 ; Vamos a asignar una dirección de comienzo al almacén siguiente.

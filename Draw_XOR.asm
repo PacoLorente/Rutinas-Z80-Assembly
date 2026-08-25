@@ -187,12 +187,29 @@ One_CColumna:
 
 Drive:
 
-	jr $
+
+	ld ix, (Puntero_de_impresion)
+	ld iy, (Puntero_objeto)
+
+;	(Columnas) en E.
+;	(Sprite_completo) en D.
 
 	ld e,a 									; (E) contiene (Columnas).
 
 	ld a,(Sprite_completo)
 	ld d,a 									; (Sprite_completo) en (D).
+
+
+;	(Columnas) en E.
+;	(Sprite_completo) en D.
+;	(IX) contiene (Puntero_de_impresion).
+;	(IY)    "     (Puntero_objeto).
+
+
+	jr $
+
+
+
 
 ;	Selecciona rutina en función de (Cuad_objeto).
 
@@ -206,13 +223,104 @@ Drive:
 	dec a
 	jr z, Cuadrante_tres
 
+; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
+
 Cuadrante_cuatro:
 
-	jr $
+;	En el 4° cuadrante, (Posicion_actual) y (Puntero_de_impresion) siempre indicarán la esquina superior izquierda del Sprite ya esté_
+;	_completo o incompleto.
+
+	inc d
+	dec d
+	jr nz, Sprite_completo_04
+
+	call Prepara_punteros
+	call Comprueba_completo_04
+
+	jr c, Sprite_incompleto_004
+	jp Sprite_entero
+
+Sprite_incompleto_004:
+
+;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
+
+	inc d
+	dec d
+	ret z											; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
+
+;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
+
+	xor a
+	ld (Sprite_completo),a
+
+	ret
+
+Sprite_completo_04:
+
+;	(HL) contiene (Posicion_actual).
+
+	call Comprueba_completo_04
+
+	jr c, Sprite_incompleto_004
+	jp Sprite_entero
+
+; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
 
 Cuadrante_tres:
 
-	jr $
+;	En el 3er cuadrante, (Posicion_actual) estará señalando la esquina superior derecha, (Sprite incompleto), o la esquina sup. izq., (Sprite completo).
+
+	inc d
+	dec d
+	jr nz, Sprite_completo_03
+
+Sprite_incompleto_03:
+
+	call Modifica_columna_a_izq
+	call Prepara_punteros
+	call Comprueba_completo_03
+
+	jr c, Sprite_incompleto_003
+	jp Sprite_entero
+
+Sprite_incompleto_003:
+
+;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
+
+	inc d
+	dec d
+	ret z											; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
+
+;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
+
+	xor a
+	ld (Sprite_completo),a
+
+;	Modifica_(Posicion_actual).
+
+	call Modifica_columna_a_der
+
+	ld (Posicion_actual),hl
+
+	ret
+
+Sprite_completo_03:
+
+;	(HL) contiene (Posicion_actual).
+
+	ld (Puntero_de_impresion),hl
+	call Comprueba_completo_01
+
+	jr c, Sprite_incompleto_003
+	jp Sprite_entero
+
+; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
+; ------------------------------------------------------------------------------
 
 Cuadrante_dos:
 
@@ -333,6 +441,49 @@ Sprite_completo_01:
 ;
 ; ---------------------------------------------------------------------------
 
+Comprueba_completo_04:
+
+	ld hl, (Puntero_de_impresion)
+
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como máximo en la columna ($1a).
+
+	ld a,l
+	and $1f
+	cp $1a
+
+	jr c,1F
+	jr z,1F
+
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la sexta fila de pantalla, ($a0).
+
+1 ld a,l
+	cp $7f
+
+	ccf
+
+	ret
+
+Comprueba_completo_03:
+
+	ld hl, (Puntero_de_impresion)
+
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la cuarta columna de pantalla, ($03).
+
+	ld a,l
+	and $1f
+	cp 3
+
+	ret c
+
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la sexta fila de pantalla, ($a0).
+
+	ld a,l
+	cp $7f
+
+	ccf
+
+	ret
+
 Comprueba_completo_02:
 
 	ld hl, (Puntero_de_impresion)
@@ -352,10 +503,10 @@ Comprueba_completo_02:
 
 	ret
 
-;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la sexta fila de pantalla, ($a0).
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la sexta fila de pantalla, ($80).
 
 1 ld a,l
-	cp $a0
+	cp $80
 
 	ret
 
@@ -371,10 +522,10 @@ Comprueba_completo_01:
 
 	ret c
 
-;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la sexta fila de pantalla, ($a0).
+;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la quinta fila de pantalla, ($80).
 
 	ld a,l
-	cp $a0
+	cp $80
 
 	ret
 
