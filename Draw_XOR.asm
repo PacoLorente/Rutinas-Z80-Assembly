@@ -26,6 +26,7 @@ Entidad_iniciada:
 	call Calcula_Cuad_objeto
 
 1 call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+
 	call Drive													; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
 
 	ld a,(Ctrl_0)												; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
@@ -204,11 +205,6 @@ Drive:
 ;	(Sprite_completo) en D.
 ;	(IX) contiene (Puntero_de_impresion).
 ;	(IY)    "     (Puntero_objeto).
-
-
-	jr $
-
-
 
 
 ;	Selecciona rutina en función de (Cuad_objeto).
@@ -428,8 +424,8 @@ Sprite_incompleto_001:
 Sprite_completo_01:
 
 ;	(HL) contiene (Posicion_actual).
-
-	ld (Puntero_de_impresion),hl
+	
+	call Prepara_punteros
 	call Comprueba_completo_01
 
 	jr c, Sprite_incompleto_001
@@ -512,11 +508,9 @@ Comprueba_completo_02:
 
 Comprueba_completo_01:
 
-	ld hl, (Puntero_de_impresion)
-
 ;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la cuarta columna de pantalla, ($03).
 
-	ld a,l
+	ld a,ixl
 	and $1f
 	cp 3
 
@@ -524,7 +518,16 @@ Comprueba_completo_01:
 
 ;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la quinta fila de pantalla, ($80).
 
-	ld a,l
+	ld a,ixh
+	and $18
+	sra a
+	sra a
+	sra a
+
+	dec a
+	ret z
+
+	ld a,ixl
 	cp $80
 
 	ret
@@ -542,7 +545,7 @@ Sprite_entero:
 
 ;	Modificamos (Posicion_actual).
 
-	ld (Posicion_actual),hl
+	ld (Posicion_actual),ix
 
 	ret
 
