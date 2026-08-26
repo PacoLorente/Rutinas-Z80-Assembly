@@ -27,7 +27,89 @@ Entidad_iniciada:
 
 1 call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
 
+
+
+;	----------------------------------------
+
+	push hl
+	push bc
+	push af
+	push de
+	push ix
+	push iy
+
+
+	ld hl,(Posicion_actual)
+
+	ld ix,(Puntero_de_impresion)
+	ld iy,(Puntero_objeto)
+
+	ld a,(Columns)
+	ld b,a
+	ld a,(Columnas)
+	ld c,a
+
+	ld a,(Sprite_completo)
+	ld e,a
+
+	ld a,(Cuad_objeto)
+
+	jr $
+
+	pop iy
+	pop ix
+	pop de
+	pop af
+	pop bc
+	pop hl
+
+;	----------------------------------------
+
 	call Drive													; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
+
+;	----------------------------------------
+
+	push hl
+	push bc
+	push af
+	push de
+	push ix
+	push iy
+
+
+	ld hl,(Posicion_actual)
+
+	ld ix,(Puntero_de_impresion)
+	ld iy,(Puntero_objeto)
+
+	ld a,(Columns)
+	ld b,a
+	ld a,(Columnas)
+	ld c,a
+
+	ld a,(Sprite_completo)
+	ld e,a
+
+	ld a,(Cuad_objeto)
+
+	jr $
+
+	pop iy
+	pop ix
+	pop de
+	pop af
+	pop bc
+	pop hl
+
+;	----------------------------------------
+
+;	HL (Posicion_actual)
+;	IX (Puntero_de_impresion)
+;	IY (Puntero_objeto)
+;	 A (Cuad_objeto)
+;	 E (Sprite_completo)
+;	 B (Columns)
+;	 C (Columnas)
 
 	ld a,(Ctrl_0)												; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
 	and $d0									
@@ -188,13 +270,6 @@ One_CColumna:
 
 Drive:
 
-
-	ld ix, (Puntero_de_impresion)
-	ld iy, (Puntero_objeto)
-
-;	(Columnas) en E.
-;	(Sprite_completo) en D.
-
 	ld e,a 									; (E) contiene (Columnas).
 
 	ld a,(Sprite_completo)
@@ -203,9 +278,6 @@ Drive:
 
 ;	(Columnas) en E.
 ;	(Sprite_completo) en D.
-;	(IX) contiene (Puntero_de_impresion).
-;	(IY)    "     (Puntero_objeto).
-
 
 ;	Selecciona rutina en función de (Cuad_objeto).
 
