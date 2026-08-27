@@ -14,6 +14,7 @@ Draw:
 
 	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl
+	ld (Puntero_de_impresion),hl
 
 Entidad_iniciada:
 
@@ -284,7 +285,7 @@ Drive:
 	ld a,(Sprite_completo)
 	ld d,a 									           ; (Sprite_completo)/(Columnas) en DE.
 
-;	jr $
+	jr $
 
 ;	Situación de pantalla, (cuadrante) de la nueva (Posicion_actual).
 
