@@ -29,6 +29,7 @@ Entidad_iniciada:
 	call Calcula_Cuad_objeto  									; (Cuad_objeto) de la nueva (Posicion_actual).
 
 1 call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+;																; También comprueba si en la nueva (Posicion_actual) el Sprite se imprime COMPLETO o INCOMPLETO, (Sprite_completo_1).
 
 ;	----------------------------------------
 
@@ -212,10 +213,13 @@ Determina_lado_de_pantalla:
 
 ;	INPUT: (HL) contiene (Posicion_actual).
 ;		   (A) contiene (Cuad_objeto).
+;		   (C) contiene (Columns).
 ;
 ;	MODIFY: (A).
 ;
 ;	OUTPUT: (Columnas).
+;			(Sprite_completo).
+;
 ;		    (A) contiene (Columnas).
 ;			(HL) contiene (Posicion_actual).
 
@@ -239,8 +243,10 @@ calcula_CColumnass:
 
 Two_or_Three_ccolumnas:
 
-	ld a,(Columns)
+	ld a,c
 	ld (Columnas),a
+	ld a,1
+	ld (Sprite_completo_1),a                                       	; Sprite COMPLETO.
 
 	ret
 
@@ -249,12 +255,20 @@ Two_CColumna:
 	ld a,2
 	ld (Columnas),a
 
+	sub c
+	ret nz
+
+	ld a,1
+	ld (Sprite_completo_1),a                                       	; Sprite COMPLETO.
+
 	ret
 
 One_CColumna:
 
 	ld a,1
 	ld (Columnas),a
+	dec a
+	ld (Sprite_completo_1),a 											; Sprite INCOMPLETO.
 
 	ret
 
@@ -282,8 +296,8 @@ Drive:
 
 	ld e,a
 
-	ld a,(Sprite_completo)
-	ld d,a 									           ; (Sprite_completo)/(Columnas) en DE.
+	ld a,(Sprite_completo_1)
+	ld d,a 									           ; (Sprite_completo_1)/(Columnas) en DE.
 
 	jr $
 
@@ -329,7 +343,7 @@ Sprite_incompleto_004:
 ;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
 
 	xor a
-	ld (Sprite_completo),a
+	ld (Sprite_completo_0),a
 
 	ret
 
@@ -374,7 +388,7 @@ Sprite_incompleto_003:
 ;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
 
 	xor a
-	ld (Sprite_completo),a
+	ld (Sprite_completo_0),a
 
 ;	Modifica_(Posicion_actual).
 
@@ -431,7 +445,7 @@ Sprite_incompleto_002:
 ;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
 
 	xor a
-	ld (Sprite_completo),a
+	ld (Sprite_completo_0),a
 
 ;	Modifica_(Posicion_actual).
 
@@ -450,7 +464,7 @@ Sprite_completo_02:
 	call Comprueba_completo_02
 
 	jr c, Sprite_incompleto_002
-	jr Sprite_entero
+	jp Sprite_entero
 
 ; ------------------------------------------------------------------------------
 ; ------------------------------------------------------------------------------
@@ -466,18 +480,45 @@ Cuadrante_uno:
 
 Sprite_incompleto_01:
 
+	call Compara_cuadrantes
+	jr z, Incompleto_en_cuad1
+
+Incompl_viene_de_cuad3:
+
+	jr $
+
+
+
+
+
+Incompleto_en_cuad1:
+
+;	El objeto está apareciendo o desapareciendo por la parte izquierda de la pantalla:
+
 ;	Calculamos (Puntero_de_impresion) y preparamos salida:
 ;
 ;		   	(IX) contiene (Puntero_de_impresion).
 ;			(IY)    "     (Puntero_objeto).
 
+;	Pasamos de COMPLETO a INCOMPLETO, estamos desapareciendo por la parte izquierda de la pantalla ??
+
+	ld a,(Sprite_completo_0)
+	and a
+	jr nz, Desapareciendo_por_la_izq
+
+Apareciendo_por_la_izq:
+
 	call PreviousScan_00 							; Sitúa HL, (Posicion_actual) 15 scans. arriba, pasamos del último scanline al primero del Sprite.
 	call Modifica_columna_a_izq 					; (Posicion_actual) pasa de apuntar la esquina sup. derecha del Sprite a la esquina sup. izquierda.
 	call Prepara_punteros 							; (Puntero_de_impresion) actualizado en IX, (Puntero_objeto) en IY.
-	call Comprueba_completo_01
 
-	jr c, Sprite_incompleto_001
-	jp Sprite_entero
+	ret 											; El Sprite estaba INCOMPLETO y continúa INCOMPLETO.
+	
+Desapareciendo_por_la_izq:
+
+	jr $
+
+
 
 Sprite_incompleto_001:
 
@@ -490,7 +531,7 @@ Sprite_incompleto_001:
 ;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
 
 	xor a
-	ld (Sprite_completo),a
+	ld (Sprite_completo_0),a
 
 ;	Modifica_(Posicion_actual).
 
@@ -588,40 +629,42 @@ Comprueba_completo_02:
 
 Comprueba_completo_01:
 
-;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la cuarta columna de pantalla, ($03).
 
-	ld a,ixl
-	and $1f
-	cp 3
 
-	ret c
+	ret
 
-;	Para que el Sprite se considere completo, (Puntero_de_impresion) ha de situarse como mínimo en la quinta fila de pantalla, ($80).
+Compara_cuadrantes:
 
-	ld a,ixh
-	and $18
-	sra a
-	sra a
-	sra a
+	push hl
+	push bc
+	push af
 
-	dec a
-	ret z
+	push ix
+	pop hl
 
-	ld a,ixl
-	cp $80
+	call Calcula_Cuad_objeto
+
+	ld b,a
+	ld a,(Cuad_objeto)
+
+	sub b
+
+	pop af
+	pop bc
+	pop hl
 
 	ret
 
 Sprite_entero:
 
-	ld a,(Sprite_completo)
+	ld a,(Sprite_completo_0)
 	and a
 	ret nz 												; El Sprite estaba completo y continuará COMPLETO.
 
 ;	El Sprite pasa de modo INCOMPLETO a COMPLETO.
 
 	inc a
-	ld (Sprite_completo),a
+	ld (Sprite_completo_0),a
 
 ;	Modificamos (Posicion_actual).
 

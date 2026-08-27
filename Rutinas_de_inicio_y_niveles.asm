@@ -864,7 +864,7 @@ Construye_movimientos_masticados_entidad:
 	jr z,1B
 
 	xor a
-	ld (Sprite_completo),a
+	ld (Sprite_completo_0),a
 
 ; Hemos completado un ^ Almacén_de_mov_masticados ^.
 ; Vamos a asignar una dirección de comienzo al almacén siguiente.

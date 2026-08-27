@@ -629,12 +629,11 @@ Cuad_objeto db 0											; Almacena el cuadrante de pantalla donde se encuentr
 ;															; _baja de la pantalla cuando hemos superado el nivel.
 
 Columnas db 0
-Sprite_completo db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
-;															; 2ª Función de (Sprite_completo):
-;															; Se inicializa a "0" cada vez que ejecutamos el bucle de entidades. Se utiliza como contador; se incrementa (+1) cada vez que se añade una_
-;															; _descripción a la (Tabla_de_pintado). Este valor lo utiliza la rutina [Ordena_tabla_de_pintado] para ordenar la tabla antes de imprimir.
 
+;	DRIVE
 
+Sprite_completo_0 db 0 										
+Sprite_completo_1 db 0
 
 ; Variables de control general.
 
@@ -1341,7 +1340,7 @@ Main:
 ;															; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
 ;	 														; _viceversa.
 	xor a
-	ld (Sprite_completo),a 									; Inicializa el contador de entidades "visibles" en pantalla, (se cargan en la Tabla_de_pintado).
+	ld (Sprite_completo_0),a 									; Inicializa el contador de entidades "visibles" en pantalla, (se cargan en la Tabla_de_pintado).
 
 Bucle_de_entidades:
 
@@ -1901,7 +1900,7 @@ Borra_diferencia
 
 Entidad_a_Tabla_de_pintado
 
-	ld hl,Sprite_completo
+	ld hl,Sprite_completo_0
 	inc (hl)		 										; (Sprite_completo) actúa ahora como contador de entidades imprimibles.
 ;                                                           ; El nº de entidades almacenadas en la Tabla_de_pintado lo utilizara [Ordena_tabla_de_impresion] más adelante.
 	ld hl,(India_SP) 				 
@@ -1965,7 +1964,7 @@ Ordena_tabla_de_pintado
 
 ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
 
-	ld a,(Sprite_completo)
+	ld a,(Sprite_completo_0)
 	cp 4
 	ret c 													; < 4 entidades, no ordenamos la Tabla.
 
