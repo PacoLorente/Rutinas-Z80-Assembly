@@ -299,7 +299,7 @@ Drive:
 	ld a,(Sprite_completo_1)
 	ld d,a 									           ; (Sprite_completo_1)/(Columnas) en DE.
 
-	jr $
+;	jr $
 
 ;	Situación de pantalla, (cuadrante) de la nueva (Posicion_actual).
 
@@ -481,7 +481,8 @@ Cuadrante_uno:
 Sprite_incompleto_01:
 
 	call Compara_cuadrantes
-	jr z, Incompleto_en_cuad1
+	jr z, Incompleto_en_cuad1 						; Sprite INCOMPLETO en cuadrante_1 continúa INCOMPLETO en el 1er cuadrante.
+;													; Apareciendo o desapareciendo por la parte izq. de la pantalla.
 
 Incompl_viene_de_cuad3:
 
@@ -512,45 +513,36 @@ Apareciendo_por_la_izq:
 	call Modifica_columna_a_izq 					; (Posicion_actual) pasa de apuntar la esquina sup. derecha del Sprite a la esquina sup. izquierda.
 	call Prepara_punteros 							; (Puntero_de_impresion) actualizado en IX, (Puntero_objeto) en IY.
 
+;	El Sprite está INCOMPLETO por lo que no modiicamos (Posicion_actual).
+
 	ret 											; El Sprite estaba INCOMPLETO y continúa INCOMPLETO.
 	
 Desapareciendo_por_la_izq:
 
-	jr $
+;	jr $
 
+	call Prepara_punteros
 
-
-Sprite_incompleto_001:
-
-;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
-
-	inc d
-	dec d
-	ret z											; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
-
-;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
-
-	xor a
-	ld (Sprite_completo_0),a
-
-;	Modifica_(Posicion_actual).
+;	El Sprite pasa de COMPLETO a INCOMPLETO en el 1er cuad. Hay que modificar (Posicion_actual).
 
 	call NextScan_00
 	call Modifica_columna_a_der
 
 	ld (Posicion_actual),hl
 
-	ret
+	xor a
+	ld (Sprite_completo_0),a
+
 
 Sprite_completo_01:
 
 ;	(HL) contiene (Posicion_actual).
 	
-	call Prepara_punteros
-	call Comprueba_completo_01
+;	call Prepara_punteros
+;	call Comprueba_completo_01
 
-	jr c, Sprite_incompleto_001
-	jr Sprite_entero
+;	jr c, Sprite_incompleto_001
+;	jr Sprite_entero
 
 ; ---------------------------------------------------------------------------
 ;
