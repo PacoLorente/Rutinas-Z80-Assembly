@@ -1,15 +1,9 @@
 ; ------------------------------------------------------------------
 ;
-; 19/8/26
+; 27/8/26
 ;
 
 Draw:
-
-Inicializacion:
-
-;	ld hl,(Filas) 		 										; (Filas) en B.
-;	ld b,l 														; (Columns) en C.
-;	ld c,h
 
 	ld hl,(Posicion_actual)
 	ld a,h
@@ -23,45 +17,51 @@ Inicializacion:
 
 Entidad_iniciada:
 
-	call Calcula_Cuad_objeto
+	ld a,(Filas)
+	ld b,a
+	ld a,(Columns)
+	ld c,a														; (Filas/Columns) en BC.
+
+	ld ix,(Puntero_de_impresion) 								; (Puntero_de_impresion) de la anterior (Posicion_actual). Necesario para averiguar si existe_
+; 																; _cambio de cuadrante cuando el sprite está incompleto.
+
+	call Calcula_Cuad_objeto  									; (Cuad_objeto) de la nueva (Posicion_actual).
 
 1 call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
 
-
-
 ;	----------------------------------------
 
-	push hl
-	push bc
-	push af
-	push de
-	push ix
-	push iy
+;	push hl
+;	push bc
+;	push af
+;	push de
+;	push ix
+;	push iy
 
 
-	ld hl,(Posicion_actual)
+;	ld hl,(Posicion_actual)
 
-	ld ix,(Puntero_de_impresion)
-	ld iy,(Puntero_objeto)
+;	ld ix,(Puntero_de_impresion)
+;	ld iy,(Puntero_objeto)
 
-	ld a,(Columns)
-	ld b,a
-	ld a,(Columnas)
-	ld c,a
+;	ld a,(Columns)
+;	ld b,a
+;	ld a,(Columnas)
+;	ld c,a
 
-	ld a,(Sprite_completo)
-	ld e,a
+;	ld a,(Sprite_completo)
+;	ld e,a
 
-	ld a,(Cuad_objeto)
+;	ld a,(Cuad_objeto)
 
-	jr $
+;	jr $
 
-	pop iy
-	pop ix
-	pop de
-	pop af
-	pop bc
-	pop hl
+;	pop iy
+;	pop ix
+;	pop de
+;	pop af
+;	pop bc
+;	pop hl
 
 ;	----------------------------------------
 
@@ -69,37 +69,37 @@ Entidad_iniciada:
 
 ;	----------------------------------------
 
-	push hl
-	push bc
-	push af
-	push de
-	push ix
-	push iy
+;;	push hl
+;;	push bc
+;;	push af
+;;	push de
+;;	push ix
+;;	push iy
 
 
-	ld hl,(Posicion_actual)
+;;	ld hl,(Posicion_actual)
 
-	ld ix,(Puntero_de_impresion)
-	ld iy,(Puntero_objeto)
+;;	ld ix,(Puntero_de_impresion)
+;;	ld iy,(Puntero_objeto)
 
-	ld a,(Columns)
-	ld b,a
-	ld a,(Columnas)
-	ld c,a
+;	ld a,(Columns)
+;	ld b,a
+;	ld a,(Columnas)
+;	ld c,a
 
-	ld a,(Sprite_completo)
-	ld e,a
+;	ld a,(Sprite_completo)
+;	ld e,a
 
-	ld a,(Cuad_objeto)
+;	ld a,(Cuad_objeto)
 
-	jr $
+;	jr $
 
-	pop iy
-	pop ix
-	pop de
-	pop af
-	pop bc
-	pop hl
+;	pop iy
+;	pop ix
+;	pop de
+;	pop af
+;	pop bc
+;	pop hl
 
 ;	----------------------------------------
 
@@ -205,16 +205,18 @@ Determina_lado_de_pantalla:
 ;
 ; 	23/8/26
 ;
-;	Modify: A.
 ;	
-;	Inicializa la variable (Columnas), n° de columnas que podemos imprimir del Sprite.
+;	Inicializa la variable (Columnas), n° de columnas que podemos imprimir del Sprite cuando está incompleto, (apareciendo o desapareciendo)_
+;	_por los extremos de la pantalla.
 
 ;	INPUT: (HL) contiene (Posicion_actual).
 ;		   (A) contiene (Cuad_objeto).
 ;
+;	MODIFY: (A).
 ;
 ;	OUTPUT: (Columnas).
-;	
+;		    (A) contiene (Columnas).
+;			(HL) contiene (Posicion_actual).
 
 calcula_CColumnass:
 
@@ -257,29 +259,34 @@ One_CColumna:
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
-;   2/3/25
+;   27/8/26
 ;
 ;	INPUT: (HL) contiene (Posicion_actual).
 ;		   (BC)    "     (Filas)/(Columns).
 ; 		    (A)    "     (Columnas).
+;		   (IX)    "     (Puntero_de_impresion) de la (Posicion_actual) anterior, (antes del último movimiento).
+; 						 Comparando (Cuad_objeto) de (IX) con (Cuad_objeto) de (HL) cuando el Sprite está INCOMPLETO,_
+;						 _averiguamos si se ha producido cambio de cuadrante, (pasamos de la parte alta de la pantalla a la parte baja_
+; 						 _o viceversa).
 ;
 ;
-;	OUTPUT:	(Puntero_de_impresion).
-;		   	(IX) contiene (Puntero_de_impresion).
-;			(IY)    "     (Puntero_objeto).
+;	OUTPUT:	(HL) contiene  (Posicion_actual).
+;		   	(IX)    "      (Puntero_de_impresion).
+;			(IY)    "      (Puntero_objeto).
 
 Drive:
 
-	ld e,a 									; (E) contiene (Columnas).
+;	(Columnas) en (E).
+;	(Sprite_completo) en (D).
+
+	ld e,a
 
 	ld a,(Sprite_completo)
-	ld d,a 									; (Sprite_completo) en (D).
+	ld d,a 									           ; (Sprite_completo)/(Columnas) en DE.
 
+;	jr $
 
-;	(Columnas) en E.
-;	(Sprite_completo) en D.
-
-;	Selecciona rutina en función de (Cuad_objeto).
+;	Situación de pantalla, (cuadrante) de la nueva (Posicion_actual).
 
 	ld a,(Cuad_objeto)
 	dec a
@@ -454,7 +461,7 @@ Cuadrante_uno:
 
 	inc d
 	dec d
-	jr nz, Sprite_completo_01
+	jr nz, Sprite_completo_01 						; (D) contiene (Sprite_completo), averigua si el Sprite está COMPLETO.
 
 Sprite_incompleto_01:
 
@@ -463,9 +470,9 @@ Sprite_incompleto_01:
 ;		   	(IX) contiene (Puntero_de_impresion).
 ;			(IY)    "     (Puntero_objeto).
 
-	call PreviousScan_00
-	call Modifica_columna_a_izq
-	call Prepara_punteros
+	call PreviousScan_00 							; Sitúa HL, (Posicion_actual) 15 scans. arriba, pasamos del último scanline al primero del Sprite.
+	call Modifica_columna_a_izq 					; (Posicion_actual) pasa de apuntar la esquina sup. derecha del Sprite a la esquina sup. izquierda.
+	call Prepara_punteros 							; (Puntero_de_impresion) actualizado en IX, (Puntero_objeto) en IY.
 	call Comprueba_completo_01
 
 	jr c, Sprite_incompleto_001
