@@ -632,8 +632,7 @@ Columnas db 0
 
 ;	DRIVE
 
-Sprite_completo_0 db 0 										
-Sprite_completo_1 db 0
+Sprite_completo db 0
 
 ; Variables de control general.
 
@@ -1340,7 +1339,7 @@ Main:
 ;															; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
 ;	 														; _viceversa.
 	xor a
-	ld (Sprite_completo_0),a 									; Inicializa el contador de entidades "visibles" en pantalla, (se cargan en la Tabla_de_pintado).
+	ld (Sprite_completo),a 									; Inicializa el contador de entidades "visibles" en pantalla, (se cargan en la Tabla_de_pintado).
 
 Bucle_de_entidades:
 
@@ -1900,7 +1899,7 @@ Borra_diferencia
 
 Entidad_a_Tabla_de_pintado
 
-	ld hl,Sprite_completo_0
+	ld hl,Sprite_completo
 	inc (hl)		 										; (Sprite_completo) actúa ahora como contador de entidades imprimibles.
 ;                                                           ; El nº de entidades almacenadas en la Tabla_de_pintado lo utilizara [Ordena_tabla_de_impresion] más adelante.
 	ld hl,(India_SP) 				 
@@ -1964,7 +1963,7 @@ Ordena_tabla_de_pintado
 
 ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
 
-	ld a,(Sprite_completo_0)
+	ld a,(Sprite_completo)
 	cp 4
 	ret c 													; < 4 entidades, no ordenamos la Tabla.
 

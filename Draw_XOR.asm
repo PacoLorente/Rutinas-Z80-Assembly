@@ -18,17 +18,11 @@ Draw:
 
 Entidad_iniciada:
 
-	ld a,(Filas)
-	ld b,a
-	ld a,(Columns)
-	ld c,a														; (Filas/Columns) en BC.
-
 	ld ix,(Puntero_de_impresion) 								; (Puntero_de_impresion) de la anterior (Posicion_actual). Necesario para averiguar si existe_
 ; 																; _cambio de cuadrante cuando el sprite está incompleto.
-
 	call Calcula_Cuad_objeto  									; (Cuad_objeto) de la nueva (Posicion_actual).
 
-1 call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+	call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
 ;																; También comprueba si en la nueva (Posicion_actual) el Sprite se imprime COMPLETO o INCOMPLETO, (Sprite_completo_1).
 
 ;	----------------------------------------
@@ -243,10 +237,8 @@ calcula_CColumnass:
 
 Two_or_Three_ccolumnas:
 
-	ld a,c
+	ld a,(Columns)
 	ld (Columnas),a
-	ld a,1
-	ld (Sprite_completo_1),a                                       	; Sprite COMPLETO.
 
 	ret
 
@@ -255,20 +247,12 @@ Two_CColumna:
 	ld a,2
 	ld (Columnas),a
 
-	sub c
-	ret nz
-
-	ld a,1
-	ld (Sprite_completo_1),a                                       	; Sprite COMPLETO.
-
 	ret
 
 One_CColumna:
 
 	ld a,1
 	ld (Columnas),a
-	dec a
-	ld (Sprite_completo_1),a 											; Sprite INCOMPLETO.
 
 	ret
 
@@ -277,7 +261,6 @@ One_CColumna:
 ;   27/8/26
 ;
 ;	INPUT: (HL) contiene (Posicion_actual).
-;		   (BC)    "     (Filas)/(Columns).
 ; 		    (A)    "     (Columnas).
 ;		   (IX)    "     (Puntero_de_impresion) de la (Posicion_actual) anterior, (antes del último movimiento).
 ; 						 Comparando (Cuad_objeto) de (IX) con (Cuad_objeto) de (HL) cuando el Sprite está INCOMPLETO,_
@@ -296,12 +279,10 @@ Drive:
 
 	ld e,a
 
-	ld a,(Sprite_completo_1)
-	ld d,a 									           ; (Sprite_completo_1)/(Columnas) en DE.
+	ld a,(Sprite_completo)
+	ld d,a 									           ; (Sprite_completo)/(Columnas) en DE.
 
-;	jr $
-
-;	Situación de pantalla, (cuadrante) de la nueva (Posicion_actual).
+;	Situación en pantalla de la nueva (Posicion_actual).
 
 	ld a,(Cuad_objeto)
 	dec a
@@ -319,42 +300,7 @@ Drive:
 
 Cuadrante_cuatro:
 
-;	En el 4° cuadrante, (Posicion_actual) y (Puntero_de_impresion) siempre indicarán la esquina superior izquierda del Sprite ya esté_
-;	_completo o incompleto.
-
-	inc d
-	dec d
-	jr nz, Sprite_completo_04
-
-	call Prepara_punteros
-	call Comprueba_completo_04
-
-	jr c, Sprite_incompleto_004
-	jp Sprite_entero
-
-Sprite_incompleto_004:
-
-;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
-
-	inc d
-	dec d
-	ret z											; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
-
-;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
-
-	xor a
-	ld (Sprite_completo_0),a
-
-	ret
-
-Sprite_completo_04:
-
-;	(HL) contiene (Posicion_actual).
-
-	call Comprueba_completo_04
-
-	jr c, Sprite_incompleto_004
-	jp Sprite_entero
+	jr $
 
 ; ------------------------------------------------------------------------------
 ; ------------------------------------------------------------------------------
@@ -362,51 +308,7 @@ Sprite_completo_04:
 
 Cuadrante_tres:
 
-;	En el 3er cuadrante, (Posicion_actual) estará señalando la esquina superior derecha, (Sprite incompleto), o la esquina sup. izq., (Sprite completo).
-
-	inc d
-	dec d
-	jr nz, Sprite_completo_03
-
-Sprite_incompleto_03:
-
-	call Modifica_columna_a_izq
-	call Prepara_punteros
-	call Comprueba_completo_03
-
-	jr c, Sprite_incompleto_003
-	jp Sprite_entero
-
-Sprite_incompleto_003:
-
-;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
-
-	inc d
-	dec d
-	ret z											; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
-
-;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
-
-	xor a
-	ld (Sprite_completo_0),a
-
-;	Modifica_(Posicion_actual).
-
-	call Modifica_columna_a_der
-
-	ld (Posicion_actual),hl
-
-	ret
-
-Sprite_completo_03:
-
-;	(HL) contiene (Posicion_actual).
-
-	ld (Puntero_de_impresion),hl
-	call Comprueba_completo_01
-
-	jr c, Sprite_incompleto_003
-	jp Sprite_entero
+	jr $
 
 ; ------------------------------------------------------------------------------
 ; ------------------------------------------------------------------------------
@@ -414,57 +316,7 @@ Sprite_completo_03:
 
 Cuadrante_dos:
 
-;	En el 2° cuadrante, (Posicion_actual) estará señalando la esquina inferior izquierda, (Sprite incompleto), o la esquina sup. izq., (Sprite completo).
-
-	inc d
-	dec d
-	jr nz, Sprite_completo_02
-
-Sprite_incompleto_02:
-
-;	Calculamos (Puntero_de_impresion) y preparamos salida:
-;
-;		   	(IX) contiene (Puntero_de_impresion).
-;			(IY)    "     (Puntero_objeto).
-
-	call PreviousScan_00
-	call Prepara_punteros
-	call Comprueba_completo_02
-
-	jr c, Sprite_incompleto_002
-	jp Sprite_entero
-
-Sprite_incompleto_002:
-
-;	No modificamos (Posicion_actual) si el Sprite ya permanecía incompleto.
-
-	inc d
-	dec d
-	ret z											; El Sprite estaba incompleto y continuará INCOMPLETO. No modificamos (Posicion_actual).
-
-;	El Sprite estaba COMPLETO pero ahora pasa a INCOMPLETO:
-
-	xor a
-	ld (Sprite_completo_0),a
-
-;	Modifica_(Posicion_actual).
-
-	call NextScan_00
-
-	ld (Posicion_actual),hl
-
-	ret
-
-
-Sprite_completo_02:
-
-;	(HL) contiene (Posicion_actual).
-
-	ld (Puntero_de_impresion),hl
-	call Comprueba_completo_02
-
-	jr c, Sprite_incompleto_002
-	jp Sprite_entero
+	jr $
 
 ; ------------------------------------------------------------------------------
 ; ------------------------------------------------------------------------------
@@ -472,19 +324,64 @@ Sprite_completo_02:
 
 Cuadrante_uno:
 
-;	En el 1er cuadrante, (Posicion_actual) estará señalando la esquina inferior derecha, (Sprite incompleto), o la esquina sup. izq., (Sprite completo).
-
 	inc d
 	dec d
-	jr nz, Sprite_completo_01 						; (D) contiene (Sprite_completo), averigua si el Sprite está COMPLETO.
+	jr nz, Sprite_anteriormente_completo_en_CUAD_1: 	; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
 
-Sprite_incompleto_01:
+Sprite_anteriormente_incompleto_en_CUAD_1:
 
-	call Compara_cuadrantes
-	jr z, Incompleto_en_cuad1 						; Sprite INCOMPLETO en cuadrante_1 continúa INCOMPLETO en el 1er cuadrante.
-;													; Apareciendo o desapareciendo por la parte izq. de la pantalla.
+;	Sprite INCOMPLETO en el 1er cuadrante.
+;
+;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 1er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 3º) o se mantiene en el mismo.
 
-Incompl_viene_de_cuad3:
+	call Comprueba_Cuad_anterior 						; (A) contiene 1,2,3 o 4 en función de la situación del anterior (Puntero_de_impresion).
+
+	dec a
+	jr z, Procede_de_cuad1
+	dec a
+	jr z, Procede_de_cuad2
+	dec a
+	jr z, Procede_de_cuad3
+
+Procede_de_cuad4:
+
+	jr $
+
+
+Procede_de_cuad3:
+
+
+	jr $
+
+
+Procede_de_cuad2:
+
+
+	jr $
+
+
+Procede_de_cuad1:
+
+;	No modificamos (Posicion_actual) pues seguimos en el 1er cuadrante.
+;	Calculamos el nuevo (Puntero_de_impresion).
+
+	call PreviousScan_15
+	call Modifica_columna_a_izq
+	call Prepara_punteros
+	call Comprueba_completo_en_Cuad_1
+
+	ret c												; El Sprite continúa INCOMPLETO, (Sprite_completo_0) y (Sprite_completo_1) = "0".
+
+;	Modifica (Posicion_actual) y flag (Sprite_completo).
+
+	ld (Posicion_actual),ix
+
+	ld a,1
+	ld (Sprite_completo),a
+
+	ret
+
+Sprite_anteriormente_completo_en_CUAD_1:
 
 	jr $
 
@@ -492,57 +389,11 @@ Incompl_viene_de_cuad3:
 
 
 
-Incompleto_en_cuad1:
-
-;	El objeto está apareciendo o desapareciendo por la parte izquierda de la pantalla:
-
-;	Calculamos (Puntero_de_impresion) y preparamos salida:
-;
-;		   	(IX) contiene (Puntero_de_impresion).
-;			(IY)    "     (Puntero_objeto).
-
-;	Pasamos de COMPLETO a INCOMPLETO, estamos desapareciendo por la parte izquierda de la pantalla ??
-
-	ld a,(Sprite_completo_0)
-	and a
-	jr nz, Desapareciendo_por_la_izq
-
-Apareciendo_por_la_izq:
-
-	call PreviousScan_00 							; Sitúa HL, (Posicion_actual) 15 scans. arriba, pasamos del último scanline al primero del Sprite.
-	call Modifica_columna_a_izq 					; (Posicion_actual) pasa de apuntar la esquina sup. derecha del Sprite a la esquina sup. izquierda.
-	call Prepara_punteros 							; (Puntero_de_impresion) actualizado en IX, (Puntero_objeto) en IY.
-
-;	El Sprite está INCOMPLETO por lo que no modiicamos (Posicion_actual).
-
-	ret 											; El Sprite estaba INCOMPLETO y continúa INCOMPLETO.
-	
-Desapareciendo_por_la_izq:
-
-;	jr $
-
-	call Prepara_punteros
-
-;	El Sprite pasa de COMPLETO a INCOMPLETO en el 1er cuad. Hay que modificar (Posicion_actual).
-
-	call NextScan_00
-	call Modifica_columna_a_der
-
-	ld (Posicion_actual),hl
-
-	xor a
-	ld (Sprite_completo_0),a
 
 
-Sprite_completo_01:
 
-;	(HL) contiene (Posicion_actual).
-	
-;	call Prepara_punteros
-;	call Comprueba_completo_01
 
-;	jr c, Sprite_incompleto_001
-;	jr Sprite_entero
+
 
 ; ---------------------------------------------------------------------------
 ;
@@ -619,48 +470,36 @@ Comprueba_completo_02:
 
 	ret
 
-Comprueba_completo_01:
+Comprueba_completo_en_Cuad_1:
 
+	ld a,ixl
+	and $1f
+	cp 3
 
+	ret c 									; RET con CARRY FLAG indica que el Sprite en la actual (Posicion_actual) está INCOMPLETO.
+
+	ld a,ixl
+	cp $a0
 
 	ret
 
-Compara_cuadrantes:
+; ---------------------------------------------------
+;
+;	28/8/26
+;
+;	OUTPUT: (A) contiene el nº de cuadrante del anterior (Puntero_de_impresion).
+;
+
+Comprueba_Cuad_anterior:
 
 	push hl
-	push bc
-	push af
 
 	push ix
 	pop hl
 
 	call Calcula_Cuad_objeto
 
-	ld b,a
-	ld a,(Cuad_objeto)
-
-	sub b
-
-	pop af
-	pop bc
 	pop hl
-
-	ret
-
-Sprite_entero:
-
-	ld a,(Sprite_completo_0)
-	and a
-	ret nz 												; El Sprite estaba completo y continuará COMPLETO.
-
-;	El Sprite pasa de modo INCOMPLETO a COMPLETO.
-
-	inc a
-	ld (Sprite_completo_0),a
-
-;	Modificamos (Posicion_actual).
-
-	ld (Posicion_actual),ix
 
 	ret
 
@@ -675,22 +514,6 @@ Prepara_punteros:
 
 	push hl
 	pop iy
-
-	ret
-
-NextScan_00:
-
-	ld b,15
-1 call NextScan
-	djnz 1B
-
-	ret
-
-PreviousScan_00:
-
-	ld b,15
-1 call PreviousScan
-	djnz 1B
 
 	ret
 
@@ -748,6 +571,14 @@ NextScan:
     ld h,a
     ret
 
+NextScan_15:
+
+	ld b,15
+1 call NextScan
+	djnz 1B
+
+	ret
+
 ;----------------------------------------------------------------------------------------------------------------     
 ;
 ;	5/08/22
@@ -781,6 +612,14 @@ PreviousScan:
     add a,8             							; _unidad a los bits que definen el tercio TT, (add a,$08).
     ld h,a
     ret
+
+PreviousScan_15:
+
+	ld b,15
+1 call PreviousScan
+	djnz 1B
+
+	ret
 
 ; -----------------------------------------------------------------
 ;
