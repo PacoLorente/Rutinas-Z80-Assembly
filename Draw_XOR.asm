@@ -291,7 +291,7 @@ Drive:
 	jp z, Cuadrante_uno
 
 	dec a
-	jr z, Cuadrante_dos
+	jp z, Cuadrante_dos
 
 	dec a
 	jr z, Cuadrante_tres
@@ -302,7 +302,85 @@ Drive:
 
 Cuadrante_cuatro:
 
+	inc d
+	dec d
+	jr nz, Sprite_anteriormente_completo_en_CUAD_4 		; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
+
+Sprite_anteriormente_incompleto_en_CUAD_4:
+
+;	Sprite INCOMPLETO en el 4º cuadrante.
+;
+;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 4º cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 4º) o se mantiene en el mismo.
+
+	call Comprueba_Cuad_anterior 						; (A) contiene 1,2,3 o 4 en función de la situación del anterior (Puntero_de_impresion).
+
+	dec a
+	jr z, Procede_de_cuad1_4
+	dec a
+	jr z, Procede_de_cuad2_4
+	dec a
+	jr z, Procede_de_cuad3_4
+
+Procede_de_cuad4_4:
+
+;	No modificamos (Posicion_actual) pues seguimos en el 4º cuadrante.
+;	En el 4º cuadrante el (Puntero_de_impresion) siempre será igual a (Posicion_actual).
+
+	ld (Posicion_actual),hl
+	call Prepara_punteros
+
+	call Comprueba_completo_en_Cuad_4
+	ret nc 												; El Sprite continúa INCOMPLETO, (Sprite_completo) = "0".
+
+;	El Sprite pasa de INCOMPLETO a COMPLETO.
+
+;	Modifica (Posicion_actual) y flag (Sprite_completo).
+
+	ld a,1
+	ld (Sprite_completo),a
+
+	ret
+
+Procede_de_cuad3_4:
+
+;	Si estamos en el 4º cuadrante con el Sprite INCOMPLETO y anteriormente el Sprite estaba en el 3er Cuad. significa que desapareció por la parte izquierda de la pantalla y_
+;	_vuelve a aparecer por la derecha.
+
+;	Recolocamos (Posicion_actual)
+
+	call Modifica_columna_a_izq
+	jr Procede_de_cuad4_4
+
+Procede_de_cuad2_4:
+
+;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (3º a 4º).
+
+	call PreviousScan_15
+	jr Procede_de_cuad4_4
+
+	ret
+
+Procede_de_cuad1_4:
+
 	jr $
+
+Sprite_anteriormente_completo_en_CUAD_4:
+
+;	El Sprite estaba completo en Cuad_1,2 o 4 en su anterior (Posicion_actual). Estamos en Cuad_2.
+;	Vamos a pensar que el sprite continúa completo.
+
+	call Prepara_punteros
+	call Comprueba_completo_en_Cuad_4
+	ret c 												; RET si el Sprite sigue estando COMPLETO.
+
+;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
+
+;	Recolocamos (Posicion_actual)
+
+	xor a
+	ld (Sprite_completo),a
+
+	ret
 
 ; ------------------------------------------------------------------------------
 ; ------------------------ CUADRANTE 3 -----------------------------------------
@@ -331,7 +409,13 @@ Sprite_anteriormente_incompleto_en_CUAD_3:
 
 Procede_de_cuad4_3:
 
-	jr $
+;	Si estamos en el 3er cuadrante con el Sprite INCOMPLETO y anteriormente el Sprite estaba en el 4º Cuad. significa que desapareció por la parte derecha de la pantalla y _
+;	_vuelve a aparecer por la izquierda.
+
+;	Recolocamos (Posicion_actual)
+
+	call Modifica_columna_a_der
+	ld (Posicion_actual),hl
 
 Procede_de_cuad3_3:
 
@@ -461,6 +545,9 @@ Procede_de_cuad1_2:
 
 	jr Procede_de_cuad2_2
 
+	call NextScan_15
+	ld (Posicion_actual),hl
+
 Sprite_anteriormente_completo_en_CUAD_2:
 
 ;	El Sprite estaba completo en Cuad_1,2 o 4 en su anterior (Posicion_actual). Estamos en Cuad_2.
@@ -582,8 +669,11 @@ Sprite_anteriormente_completo_en_CUAD_1:
 ;
 ; ---------------------------------------------------------------------------
 
-Comprueba_completo_04:
+Comprueba_completo_en_Cuad_4:
 
+	ld a,ixl
+	and $1f
+	cp $1d
 
 	ret
 
@@ -606,9 +696,12 @@ Comprueba_completo_en_Cuad_2:
 
 	ret
 
-1 ld a,ixl
+1 ld a,ixh
+	cp $48
+	ret nc
+
+	ld a,ixl
 	cp $a0
-	ret c
 
 	ret
 
@@ -619,6 +712,10 @@ Comprueba_completo_en_Cuad_1:
 	cp 3
 
 	ret c 									; RET con CARRY FLAG indica que el Sprite en la actual (Posicion_actual) está INCOMPLETO.
+
+	ld a,ixh
+	cp $48
+	ret nc
 
 	ld a,ixl
 	cp $a0
