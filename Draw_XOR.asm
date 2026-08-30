@@ -24,88 +24,7 @@ Entidad_iniciada:
 
 	call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
 ;																; También comprueba si en la nueva (Posicion_actual) el Sprite se imprime COMPLETO o INCOMPLETO, (Sprite_completo_1).
-
-;	----------------------------------------
-
-;	push hl
-;	push bc
-;	push af
-;	push de
-;	push ix
-;	push iy
-
-
-;	ld hl,(Posicion_actual)
-
-;	ld ix,(Puntero_de_impresion)
-;	ld iy,(Puntero_objeto)
-
-;	ld a,(Columns)
-;	ld b,a
-;	ld a,(Columnas)
-;	ld c,a
-
-;	ld a,(Sprite_completo)
-;	ld e,a
-
-;	ld a,(Cuad_objeto)
-
-;	jr $
-
-;	pop iy
-;	pop ix
-;	pop de
-;	pop af
-;	pop bc
-;	pop hl
-
-;	----------------------------------------
-
 	call Drive													; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
-
-;	----------------------------------------
-
-;;	push hl
-;;	push bc
-;;	push af
-;;	push de
-;;	push ix
-;;	push iy
-
-
-;;	ld hl,(Posicion_actual)
-
-;;	ld ix,(Puntero_de_impresion)
-;;	ld iy,(Puntero_objeto)
-
-;	ld a,(Columns)
-;	ld b,a
-;	ld a,(Columnas)
-;	ld c,a
-
-;	ld a,(Sprite_completo)
-;	ld e,a
-
-;	ld a,(Cuad_objeto)
-
-;	jr $
-
-;	pop iy
-;	pop ix
-;	pop de
-;	pop af
-;	pop bc
-;	pop hl
-
-;	----------------------------------------
-
-;	HL (Posicion_actual)
-;	IX (Puntero_de_impresion)
-;	IY (Puntero_objeto)
-;	 A (Cuad_objeto)
-;	 E (Sprite_completo)
-;	 B (Columns)
-;	 C (Columnas)
 
 	ld a,(Ctrl_0)												; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
 	and $d0									
@@ -282,11 +201,10 @@ Drive:
 	ld a,(Sprite_completo)
 	ld d,a 									           ; (Sprite_completo)/(Columnas) en DE.
 
-;	jr $
-
 ;	Situación en pantalla de la nueva (Posicion_actual).
 
 	ld a,(Cuad_objeto)
+
 	dec a
 	jp z, Cuadrante_uno
 
@@ -375,7 +293,7 @@ Sprite_anteriormente_completo_en_CUAD_4:
 
 ;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
 
-;	Recolocamos (Posicion_actual)
+;	Recolocamos (Posicion_actual).
 
 	xor a
 	ld (Sprite_completo),a
@@ -413,6 +331,8 @@ Procede_de_cuad4_3:
 ;	_vuelve a aparecer por la izquierda.
 
 ;	Recolocamos (Posicion_actual)
+
+	jr $
 
 	call Modifica_columna_a_der
 	ld (Posicion_actual),hl
@@ -758,7 +678,10 @@ Prepara_punteros:
 
 Modifica_columna_a_izq:
 
-	dec e 									; (E) contiene (Columnas).
+	ld a,(Columnas)
+	dec a
+
+	ld e,a 									; (Columnas)-1 en E.
 
 	ld a,l
 	sub e
@@ -768,10 +691,13 @@ Modifica_columna_a_izq:
 
 Modifica_columna_a_der:
 
-	dec e 									; (E) contiene (Columnas).
+	ld a,(Columnas)
+	dec a
 
-	ld a,l
-	inc e
+	ld e,a 									; (Columnas)-1 en E.
+
+											ld a,l
+	add e
 	ld l,a
 
 	ret
