@@ -285,7 +285,10 @@ Procede_de_cuad2_4:
 
 Procede_de_cuad1_4:
 
-	jr $
+	call PreviousScan_15
+	call Modifica_columna_a_izq
+
+	jr Procede_de_cuad4_4
 
 Sprite_anteriormente_completo_en_CUAD_4:
 
@@ -367,17 +370,22 @@ Procede_de_cuad3_3:
 
 Procede_de_cuad2_3:
 
-	jr $
+;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (1º a 3º).
+
+	call PreviousScan_15
+	call Modifica_columna_a_der
+	ld (Posicion_actual),hl
+
+	jr Procede_de_cuad3_3
 
 Procede_de_cuad1_3:
 
 ;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (1º a 3º).
 
-;	jr $
-
 	call PreviousScan_15
  	ld (Posicion_actual),hl
-	jr Procede_de_cuad3_3
+
+ 	jr Procede_de_cuad3_3
 
 Sprite_anteriormente_completo_en_CUAD_3:
 
@@ -385,6 +393,7 @@ Sprite_anteriormente_completo_en_CUAD_3:
 ;	Vamos a pensar que el sprite continúa completo.
 
 	call Prepara_punteros
+
 	call Comprueba_completo_en_Cuad_3
 	ret nc 												; RET si el Sprite sigue estando COMPLETO.
 
@@ -474,16 +483,13 @@ Procede_de_cuad1_2:
 
 	jr Procede_de_cuad2_2
 
-	call NextScan_15
-	ld (Posicion_actual),hl
-
 Sprite_anteriormente_completo_en_CUAD_2:
 
 ;	El Sprite estaba completo en Cuad_1,2 o 4 en su anterior (Posicion_actual). Estamos en Cuad_2.
 ;	Vamos a pensar que el sprite continúa completo.
 
 	call Prepara_punteros
-	call Comprueba_completo_en_Cuad_1
+	call Comprueba_completo_en_Cuad_2
 	ret nc 												; RET si el Sprite sigue estando COMPLETO.
 
 ;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
@@ -526,14 +532,19 @@ Sprite_anteriormente_incompleto_en_CUAD_1:
 
 Procede_de_cuad4:
 
-	jr $
+	call NextScan_15
+	call Modifica_columna_a_der
+
+	ld (Posicion_actual),hl
+
+	jr Procede_de_cuad1
 
 Procede_de_cuad3:
 
 ;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (3º a 1º).
 
 	call NextScan_15
-	ld (Posicion_actual),hl
+	ld hl,(Posicion_actual)
 
 ;	Calculamos el nuevo (Puntero_de_impresion).
 
