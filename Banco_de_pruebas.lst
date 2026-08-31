@@ -2229,7 +2229,7 @@
  293+ 913A 02           	db 2											; (Contador_de_vueltas). "2": Sólo una vuelta lenta. "1" Dos vueltas lentas.
  294+ 913B C0 88        	defw Indice_Badsat_der							; (Indice_Sprite_der).
  295+ 913D 30 87        	defw Indice_Badsat_izq							; (Indice_Sprite_izq).
- 296+ 913F 61 40        	defw $4061	                					; (Posicion_inicio).
+ 296+ 913F 67 40        	defw $4067	                					; (Posicion_inicio).
  297+ 9141 00           	db 0											; (Cuad_objeto).
  298+ 9142 00 00        	defw 0 											; (Puntero_de_almacen_de_mov_masticados)
  299+ 9144 44           	db %01000100 									; (Attr).
