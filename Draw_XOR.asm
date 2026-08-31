@@ -203,6 +203,10 @@ Drive:
 
 	ld e,a
 
+;	cp 3
+;	jr z,$
+
+
 	ld a,(Sprite_completo)
 	ld d,a 									           ; (Sprite_completo)/(Columnas) en DE.
 
@@ -632,9 +636,9 @@ Comprueba_completo_en_Cuad_2:
 	ld a,ixl
 	and $1f
 	cp $1d
-	jr c,1F 								; Estamos por debajo de la columna $1d, en principio el sprite está completo
+	jr c,1F 											; Estamos por debajo de la columna $1d, en principio el sprite está completo
 
-	ccf 									; Estamos por encima de la columna $1d, invertimos el FLAG CARRY y RET. Sprite INCOMPLETO.
+	ccf 												; Estamos por encima de la columna $1d, invertimos el FLAG CARRY y RET. Sprite INCOMPLETO.
 
 	ret
 
@@ -653,7 +657,7 @@ Comprueba_completo_en_Cuad_1:
 	and $1f
 	cp 3
 
-	ret c 									; RET con CARRY FLAG indica que el Sprite en la actual (Posicion_actual) está INCOMPLETO.
+	ret c 												; RET con CARRY FLAG indica que el Sprite en la actual (Posicion_actual) está INCOMPLETO.
 
 	ld a,ixh
 	cp $48
@@ -697,7 +701,7 @@ Modifica_columna_a_izq:
 	ld a,(Columnas)
 	dec a
 
-	ld e,a 									; (Columnas)-1 en E.
+	ld e,a 												; (Columnas)-1 en E.
 
 	ld a,l
 	sub e
@@ -710,9 +714,9 @@ Modifica_columna_a_der:
 	ld a,(Columnas)
 	dec a
 
-	ld e,a 									; (Columnas)-1 en E.
+	ld e,a 												; (Columnas)-1 en E.
 
-											ld a,l
+	ld a,l
 	add e
 	ld l,a
 

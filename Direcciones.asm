@@ -214,8 +214,8 @@ DESPLZ_DER:
 
 	ret
 
-; ******************************************************************************************************************************************************************************************
-;	15/02/23
+; *************************************************************************************************************************************************************************************
+;	31/08/26
 ;
 
 Desplaza_derecha:
@@ -310,7 +310,11 @@ modifica_parametros_1er_DESPLZ_2:
 	and 1
 	jr z,1F
 
-	ld hl,Posicion_actual 										  ; Incrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _	
+	ld a,(Sprite_completo)
+	and a
+	jr nz,1F
+
+	ld hl,Posicion_actual 										  ; Incrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los
 	inc (hl) 													  ; _ cuadrantes 1 y 3 de pantalla.
 
 ;	call Genera_coordenadas
@@ -360,12 +364,16 @@ Ciclo_completo:
 
 	ld a,(Cuad_objeto) 											 ; Si estamos situados en el cuadrante 1º o 3º de la pantalla no modificamos_
 	and 1 														 ; _(Posicion_actual). Limpiamos la (Caja_de_DESPLZ) y salimos.
-	jr nz,3F
+	jr z,3F
 
-	ld hl,Posicion_actual                                        ; Incrementamos (Posicion_actual) en los cuadrantes 2º y 4º.
+	ld a,(Sprite_completo)
+	and a
+	jr z,2F
+
+3 ld hl,Posicion_actual                                        ; Incrementamos (Posicion_actual) en los cuadrantes 2º y 4º.
 	inc (hl)
 
-3 call Inicia_puntero_objeto_der
+2 call Inicia_puntero_objeto_der
 
 	ret
 
