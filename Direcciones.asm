@@ -129,26 +129,24 @@ Reponne_punntero_objeto:
 
 Mov_right:
 
-	ld a,(Ctrl_0)
-	bit 6,a
-	jr z,4F 														; Amadeus o Entidad ???																								
+;	Moviendo entidades. Detecta salida por la parte derecha de la pantalla en función de (CTRL_DESPLZ) y (Vel_right).
 
-	call Stop_Amadeus_right											; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que no hemos llegado al char.30 de la línea, [Stop_Amadeus].
-	ret z 															; Salimos de Mov_right si hemos llegado al char.30.
+Detecta_salida_por_la_derecha:
 
-	jr 8F
-
-4 ld a,(Posicion_actual)	 	  									; Estamos en el char. 31?
+	ld a,(Posicion_actual)	 	  									; Estamos en el char. 31?
 	and $1f
 	cp $1f															; Si no es así, saltamos a [3] para seguir con el desplazamiento progrmado.
+
 	jr nz,8F
 
-	ld a,(CTRL_DESPLZ) 		 										; Estamos en el último char. de la línea. Si (CTRL_DESPLZ)="0" saltamos a_	 									
+; ---------- ---------- ---------- ----------
+;
+;	Estamos en el último char. de la fila
+
+	ld a,(CTRL_DESPLZ) 		 										; Estamos en el último char. de la línea. Si (CTRL_DESPLZ)="0" saltamos a_
 	and a 															; _[3] para continuar con el DESPLZ.
 	jr z,8F 														 														
 
-; ---------- ---------- ----------
-;
 ;	Estamos en el último char. de la fila y (CTRL_DESPLZ) es distinto de "0".
 
 	ld a,(Vel_right) 												; En función del factor de velocidad, iniciaremos la salida de la pantalla,_									;
@@ -387,15 +385,7 @@ Ciclo_completo:
 ;
 Mov_left:
 
-	ld a,(Ctrl_0)
-	bit 6,a
-	jr z,3F 														; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que que no hemos llegado al char.1 de la línea, [Stop_Amadeus].
-
-	call Stop_Amadeus_left
-	ret z
-	jr nz,8F
-
-3 ld a,(Posicion_actual)	 	 								
+	ld a,(Posicion_actual)
 	and $1f											
 	jr nz,8F
 
@@ -443,6 +433,7 @@ Mov_left:
 	call DESPLZ_IZQ
 	pop bc
 	djnz 5B
+
 	ld hl,Posicion_actual 											; Incrementamos su posición actual, pués al desplazarlo a la izquierda, volvemos a incrementar el nº de (Columns) y _
 	inc (hl) 														; _ (Posicion_actual) ha pasado de $1f a $1e.
 
@@ -540,7 +531,7 @@ Desplaza_izquierda:
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	7/6/25
+;	1/9/26
 ;
 ;	modifica_parametros_1er_DESPLZ
 ;
@@ -550,9 +541,9 @@ Desplaza_izquierda:
 
 modifica_parametros_1er_DESPLZ:
 
-	ld a,(CTRL_DESPLZ) 				    ; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
+	ld a,(CTRL_DESPLZ) 				    							; Incrementamos el nª de (Columns) cuando desplazamos el objeto por 1ª vez.
 	and a
-	jr nz,1F
+	jr nz,2F
 
 	dec a              							            	    ; Situamos en $f7 el valor de partida de (CTRL_DESPLZ) tras el 1er desplazamiento.
     ld (CTRL_DESPLZ),a
@@ -562,37 +553,47 @@ modifica_parametros_1er_DESPLZ:
 
 	ld a,(Cuad_objeto)
 	and 1
-	jr nz,1F
+	jr z,1F
 
-	ld hl,Posicion_actual 									    ; Decrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _
-	dec (hl) 														    ; _ cuadrantes 2 y 4 de pantalla.
+;	En el 1er y 3er cuadrante también decrementaremos (Posicion_actual) cuando el objeto esté completo.
 
-1 call Dec_CTRL_DESPLZ
+	ld a,(Sprite_completo)
+	and a
+	jr z,2F
+
+
+1 ld hl,Posicion_actual 									    	; Decrementamos 1 char. el valor de (Posicion_actual), la primera vez que desplazamos el objeto y se encuentra en los _
+	dec (hl) 														; _ cuadrantes 2 y 4 de pantalla.
+
+2 call Dec_CTRL_DESPLZ
 
 	ret
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-Ciclo_completo_2
+Ciclo_completo_2:
 
 	ld a,(CTRL_DESPLZ)
 	cp $f7
 	jr z,1F 												   		; Salimos de la rutina si no hemos completado 8 o más desplazamientos.
+
 	ret nc
 
-; (CTRL_DESPLZ) fuera de rango, (por debajo de $f7), hay que reajustar.
+; 	(CTRL_DESPLZ) fuera de rango, (por debajo de $f7), hay que reajustar.
 
 	ld b,0
-4 inc b
+3 inc b
 	inc a
 	cp $f7
-	jr nz,4B
+	jr nz,3B
+
 	ld a,$ff
 	sub b
 	ld (CTRL_DESPLZ),a
+
 	ret
 
-; Se completa el ciclo de movimiento. (CTRL_DESPLZ)="0", se generan coordenadas y se corrige (Posicion_actual).
+; 	Se completa el ciclo de movimiento. (CTRL_DESPLZ)="0", se corrige (Posicion_actual).
 
 1 ld hl,Columns
 	dec (hl)
@@ -604,12 +605,18 @@ Ciclo_completo_2
 	and 1
 	jr z,2F
 
+;	En los cuadrantes 1º y 3º tampoco decrementaremos (Posicion_actual) cuando el Sprite esté completo.
+
+	ld a,(Sprite_completo)
+	and a
+	jr nz,2F
+
 	ld hl,Posicion_actual                                         ; Decrementamos (Posicion_actual) en los cuadrantes 1º y 3º.
 	dec (hl)
 
-; Inicia (Puntero_DESPLZ_izq) y (Puntero_objeto).
+; 	Inicia (Puntero_DESPLZ_izq) y (Puntero_objeto).
 
-2 call Inicia_puntero_objeto_izq 
+2 call Inicia_puntero_objeto_izq
 
 	ret
 
@@ -623,7 +630,7 @@ Ciclo_completo_2
 Stop_Amadeus_right:
 
 	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
-	cp 30																			 ; Hemos llegado al límite derecho de la pantalla??.
+	cp 30															 ; Hemos llegado al límite derecho de la pantalla??.
 
 	ret
 

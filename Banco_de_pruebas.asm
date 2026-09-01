@@ -1602,7 +1602,9 @@ End_frame:
 	ld hl,Ctrl_4
 	res 0,(hl)
 
-	xor a
+
+	ld a,5
+;	xor a
 	out ($fe),a
 
 	halt												

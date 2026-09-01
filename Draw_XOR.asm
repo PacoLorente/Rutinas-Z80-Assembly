@@ -452,7 +452,13 @@ Procede_de_cuad4_2:
 
 Procede_de_cuad3_2:
 
-	jr $
+
+;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (3º a 2º).
+
+	call NextScan_15
+	call Modifica_columna_a_izq
+	ld (Posicion_actual),hl
+
 
 Procede_de_cuad2_2:
 
