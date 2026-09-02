@@ -125,15 +125,23 @@ Reponne_punntero_objeto:
 ;	Mov_right.
 ;
 ; 	Desplaza el Sprite (x)Pixels a la derecha.
-;
 
 Mov_right:
+
+	ld a,(Ctrl_0)
+	bit 6,a
+	jr z,4F 														; Amadeus o Entidad ???
+
+	call Stop_Amadeus_right											; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que no hemos llegado al char.30 de la línea, [Stop_Amadeus].
+	ret z 															; Salimos de Mov_right si hemos llegado al char.30.
+
+	jr 8F
 
 ;	Moviendo entidades. Detecta salida por la parte derecha de la pantalla en función de (CTRL_DESPLZ) y (Vel_right).
 
 Detecta_salida_por_la_derecha:
 
-	ld a,(Posicion_actual)	 	  									; Estamos en el char. 31?
+4 ld a,(Posicion_actual)	 	  									; Estamos en el char. 31?
 	and $1f
 	cp $1f															; Si no es así, saltamos a [3] para seguir con el desplazamiento progrmado.
 
@@ -383,9 +391,18 @@ Ciclo_completo:
 ;
 ; 	Desplaza el Sprite (x)Pixels a la izquierda.
 ;
+
 Mov_left:
 
-	ld a,(Posicion_actual)
+	ld a,(Ctrl_0)
+	bit 6,a
+	jr z,3F 														; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que que no hemos llegado al char.1 de la línea, [Stop_Amadeus].
+
+	call Stop_Amadeus_left
+	ret z
+	jr nz,8F
+
+3 ld a,(Posicion_actual)
 	and $1f											
 	jr nz,8F
 
