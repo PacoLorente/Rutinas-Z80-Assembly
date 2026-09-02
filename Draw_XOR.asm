@@ -10,7 +10,7 @@ Draw:
 	or l
 	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
 
-	call Inicia_Puntero_mov
+	call Inicia_Puntero_mov 									; Se ignora para Amadeus.
 
 	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl
@@ -300,6 +300,11 @@ Sprite_anteriormente_completo_en_CUAD_4:
 ;	Vamos a pensar que el sprite continúa completo.
 
 	call Prepara_punteros
+
+	ld a,(Ctrl_0)
+	bit 6,a
+	ret nz
+
 	call Comprueba_completo_en_Cuad_4
 	ret c 												; RET si el Sprite sigue estando COMPLETO.
 

@@ -130,10 +130,7 @@ Mov_right:
 
 	ld a,(Ctrl_0)
 	bit 6,a
-	jr z,4F 														; Amadeus o Entidad ???
-
-	call Stop_Amadeus_right											; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que no hemos llegado al char.30 de la línea, [Stop_Amadeus].
-	ret z 															; Salimos de Mov_right si hemos llegado al char.30.
+	jr z, Detecta_salida_por_la_derecha								; Estamos generando los movimintos de Amadeus o de una Entidad ???
 
 	jr 8F
 
@@ -394,15 +391,7 @@ Ciclo_completo:
 
 Mov_left:
 
-	ld a,(Ctrl_0)
-	bit 6,a
-	jr z,3F 														; Estamos moviendo Amadeus???????. Si es así hemos de comprobar que que no hemos llegado al char.1 de la línea, [Stop_Amadeus].
-
-	call Stop_Amadeus_left
-	ret z
-	jr nz,8F
-
-3 ld a,(Posicion_actual)
+	ld a,(Posicion_actual)
 	and $1f											
 	jr nz,8F
 

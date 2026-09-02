@@ -911,7 +911,7 @@ Actualiza_Puntero_de_almacen_de_mov_masticados:
 
 ; -----------------------------------------------------------------------------------
 ;
-;	28/12/23
+;	2/9/26
 ;
 ;	Guarda el "movimiento_masticado" en el {Almacen_de_movimientos_masticados} de la entidad.
 ;	Actualiza el (Puntero_de_almacen_de_mov_masticados) tras el guardado.
@@ -1421,7 +1421,7 @@ Prepara_Cajas_de_Entidades:
 ; 	Cargamos la definición de Amadeus en DRAW.
 ;	Nos situamos en el 1er .db, (Tipo), de la definición de Amadeus.
 
-Inicia_Amadeus 
+Inicia_Amadeus:
 
 	ld hl,Definicion_Amadeus
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
@@ -1443,11 +1443,19 @@ Construye_movimientos_masticados_Amadeus
 
 ; Generamos movimientos masticados de Amadeus.
 
+	ld hl,Ctrl_0
+	set 6,(hl) 														; Indica a Mov_right que se están generando los movimientos masticados de Amadeus.
+
 	ld b,121														; $0079, 121d.
 
 1 push bc
 	call Draw
-	call Guarda_movimiento_masticado
+
+;	Posicion_actual ..... Puntero_de_impresion
+
+;	$50c1					$50c0
+
+	call Guarda_movimiento_masticado 								; PUSH IX, (Puntero_de_impresion) / PUSH IY, (Puntero_objeto).
 
 	call Mov_right
 	call Mov_right													; Amadeus se mueve x2 pixel.
@@ -1455,7 +1463,10 @@ Construye_movimientos_masticados_Amadeus
 	pop bc
 	djnz 1B
 
-; Todos los movimientos masticados de Amadeus se han creado. 
+	ld hl,Ctrl_0
+	res 6,(hl)
+
+; Todos los movimientos masticados de Amadeus se han creado.
 
 ;	(Contador_de_mov_masticados) de Amadeus ="$0079", 121d movimientos en total. Amadeus se encuentra ahora en el extremo derecho de la pantalla.
 ;	Ahora hay que modificar la posición del (Puntero_de_almacen_de_mov_masticados), (está 4 posiciones de memoria adelantado para seguir creando desplazamientos).
