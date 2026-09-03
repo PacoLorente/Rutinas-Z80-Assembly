@@ -549,13 +549,12 @@ Ctrl_2 db 0
 ;															_ El bit5 a "1" nos indica que el sprite se inicia por arriba o por abajo y por lo tanto hay que restaurar_
 ;															_ (Puntero_objeto) con (Repone_puntero_objeto) una vez iniciado y realizada su 1ª `foto'.
 ;														
-;															BIT 1, Este bit a "1" indica que se ha iniciado el proceso de EXPLOSIÓN en una entidad.
+;															BIT 1, ???
 ;															BIT 2, Este bit es activado por [Movimiento]. Indica que hemos `iniciado un desplazamiento'._
 ;															_ Evita que volvamos a iniciar el desplazamiento cada vez que ejecutemos [Movimiento].
-;															BIT 3, Indica que (Cola_de_desplazamiento)="254". Esto quiere decir que repetiremos (1-255 veces),_
-;															_ el último MOVIMIENTO que hayamos ejecutado.
+;															BIT 3, ???
 ;															BIT 4, ???
-;															BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
+;															BIT 5, ???
 ;															BIT 6, Habilita la transición: "Salida de Amadeus" por la parte baja de la pantalla cuando completamos un nivel.
 ;																   La rutina [Dispara_salida_de_amadeus] pone este bit a "1" tras imprimir el msg. "DONE".
 ;															BIT 7, "1" Detecta que hemos pulsado "SHIELD". ; "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".

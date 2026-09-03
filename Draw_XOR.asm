@@ -10,7 +10,7 @@ Draw:
 	or l
 	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
 
-	call Inicia_Puntero_mov 									; Se ignora para Amadeus.
+	call Inicia_Puntero_mov 									
 
 	ld hl,(Posicion_inicio)
 	ld (Posicion_actual),hl
@@ -203,10 +203,6 @@ Drive:
 
 	ld e,a
 
-;	cp 3
-;	jr z,$
-
-
 	ld a,(Sprite_completo)
 	ld d,a 									           ; (Sprite_completo)/(Columnas) en DE.
 
@@ -315,6 +311,8 @@ Sprite_anteriormente_completo_en_CUAD_4:
 	xor a
 	ld (Sprite_completo),a
 
+	call Detecta_cambio_de_cuadrante
+
 	ret
 
 ; ------------------------------------------------------------------------------
@@ -322,8 +320,6 @@ Sprite_anteriormente_completo_en_CUAD_4:
 ; ------------------------------------------------------------------------------
 
 Cuadrante_tres:
-
-;	jr $
 
 	inc d
 	dec d
@@ -416,6 +412,8 @@ Sprite_anteriormente_completo_en_CUAD_3:
 
 	xor a
 	ld (Sprite_completo),a
+
+	call Detecta_cambio_de_cuadrante
 
 	ret
 
@@ -518,6 +516,8 @@ Sprite_anteriormente_completo_en_CUAD_2:
 	xor a
 	ld (Sprite_completo),a
 
+	call Detecta_cambio_de_cuadrante
+	
 	ret
 
 ; ------------------------------------------------------------------------------
@@ -608,6 +608,8 @@ Sprite_anteriormente_completo_en_CUAD_1:
 
 ;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
 
+;	Nuevo (cuadrante anterior en A´.)
+
 ;	Recolocamos (Posicion_actual)
 
 	ld hl,(Posicion_actual)
@@ -617,6 +619,8 @@ Sprite_anteriormente_completo_en_CUAD_1:
 
 	xor a
 	ld (Sprite_completo),a
+
+	call Detecta_cambio_de_cuadrante
 
 	ret
 
