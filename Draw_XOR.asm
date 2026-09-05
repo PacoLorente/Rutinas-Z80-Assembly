@@ -321,9 +321,6 @@ Sprite_anteriormente_completo_en_CUAD_4:
 
 Cuadrante_tres:
 
-
-	jr $
-
 	inc d
 	dec d
 	jr nz, Sprite_anteriormente_completo_en_CUAD_3 		; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
@@ -334,12 +331,7 @@ Sprite_anteriormente_incompleto_en_CUAD_3:
 ;
 ;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 1er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 3º) o se mantiene en el mismo.
 
-;	call Detecta_cambio_de_cuadrante 					; (A) contiene el nº del cuadrante anterior si ha habido cambio de cuadrante.
-
-	ex af,af
-	push af
-	ex af,af
-	pop af 												; (Cuad_objeto) anterior en A y A'.
+	call Detecta_cambio_de_cuadrante 					; (A) contiene el nº del cuadrante anterior si ha habido cambio de cuadrante.
 
 	dec a
 	jr z, Procede_de_cuad1_3
