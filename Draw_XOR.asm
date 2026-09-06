@@ -327,11 +327,14 @@ Cuadrante_tres:
 
 Sprite_anteriormente_incompleto_en_CUAD_3:
 
-;	Sprite INCOMPLETO en el 1er cuadrante.
+;	Sprite INCOMPLETO en el 3er cuadrante.
 ;
-;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 1er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 3º) o se mantiene en el mismo.
+;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 3er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (1º,2° o 4), o se mantiene en el mismo.
 
-	call Detecta_cambio_de_cuadrante 					; (A) contiene el nº del cuadrante anterior si ha habido cambio de cuadrante.
+	ex af,af
+	push af
+	ex af,af
+	pop af 												; (A) y (A') contienen el Cuad_objeto anterior.
 
 	dec a
 	jr z, Procede_de_cuad1_3
@@ -345,10 +348,11 @@ Procede_de_cuad4_3:
 ;	Si estamos en el 3er cuadrante con el Sprite INCOMPLETO y anteriormente el Sprite estaba en el 4º Cuad. significa que desapareció por la parte derecha de la pantalla y _
 ;	_vuelve a aparecer por la izquierda.
 
-;	Recolocamos (Posicion_actual)
+;	Recolocamos (Posicion_actual) ?.
 
 	call Modifica_columna_a_der
-	ld (Posicion_actual),hl
+	call Detecta_cambio_de_cuadrante
+
 
 Procede_de_cuad3_3:
 
@@ -356,9 +360,7 @@ Procede_de_cuad3_3:
 ;	Calculamos el nuevo (Puntero_de_impresion).
 
 	call Modifica_columna_a_izq
-
 	call Prepara_punteros
-
 	call Comprueba_completo_en_Cuad_3
 	ret c 												 ; El Sprite continúa INCOMPLETO, (Sprite_completo) = "0".
 
@@ -375,28 +377,26 @@ Procede_de_cuad3_3:
 
 Procede_de_cuad2_3:
 
-;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (1º a 3º).
+;	Recolocamos (Posicion_actual) ?.
 
 	call PreviousScan_15
 	call Modifica_columna_a_der
-	ld (Posicion_actual),hl
+	call Detecta_cambio_de_cuadrante
 
 	jr Procede_de_cuad3_3
 
 Procede_de_cuad1_3:
 
-;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (1º a 3º).
+;	Recolocamos (Posicion_actual) ?.
 
 	call PreviousScan_15
- 	ld (Posicion_actual),hl
-
-; 	call Calcula_Cuad_objeto
+	call Detecta_cambio_de_cuadrante
 
  	jr Procede_de_cuad3_3
 
 Sprite_anteriormente_completo_en_CUAD_3:
 
-;	El Sprite estaba completo en Cuad_1,2 o 3 en su anterior (Posicion_actual). Estamos en Cuad_1.
+;	El Sprite estaba completo en Cuad_1,2 o 3 en su anterior (Posicion_actual). Estamos en Cuad_3.
 ;	Vamos a pensar que el sprite continúa completo.
 
 	call Prepara_punteros
@@ -691,9 +691,12 @@ Detecta_cambio_de_cuadrante:
 	ld b,a
 	ex af,af
 
-	ld a,(Cuad_objeto)
+	call Calcula_Cuad_objeto
+
 	cp b
 	ret z 												; No hay cambio de cuadrante.
+
+	ld (Posicion_actual),hl
 
 	ex af,af											; Nuevo cuad anterior en A'.
 
