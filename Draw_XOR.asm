@@ -235,7 +235,10 @@ Sprite_anteriormente_incompleto_en_CUAD_4:
 ;
 ;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 4º cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 4º) o se mantiene en el mismo.
 
-	call Detecta_cambio_de_cuadrante 					; (A) contiene el nº del cuadrante anterior si ha habido cambio de cuadrante.
+	ex af,af
+	push af
+	ex af,af
+	pop af
 
 	dec a
 	jr z, Procede_de_cuad1_4
@@ -249,15 +252,15 @@ Procede_de_cuad4_4:
 ;	No modificamos (Posicion_actual) pues seguimos en el 4º cuadrante.
 ;	En el 4º cuadrante el (Puntero_de_impresion) siempre será igual a (Posicion_actual).
 
-	ld (Posicion_actual),hl
 	call Prepara_punteros
-
 	call Comprueba_completo_en_Cuad_4
 	ret nc 												; El Sprite continúa INCOMPLETO, (Sprite_completo) = "0".
 
 ;	El Sprite pasa de INCOMPLETO a COMPLETO.
 
 ;	Modifica (Posicion_actual) y flag (Sprite_completo).
+
+	ld (Posicion_actual),ix
 
 	ld a,1
 	ld (Sprite_completo),a
@@ -272,21 +275,26 @@ Procede_de_cuad3_4:
 ;	Recolocamos (Posicion_actual)
 
 	call Modifica_columna_a_izq
+	call Detecta_cambio_de_cuadrante
+
 	jr Procede_de_cuad4_4
 
 Procede_de_cuad2_4:
 
-;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (3º a 4º).
+;	Recolocamos (Posicion_actual) ?.
 
 	call PreviousScan_15
-	jr Procede_de_cuad4_4
+	call Detecta_cambio_de_cuadrante
 
-	ret
+	jr Procede_de_cuad4_4
 
 Procede_de_cuad1_4:
 
+;	Recolocamos (Posicion_actual) ?.
+
 	call PreviousScan_15
 	call Modifica_columna_a_izq
+	call Detecta_cambio_de_cuadrante
 
 	jr Procede_de_cuad4_4
 
@@ -368,6 +376,9 @@ Procede_de_cuad3_3:
 
 ;	Modifica (Posicion_actual) y flag (Sprite_completo).
 
+;	jr $
+
+
 	ld (Posicion_actual),ix
 
 	ld a,1
@@ -435,7 +446,10 @@ Sprite_anteriormente_incompleto_en_CUAD_2:
 ;
 ;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 1er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 3º) o se mantiene en el mismo.
 
-	call Detecta_cambio_de_cuadrante 					; (A) contiene el nº del cuadrante anterior si ha habido cambio de cuadrante.
+	ex af,af
+	push af
+	ex af,af
+	pop af 												; (A) y (A') contienen el Cuad_objeto anterior.
 
 	dec a
 	jr z, Procede_de_cuad1_2
@@ -446,24 +460,20 @@ Sprite_anteriormente_incompleto_en_CUAD_2:
 
 Procede_de_cuad4_2:
 
-;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (4º a 2º).
+;	Recolocamos (Posicion_actual) ?.
 
 	call NextScan_15
-	ld (Posicion_actual),hl
-
-;	Calculamos el nuevo (Puntero_de_impresion).
+	call Detecta_cambio_de_cuadrante
 
 	jr Procede_de_cuad2_2
 
 Procede_de_cuad3_2:
 
-
-;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (3º a 2º).
+;	Recolocamos (Posicion_actual) ?.
 
 	call NextScan_15
 	call Modifica_columna_a_izq
-	ld (Posicion_actual),hl
-
+	call Detecta_cambio_de_cuadrante
 
 Procede_de_cuad2_2:
 
@@ -489,12 +499,10 @@ Procede_de_cuad2_2:
 
 Procede_de_cuad1_2:
 
-;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (1º a 2º).
+;	Recolocamos (Posicion_actual) ?.
 
 	call Modifica_columna_a_izq
-	ld (Posicion_actual),hl
-
-;	Calculamos el nuevo (Puntero_de_impresion).
+	call Detecta_cambio_de_cuadrante
 
 	jr Procede_de_cuad2_2
 
@@ -538,7 +546,10 @@ Sprite_anteriormente_incompleto_en_CUAD_1:
 ;
 ;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 1er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 3º) o se mantiene en el mismo.
 
-	call Detecta_cambio_de_cuadrante 					; (A) contiene el nº del cuadrante anterior si ha habido cambio de cuadrante.
+	ex af,af
+	push af
+	ex af,af
+	pop af 												; (A) y (A') contienen el Cuad_objeto anterior.
 
 	dec a
 	jr z, Procede_de_cuad1
@@ -549,32 +560,29 @@ Sprite_anteriormente_incompleto_en_CUAD_1:
 
 Procede_de_cuad4:
 
+;	Recolocamos (Posicion_actual) ?.
+
 	call NextScan_15
 	call Modifica_columna_a_der
-
-	ld (Posicion_actual),hl
+	call Detecta_cambio_de_cuadrante
 
 	jr Procede_de_cuad1
 
 Procede_de_cuad3:
 
-;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (3º a 1º).
+;	Recolocamos (Posicion_actual) ?.
 
 	call NextScan_15
-	ld hl,(Posicion_actual)
-
-;	Calculamos el nuevo (Puntero_de_impresion).
+	call Detecta_cambio_de_cuadrante
 
 	jr Procede_de_cuad1
 
 Procede_de_cuad2:
 
-;	En 1er lugar Recolocamos (Posicion_actual) pues hay cambio de Cuad. (2º a 1º).
+;	Recolocamos (Posicion_actual) ?.
 
 	call Modifica_columna_a_der
-	ld (Posicion_actual),hl
-
-;	Calculamos el nuevo (Puntero_de_impresion).
+	call Detecta_cambio_de_cuadrante
 
 Procede_de_cuad1:
 
@@ -621,6 +629,8 @@ Sprite_anteriormente_completo_en_CUAD_1:
 
 	xor a
 	ld (Sprite_completo),a
+
+	jr $
 
 	call Detecta_cambio_de_cuadrante
 
