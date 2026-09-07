@@ -1,69 +1,54 @@
-; ******************************************************************************************************************************************************************************************
+; ------------------------------------------------------------------
 ;
-; 13/3/25
+; 27/8/26
 ;
-; DRAW. ************************************************************************************************************************************************************************************
 
 Draw:
 
-	call Prepara_draw
-
-	ld a,h 						 					
-	or l 											
+	ld hl,(Posicion_actual)
+	ld a,h
+	or l
 	jr nz,Entidad_iniciada 										; Si el contenido de (Posicion_actual) es distinto de "0" la entidad ya se ha iniciado.
 
-; --------------------------------------------------
+	call Inicia_Puntero_mov
 
-Inicializacion:
-	
-	ld hl,(Posicion_inicio) 						
-	ld (Posicion_actual),hl										
+	ld hl,(Posicion_inicio)
+	ld (Posicion_actual),hl
+	ld (Puntero_de_impresion),hl
+
+;	Comparador de cuadrantes:
 
 	call Calcula_Cuad_objeto
-
-	call Genera_coordenadas
-
-	call Inicia_Puntero_mov							; El objeto está inicializado. Antes de salir inicializamos tb el puntero de movimiento de la entidad.
-
-	jr 3F
-
-; --------------------------------------------------
+	ex af,af													; (Cuad_objeto) inicial en A'.
 
 Entidad_iniciada:
 
-	ld a,(Ctrl_0)
-	bit 5,a
-	jr nz,3F										
-;													
-	call Comprueba_limite_horizontal   				
-	call Comprueba_limite_vertical
+	ld ix,(Puntero_de_impresion) 								; (Puntero_de_impresion) de la anterior (Posicion_actual). Necesario para averiguar si existe_
+; 																; _cambio de cuadrante cuando el sprite está incompleto.
+	call Calcula_Cuad_objeto  									; (Cuad_objeto) de la nueva (Posicion_actual).
 
-; Llegados a este punto, tengo Filas/Columnas en BC y (Cuad_objeto) en A´.
-; -----------------------
-; -----------------------
-; -----------------------
+	call calcula_CColumnass										; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
+;																; También comprueba si en la nueva (Posicion_actual) el Sprite se imprime COMPLETO o INCOMPLETO, (Sprite_completo_1).
+	call Drive													; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
 
-3 call calcula_CColumnass							; Define el valor de la variable (Columnas). Nº de columnas que se van a pintar de la entidad.
-	call Calcula_puntero_de_impresion				; Después de ejecutar esta rutina tenemos el puntero de impresión en HL.
-
-	ld a,(Ctrl_0)									; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
-	and $d0									
+	ld a,(Ctrl_0)												; Antes de salir de la rutina restauramos los bits 0,1,2,3 y 5 de (Ctrl_0).
+	and $d0
 	ld (Ctrl_0),a
 
 	ret
 
-; *******************************************************************************************************************************************************************************************
 ; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;   14/02/25
+;   23/8/26
 ;
 ;	Calcula el cuadrante de pantalla donde se encuentra la entidad: (Cuad_objeto), "1", "2", "3" o "4".
 ;	Esta información es necesaria para poder calcular el (Puntero_de_impresion) de la entidad.
 ;
 ;	INPUT:  HL contiene (Posicion_actual).
-;	OUTPUT: (Cuad_objeto) y A contienen "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.		
+;	OUTPUT: (Cuad_objeto) y A contienen "1", "2", "3" o "4" en función del cuadrante de pantalla en el que se encuentra la entidad.
+;			HL contiene (Posicion_actual).
 ;
-;	MODIFY: A.	
+;	MODIFY: A.
 
 
 Calcula_Cuad_objeto:
@@ -72,7 +57,7 @@ Calcula_Cuad_objeto:
 
 ;	Ahora tenemos "0", "1" o "2" en el acumulador en función del tercio de pantalla en el que nos encontremos.
 
-	jr z,Primer_tercio 													
+	jr z,Primer_tercio
 
 	dec a
 
@@ -92,20 +77,19 @@ Tercer_tercio:
 1 ld a,3
 	ld (Cuad_objeto),a
 
-	ret	
+	ret
 
 Primer_tercio:
 
 	call Determina_lado_de_pantalla
-
-	jr nz,3F
+	jr nz,2F
 
 	ld a,2
 	ld (Cuad_objeto),a
 
 	ret
 
-3 ld a,1
+2 ld a,1
 	ld (Cuad_objeto),a
 
 	ret
@@ -113,15 +97,13 @@ Primer_tercio:
 Segundo_tercio:
 
 	ld a,l
-	cp $7f
+	cp $80
 	jr c,Primer_tercio
-	jr z,Primer_tercio
-
 	jr Tercer_tercio
 
 ; ------------------------------------
 ;
-;	OUTPUT: A contiene "0" si estamos en la mitad derecha de la pantalla y "1" si estamos en la mitad izquierda.
+;	OUTPUT: Z si estamos en la mitad derecha de la pantalla y NZ si estamos en la mitad izquierda.
 ;
 
 Determina_lado_de_pantalla:
@@ -129,411 +111,634 @@ Determina_lado_de_pantalla:
 	ld a,l
 	and $1f
 	cp $10
+
 	jr c,1F
 
 	xor a
-
 	ret
 
 1 ld a,1
-
-	ret
-
-; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-;
-;	25/02/25
-;
-; 	Comprueba_limite_horizontal.
-;
-;	INPUT: HL contiene (Posicion_actual).
-
-Comprueba_limite_horizontal:
-
-	ld e,0											; Inicializamos E.
-
-;	Exclusiones !!!
-
-	call calcula_tercio  							; RET cuando no estamos en el centro de la pantalla, (2º tercio).
-	ret z
-
-	dec a
-	dec a
-	ret z
-
-; ----------------------------------- Comprobamos límite.
-
-;	HL (Posicion_actual).
-;	E=0
-
-	ld a,(Cuad_objeto)
-	cp 2
-	jr z,1F
-	jr c,1F
-
-;	Nos encontramos en la parte INFERIOR de la pantalla.
-;	En este caso superamos el CENTRO de la pantalla cuando L < $80
-
-	ld a,$7f 
-	sub l
-	ret c			 								; RET no hemos llegado al centro de la pantalla, E=0.								
-										
-	ld e,2											; Zona NEBULOSA que no es poca cosa.
-
-	ld a,$3f 										; (Limite_horizontal) = "$3f".
-	sub l
-	ret c											; RET con E=2.
-
-	call Modificaccionne
-
-	ld a,(Cuad_objeto)
-	inc a
-	inc a
-	ld (Cuad_objeto),a
-
-	dec e
-
-	ret												; RET con E=1.
-
-;	Nos encontramos en la parte SUPERIOR de la pantalla.
-;	En este caso superamos el CENTRO de la pantalla cuando L => $80.
-
-1 ld a,$80
-	sub l
-	ret nc											; RET no hemos llegado al centro de la pantalla, E=0.
-
-	ld e,2											; Zona NEBULOSA que no es poca cosa.
-
-;	
-	ld a,$c0 				 						; (Limite_horizontal) = "$c0".
-	sub l
-	ret nc 											; RET Estamos en zona nebulosa horizontal, no hemos superado (Limite_horizontal). E=2.
-
-	call Modificaccionne
-
-	ld a,(Cuad_objeto)
-	dec a
-	dec a
-	ld (Cuad_objeto),a
-
-	dec e 											; Hemos modificado (Posicion_actual) debido a que hemos superado el (Limite_horizontal). E=1.
-
-	ret												
-
-; -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-;
-;   13/3/25
-;
-;	Comprueba_limite_vertical
-;
-;	Modifica el registro L del puntero de pantalla cuando se sobrepasa la columna límite, (Limite2).
-;	Dependiendo del cuadrante en el que nos encontremos, sumaremos o restaremos, (Columnas-1) a L. 
-;	
-;	INPUT: HL contiene (Posicion_actual).
-
-Comprueba_limite_vertical:
-
-	ld a,(Cuad_objeto)
-	and 1
-	jr z,2F
-
-;	Nos encontramos en la parte IZQUIERDA de la pantalla.
-;	-----------------------------------------------------
-
-	ld a,$13
-	ld (Limite_vertical),a
-
-	call Comprobacion
-	jr nc,Comprueba_centro_vertical_izquierdo
-
-;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
-;	Pasamos de la mitad izquierda de la pantalla a la mitad derecha.
-
-	dec c											; (Columns-1) en C.
-	ld a,l
-	sub c
-	ld (Posicion_actual),a
-
-	ld a,(Cuad_objeto)
-	inc a
-	ld (Cuad_objeto),a
-
-	jr Consulta_E 
-
-;	Nos encontramos en la parte DERECHA de la pantalla.
-;	-----------------------------------------------------
-
-2 ld a,$0c
-	ld (Limite_vertical),a
-
-	call Comprobacion
-	jr c,Comprueba_centro_vertical_derecho 			; No hemos superado (Limite_vertical). Estamos nébulus???.
-
-;	Cambiamos de cuadrante, hemos superado (Limite_vertical). 
-;	Pasamos de la mitad derecha de la pantalla a la mitad izquierda.
-
-	dec c											; (Columns-1) en C.
-	ld a,l
-	add c
-	ld (Posicion_actual),a
-
-	ld a,(Cuad_objeto)
-	dec a
-	ld (Cuad_objeto),a
-
-;	Consultamos E.
-
-Consulta_E 
-
-	dec e
-	dec e
-	ret z
-
-	call Calcula_Cuad_objeto
-	call Genera_coordenadas
-
-	ret
-
-; ----- ----- ----- ----- ----- 
-
-Comprobacion ld a,l							
-	and $1f
-	ld d,a
-	ld a,(Limite_vertical)  
-	sub d
-	ret
-
-Comprueba_centro_vertical_izquierdo ld a,$10		
-	sub d
-	jr nc,Centro_no_alcanzado
-	ret 
-	
-Comprueba_centro_vertical_derecho ld a,$0f
-	sub d
-	jr c,Centro_no_alcanzado
-	ret
-
-Centro_no_alcanzado
-
-;	No hemos alcanzado el centro de la pantalla.
-;	Consultamos E.
-
-	ld a,e
-	and 1
-	ret z
-
-	call Calcula_Cuad_objeto
-	call Genera_coordenadas
-	ret
-
-; --------------------------------------------------------------------------
-;
-;	13/3/25
-;
-;	Modifica (Posicion_actual). 
-;
-;	En función de la mitad de pantalla de la que partamos:
-;
-;	CALL [Modifica_Pos_actual], si partimos de la mitad superior de la pantalla. 
-;	CALL [Modifica_Pos_actual2], si partimos de la mitad inferior de la pantalla.
-;
-;	INPUTS: HL contiene (Posicion_actual).
-;	OUTPUT: Actualiza (Posicion_actual).
-;	MODIFY: A y HL.
-
-
-
-Modificaccionne:
-	
-	ld a,(Cuad_objeto)
-	cp 2
-    call z,Modifica_Pos_actual                      ; Si por el contrario estamos en la mitad inferior, call Modifica_Pos_actual2.
-    ret z
-    call c,Modifica_Pos_actual
-	ret z
-    call Modifica_Pos_actual2
-    ret
-
-Modifica_Pos_actual ld b,15                         ; Scanlines-1 en B.
-1 call PreviousScan
-	djnz 1B
-	ld (Posicion_actual),hl
-	xor a 											; Carry a "0". Evita que vuelva a entrar consecutivamente.
-	ret
-
-Modifica_Pos_actual2 ld b,15                        ; Scanlines-1 en B.
-1 call NextScan
-	djnz 1B
-	ld (Posicion_actual),hl
-	xor a 											; Fijo el acarreo a "0" para asegurarme de no volver a entrar en la rutina.
-	ret
-
-; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-
-Salida_nebulosamente_por_la_derecha
-
-;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado derecho ???
-
-	ld a,(Posicion_actual)
-	and $1f
-	cp $1e
-	ret c
-
-; 	Existe posibilidad de desaparecer por el lado derecho de la pantalla. Si (Cuad_objeto) indica que_
-;	_estamos en la parte izquierda de la pantalla, (1/3), la salida será defectuosa. 
-
-	ld a,(Cuad_objeto)
-	and 1
-	ret z 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
-
-	ld a,(Cuad_objeto)
-	inc a
-	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
-
-	dec c											; (Columns-1) en C.
-	ld a,l
-	sub c
-	ld (Posicion_actual),a
-
-	dec e
-	dec e 											; E=0 , evita que ejecutemos [Salida_nebulosamente_por_la_izquierda].
-
-	ret
-
-Salida_nebulosamente_por_la_izquierda
-
-;	E=2. Estamos en la zona nebulosa horizontal. Existe posibilidad de salida por el lado izquierdo ???.
-
-	ld a,(Posicion_actual)
-	and $1f
-	cp $01
-	ret nc
-	ret nz
-
-; 	Existe posibilidad de desaparecer por el lado izquierdo de la pantalla. Si (Cuad_objeto) indica que_
-;	_estamos en la parte derecha de la pantalla, (2/4), la salida será defectuosa. 
-
-	ld a,(Cuad_objeto)
-	and 1
-	ret nz 											; RET. (Cuad_objeto) indica el cuadrante correcto. No habrá problemas en la salida.
-
-	ld a,(Cuad_objeto)
-	dec a 
-	ld (Cuad_objeto),a 								; Corregimos (Cuad_objeto) y activamos FLAG para que no haya llamada a [Inicializacion] más adelante.
-
-	dec c											 				; (Columns-1) en C.
-	ld a,l
-	inc c
-	ld (Posicion_actual),a
-
+	and a
 	ret
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
-; 	3/2/25
+; 	23/8/26
 ;
-;	Modify: A.
-;	
-;	INPUT: A contiene el byte bajo de (Posicion_actual).
+;
+;	Inicializa la variable (Columnas), n° de columnas que podemos imprimir del Sprite cuando está incompleto, (apareciendo o desapareciendo)_
+;	_por los extremos de la pantalla.
+
+;	INPUT: (HL) contiene (Posicion_actual).
+;		   (A) contiene (Cuad_objeto).
+;		   (C) contiene (Columns).
+;
+;	MODIFY: (A).
+;
 ;	OUTPUT: (Columnas).
-;	
+;			(Sprite_completo).
+;
+;		    (A) contiene (Columnas).
+;			(HL) contiene (Posicion_actual).
 
 calcula_CColumnass:
 
 	ld a,(Posicion_actual)
 	and $1f
 	jr z,One_CColumna
+
 	dec a
-	jr z,Due_CColumna
+	jr z,Two_CColumna
+
 	inc a
+
 	cp $1e
-	jr c,one_or_due_ccolumnas
-	jr z,Due_CColumna
+	jr c,Two_or_Three_ccolumnas
+
+	jr z,Two_CColumna
+
 	jr One_CColumna
 
-one_or_due_ccolumnas ld a,(Columns)
+Two_or_Three_ccolumnas:
+
+	ld a,(Columns)
 	ld (Columnas),a
+
 	ret
 
-Due_CColumna ld a,2
-	jr 1F
-One_CColumna ld a,1
-1 ld (Columnas),a
+Two_CColumna:
+
+	ld a,2
+	ld (Columnas),a
+
+	ret
+
+One_CColumna:
+
+	ld a,1
+	ld (Columnas),a
+
 	ret
 
 ; --------------------------------------------------------------------------------------------------------------------
 ;
-;   2/3/25
+;   27/8/26
 ;
-;	Calcula el puntero de impresión del sprite, (arriba-izquierda).
+;	INPUT: (HL) contiene (Posicion_actual).
+; 		    (A)    "     (Columnas).
+;		   (IX)    "     (Puntero_de_impresion) de la (Posicion_actual) anterior, (antes del último movimiento).
+; 						 Comparando (Cuad_objeto) de (IX) con (Cuad_objeto) de (HL) cuando el Sprite está INCOMPLETO,_
+;						 _averiguamos si se ha producido cambio de cuadrante, (pasamos de la parte alta de la pantalla a la parte baja_
+; 						 _o viceversa).
 ;
-;	OUTPUT: IX Contienen el puntero de impresión.
-;			HL e IY Contienen (Puntero_objeto).
 ;
-;	DESTRUYE: HL,B Y A.	
+;	OUTPUT:	(HL) contiene  (Posicion_actual).
+;		   	(IX)    "      (Puntero_de_impresion).
+;			(IY)    "      (Puntero_objeto).
 
-Calcula_puntero_de_impresion:
+Drive:
+
+;	(Columnas) en (E).
+;	(Sprite_completo) en (D).
+
+	ld e,a
+
+	ld a,(Sprite_completo)
+	ld d,a 									           ; (Sprite_completo)/(Columnas) en DE.
+
+;	Situación en pantalla de la nueva (Posicion_actual).
 
 	ld a,(Cuad_objeto)
-	and 1
-	jr nz,Lado_izquierdo
 
-Lado_derecho
-
-	ld a,(Cuad_objeto)
 	dec a
+	jp z, Cuadrante_uno
+
 	dec a
-	jr z,Cuadrante_dos
-	jr Cuadrante_cuatro
+	jp z, Cuadrante_dos
 
-Lado_izquierdo
+	dec a
+	jr z, Cuadrante_tres
 
-	ld a,(Cuad_objeto)
-	srl a
-	jr z,Cuadrante_uno 
+; ------------------------------------------------------------------------------
+; ------------------------ CUADRANTE 4 -----------------------------------------
+; ------------------------------------------------------------------------------
 
-; Estamos situados en el 3er cuadrante de pantalla. ----- ----- -----
+Cuadrante_cuatro:
 
-	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
+	inc d
+	dec d
+	jr nz, Sprite_anteriormente_completo_en_CUAD_4 		; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
 
-	ld a,l
+Sprite_anteriormente_incompleto_en_CUAD_4:
+
+;	Sprite INCOMPLETO en el 4º cuadrante.
+;
+;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 4º cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 4º) o se mantiene en el mismo.
+
+	ex af,af
+	push af
+	ex af,af
+	pop af
+
+	dec a
+	jr z, Procede_de_cuad1_4
+	dec a
+	jr z, Procede_de_cuad2_4
+	dec a
+	jr z, Procede_de_cuad3_4
+
+Procede_de_cuad4_4:
+
+;	No modificamos (Posicion_actual) pues seguimos en el 4º cuadrante.
+;	En el 4º cuadrante el (Puntero_de_impresion) siempre será igual a (Posicion_actual).
+
+	call Prepara_punteros
+	call Comprueba_completo_en_Cuad_4
+	ret nc 												; El Sprite continúa INCOMPLETO, (Sprite_completo) = "0".
+
+;	El Sprite pasa de INCOMPLETO a COMPLETO.
+
+;	Modifica (Posicion_actual) y flag (Sprite_completo).
+
+	ld (Posicion_actual),ix
+
+	ld a,1
+	ld (Sprite_completo),a
+
+	call New_old_cuad_obj
+
+	ret
+
+Procede_de_cuad3_4:
+
+;	Si estamos en el 4º cuadrante con el Sprite INCOMPLETO y anteriormente el Sprite estaba en el 3er Cuad. significa que desapareció por la parte izquierda de la pantalla y_
+;	_vuelve a aparecer por la derecha.
+
+;	Recolocamos (Posicion_actual)
+
+	call Modifica_columna_a_izq
+	call Detecta_cambio_de_cuadrante
+
+	jr Procede_de_cuad4_4
+
+Procede_de_cuad2_4:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call PreviousScan_15
+	call Detecta_cambio_de_cuadrante
+
+	jr Procede_de_cuad4_4
+
+Procede_de_cuad1_4:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call PreviousScan_15
+	call Modifica_columna_a_izq
+	call Detecta_cambio_de_cuadrante
+
+	jr Procede_de_cuad4_4
+
+Sprite_anteriormente_completo_en_CUAD_4:
+
+;	El Sprite estaba completo en Cuad_1,2 o 4 en su anterior (Posicion_actual). Estamos en Cuad_2.
+;	Vamos a pensar que el sprite continúa completo.
+
+	call Prepara_punteros
+	call New_old_cuad_obj
+
+	ld a,(Ctrl_0)
+	bit 6,a
+	ret nz
+
+	call Comprueba_completo_en_Cuad_4
+	ret c 												; RET si el Sprite sigue estando COMPLETO.
+
+;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
+
+	xor a
+	ld (Sprite_completo),a
+
+;	call Calcula_Cuad_objeto
+;	ex af,af
+
+	ret
+
+; ------------------------------------------------------------------------------
+; ------------------------ CUADRANTE 3 -----------------------------------------
+; ------------------------------------------------------------------------------
+
+Cuadrante_tres:
+
+	inc d
+	dec d
+	jr nz, Sprite_anteriormente_completo_en_CUAD_3 		; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
+
+Sprite_anteriormente_incompleto_en_CUAD_3:
+
+;	Sprite INCOMPLETO en el 3er cuadrante.
+;
+;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 3er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (1º,2° o 4), o se mantiene en el mismo.
+
+	ex af,af
+	push af
+	ex af,af
+	pop af 												; (A) y (A') contienen el Cuad_objeto anterior.
+
+	dec a
+	jr z, Procede_de_cuad1_3
+	dec a
+	jr z, Procede_de_cuad2_3
+	dec a
+	jr z, Procede_de_cuad3_3
+
+Procede_de_cuad4_3:
+
+;	Si estamos en el 3er cuadrante con el Sprite INCOMPLETO y anteriormente el Sprite estaba en el 4º Cuad. significa que desapareció por la parte derecha de la pantalla y _
+;	_vuelve a aparecer por la izquierda.
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call Modifica_columna_a_der
+	call Detecta_cambio_de_cuadrante
+
+
+Procede_de_cuad3_3:
+
+;	No modificamos (Posicion_actual) pues seguimos en el 3er cuadrante.
+;	Calculamos el nuevo (Puntero_de_impresion).
+
+	call Modifica_columna_a_izq
+	call Prepara_punteros
+	call Comprueba_completo_en_Cuad_3
+	ret c 												 ; El Sprite continúa INCOMPLETO, (Sprite_completo) = "0".
+
+	ld (Posicion_actual),ix
+
+	ld a,1
+	ld (Sprite_completo),a
+
+	call New_old_cuad_obj
+
+	ret
+
+Procede_de_cuad2_3:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call PreviousScan_15
+	call Modifica_columna_a_der
+	call Detecta_cambio_de_cuadrante
+
+	jr Procede_de_cuad3_3
+
+Procede_de_cuad1_3:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call PreviousScan_15
+	call Detecta_cambio_de_cuadrante
+
+ 	jr Procede_de_cuad3_3
+
+Sprite_anteriormente_completo_en_CUAD_3:
+
+;	El Sprite estaba completo en Cuad_1,2 o 3 en su anterior (Posicion_actual). Estamos en Cuad_3.
+;	Vamos a pensar que el sprite continúa completo.
+
+	call Prepara_punteros
+	call New_old_cuad_obj
+
+	call Comprueba_completo_en_Cuad_3
+	ret nc 												; RET si el Sprite sigue estando COMPLETO.
+
+;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
+
+;	Recolocamos (Posicion_actual)
+
+	push ix
+	pop hl
+
+	call Modifica_columna_a_der
+	ld (Posicion_actual),hl
+
+	xor a
+	ld (Sprite_completo),a
+
+;	call Calcula_Cuad_objeto
+;	ex af,af
+
+	ret
+
+; ------------------------------------------------------------------------------
+; ------------------------ CUADRANTE 2 -----------------------------------------
+; ------------------------------------------------------------------------------
+
+Cuadrante_dos:
+
+	inc d
+	dec d
+	jr nz, Sprite_anteriormente_completo_en_CUAD_2 	; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
+
+Sprite_anteriormente_incompleto_en_CUAD_2:
+
+;	Sprite INCOMPLETO en el 1er cuadrante.
+;
+;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 1er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 3º) o se mantiene en el mismo.
+
+	ex af,af
+	push af
+	ex af,af
+	pop af 												; (A) y (A') contienen el Cuad_objeto anterior.
+
+	dec a
+	jr z, Procede_de_cuad1_2
+	dec a
+	jr z, Procede_de_cuad2_2
+	dec a
+	jr z, Procede_de_cuad3_2
+
+Procede_de_cuad4_2:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call NextScan_15
+	call Detecta_cambio_de_cuadrante
+
+	jr Procede_de_cuad2_2
+
+Procede_de_cuad3_2:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call NextScan_15
+	call Modifica_columna_a_izq
+	call Detecta_cambio_de_cuadrante
+
+Procede_de_cuad2_2:
+
+;	No modificamos (Posicion_actual) pues seguimos en el 2º cuadrante.
+;	Calculamos el nuevo (Puntero_de_impresion).
+
+	call PreviousScan_15
+	call Prepara_punteros
+
+	call Comprueba_completo_en_Cuad_2
+	ret c												; El Sprite continúa INCOMPLETO, (Sprite_completo) = "0".
+
+;	El Sprite pasa de INCOMPLETO a COMPLETO.
+
+;	Modifica (Posicion_actual) y flag (Sprite_completo).
+
+	ld (Posicion_actual),ix
+
+	ld a,1
+	ld (Sprite_completo),a
+
+	call New_old_cuad_obj
+
+	ret
+
+Procede_de_cuad1_2:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call Modifica_columna_a_izq
+	call Detecta_cambio_de_cuadrante
+
+	jr Procede_de_cuad2_2
+
+Sprite_anteriormente_completo_en_CUAD_2:
+
+;	El Sprite estaba completo en Cuad_1,2 o 4 en su anterior (Posicion_actual). Estamos en Cuad_2.
+;	Vamos a pensar que el sprite continúa completo.
+
+	call Prepara_punteros
+	call New_old_cuad_obj
+
+	call Comprueba_completo_en_Cuad_2
+	ret nc 												; RET si el Sprite sigue estando COMPLETO.
+
+;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
+
+;	Recolocamos (Posicion_actual)
+
+	push ix
+	pop hl
+
+	call NextScan_15
+	ld (Posicion_actual),hl
+
+	xor a
+	ld (Sprite_completo),a
+
+;	call Calcula_Cuad_objeto
+;	ex af,af
+
+	ret
+
+; ------------------------------------------------------------------------------
+; ------------------------ CUADRANTE 1 -----------------------------------------
+; ------------------------------------------------------------------------------
+
+Cuadrante_uno:
+
+	inc d
+	dec d
+	jr nz, Sprite_anteriormente_completo_en_CUAD_1 		; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
+
+Sprite_anteriormente_incompleto_en_CUAD_1:
+
+;	Sprite INCOMPLETO en el 1er cuadrante.
+;
+;	(Posicion_actual) del Sprite se encuentra en zona nebulosa del 1er cuadrante. Lo primero que necesitamos saber es si el Sprite viene de otro cuadrante, (2º o 3º) o se mantiene en el mismo.
+
+	ex af,af
+	push af
+	ex af,af
+	pop af 												; (A) y (A') contienen el Cuad_objeto anterior.
+
+	dec a
+	jr z, Procede_de_cuad1
+	dec a
+	jr z, Procede_de_cuad2
+	dec a
+	jr z, Procede_de_cuad3
+
+Procede_de_cuad4:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call NextScan_15
+	call Modifica_columna_a_der
+	call Detecta_cambio_de_cuadrante
+
+	jr Procede_de_cuad1
+
+Procede_de_cuad3:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call NextScan_15
+	call Detecta_cambio_de_cuadrante
+
+	jr Procede_de_cuad1
+
+Procede_de_cuad2:
+
+;	Recolocamos (Posicion_actual) ?.
+
+	call Modifica_columna_a_der
+	call Detecta_cambio_de_cuadrante
+
+Procede_de_cuad1:
+
+;	No modificamos (Posicion_actual) pues seguimos en el 1er cuadrante.
+;	Calculamos el nuevo (Puntero_de_impresion).
+
+	call PreviousScan_15
+	call Modifica_columna_a_izq
+	call Prepara_punteros
+
+	call Comprueba_completo_en_Cuad_1
+	ret c												; El Sprite continúa INCOMPLETO, (Sprite_completo) = "0".
+
+;	El Sprite pasa de INCOMPLETO a COMPLETO.
+
+;	Modifica (Posicion_actual) y flag (Sprite_completo).
+
+	ld (Posicion_actual),ix
+
+	ld a,1
+	ld (Sprite_completo),a
+
+	call New_old_cuad_obj
+
+	ret
+
+Sprite_anteriormente_completo_en_CUAD_1:
+
+;	El Sprite estaba completo en Cuad_1,2 o 3 en su anterior (Posicion_actual). Estamos en Cuad_1.
+;	Vamos a pensar que el sprite continúa completo.
+
+	call Prepara_punteros
+	call New_old_cuad_obj
+
+	call Comprueba_completo_en_Cuad_1
+	ret nc 												; RET si el Sprite sigue estando COMPLETO.
+
+;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
+
+;	Nuevo (cuadrante anterior en A´.)
+
+;	Recolocamos (Posicion_actual)
+
+	push ix
+	pop hl
+
+	call NextScan_15
+	call Modifica_columna_a_der
+	ld (Posicion_actual),hl
+
+	xor a
+	ld (Sprite_completo),a
+
+;	call Calcula_Cuad_objeto
+;	ex af,af
+
+	ret
+
+; ---------------------------------------------------------------------------
+;
+;	Subrutinas DRIVE.
+;
+; ---------------------------------------------------------------------------
+
+New_old_cuad_obj:
+
+	push ix
+	pop hl
+
+	call Calcula_Cuad_objeto
+
+	ex af,af
+
+	ret
+
+Comprueba_completo_en_Cuad_4:
+
+	ld a,ixl
 	and $1f
-	jr z,4F
+	cp $1d
 
-6 dec hl
-	djnz 6B
+	ret
 
-	jr 4F
+Comprueba_completo_en_Cuad_3:
 
-Cuadrante_cuatro
-
-	ld hl,(Posicion_actual) 
-	jr 4F
-
-Cuadrante_uno
-
-	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
-
-	ld a,l
+	ld a,ixl
 	and $1f
-	jr z,3F
+	cp 3
 
-1 dec hl
-	djnz 1B
+	ret
 
-3 ld b,15
-2 call PreviousScan
-	djnz 2B
+Comprueba_completo_en_Cuad_2:
 
-	jr 4F
+	ld a,ixl
+	and $1f
+	cp $1d
+	jr c,1F 											; Estamos por debajo de la columna $1d, en principio el sprite está completo
 
-Cuadrante_dos
+	ccf 												; Estamos por encima de la columna $1d, invertimos el FLAG CARRY y RET. Sprite INCOMPLETO.
 
-	call Operandos									; (Posicion_actual) en HL y (Columnas)-1 en B.
-	ld b,15
-5 call PreviousScan
-	djnz 5B
+	ret
 
-4 ld (Puntero_de_impresion),hl
+1 ld a,ixh
+	cp $48
+	ret nc
+
+	ld a,ixl
+	cp $a0
+
+	ret
+
+Comprueba_completo_en_Cuad_1:
+
+	ld a,ixl
+	and $1f
+	cp 3
+
+	ret c 												; RET con CARRY FLAG indica que el Sprite en la actual (Posicion_actual) está INCOMPLETO.
+
+	ld a,ixh
+	cp $48
+	ret nc
+
+	ld a,ixl
+	cp $a0
+
+	ret
+
+Detecta_cambio_de_cuadrante:
+
+	ex af,af
+	ld b,a
+	ex af,af
+
+	call Calcula_Cuad_objeto
+
+	cp b
+	ret z 												; No hay cambio de cuadrante.
+
+	ld (Posicion_actual),hl
+
+	ex af,af											; Nuevo cuad anterior en A'.
+
+	ret
+
+Prepara_punteros:
+
+	ld (Puntero_de_impresion),hl
 
 	push hl
 	pop ix
@@ -545,53 +750,29 @@ Cuadrante_dos
 
 	ret
 
-; --------------------------------------------------------------------------------------------------------------------
-;
-;	2/1/23
-;
-;	Sub-rutina de [Calcula_puntero_de_impresion].
-;	
-;	Tras esta rutina tenemos:
-;
-;	OUTPUT: HL contiene (Posicion_actual).
-;			B contiene (Columnas)-1. Nota: Este valor `nunca' será "0". El valor mínimo es "1".
-;
-;	DESTRUYE!!!!! HL,B y A.
+Modifica_columna_a_izq:
 
-Operandos:
-
-	ld hl,(Posicion_actual)
 	ld a,(Columnas)
 	dec a
-	jr nz,1F
-	inc a
-1 ld b,a
+
+	ld e,a 												; (Columnas)-1 en E.
+
+	ld a,l
+	sub e
+	ld l,a
+
 	ret
 
-; --------------------------------------------------------------------------------------------------------------------
-;
-;	Prepara_draw
-;
-;	Es una rutina de carga.
-;	Carga los registros BC,HL y E para posteriormente llamar a la rutina de pintado [DRAW].
-;	
-;	OUTPUT:
-;
-;	- LD (Filas/Columns) del objeto a pintar en [BC].
-;	- LD (Posicion_actual) del objeto en [HL].
-;
-;	MODIFY: HL y BC.
+Modifica_columna_a_der:
 
-Prepara_draw:
+	ld a,(Columnas)
+	dec a
 
-	ld hl,Filas 		 							; Prepara los registros BC, E y HL.
-	ld b,(hl) 										; Carga Filas/Columns del objeto a pintar o inicializar en BC.
+	ld e,a 												; (Columnas)-1 en E.
 
-	inc hl 											; Carga (Posicion_actual) en HL.
-
-	ld c,(hl)
-
-	ld hl,(Posicion_actual)
+	ld a,l
+	add e
+	ld l,a
 
 	ret
 
@@ -599,7 +780,7 @@ Prepara_draw:
 ;
 ;	5/08/22
 ;
-;   NextScan. 
+;   NextScan.
 ;
 ;   Calcula la dirección de mem. de pantalla donde se sitúa el siguiente scanline. (Inc H, línea abajo).
 ;
@@ -609,7 +790,7 @@ Prepara_draw:
 ;
 ;       DESTRUIDOS: AF y HL !!!
 ;
-;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
+;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
 ;
 
 NextScan:
@@ -629,7 +810,15 @@ NextScan:
     ld h,a
     ret
 
-;----------------------------------------------------------------------------------------------------------------     
+NextScan_15:
+
+	ld b,15
+1 call NextScan
+	djnz 1B
+
+	ret
+
+;----------------------------------------------------------------------------------------------------------------
 ;
 ;	5/08/22
 ;
@@ -643,7 +832,7 @@ NextScan:
 ;
 ;       DESTRUIDOS: AF y HL !!!
 ;
-;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
+;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
 ;
 
 PreviousScan:
@@ -662,6 +851,14 @@ PreviousScan:
     add a,8             							; _unidad a los bits que definen el tercio TT, (add a,$08).
     ld h,a
     ret
+
+PreviousScan_15:
+
+	ld b,15
+1 call PreviousScan
+	djnz 1B
+
+	ret
 
 ; -----------------------------------------------------------------
 ;
