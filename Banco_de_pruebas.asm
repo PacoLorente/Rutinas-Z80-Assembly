@@ -538,8 +538,6 @@ Attr db 0 													; Atributos de la entidad.
 
 ; ----- ----- De aquí para arriba son los datos que se trasfieren a las cajas de entidades. ¡¡¡¡¡
 
-
-
 Ctrl_2 db 0
 ;															BIT 0, Los sprites se inician con un `sprite vacío', (sprite formado por "ceros"), cuando la rutina_
 ;															_ [Genera_datos_de_impresion] guarda su 1ª imagen.
@@ -548,14 +546,13 @@ Ctrl_2 db 0
 ; 															_ las rutinas [Mov_up] y [Mov_down] no necesitan modificar el sprite.
 ;															_ El bit5 a "1" nos indica que el sprite se inicia por arriba o por abajo y por lo tanto hay que restaurar_
 ;															_ (Puntero_objeto) con (Repone_puntero_objeto) una vez iniciado y realizada su 1ª `foto'.
-;														
-;															BIT 1, Este bit a "1" indica que se ha iniciado el proceso de EXPLOSIÓN en una entidad.
+;
+;															BIT 1, ???
 ;															BIT 2, Este bit es activado por [Movimiento]. Indica que hemos `iniciado un desplazamiento'._
 ;															_ Evita que volvamos a iniciar el desplazamiento cada vez que ejecutemos [Movimiento].
-;															BIT 3, Indica que (Cola_de_desplazamiento)="254". Esto quiere decir que repetiremos (1-255 veces),_
-;															_ el último MOVIMIENTO que hayamos ejecutado.
+;															BIT 3, ???
 ;															BIT 4, ???
-;															BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
+;															BIT 5, ???
 ;															BIT 6, Habilita la transición: "Salida de Amadeus" por la parte baja de la pantalla cuando completamos un nivel.
 ;																   La rutina [Dispara_salida_de_amadeus] pone este bit a "1" tras imprimir el msg. "DONE".
 ;															BIT 7, "1" Detecta que hemos pulsado "SHIELD". ; "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
