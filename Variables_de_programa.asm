@@ -78,7 +78,7 @@ Ctrl_2 db 0
 ;															- La rutina [Borra_escudo], inicializará el FLAG.
 
 Ctrl_0 db 0 												; Byte de control. A través de este byte de control. Las rutinas de desplazamiento: [Mov_right], [Mov_left], [Mov_up] y [Mov_down],_
-;															; _indican a las subrutinas de recolocación del objeto de la rutina [DRAW]: [Comprueba_limite_horizontal] y [Comprueba_limite_vertical],_
+;															; _indican a las subrutinas de recolocación del objeto de la rutina [DRAW]: [Comprueba_limite_horizontal] y [Comprueba_Sprite_completo],_
 ; 															; _que desaparecemos por un extremo de la pantalla y hemos de `reaparecer? por el contrario.
 ; 															; Este dato es necesario debido a que las rutinas de recolocación, están ideadas para recolocar el puntero (Posicion_actual), cuando pasamos_
 ; 															; _de un cuadrante a otro de la pantalla pero no preveen la `desaparición? por un extremo del cuadrante y la `reaparición? por el otro.
@@ -86,9 +86,9 @@ Ctrl_0 db 0 												; Byte de control. A través de este byte de control. La
 ; 															DESCRIPCIÖN:
 ;
 ; 															SET 0, [Reaparece_derecha]. El bit 0 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_left] detecta que el objeto ha `desaparecido? por el_
-; 															_lado izquierdo de la pantalla y ha de `reaparecer? por el derecho. ([Comprueba_limite_vertical]).
+; 															_lado izquierdo de la pantalla y ha de `reaparecer? por el derecho. ([Comprueba_Sprite_completo]).
 ; 															SET 1, [Reaparece_izquierda]. El bit 1 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_right] detecta que el objeto ha `desaparecido? por el_
-; 															_lado derecho de la pantalla y ha de `reaparecer? por el izquierdo. ([Comprueba_limite_vertical]).
+; 															_lado derecho de la pantalla y ha de `reaparecer? por el izquierdo. ([Comprueba_Sprite_completo]).
 ; 															SET 2, [Reaparece_abajo]. El bit 2 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_up] detecta que el objeto ha `desaparecido? por la_
 ; 															_parte superior de la pantalla y ha de `reaparecer? por el inferior. ([Comprueba_limite_horizontal]).
 ; 															SET 3, [Reaparece_arriba]. El bit 3 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_down] detecta que el objeto ha `desaparecido? por la_
@@ -97,7 +97,7 @@ Ctrl_0 db 0 												; Byte de control. A través de este byte de control. La
 ; 															SET 4, El Bit4 a "1", indica que hubo movimiento de la entidad. Necesitamos esta información
 ;												            _para "NO BORRAR/PINTAR" en objeto si NO hubo MOVIMIENTO.
 ;															SET 5, La rutina [Inicializacion] de Draw_XOR.asm, pone este bit a "1". Con esta información evitamos ejecutar las
-;															_rutinas: (Comprueba_limite_horizontal) y (Comprueba_limite_vertical) justo después de `inicializar? un objeto.
+;															_rutinas: (Comprueba_limite_horizontal) y (Comprueba_Sprite_completo) justo después de `inicializar? un objeto.
 ; 															SET 6, Está a "1" si el Sprite que tenemos cargado en el `Engine? es AMADEUS.
 ;
 ; 															SET 7, El bit 7 se encuentra alto, ("1"), cuando el último movimiento horizontal se ha producido a la "DERECHA".
@@ -146,8 +146,8 @@ Cuad_objeto db 0											; Almacena el cuadrante de pantalla donde se encuentr
 ;															; _baja de la pantalla cuando hemos superado el nivel.
 
 Columnas db 0 												; N° de columnas que se van a imprimir del Sprite.
-Limite_vertical db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
-;															; 2ª Función de (Limite_vertical):
+Sprite_completo db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
+;															; 2ª Función de (Sprite_completo):
 ;															; Se inicializa a "0" cada vez que ejecutamos el bucle de entidades. Se utiliza como contador; se incrementa (+1) cada vez que se añade una_
 ;															; _descripción a la (Tabla_de_pintado). Este valor lo utiliza la rutina [Ordena_tabla_de_pintado] para ordenar la tabla antes de imprimir.
 

@@ -321,7 +321,7 @@ Main:
 ;															; `Album_de_pintado' pasa a ser ahora `Album_de_borrado' y_
 ;	 														; _viceversa.
 	xor a
-	ld (Limite_vertical),a 									; Inicializa el contador de entidades "visibles" en pantalla, (se cargan en la Tabla_de_pintado).
+	ld (Sprite_completo),a 									; Inicializa el contador de entidades "visibles" en pantalla, (se cargan en la Tabla_de_pintado).
 
 Bucle_de_entidades:
 
@@ -881,8 +881,8 @@ Borra_diferencia
 
 Entidad_a_Tabla_de_pintado
 
-	ld hl,Limite_vertical
-	inc (hl)		 										; (Limite_vertical) actúa ahora como contador de entidades imprimibles.
+	ld hl,Sprite_completo
+	inc (hl)		 										; (Sprite_completo) actúa ahora como contador de entidades imprimibles.
 ;                                                           ; El nº de entidades almacenadas en la Tabla_de_pintado lo utilizara [Ordena_tabla_de_impresion] más adelante.
 	ld hl,(India_SP) 				 
 
@@ -945,7 +945,7 @@ Ordena_tabla_de_pintado
 
 ;	INPUT: HL está situado en el 1er byte de la Tabla de pintado.
 
-	ld a,(Limite_vertical)
+	ld a,(Sprite_completo)
 	cp 4
 	ret c 													; < 4 entidades, no ordenamos la Tabla.
 

@@ -32,6 +32,14 @@ NextScan:
     ld h,a
     ret
 
+NextScan_15:
+
+	ld b,15
+1 call NextScan
+	djnz 1B
+
+	ret
+
 ;----------------------------------------------------------------------------------------------------------------
 ;
 ;	5/08/22
@@ -65,6 +73,14 @@ PreviousScan:
     add a,8             							; _unidad a los bits que definen el tercio TT, (add a,$08).
     ld h,a
     ret
+
+PreviousScan_15:
+
+	ld b,15
+1 call PreviousScan
+	djnz 1B
+
+	ret
 
 ; ******************************************* Indica el tercio de pantalla en el que nos encontramos según el valor del registro H ********************************************************
 ; 
