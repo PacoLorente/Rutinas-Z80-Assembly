@@ -265,6 +265,8 @@ Procede_de_cuad4_4:
 	ld a,1
 	ld (Sprite_completo),a
 
+	call New_old_cuad_obj
+
 	ret
 
 Procede_de_cuad3_4:
@@ -304,6 +306,7 @@ Sprite_anteriormente_completo_en_CUAD_4:
 ;	Vamos a pensar que el sprite continúa completo.
 
 	call Prepara_punteros
+	call New_old_cuad_obj
 
 	ld a,(Ctrl_0)
 	bit 6,a
@@ -314,12 +317,11 @@ Sprite_anteriormente_completo_en_CUAD_4:
 
 ;	El Sprite pasa de estar COMPLETO a estar INCOMPLETO.
 
-;	Recolocamos (Posicion_actual).
-
 	xor a
 	ld (Sprite_completo),a
 
-	call Detecta_cambio_de_cuadrante
+;	call Calcula_Cuad_objeto
+;	ex af,af
 
 	ret
 
@@ -372,17 +374,12 @@ Procede_de_cuad3_3:
 	call Comprueba_completo_en_Cuad_3
 	ret c 												 ; El Sprite continúa INCOMPLETO, (Sprite_completo) = "0".
 
-;	El Sprite pasa de INCOMPLETO a COMPLETO.
-
-;	Modifica (Posicion_actual) y flag (Sprite_completo).
-
-;	jr $
-
-
 	ld (Posicion_actual),ix
 
 	ld a,1
 	ld (Sprite_completo),a
+
+	call New_old_cuad_obj
 
 	ret
 
@@ -411,6 +408,7 @@ Sprite_anteriormente_completo_en_CUAD_3:
 ;	Vamos a pensar que el sprite continúa completo.
 
 	call Prepara_punteros
+	call New_old_cuad_obj
 
 	call Comprueba_completo_en_Cuad_3
 	ret nc 												; RET si el Sprite sigue estando COMPLETO.
@@ -419,14 +417,17 @@ Sprite_anteriormente_completo_en_CUAD_3:
 
 ;	Recolocamos (Posicion_actual)
 
-	ld hl,(Posicion_actual)
+	push ix
+	pop hl
+
 	call Modifica_columna_a_der
 	ld (Posicion_actual),hl
 
 	xor a
 	ld (Sprite_completo),a
 
-	call Detecta_cambio_de_cuadrante
+;	call Calcula_Cuad_objeto
+;	ex af,af
 
 	ret
 
@@ -495,6 +496,8 @@ Procede_de_cuad2_2:
 	ld a,1
 	ld (Sprite_completo),a
 
+	call New_old_cuad_obj
+
 	ret
 
 Procede_de_cuad1_2:
@@ -512,6 +515,8 @@ Sprite_anteriormente_completo_en_CUAD_2:
 ;	Vamos a pensar que el sprite continúa completo.
 
 	call Prepara_punteros
+	call New_old_cuad_obj
+
 	call Comprueba_completo_en_Cuad_2
 	ret nc 												; RET si el Sprite sigue estando COMPLETO.
 
@@ -519,15 +524,18 @@ Sprite_anteriormente_completo_en_CUAD_2:
 
 ;	Recolocamos (Posicion_actual)
 
-	ld hl,(Posicion_actual)
+	push ix
+	pop hl
+
 	call NextScan_15
 	ld (Posicion_actual),hl
 
 	xor a
 	ld (Sprite_completo),a
 
-	call Detecta_cambio_de_cuadrante
-	
+;	call Calcula_Cuad_objeto
+;	ex af,af
+
 	ret
 
 ; ------------------------------------------------------------------------------
@@ -538,7 +546,7 @@ Cuadrante_uno:
 
 	inc d
 	dec d
-	jr nz, Sprite_anteriormente_completo_en_CUAD_1 	; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
+	jr nz, Sprite_anteriormente_completo_en_CUAD_1 		; (D) contiene (Sprite_completo), indica si el Sprite estaba COMPLETO o no en la (Posicion_actual) anterior.
 
 Sprite_anteriormente_incompleto_en_CUAD_1:
 
@@ -605,6 +613,8 @@ Procede_de_cuad1:
 	ld a,1
 	ld (Sprite_completo),a
 
+	call New_old_cuad_obj
+
 	ret
 
 Sprite_anteriormente_completo_en_CUAD_1:
@@ -613,6 +623,8 @@ Sprite_anteriormente_completo_en_CUAD_1:
 ;	Vamos a pensar que el sprite continúa completo.
 
 	call Prepara_punteros
+	call New_old_cuad_obj
+
 	call Comprueba_completo_en_Cuad_1
 	ret nc 												; RET si el Sprite sigue estando COMPLETO.
 
@@ -622,7 +634,9 @@ Sprite_anteriormente_completo_en_CUAD_1:
 
 ;	Recolocamos (Posicion_actual)
 
-	ld hl,(Posicion_actual)
+	push ix
+	pop hl
+
 	call NextScan_15
 	call Modifica_columna_a_der
 	ld (Posicion_actual),hl
@@ -630,9 +644,8 @@ Sprite_anteriormente_completo_en_CUAD_1:
 	xor a
 	ld (Sprite_completo),a
 
-	jr $
-
-	call Detecta_cambio_de_cuadrante
+;	call Calcula_Cuad_objeto
+;	ex af,af
 
 	ret
 
@@ -641,6 +654,17 @@ Sprite_anteriormente_completo_en_CUAD_1:
 ;	Subrutinas DRIVE.
 ;
 ; ---------------------------------------------------------------------------
+
+New_old_cuad_obj:
+
+	push ix
+	pop hl
+
+	call Calcula_Cuad_objeto
+
+	ex af,af
+
+	ret
 
 Comprueba_completo_en_Cuad_4:
 
