@@ -84,7 +84,7 @@ INICIALIZACION:
 ;	Make Stars & moon.
 
 	call Print_Moon
-	call make_stars
+;	call make_stars
 
 Init_level:
 

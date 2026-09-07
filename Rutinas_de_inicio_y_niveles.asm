@@ -833,24 +833,9 @@ Construye_movimientos_masticados_entidad:
 
 
 
-1 call Drive
+1 call Draw
 
-;	Inicializa la entidad cuando (Posicion_actual)="$0000".
-
-;	(Posicion_actual)=(Posicion_inicio)
-;	Inicializa (Cuad_objeto)
-;	Inicializa (Puntero_mov)
-
-;	Actualiza (Columnas) según su (Posicion_actual), vRAM donde vamos a imprimir el byte arriba-izq del Sprite.
-
-; ****************************************************************************
-; ****************************************************************************
-; ****************************************************************************
-; ****************************************************************************
-; ****************************************************************************
-; ****************************************************************************
-; ****************************************************************************
-; ****************************************************************************
+; 	[Draw] entrega el (Puntero_de_impresion), (Puntero_objeto) y (Columnas) de la (Posicion_actual) en curso.
 
 ;	Depurador_de_danzas_v01	;	--- macro ---
 
