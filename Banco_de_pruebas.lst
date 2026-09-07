@@ -2548,441 +2548,443 @@
   59+ A501
   60+ A501              ; ----- ----- De aquí para arriba son los datos que se trasfieren a las cajas de entidades. ¡¡¡¡¡
   61+ A501
-  62+ A501
-  63+ A501
-  64+ A501 00           Ctrl_2 db 0
-  65+ A502
-  66+ A502              ; 															BIT 0, Este bit a "1" Indica que (Puntero_objeto) apuntará a un Sprite vacío, [Recompone_posicion_inicio].
-  67+ A502              ;
-  68+ A502              ;															BIT 1, Este bit a "1" indica que se ha iniciado el proceso de EXPLOSIÓN en una entidad.
-  69+ A502              ;															BIT 2, Este bit es activado por [Movimiento]. Indica que hemos `iniciado un desplazamiento'._
-  70+ A502              ;															_ Evita que volvamos a iniciar el desplazamiento cada vez que ejecutemos [Movimiento].
-  71+ A502              ;															BIT 3, Indica que (Cola_de_desplazamiento)="254". Esto quiere decir que repetiremos (1-255 veces),_
-  72+ A502              ;															_ el último MOVIMIENTO que hayamos ejecutado.
-  73+ A502              ;															BIT 4, ???
-  74+ A502              ;															BIT 5, Este bit a "1" indica que esta entidad es una "Entidad_guía".
-  75+ A502              ;															BIT 6, Habilita la transición: "Salida de Amadeus" por la parte baja de la pantalla cuando completamos un nivel.
-  76+ A502              ;																   La rutina [Dispara_salida_de_amadeus] pone este bit a "1" tras imprimir el msg. "DONE".
-  77+ A502              ;															BIT 7, "1" Detecta que hemos pulsado "SHIELD". ; "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
-  78+ A502              ;															- La rutina [Borra_escudo], inicializará el FLAG.
-  79+ A502
-  80+ A502 00           Ctrl_0 db 0 												; Byte de control. A través de este byte de control. Las rutinas de desplazamiento: [Mov_right], [Mov_left], [Mov_up] y [Mov_down],_
-  81+ A503              ;															; _indican a las subrutinas de recolocación del objeto de la rutina [DRAW]: [Comprueba_limite_horizontal] y [Comprueba_Sprite_completo],_
-  82+ A503              ; 															; _que desaparecemos por un extremo de la pantalla y hemos de `reaparecer? por el contrario.
-  83+ A503              ; 															; Este dato es necesario debido a que las rutinas de recolocación, están ideadas para recolocar el puntero (Posicion_actual), cuando pasamos_
-  84+ A503              ; 															; _de un cuadrante a otro de la pantalla pero no preveen la `desaparición? por un extremo del cuadrante y la `reaparición? por el otro.
-  85+ A503              ;
-  86+ A503              ; 															DESCRIPCIÖN:
+  62+ A501 00           Ctrl_2 db 0
+  63+ A502              ;															BIT 0, Los sprites se inician con un `sprite vacío', (sprite formado por "ceros"), cuando la rutina_
+  64+ A502              ;															_ [Genera_datos_de_impresion] guarda su 1ª imagen.
+  65+ A502              ;															_ Más adelante las rutinas [Mov_left] y [Mov_right] restauraran (Puntero_objeto). Si el 1er movimiento
+  66+ A502              ; 															_ que hace la entidad después de iniciarse es hacia arriba/abajo no se restaurará (Puntero_objeto), pués_
+  67+ A502              ; 															_ las rutinas [Mov_up] y [Mov_down] no necesitan modificar el sprite.
+  68+ A502              ;															_ El bit5 a "1" nos indica que el sprite se inicia por arriba o por abajo y por lo tanto hay que restaurar_
+  69+ A502              ;															_ (Puntero_objeto) con (Repone_puntero_objeto) una vez iniciado y realizada su 1ª `foto'.
+  70+ A502              ;
+  71+ A502              ;															BIT 1, ???
+  72+ A502              ;															BIT 2, Este bit es activado por [Movimiento]. Indica que hemos `iniciado un desplazamiento'._
+  73+ A502              ;															_ Evita que volvamos a iniciar el desplazamiento cada vez que ejecutemos [Movimiento].
+  74+ A502              ;															BIT 3, ???
+  75+ A502              ;															BIT 4, ???
+  76+ A502              ;															BIT 5, ???
+  77+ A502              ;															BIT 6, Habilita la transición: "Salida de Amadeus" por la parte baja de la pantalla cuando completamos un nivel.
+  78+ A502              ;																   La rutina [Dispara_salida_de_amadeus] pone este bit a "1" tras imprimir el msg. "DONE".
+  79+ A502              ;															BIT 7, "1" Detecta que hemos pulsado "SHIELD". ; "El reloj de juego, (IM2)", borrara un escudo siempre que este FLAG esté a "1".
+  80+ A502              ;															- La rutina [Borra_escudo], inicializará el FLAG.
+  81+ A502
+  82+ A502 00           Ctrl_0 db 0 												; Byte de control. A través de este byte de control. Las rutinas de desplazamiento: [Mov_right], [Mov_left], [Mov_up] y [Mov_down],_
+  83+ A503              ;															; _indican a las subrutinas de recolocación del objeto de la rutina [DRAW]: [Comprueba_limite_horizontal] y [Comprueba_Sprite_completo],_
+  84+ A503              ; 															; _que desaparecemos por un extremo de la pantalla y hemos de `reaparecer? por el contrario.
+  85+ A503              ; 															; Este dato es necesario debido a que las rutinas de recolocación, están ideadas para recolocar el puntero (Posicion_actual), cuando pasamos_
+  86+ A503              ; 															; _de un cuadrante a otro de la pantalla pero no preveen la `desaparición? por un extremo del cuadrante y la `reaparición? por el otro.
   87+ A503              ;
-  88+ A503              ; 															SET 0, [Reaparece_derecha]. El bit 0 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_left] detecta que el objeto ha `desaparecido? por el_
-  89+ A503              ; 															_lado izquierdo de la pantalla y ha de `reaparecer? por el derecho. ([Comprueba_Sprite_completo]).
-  90+ A503              ; 															SET 1, [Reaparece_izquierda]. El bit 1 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_right] detecta que el objeto ha `desaparecido? por el_
-  91+ A503              ; 															_lado derecho de la pantalla y ha de `reaparecer? por el izquierdo. ([Comprueba_Sprite_completo]).
-  92+ A503              ; 															SET 2, [Reaparece_abajo]. El bit 2 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_up] detecta que el objeto ha `desaparecido? por la_
-  93+ A503              ; 															_parte superior de la pantalla y ha de `reaparecer? por el inferior. ([Comprueba_limite_horizontal]).
-  94+ A503              ; 															SET 3, [Reaparece_arriba]. El bit 3 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_down] detecta que el objeto ha `desaparecido? por la_
-  95+ A503              ; 															_parte inferior de la pantalla y ha de `reaparecer? por la superior. ([Comprueba_limite_horizontal]).
-  96+ A503
-  97+ A503              ; 															SET 4, El Bit4 a "1", indica que hubo movimiento de la entidad. Necesitamos esta información
-  98+ A503              ;												            _para "NO BORRAR/PINTAR" en objeto si NO hubo MOVIMIENTO.
-  99+ A503              ;															SET 5, La rutina [Inicializacion] de Draw_XOR.asm, pone este bit a "1". Con esta información evitamos ejecutar las
- 100+ A503              ;															_rutinas: (Comprueba_limite_horizontal) y (Comprueba_Sprite_completo) justo después de `inicializar? un objeto.
- 101+ A503              ; 															SET 6, Está a "1" si el Sprite que tenemos cargado en el `Engine? es AMADEUS.
- 102+ A503              ;
- 103+ A503              ; 															SET 7, El bit 7 se encuentra alto, ("1"), cuando el último movimiento horizontal se ha producido a la "DERECHA".
- 104+ A503              ; 															_ Utilizo la información que proporciona este BIT para modificar (CTRL_DESPLZ) si el siguiente movimiento_
- 105+ A503              ; 															_ se va a producir a la izquierda. "1" DERECHA - "0" IZQUIERDA.
- 106+ A503
- 107+ A503 00           Filas db 0												    ; Filas. [DRAW]. - 2ª Funcion tras haber generado los movimientos masticados:
- 108+ A504              ;															; Almacena un bit que iremos alternando: "0" a "1" mediante una función XOR. Se utiliza para cambiar los attr. de la explosión de las entidades,_
- 109+ A504              ;															; _rojo - amarillo.
- 110+ A504
- 111+ A504 00           Columns db 0 												; Nº de columnas. [DRAW]. - 2ª Funcion tras haber generado los movimientos masticados:
- 112+ A505              ;															; Almacena un bit que iremos alternando: "0" a "1" mediante una función XOR. Se utiliza para cambiar los attr. de la explosión de Amadeus, (rojo - amarillo).
- 113+ A505
- 114+ A505 00 00        Posicion_actual defw 0										; Dirección actual del Sprite. [DRAW]
- 115+ A507 00 00        Puntero_objeto defw 0										; Donde están los datos para pintar el Sprite.
- 116+ A509
- 117+ A509              ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ----------
+  88+ A503              ; 															DESCRIPCIÖN:
+  89+ A503              ;
+  90+ A503              ; 															SET 0, [Reaparece_derecha]. El bit 0 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_left] detecta que el objeto ha `desaparecido? por el_
+  91+ A503              ; 															_lado izquierdo de la pantalla y ha de `reaparecer? por el derecho. ([Comprueba_Sprite_completo]).
+  92+ A503              ; 															SET 1, [Reaparece_izquierda]. El bit 1 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_right] detecta que el objeto ha `desaparecido? por el_
+  93+ A503              ; 															_lado derecho de la pantalla y ha de `reaparecer? por el izquierdo. ([Comprueba_Sprite_completo]).
+  94+ A503              ; 															SET 2, [Reaparece_abajo]. El bit 2 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_up] detecta que el objeto ha `desaparecido? por la_
+  95+ A503              ; 															_parte superior de la pantalla y ha de `reaparecer? por el inferior. ([Comprueba_limite_horizontal]).
+  96+ A503              ; 															SET 3, [Reaparece_arriba]. El bit 3 de (Ctrl_0) se coloca a "1" cuando la rutina [Mov_down] detecta que el objeto ha `desaparecido? por la_
+  97+ A503              ; 															_parte inferior de la pantalla y ha de `reaparecer? por la superior. ([Comprueba_limite_horizontal]).
+  98+ A503
+  99+ A503              ; 															SET 4, El Bit4 a "1", indica que hubo movimiento de la entidad. Necesitamos esta información
+ 100+ A503              ;												            _para "NO BORRAR/PINTAR" en objeto si NO hubo MOVIMIENTO.
+ 101+ A503              ;															SET 5, La rutina [Inicializacion] de Draw_XOR.asm, pone este bit a "1". Con esta información evitamos ejecutar las
+ 102+ A503              ;															_rutinas: (Comprueba_limite_horizontal) y (Comprueba_Sprite_completo) justo después de `inicializar? un objeto.
+ 103+ A503              ; 															SET 6, Está a "1" si el Sprite que tenemos cargado en el `Engine? es AMADEUS.
+ 104+ A503              ;
+ 105+ A503              ; 															SET 7, El bit 7 se encuentra alto, ("1"), cuando el último movimiento horizontal se ha producido a la "DERECHA".
+ 106+ A503              ; 															_ Utilizo la información que proporciona este BIT para modificar (CTRL_DESPLZ) si el siguiente movimiento_
+ 107+ A503              ; 															_ se va a producir a la izquierda. "1" DERECHA - "0" IZQUIERDA.
+ 108+ A503
+ 109+ A503 00           Filas db 0												    ; Filas. [DRAW]. - 2ª Funcion tras haber generado los movimientos masticados:
+ 110+ A504              ;															; Almacena un bit que iremos alternando: "0" a "1" mediante una función XOR. Se utiliza para cambiar los attr. de la explosión de las entidades,_
+ 111+ A504              ;															; _rojo - amarillo.
+ 112+ A504
+ 113+ A504 00           Columns db 0 												; Nº de columnas. [DRAW]. - 2ª Funcion tras haber generado los movimientos masticados:
+ 114+ A505              ;															; Almacena un bit que iremos alternando: "0" a "1" mediante una función XOR. Se utiliza para cambiar los attr. de la explosión de Amadeus, (rojo - amarillo).
+ 115+ A505
+ 116+ A505 00 00        Posicion_actual defw 0										; Dirección actual del Sprite. [DRAW]
+ 117+ A507 00 00        Puntero_objeto defw 0										; Donde están los datos para pintar el Sprite.
  118+ A509
- 119+ A509 00           CTRL_DESPLZ db 0											; Este byte nos indica la posición que tiene el Sprite dentro del mapa de desplazamientos.
- 120+ A50A              ;															; Una vez construidos los movimientos masticados del nivel esta variable:
- 121+ A50A              ;
- 122+ A50A              ;															; Almacena un contador de scanlines que se utiliza para hacer desaparecer Amadeus por la parte baja de la pantalla.
- 123+ A50A
- 124+ A50A              ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ----------
+ 119+ A509              ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ----------
+ 120+ A509
+ 121+ A509 00           CTRL_DESPLZ db 0											; Este byte nos indica la posición que tiene el Sprite dentro del mapa de desplazamientos.
+ 122+ A50A              ;															; Una vez construidos los movimientos masticados del nivel esta variable:
+ 123+ A50A              ;
+ 124+ A50A              ;															; Almacena un contador de scanlines que se utiliza para hacer desaparecer Amadeus por la parte baja de la pantalla.
  125+ A50A
- 126+ A50A              ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
- 127+ A50A              ;
- 128+ A50A              ;	COLORES: 0 ..... NEGRO
- 129+ A50A              ;    		 1 ..... AZUL    jr $
- 130+ A50A              ; 			 2 ..... ROJO
- 131+ A50A              ;			 3 ..... MAGENTA
- 132+ A50A              ; 			 4 ..... VERDE
- 133+ A50A              ; 			 5 ..... CIAN
- 134+ A50A              ;			 6 ..... AMARILLO
- 135+ A50A              ; 			 7 ..... BLANCO
- 136+ A50A
- 137+ A50A
- 138+ A50A 00 00        Indice_Sprite_der defw 0
- 139+ A50C 00 00        Indice_Sprite_izq defw 0
- 140+ A50E 00 00        Puntero_DESPLZ_der defw 0
- 141+ A510 00 00        Puntero_DESPLZ_izq defw 0
- 142+ A512 00 00        Posicion_inicio defw 0										; Dirección de pantalla donde aparece el objeto. [DRAW].
- 143+ A514
- 144+ A514 00           Cuad_objeto db 0											; Almacena el cuadrante de pantalla donde se encuentra el objeto, (1,2,3,4). [DRAW]
- 145+ A515              ;															; 2ª FUNCIÓN: Temporizador, define la velocidad de la animación de Amadeus por la parte_
- 146+ A515              ;															; _baja de la pantalla cuando hemos superado el nivel.
- 147+ A515
- 148+ A515 00           Columnas db 0 												; N° de columnas que se van a imprimir del Sprite.
- 149+ A516 00           Sprite_completo db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
- 150+ A517              ;															; 2ª Función de (Sprite_completo):
- 151+ A517              ;															; Se inicializa a "0" cada vez que ejecutamos el bucle de entidades. Se utiliza como contador; se incrementa (+1) cada vez que se añade una_
- 152+ A517              ;															; _descripción a la (Tabla_de_pintado). Este valor lo utiliza la rutina [Ordena_tabla_de_pintado] para ordenar la tabla antes de imprimir.
- 153+ A517
- 154+ A517
+ 126+ A50A              ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ----------
+ 127+ A50A
+ 128+ A50A              ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+ 129+ A50A              ;
+ 130+ A50A              ;	COLORES: 0 ..... NEGRO
+ 131+ A50A              ;    		 1 ..... AZUL    jr $
+ 132+ A50A              ; 			 2 ..... ROJO
+ 133+ A50A              ;			 3 ..... MAGENTA
+ 134+ A50A              ; 			 4 ..... VERDE
+ 135+ A50A              ; 			 5 ..... CIAN
+ 136+ A50A              ;			 6 ..... AMARILLO
+ 137+ A50A              ; 			 7 ..... BLANCO
+ 138+ A50A
+ 139+ A50A
+ 140+ A50A 00 00        Indice_Sprite_der defw 0
+ 141+ A50C 00 00        Indice_Sprite_izq defw 0
+ 142+ A50E 00 00        Puntero_DESPLZ_der defw 0
+ 143+ A510 00 00        Puntero_DESPLZ_izq defw 0
+ 144+ A512 00 00        Posicion_inicio defw 0										; Dirección de pantalla donde aparece el objeto. [DRAW].
+ 145+ A514
+ 146+ A514 00           Cuad_objeto db 0											; Almacena el cuadrante de pantalla donde se encuentra el objeto, (1,2,3,4). [DRAW]
+ 147+ A515              ;															; 2ª FUNCIÓN: Temporizador, define la velocidad de la animación de Amadeus por la parte_
+ 148+ A515              ;															; _baja de la pantalla cuando hemos superado el nivel.
+ 149+ A515
+ 150+ A515 00           Columnas db 0 												; N° de columnas que se van a imprimir del Sprite.
+ 151+ A516 00           Sprite_completo db 0 										; Nº de columna. Si el objeto llega a esta columna se modifica (Posicion_actual) para poder asignar un nuevo (Cuad_objeto).
+ 152+ A517              ;															; 2ª Función de (Sprite_completo):
+ 153+ A517              ;															; Se inicializa a "0" cada vez que ejecutamos el bucle de entidades. Se utiliza como contador; se incrementa (+1) cada vez que se añade una_
+ 154+ A517              ;															; _descripción a la (Tabla_de_pintado). Este valor lo utiliza la rutina [Ordena_tabla_de_pintado] para ordenar la tabla antes de imprimir.
  155+ A517
- 156+ A517              ; Variables de control general.
+ 156+ A517
  157+ A517
- 158+ A517 00           Frames_explosion db 0 										; Nº de Frames que tiene la explosión.
- 159+ A518
- 160+ A518              ; Variables de funcionamiento, (No incluidas en base de datos de entidades), a partir de aquí!!!!!
+ 158+ A517              ; Variables de control general.
+ 159+ A517
+ 160+ A517 00           Frames_explosion db 0 										; Nº de Frames que tiene la explosión.
  161+ A518
- 162+ A518              Perfiles_de_velocidad
+ 162+ A518              ; Variables de funcionamiento, (No incluidas en base de datos de entidades), a partir de aquí!!!!!
  163+ A518
- 164+ A518 00           Vel_left db 0 												; Velocidad izquierda. Nº de píxeles que desplazamos el objeto a izquierda. 1, 2, 4 u 8 px.
- 165+ A519 00           Vel_right db 0 												; Velocidad derecha. Nº de píxeles que desplazamos el objeto a derecha. 1, 2, 4 u 8 px.
- 166+ A51A 00           Vel_up db 0 												; Velocidad subida. Nº de píxeles que desplazamos el objeto hacia arriba. (De 1 a 7px).
- 167+ A51B 00           Vel_down db 0 												; Velocidad bajada. Nº de píxeles que desplazamos el objeto hacia abajo. (De 1 a 7px).
- 168+ A51C
- 169+ A51C              ; Movimiento. ------------------------------------------------------------------------------------------------------
+ 164+ A518              Perfiles_de_velocidad
+ 165+ A518
+ 166+ A518 00           Vel_left db 0 												; Velocidad izquierda. Nº de píxeles que desplazamos el objeto a izquierda. 1, 2, 4 u 8 px.
+ 167+ A519 00           Vel_right db 0 												; Velocidad derecha. Nº de píxeles que desplazamos el objeto a derecha. 1, 2, 4 u 8 px.
+ 168+ A51A 00           Vel_up db 0 												; Velocidad subida. Nº de píxeles que desplazamos el objeto hacia arriba. (De 1 a 7px).
+ 169+ A51B 00           Vel_down db 0 												; Velocidad bajada. Nº de píxeles que desplazamos el objeto hacia abajo. (De 1 a 7px).
  170+ A51C
- 171+ A51C 00 00        Puntero_tabla_Random defw 0
- 172+ A51E 00 00        Puntero_indice_mov defw 0									; Puntero índice del patrón de movimiento de la entidad. "0" No hay movimiento.
- 173+ A520 00 00        Puntero_mov defw 0											; Guarda la posición de memoria en la que nos encontramos dentro de la cadena de movimiento.
- 174+ A522 00 00        Puntero_indice_mov_bucle defw 0
- 175+ A524              ;
- 176+ A524              ;
- 177+ A524 00           Incrementa_puntero db 0										; Byte que iremos sumando a (Puntero_indice_mov) para ir escalando por las_
- 178+ A525              ;															; _ distintas cadenas de movimiento del índice de movimiento de la entidad._
- 179+ A525              ;															; Va aumentando su valor en saltos de 2 uds, (0,2,4,6,8).
- 180+ A525
- 181+ A525 00           Incrementa_puntero_backup db 0
- 182+ A526 00           Repetimos_desplazamiento db 0								; El nibble bajo del 3er byte que compone un desplazamiento, indica el nº de veces que_
- 183+ A527              ;															; repetimos dicho desplazamiento. Ese valor se almacena en esta variable, ($1-$f). NUNCA SERÁ "0".
- 184+ A527
- 185+ A527 00           Repetimos_desplazamiento_backup db 0	   					; Restaura (Repetimos_desplazamiento) cuando este llega a "0".
- 186+ A528 00           Repetimos_movimiento db 0									; Byte que indica el nº de veces que repetimos el último MOVIMIENTO.
- 187+ A529 00           Cola_de_desplazamiento db 0									; Este byte indica:
- 188+ A52A
- 189+ A52A              ;
- 190+ A52A              ;															;	"$00" ..... Hemos finalizado la cadena de movimiento.
- 191+ A52A              ;															;				En este caso hemos de incrementar (Puntero_indice_mov)_
- 192+ A52A              ;															;				_ y pasar a la siguiente cadena de movimiento del índice.
- 193+ A52A              ;
- 194+ A52A              ;															;	"$01 - "$fe" ..... Repetición del movimiento.
- 195+ A52A              ;															;						Nº de veces que vamos a repetir el movimiento completo.
- 196+ A52A              ;															;						En este caso, volveremos a inicializar (Puntero_mov),_
- 197+ A52A              ;															;						_ con (Puntero_indice_mov) y decrementaremos (Cola_de_desplazamiento).
- 198+ A52A              ;
- 199+ A52A              ;															;	"$ff" ..... Bucle infinito de repetición.
- 200+ A52A              ;															;				Nunca vamos a saltar a la siguiente cadena de movimiento del índice,_
- 201+ A52A              ;															;				,_ (si es que la hay). Volvemos a inicializar (Puntero_mov) con (Puntero_indice_mov).
- 202+ A52A
- 203+ A52A 00           Ctrl_1 db 0 												; Byte de control de propósito general.
- 204+ A52B
- 205+ A52B              ;																DESCRIPCIÓN:
- 206+ A52B              ;
- 207+ A52B              ;															BIT 0, "1" Habilita la impresión del msg. DONE en pantalla. La llamada a [Print_DONE] se efectúa desde el Reloj del juego,_
- 208+ A52B              ; 															_ Rutina de interrupciones IM2.
- 209+ A52B
- 210+ A52B 00 00        Repone_puntero_objeto defw 0								; Almacena (Puntero_objeto). Cuando el Sprite se inicia por arriba o por abajo,_
- 211+ A52D              ; 															; _ hay que sustituirlo por un `sprite vacío' para que no se vea el 1er o último scanline.
- 212+ A52D              ; 															; _ Cuando hemos terminado de iniciarlo y guardado su foto, hemos de recuperar su (Puntero_objeto).
- 213+ A52D              ;															; (Repone_puntero_objeto) es una copia de respaldo de (Puntero_objeto) y su función es restaurarlo.
- 214+ A52D              ;
- 215+ A52D              ;															; 2ª Función:
+ 171+ A51C              ; Movimiento. ------------------------------------------------------------------------------------------------------
+ 172+ A51C
+ 173+ A51C 00 00        Puntero_tabla_Random defw 0
+ 174+ A51E 00 00        Puntero_indice_mov defw 0									; Puntero índice del patrón de movimiento de la entidad. "0" No hay movimiento.
+ 175+ A520 00 00        Puntero_mov defw 0											; Guarda la posición de memoria en la que nos encontramos dentro de la cadena de movimiento.
+ 176+ A522 00 00        Puntero_indice_mov_bucle defw 0
+ 177+ A524              ;
+ 178+ A524              ;
+ 179+ A524 00           Incrementa_puntero db 0										; Byte que iremos sumando a (Puntero_indice_mov) para ir escalando por las_
+ 180+ A525              ;															; _ distintas cadenas de movimiento del índice de movimiento de la entidad._
+ 181+ A525              ;															; Va aumentando su valor en saltos de 2 uds, (0,2,4,6,8).
+ 182+ A525
+ 183+ A525 00           Incrementa_puntero_backup db 0
+ 184+ A526 00           Repetimos_desplazamiento db 0								; El nibble bajo del 3er byte que compone un desplazamiento, indica el nº de veces que_
+ 185+ A527              ;															; repetimos dicho desplazamiento. Ese valor se almacena en esta variable, ($1-$f). NUNCA SERÁ "0".
+ 186+ A527
+ 187+ A527 00           Repetimos_desplazamiento_backup db 0	   					; Restaura (Repetimos_desplazamiento) cuando este llega a "0".
+ 188+ A528 00           Repetimos_movimiento db 0									; Byte que indica el nº de veces que repetimos el último MOVIMIENTO.
+ 189+ A529 00           Cola_de_desplazamiento db 0									; Este byte indica:
+ 190+ A52A
+ 191+ A52A              ;
+ 192+ A52A              ;															;	"$00" ..... Hemos finalizado la cadena de movimiento.
+ 193+ A52A              ;															;				En este caso hemos de incrementar (Puntero_indice_mov)_
+ 194+ A52A              ;															;				_ y pasar a la siguiente cadena de movimiento del índice.
+ 195+ A52A              ;
+ 196+ A52A              ;															;	"$01 - "$fe" ..... Repetición del movimiento.
+ 197+ A52A              ;															;						Nº de veces que vamos a repetir el movimiento completo.
+ 198+ A52A              ;															;						En este caso, volveremos a inicializar (Puntero_mov),_
+ 199+ A52A              ;															;						_ con (Puntero_indice_mov) y decrementaremos (Cola_de_desplazamiento).
+ 200+ A52A              ;
+ 201+ A52A              ;															;	"$ff" ..... Bucle infinito de repetición.
+ 202+ A52A              ;															;				Nunca vamos a saltar a la siguiente cadena de movimiento del índice,_
+ 203+ A52A              ;															;				,_ (si es que la hay). Volvemos a inicializar (Puntero_mov) con (Puntero_indice_mov).
+ 204+ A52A
+ 205+ A52A 00           Ctrl_1 db 0 												; Byte de control de propósito general.
+ 206+ A52B
+ 207+ A52B              ;																DESCRIPCIÓN:
+ 208+ A52B              ;
+ 209+ A52B              ;															BIT 0, "1" Habilita la impresión del msg. DONE en pantalla. La llamada a [Print_DONE] se efectúa desde el Reloj del juego,_
+ 210+ A52B              ; 															_ Rutina de interrupciones IM2.
+ 211+ A52B
+ 212+ A52B 00 00        Repone_puntero_objeto defw 0								; Almacena (Puntero_objeto). Cuando el Sprite se inicia por arriba o por abajo,_
+ 213+ A52D              ; 															; _ hay que sustituirlo por un `sprite vacío' para que no se vea el 1er o último scanline.
+ 214+ A52D              ; 															; _ Cuando hemos terminado de iniciarlo y guardado su foto, hemos de recuperar su (Puntero_objeto).
+ 215+ A52D              ;															; (Repone_puntero_objeto) es una copia de respaldo de (Puntero_objeto) y su función es restaurarlo.
  216+ A52D              ;
- 217+ A52D              ;															; La rutina [Genera_cabecera] almacena la dirección del álbum de scanlines donde se inicia la cabecera para posteriormente_
- 218+ A52D              ;															; _guardar esta dirección en la (Tabla_de_pintado).
- 219+ A52D
- 220+ A52D              Gestion_de_ENTIDADES_y_CAJAS:
+ 217+ A52D              ;															; 2ª Función:
+ 218+ A52D              ;
+ 219+ A52D              ;															; La rutina [Genera_cabecera] almacena la dirección del álbum de scanlines donde se inicia la cabecera para posteriormente_
+ 220+ A52D              ;															; _guardar esta dirección en la (Tabla_de_pintado).
  221+ A52D
- 222+ A52D 00 00        Puntero_store_caja defw 0
- 223+ A52F 00 00        Puntero_restore_caja defw 0
- 224+ A531 00 00        Indice_restore_caja defw 0
- 225+ A533 00 00        Puntero_indice_master defw 0
- 226+ A535
- 227+ A535 00           Numero_de_entidades db 0									; Nº total de entidades maliciosas que contiene el nivel.
- 228+ A536 00           Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de entidades. (7 Cajas).
- 229+ A537 00           Entidades_en_curso db 0										; Entidades en pantalla.
- 230+ A538
- 231+ A538 00 00        Puntero_indice_ENTIDADES defw 0 							; Se desplazará por el índice de entidades para `meterlas' en cajas.
- 232+ A53A              ; Datos_de_entidad defw 0										; Situado en el .db de la definición correspondiente.
- 233+ A53A
- 234+ A53A              ;---------------------------------------------------------------------------------------------------------------
- 235+ A53A              ;
- 236+ A53A              ;	13/10/24
+ 222+ A52D              Gestion_de_ENTIDADES_y_CAJAS:
+ 223+ A52D
+ 224+ A52D 00 00        Puntero_store_caja defw 0
+ 225+ A52F 00 00        Puntero_restore_caja defw 0
+ 226+ A531 00 00        Indice_restore_caja defw 0
+ 227+ A533 00 00        Puntero_indice_master defw 0
+ 228+ A535
+ 229+ A535 00           Numero_de_entidades db 0									; Nº total de entidades maliciosas que contiene el nivel.
+ 230+ A536 00           Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de entidades. (7 Cajas).
+ 231+ A537 00           Entidades_en_curso db 0										; Entidades en pantalla.
+ 232+ A538
+ 233+ A538 00 00        Puntero_indice_ENTIDADES defw 0 							; Se desplazará por el índice de entidades para `meterlas' en cajas.
+ 234+ A53A              ; Datos_de_entidad defw 0										; Situado en el .db de la definición correspondiente.
+ 235+ A53A
+ 236+ A53A              ;---------------------------------------------------------------------------------------------------------------
  237+ A53A              ;
- 238+ A53A              ;	Álbumes.
- 239+ A53A
- 240+ A53A 00 00        Stack defw 0 												; La rutinas de pintado, utilizan esta_
- 241+ A53C              ;															; _variable para almacenar lo posición del puntero_
- 242+ A53C              ; 															; _de pila, SP.
- 243+ A53C 00 00        Stack_2 defw 0												; 2º variable destinada a almacenar el puntero de pila, SP.
- 244+ A53E              ;															; La utiliza la rutina [Extrae_foto_registros].
- 245+ A53E
- 246+ A53E              ; Impresión. ----------------------------------------------------------------------------------------------------
+ 238+ A53A              ;	13/10/24
+ 239+ A53A              ;
+ 240+ A53A              ;	Álbumes.
+ 241+ A53A
+ 242+ A53A 00 00        Stack defw 0 												; La rutinas de pintado, utilizan esta_
+ 243+ A53C              ;															; _variable para almacenar lo posición del puntero_
+ 244+ A53C              ; 															; _de pila, SP.
+ 245+ A53C 00 00        Stack_2 defw 0												; 2º variable destinada a almacenar el puntero de pila, SP.
+ 246+ A53E              ;															; La utiliza la rutina [Extrae_foto_registros].
  247+ A53E
- 248+ A53E 00 00        Album_de_pintado defw 0
- 249+ A540 00 00        Album_de_borrado defw 0
- 250+ A542 00 00        Album_de_pintado_Amadeus defw 0
- 251+ A544 00 00        Album_de_borrado_Amadeus defw 0
- 252+ A546
- 253+ A546 00 00        Album_de_pintado_disparos_Amadeus defw 0
- 254+ A548 00 00        Album_de_borrado_disparos_Amadeus defw 0
- 255+ A54A
- 256+ A54A 00 00        Album_de_pintado_disparos_Entidades defw 0
- 257+ A54C 00 00        Album_de_borrado_disparos_Entidades defw 0
- 258+ A54E
- 259+ A54E
- 260+ A54E 00 00        Nivel_scan_disparos_album_de_pintado defw 0
- 261+ A550
- 262+ A550 00           Num_de_bytes_album_de_disparos db 0
- 263+ A551 00           Num_de_bytes_album_de_disparos_borrado db 0
- 264+ A552
- 265+ A552 07           Numero_de_disparos_de_entidades db 7
- 266+ A553
- 267+ A553 00           Permiso_de_disparo_Amadeus db 0								; "0" Permite disparo.
- 268+ A554 00           Permiso_de_disparo_Entidades db 0							; A "1", se puede generar disparo.
- 269+ A555
- 270+ A555 00 00        Techo_Scanlines_album defw 0
- 271+ A557 00 00        Techo_Scanlines_album_2 defw 0
- 272+ A559 00           Switch db 0
- 273+ A55A 00 00        Techo defw 0
- 274+ A55C 00 00        Scanlines_album_SP defw 0
- 275+ A55E DC A1        India_SP defw Tabla_de_pintado
- 276+ A560 00 00        India_2_SP defw 0
- 277+ A562 00 A2        India_3_SP defw Tabla_de_borrado
- 278+ A564
- 279+ A564 00           Ctrl_3 db 0													; 2º Byte de Ctrl. general, (no específico) a una única entidad.
- 280+ A565              ;
- 281+ A565              ;															BIT 0, "1" Indica que el FRAME está completo, (hemos podido hacer la foto de todas las entidades).
- 282+ A565              ;															BIT 1, "1" Indica que hemos completado todo el patrón de movimientos de este tipo de entidad.
- 283+ A565              ;																_ El almacén de movimientos masticados de este tipo de entidad quedará completo. ([Inicia_entidad]).
- 284+ A565              ;															BIT 2, "1" Indica que se produce movimiento en alguna entidad, (modificamos el último FRAME impreso en pantalla).
- 285+ A565              ;																Habilita el borrado/pintado de sprites.
- 286+ A565              ;															BIT 3, "1" Este bit lo coloca a "1" la rutina [Borra_diferencia] para indicar que hemos actualizado el (Techo_de_pintado)_
- 287+ A565              ;																_ a la baja.
- 288+ A565              ; 															BIT 4, "1" Indica que hemos terminado de ordenar la Tabla_de_pintado. Podremos salir así de la rutina [Ordena_tabla_de_impresion].
- 289+ A565              ;															BIT 5, "1" Indica que existe movimiento de Amadeus.
- 290+ A565              ;															BIT 6, "1" Indica que Amadeus ha sido destruido. Este bit lo activa la rutina [Genera_explosion_Amadeus] despues de pintar_
- 291+ A565              ; 																_ el último frame de la explosión de nuestra nave.
- 292+ A565              ;															BIT 7, "1" Indica que se ha iniciado el proceso de explosión en Amadeus.
- 293+ A565              ;																_ Mientras este bit este activo, no se generarán dos explosiones de entidades a la vez.
- 294+ A565
- 295+ A565 00           Ctrl_4 db 0													; 4º Byte de Ctrl. general, (no específico) a una única entidad.
- 296+ A566              ;
- 297+ A566              ;															BIT 0, "1" Cada vez que se incrementan las entidades en curso, este bit se pone a "1". Esto hará que una entidad pase de "dormida" a "activa".
- 298+ A566              ;															BIT 1, (INVESTIGAR !!!)
- 299+ A566              ;															BIT 2, -------------------------------------------
- 300+ A566              ;															BIT 3, "1" Indica que se ha asignado un color RND a la entidad.
- 301+ A566              ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta?.
- 302+ A566              ; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
- 303+ A566              ;															BIT 5, "1" Indica que ha terminado la transición de salida de Amadeus por la parte baja de la pantalla.
- 304+ A566              ;															BIT 6, "1" Indica aL reloj IM2 que ha de borrar una vida de la pantalla.
- 305+ A566              ; 															BIT 7, !!! Used !!!. Averiguar para qué.
- 306+ A566
- 307+ A566 00           Ctrl_5 db 0
- 308+ A567
- 309+ A567              ;															BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria.
- 310+ A567              ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.
- 311+ A567              ;															BIT	3, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la izquierda.
- 312+ A567              ;															BIT 4, ?????
- 313+ A567              ;															BIT 5, "1" Indica: NIVEL SUPERADO !!!.
- 314+ A567              ;															BIT 6, "1" Indica: GAME OVER !!!.
- 315+ A567              ;															BIT 7, "1" Indica a la rutina de sonido que hemos de generar un efecto ascendente; (estamos pintando el rayo de entrada de la transición de entrada).
- 316+ A567
- 317+ A567 00           Ctrl_6 db 0
- 318+ A568
- 319+ A568              ;															BIT 0, "1" Activa el inhibidor de efectos de sonido. No se ejecutará [Play_burst_sound_effect], tampoco [Play_shot_sound_effect]_
- 320+ A568              ; 																   _si está señal está activa.
- 321+ A568              ; 															BIT 1, "1" Este bit es activado por la rutina [Press_START] cuando el temporizador (Start_counter) llega a "0".
- 322+ A568              ; 																   El bit indica a la rutina principal START: que ha de volver a mostrar el menú principal.
- 323+ A568              ; 																   El submenú CONTROLS se muestra en pantalla un tiempo definido por (Start_counter), pasado este tiempo_
- 324+ A568              ;																   _la rutina activa `este bit´ y sale de la rutina. El menú está así diseñado para poder DEFINIR los controles si los
- 325+ A568              ; 																   _actuales no nos agradan.
- 326+ A568              ; 															BIT 2, -----------------------------------
- 327+ A568              ; 															BIT 3, "1" Indica que salimos de la rutina de IM nada más entrar. Este bit lo activa la rutina [Carrusell] tras habilitar las interrupciones.
- 328+ A568              ; 																   Necesitamos leer el teclado cada 20ms para facilitar que no se produzca la repetición de una misma tecla.
- 329+ A568              ; 															BIT 4, "1" Indica DELETE a la subrutina FLASH. Lo activa la subrutina [Enter_name] cuando pulsamos CAPS SHIFT.
- 330+ A568
- 331+ A568 00 00        Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
- 332+ A56A 00 00        Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
- 333+ A56C 00           Impacto2 db 0												; Byte de control de impactos.
- 334+ A56D
- 335+ A56D              ;
- 336+ A56D              ;															; bit_2. La rutina [Genera_coordenadas_X] coloca este bit a "1" para indicar que hay una posible colisión entre una entidad y Amadeus.
- 337+ A56D              ;															; Una de la entidades ha entrado en zona de Amadeus y alguna de sus columnas coincide con las de nuestra nave.
- 338+ A56D              ;															; El bit indica que hay que ejecutar [Detecta_colision_nave_entidad] al principio de [Main], (Construcción del frame).
- 339+ A56D              ;															; bit_3. La rutina [Genera_coordenadas_de_disparo_Amadeus] pone este bit a "1" para indicar que un disparo de Amadeus ha alcanzado a una entidad.
- 340+ A56D
- 341+ A56D 00 00        Entidad_sospechosa_de_colision defw 0						; Almacena la dirección de memoria donde se encuentra el .db_
- 342+ A56F              ;															; _(Impacto) de la entidad que ocupa el mismo espacio que Amadeus.
- 343+ A56F              ;															; Necesitaremos poner a "0" este .db en el caso de que finalmente no se produzca colisión.
- 344+ A56F
- 345+ A56F 00 00        Coordenadas_disparo_certero ds 2							; Almacenamos aquí las coordenadas del disparo que alcanza a una entidad, (Fila, Columna).
- 346+ A571              ;											           		; (Coordenadas_disparo_certero)=Y ..... (Coordenadas_disparo_certero +1)=X.
- 347+ A571 00 00 00     Coordenadas_X_Entidad ds 3  								; 3 Bytes reservados para almacenar las 3 posibles columnas_
- 348+ A574              ;															; _ que puede ocupar el sprite de una entidad. (Colisión).
- 349+ A574 00 00 00     Coordenadas_X_Amadeus ds 3									; 3 Bytes reservados para almacenar las 3 posibles columnas_
- 350+ A577              ;															; _ que puede ocupar el sprite de Amadeus. (Colisión).
- 351+ A577
- 352+ A577              ;---------------------------------------------------------------------------------------------------------------
+ 248+ A53E              ; Impresión. ----------------------------------------------------------------------------------------------------
+ 249+ A53E
+ 250+ A53E 00 00        Album_de_pintado defw 0
+ 251+ A540 00 00        Album_de_borrado defw 0
+ 252+ A542 00 00        Album_de_pintado_Amadeus defw 0
+ 253+ A544 00 00        Album_de_borrado_Amadeus defw 0
+ 254+ A546
+ 255+ A546 00 00        Album_de_pintado_disparos_Amadeus defw 0
+ 256+ A548 00 00        Album_de_borrado_disparos_Amadeus defw 0
+ 257+ A54A
+ 258+ A54A 00 00        Album_de_pintado_disparos_Entidades defw 0
+ 259+ A54C 00 00        Album_de_borrado_disparos_Entidades defw 0
+ 260+ A54E
+ 261+ A54E
+ 262+ A54E 00 00        Nivel_scan_disparos_album_de_pintado defw 0
+ 263+ A550
+ 264+ A550 00           Num_de_bytes_album_de_disparos db 0
+ 265+ A551 00           Num_de_bytes_album_de_disparos_borrado db 0
+ 266+ A552
+ 267+ A552 07           Numero_de_disparos_de_entidades db 7
+ 268+ A553
+ 269+ A553 00           Permiso_de_disparo_Amadeus db 0								; "0" Permite disparo.
+ 270+ A554 00           Permiso_de_disparo_Entidades db 0							; A "1", se puede generar disparo.
+ 271+ A555
+ 272+ A555 00 00        Techo_Scanlines_album defw 0
+ 273+ A557 00 00        Techo_Scanlines_album_2 defw 0
+ 274+ A559 00           Switch db 0
+ 275+ A55A 00 00        Techo defw 0
+ 276+ A55C 00 00        Scanlines_album_SP defw 0
+ 277+ A55E DC A1        India_SP defw Tabla_de_pintado
+ 278+ A560 00 00        India_2_SP defw 0
+ 279+ A562 00 A2        India_3_SP defw Tabla_de_borrado
+ 280+ A564
+ 281+ A564 00           Ctrl_3 db 0													; 2º Byte de Ctrl. general, (no específico) a una única entidad.
+ 282+ A565              ;
+ 283+ A565              ;															BIT 0, "1" Indica que el FRAME está completo, (hemos podido hacer la foto de todas las entidades).
+ 284+ A565              ;															BIT 1, "1" Indica que hemos completado todo el patrón de movimientos de este tipo de entidad.
+ 285+ A565              ;																_ El almacén de movimientos masticados de este tipo de entidad quedará completo. ([Inicia_entidad]).
+ 286+ A565              ;															BIT 2, "1" Indica que se produce movimiento en alguna entidad, (modificamos el último FRAME impreso en pantalla).
+ 287+ A565              ;																Habilita el borrado/pintado de sprites.
+ 288+ A565              ;															BIT 3, "1" Este bit lo coloca a "1" la rutina [Borra_diferencia] para indicar que hemos actualizado el (Techo_de_pintado)_
+ 289+ A565              ;																_ a la baja.
+ 290+ A565              ; 															BIT 4, "1" Indica que hemos terminado de ordenar la Tabla_de_pintado. Podremos salir así de la rutina [Ordena_tabla_de_impresion].
+ 291+ A565              ;															BIT 5, "1" Indica que existe movimiento de Amadeus.
+ 292+ A565              ;															BIT 6, "1" Indica que Amadeus ha sido destruido. Este bit lo activa la rutina [Genera_explosion_Amadeus] despues de pintar_
+ 293+ A565              ; 																_ el último frame de la explosión de nuestra nave.
+ 294+ A565              ;															BIT 7, "1" Indica que se ha iniciado el proceso de explosión en Amadeus.
+ 295+ A565              ;																_ Mientras este bit este activo, no se generarán dos explosiones de entidades a la vez.
+ 296+ A565
+ 297+ A565 00           Ctrl_4 db 0													; 4º Byte de Ctrl. general, (no específico) a una única entidad.
+ 298+ A566              ;
+ 299+ A566              ;															BIT 0, "1" Cada vez que se incrementan las entidades en curso, este bit se pone a "1". Esto hará que una entidad pase de "dormida" a "activa".
+ 300+ A566              ;															BIT 1, (INVESTIGAR !!!)
+ 301+ A566              ;															BIT 2, -------------------------------------------
+ 302+ A566              ;															BIT 3, "1" Indica que se ha asignado un color RND a la entidad.
+ 303+ A566              ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta?.
+ 304+ A566              ; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
+ 305+ A566              ;															BIT 5, "1" Indica que ha terminado la transición de salida de Amadeus por la parte baja de la pantalla.
+ 306+ A566              ;															BIT 6, "1" Indica aL reloj IM2 que ha de borrar una vida de la pantalla.
+ 307+ A566              ; 															BIT 7, !!! Used !!!. Averiguar para qué.
+ 308+ A566
+ 309+ A566 00           Ctrl_5 db 0
+ 310+ A567
+ 311+ A567              ;															BIT 1, "1" Indica que la entidad en curso es la alcanzada por nuestro disparo. La comparativa entre coordenadas ha sido satisfactoria.
+ 312+ A567              ;															BIT	2, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la derecha.
+ 313+ A567              ;															BIT	3, "1" Indica que tras consecutivos desplazamientos del disparo hay que modificar el (Puntero_de_impresión) dos posiciones a la izquierda.
+ 314+ A567              ;															BIT 4, ?????
+ 315+ A567              ;															BIT 5, "1" Indica: NIVEL SUPERADO !!!.
+ 316+ A567              ;															BIT 6, "1" Indica: GAME OVER !!!.
+ 317+ A567              ;															BIT 7, "1" Indica a la rutina de sonido que hemos de generar un efecto ascendente; (estamos pintando el rayo de entrada de la transición de entrada).
+ 318+ A567
+ 319+ A567 00           Ctrl_6 db 0
+ 320+ A568
+ 321+ A568              ;															BIT 0, "1" Activa el inhibidor de efectos de sonido. No se ejecutará [Play_burst_sound_effect], tampoco [Play_shot_sound_effect]_
+ 322+ A568              ; 																   _si está señal está activa.
+ 323+ A568              ; 															BIT 1, "1" Este bit es activado por la rutina [Press_START] cuando el temporizador (Start_counter) llega a "0".
+ 324+ A568              ; 																   El bit indica a la rutina principal START: que ha de volver a mostrar el menú principal.
+ 325+ A568              ; 																   El submenú CONTROLS se muestra en pantalla un tiempo definido por (Start_counter), pasado este tiempo_
+ 326+ A568              ;																   _la rutina activa `este bit´ y sale de la rutina. El menú está así diseñado para poder DEFINIR los controles si los
+ 327+ A568              ; 																   _actuales no nos agradan.
+ 328+ A568              ; 															BIT 2, -----------------------------------
+ 329+ A568              ; 															BIT 3, "1" Indica que salimos de la rutina de IM nada más entrar. Este bit lo activa la rutina [Carrusell] tras habilitar las interrupciones.
+ 330+ A568              ; 																   Necesitamos leer el teclado cada 20ms para facilitar que no se produzca la repetición de una misma tecla.
+ 331+ A568              ; 															BIT 4, "1" Indica DELETE a la subrutina FLASH. Lo activa la subrutina [Enter_name] cuando pulsamos CAPS SHIFT.
+ 332+ A568
+ 333+ A568 00 00        Puntero_DESPLZ_DISPARO_ENTIDADES defw 0
+ 334+ A56A 00 00        Puntero_de_impresion_disparo_de_entidad defw 0				; Guardaremos aquí la dirección de pantalla del último scanline de la entidad en curso.
+ 335+ A56C 00           Impacto2 db 0												; Byte de control de impactos.
+ 336+ A56D
+ 337+ A56D              ;
+ 338+ A56D              ;															; bit_2. La rutina [Genera_coordenadas_X] coloca este bit a "1" para indicar que hay una posible colisión entre una entidad y Amadeus.
+ 339+ A56D              ;															; Una de la entidades ha entrado en zona de Amadeus y alguna de sus columnas coincide con las de nuestra nave.
+ 340+ A56D              ;															; El bit indica que hay que ejecutar [Detecta_colision_nave_entidad] al principio de [Main], (Construcción del frame).
+ 341+ A56D              ;															; bit_3. La rutina [Genera_coordenadas_de_disparo_Amadeus] pone este bit a "1" para indicar que un disparo de Amadeus ha alcanzado a una entidad.
+ 342+ A56D
+ 343+ A56D 00 00        Entidad_sospechosa_de_colision defw 0						; Almacena la dirección de memoria donde se encuentra el .db_
+ 344+ A56F              ;															; _(Impacto) de la entidad que ocupa el mismo espacio que Amadeus.
+ 345+ A56F              ;															; Necesitaremos poner a "0" este .db en el caso de que finalmente no se produzca colisión.
+ 346+ A56F
+ 347+ A56F 00 00        Coordenadas_disparo_certero ds 2							; Almacenamos aquí las coordenadas del disparo que alcanza a una entidad, (Fila, Columna).
+ 348+ A571              ;											           		; (Coordenadas_disparo_certero)=Y ..... (Coordenadas_disparo_certero +1)=X.
+ 349+ A571 00 00 00     Coordenadas_X_Entidad ds 3  								; 3 Bytes reservados para almacenar las 3 posibles columnas_
+ 350+ A574              ;															; _ que puede ocupar el sprite de una entidad. (Colisión).
+ 351+ A574 00 00 00     Coordenadas_X_Amadeus ds 3									; 3 Bytes reservados para almacenar las 3 posibles columnas_
+ 352+ A577              ;															; _ que puede ocupar el sprite de Amadeus. (Colisión).
  353+ A577
- 354+ A577              ; Relojes y temporizaciones.
+ 354+ A577              ;---------------------------------------------------------------------------------------------------------------
  355+ A577
- 356+ A577 04           Clock_explosion db 4										; Temporización de las explosiones, (velocidad de la explosión).
- 357+ A578 05           Clock_explosion_Amadeus db 5
- 358+ A579 64           Temp_new_live db 100										; Tiempo que tarda en aparecer una nueva nave Amadeus tras ser destruida.
- 359+ A57A
- 360+ A57A 85 A2        RND_SP defw Numeros_aleatorios								; Puntero que se irá desplazando por el SET de nº aleatorios.
- 361+ A57C              ;Puntero_num_aleatorios_disparos defw Numeros_aleatorios		; Puntero que se irá desplazando por el SET de nº aleatorios, (para generar disparos de entidades).
- 362+ A57C 00           Numero_rnd_disparos db 0
- 363+ A57D
- 364+ A57D 00           Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva entidad.
- 365+ A57E 00           Repone_CLOCK_disparos db 0									; Reloj decreciente.
- 366+ A57F 00           CLOCK_disparos_de_entidades db 0
- 367+ A580
- 368+ A580 00 00        Start_counter defw 0 										; Temporizador. Espera la pulsación de "FIRE" en los menús KEYBOARD y KEMPSTON.
- 369+ A582 05           Start_counter_2 db $05 										; 2º Temporizador, (3 bytes counter). Espera la pulsación "FIRE" en el menú KEMPSTON.
- 370+ A583
- 371+ A583              ;---------------------------------------------------------------------------------------------------------------
+ 356+ A577              ; Relojes y temporizaciones.
+ 357+ A577
+ 358+ A577 04           Clock_explosion db 4										; Temporización de las explosiones, (velocidad de la explosión).
+ 359+ A578 05           Clock_explosion_Amadeus db 5
+ 360+ A579 64           Temp_new_live db 100										; Tiempo que tarda en aparecer una nueva nave Amadeus tras ser destruida.
+ 361+ A57A
+ 362+ A57A 85 A2        RND_SP defw Numeros_aleatorios								; Puntero que se irá desplazando por el SET de nº aleatorios.
+ 363+ A57C              ;Puntero_num_aleatorios_disparos defw Numeros_aleatorios		; Puntero que se irá desplazando por el SET de nº aleatorios, (para generar disparos de entidades).
+ 364+ A57C 00           Numero_rnd_disparos db 0
+ 365+ A57D
+ 366+ A57D 00           Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva entidad.
+ 367+ A57E 00           Repone_CLOCK_disparos db 0									; Reloj decreciente.
+ 368+ A57F 00           CLOCK_disparos_de_entidades db 0
+ 369+ A580
+ 370+ A580 00 00        Start_counter defw 0 										; Temporizador. Espera la pulsación de "FIRE" en los menús KEYBOARD y KEMPSTON.
+ 371+ A582 05           Start_counter_2 db $05 										; 2º Temporizador, (3 bytes counter). Espera la pulsación "FIRE" en el menú KEMPSTON.
  372+ A583
- 373+ A583              ; Gestión de NIVELES.
+ 373+ A583              ;---------------------------------------------------------------------------------------------------------------
  374+ A583
- 375+ A583
+ 375+ A583              ; Gestión de NIVELES.
  376+ A583
- 377+ A583 C0 A0        Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1
- 378+ A585
- 379+ A585 00 00        Puntero_de_entidades defw 0									; Este puntero se va desplazando por los distintos bytes_
- 380+ A587              ; 															; _ que definen el NIVEL.
- 381+ A587
- 382+ A587
- 383+ A587              ; ---------------------------------------------------------------------------------------------------------------
+ 377+ A583
+ 378+ A583
+ 379+ A583 C0 A0        Puntero_indice_de_almacenes defw Almacen_de_movimientos_masticados_1
+ 380+ A585
+ 381+ A585 00 00        Puntero_de_entidades defw 0									; Este puntero se va desplazando por los distintos bytes_
+ 382+ A587              ; 															; _ que definen el NIVEL.
+ 383+ A587
  384+ A587
- 385+ A587              ; Temporizaciones Shield.
+ 385+ A587              ; ---------------------------------------------------------------------------------------------------------------
  386+ A587
- 387+ A587
- 388+ A587              ; Temporizaciones Shield.
+ 387+ A587              ; Temporizaciones Shield.
+ 388+ A587
  389+ A587
- 390+ A587 04 01 04 01  Datos_Shield db 4,1,4,1										; Tiempos. (Frecuencia del parpadeo de Amadeus).
- 391+ A58B 00 00        Puntero_datos_shield defw 0									; Señala distintos tiempos para introducirlos en (Shield_2).
- 392+ A58D 64           Shield db 100												; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".
- 393+ A58E 00           Shield_2 db 0 												; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
- 394+ A58F 00           Shield_3 db 0
- 395+ A590
- 396+ A590              ; HUB
+ 390+ A587              ; Temporizaciones Shield.
+ 391+ A587
+ 392+ A587 04 01 04 01  Datos_Shield db 4,1,4,1										; Tiempos. (Frecuencia del parpadeo de Amadeus).
+ 393+ A58B 00 00        Puntero_datos_shield defw 0									; Señala distintos tiempos para introducirlos en (Shield_2).
+ 394+ A58D 64           Shield db 100												; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".
+ 395+ A58E 00           Shield_2 db 0 												; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
+ 396+ A58F 00           Shield_3 db 0
  397+ A590
- 398+ A590
+ 398+ A590              ; HUB
  399+ A590
  400+ A590
- 401+ A590              ; Sounds:
+ 401+ A590
  402+ A590
- 403+ A590 00 00        Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
- 404+ A592 00           Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
- 405+ A593 A0 00        Laser_sound defw Laser_sound_init_value
- 406+ A595 00 00        Shot_sound defw 0
- 407+ A597 00 00        Burst_sound defw 0
- 408+ A599 00 00        Shield_sound defw 0
- 409+ A59B
- 410+ A59B              ; Varios:
+ 403+ A590              ; Sounds:
+ 404+ A590
+ 405+ A590 00 00        Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
+ 406+ A592 00           Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
+ 407+ A593 A0 00        Laser_sound defw Laser_sound_init_value
+ 408+ A595 00 00        Shot_sound defw 0
+ 409+ A597 00 00        Burst_sound defw 0
+ 410+ A599 00 00        Shield_sound defw 0
  411+ A59B
- 412+ A59B 00           Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
- 413+ A59C 00           Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
- 414+ A59D 00           Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
- 415+ A59E 50           Temp_Amadeus_exit db 80										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
- 416+ A59F
- 417+ A59F              Variables_DRAW1: 											; Estas variables no se inicializan si avanzamos de nivel.
+ 412+ A59B              ; Varios:
+ 413+ A59B
+ 414+ A59B 00           Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
+ 415+ A59C 00           Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
+ 416+ A59D 00           Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
+ 417+ A59E 50           Temp_Amadeus_exit db 80										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
  418+ A59F
- 419+ A59F 01           Nivel db 1													; Nivel actual del juego.
- 420+ A5A0 CE A0        Puntero_indice_NIVELES defw Indice_de_niveles
- 421+ A5A2 FA A0        Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
- 422+ A5A4 03           Lives db 3
- 423+ A5A5 03           Shields db 3 												; Nº de Shields
- 424+ A5A6
- 425+ A5A6 E8 A0        Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
- 426+ A5A8 D6 A0        Puntero_de_vidas defw Indice_de_vidas
- 427+ A5AA
- 428+ A5AA 00           Entidades_BCD_unidades db 0
- 429+ A5AB 00           Entidades_BCD_decenas db 0
- 430+ A5AC
- 431+ A5AC 00 00        Puntero_unidades_grandes defw 0
- 432+ A5AE 00 00        Puntero_decenas_grandes defw 0
- 433+ A5B0
- 434+ A5B0 46           Attr_big_counter db %01000110
- 435+ A5B1
- 436+ A5B1              ; SCORE:
+ 419+ A59F              Variables_DRAW1: 											; Estas variables no se inicializan si avanzamos de nivel.
+ 420+ A59F
+ 421+ A59F 01           Nivel db 1													; Nivel actual del juego.
+ 422+ A5A0 CE A0        Puntero_indice_NIVELES defw Indice_de_niveles
+ 423+ A5A2 FA A0        Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
+ 424+ A5A4 03           Lives db 3
+ 425+ A5A5 03           Shields db 3 												; Nº de Shields
+ 426+ A5A6
+ 427+ A5A6 E8 A0        Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
+ 428+ A5A8 D6 A0        Puntero_de_vidas defw Indice_de_vidas
+ 429+ A5AA
+ 430+ A5AA 00           Entidades_BCD_unidades db 0
+ 431+ A5AB 00           Entidades_BCD_decenas db 0
+ 432+ A5AC
+ 433+ A5AC 00 00        Puntero_unidades_grandes defw 0
+ 434+ A5AE 00 00        Puntero_decenas_grandes defw 0
+ 435+ A5B0
+ 436+ A5B0 46           Attr_big_counter db %01000110
  437+ A5B1
- 438+ A5B1 00 00        Score_hex defw 0
- 439+ A5B3
- 440+ A5B3 00           Score_BCD_unidades db 0
- 441+ A5B4 00           Score_BCD_decenas db 0
- 442+ A5B5 00           Score_BCD_centenas db 0
- 443+ A5B6 00           Score_BCD_unidades_de_millar db 0
- 444+ A5B7 00           Score_BCD_decenas_de_millar db 0
- 445+ A5B8 80 3D        Puntero_de_unidades_Score defw Cero_Score
- 446+ A5BA 80 3D        Puntero_de_decenas_Score defw Cero_Score
- 447+ A5BC 80 3D        Puntero_de_centenas_Score defw Cero_Score
- 448+ A5BE 80 3D        Puntero_de_um_Score defw Cero_Score
- 449+ A5C0 80 3D        Puntero_de_dm_Score defw Cero_Score
- 450+ A5C2
- 451+ A5C2 00           Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
- 452+ A5C3              ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
- 453+ A5C3
- 454+ A5C3              Variables_DRAW2:
+ 438+ A5B1              ; SCORE:
+ 439+ A5B1
+ 440+ A5B1 00 00        Score_hex defw 0
+ 441+ A5B3
+ 442+ A5B3 00           Score_BCD_unidades db 0
+ 443+ A5B4 00           Score_BCD_decenas db 0
+ 444+ A5B5 00           Score_BCD_centenas db 0
+ 445+ A5B6 00           Score_BCD_unidades_de_millar db 0
+ 446+ A5B7 00           Score_BCD_decenas_de_millar db 0
+ 447+ A5B8 80 3D        Puntero_de_unidades_Score defw Cero_Score
+ 448+ A5BA 80 3D        Puntero_de_decenas_Score defw Cero_Score
+ 449+ A5BC 80 3D        Puntero_de_centenas_Score defw Cero_Score
+ 450+ A5BE 80 3D        Puntero_de_um_Score defw Cero_Score
+ 451+ A5C0 80 3D        Puntero_de_dm_Score defw Cero_Score
+ 452+ A5C2
+ 453+ A5C2 00           Score_Ctrl db 0 											; Byte de control. Se utiliza para no mostrar todos los dígitos de Score.
+ 454+ A5C3              ; 															; Se irán imprimiendo dñigitos conforme la puntuación vaya creciendo.
  455+ A5C3
- 456+ A5C3              ; --------------------------------------------------
- 457+ A5C3              ;
- 458+ A5C3              ;	Estas variables no se inicializan:
- 459+ A5C3
- 460+ A5C3 00           Ctrl_7 db 0 																			; Variable de Control que no se inicializa al superar nivel.
- 461+ A5C4              ;
- 462+ A5C4              ; 																						; BIT 0, "1" Hay que imprimir la puntuación máxima en el menú principal. También indica que hemos terminado de introducir el nombre.
- 463+ A5C4              ; 																						; BIT 1, "1" JOYSTICK KEMPSTON activado.
- 464+ A5C4
- 465+ A5C4 00 00        Score_hex_max defw 0
- 466+ A5C6
- 467+ A5C6              ; Name NEW RECORD.!!!!!
+ 456+ A5C3              Variables_DRAW2:
+ 457+ A5C3
+ 458+ A5C3              ; --------------------------------------------------
+ 459+ A5C3              ;
+ 460+ A5C3              ;	Estas variables no se inicializan:
+ 461+ A5C3
+ 462+ A5C3 00           Ctrl_7 db 0 																			; Variable de Control que no se inicializa al superar nivel.
+ 463+ A5C4              ;
+ 464+ A5C4              ; 																						; BIT 0, "1" Hay que imprimir la puntuación máxima en el menú principal. También indica que hemos terminado de introducir el nombre.
+ 465+ A5C4              ; 																						; BIT 1, "1" JOYSTICK KEMPSTON activado.
+ 466+ A5C4
+ 467+ A5C4 00 00        Score_hex_max defw 0
  468+ A5C6
- 469+ A5C6 99 A2        Puntero_del_nombre_del_campeon defw Nombre_del_campeon
- 470+ A5C8 05           Contador_de_caracteres_del_nombre_del_campeon db 5 										; El nombre del ganador tiene 5 caracteres.
- 471+ A5C9
- 472+ A5C9              ; Key code BOX.
- 473+ A5C9              ; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
- 474+ A5C9              ; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
- 475+ A5C9
- 476+ A5C9 00           Desplazamiento_level_msg db 0
- 477+ A5CA 00           Counter_msg_char db 0
- 478+ A5CB
- 479+ A5CB              ; Control de Amadeus, (KEY CODES).
+ 469+ A5C6              ; Name NEW RECORD.!!!!!
+ 470+ A5C6
+ 471+ A5C6 99 A2        Puntero_del_nombre_del_campeon defw Nombre_del_campeon
+ 472+ A5C8 05           Contador_de_caracteres_del_nombre_del_campeon db 5 										; El nombre del ganador tiene 5 caracteres.
+ 473+ A5C9
+ 474+ A5C9              ; Key code BOX.
+ 475+ A5C9              ; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
+ 476+ A5C9              ; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
+ 477+ A5C9
+ 478+ A5C9 00           Desplazamiento_level_msg db 0
+ 479+ A5CA 00           Counter_msg_char db 0
  480+ A5CB
- 481+ A5CB 00           No_repeat_key_code db 0
- 482+ A5CC
- 483+ A5CC 24           Move_LEFT db $24
- 484+ A5CD 1C           Move_RIGHT db $1c
- 485+ A5CE 04           Move_FIRE db $04
- 486+ A5CF 20           Move_SHIELD db $20
- 487+ A5D0
- 488+ A5D0 31           Move_LEFT_ASCII_CODE db "1"
- 489+ A5D1 00 00 00...  	ds 5
- 490+ A5D6 32           Move_RIGHT_ASCII_CODE db "2"
- 491+ A5D7 00 00 00...  	ds 5
- 492+ A5DC 35           Move_FIRE_ASCII_CODE db "5"
- 493+ A5DD 00 00 00...  	ds 5
- 494+ A5E2 20           Move_SHIELD_ASCII_CODE db " "
- 495+ A5E3 00 00 00...  	ds 5
- 496+ A5E8
+ 481+ A5CB              ; Control de Amadeus, (KEY CODES).
+ 482+ A5CB
+ 483+ A5CB 00           No_repeat_key_code db 0
+ 484+ A5CC
+ 485+ A5CC 24           Move_LEFT db $24
+ 486+ A5CD 1C           Move_RIGHT db $1c
+ 487+ A5CE 04           Move_FIRE db $04
+ 488+ A5CF 20           Move_SHIELD db $20
+ 489+ A5D0
+ 490+ A5D0 31           Move_LEFT_ASCII_CODE db "1"
+ 491+ A5D1 00 00 00...  	ds 5
+ 492+ A5D6 32           Move_RIGHT_ASCII_CODE db "2"
+ 493+ A5D7 00 00 00...  	ds 5
+ 494+ A5DC 35           Move_FIRE_ASCII_CODE db "5"
+ 495+ A5DD 00 00 00...  	ds 5
+ 496+ A5E2 20           Move_SHIELD_ASCII_CODE db " "
+ 497+ A5E3 00 00 00...  	ds 5
+ 498+ A5E8
 # file closed: Variables_de_programa.asm
   18  A5E8
   19  A5E8              	include "Patrones_de_mov.asm"
