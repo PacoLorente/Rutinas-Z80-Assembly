@@ -2091,18 +2091,30 @@ Intercambia_1_byte
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	17/02/25
+;	8/9/26
 ;
 ;	INPUTS: IX contiene (Puntero_de_impresion)
 ;			IY contiene (Puntero_objeto)
+
+;	El nibble alto del byte alto de una dirección de memoria de pantalla sólo utiliza los bits 6 y 4 para codificar dicha dirección:
+;
+;	$4xxx, $5xxx ........ %0100 xxxx xxxx xxxx, %0101 xxxx xxxx xxxx
+;
+;	Como los bits 7 y 5 quedan libres, los utilizaremos para codificar el n° de (Columnas) que podremos imprimir del sprite.
+;
+;	La rutina también posiciona (Puntero_objeto) una o dos columnas a la derecha cuando estamos apareciendo o desapareciendo por la parte_
+;	_izquierda de la pantalla.
+
 
 Codifica_Puntero_de_impresion:
 
 	ld a,(Columnas)
 	dec a
 	jr z,Una_Columna
+
 	dec a
 	jr z,Dos_Columnas
+
 	ret
 
 Dos_Columnas 
@@ -2123,19 +2135,8 @@ Dos_Columnas
 
 Una_Columna 					
 
-; (Puntero_objeto) en ROM ????
-
 	ld a,ixh
-	bit 6,a
-	jr nz,2F
-
-; Cuando estamos apareciendo por la izquierda y el objeto está en ROM, IXH ="$f_".
-
-	set 7,a
-	set 6,a
-	set 4,a
-
-2 set 5,a
+	set 5,a
 	ld ixh,a
 
 	jr 1B
