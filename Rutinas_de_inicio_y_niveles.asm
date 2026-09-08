@@ -452,8 +452,7 @@ Movimientos_masticados_construidos:
 	ld hl,(Puntero_indice_master)
 	call Extrae_address
 
-	ld e,l
-	ld d,h
+	ex de,hl
 
 	call Parametros_de_bandeja_DRAW_a_Caja_Master	 				; Caja de entidades Master completa.
 
@@ -465,9 +464,8 @@ Movimientos_masticados_construidos:
 	xor a
 	ld (Ctrl_3),a 													; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
 ;																	; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados.
-	ld hl,Clase
+	ld hl,Bandeja_DRAW
 	ld bc,Gestion_de_ENTIDADES_y_CAJAS-Bandeja_DRAW
-
 	dec bc
 
 	call Clean_mem
@@ -847,8 +845,6 @@ Construye_movimientos_masticados_entidad:
 ; ****************************************************************************
 ; ****************************************************************************
 ; ****************************************************************************
-
-	jr $
 
 	call Codifica_Puntero_de_impresion
 	call Guarda_movimiento_masticado
@@ -1394,8 +1390,8 @@ Prepara_Cajas_de_Entidades:
 
 	ld bc,14
 	ldir															; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
-
 ;																	; DE apunta ahora al 1er .db de la siguiente caja de entidades.
+	jr $
 
 	call Scanlines_generator
 
@@ -1784,6 +1780,7 @@ Inicializa_Numero_parcial_de_entidades
 	ld a,4
 	ld (Numero_parcial_de_entidades),a
 	ld b,a
+
 	ret
 
 ; El nº total de entidades no supera el nº de cajas de entidades. 
@@ -1793,6 +1790,7 @@ Inicializa_Numero_parcial_de_entidades
 	ld b,a
 	xor a
 	ld (Numero_de_entidades),a
+
 	ret
 
 ;---------------------------------------------------------------------------------------------------------------
