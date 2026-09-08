@@ -436,6 +436,8 @@ Prepara_Cajas_Master:
 
 	call Construye_movimientos_masticados_entidad
 
+	jr $
+
 Movimientos_masticados_construidos:
 
 	ld hl,(Puntero_indice_master)
@@ -818,9 +820,6 @@ Construye_movimientos_masticados_entidad:
 ; ****************************************************************************
 
 	call Codifica_Puntero_de_impresion
-
-	jr $
-
 	call Guarda_movimiento_masticado
 	call Movimiento
 
