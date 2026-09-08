@@ -1079,9 +1079,12 @@ Intercambia_1_byte
 
 Codifica_Puntero_de_impresion:
 
+
+
 	ld a,(Columnas)
 	dec a
 	jr z,Una_Columna
+
 	dec a
 	jr z,Dos_Columnas
 	ret
@@ -1090,7 +1093,8 @@ Dos_Columnas
 
 	ld a,ixh
 	set 7,a
-	ld ixh,a
+	ld ixh,a 												; El bit_7 de una dirección de memoria de pantalla siempre estará a "0", ($4xxx - $5xxx).
+;															; Por eso utilizamos el bit_7 para codificar el n° de (Columnas).
 
 ;	Si nos encontramos en el lado derecho de la pantalla no modificamos (Puntero_objeto).	
 
