@@ -1202,11 +1202,9 @@ Take_movement:
 
 	ret
 
-; Decodificamos (Puntero_de_impresion) para almacenarlo correctamente.
-
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
-;	9/8/25
+;	8/9/26
 ;
 ;
 ;	INPUTS: IX apunta al .db de la caja de entidades correspondiente.
@@ -1218,37 +1216,27 @@ Take_movement:
 
 Decodifica_Puntero_de_impresion:
 
-;	Inicialmente suponemos que la entidad está apareciendo por el lado izquierdo de la pantalla, (1 Columna) y (Puntero_objeto) se encuentra en ROM, (por debajo de $4000).
+;	Inicialmente suponemos que la entidad está apareciendo por el lado izquierdo o derecho de la pantalla, (1 Columna).
 
-	ld a,1															
+	ld a,1
 	ld (Columnas),a
 
-	ld a,b
-	and $f0
-	cp $f0
-	jr nz,1F
-
-	res 7,b
-	res 6,b
-	jr 2F
-
-1 bit 6,b
-	jr z,3F
-
 	bit 5,b
-	jr z,3F
+	jr z,1F
+
 	res 5,b
 	jr 2F
 
 ;	Dos Columnas ???
 
-3 ld a,3
+1 ld a,3
 	ld (Columnas),a
 
 	bit 7,b
 	jr z,2F
 
 	res 7,b
+
 	dec a
 	ld (Columnas),a
 
