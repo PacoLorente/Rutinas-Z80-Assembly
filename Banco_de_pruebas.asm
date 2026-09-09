@@ -494,8 +494,6 @@ Clase db 0  												; A cada entidad se le asigna un nº o (Clase) para pode
 
 Tipo db 0													; Cada `tipo? de Entidad tiene unas características únicas que lo distinguen de otros tipos.
 ; 															; Las entidades del mismo (Tipo) comparte el MISMO PATRÓN DE MOVIMIENTO. 															
-Coordenada_X db 0 											; Coordenada X del objeto. (En chars.)
-Coordenada_y db 0 											; Coordenada Y del objeto. (En chars.)
 
 Contador_de_vueltas db 0									; Contador de vueltas de entidades. Inicialmente su valor es "1". El bit se desplaza una posición_
 ; 															  _a la izquierda cada vez que la entidaddesaparece por la parte baja de la pantalla.
@@ -592,6 +590,9 @@ Filas db 0												    ; Filas. [DRAW]. - 2ª Funcion tras haber generado los
 
 Columns db 0 												; Nº de columnas. [DRAW]. - 2ª Funcion tras haber generado los movimientos masticados: 
 ;															; Almacena un bit que iremos alternando: "0" a "1" mediante una función XOR. Se utiliza para cambiar los attr. de la explosión de Amadeus, (rojo - amarillo). 														
+
+Coordenada_X db 0 											; Coordenada X del objeto. (En chars.)
+Coordenada_y db 0 											; Coordenada Y del objeto. (En chars.)
 
 Posicion_actual defw 0										; Dirección actual del Sprite. [DRAW]
 Puntero_objeto defw 0										; Donde están los datos para pintar el Sprite.

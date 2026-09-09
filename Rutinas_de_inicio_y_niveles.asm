@@ -368,7 +368,7 @@ Inicia_albumes_de_disparos:
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   23/6/25
+;   9/9/26
 ;
 ;	Prepara las CAJAS MASTER y genera los movimientos masticados de todos los (Tipo)s de entidades que conforman el nivel.
 ;
@@ -398,6 +398,7 @@ Prepara_Cajas_Master:
 ;	En 1er lugar cargaremos la bandeja DRAW con la definición de esta (Clase) de entidad para poder generar todos los movimientos masticados.
 
 	ld a,c 															; (A) = (Clase).
+	ld (Clase),a 													; (Clase) de la entidad en la Bandeja Draw. La definición de la entidad no contiene (Clase).
 
 	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
@@ -405,6 +406,8 @@ Prepara_Cajas_Master:
 ;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
 ;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
 ;	coreografías distintas.
+
+	jr $
 
 	ld b,7   											 						
 	ld hl,Numeros_aleatorios_baile 							
@@ -436,7 +439,7 @@ Prepara_Cajas_Master:
 
 	call Construye_movimientos_masticados_entidad
 
-	jr $
+;	jr $
 
 Movimientos_masticados_construidos:
 
@@ -1649,7 +1652,7 @@ Situa_en_datos_de_definicion:
 
 ; ----------------------------------------------------------------------------------------------------------
 ;
-;	15/4/25
+;	9/9/26
 ;
 ;	Introduce una definición de entidad en la bandeja DRAW para generar sus "movimientos masticados".
 ;
@@ -1659,36 +1662,41 @@ Situa_en_datos_de_definicion:
 ;	MODIFICA: HL,DE y BC
 
 
-Definicion_de_entidad_a_bandeja_DRAW 	
+Definicion_de_entidad_a_bandeja_DRAW:
 
-	ld de,Bandeja_DRAW   	 										; DE apunta al 1er .db de la bandeja_DRAW, (Clase).
-	ld bc,2
-	ldir 															; Volcamos (Clase) y (Tipo).
+	jr $
 
-	ld de,Filas														; Volcamos (Filas) y (Columns).
-	ld bc,2
-	ldir															; Hemos volcado (Contador_de_vueltas), (Indice_Sprite_der) y (Indice_Sprite_izq).
-;																	; HL, (origen), apunta ahora al .db (Posicion_inicio), hay que situar DE.
-	ld de,Contador_de_vueltas 
+	ld de,Tipo   	 												; DE apunta al 2° .db de la bandeja_DRAW, (Tipo).
 	ld a,(hl)
-	ld (de),a
-	inc hl															; Hemos volcado (Posicion_inicio) y (Cuad_objeto).
+	ld (de),a 														; Volcamos (Tipo).
+
+	inc hl
+
+	ld de,Filas
+	ld bc,2
+	ldir							 								; Volcamos (Filas) y (Columns).
+
+	ld de,Contador_de_vueltas
+	ld a,(hl)
+	ld (de),a 														; (Contador_de_vueltas).
+
+	inc hl
 
 	ld de,Indice_Sprite_der
 	ld bc,4
-	ldir 															; Hemos volcado (Puntero_de_almacen_de_mov_masticados).
+	ldir 															; Volcamos (Indice_Sprite_der) y (Indice_Sprite_izq).
 
 	ld de,Posicion_inicio
-	ld bc,3															; 3 FRAMES de explosión.!!!!!!!!!!!!!!
-	ldir 															; Vuelco (Frames_explosion).
+	ld bc,2
+	ldir 															; (Posicion_inicio).
 
 	ld de,Puntero_de_almacen_de_mov_masticados
 	ld bc,2
 	ldir
 
 	ld de,Attr
-	ld a,(hl) 														; Volcamos (Attr).
-	ld (de),a
+	ld a,(hl)
+	ld (de),a 														; Volcamos (Attr).
 
 	ret
 
