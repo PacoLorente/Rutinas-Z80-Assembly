@@ -407,8 +407,6 @@ Prepara_Cajas_Master:
 ;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
 ;	coreografías distintas.
 
-	jr $
-
 	ld b,7   											 						
 	ld hl,Numeros_aleatorios_baile 							
 	call Derivando_RND 										 		; Generamos 7 nº RND para construir los mov. masticados.
@@ -438,8 +436,6 @@ Prepara_Cajas_Master:
 ;	Generamos "Movimientos masticados" de la entidad.
 
 	call Construye_movimientos_masticados_entidad
-
-;	jr $
 
 Movimientos_masticados_construidos:
 
@@ -1342,10 +1338,14 @@ Prepara_Cajas_de_Entidades:
 	push de
 	pop ix 															; ! A partir de ahora IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).
 
-	ld bc,14
+	ld bc,12
 	ldir															; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
 
 ;																	; DE apunta ahora al 1er .db de la siguiente caja de entidades.
+
+
+	jr $
+
 
 	call Scanlines_generator
 
@@ -1652,7 +1652,7 @@ Situa_en_datos_de_definicion:
 
 ; ----------------------------------------------------------------------------------------------------------
 ;
-;	9/9/26
+;	10/9/26
 ;
 ;	Introduce una definición de entidad en la bandeja DRAW para generar sus "movimientos masticados".
 ;
@@ -1663,8 +1663,6 @@ Situa_en_datos_de_definicion:
 
 
 Definicion_de_entidad_a_bandeja_DRAW:
-
-	jr $
 
 	ld de,Tipo   	 												; DE apunta al 2° .db de la bandeja_DRAW, (Tipo).
 	ld a,(hl)
@@ -1690,10 +1688,6 @@ Definicion_de_entidad_a_bandeja_DRAW:
 	ld bc,2
 	ldir 															; (Posicion_inicio).
 
-	ld de,Puntero_de_almacen_de_mov_masticados
-	ld bc,2
-	ldir
-
 	ld de,Attr
 	ld a,(hl)
 	ld (de),a 														; Volcamos (Attr).
@@ -1708,7 +1702,7 @@ Definicion_de_entidad_a_bandeja_DRAW:
 Parametros_de_bandeja_DRAW_a_Caja_Master:
 
 	ld hl,Bandeja_DRAW
-	ld bc,14
+	ld bc,12
 	ldir													 
 
 	ret
