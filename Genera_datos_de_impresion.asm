@@ -25,8 +25,10 @@ Scanlines_generator:
 	call Take_movement
 
     ld a,d
-    add e
+    or e
     ret z                                                           ; Movimiento NO VÁLIDO. Reiniciamos danza.
+
+    jr $
 
     call Decodifica_Puntero_de_impresion
 

@@ -2160,7 +2160,7 @@ Ajusta_Puntero_objeto:
 
 ; ------------------------------------------
 ;
-;	9/8/25
+;	10/9/26
 ;
 ;	Extraemos movimiento del (Almacen_de_mov_masticados):
 ;
@@ -2176,44 +2176,35 @@ Ajusta_Puntero_objeto:
 
 Take_movement:
 
-	ld l,(ix+10)
-	ld h,(ix+11)
-
-;	(Contador_de_mov_masticados) en HL.
+	ld l,(ix+8)
+	ld h,(ix+9)                                            ; (Contador_de_mov_masticados) en HL.
 
 	ld a,h
-	and a
+	or l
 	jr nz,1F
 
-	inc l
-	dec l
-
-	call z,Reinicia_entidad_maliciosa
-
-;	El (Contador_de_mov_masticados) no ha llegado a "0". Dec.
+	call z,Reinicia_entidad_maliciosa 					   ; El (Contador_de_mov_masticados) no ha llegado a "0". Dec.
 
 1 dec hl
 
-	ld (ix+10),l
-	ld (ix+11),h 											; (Contador_de_mov_masticados) actualizado.
+	ld (ix+8),l
+	ld (ix+9),h 											; (Contador_de_mov_masticados) actualizado.
 
-	ld l,(ix+8)
-	ld h,(ix+9) 											; (Puntero_de_almacen_de_mov_masticados) en HL.
+	ld l,(ix+6)
+	ld h,(ix+7) 											; (Puntero_de_almacen_de_mov_masticados) en HL.
 
 	ld (Stack),sp
 	ld sp,hl
 	
-	xor a
-	ld h,a
-	ld l,h													; ld hl,"0"
-
+	ld hl,0
+												
 	pop de													; (Puntero_objeto) en DE.
 	pop bc													; (Puntero_de_impresion) codificado en BC.
 
 	add hl,sp
 
-	ld (ix+8),l
-	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) de la caja de entidades actualizado.
+	ld (ix+6),l
+	ld (ix+7),h												; (Puntero_de_almacen_de_mov_masticados) de la caja de entidades actualizado.
 
 	ld sp,(Stack)
 

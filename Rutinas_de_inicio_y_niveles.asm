@@ -1232,7 +1232,7 @@ Situa_en_Caja_Master:
 
 ; -------------------------------------------------------------------------------------------------
 ;
-;	17/4/25
+;	10/9/26
 ;
 ;	Busca en las tres Cajas_Master una entidad de la (Clase) que contiene el registro A_
 ;	_para completar las Cajas_de_entidades.
@@ -1248,8 +1248,8 @@ Obtiene_datos_de_Caja_Master
 	cp (hl) 																							
 	ret z 															; RET pues esta Caja_Master es de la (Clase) que necesitamos.
 
-	inc e
-	inc e
+	inc de
+	inc de
 
 	ld (Puntero_indice_master),de
 	ex de,hl 																						
@@ -1342,10 +1342,6 @@ Prepara_Cajas_de_Entidades:
 	ldir															; Caja de entidades completa. HL apuntará ahora al 1er .db de la siguiente caja "Master".
 
 ;																	; DE apunta ahora al 1er .db de la siguiente caja de entidades.
-
-
-	jr $
-
 
 	call Scanlines_generator
 
@@ -1484,11 +1480,11 @@ Decrementa_Contador_de_mov_masticados
 
 ; ---------------------------------------------------------------------
 ;
-;	7/9/25
+;	10/9/26
 
 Reinicia_entidad_maliciosa 
 
-	ld a,(ix)
+	ld a,(ix+00)
 
 ;	(Clase) de la entidad en A.
 ;	Hemos completado todos los movimientos masticados de la entidad.
@@ -1503,17 +1499,18 @@ Reinicia_entidad_maliciosa
 
 ;	Inicializamos (Puntero_de_almacen_de_mov_masticados) y (Contador_de_mov_masticados).
 
-	ld a,l
-	add 8
-	ld l,a
+	ld bc,6
+
+	and a
+	adc hl,bc
 
 	call Extrae_address
 
-	ld (ix+8),l
-	ld (ix+9),h
+	ld (ix+6),l
+	ld (ix+7),h 								; (Puntero_de_almacen_de_mov_masticados) inicializado en la caja correspondiente.
 
-	inc e
-	inc e
+	inc de
+	inc de
 
 	ex de,hl
 
@@ -1521,8 +1518,8 @@ Reinicia_entidad_maliciosa
 
 	inc hl 																		;	(Contador_de_mov_masticados)+1. Cuando regresemos, [Take_movement] le restará una unidad.
 
-	ld (ix+10),l
-	ld (ix+11),h
+	ld (ix+8),l
+	ld (ix+9),h
 
 ;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
 ;
@@ -1545,13 +1542,13 @@ Reinicia_entidad_maliciosa
 ;	4ª vuelta: 	""	""	""	""	""  ="$10" ---   ""	 ""	  ="4".
 ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".   
 
-	sla (ix+4)														; sla x2 (Contador_de_vueltas). Inicialmente es "1".
+	sla (ix+2)														; sla x2 (Contador_de_vueltas). Inicialmente es "1".
 
-	ld a,(ix+4)   													; ld a,(Contador_de_vueltas)
+	ld a,(ix+2)   													; ld a,(Contador_de_vueltas)
 	sra a
 	sra a
 
-	ld (ix+12),a 													; ld (Velocidad),a
+	ld (ix+10),a 													; ld (Velocidad),a
 	and a
 
 ; Attr. 
@@ -1563,24 +1560,26 @@ Reinicia_entidad_maliciosa
 ; Límitador. 
 
 	ld a,$40
-	cp (ix+4)
+	cp (ix+2)
 	jr z,1F
 
 	xor a															; Siempre salimos de esta rutina con un "Z".
+
 	ret
 
 
 ;	Limita el valor de (Contador_de_vueltas) a "$40" y de (Velocidad) a "$08".
 
-1 sra (ix+4)
-	sra (ix+12)
+1 sra (ix+2)
+	sra (ix+10)
 
 	xor a															; Siempre salimos de esta rutina con un "Z".
+
 	ret
 
 ; ----- ----- ----- ----- -----
 ;
-;	27/3/25
+;	10/9/26
 ;
 ;	Define (Attr) en función de la (Velocidad).
 ;
@@ -1608,7 +1607,7 @@ Blanco ld a,%01000111
 
 Amarillo ld a,%01000110
 
-2 ld (ix+13),a
+2 ld (ix+11),a
 
 	ret
 
