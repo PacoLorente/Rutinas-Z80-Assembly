@@ -2214,7 +2214,7 @@ Take_movement:
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
-;	8/9/26
+;	11/9/26
 ;
 ;
 ;	INPUTS: IX apunta al .db de la caja de entidades correspondiente.
@@ -2250,8 +2250,8 @@ Decodifica_Puntero_de_impresion:
 	dec a
 	ld (Columnas),a
 
-2 ld (ix+6),c
-	ld (ix+7),b												; Actualiza el (Puntero_de_impresion) decodificado en la caja de entidades.
+2 ld (ix+4),c
+	ld (ix+5),b												; Actualiza el (Puntero_de_impresion) decodificado en la caja de entidades.
 
 	ld (Puntero_de_impresion),bc
 

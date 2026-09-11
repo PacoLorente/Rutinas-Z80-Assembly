@@ -23,9 +23,6 @@
 Scanlines_generator:
 
 	call Take_movement
-
-    jr $
-
     call Decodifica_Puntero_de_impresion
 
     push bc
@@ -205,12 +202,12 @@ Cargamos_registros_con_explosion_Amadeus:
 
 ; ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	6/8/25
+;	11/9/26
 ;
 ;   INPUTS:
 ;
 ;   DE contiene (Puntero_objeto).
-;   HL e IX contienen (Puntero_de_impresion).
+;   HL, IX y BC contienen (Puntero_de_impresion).
 ;
 ;   MODIFY: A,IX,HL,BC y DE.
 
@@ -227,9 +224,9 @@ Genera_datos_de_impresion:
 
 ;   1er Tercio de pantalla !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-    ld a,l
-    cp $20
-    jr c,No_scanlines                               ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
+;    ld a,l
+;    cp $20
+;    jr c,No_scanlines                               ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
 
     ld a,l
     cp $60
@@ -242,15 +239,15 @@ Genera_datos_de_impresion:
     ld a,h
     sub $40
     ld b,a                                          ; Nº de scanlines en B. Si el 1er scanline es $40XX, siendo XX la segunda fila de pantalla: [No_scanlines].
-    jr nz,2F
+;    jr nz,2F
 
 ;   Estamos en una línea $40 y apareciendo.
 
-    ld a,l
-    cp $40
-    jr c,No_scanlines                               ; Si estamos en la 2ª Fila la entidad quedaría oculta, jr [No_scanlines].
+;    ld a,l
+;    cp $40
+;    jr c,No_scanlines                               ; Si estamos en la 2ª Fila la entidad quedaría oculta, jr [No_scanlines].
 
-2 ld a,l
+    ld a,l
     add $40
     ld l,a
 
@@ -295,8 +292,11 @@ Modifica_puntero_objeto
 ;   HL y IX contienen (Puntero_de_impresion)
 ;   BC contiene Nº de scanlines a generar.
 
+    jr $
+
     call Genera_cabecera
     call Genera_scanlines
+
     ret
 
 ; -------------------------------------------------------------------
@@ -365,10 +365,16 @@ Genera_scanlines:
 
 ; ------------------------------------------------------------------------------------
 ;
-;   6/8/25
+;   11/9/26
 ;
 
 Genera_cabecera:
+
+;   La cabecera consta de 5 bytes:
+;
+;   (Puntero_objeto), 2 bytes.
+;   Nº de scanlines a imprimir, 1 byte.
+;   (Puntero_de_impresion), 2 bytes.
 
 ;   Genera cabecera, y actualiza (Scanlines_album_SP) situándolo en el movimiento de la siguiente entidad.
 ;   BC contendrá el nº de scanlines que vamos a imprimir.
@@ -378,15 +384,17 @@ Genera_cabecera:
     ld hl,(Scanlines_album_SP)
     ld (Repone_puntero_objeto),hl                   ; Copia de respaldo de (Scanlines_album_SP). Se utilizará más adelante en la tabla de pintado.
 
-    ld a,l
-    add 5
-    ld l,a
+    inc hl
+    inc hl
+    inc hl
+    inc hl
+    inc hl
 
     ld sp,hl
     ld (Scanlines_album_SP),hl                      ; Actualiza (Scanlines_album_SP). Lo sitúa en el siguiente movimiento.
 
     ld hl,0
-    adc hl,sp                                       ; HL posicionado para ir generando líneas tras la CABECERA.
+    adc hl,sp                                       ; HL posicionado para ir generando líneas tras la CABECERA. Una manera de pasar el SP a HL.
 
     push ix                                         ; (Puntero_de_impresion) al álbum de líneas.
     push bc                                         ; Nº de scanlines al álbum de líneas.
