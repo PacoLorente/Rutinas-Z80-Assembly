@@ -224,9 +224,9 @@ Genera_datos_de_impresion:
 
 ;   1er Tercio de pantalla !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-;    ld a,l
-;    cp $20
-;    jr c,No_scanlines                               ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
+    ld a,l
+    cp $20
+    jr c,No_scanlines                               ; Empezamos a generar scanlines a partir del segundo scanline de la 2ª fila de pantalla. (En la dirección $4120 se generaría 1 scan.).
 
     ld a,l
     cp $60
@@ -239,15 +239,15 @@ Genera_datos_de_impresion:
     ld a,h
     sub $40
     ld b,a                                          ; Nº de scanlines en B. Si el 1er scanline es $40XX, siendo XX la segunda fila de pantalla: [No_scanlines].
-;    jr nz,2F
+    jr nz,2F
 
 ;   Estamos en una línea $40 y apareciendo.
 
-;    ld a,l
-;    cp $40
-;    jr c,No_scanlines                               ; Si estamos en la 2ª Fila la entidad quedaría oculta, jr [No_scanlines].
-
     ld a,l
+    cp $40
+    jr c,No_scanlines                               ; Si estamos en la 2ª Fila la entidad quedaría oculta, jr [No_scanlines].
+
+2 ld a,l
     add $40
     ld l,a
 
@@ -292,9 +292,12 @@ Modifica_puntero_objeto
 ;   HL y IX contienen (Puntero_de_impresion)
 ;   BC contiene Nº de scanlines a generar.
 
+    call Genera_cabecera
+
+
     jr $
 
-    call Genera_cabecera
+
     call Genera_scanlines
 
     ret
@@ -384,11 +387,9 @@ Genera_cabecera:
     ld hl,(Scanlines_album_SP)
     ld (Repone_puntero_objeto),hl                   ; Copia de respaldo de (Scanlines_album_SP). Se utilizará más adelante en la tabla de pintado.
 
-    inc hl
-    inc hl
-    inc hl
-    inc hl
-    inc hl
+    ld a,l
+    add 5
+    ld l,a                                          ; Scanlines_album nunca tendrá cambio de byte alto.
 
     ld sp,hl
     ld (Scanlines_album_SP),hl                      ; Actualiza (Scanlines_album_SP). Lo sitúa en el siguiente movimiento.
