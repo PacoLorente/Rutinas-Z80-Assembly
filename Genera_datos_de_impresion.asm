@@ -67,6 +67,57 @@ Explosion_scanlines_generator
 
 	ret
 
+; ------------------------------------------------------------------------
+;
+;	12/9/26
+;
+;	Proporciona las coordenadas del objeto a imprimir.
+;	Fila superior "0", Columna izquierda "0".
+;
+;	INPUT:  (Puntero_de_impresion) del Sprite en HL e IX.
+;
+;           Nota: La rutina no contempla que ninguna entidad se imprima en las TRES PRIMERAS FILAS de la pantalla, (pues es zona de marcador).
+;
+;	Modifica: A,B y E.
+
+Genera_coordenadas:
+
+    ld a,l
+	and $1f
+
+	ld (Coordenada_X),a 								; Coordenada X del sprite, (0-$1f). Columnas.
+
+	call calcula_tercio
+	ld b,a 												; "0", "1" o "1" en función del tercio de pantalla.
+
+	inc b
+
+	ld e,0                                              ; Contador de Filas, inicialmente "0", (1a Fila del 1er tercio de pantalla).
+
+    ld a,l
+	and $e0                                             ; La máscara "$e0" entrega el valor de la primera columna de la Fila en la que nos encontamos:
+;
+;                                                       : Ejemplo:
+;
+;                                                       Cuando (L) contiene: "$0f", "$1c", "$08", ...etc (A) contiene "$00"
+;                                                       Cuando (L) contiene: "$2f", "$3c", "$28", ...etc (A) contiene "$20"
+;                                                       Cuando (L) contiene: "$4f", "$5c", "$48", ...etc (A) contiene "$40"
+;                                                       Cuando (L) contiene: "$6f", "$7c", "$68", ...etc (A) contiene "$60"
+;
+;                                                       etc.
+
+1 inc e                                                 ; Incrementa Fila.
+
+    sub 32
+    jr nz,1B
+
+    djnz 1B
+
+    ld a,e
+	ld (Coordenada_y),a
+
+    ret
+
 ; ---------------------------------------------------------------------------------------------------------------------
 ;
 ;   07/08/25

@@ -3190,7 +3190,6 @@ Next_level:
 	include "Rutinas_de_inicio_y_niveles.asm"
 	include "calcula_tercio.asm"
 	include "Cls.asm"
-	include "Genera_coordenadas.asm"
 	include "Transiciones_y_efectos.asm"
 	include "Genera_datos_de_impresion.asm"
 	include "Pinta_Sprites.asm"
