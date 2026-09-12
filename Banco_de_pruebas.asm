@@ -2210,53 +2210,6 @@ Take_movement:
 
 	ret
 
-; Decodificamos (Puntero_de_impresion) para almacenarlo correctamente.
-
-; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-;
-;	11/9/26
-;
-;
-;	INPUTS: IX apunta al .db de la caja de entidades correspondiente.
-;			BC contiene (Puntero_de_impresion) codificado.
-;
-;	OUTPUT: BC contiene el (Puntero_de_impresion) decodificdo.
-;
-;			Se actualizan las variables: (Puntero_de_impresion) y (Columnas) de la bandeja DRAW.
-
-Decodifica_Puntero_de_impresion:
-
-;	Inicialmente suponemos que la entidad está apareciendo por el lado izquierdo o derecho de la pantalla, (1 Columna).
-
-	ld a,1															
-	ld (Columnas),a
-
-	bit 5,b
-	jr z,1F
-
-	res 5,b
-	jr 2F
-
-;	Dos Columnas ???
-
-1 ld a,3
-	ld (Columnas),a
-
-	bit 7,b
-	jr z,2F
-
-	res 7,b
-
-	dec a
-	ld (Columnas),a
-
-2 ld (ix+4),c
-	ld (ix+5),b												; Actualiza el (Puntero_de_impresion) decodificado en la caja de entidades.
-
-	ld (Puntero_de_impresion),bc
-
-	ret
-
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
 ;	1/4/25
@@ -3175,7 +3128,6 @@ Next_level:
 	include "Rutinas_de_inicio_y_niveles.asm"
 	include "calcula_tercio.asm"
 	include "Cls.asm"
-	include "Genera_coordenadas.asm"
 	include "Transiciones_y_efectos.asm"
 	include "Genera_datos_de_impresion.asm"
 	include "Pinta_Sprites.asm"

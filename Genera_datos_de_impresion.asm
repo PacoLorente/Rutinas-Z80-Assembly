@@ -44,6 +44,10 @@ Explosion_scanlines_generator
 	call Genera_coordenadas
 	pop de                                                          ; POP (Puntero_objeto).
 
+
+	jr $
+
+
 	pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
 	ld bc,(Coordenada_X)
@@ -63,7 +67,101 @@ Explosion_scanlines_generator
     res 7,a
 	ld (Ctrl_4),a
 
-;	call Decrementa_Contador_de_mov_masticados                     ; Actualizamos (Contador_de_mov_masticados) tras la foto.
+	ret
+
+; ------------------------------------------------------------------------
+;
+;	12/9/26
+;
+;	Proporciona las coordenadas del objeto a imprimir.
+;	Fila superior "0", Columna izquierda "0".
+;
+;	INPUT:  (Puntero_de_impresion) del Sprite en HL e IX.
+;
+;           Nota: La rutina no contempla que ninguna entidad se imprima en las TRES PRIMERAS FILAS de la pantalla, (pues es zona de marcador).
+;
+;	Modifica: A,B y E.
+
+Genera_coordenadas:
+
+    ld a,l
+	and $1f
+
+	ld (Coordenada_X),a 								; Coordenada X del sprite, (0-$1f). Columnas.
+
+	call calcula_tercio
+	ld b,a 												; "0", "1" o "1" en función del tercio de pantalla.
+
+	inc b
+
+	ld e,0                                              ; Contador de Filas, inicialmente "0", (1a Fila del 1er tercio de pantalla).
+
+    ld a,l
+	and $e0                                             ; La máscara "$e0" entrega el valor de la primera columna de la Fila en la que nos encontamos:
+;
+;                                                       : Ejemplo:
+;
+;                                                       Cuando (L) contiene: "$0f", "$1c", "$08", ...etc (A) contiene "$00"
+;                                                       Cuando (L) contiene: "$2f", "$3c", "$28", ...etc (A) contiene "$20"
+;                                                       Cuando (L) contiene: "$4f", "$5c", "$48", ...etc (A) contiene "$40"
+;                                                       Cuando (L) contiene: "$6f", "$7c", "$68", ...etc (A) contiene "$60"
+;
+;                                                       etc.
+
+1 inc e                                                 ; Incrementa Fila.
+
+    sub 32
+    jr nz,1B
+
+    djnz 1B
+
+    ld a,e
+	ld (Coordenada_y),a
+
+    ret
+
+; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+;
+;	11/9/26
+;
+;
+;	INPUTS: IX apunta al .db de la caja de entidades correspondiente.
+;			BC contiene (Puntero_de_impresion) codificado.
+;
+;	OUTPUT: BC contiene el (Puntero_de_impresion) decodificdo.
+;
+;			Se actualizan las variables: (Puntero_de_impresion) y (Columnas) de la bandeja DRAW.
+
+Decodifica_Puntero_de_impresion:
+
+;	Inicialmente suponemos que la entidad está apareciendo por el lado izquierdo o derecho de la pantalla, (1 Columna).
+
+	ld a,1
+	ld (Columnas),a
+
+	bit 5,b
+	jr z,1F
+
+	res 5,b
+	jr 2F
+
+;	Dos Columnas ???
+
+1 ld a,3
+	ld (Columnas),a
+
+	bit 7,b
+	jr z,2F
+
+	res 7,b
+
+	dec a
+	ld (Columnas),a
+
+2 ld (ix+4),c
+	ld (ix+5),b												; Actualiza el (Puntero_de_impresion) decodificado en la caja de entidades.
+
+	ld (Puntero_de_impresion),bc
 
 	ret
 
@@ -293,18 +391,13 @@ Modifica_puntero_objeto
 ;   BC contiene Nº de scanlines a generar.
 
     call Genera_cabecera
-
-
-    jr $
-
-
     call Genera_scanlines
 
     ret
 
 ; -------------------------------------------------------------------
 
-No_scanlines
+No_scanlines:
 
     ld hl,Ctrl_4
     set 7,(hl)                                       ; Indica que esta unidad no se imprime. NO SE AÑADE A LA TABLA DE PINTADO.
@@ -318,16 +411,17 @@ No_scanlines
 
 ;   IX y HL contienen (Puntero_de_impresion). DE contiene (Puntero_objeto).
 
-Completo_o_desapareciendo
+Completo_o_desapareciendo:
 
     call Calcula_numero_de_scans
     call Genera_cabecera
     call Genera_scanlines
+
     ret
 
 ; ------------------------------------------------------------------------------------
 ;
-;   2/8/25
+;   12/9/26
 ;
 ;   INPUTS: HL (Scanlines_album).
 ;           DE (Puntero_objeto).
@@ -361,8 +455,8 @@ Genera_scanlines:
     ld (Scanlines_album_SP),de
     ld (Puntero_de_impresion_disparo_de_entidad),hl
 
-    push ix                                          ; RET con el (Puntero_de_impresion) en HL e IX.
-    pop hl
+    push ix
+    pop hl                                           ; RET con el (Puntero_de_impresion) en HL e IX.
 
     ret
 
@@ -399,7 +493,9 @@ Genera_cabecera:
 
     push ix                                         ; (Puntero_de_impresion) al álbum de líneas.
     push bc                                         ; Nº de scanlines al álbum de líneas.
+
     inc sp
+
     push de                                         ; (Puntero_objeto) al álbum de líneas.
 
 ; Recuperamos SP.
@@ -410,7 +506,7 @@ Genera_cabecera:
 
 ; ------------------------------------------------------------------------------------
 ;
-;   6/8/25
+;   12/9/26
 ;
 ;   Calcula el nº de scanlines que vamos a generar, (cuando la entidad no está apareciendo).
 ;
@@ -456,7 +552,7 @@ Calcula_numero_de_scans:
 
     ret
 
-Calcula_scans_desapareciendo
+Calcula_scans_desapareciendo:
 
     ld a,$58
     sub h
