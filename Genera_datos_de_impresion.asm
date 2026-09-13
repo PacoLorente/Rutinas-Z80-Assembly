@@ -1,12 +1,12 @@
 ; ---------------------------------------------------------------------------------------------------------------------------------------
 ;
-;	9/8/25
+;	13/9/26
 ;
 ;	Scanlines_generator.
 ;
 ;	Obtiene el (Puntero_de_impresion) codificado del álbum de movimientos masticados. Lo decodifica y genera sus coordenadas X e Y.
 ;	Tanto el puntero decodificado como las coordenadas son actualizadas en su correspondiente `Caja_de_entidades'.
-;	Cuando que el objeto es `visible' en pantalla, (no esté situado en zona ROM ni en marcador), generará la cabecera de impresión y los scanlines correspondientes en el (Album_de_pintado).
+;	Se genera la cabecera de impresión y los scanlines correspondientes en el (Album_de_pintado).
 ;	En este caso, anotará además la correspondiente línea informativa en la (Tabla_de_pintado).
 ;
 ;		Estructura de cada línea en la (Tabla_de_pintado):

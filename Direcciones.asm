@@ -628,34 +628,6 @@ Ciclo_completo_2:
 
 ; ---------- ---------- ---------- ---------- ---------- ----------
 ;
-;	19/10/22
-;
-;	(cp 29) para un Amadeus de 3 Columns.
-;	(cp 30)   ""  ""    ""     2 Columns.
-
-Stop_Amadeus_right:
-
-	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
-	cp 30															 ; Hemos llegado al límite derecho de la pantalla??.
-
-	ret
-
-; ---------- ---------- ---------- ---------- ---------- ----------
-;
-;	19/10/22
-;
-;	(cp 2) para un Amadeus de 3 Columns.
-;	(cp 1)   ""  ""    ""     2 Columns.
-
-Stop_Amadeus_left:
-
-	ld a,(Coordenada_X)	 	  										 ; Posición horizontal de Amadeus.
-	cp 1																			 ; Hemos llegado al límite izquierdo de la pantalla??. 
-
-	ret
-
-; ---------- ---------- ---------- ---------- ---------- ----------
-;
 ;	7/6/25
 ;
 ;	Inc_CTRL_DESPLZ
