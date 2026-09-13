@@ -9182,16 +9182,16 @@
   44+ A968 CD 8C A9     	call Genera_coordenadas
   45+ A96B D1           	pop de                                                          ; POP (Puntero_objeto).
   46+ A96C
-  47+ A96C
-  48+ A96C 18 FE        	jr $
-  49+ A96E
-  50+ A96E
-  51+ A96E DD E1        	pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
-  52+ A970
-  53+ A970 ED 4B C9 93  	ld bc,(Coordenada_X)
-  54+ A974
-  55+ A974 DD 71 02     	ld (ix+2),c
-  56+ A977 DD 70 03     	ld (ix+3),b														; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+  47+ A96C DD E1            pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+  48+ A96E
+  49+ A96E ED 4B C9 93  	ld bc,(Coordenada_X)
+  50+ A972
+  51+ A972 DD 71 0C     	ld (ix+12),c                                                    ; (Coordenada_X) en (C), Columna.
+  52+ A975 DD 70 0D     	ld (ix+13),b													; (Coordenada_Y) en (B), Fila.
+  53+ A978
+  54+ A978
+  55+ A978 18 FE        	jr $
+  56+ A97A
   57+ A97A
   58+ A97A 3A 2D 94     	ld a,(Ctrl_4)
   59+ A97D F5               push af

@@ -44,16 +44,16 @@ Explosion_scanlines_generator
 	call Genera_coordenadas
 	pop de                                                          ; POP (Puntero_objeto).
 
-
-	jr $
-
-
-	pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+    pop ix 															; POP 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
 	ld bc,(Coordenada_X)
 
-	ld (ix+2),c
-	ld (ix+3),b														; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+	ld (ix+12),c                                                    ; (Coordenada_X) en (C), Columna.
+	ld (ix+13),b													; (Coordenada_Y) en (B), Fila.
+
+
+	jr $
+
 
 	ld a,(Ctrl_4)
     push af
