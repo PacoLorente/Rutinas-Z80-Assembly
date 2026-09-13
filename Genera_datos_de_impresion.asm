@@ -51,10 +51,6 @@ Explosion_scanlines_generator
 	ld (ix+12),c                                                    ; (Coordenada_X) en (C), Columna.
 	ld (ix+13),b													; (Coordenada_Y) en (B), Fila.
 
-
-	jr $
-
-
 	ld a,(Ctrl_4)
     push af
 
@@ -64,6 +60,7 @@ Explosion_scanlines_generator
 	call Entidad_a_Tabla_de_pintado									; Almacena la (Coordenada_Y) y dirección dentro de (Scanlines_album_SP) de la entidad en curso.
 
 1 pop af
+
     res 7,a
 	ld (Ctrl_4),a
 

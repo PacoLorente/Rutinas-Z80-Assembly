@@ -18,7 +18,7 @@
 Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
 
-Tabla_de_pintado ds 30								; No puede haber cambio de byte alto en la Tabla_de_pintado.
+Tabla_de_pintado ds 30								; PUEDE HABER CAMBIO DE BYTE ALTO EN LA TABLA DE PINTADO.
 Tabla_de_borrado ds 24
 
 ;	db 0, defw 0, db 0

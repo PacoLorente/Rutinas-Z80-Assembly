@@ -1667,11 +1667,11 @@ Reinicia_Amadeus:
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	23/11/24
+;	13/9/26
 
 Ajusta_velocidad_entidad:
 
-	ld a,(ix+12)											; ld a,(Velocidad)
+	ld a,(ix+10)											; ld a,(Velocidad)
 	and a
 	ret z 													; En la 1ª vuelta (Contador_de_vueltas) será "1" o "2", dependiendo de si queremos_
 	;									  					_ una o dos vueltas "lentas" iniciales. En ambos casos, (Velocidad)="0", pues:
@@ -1688,7 +1688,7 @@ Ajusta_velocidad_entidad:
 ;	5ª vuelta: 	""	""	""	""	""  ="$20" ---   ""	 ""	  ="8".   
 
 	sla a 													; Multiplica x2 (Velocidad) en cada FRAME.
-	ld (ix+12),a											; ld (Velocidad),a
+	ld (ix+10),a											; ld (Velocidad),a
 	and $10
 	ret z
 
@@ -1697,8 +1697,8 @@ Ajusta_velocidad_entidad:
 
 ;	Decrementa (Contador_de_mov_masticados), (SI SU CONTENIDO NO ES "0").
 
-	ld l,(ix+10)
-	ld h,(ix+11)
+	ld l,(ix+8)
+	ld h,(ix+9)
 
 	ld a,h
 	and a
@@ -1711,24 +1711,24 @@ Ajusta_velocidad_entidad:
 
 1 dec hl
 
-	ld (ix+10),l
-	ld (ix+11),h
-
-	ld a,(ix+4)												; ld a,(Contador_de_vueltas)
-	sra a
-	sra a
-	ld (ix+12),a	
-
-	ld l,(ix+8)
-	ld h,(ix+9)												; HL contiene (Puntero_de_almacen_de_mov_masticados)
-
-	inc hl
-	inc hl
-	inc hl
-	inc hl
-
 	ld (ix+8),l
-	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) actualizado.
+	ld (ix+9),h
+
+	ld a,(ix+2)												; ld a,(Contador_de_vueltas)
+	sra a
+	sra a
+	ld (ix+10),a
+
+	ld l,(ix+6)
+	ld h,(ix+7)												; HL contiene (Puntero_de_almacen_de_mov_masticados)
+
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+
+	ld (ix+6),l
+	ld (ix+7),h												; (Puntero_de_almacen_de_mov_masticados) actualizado.
 
 	ret
 
@@ -1744,19 +1744,25 @@ Change:
 
 	ld hl,(Album_de_pintado)
 	ld de,(Album_de_borrado)
+
 	ex de,hl
+
 	ld (Album_de_pintado),hl
 	ld (Scanlines_album_SP),hl
 	ld (Album_de_borrado),de
+
 	ret
 
 Change_Amadeus:
 
 	ld hl,(Album_de_pintado_Amadeus)
 	ld de,(Album_de_borrado_Amadeus)
+
 	ex de,hl
+
 	ld (Album_de_pintado_Amadeus),hl
 	ld (Album_de_borrado_Amadeus),de
+
 	ret
 
 Change_Disparos:
@@ -1765,16 +1771,21 @@ Change_Disparos:
 
 1 ld hl,(Album_de_pintado_disparos_Amadeus)
 	ld de,(Album_de_borrado_disparos_Amadeus)
+
 	ex de,hl
+
 	ld (Album_de_pintado_disparos_Amadeus),hl
 	ld (Album_de_borrado_disparos_Amadeus),de
+
 	call Limpia_album_de_pintado_disparos_Amadeus
 
 ; Álbumes de entidades.
 
 	ld hl,(Album_de_pintado_disparos_Entidades)
 	ld de,(Album_de_borrado_disparos_Entidades)
+
 	ex de,hl
+
 	ld (Album_de_pintado_disparos_Entidades),hl
 	ld (Album_de_borrado_disparos_Entidades),de
 	ld (Nivel_scan_disparos_album_de_pintado),hl
@@ -1839,9 +1850,9 @@ Define_Clock_next_entity:
 
 ; ------------------------------------
 ;
-; 	18/03/24
+; 	13/9/26
 
-Borra_diferencia 
+Borra_diferencia:
 
 	ld bc,(Scanlines_album_SP)
 
@@ -1869,7 +1880,7 @@ Borra_diferencia
 	ex de,hl
 
 	ld (hl),c
-	inc l
+	inc hl
 	ld (hl),b
 
 	xor a
@@ -1890,7 +1901,7 @@ Borra_diferencia
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	28/3/25
+;	13/9/26
 ;
 ;	INPUT: IX apunta al 1er .db (Tipo) de la entidad, (caja de entidades correspondiente).	
 ;
@@ -1899,30 +1910,31 @@ Borra_diferencia
 ;	(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
 ;	.db, .db, .db, .defw
 
-Entidad_a_Tabla_de_pintado
+Entidad_a_Tabla_de_pintado:
 
 	ld hl,Sprite_completo
 	inc (hl)		 										; (Sprite_completo) actúa ahora como contador de entidades imprimibles.
 ;                                                           ; El nº de entidades almacenadas en la Tabla_de_pintado lo utilizara [Ordena_tabla_de_impresion] más adelante.
-	ld hl,(India_SP) 				 
 
-	ld e,(ix+3)
-	ld d,(ix+13)
+	ld hl,(India_SP) 	 									; (India_SP) es el puntero que se mueve por la tabla de pintado.
+
+	ld e,(ix+13)
+	ld d,(ix+11)
 	ld a,(Columnas)
 
 	ld (hl),e        										; (Columna_Y).
-	inc l
+	inc hl
 	ld (hl),d 		 										; (Attr).
-	inc l
+	inc hl
 	ld (hl),a 		 										; (Columnas).
-	inc l
+	inc hl
 
 	ld de,(Repone_puntero_objeto)				 			; .defw (Album_de_pintado).
 
 	ld (hl),e   
-	inc l
+	inc hl
 	ld (hl),d 		 
-	inc l 			 										; (Album_de_pintado).
+	inc hl 			 										; (Album_de_pintado).
 
 	ld (India_SP),hl
 
@@ -1949,7 +1961,7 @@ Inicializa_India_y_limpia_Tabla_de_impresion
 	xor a
 
 1 ld (hl),a
-	inc l
+	inc hl
 	djnz 1B													; Limpia Tabla.
 
 2 ld hl,Tabla_de_pintado									; Inicializa (India_SP).
@@ -2002,11 +2014,11 @@ Avanza_India_2_SP
 	call z,Avanza_punteros_indios
 	ret z 													; Tabla_de_pintado ordenada !!!
 
-	inc l
-	inc l
-	inc l
-	inc l
-	inc l
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
 
 	ld b,(hl)
 
@@ -2056,11 +2068,11 @@ Avanza_punteros_indios
 
 	ld hl,(India_SP)
 
-	inc l
-	inc l
-	inc l
-	inc l
-	inc l
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
 
 	ld a,(hl)
 	ld (India_SP),hl
@@ -2079,8 +2091,8 @@ Prepara_salida
 
 Intercambia_1_byte 
 
-	inc l
-	inc e
+	inc hl
+	inc de
 
 	ld b,(hl)
 	ld a,(de)
@@ -2212,7 +2224,7 @@ Take_movement:
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 ;
-;	1/4/25
+;	13/9/26
 ;
 ;	Tras ejecutar esta rutina tendremos:
 ;
@@ -2221,16 +2233,16 @@ Take_movement:
 
 Cargamos_registros_con_explosion:
 
-	ld l,(ix+8)
-	ld h,(ix+9)														
+	ld l,(ix+6)
+	ld h,(ix+7)
 
 ; (Puntero_de_almacen_de_mov_masticados) en HL.
 
 	call Extrae_address
 	ex de,hl												; Puntero objeto de la (Explosión), en DE.
 
-	ld l,(ix+6)
-	ld h,(ix+7)			
+	ld l,(ix+4)
+	ld h,(ix+5)
 
 	push hl
 	pop ix													; (Puntero_de_impresion) en IX.
@@ -2239,7 +2251,7 @@ Cargamos_registros_con_explosion:
 
 ; ---------------------------------------------------------------------------------------------------------------------
 ;
-; 8/1/23
+; 13/9/26
 ;
 ; (Puntero_store_caja) contendrá la dirección donde se encuentran los parámetros de la 1ª entidad del índice.
 ; (Indice_restore_caja) se sitúa en la 2ª entidad del índice. 	
@@ -2247,42 +2259,47 @@ Cargamos_registros_con_explosion:
 
 ; Destruye HL y DE !!!!!
  
-Inicia_punteros_de_cajas 
+Inicia_punteros_de_cajas:
 
 	ld hl,Indice_de_cajas_de_entidades
     call Extrae_address
     ld (Puntero_store_caja),hl
-	ld hl,Indice_de_cajas_de_entidades+2
+
+    ld hl,Indice_de_cajas_de_entidades+2
 	ld (Indice_restore_caja),hl
 	call Extrae_address
 	ld (Puntero_restore_caja),hl
-    ret
+
+	ret
 
 ; *************************************************************************************************************************************************************
 
 ;
-; 20/10/22
+; 13/9/26
 ;
 ; Extrae la direccio? que contiene un puntero, (HL), también en HL.
 ;
 ; Destruye el puntero y DE !!!!!
 
-Extrae_address ld e,(hl)
+Extrae_address:
+
+	ld e,(hl)
 	inc hl
 	ld d,(hl)
 	dec hl
 	ex de,hl
+
 	ret
 
 ; **************************************************************************************************
 ;
-;	27/11/24
+;	13/9/26
 ;
 ;	INPUT: IX contiene (Puntero_store_caja).
 ;
 ;	No situamos en la siguiente caja de entidades si esta está vacía.
 	
-Salta_caja_de_entidades_vacia 
+Salta_caja_de_entidades_vacia:
 
 	ld a,(ix+1)
 	and a
@@ -2290,26 +2307,30 @@ Salta_caja_de_entidades_vacia
 
 	call Incrementa_punteros_de_cajas
 	ld ix,(Puntero_store_caja)
+
 	jr Salta_caja_de_entidades_vacia
 
 	ret
 
 ; **************************************************************************************************
 ;
-;	08/05/23
+;	13/9/26
 ;
 ;	Incrementamos los dos punteros de entidades. (+1).
 
-Incrementa_punteros_de_cajas 
+Incrementa_punteros_de_cajas:
 
 	ld hl,(Puntero_restore_caja)
 	ld (Puntero_store_caja),hl 				
 	ld hl,(Indice_restore_caja)
+
 	inc hl
 	inc hl
+
 	ld (Indice_restore_caja),hl
     call Extrae_address
     ld (Puntero_restore_caja),hl
+
     ret
 
 ; **************************************************************************************************
@@ -2331,7 +2352,7 @@ Incrementa_punteros_de_cajas
 ;
 ;	!!!!!!!! DESTRUYE BC !!!!!!!!!!!
 
-DELAY
+DELAY:
 ;															;$0320 ..... Delay mínimo
 	dec bc  												;Sumaremos $0045 por FILA a esta cantidad inicial. Ejempl: si el Sprite ocupa la 1ª y 2ª_
 	
@@ -2354,7 +2375,7 @@ DELAY
 ; Shield_2 db 0 											; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
 ; Shield_3 db 0
 
-Inicia_Shield
+Inicia_Shield:
 
 	ld hl,Datos_Shield
 	ld (Puntero_datos_shield),hl 							; Inicia el puntero (Puntero_datos_shield), lo situamos en la 1ª temporización.
@@ -2383,29 +2404,33 @@ Inicia_Shield
 ;	INPUT: IX contiene el 1er .db de la entidad en curso.
 ;	MODIFY: A,BC,DE y HL.
 
-Limpia_caja_de_entidades
+Limpia_caja_de_entidades:
 
 	push ix
 	pop hl
+
 	xor a
 	ld (hl),a
+
 	ld e,l
 	ld d,h
-	inc e
+
+	inc de
 	ld bc,13
 	ldir 
+
 	ret
 
 ; ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
 ;
-;	26/01/25
+;	13/9/26
 ;
 ;	Es la 1ª rutina que se ejcuta tras la rutina de interrupciones.
 ; 	
 ;	ACTUALIZA LA PANTALLA siempre que se haya producido algún movimiento, (entidades, Amadeus).
 ;
 
-Actualiza_pantalla 
+Actualiza_pantalla:
 
 	ld a,2	
 	out ($fe),a												
@@ -2416,7 +2441,7 @@ Actualiza_pantalla
 
 ;	Inicializamos el (Puntero_de_columnas) para el borrado, (Puntero_indice_mov).
 
-Borrando_entidades
+Borrando_entidades:
 
 	ld hl,(India_3_SP) 										; (Attr), (Columnas) y (.defw).
 
@@ -2431,7 +2456,7 @@ Borrando_entidades
 	xor a
 	ld (hl),a
 
-	inc l
+	inc hl
 
 	ld a,(hl) 												; (Columnas) en A.
 	ld (Columnas),a
@@ -2443,14 +2468,14 @@ Borrando_entidades
 
 ;	Adquirimos dirección de Scanlies_album.
 
-	inc l
+	inc hl
 
 	call Extrae_address
 
 	ld (de),a
-	inc e
+	inc de
 	ld (de),a
-	inc e
+	inc de
 	ld (India_3_SP),de
 
 	call Extrae_address
@@ -2458,7 +2483,7 @@ Borrando_entidades
 
 	jr Borrando_entidades
 	
-Pintando_entidades
+Pintando_entidades:
 
 ;	(Columna_Y), (Attr), (Columnas) y .defw (Album_de_pintado).
 ;	.db, .db, .db, .defw
@@ -2470,7 +2495,7 @@ Pintando_entidades
 
 3 ld hl,(India_SP) 										; (India_SP) se encuentra al comienzo de la TABLA_DE_PINTADO.
 
-	inc l													; Nota: No cambia el byte alto en las tablas de pintado y borrado.
+	inc hl													; Nota: No cambia el byte alto en las tablas de pintado y borrado.
 
 	ld a,(hl) 							
 	and a
@@ -2479,16 +2504,17 @@ Pintando_entidades
 	ld (Attr),a
 	ld c,a 	 												; (Attr) en C.
 
-	inc l
+	inc hl
 
 	ld a,(hl) 							
 	ld (Columnas),a
-	inc l
+
+	inc hl
 
 	call Extrae_address 									; .defw (Album_de_pintado) en HL.
 
-	inc e
-	inc e
+	inc de
+	inc de
 
 	ld (India_SP),de 										; Puntero (India_SP) situado en la siguiente línea de la tabla.
 ;
@@ -2502,13 +2528,13 @@ Pintando_entidades
 	ld hl,(India_3_SP)
 
 	ld (hl),c 												; (Attr).
-	inc l
+	inc hl
 	ld (hl),a 												; (Columnas).
-	inc l
+	inc hl
 	ld (hl),e 												; (.defw) dentro del (Album_de_pintado).
-	inc l
+	inc hl
 	ld (hl),d
-	inc l
+	inc hl
 
 	ld (India_3_SP),hl
 
@@ -2577,7 +2603,7 @@ Pintando_Amadeus
 
 ;	Ejecuta Shield. 
 
-Aplica_Shield 
+Aplica_Shield:
 
 ;	Bit 1 "1" (Shield_3) Sólo borra.
 ;		  "0"     ""     Borra/Pinta.
@@ -2600,7 +2626,7 @@ Aplica_Shield
 
 ; ----- ----- ----- ----- ----- ----- ----- ----- -----  
 
-Borra_Amadeus_shield
+Borra_Amadeus_shield:
 
 	ld a,(Ctrl_3)
 	bit 5,a
@@ -2660,7 +2686,7 @@ Borra_entidad_colisionada
 	jr nz,1F
 
 	ld a,%01000110 											; Amarillo.
-	ld (ix+13),a
+	ld (ix+11),a
 
 1 push ix 													; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
@@ -2681,7 +2707,7 @@ Borra_entidad_colisionada
 Siguiente_frame_explosion
 
 	ld a,%01000010  										; Rojo.
-	ld (ix+13),a
+	ld (ix+11),a
 
 	ld a,(Filas)
 	xor 1
@@ -2692,8 +2718,8 @@ Siguiente_frame_explosion
 
 ; Avanza Frame de explosión.
 
-	ld l,(ix+8)
-	ld h,(ix+9)												; ld hl,(Puntero_de_almacen_de_mov_masticados).
+	ld l,(ix+6)
+	ld h,(ix+7)												; ld hl,(Puntero_de_almacen_de_mov_masticados).
 
 	ld bc,Indice_Explosion_entidades+4
 
@@ -2740,7 +2766,9 @@ Siguiente_frame_explosion
 
 	ld hl,(Puntero_de_entidades)
 	ld a,(hl) 												; Clase de la siguiente entidad que hay que reponer en la caja.
-	inc l
+
+	inc hl
+
 	ld (Puntero_de_entidades),hl
 
 	call Obtiene_datos_de_Caja_Master						; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
@@ -2748,7 +2776,7 @@ Siguiente_frame_explosion
 	push ix
 	pop de
 
-	ld bc,14
+	ld bc,12
 	ldir	
 
 ; Generamos (Puntero_de_impresion) y coordenadas de la nueva entidad restaurada.
@@ -2756,16 +2784,16 @@ Siguiente_frame_explosion
 	call Take_movement
 	call Decodifica_Puntero_de_impresion
 
-	ld l,(ix+6)
+	ld l,(ix+4)
 	inc l
-	ld h,(ix+7)												; (Puntero_de_impresion) en HL.
+	ld h,(ix+5)												; (Puntero_de_impresion) en HL.
 
 	call Genera_coordenadas
 
 	ld bc,(Coordenada_X)
 
-	ld (ix+2),c
-	ld (ix+3),b												; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+	ld (ix+12),c
+	ld (ix+13),b												; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
 
 	xor a
 	inc a 													; Necesario NZ a la salida de la subrutina.
@@ -2789,8 +2817,8 @@ Siguiente_frame_explosion
 1 inc hl
 	inc hl
 
-	ld (ix+8),l
-	ld (ix+9),h												; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
+	ld (ix+6),l
+	ld (ix+7),h												; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
 
 	jp Borra_entidad_colisionada
 
@@ -2798,7 +2826,7 @@ Siguiente_frame_explosion
 ;
 ;	10/3/25
 
-calcula_CColumnass_Explosion_entidad
+calcula_CColumnass_Explosion_entidad:
 
 	ld a,l
 	and $1f
@@ -2928,7 +2956,9 @@ Siguiente_frame_explosion_Amadeus
 
 	ld hl,(Album_de_borrado_Amadeus)
 	ld (hl),a
-	inc l
+
+	inc hl
+
 	ld (hl),a
 
 	call Change_Amadeus
@@ -2943,6 +2973,7 @@ Siguiente_frame_explosion_Amadeus
 
 1 inc hl
 	inc hl
+
 	ld (Pamm_Amadeus),hl
 	jr Borra_Amadeus_impactado
 
@@ -3038,8 +3069,8 @@ Incrementa_Score:
 ;          	                                ; db 50 .....
 ;                                           ; db 60 .....
 
-	ld l,(ix+6)
-	ld h,(ix+7) 							; Carga HL con el (Puntero_de_impresion) de esta entidad para calcular en que tercio de la pantalla se encuentra.
+	ld l,(ix+4)
+	ld h,(ix+5) 							; Carga HL con el (Puntero_de_impresion) de esta entidad para calcular en que tercio de la pantalla se encuentra.
 
 	call calcula_tercio
 	jr z,vel                                ; Puntuación BASE en el 1er tercio de pantalla.
@@ -3056,7 +3087,7 @@ Incrementa_Score:
 
 vel
 
-	ld a,(ix+12)
+	ld a,(ix+10)
 
 	add c
 	ld c,a 									; A la puntuación le sumamos el perfil de velocidad.

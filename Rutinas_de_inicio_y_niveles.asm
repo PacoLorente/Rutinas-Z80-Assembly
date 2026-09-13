@@ -280,7 +280,7 @@ Extrae_numero_aleatorio_y_avanza:
 ; Coloca el nº aleatorio en A y mueve el puntero al siguiente nº.
 
 1 ld a,(hl)
-	inc l
+	inc hl
 	ld (RND_SP),hl
 
 	ret
@@ -858,16 +858,19 @@ Construye_movimientos_masticados_entidad:
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;	14/6/26
+;	13/9/26
 ;
 ;	INPUTS: HL a de contener (Puntero_de_almacen_de_mov_masticados).
 
 Actualiza_Puntero_de_almacen_de_mov_masticados:
 
 	ld hl,(Puntero_de_almacen_de_mov_masticados)
-	ld bc,4
-	and a
-	adc hl,bc
+
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+
 	ld (Puntero_de_almacen_de_mov_masticados),hl
 
 	ret
@@ -933,6 +936,7 @@ Situa_en_contador_general_de_mov_masticados:
 ;   Sitúa en la 1ª de las tres variables.
 
 	ld hl,Contador_general_de_mov_masticados_1
+
 1 ld a,(hl)
 	and a
 	ret z
@@ -1239,7 +1243,7 @@ Situa_en_Caja_Master:
 ;
 ;	INPUT: A contiene la (Clase) de entidad.
 
-Obtiene_datos_de_Caja_Master
+Obtiene_datos_de_Caja_Master:
 
 	ld hl,Indice_de_cajas_master	
 	ld (Puntero_indice_master),hl
@@ -1306,7 +1310,7 @@ Situa_Puntero_indice_mov:
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   23/6/25
+;   13/9/26
 ;
 ;	Esta rutina se encarga de prepara todas las cajas de entidades. Cuando comienza un nivel han de estar todas completas.
 
@@ -1358,7 +1362,7 @@ Prepara_Cajas_de_Entidades:
 	ld hl,0
 	ld (Coordenada_X),hl
 	ld (Puntero_de_impresion),hl
-	ld (Columnas),hl
+	ld (Columnas),hl 												; También limpia (Sprite_completo).
 
 	call Incrementa_punteros_de_cajas
 
@@ -1385,6 +1389,9 @@ Prepara_Cajas_de_Entidades:
 ;	Nos situamos en el 1er .db, (Tipo), de la definición de Amadeus.
 
 Inicia_Amadeus:
+
+
+	jr $
 
 	ld hl,Definicion_Amadeus
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
@@ -1462,19 +1469,19 @@ Definicion_segun_tipo:
 
 ; ---------------------------------------------------------------------
 ;
-;	23/11/24
+;	13/9/26
 ;
 ;	Actualiza el (Contador_de_mov_masticados) de la entidad.
 
-Decrementa_Contador_de_mov_masticados 
+Decrementa_Contador_de_mov_masticados:
 
-	ld l,(ix+10)
-	ld h,(ix+11)
+	ld l,(ix+8)
+	ld h,(ix+9)
 
 	dec hl
 
-	ld (ix+10),l
-	ld (ix+11),h
+	ld (ix+8),l
+	ld (ix+9),h
 
 	ret
 
@@ -1482,7 +1489,7 @@ Decrementa_Contador_de_mov_masticados
 ;
 ;	10/9/26
 
-Reinicia_entidad_maliciosa 
+Reinicia_entidad_maliciosa:
 
 	ld a,(ix+00)
 
@@ -1584,7 +1591,7 @@ Reinicia_entidad_maliciosa
 ;	Define (Attr) en función de la (Velocidad).
 ;
 
-Define_attr	
+Define_attr:
 
 	dec a
 	jr z,Amarillo
@@ -1708,7 +1715,7 @@ Parametros_de_bandeja_DRAW_a_Caja_Master:
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;	13/11/24
+;	13/9/26
 ;
 ;	INICIALIZA (Numero_parcial_de_entidades).
 ;
@@ -1735,9 +1742,12 @@ Inicializa_Numero_parcial_de_entidades
 
 	sub 4
 	ld (Numero_de_entidades),a
+
 	ld a,4
 	ld (Numero_parcial_de_entidades),a
+
 	ld b,a
+
 	ret
 
 ; El nº total de entidades no supera el nº de cajas de entidades. 
@@ -1745,8 +1755,10 @@ Inicializa_Numero_parcial_de_entidades
 
 1 ld (Numero_parcial_de_entidades),a
 	ld b,a
+
 	xor a
 	ld (Numero_de_entidades),a
+
 	ret
 
 ;---------------------------------------------------------------------------------------------------------------
