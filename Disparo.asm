@@ -1209,7 +1209,7 @@ Colision_Entidad_Amadeus
     and a
     ret nz                                                  ; Evita que se produzca colisión con dos entidades a la vez.
 
-Genera_coordenadas_X
+Genera_coordenadas_X:
 
 ;   Guardamos las coordenadas_X de la entidad y Amadeus en sus correspondientes almacenes.
 ;   DRAW tiene almacenados, en este momento, los datos de la última ENTIDAD que hemos desplazado.
@@ -1243,11 +1243,15 @@ Genera_coordenadas_X
     ld a,1                                               ; El .db (Impacto)="1" indica que es altamente probable que esta_
     ld (ix+3),a                                          ; _ entidad colisione con Amadeus, (ha superado, o está en la fila $14) y 
 
-    ld a,ixl
-    add 5
-    ld ixl,a
+    push ix
+    pop hl
 
-    ld (Entidad_sospechosa_de_colision),ix               ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.
+    inc hl
+    inc hl
+    inc hl
+
+    ld (Entidad_sospechosa_de_colision),hl               ; Almacena la dirección del .db (Impacto) de la caja de esta entidad.
+;                                                        ; En caso de que no exista colisión con Amadeus hemos de poner el .db (Impacto) de la (Entidad_sospechosa_de_colision) a "0" más adelante.
 
     ld hl,Impacto2                                       ; _ alguna de las columnas_X que ocupa coinciden con las de Amadeus.
     set 2,(hl)
@@ -1320,7 +1324,7 @@ Comparando_1 cp b
 ;   04/7/24
 ;   
 
-Detecta_colision_nave_entidad 
+Detecta_colision_nave_entidad:
 
 ; Exclusiones:
 

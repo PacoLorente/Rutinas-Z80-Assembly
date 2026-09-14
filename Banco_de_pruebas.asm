@@ -1423,7 +1423,7 @@ Bucle_de_entidades:
 
 4 call Colision_Entidad_Amadeus								; Si hay posibilidad de COLISION, set 2,(Impacto2) y (Impacto) de entidad en curso a "1".
 
-Gestiona_siguiente_entidad
+Gestiona_siguiente_entidad:
  
 	call Incrementa_punteros_de_cajas
 
@@ -1547,7 +1547,6 @@ Amadeus_vivo:
 	call Main_keyboard_routine
 	call Kempston_control
 
-
 	ld hl,Ctrl_2
 	bit 6,(hl)
 	jr z,2F
@@ -1604,9 +1603,7 @@ End_frame:
 	ld hl,Ctrl_4
 	res 0,(hl)
 
-
-	ld a,5
-;	xor a
+	xor a
 	out ($fe),a
 
 	halt												
@@ -1640,7 +1637,7 @@ Reinicia_Amadeus:
 
 	xor a
 	ld (hl),a
-	inc l
+	inc hl
 	ld (hl),a
 
 ; 	Restauramos el FLAG: Amadeus vivo.
@@ -2681,14 +2678,14 @@ Genera_explosion:
 	dec (hl)
 	jr z,Siguiente_frame_explosion							; Gestionamos la siguiente entidad.
 
-Borra_entidad_colisionada
+Borra_entidad_colisionada:
 
 	ld a,(Filas)
 	and a
 	jr nz,1F
 
-	ld a,%01000110 											; Amarillo.
-	ld (ix+11),a
+	ld a,%01000110
+	ld (ix+11),a 											; Cambia a AMARILLO los attrs. de la entidad.
 
 1 push ix 													; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
@@ -2706,7 +2703,7 @@ Borra_entidad_colisionada
 
 	ret
 
-Siguiente_frame_explosion
+Siguiente_frame_explosion:
 
 	ld a,%01000010  										; Rojo.
 	ld (ix+11),a
@@ -2826,7 +2823,7 @@ Siguiente_frame_explosion
 
 ; ----- ----- ----- ----- -----
 ;
-;	10/3/25
+;	14/9/26
 
 calcula_CColumnass_Explosion_entidad:
 
@@ -2835,8 +2832,10 @@ calcula_CColumnass_Explosion_entidad:
 	jr z,Aparece_izquierda
 
 	ex af,af
+
 	ld a,3
 	ld (Columnas),a
+
 	ex af,af
 
 	cp $1e
@@ -2844,21 +2843,26 @@ calcula_CColumnass_Explosion_entidad:
 
 	jr z,Dos_columnas_derecha
 
-Aparece_derecha
+Aparece_derecha:
 
 	ld a,1
 	ld (Columnas),a
+
 	ret
 
-Dos_columnas_derecha 
+Dos_columnas_derecha:
 
 	ld a,2
 	ld (Columnas),a
+
 	ret
 
-Aparece_izquierda inc a
+Aparece_izquierda:
+
+	inc a
 	inc a
 	ld (Columnas),a
+
 	inc e
 
 	ret

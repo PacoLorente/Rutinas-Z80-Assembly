@@ -32,7 +32,7 @@ Scanlines_generator:
 ;						 IX contiene (1er_db_caja_de_entidades).
 ;						 DE contiene (Puntero_objeto).
 
-Explosion_scanlines_generator
+Explosion_scanlines_generator:
 
     push ix								                            ; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
 
