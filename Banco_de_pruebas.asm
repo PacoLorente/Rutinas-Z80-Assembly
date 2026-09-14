@@ -640,7 +640,7 @@ Frames_explosion db 0 										; Nº de Frames que tiene la explosión.
 
 ; Variables de funcionamiento, (No incluidas en base de datos de entidades), a partir de aquí!!!!!
 
-Perfiles_de_velocidad
+Perfiles_de_velocidad:
 
 Vel_left db 0 												; Velocidad izquierda. Nº de píxeles que desplazamos el objeto a izquierda. 1, 2, 4 u 8 px.
 Vel_right db 0 												; Velocidad derecha. Nº de píxeles que desplazamos el objeto a derecha. 1, 2, 4 u 8 px.
@@ -1187,13 +1187,14 @@ Init_level:
 ;														 	; La rutina [Genera_datos_de_impresion] habilita las interrupciones antes del RET.
 ;														 	; DI nos asegura que no vamos a ejecutar FRAME hasta que no tengamos todas las entidades iniciadas.
 ;														 	; La rutina [Genera_datos_de_impresion] activa las interrupciones antes del RET.
+
 	ld de,Amadeus_BOX
 	call Parametros_de_bandeja_DRAW_a_Caja_Master	 		; Volcamos Amadeus en (Amadeus_BOX).
 
 ;	Limpiamos la bandeja DRAW.
 
+	ld bc,Perfiles_de_velocidad-Clase-1
 	ld hl,Clase
-	ld bc,37
 	call Clean_mem
 
 ; 	Situamos a Amadeus en el centro de la pantalla.
@@ -1374,16 +1375,17 @@ Bucle_de_entidades:
 
 5 ld a,(Impacto2)
 	bit 3,a
+
 	call nz,Compara_con_coordenadas_de_disparo
 
 ; Existe colisión en esta entidad por un disparo de Amadeus ???
 
-	ld a,(ix+5)												; (ix+5) - (Impacto)
+	ld a,(ix+3)												; (ix+3) - (Impacto)
 	bit 1,a
 	call nz,Genera_explosion
 	jr nz,Gestiona_siguiente_entidad
 
-	ld a,(ix+5)												; ld a,(Impacto)
+	ld a,(ix+3)												; ld a,(Impacto)
 	and a
 	jr z,3F
 
@@ -1447,7 +1449,7 @@ Gestiona_siguiente_entidad
 
 	ex de,hl
 	ld (hl),c
-	inc l
+	inc hl
 	ld (hl),b												; Nuevo techo, mayor que el anterior.
 
 ;	! GESTIONA AMADEUS !!!!!!!!!!

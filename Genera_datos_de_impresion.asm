@@ -164,7 +164,7 @@ Decodifica_Puntero_de_impresion:
 
 ; ---------------------------------------------------------------------------------------------------------------------
 ;
-;   07/08/25
+;   14/9/26
 ;
 ;   Genera la coordenada X de Amadeus y los datos de impresión de la nave en su (Album_de_pintado_Amadeus).
 
@@ -225,15 +225,15 @@ Genera_datos_de_impresion_Amadeus:
     ld b,8
 
     ld (hl),e
-    inc l
+    inc hl
     ld (hl),d
 
-    inc l
-    inc l
+    inc hl
+    inc hl
 
 2 ld (hl),a
-    inc l
-    inc l
+    inc hl
+    inc hl
     djnz 2B
 
     ld b,8
@@ -245,7 +245,7 @@ Genera_datos_de_impresion_Amadeus:
 
 ; --------------------------------------------------------------------------------------------------------------
 ;
-;   17/06/24
+;   14/9/26
 ;
 ;   Cargamos los registros DE e IX, (Puntero_de_almacen_de_mov_masticados) de Amadeus. 
 ;   

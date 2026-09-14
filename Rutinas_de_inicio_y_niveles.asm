@@ -1390,11 +1390,11 @@ Prepara_Cajas_de_Entidades:
 
 Inicia_Amadeus:
 
-
-	jr $
-
 	ld hl,Definicion_Amadeus
 	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
+
+	ld hl,Almacen_de_movimientos_masticados_Amadeus
+	ld (Puntero_de_almacen_de_mov_masticados),hl	
 
 ;	Inicializamos los perfiles de velocidad antes de crear la danza de Amadeus.
 ;	(Vel_left), (Vel_right), (Vel_up) y (Vel_down) a "1".

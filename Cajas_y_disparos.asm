@@ -322,7 +322,7 @@ Definicion_Amadeus:
 	defw $50c1	                                    ; (Posicion_inicio).
 	db %01000101									; (Attr).
 
-	defw Almacen_de_movimientos_masticados_Amadeus	; (Puntero_de_almacen_de_mov_masticados).
+
 
 
 
