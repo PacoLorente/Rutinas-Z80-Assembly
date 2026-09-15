@@ -263,6 +263,17 @@ Clean_and_logo:
     xor a
     out ($fe),a                                             ; BORDER NEGRO.
 
+;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;   COLORES: 0 ..... NEGRO
+;            1 ..... AZUL    
+;            2 ..... ROJO
+;            3 ..... MAGENTA
+;            4 ..... VERDE
+;            5 ..... CIAN
+;            6 ..... AMARILLO
+;            7 ..... BLANCO
+
     ld a,%01000101                                          ; Fondo NEGRO, tinta Cyan + bright.
     call Cls
 

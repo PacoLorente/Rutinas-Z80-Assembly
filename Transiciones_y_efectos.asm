@@ -282,7 +282,9 @@ Print_Moon:
 
 Imprime_Logo_principal:
 
-;	Datos.
+;	Datos de entrada.
+
+;	jr $
 
 	ld hl,Direccion_Logo_principal 									; $4049,$404a,$404b ..... $5849,$584a,$584b
 ;																	; $4069,$406a,$406b

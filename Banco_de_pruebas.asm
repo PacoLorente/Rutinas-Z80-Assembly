@@ -7,14 +7,6 @@
 ;
 ;	13/08/24
 ;
-;	
-	org $feff		;$fcff        													; (Debajo de la pila).
-
-	defw $8310															; Indica al vector de interrupciones, (IM2), que el clock del programa se encuentra en $82a0.
-
-;
-;	12/10/24
-;
 ; 	Constantes de programa.
 ;
 
@@ -291,6 +283,14 @@ Fila_msg_de_nivel equ Line_9 + 6				;	Los mensajes de nivel se imprimen en la fi
 ;
 ;	13/08/24
 ;
+;	Fija el vector de interrupciones, (IM2) en $feff.
+;	Se establece el CLOCK en $8310
+
+	org $feff				      							; (Debajo de la pila).
+	defw $8310												; Indica al vector de interrupciones, (IM2), $8310
+
+;	CLOCK_IM2
+
 	org $8310
 
 	ex af,af
@@ -605,18 +605,6 @@ CTRL_DESPLZ db 0											; Este byte nos indica la posición que tiene el Spri
 ;															; Almacena un contador de scanlines que se utiliza para hacer desaparecer Amadeus por la parte baja de la pantalla.
 
 ; ---------- ---------- ---------- ---------;      ;--------- ---------- ---------- ---------- 
-
-;	El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
-;
-;	COLORES: 0 ..... NEGRO
-;    		 1 ..... AZUL    jr $
-; 			 2 ..... ROJO
-;			 3 ..... MAGENTA
-; 			 4 ..... VERDE
-; 			 5 ..... CIAN
-;			 6 ..... AMARILLO
-; 			 7 ..... BLANCO
-
 
 Indice_Sprite_der defw 0
 Indice_Sprite_izq defw 0
@@ -3160,11 +3148,10 @@ Next_level:
 
 ;	Rutinas consecutivas, no hay bytes libres entre ellas.
 
+	include "Funciones_genericas.asm"
 	include "Rutinas_de_teclado.asm"
 	include "RND_Derivando.asm"
 	include "Rutinas_de_inicio_y_niveles.asm"
-	include "calcula_tercio.asm"
-	include "Cls.asm"
 	include "Transiciones_y_efectos.asm"
 	include "Genera_datos_de_impresion.asm"
 	include "Pinta_Sprites.asm"
