@@ -206,8 +206,6 @@ Clean_mem:
 
 Pinta_imagen:
 
-    jr $
-
     push hl
     push bc
 
@@ -219,70 +217,128 @@ Pinta_imagen:
 
 ;   Dirección de attrs. en (HL), char. arriba-izq.
 
-2 dec c                                                             ; Decrementa Fila.
+    call Fija_attrs
+
+    pop bc
+    pop hl 
+
+    call Imprime_imagen
+
+    ret
+
+; -----------------------------------------------------------------
+;
+;   15/9/26
+;
+;   Fija los atributos de una imagen en pantalla, (NO SPRITES).
+;
+;   INPUTS: (HL) contiene la dirección de attrs. del 1er char. de la imagen, (arriba-izq).
+;            (A) contiene los atributos.
+;            (B) contiene el nº de Columnas.
+;            (C) contiene el nº de Filas.
+;
+;   MODIFY: (HL), contendrá la dirección de attrs. del último char. de la imagen, (abajo-izq) + 1
+;            (C), contiene "0".
+;
+
+Fija_attrs:
 
     push bc
 
 1 ld (hl),a
-    inc l                                                           ; Siguiente char.
-    djnz 1B
-
-    inc c
-    dec c                                                           ; Hemos terminado de definir los attrs. ???
-
-    jr nz,Next_attr_file                                            ; Sólo 1 Fila.
+    inc l
+    djnz 1B                                                         ; (B) contiene las columnas que tiene la imagen.
 
     pop bc
 
-    jr Imprime_imagen
+    dec c                                                           ; Decrementa Filas. RET si (Filas)="0".
+    ret z
 
-Next_attr_file
-
-    pop bc
+; Next attrs. file.
 
     ex af,af
 
     ld a,l
     sub b
-    add $20
-    ld l,a                                                          ; (HL) en siguiente Fila de attrs.
+    ld l,a
 
-    ex af,af
-
-    jr 2B
-
-Imprime_imagen
-
-    pop bc
-    pop hl
-
-7 ld a,8
-    ex af,af
-
-4 push hl
     push bc
 
-;   Generamos scanlines
+;   Sumamos con adc por si la imagen se encuentra situada entre dos tercios de pantalla.
 
-3 ld a,(de)
+    ld bc,$20
+    and a
+    adc hl,bc                                                       ; HL situado en la siguiente Fila.
+
+    pop bc
+                                                   
+    ex af,af
+
+    jr Fija_attrs
+
+; ----------------------------------------------------------------
+;
+;   15/9/26
+;
+;   Pinta cualquier imagen en pantalla, (XOR). Esta rutina se utiliza para imágenes estáticas, (NO SPRITES).
+;
+;   INPUTS: HL contiene la dirección de memoria depantalla donde queremos imprimir la imagen, (esquina superior izquierda).
+;           DE contiene la dirección del 1er .db que conforman los datos de la imagen.
+;            A contiene los Attr.
+;            B contiene el nº de Columnas.
+;            C contiene el nº de Filas.
+;
+;   MODIFICA: AF,HL,DE y BC.
+
+;   Notas:  Utiliza esta rutina para ir borrando vidas. Por eso utilizamos la función XOR.
+
+Imprime_imagen:
+
+    ld a,8
+    ex af,af                                                         ; (A´) contendrá el contador de scanlines que tiene un char.
+
+1 push hl
+    push bc
+
+;   Generamos scanlines.
+
+;   La secuencia es la siguiente:
+;
+;   Byte (XOR) del 1er char. de la imagen.
+;   Byte (XOR) del 2º char. de la imagen.
+;   Byte (XOR) del 3er char. de la imagen., etc.
+
+;   Decrementa el contador de scanlines, (A´).
+
+;   Nos situamos en el siguiente scan, (call NextScan).
+
+;   Byte (XOR) del 1er char. de la imagen.
+;   Byte (XOR) del 2º char. de la imagen.
+;   Byte (XOR) del 3er char. de la imagen., etc.
+
+;   Decrementa el contador de scanlines, (A´).
+
+2 ld a,(de)
     xor (hl)
     ld (hl),a
 
     inc l
     inc de
 
-    djnz 3B
+    djnz 2B
 
     ex af,af
     dec a
     jr z,Next_file
+
     ex af,af
 
-6 pop bc
+    pop bc
     pop hl
+
     call NextScan
 
-    jr 4B
+    jr 1B
 
 Next_file
 
@@ -294,4 +350,4 @@ Next_file
 
     call NextScan
 
-    jr 7B
+    jr Imprime_imagen

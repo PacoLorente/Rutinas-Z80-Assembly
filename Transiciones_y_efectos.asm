@@ -284,8 +284,6 @@ Imprime_Logo_principal:
 
 ;	Datos de entrada.
 
-;	jr $
-
 	ld hl,Direccion_Logo_principal 									; $4049,$404a,$404b ..... $5849,$584a,$584b
 ;																	; $4069,$406a,$406b
 ; 																	; $4089,$408a,$408b
