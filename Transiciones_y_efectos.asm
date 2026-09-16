@@ -1,3 +1,38 @@
+; ----------------------------------------------------------
+;
+;   16/9/26
+;
+;   Limpia la pantalla fijando el negro y pinta el logo de Amadeus.
+;
+;	MODIFY: AF,BC,DE y HL.
+
+Clean_and_logo:
+
+    xor a
+    out ($fe),a                                             ; BORDER NEGRO.
+
+;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;   COLORES: 0 ..... NEGRO
+;            1 ..... AZUL    
+;            2 ..... ROJO
+;            3 ..... MAGENTA
+;            4 ..... VERDE
+;            5 ..... CIAN
+;            6 ..... AMARILLO
+;            7 ..... BLANCO
+
+    ld a,%01000101                                          ; Fondo NEGRO, tinta Cyan + bright.
+    call Cls
+
+;   Imprime en pantalla el logo principal.
+
+    call Imprime_Logo_principal
+
+    ret
+
+; -----------------------------------------------------------------------
+
 Enable_Print_DONE:
 
 	ld a,(Ctrl_1)
@@ -276,9 +311,14 @@ Print_Moon:
 
 ; ------------------------------------------------------------------------
 ;
-;	19/7/25
+;	16/09/26
 ;
 ;	Imprime en pantalla la imagen del logo principal.
+;
+;	Nota: El logo principal está compuesto por varios fragmentos.
+;
+;	MODIFY: BC, DE y HL.
+
 
 Imprime_Logo_principal:
 
@@ -289,10 +329,8 @@ Imprime_Logo_principal:
 ; 																	; $4089,$408a,$408b
 
 	ld de,Logo_nave													; (3x24)
-
 	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
-	ld b,3															; Nº de Columnas en B.
-	ld c,3															; Nº de Filas en C.
+	ld bc,$0303 													; Nº de Columnas en B y nº de Filas en C.
 
 	push hl
 	call Pinta_imagen												; Pinta la nave.
@@ -300,9 +338,7 @@ Imprime_Logo_principal:
 
 ;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""ma"".
 
-	ld a,l
-	add $20
-	ld l,a															; Sitúa en Fila inferior.
+	call Down_File 													; Coloca HL en la siguiente Fila.
 
 	inc l															; Sitúa en la columna correspondiente.
 	inc l
@@ -316,8 +352,7 @@ Imprime_Logo_principal:
 ;																	; $408c, $408d, $408e
 
 	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
-	ld b,3															; Nº de Columnas en B.
-	ld c,2															; Nº de Filas en C.
+	ld bc,$0302 													; Nº de Columnas en B y nº de Filas en C.
 
 	push hl
 	call Pinta_imagen												; Pinta "ma".
@@ -325,13 +360,11 @@ Imprime_Logo_principal:
 
 ;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""ad"".
 
-	ld a,l
-	sub $20
-	ld l,a															; Sitúa en Fila superior.
+	call Up_File 													; Coloca HL en la anterior Fila.
 
-	inc l															; Sitúa en la columna correspondiente.
+	inc l															
 	inc l
-	inc l
+	inc l 															; Sitúa en la columna correspondiente.
 
 ;	Datos.
 
@@ -342,19 +375,15 @@ Imprime_Logo_principal:
 	ld de,logo_ad													; (3x24)
 
 	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
-	ld b,3															; Nº de Columnas en B.
-	ld c,3															; Nº de Filas en C.
+	ld bc,$0303 													; Nº de Columnas en B y nº de Filas en C.
 
 	push hl
 	call Pinta_imagen												; Pinta "ad".
 	pop hl
 
-
 ;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""eu"".
 
-	ld a,l
-	add $20
-	ld l,a															; Sitúa en Fila inferior.
+	call Down_File 													; Coloca HL en la siguiente Fila.
 
 	inc l															; Sitúa en la columna correspondiente.
 	inc l
@@ -368,8 +397,7 @@ Imprime_Logo_principal:
 	ld de,logo_eu													; (3x16)
 
 	ld a,%01000101													; Attr. en A.
-	ld b,3															; Nº de Columnas en B.
-	ld c,2															; Nº de Filas en C.
+	ld bc,$0302 													; Nº de Columnas en B y nº de Filas en C.
 
 	push hl
 	call Pinta_imagen												; Pinta "eu".
@@ -389,8 +417,7 @@ Imprime_Logo_principal:
 	ld de,logo_us													; (3x16)
 
 	ld a,%01000101													; Attr. en A.
-	ld b,3															; Nº de Columnas en B.
-	ld c,2															; Nº de Filas en C.
+	ld bc,$0302                                                     ; Nº de Columnas en B y nº de Filas en C.
 
 	push hl
 	call Pinta_imagen												; Pinta "us".

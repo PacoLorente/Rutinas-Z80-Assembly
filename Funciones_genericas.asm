@@ -117,6 +117,18 @@ NextScan_15:
 
 	ret
 
+Down_File:
+
+    push bc
+
+    ld b,8
+1 call NextScan
+    djnz 1B
+
+    pop bc
+
+    ret
+
 ;----------------------------------------------------------------------------------------------------------------     
 ;
 ;	5/08/22
@@ -159,6 +171,18 @@ PreviousScan_15:
 
 	ret
 
+Up_File:
+
+    push bc
+
+    ld b,8
+1 call PreviousScan
+    djnz 1B
+
+    pop bc
+
+    ret
+
 ; -----------------------------------------------------------------
 ;
 ;	4/4/25
@@ -185,7 +209,7 @@ Clean_mem:
 
 ; ------------------------------------------------------------------------
 ;
-;   7/6/26
+;   16/9/26
 ;
 ;   Pinta_imagen.
 ;
@@ -197,12 +221,9 @@ Clean_mem:
 ;            B contiene el nº de Columnas.
 ;            C contiene el nº de Filas.
 ;
-;   MODIFICA: AF,HL,DE y BC.
+;   MODIFICA: AF, AF´, HL, DE y BC.
 
 ;   Notas:  Utiliza esta rutina para ir borrando vidas. Por eso utilizamos la función XOR.
-
-;   6643, 6683, 6516, 6659, 6516  t/states. ..... 6603 t/states.
-
 
 Pinta_imagen:
 
@@ -278,7 +299,7 @@ Fija_attrs:
 
 ; ----------------------------------------------------------------
 ;
-;   15/9/26
+;   16/9/26
 ;
 ;   Pinta cualquier imagen en pantalla, (XOR). Esta rutina se utiliza para imágenes estáticas, (NO SPRITES).
 ;
@@ -288,7 +309,7 @@ Fija_attrs:
 ;            B contiene el nº de Columnas.
 ;            C contiene el nº de Filas.
 ;
-;   MODIFICA: AF,HL,DE y BC.
+;   MODIFICA: A,HL,DE y BC.
 
 ;   Notas:  Utiliza esta rutina para ir borrando vidas. Por eso utilizamos la función XOR.
 
@@ -317,6 +338,7 @@ Imprime_imagen:
 ;   Byte (XOR) del 3er char. de la imagen., etc.
 
 ;   Decrementa el contador de scanlines, (A´).
+
 
 2 ld a,(de)
     xor (hl)
