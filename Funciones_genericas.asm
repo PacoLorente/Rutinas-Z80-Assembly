@@ -362,7 +362,7 @@ Imprime_imagen:
 
     jr 1B
 
-Next_file
+Next_file:
 
     pop bc
     pop hl
@@ -373,3 +373,143 @@ Next_file
     call NextScan
 
     jr Imprime_imagen
+
+; ----------------------------------------------------------
+;
+;   16/9/26
+;
+;   Imprime TEXTO usando el CHARSET de la ROM.
+;
+;   Si el registro (B) es distinto de "0", la rutina usará ese valor para TEMPORIZAR la impresión de caracteres,_
+;   _como si fuera una máquina de escribir.
+
+;   INPUTS: HL apunta al mensage a imprimir, (msg).
+;           DE indica la fila de pantalla donde queremos imprimir el msg.
+;            A contiene los attrs. del msg.
+;            B Actúa como temporizador, ralentiza la impresión de caracteres, (simula una máquina de escribir).
+;              No actua cuando su valor es "0".
+;
+;   MODIFY: HL y DE.
+
+Print_text_msg:
+
+    push bc                                 ;   PUSH temporizador.
+
+    ex af,af                                ;   Attr. en A´.
+
+    push hl
+    push de
+
+    call Find_address
+
+    ex de,hl                                ;   BIN en DE - Fila en HL.
+
+    call Print_BIN                          ;   Imprime caracter.
+
+    call Calcula_direccion_atributos
+
+    ex af,af
+    ld (hl),a                               ;   Asigna attrs. al caracter impreso.
+
+    pop de                                  ;   Fila de pantalla.
+    pop hl                                  ;   Mensaje de texto.
+
+;   Suiguiente char.
+
+    inc hl                                  ;   Siguiente caracter a imprimir.
+
+    inc (hl)
+    dec (hl)
+
+    jr z,Exit_01                            ;   RET, fin de msg.
+
+    inc e                                   ;   Siguiente columna de pantalla.
+
+    pop bc                                  ;   Carga el temporizador en B.
+
+    inc b
+    dec b
+
+    jr z,Print_text_msg                     ;   Mensaje NO TEMPORIZADO. Siguiente char.
+
+;  Temporización del caracter.
+
+    ex af,af                                ;   attrs. del msg en AF´.
+
+    ld a,r
+    srl a
+
+    bit 0,a
+    jr z,3F
+
+    ld b,90
+    jr 1F
+
+3 ld b,130
+
+1 ld c,$ff
+
+2 dec c
+    jr nz,2B
+
+    djnz 1B                                 ;   Aplica temporización.
+
+    call BEEP
+
+    ld b,1                                  ;   Activa retardo RND en el próximo char. a imprimir.
+
+    ex af,af                                ;   Recupera attrs. en A.
+
+    jr Print_text_msg
+
+
+Exit_01:
+
+    pop bc
+
+    ret
+
+; -----------------------------------------------------
+
+;   Find char. data.
+;
+;   INPUT: (HL) contiene el código ASCII del char. a imprimir.
+;
+;   MODIFY: HL y BC.
+
+;   OUTPUT: HL contendrá la dirección de memoria ROM donde se encuentran los 8 bytes que forman el caracter.
+
+
+Find_address:
+
+    ld bc,ROM_ASCII
+
+    ld l,(hl)
+    ld h,0                                  ;   Código ASCII del caracter a imprimir en HL.
+
+    add hl,hl
+    add hl,hl
+    add hl,hl                               ;   ASCII * 8
+
+    add hl,bc
+
+    ret
+
+Print_BIN:
+
+    ld b,8                                  ;   Nº de lineas que forman el caracter.
+
+    push hl
+
+1 ld a,(de)
+    ld (hl),a                               ;   Print
+
+    inc h                                   ;   INC scanline.
+    inc e                                   ;   INC data address
+
+    djnz 1B
+
+    pop hl
+
+    ret
+

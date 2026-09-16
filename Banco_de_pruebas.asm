@@ -1074,7 +1074,7 @@ START:
 Main_menu:
 
 	call Clean_and_logo 									; v2. Ok.
-	call Print_Main_menu
+	call Print_Main_menu  									; [BEEP]
 	call Firma
 
 ;	Print Best Score if it exist.
