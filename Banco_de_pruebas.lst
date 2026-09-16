@@ -582,11 +582,11 @@
  431  83A7
  432  83A7 3A 2C 94     	ld a,(Ctrl_5)
  433  83AA CB 77        	bit 6,a
- 434  83AC C4 47 C5     	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
+ 434  83AC C4 49 C5     	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
  435  83AF
  436  83AF 3A EE 93     	ld a,(Ctrl_1)
  437  83B2 CB 47        	bit 0,a
- 438  83B4 C4 29 C5     	call nz,Print_DONE 												; Imprime "DONE" si hemos eliminado a la última entidad del nivel.
+ 438  83B4 C4 2B C5     	call nz,Print_DONE 												; Imprime "DONE" si hemos eliminado a la última entidad del nivel.
  439  83B7
  440  83B7 C1           	pop bc
  441  83B8 D1           	pop de
@@ -3113,13 +3113,13 @@
  888  9465              Variables_DRAW1: 											; Estas variables no se inicializan si avanzamos de nivel.
  889  9465
  890  9465 01           Nivel db 1													; Nivel actual del juego.
- 891  9466 37 C6        Puntero_indice_NIVELES defw Indice_de_niveles
- 892  9468 AF C5        Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
+ 891  9466 39 C6        Puntero_indice_NIVELES defw Indice_de_niveles
+ 892  9468 B1 C5        Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
  893  946A 03           Lives db 3
  894  946B 03           Shields db 3 												; Nº de Shields
  895  946C
- 896  946C E9 C5        Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
- 897  946E D7 C5        Puntero_de_vidas defw Indice_de_vidas
+ 896  946C EB C5        Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
+ 897  946E D9 C5        Puntero_de_vidas defw Indice_de_vidas
  898  9470
  899  9470 00           Entidades_BCD_unidades db 0
  900  9471 00           Entidades_BCD_decenas db 0
@@ -5413,7 +5413,7 @@
 3132  9D9F 21 2B 94     	ld hl,Ctrl_4
 3133  9DA2 CB AE        	res 5,(hl)
 3134  9DA4
-3135  9DA4 CD 38 C5     	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
+3135  9DA4 CD 3A C5     	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
 3136  9DA7
 3137  9DA7 CD 32 A8     	call Replace_Amadeus_attr_zone 					;	Repone los atributos de las 2 últimas líneas de pantalla para que la entrada de Amadeus del siguiente nivel sea azul.
 3138  9DAA
@@ -5921,7 +5921,7 @@
  110+ 9EB8
  111+ 9EB8 3E 47            ld a,%01000111                                          ; attrs. Yellow ink.
  112+ 9EBA 06 00            ld b,0
- 113+ 9EBC CD 5A C5         call Print_text_msg
+ 113+ 9EBC CD 5C C5         call Print_text_msg
  114+ 9EBF
  115+ 9EBF              ;	Avanzamos carro de impresión y msg.
  116+ 9EBF
@@ -6480,7 +6480,7 @@
  669+ A0B5 11 C7 50         ld de,Line_22 + 7
  670+ A0B8 06 00        	ld b,0
  671+ A0BA 3E C5            ld a,%11000101                                          ; attrs.
- 672+ A0BC CD 5A C5         call Print_text_msg                                     ; Print "Press FIRE to START".
+ 672+ A0BC CD 5C C5         call Print_text_msg                                     ; Print "Press FIRE to START".
  673+ A0BF
  674+ A0BF              ;   Scan KEYBOARD to START GAME.
  675+ A0BF
@@ -6504,7 +6504,7 @@
  693+ A0C7 21 59 95     	ld hl,a6                                                ; "Press FIRE to START"
  694+ A0CA 11 C7 50         ld de,Line_22 + 7
  695+ A0CD 3E C5            ld a,%11000101                                          ; attrs.
- 696+ A0CF CD 5A C5         call Print_text_msg                                     ; Print "Press FIRE to START".
+ 696+ A0CF CD 5C C5         call Print_text_msg                                     ; Print "Press FIRE to START".
  697+ A0D2
  698+ A0D2              ;	Guarda los controles KEYBOARD en la caja.
  699+ A0D2
@@ -6624,10 +6624,10 @@
   24+ A133 35           	dec (hl)
   25+ A134 C0           	ret nz
   26+ A135
-  27+ A135 21 37 C6     	ld hl,Indice_de_niveles
+  27+ A135 21 39 C6     	ld hl,Indice_de_niveles
   28+ A138 22 66 94     	ld (Puntero_indice_NIVELES),hl
   29+ A13B
-  30+ A13B 21 AF C5     	ld hl,Msg_level_index
+  30+ A13B 21 B1 C5     	ld hl,Msg_level_index
   31+ A13E 22 68 94     	ld (Puntero_de_mensajes_de_niveles),hl
   32+ A141
   33+ A141 C9           	ret
@@ -6722,10 +6722,10 @@
  122+ A1A4 21 65 94     	ld hl,Nivel
  123+ A1A7 36 01        	ld (hl),1
  124+ A1A9
- 125+ A1A9 21 37 C6     	ld hl,Indice_de_niveles
+ 125+ A1A9 21 39 C6     	ld hl,Indice_de_niveles
  126+ A1AC 22 66 94     	ld (Puntero_indice_NIVELES),hl
  127+ A1AF
- 128+ A1AF 21 AF C5     	ld hl,Msg_level_index
+ 128+ A1AF 21 B1 C5     	ld hl,Msg_level_index
  129+ A1B2 22 68 94     	ld (Puntero_de_mensajes_de_niveles),hl
  130+ A1B5
  131+ A1B5 21 6A 94     	ld hl,Lives
@@ -6733,9 +6733,9 @@
  133+ A1BA 23           	inc hl
  134+ A1BB 36 03        	ld (hl),3
  135+ A1BD
- 136+ A1BD 21 E9 C5     	ld hl,Indice_de_escudos
+ 136+ A1BD 21 EB C5     	ld hl,Indice_de_escudos
  137+ A1C0 22 6C 94     	ld (Puntero_de_escudos),hl
- 138+ A1C3 21 D7 C5     	ld hl,Indice_de_vidas
+ 138+ A1C3 21 D9 C5     	ld hl,Indice_de_vidas
  139+ A1C6 22 6E 94     	ld (Puntero_de_vidas),hl
  140+ A1C9
  141+ A1C9 3E 46        	ld a,%01000110
@@ -7870,7 +7870,7 @@
 1270+ A519
 1271+ A519 CD 42 A6     	call Calcula_salto_en_BC
 1272+ A51C
-1273+ A51C 21 FB C5     	ld hl,Indice_de_tablas_Random
+1273+ A51C 21 FD C5     	ld hl,Indice_de_tablas_Random
 1274+ A51F A7           	and a
 1275+ A520 ED 4A        	adc hl,bc
 1276+ A522 22 E0 93     	ld (Puntero_tabla_Random),hl
@@ -16091,7 +16091,7 @@
   15+ C0DB 3E 47            ld a,%01000111
   16+ C0DD 06 00            ld b,0
   17+ C0DF 21 92 94         ld hl,Nombre_del_campeon
-  18+ C0E2 CD 5A C5         call Print_text_msg
+  18+ C0E2 CD 5C C5         call Print_text_msg
   19+ C0E5
   20+ C0E5 1C               inc e
   21+ C0E6 1C               inc e
@@ -16099,7 +16099,7 @@
   23+ C0E7 3E 47            ld a,%01000111
   24+ C0E9 06 00            ld b,0
   25+ C0EB 21 A0 95         ld hl,a10
-  26+ C0EE CD 5A C5         call Print_text_msg
+  26+ C0EE CD 5C C5         call Print_text_msg
   27+ C0F1
   28+ C0F1 1C               inc e
   29+ C0F2 1C               inc e
@@ -16107,7 +16107,7 @@
   31+ C0F3 3E C5            ld a,%11000101
   32+ C0F5 06 00            ld b,0
   33+ C0F7 21 8C 94         ld hl,Score_max_msg
-  34+ C0FA CD 5A C5         call Print_text_msg
+  34+ C0FA CD 5C C5         call Print_text_msg
   35+ C0FD
   36+ C0FD C9           	ret
   37+ C0FE
@@ -16130,7 +16130,7 @@
   54+ C107 3E 47            ld a,%01000111
   55+ C109 06 00            ld b,0
   56+ C10B 21 8C 94         ld hl,Score_max_msg
-  57+ C10E CD 5A C5         call Print_text_msg
+  57+ C10E CD 5C C5         call Print_text_msg
   58+ C111
   59+ C111 C9               ret
   60+ C112
@@ -16199,7 +16199,7 @@
  123+ C131 11 29 48         ld de,Line_9 + 9
  124+ C134 3E 45            ld a,%01000101                                          ; attrs. black paper, cyan ink.
  125+ C136 06 00            ld b,0
- 126+ C138 CD 5A C5         call Print_text_msg
+ 126+ C138 CD 5C C5         call Print_text_msg
  127+ C13B
  128+ C13B CD 6D C1         call Make_Score_max_msg                                 ; Construye un mensaje de texto con la puntuación máx. obtenida.
  129+ C13E
@@ -16209,7 +16209,7 @@
  133+ C144 11 04 50         ld de,Line_16 + 4
  134+ C147 3E 46            ld a,%01000110                                          ; attrs. black paper, yellow ink.
  135+ C149 06 00            ld b,0
- 136+ C14B CD 5A C5         call Print_text_msg
+ 136+ C14B CD 5C C5         call Print_text_msg
  137+ C14E
  138+ C14E              ;   Attrs. en la zona del nombre.
  139+ C14E
@@ -16362,7 +16362,7 @@
  286+ C1BC              ;    ld b,150                                                   ; TEMPORIZADOR DE CARACTERES ON !!!
  287+ C1BC 06 01            ld b,1
  288+ C1BE
- 289+ C1BE CD 5A C5         call Print_text_msg
+ 289+ C1BE CD 5C C5         call Print_text_msg
  290+ C1C1
  291+ C1C1 C9               ret
  292+ C1C2
@@ -16445,7 +16445,7 @@
  369+ C1FC 11 09 48         ld de,Line_8 + 9
  370+ C1FF 3E 46            ld a,%01000110                                          ; attrs. Yellow ink.
  371+ C201 06 00            ld b,0
- 372+ C203 CD 5A C5         call Print_text_msg
+ 372+ C203 CD 5C C5         call Print_text_msg
  373+ C206
  374+ C206              ;   LEFT. -----------------------------------------------------------------------------------------------------------------
  375+ C206
@@ -16453,7 +16453,7 @@
  377+ C209 11 8C 48         ld de,Line_12 + 12
  378+ C20C 3E C7            ld a,%11000111                                          ; attrs. Flash White.
  379+ C20E 06 00            ld b,0
- 380+ C210 CD 5A C5         call Print_text_msg
+ 380+ C210 CD 5C C5         call Print_text_msg
  381+ C213
  382+ C213              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
  383+ C213
@@ -16485,7 +16485,7 @@
  409+ C237
  410+ C237 3E 68            ld a,%01101000
  411+ C239 06 00            ld b,0
- 412+ C23B CD 5A C5         call Print_text_msg
+ 412+ C23B CD 5C C5         call Print_text_msg
  413+ C23E
  414+ C23E              ;   RIGHT. -----------------------------------------------------------------------------------------------------------------
  415+ C23E
@@ -16493,7 +16493,7 @@
  417+ C241 11 CC 48         ld de,Line_14 + 12
  418+ C244 3E C7            ld a,%11000111                                          ; attrs. Flash White.
  419+ C246 06 00            ld b,0
- 420+ C248 CD 5A C5         call Print_text_msg
+ 420+ C248 CD 5C C5         call Print_text_msg
  421+ C24B
  422+ C24B              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move LEFT).
  423+ C24B
@@ -16524,7 +16524,7 @@
  448+ C26E
  449+ C26E 3E 68            ld a,%01101000
  450+ C270 06 00            ld b,0
- 451+ C272 CD 5A C5         call Print_text_msg
+ 451+ C272 CD 5C C5         call Print_text_msg
  452+ C275
  453+ C275              ;   FIRE. -----------------------------------------------------------------------------------------------------------------
  454+ C275
@@ -16532,7 +16532,7 @@
  456+ C278 11 0C 50         ld de,Line_16 + 12
  457+ C27B 3E C7            ld a,%11000111                                          ; attrs. Flash White.
  458+ C27D 06 00            ld b,0
- 459+ C27F CD 5A C5         call Print_text_msg
+ 459+ C27F CD 5C C5         call Print_text_msg
  460+ C282
  461+ C282              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_RIGHT).
  462+ C282
@@ -16564,7 +16564,7 @@
  488+ C2A6
  489+ C2A6 3E 68            ld a,%01101000
  490+ C2A8 06 00            ld b,0
- 491+ C2AA CD 5A C5         call Print_text_msg
+ 491+ C2AA CD 5C C5         call Print_text_msg
  492+ C2AD
  493+ C2AD              ;   SHIELD. -----------------------------------------------------------------------------------------------------------------
  494+ C2AD
@@ -16572,7 +16572,7 @@
  496+ C2B0 11 4C 50         ld de,Line_18 + 12
  497+ C2B3 3E C7            ld a,%11000111                                          ; attrs. Flash White.
  498+ C2B5 06 00            ld b,0
- 499+ C2B7 CD 5A C5         call Print_text_msg
+ 499+ C2B7 CD 5C C5         call Print_text_msg
  500+ C2BA
  501+ C2BA              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_FIRE).
  502+ C2BA
@@ -16599,7 +16599,7 @@
  523+ C2D8
  524+ C2D8 3E 68            ld a,%01101000
  525+ C2DA 06 00            ld b,0
- 526+ C2DC CD 5A C5         call Print_text_msg
+ 526+ C2DC CD 5C C5         call Print_text_msg
  527+ C2DF
  528+ C2DF              ; Teclas definidas.
  529+ C2DF
@@ -16778,7 +16778,7 @@
  702+ C381 11 0C 48         ld de,Line_8 + 12
  703+ C384 06 00            ld b,0
  704+ C386 3E 46            ld a,%01000110                                          ; attrs.
- 705+ C388 CD 5A C5         call Print_text_msg                                     ; Print "Controls:".
+ 705+ C388 CD 5C C5         call Print_text_msg                                     ; Print "Controls:".
  706+ C38B
  707+ C38B 21 EC 95         ld hl,Move_LEFT
  708+ C38E 11 86 48         ld de,Line_12 + 6                                       ; Posición de inicio de línea.
@@ -16792,7 +16792,7 @@
  716+ C398 21 19 95         ld hl,a0                                                ; "Press ".
  717+ C39B 3E 47            ld a,%01000111                                          ; attrs.
  718+ C39D 06 00            ld b,0
- 719+ C39F CD 5A C5         call Print_text_msg                                     ; Print "Press ".
+ 719+ C39F CD 5C C5         call Print_text_msg                                     ; Print "Press ".
  720+ C3A2
  721+ C3A2 1C               inc e
  722+ C3A3
@@ -16808,7 +16808,7 @@
  732+ C3AA 21 20 95         ld hl,a1                                                ; "or ".
  733+ C3AD 3E 47            ld a,%01000111                                          ; attrs.
  734+ C3AF 06 00            ld b,0
- 735+ C3B1 CD 5A C5         call Print_text_msg                                     ; Print "or ".
+ 735+ C3B1 CD 5C C5         call Print_text_msg                                     ; Print "or ".
  736+ C3B4
  737+ C3B4 1C               inc e
  738+ C3B5
@@ -16824,7 +16824,7 @@
  748+ C3BC 21 25 95         ld hl,a2                                                ; " to move ".
  749+ C3BF 3E 47            ld a,%01000111                                          ; attrs.
  750+ C3C1 06 00            ld b,0
- 751+ C3C3 CD 5A C5         call Print_text_msg                                     ; Print " to move".
+ 751+ C3C3 CD 5C C5         call Print_text_msg                                     ; Print " to move".
  752+ C3C6
  753+ C3C6 1C               inc e
  754+ C3C7
@@ -16834,7 +16834,7 @@
  758+ C3CA 11 C8 48         ld de,Line_14 + 8
  759+ C3CD 3E 47            ld a,%01000111                                          ; attrs.
  760+ C3CF 06 00            ld b,0
- 761+ C3D1 CD 5A C5         call Print_text_msg                                     ; Print " LEFT and RIGHT.".
+ 761+ C3D1 CD 5C C5         call Print_text_msg                                     ; Print " LEFT and RIGHT.".
  762+ C3D4
  763+ C3D4 1C               inc e
  764+ C3D5
@@ -16855,7 +16855,7 @@
  779+ C3E2 21 19 95         ld hl,a0                                                ; "Press ".
  780+ C3E5 3E 47            ld a,%01000111                                          ; attrs.
  781+ C3E7 06 00            ld b,0
- 782+ C3E9 CD 5A C5         call Print_text_msg
+ 782+ C3E9 CD 5C C5         call Print_text_msg
  783+ C3EC
  784+ C3EC 1C               inc e                                                   ; Print "Press ".
  785+ C3ED
@@ -16871,7 +16871,7 @@
  795+ C3F4 21 40 95         ld hl,a4                                                ; " to FIRE and ".
  796+ C3F7 3E 47            ld a,%01000111                                          ; attrs.
  797+ C3F9 06 00            ld b,0
- 798+ C3FB CD 5A C5         call Print_text_msg                                     ; Print " to FIRE and ".
+ 798+ C3FB CD 5C C5         call Print_text_msg                                     ; Print " to FIRE and ".
  799+ C3FE
  800+ C3FE 1C               inc e
  801+ C3FF
@@ -16886,7 +16886,7 @@
  810+ C408 11 4B 50         ld de,Line_18 + 11
  811+ C40B 3E 47            ld a,%01000111                                          ; attrs.
  812+ C40D 06 00            ld b,0
- 813+ C40F CD 5A C5         call Print_text_msg                                     ; Print " to FIRE and ".
+ 813+ C40F CD 5C C5         call Print_text_msg                                     ; Print " to FIRE and ".
  814+ C412
  815+ C412              ;   Next msn
  816+ C412
@@ -16894,7 +16894,7 @@
  818+ C415 11 C7 50         ld de,Line_22 + 7
  819+ C418 3E C5            ld a,%11000101                                          ; attrs.
  820+ C41A 06 00            ld b,0
- 821+ C41C CD 5A C5         call Print_text_msg                                     ; Print "Press FIRE to START".
+ 821+ C41C CD 5C C5         call Print_text_msg                                     ; Print "Press FIRE to START".
  822+ C41F
  823+ C41F              ;   Scan KEYBOARD to START GAME.
  824+ C41F
@@ -17037,7 +17037,7 @@
  961+ C4C2 28 0B            jr z,SPACE_ascii_code                                   ; SPACE ascii code.
  962+ C4C4
  963+ C4C4 3E 70        1 ld a,%01110000                                            ; attrs.
- 964+ C4C6 CD 5A C5         call Print_text_msg
+ 964+ C4C6 CD 5C C5         call Print_text_msg
  965+ C4C9
  966+ C4C9 C9               ret
  967+ C4CA
@@ -17053,7 +17053,7 @@
  977+ C4D4
  978+ C4D4              ; ----------------------------------------------------------
  979+ C4D4              ;
- 980+ C4D4              ;   19/2/26
+ 980+ C4D4              ;   16/9/26
  981+ C4D4              ;
  982+ C4D4              ;   Print MAIN MENU.
  983+ C4D4              ;
@@ -17061,503 +17061,513 @@
  985+ C4D4              ;       KEMPSTON
  986+ C4D4              ;       SINCLAIR
  987+ C4D4              ;       DEFINE
- 988+ C4D4
- 989+ C4D4
- 990+ C4D4              Print_Main_menu:
- 991+ C4D4
- 992+ C4D4 21 D5 94         ld hl,Keyboard                                          ; HL contiene el mensaje.
- 993+ C4D7 06 00            ld b,0                                                  ; NO TEMPORIZADOR.
- 994+ C4D9 11 2C 48         ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
- 995+ C4DC 3E 47            ld a,%01000111                                          ; attrs. Ink white.
- 996+ C4DE
- 997+ C4DE D5               push de
- 998+ C4DF CD 5A C5         call Print_text_msg
- 999+ C4E2 E1               pop hl
-1000+ C4E3
-1001+ C4E3 06 50            ld b,%01010000                                          ; Red bright.
-1002+ C4E5 CD 55 C5         call Modify_first_char_attr
-1003+ C4E8
-1004+ C4E8 21 DE 94         ld hl,Kempstom                                          ; msg.
-1005+ C4EB 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1006+ C4EE 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1007+ C4F1 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1008+ C4F3
-1009+ C4F3 D5               push de
-1010+ C4F4 CD 5A C5         call Print_text_msg
-1011+ C4F7 E1               pop hl
-1012+ C4F8
-1013+ C4F8 2C               inc l
-1014+ C4F9
-1015+ C4F9 06 70            ld b,%01110000                                          ; Yellow bright.
-1016+ C4FB CD 55 C5         call Modify_first_char_attr
-1017+ C4FE
-1018+ C4FE 21 E7 94         ld hl,Interface                                         ; msg.
-1019+ C501 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1020+ C504 11 AC 48         ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1021+ C507 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1022+ C509
-1023+ C509 D5               push de
-1024+ C50A CD 5A C5         call Print_text_msg
-1025+ C50D E1               pop hl
-1026+ C50E
-1027+ C50E 06 60            ld b,%01100000                                          ; Verde bright.
-1028+ C510 CD 55 C5         call Modify_first_char_attr
-1029+ C513
-1030+ C513 21 F0 94         ld hl,Define                                            ; msg.
-1031+ C516 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1032+ C519 11 EC 48         ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1033+ C51C 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1034+ C51E
-1035+ C51E D5               push de
-1036+ C51F CD 5A C5         call Print_text_msg
-1037+ C522 E1               pop hl
-1038+ C523
-1039+ C523 06 48            ld b,%01001000                                          ; Azul bright._
-1040+ C525 CD 55 C5         call Modify_first_char_attr
-1041+ C528
-1042+ C528 C9               ret
-1043+ C529
-1044+ C529              ; ----------------------------------------------------------
-1045+ C529              ;
-1046+ C529              ;   21/07/26
-1047+ C529              ;
-1048+ C529
-1049+ C529              Print_DONE:
-1050+ C529
-1051+ C529 01 00 00         ld bc,0
-1052+ C52C 21 0A 95         ld hl,Done                                              ; msg.
-1053+ C52F 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
-1054+ C532 3E E0            ld a,%11100000                                          ; attrs.
-1055+ C534
-1056+ C534 CD 5A C5         call Print_text_msg
-1057+ C537
-1058+ C537 C9               ret
-1059+ C538
-1060+ C538              Clean_DONE
-1061+ C538
-1062+ C538 21 A7 95         ld hl,a12                                               ; msg., "    ",
-1063+ C53B 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
-1064+ C53E 3E 00            ld a,0                                                  ; attrs.
-1065+ C540
-1066+ C540 CD 5A C5         call Print_text_msg
-1067+ C543
-1068+ C543 C9               ret
-1069+ C544
-1070+ C544 AF               xor a
-1071+ C545 3C               inc a                                                   ; Fuerza NZ a la salida.
+ 988+ C4D4              ;
+ 989+ C4D4              ;   MODIFY: AF, HL, BC y DE.
+ 990+ C4D4
+ 991+ C4D4              Print_Main_menu:
+ 992+ C4D4
+ 993+ C4D4 18 FE            jr $
+ 994+ C4D6
+ 995+ C4D6 21 D5 94         ld hl,Keyboard                                          ; HL contiene el mensaje.
+ 996+ C4D9 06 00            ld b,0                                                  ; NO TEMPORIZADOR.
+ 997+ C4DB 11 2C 48         ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
+ 998+ C4DE 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+ 999+ C4E0
+1000+ C4E0 D5               push de
+1001+ C4E1 CD 5C C5         call Print_text_msg
+1002+ C4E4 E1               pop hl
+1003+ C4E5
+1004+ C4E5 06 50            ld b,%01010000                                          ; Red bright.
+1005+ C4E7 CD 57 C5         call Modify_first_char_attr
+1006+ C4EA
+1007+ C4EA 21 DE 94         ld hl,Kempstom                                          ; msg.
+1008+ C4ED 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1009+ C4F0 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1010+ C4F3 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1011+ C4F5
+1012+ C4F5 D5               push de
+1013+ C4F6 CD 5C C5         call Print_text_msg
+1014+ C4F9 E1               pop hl
+1015+ C4FA
+1016+ C4FA 2C               inc l
+1017+ C4FB
+1018+ C4FB 06 70            ld b,%01110000                                          ; Yellow bright.
+1019+ C4FD CD 57 C5         call Modify_first_char_attr
+1020+ C500
+1021+ C500 21 E7 94         ld hl,Interface                                         ; msg.
+1022+ C503 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1023+ C506 11 AC 48         ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1024+ C509 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1025+ C50B
+1026+ C50B D5               push de
+1027+ C50C CD 5C C5         call Print_text_msg
+1028+ C50F E1               pop hl
+1029+ C510
+1030+ C510 06 60            ld b,%01100000                                          ; Verde bright.
+1031+ C512 CD 57 C5         call Modify_first_char_attr
+1032+ C515
+1033+ C515 21 F0 94         ld hl,Define                                            ; msg.
+1034+ C518 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1035+ C51B 11 EC 48         ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1036+ C51E 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1037+ C520
+1038+ C520 D5               push de
+1039+ C521 CD 5C C5         call Print_text_msg
+1040+ C524 E1               pop hl
+1041+ C525
+1042+ C525 06 48            ld b,%01001000                                          ; Azul bright._
+1043+ C527 CD 57 C5         call Modify_first_char_attr
+1044+ C52A
+1045+ C52A C9               ret
+1046+ C52B
+1047+ C52B              ; ----------------------------------------------------------
+1048+ C52B              ;
+1049+ C52B              ;   21/07/26
+1050+ C52B              ;
+1051+ C52B
+1052+ C52B              Print_DONE:
+1053+ C52B
+1054+ C52B 01 00 00         ld bc,0
+1055+ C52E 21 0A 95         ld hl,Done                                              ; msg.
+1056+ C531 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
+1057+ C534 3E E0            ld a,%11100000                                          ; attrs.
+1058+ C536
+1059+ C536 CD 5C C5         call Print_text_msg
+1060+ C539
+1061+ C539 C9               ret
+1062+ C53A
+1063+ C53A              Clean_DONE
+1064+ C53A
+1065+ C53A 21 A7 95         ld hl,a12                                               ; msg., "    ",
+1066+ C53D 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
+1067+ C540 3E 00            ld a,0                                                  ; attrs.
+1068+ C542
+1069+ C542 CD 5C C5         call Print_text_msg
+1070+ C545
+1071+ C545 C9               ret
 1072+ C546
-1073+ C546 C9               ret
-1074+ C547
-1075+ C547              ; ----------------------------------------------------------
-1076+ C547              ;
-1077+ C547              ;   29/4/26
-1078+ C547              ;
-1079+ C547
-1080+ C547              Print_Game_Over:
-1081+ C547
-1082+ C547 21 0F 95         ld hl,Game_Over                                         ; msg.
-1083+ C54A 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1084+ C54D 3E 50            ld a,%01010000                                          ; attrs.
-1085+ C54F 06 00            ld b,0
-1086+ C551
-1087+ C551 CD 5A C5         call Print_text_msg
-1088+ C554
-1089+ C554 C9               ret
-1090+ C555
-1091+ C555              ; ----------------------------------------------------------
-1092+ C555
-1093+ C555              Modify_first_char_attr:
-1094+ C555
-1095+ C555 CD C0 9D         call Calcula_direccion_atributos
-1096+ C558 70               ld (hl),b
-1097+ C559
-1098+ C559 C9               ret
-1099+ C55A
-1100+ C55A              ; ----------------------------------------------------------
-1101+ C55A              ;
-1102+ C55A              ;   18/2/26
-1103+ C55A              ;
-1104+ C55A              ;   INPUTS: HL apunta al mensage a imprimir, (msg).
-1105+ C55A              ;           DE indica la fila de pantalla donde queremos imprimir el msg.
-1106+ C55A              ;            A contiene los attrs. del msg.
-1107+ C55A              ;            B Actúa como temporizador, ralentiza la impresión de caracteres. No actúa cuando es "0".
-1108+ C55A
-1109+ C55A
-1110+ C55A              ;
-1111+ C55A              ;           % FBPPPIII
-1112+ C55A
-1113+ C55A              Print_text_msg:
-1114+ C55A
-1115+ C55A C5               push bc                                 ;   PUSH temporizador.
-1116+ C55B
-1117+ C55B 08               ex af,af                                ;   Attr. en A´.
-1118+ C55C
-1119+ C55C E5               push hl
-1120+ C55D D5               push de
+1073+ C546 AF               xor a
+1074+ C547 3C               inc a                                                   ; Fuerza NZ a la salida.
+1075+ C548
+1076+ C548 C9               ret
+1077+ C549
+1078+ C549              ; ----------------------------------------------------------
+1079+ C549              ;
+1080+ C549              ;   29/4/26
+1081+ C549              ;
+1082+ C549
+1083+ C549              Print_Game_Over:
+1084+ C549
+1085+ C549 21 0F 95         ld hl,Game_Over                                         ; msg.
+1086+ C54C 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1087+ C54F 3E 50            ld a,%01010000                                          ; attrs.
+1088+ C551 06 00            ld b,0
+1089+ C553
+1090+ C553 CD 5C C5         call Print_text_msg
+1091+ C556
+1092+ C556 C9               ret
+1093+ C557
+1094+ C557              ; ----------------------------------------------------------
+1095+ C557
+1096+ C557              Modify_first_char_attr:
+1097+ C557
+1098+ C557 CD C0 9D         call Calcula_direccion_atributos
+1099+ C55A 70               ld (hl),b
+1100+ C55B
+1101+ C55B C9               ret
+1102+ C55C
+1103+ C55C              ; ----------------------------------------------------------
+1104+ C55C              ;
+1105+ C55C              ;   18/2/26
+1106+ C55C              ;
+1107+ C55C              ;   INPUTS: HL apunta al mensage a imprimir, (msg).
+1108+ C55C              ;           DE indica la fila de pantalla donde queremos imprimir el msg.
+1109+ C55C              ;            A contiene los attrs. del msg.
+1110+ C55C              ;            B Actúa como temporizador, ralentiza la impresión de caracteres. No actúa cuando es "0".
+1111+ C55C
+1112+ C55C
+1113+ C55C              ;
+1114+ C55C              ;           % FBPPPIII
+1115+ C55C
+1116+ C55C              Print_text_msg:
+1117+ C55C
+1118+ C55C C5               push bc                                 ;   PUSH temporizador.
+1119+ C55D
+1120+ C55D 08               ex af,af                                ;   Attr. en A´.
 1121+ C55E
-1122+ C55E CD 92 C5         call Find_address
-1123+ C561
-1124+ C561 EB               ex de,hl                                ;   BIN en DE - Fila en HL.
-1125+ C562
-1126+ C562 CD 9F C5         call Print_BIN                          ;   Imprime caracter con atributos.
-1127+ C565
-1128+ C565 D1               pop de
-1129+ C566 E1               pop hl
+1122+ C55E E5               push hl
+1123+ C55F D5               push de
+1124+ C560
+1125+ C560 CD 94 C5         call Find_address
+1126+ C563
+1127+ C563 EB               ex de,hl                                ;   BIN en DE - Fila en HL.
+1128+ C564
+1129+ C564 CD A1 C5         call Print_BIN                          ;   Imprime caracter con atributos.
 1130+ C567
-1131+ C567              ;   Suiguiente char.
-1132+ C567
-1133+ C567 23               inc hl
-1134+ C568
-1135+ C568 34               inc (hl)
-1136+ C569 35               dec (hl)
+1131+ C567 D1               pop de
+1132+ C568 E1               pop hl
+1133+ C569
+1134+ C569              ;   Suiguiente char.
+1135+ C569
+1136+ C569 23               inc hl
 1137+ C56A
-1138+ C56A 28 24            jr z,Exit_01                            ;   RET, fin de msg.
-1139+ C56C
-1140+ C56C 1C               inc e
-1141+ C56D
-1142+ C56D              ;   TEMPORIZADOR.
-1143+ C56D
-1144+ C56D C1               pop bc                                  ;   Carga el temporizador en B.
-1145+ C56E
-1146+ C56E 04               inc b
-1147+ C56F 05               dec b
+1138+ C56A 34               inc (hl)
+1139+ C56B 35               dec (hl)
+1140+ C56C
+1141+ C56C 28 24            jr z,Exit_01                            ;   RET, fin de msg.
+1142+ C56E
+1143+ C56E 1C               inc e
+1144+ C56F
+1145+ C56F              ;   TEMPORIZADOR.
+1146+ C56F
+1147+ C56F C1               pop bc                                  ;   Carga el temporizador en B.
 1148+ C570
-1149+ C570 28 E8            jr z,Print_text_msg                     ;   Mensaje NO TEMPORIZADO. Siguiente char.
-1150+ C572
-1151+ C572 08               ex af,af                                ;   attrs. del msg en AF´.
-1152+ C573
-1153+ C573 ED 5F            ld a,r
-1154+ C575 CB 3F            srl a
-1155+ C577 CB 47            bit 0,a
-1156+ C579
-1157+ C579 28 04            jr z,3F
-1158+ C57B
-1159+ C57B 06 5A            ld b,90
-1160+ C57D 18 02            jr 1F
-1161+ C57F 06 82        3 ld b,130
-1162+ C581
-1163+ C581 0E FF        1 ld c,$ff
-1164+ C583 0D           2 dec c
-1165+ C584 20 FD            jr nz,2B
-1166+ C586 10 F9            djnz 1B                                 ;   Aplica temporización.
-1167+ C588
-1168+ C588 CD E0 BF         call BEEP
-1169+ C58B
-1170+ C58B              ;    pop bc
-1171+ C58B
-1172+ C58B 06 01            ld b,1                                  ;   Activa retardo RND en el próximo char. a imprimir.
-1173+ C58D
-1174+ C58D 08               ex af,af                                ;   Recupera attrs. en A.
-1175+ C58E
-1176+ C58E 18 CA            jr Print_text_msg
-1177+ C590
+1149+ C570 04               inc b
+1150+ C571 05               dec b
+1151+ C572
+1152+ C572 28 E8            jr z,Print_text_msg                     ;   Mensaje NO TEMPORIZADO. Siguiente char.
+1153+ C574
+1154+ C574 08               ex af,af                                ;   attrs. del msg en AF´.
+1155+ C575
+1156+ C575 ED 5F            ld a,r
+1157+ C577 CB 3F            srl a
+1158+ C579 CB 47            bit 0,a
+1159+ C57B
+1160+ C57B 28 04            jr z,3F
+1161+ C57D
+1162+ C57D 06 5A            ld b,90
+1163+ C57F 18 02            jr 1F
+1164+ C581 06 82        3 ld b,130
+1165+ C583
+1166+ C583 0E FF        1 ld c,$ff
+1167+ C585 0D           2 dec c
+1168+ C586 20 FD            jr nz,2B
+1169+ C588 10 F9            djnz 1B                                 ;   Aplica temporización.
+1170+ C58A
+1171+ C58A CD E0 BF         call BEEP
+1172+ C58D
+1173+ C58D              ;    pop bc
+1174+ C58D
+1175+ C58D 06 01            ld b,1                                  ;   Activa retardo RND en el próximo char. a imprimir.
+1176+ C58F
+1177+ C58F 08               ex af,af                                ;   Recupera attrs. en A.
 1178+ C590
-1179+ C590              Exit_01
-1180+ C590
-1181+ C590 C1               pop bc
-1182+ C591
-1183+ C591 C9               ret
-1184+ C592
-1185+ C592              ; -----------------------------------------------------
-1186+ C592
-1187+ C592              ;   Find char. data.
-1188+ C592
-1189+ C592              Find_address
-1190+ C592
-1191+ C592 01 00 3C         ld bc,ROM_ASCII
-1192+ C595
-1193+ C595 6E               ld l,(hl)
-1194+ C596 26 00            ld h,0
-1195+ C598
-1196+ C598 29               add hl,hl
-1197+ C599 29               add hl,hl
-1198+ C59A 29               add hl,hl                               ;   ASCII * 8
-1199+ C59B
-1200+ C59B AF               xor a
-1201+ C59C
-1202+ C59C ED 4A            adc hl,bc
-1203+ C59E
-1204+ C59E C9               ret
-1205+ C59F
-1206+ C59F              Print_BIN
-1207+ C59F
-1208+ C59F 06 08            ld b,8                                  ;   Nº de lineas que forman el caracter.
-1209+ C5A1
-1210+ C5A1 E5               push hl
-1211+ C5A2
-1212+ C5A2 1A           1 ld a,(de)
-1213+ C5A3 77               ld (hl),a                               ;   Print
-1214+ C5A4
-1215+ C5A4 24               inc h                                   ;   INC scanline.
-1216+ C5A5 1C               inc e                                   ;   INC data address
-1217+ C5A6
-1218+ C5A6 10 FA            djnz 1B
-1219+ C5A8
-1220+ C5A8 E1               pop hl
-1221+ C5A9
-1222+ C5A9 CD C0 9D         call Calcula_direccion_atributos
-1223+ C5AC
-1224+ C5AC 08               ex af,af
-1225+ C5AD 77               ld (hl),a
-1226+ C5AE
-1227+ C5AE C9               ret
-1228+ C5AF
+1179+ C590 18 CA            jr Print_text_msg
+1180+ C592
+1181+ C592
+1182+ C592              Exit_01
+1183+ C592
+1184+ C592 C1               pop bc
+1185+ C593
+1186+ C593 C9               ret
+1187+ C594
+1188+ C594              ; -----------------------------------------------------
+1189+ C594
+1190+ C594              ;   Find char. data.
+1191+ C594              ;
+1192+ C594              ;   INPUT: (HL) contiene el código ASCII del char. a imprimir.
+1193+ C594              ;
+1194+ C594              ;   MODIFY: HL y BC.
+1195+ C594
+1196+ C594              ;   OUTPUT: HL contendrá la dirección de memoria ROM donde se encuentran los 8 bytes que forman el caracter.
+1197+ C594              ;           (A)="0"
+1198+ C594
+1199+ C594              Find_address:
+1200+ C594
+1201+ C594 01 00 3C         ld bc,ROM_ASCII
+1202+ C597
+1203+ C597 6E               ld l,(hl)
+1204+ C598 26 00            ld h,0                                  ;   Código ASCII del caracter a imprimir en HL.
+1205+ C59A
+1206+ C59A 29               add hl,hl
+1207+ C59B 29               add hl,hl
+1208+ C59C 29               add hl,hl                               ;   ASCII * 8
+1209+ C59D
+1210+ C59D AF               xor a
+1211+ C59E
+1212+ C59E ED 4A            adc hl,bc
+1213+ C5A0
+1214+ C5A0 C9               ret
+1215+ C5A1
+1216+ C5A1              Print_BIN:
+1217+ C5A1
+1218+ C5A1 06 08            ld b,8                                  ;   Nº de lineas que forman el caracter.
+1219+ C5A3
+1220+ C5A3 E5               push hl
+1221+ C5A4
+1222+ C5A4 1A           1 ld a,(de)
+1223+ C5A5 77               ld (hl),a                               ;   Print
+1224+ C5A6
+1225+ C5A6 24               inc h                                   ;   INC scanline.
+1226+ C5A7 1C               inc e                                   ;   INC data address
+1227+ C5A8
+1228+ C5A8 10 FA            djnz 1B
+1229+ C5AA
+1230+ C5AA E1               pop hl
+1231+ C5AB
+1232+ C5AB CD C0 9D         call Calcula_direccion_atributos
+1233+ C5AE
+1234+ C5AE 08               ex af,af
+1235+ C5AF 77               ld (hl),a
+1236+ C5B0
+1237+ C5B0 C9               ret
+1238+ C5B1
 # file closed: Print_text_msg.asm
-3164  C5AF              	include "Niveles.asm"
+3164  C5B1              	include "Niveles.asm"
 # file opened: Niveles.asm
-   1+ C5AF              ; ------------------------------------------------------------------
-   2+ C5AF              ;
-   3+ C5AF              ; 	5/7/26
-   4+ C5AF              ;
-   5+ C5AF
-   6+ C5AF              ;	Fila donde se imprimen los msg: $4826
-   7+ C5AF
-   8+ C5AF              Msg_level_index:
-   9+ C5AF
-  10+ C5AF B9 C5        	defw Msg_1
-  11+ C5B1 C1 C5        	defw Msg_2
-  12+ C5B3 C8 C5        	defw Msg_3
-  13+ C5B5              ;	defw Msg_4
-  14+ C5B5
-  15+ C5B5 00 00        	defw 0
-  16+ C5B7 00 00        	defw 0
-  17+ C5B9
-  18+ C5B9 08 05        Msg_1 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
-  19+ C5BB 46 4C 49 45  	defm "FLIES",0
-  19+ C5BF 53 00
-  20+ C5C1
-  21+ C5C1 08 05        Msg_2 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
-  22+ C5C3 55 46 4F 53  	defm "UFOS",0
-  22+ C5C7 00
-  23+ C5C8
-  24+ C5C8 04 0C        Msg_3 db 4,12
-  25+ C5CA 46 4C 49 45  	defm "FLIES & UFOS",0
-  25+ C5CE 53 20 26 20
-  25+ C5D2 55 46 4F 53
-  25+ C5D6 00
-  26+ C5D7
-  27+ C5D7              ; --------------------------------------------------------------------------------------------------------------
-  28+ C5D7
-  29+ C5D7              Indice_de_vidas
-  30+ C5D7
-  31+ C5D7 01 40 80 8A  	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
-  31+ C5DB 02 03
-  32+ C5DD 03 40 00 8B  	defw Vida_2,Amadeus_Fb,$0302
-  32+ C5E1 02 03
-  33+ C5E3 06 40 80 8A  	defw Vida_3,Amadeus,$0302
-  33+ C5E7 02 03
-  34+ C5E9
-  35+ C5E9              Indice_de_escudos
-  36+ C5E9
-  37+ C5E9 41 40 30 85  	defw Escudo_1,Escudo_00,$0201
-  37+ C5ED 01 02
-  38+ C5EF 43 40 40 85  	defw Escudo_2,Escudo_00_Fb,$0301
-  38+ C5F3 01 03
-  39+ C5F5 46 40 30 85  	defw Escudo_3,Escudo_00,$0201
-  39+ C5F9 01 02
-  40+ C5FB
-  41+ C5FB              ; --------------------------------------------------------------------------------------------------------------
-  42+ C5FB
-  43+ C5FB
-  44+ C5FB
-  45+ C5FB              Indice_de_tablas_Random
-  46+ C5FB
-  47+ C5FB              ; Entidades (Tipo) (1), (2) y (3). Son entidades (tipo) BadSat.
-  48+ C5FB
-  49+ C5FB 03 C6        	defw Tabla_Random_BadSat
-  50+ C5FD 21 C6        	defw Tabla_Random_Badplate
-  51+ C5FF 00 00        	defw 0
-  52+ C601
-  53+ C601              ;	...
-  54+ C601              ;	...
-  55+ C601              ;	+ Tablas ...
-  56+ C601
-  57+ C601 00 00        	defw 0
-  58+ C603
-  59+ C603              ; --------------------------------------------------------------------------------------------------------------
-  60+ C603              ;
-  61+ C603              ;	4/3/25
-  62+ C603              ;
-  63+ C603              ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
-  64+ C603              ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio.
-  65+ C603              ;
-  66+ C603              ;	El siguiente .defw indica:
-  67+ C603              ;
-  68+ C603              ;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
-  69+ C603              ;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
-  70+ C603              ;
-  71+ C603              ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
-  72+ C603              ;
-  73+ C603              ; ----- ----- ----- ----- -----
-  74+ C603              ;
-  75+ C603              ;   Factor RANDOM --- BadSat.
-  76+ C603
-  77+ C603              ; Random_1_1_10 (1-10) Bajo_decelerando
-  78+ C603              ; Random_2_1_15 (1-15) Derecha_y_subiendo
-  79+ C603
-  80+ C603              ; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
-  81+ C603              ; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
-  82+ C603
-  83+ C603              ; Random_5_1_15 (1-5) Izquierda_y_subiendo
-  84+ C603
-  85+ C603              ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
-  86+ C603              ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
-  87+ C603              ;
-  88+ C603              ; ----- ----- ----- ----- -----
-  89+ C603              ;
-  90+ C603              ;   Factor RANDOM --- BadPlate.
-  91+ C603
-  92+ C603              ; Random_1_1_10 (1-10) Bajo_decelerando
-  93+ C603              ; Random_8_1_15 (1-15) Tira_pa_la_derecha
-  94+ C603
-  95+ C603              ; Random_9_1_15 (1-15) Tira_pa_la_izq
-  96+ C603              ; Random_A_1_15 (1-15) Diagonal_bajando_izq
-  97+ C603              ; Random_B_1_15 (1-15) Diagonal_bajando_derecha
-  98+ C603              ;
-  99+ C603              ; ----- ----- ----- ----- -----
- 100+ C603
- 101+ C603              Tabla_Random_BadSat
- 102+ C603
- 103+ C603 01 0A        	defw $0a01
- 104+ C605 22 92        	defw Random_1_1_10
- 105+ C607
- 106+ C607 01 0F        	defw $0f01
- 107+ C609 9F 92        	defw Random_2_1_15
- 108+ C60B
- 109+ C60B 00 01        	db 0,1 				;	1 repetición.
- 110+ C60D 01 0F        	defw $0f01
- 111+ C60F D1 92        	defw Random_3_1_15	;	Igual
- 112+ C611 DB 92        	defw Random_4_1_15	;	Igual
- 113+ C613
- 114+ C613 01 0F        	defw $0f01
- 115+ C615 49 93        	defw Random_5_1_15
- 116+ C617
- 117+ C617 00 01        	db 0,1
- 118+ C619 01 0F        	defw $0f01
- 119+ C61B 7B 93        	defw Random_6_1_15	;	Igual
- 120+ C61D 85 93        	defw Random_7_1_15	;	Igual
- 121+ C61F
- 122+ C61F 00 00        	defw 0 				;	Indica FIN de la tabla RANDOM.
- 123+ C621
- 124+ C621              Tabla_Random_Badplate
- 125+ C621
- 126+ C621 01 0A        	defw $0a01
- 127+ C623 22 92        	defw Random_1_1_10
- 128+ C625
- 129+ C625 01 0F        	defw $0f01
- 130+ C627 0E 92        	defw Random_8_1_15
- 131+ C629
- 132+ C629 01 0F        	defw $0f01
- 133+ C62B 13 92        	defw Random_9_1_15
- 134+ C62D
- 135+ C62D 01 03        	defw $0301
- 136+ C62F 18 92        	defw Random_A_1_3
- 137+ C631
- 138+ C631 01 03        	defw $0301
- 139+ C633 1D 92        	defw Random_B_1_3
- 140+ C635
- 141+ C635 00 00        	defw 0				;	Indica FIN de la tabla RANDOM.
- 142+ C637
- 143+ C637              ; ----------------------------------------------------------------------
- 144+ C637              ;
- 145+ C637              ;	19/11/25
- 146+ C637
- 147+ C637              Indice_de_niveles:
- 148+ C637
- 149+ C637 3F C6        	defw Nivel_1
- 150+ C639 58 C6        	defw Nivel_2
- 151+ C63B 71 C6        	defw Nivel_3
- 152+ C63D              ;	defw Nivel_4
- 153+ C63D
- 154+ C63D              ;	...
- 155+ C63D              ;	...
- 156+ C63D              ;	+ Niveles ...
- 157+ C63D
- 158+ C63D 00 00        	defw 0
- 159+ C63F              ;	defw 0
- 160+ C63F
- 161+ C63F              ; NIVEL_1. Tres clases de entidades tipo BadSat.
- 162+ C63F
- 163+ C63F F0 0A 70 70  Nivel_1 db $f0,$0a,$70,$70 						; FLIES !!!
- 164+ C643
- 165+ C643              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 166+ C643              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 167+ C643              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 168+ C643              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 169+ C643 14           	db 20 										; Nº de entidades que tiene el nivel.
- 170+ C644
- 171+ C644
- 172+ C644
- 173+ C644 01 02 03 02  	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
- 173+ C648 01
- 174+ C649 03 02 01 02  	db 3,2,1,2,2
- 174+ C64D 02
- 175+ C64E 01 03 01 03  	db 1,3,1,3,2
- 175+ C652 02
- 176+ C653 01 03 03 02  	db 1,3,3,2,2
- 176+ C657 02
- 177+ C658
- 178+ C658              ; ---------------------------------------------------------------------------------------
- 179+ C658
- 180+ C658              ; Nivel_2. UFO´s
- 181+ C658
- 182+ C658 C0 15 50 70  Nivel_2 db $C0,$15,$50,$70 						; UFOS !!!
- 183+ C65C
- 184+ C65C              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 185+ C65C              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 186+ C65C              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 187+ C65C              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 188+ C65C 14           	db 20
- 189+ C65D
- 190+ C65D 04 05 06 04  	db 4,5,6,4,5
- 190+ C661 05
- 191+ C662 05 05 06 04  	db 5,5,6,4,6
- 191+ C666 06
- 192+ C667 04 05 06 05  	db 4,5,6,5,4
- 192+ C66B 04
- 193+ C66C 04 06 06 04  	db 4,6,6,4,5
- 193+ C670 05
- 194+ C671
- 195+ C671
- 196+ C671              ; ---------------------------------------------------------------------------------------
- 197+ C671
- 198+ C671              ; Nivel_3. Flies & UFOS.
- 199+ C671
- 200+ C671 B0 15 50 70  Nivel_3 db $b0,$15,$50,$70 						; UFOS !!!
- 201+ C675
- 202+ C675              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 203+ C675              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 204+ C675              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 205+ C675              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 206+ C675
- 207+ C675 14           	db 20
- 208+ C676
- 209+ C676 01 04 06 01  	db 1,4,6,1,6
- 209+ C67A 06
- 210+ C67B 04 06 06 01  	db 4,6,6,1,4
- 210+ C67F 04
- 211+ C680 01 06 01 06  	db 1,6,1,6,1
- 211+ C684 01
- 212+ C685 04 01 06 01  	db 4,1,6,1,6
- 212+ C689 06
- 213+ C68A
- 214+ C68A
- 215+ C68A
- 216+ C68A
- 217+ C68A
- 218+ C68A
- 219+ C68A
- 220+ C68A
- 221+ C68A
- 222+ C68A
- 223+ C68A
- 224+ C68A
+   1+ C5B1              ; ------------------------------------------------------------------
+   2+ C5B1              ;
+   3+ C5B1              ; 	5/7/26
+   4+ C5B1              ;
+   5+ C5B1
+   6+ C5B1              ;	Fila donde se imprimen los msg: $4826
+   7+ C5B1
+   8+ C5B1              Msg_level_index:
+   9+ C5B1
+  10+ C5B1 BB C5        	defw Msg_1
+  11+ C5B3 C3 C5        	defw Msg_2
+  12+ C5B5 CA C5        	defw Msg_3
+  13+ C5B7              ;	defw Msg_4
+  14+ C5B7
+  15+ C5B7 00 00        	defw 0
+  16+ C5B9 00 00        	defw 0
+  17+ C5BB
+  18+ C5BB 08 05        Msg_1 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
+  19+ C5BD 46 4C 49 45  	defm "FLIES",0
+  19+ C5C1 53 00
+  20+ C5C3
+  21+ C5C3 08 05        Msg_2 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
+  22+ C5C5 55 46 4F 53  	defm "UFOS",0
+  22+ C5C9 00
+  23+ C5CA
+  24+ C5CA 04 0C        Msg_3 db 4,12
+  25+ C5CC 46 4C 49 45  	defm "FLIES & UFOS",0
+  25+ C5D0 53 20 26 20
+  25+ C5D4 55 46 4F 53
+  25+ C5D8 00
+  26+ C5D9
+  27+ C5D9              ; --------------------------------------------------------------------------------------------------------------
+  28+ C5D9
+  29+ C5D9              Indice_de_vidas
+  30+ C5D9
+  31+ C5D9 01 40 80 8A  	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
+  31+ C5DD 02 03
+  32+ C5DF 03 40 00 8B  	defw Vida_2,Amadeus_Fb,$0302
+  32+ C5E3 02 03
+  33+ C5E5 06 40 80 8A  	defw Vida_3,Amadeus,$0302
+  33+ C5E9 02 03
+  34+ C5EB
+  35+ C5EB              Indice_de_escudos
+  36+ C5EB
+  37+ C5EB 41 40 30 85  	defw Escudo_1,Escudo_00,$0201
+  37+ C5EF 01 02
+  38+ C5F1 43 40 40 85  	defw Escudo_2,Escudo_00_Fb,$0301
+  38+ C5F5 01 03
+  39+ C5F7 46 40 30 85  	defw Escudo_3,Escudo_00,$0201
+  39+ C5FB 01 02
+  40+ C5FD
+  41+ C5FD              ; --------------------------------------------------------------------------------------------------------------
+  42+ C5FD
+  43+ C5FD
+  44+ C5FD
+  45+ C5FD              Indice_de_tablas_Random
+  46+ C5FD
+  47+ C5FD              ; Entidades (Tipo) (1), (2) y (3). Son entidades (tipo) BadSat.
+  48+ C5FD
+  49+ C5FD 05 C6        	defw Tabla_Random_BadSat
+  50+ C5FF 23 C6        	defw Tabla_Random_Badplate
+  51+ C601 00 00        	defw 0
+  52+ C603
+  53+ C603              ;	...
+  54+ C603              ;	...
+  55+ C603              ;	+ Tablas ...
+  56+ C603
+  57+ C603 00 00        	defw 0
+  58+ C605
+  59+ C605              ; --------------------------------------------------------------------------------------------------------------
+  60+ C605              ;
+  61+ C605              ;	4/3/25
+  62+ C605              ;
+  63+ C605              ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
+  64+ C605              ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio.
+  65+ C605              ;
+  66+ C605              ;	El siguiente .defw indica:
+  67+ C605              ;
+  68+ C605              ;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
+  69+ C605              ;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
+  70+ C605              ;
+  71+ C605              ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
+  72+ C605              ;
+  73+ C605              ; ----- ----- ----- ----- -----
+  74+ C605              ;
+  75+ C605              ;   Factor RANDOM --- BadSat.
+  76+ C605
+  77+ C605              ; Random_1_1_10 (1-10) Bajo_decelerando
+  78+ C605              ; Random_2_1_15 (1-15) Derecha_y_subiendo
+  79+ C605
+  80+ C605              ; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
+  81+ C605              ; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
+  82+ C605
+  83+ C605              ; Random_5_1_15 (1-5) Izquierda_y_subiendo
+  84+ C605
+  85+ C605              ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
+  86+ C605              ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
+  87+ C605              ;
+  88+ C605              ; ----- ----- ----- ----- -----
+  89+ C605              ;
+  90+ C605              ;   Factor RANDOM --- BadPlate.
+  91+ C605
+  92+ C605              ; Random_1_1_10 (1-10) Bajo_decelerando
+  93+ C605              ; Random_8_1_15 (1-15) Tira_pa_la_derecha
+  94+ C605
+  95+ C605              ; Random_9_1_15 (1-15) Tira_pa_la_izq
+  96+ C605              ; Random_A_1_15 (1-15) Diagonal_bajando_izq
+  97+ C605              ; Random_B_1_15 (1-15) Diagonal_bajando_derecha
+  98+ C605              ;
+  99+ C605              ; ----- ----- ----- ----- -----
+ 100+ C605
+ 101+ C605              Tabla_Random_BadSat
+ 102+ C605
+ 103+ C605 01 0A        	defw $0a01
+ 104+ C607 22 92        	defw Random_1_1_10
+ 105+ C609
+ 106+ C609 01 0F        	defw $0f01
+ 107+ C60B 9F 92        	defw Random_2_1_15
+ 108+ C60D
+ 109+ C60D 00 01        	db 0,1 				;	1 repetición.
+ 110+ C60F 01 0F        	defw $0f01
+ 111+ C611 D1 92        	defw Random_3_1_15	;	Igual
+ 112+ C613 DB 92        	defw Random_4_1_15	;	Igual
+ 113+ C615
+ 114+ C615 01 0F        	defw $0f01
+ 115+ C617 49 93        	defw Random_5_1_15
+ 116+ C619
+ 117+ C619 00 01        	db 0,1
+ 118+ C61B 01 0F        	defw $0f01
+ 119+ C61D 7B 93        	defw Random_6_1_15	;	Igual
+ 120+ C61F 85 93        	defw Random_7_1_15	;	Igual
+ 121+ C621
+ 122+ C621 00 00        	defw 0 				;	Indica FIN de la tabla RANDOM.
+ 123+ C623
+ 124+ C623              Tabla_Random_Badplate
+ 125+ C623
+ 126+ C623 01 0A        	defw $0a01
+ 127+ C625 22 92        	defw Random_1_1_10
+ 128+ C627
+ 129+ C627 01 0F        	defw $0f01
+ 130+ C629 0E 92        	defw Random_8_1_15
+ 131+ C62B
+ 132+ C62B 01 0F        	defw $0f01
+ 133+ C62D 13 92        	defw Random_9_1_15
+ 134+ C62F
+ 135+ C62F 01 03        	defw $0301
+ 136+ C631 18 92        	defw Random_A_1_3
+ 137+ C633
+ 138+ C633 01 03        	defw $0301
+ 139+ C635 1D 92        	defw Random_B_1_3
+ 140+ C637
+ 141+ C637 00 00        	defw 0				;	Indica FIN de la tabla RANDOM.
+ 142+ C639
+ 143+ C639              ; ----------------------------------------------------------------------
+ 144+ C639              ;
+ 145+ C639              ;	19/11/25
+ 146+ C639
+ 147+ C639              Indice_de_niveles:
+ 148+ C639
+ 149+ C639 41 C6        	defw Nivel_1
+ 150+ C63B 5A C6        	defw Nivel_2
+ 151+ C63D 73 C6        	defw Nivel_3
+ 152+ C63F              ;	defw Nivel_4
+ 153+ C63F
+ 154+ C63F              ;	...
+ 155+ C63F              ;	...
+ 156+ C63F              ;	+ Niveles ...
+ 157+ C63F
+ 158+ C63F 00 00        	defw 0
+ 159+ C641              ;	defw 0
+ 160+ C641
+ 161+ C641              ; NIVEL_1. Tres clases de entidades tipo BadSat.
+ 162+ C641
+ 163+ C641 F0 0A 70 70  Nivel_1 db $f0,$0a,$70,$70 						; FLIES !!!
+ 164+ C645
+ 165+ C645              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 166+ C645              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 167+ C645              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 168+ C645              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 169+ C645 14           	db 20 										; Nº de entidades que tiene el nivel.
+ 170+ C646
+ 171+ C646
+ 172+ C646
+ 173+ C646 01 02 03 02  	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
+ 173+ C64A 01
+ 174+ C64B 03 02 01 02  	db 3,2,1,2,2
+ 174+ C64F 02
+ 175+ C650 01 03 01 03  	db 1,3,1,3,2
+ 175+ C654 02
+ 176+ C655 01 03 03 02  	db 1,3,3,2,2
+ 176+ C659 02
+ 177+ C65A
+ 178+ C65A              ; ---------------------------------------------------------------------------------------
+ 179+ C65A
+ 180+ C65A              ; Nivel_2. UFO´s
+ 181+ C65A
+ 182+ C65A C0 15 50 70  Nivel_2 db $C0,$15,$50,$70 						; UFOS !!!
+ 183+ C65E
+ 184+ C65E              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 185+ C65E              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 186+ C65E              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 187+ C65E              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 188+ C65E 14           	db 20
+ 189+ C65F
+ 190+ C65F 04 05 06 04  	db 4,5,6,4,5
+ 190+ C663 05
+ 191+ C664 05 05 06 04  	db 5,5,6,4,6
+ 191+ C668 06
+ 192+ C669 04 05 06 05  	db 4,5,6,5,4
+ 192+ C66D 04
+ 193+ C66E 04 06 06 04  	db 4,6,6,4,5
+ 193+ C672 05
+ 194+ C673
+ 195+ C673
+ 196+ C673              ; ---------------------------------------------------------------------------------------
+ 197+ C673
+ 198+ C673              ; Nivel_3. Flies & UFOS.
+ 199+ C673
+ 200+ C673 B0 15 50 70  Nivel_3 db $b0,$15,$50,$70 						; UFOS !!!
+ 201+ C677
+ 202+ C677              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 203+ C677              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 204+ C677              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 205+ C677              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 206+ C677
+ 207+ C677 14           	db 20
+ 208+ C678
+ 209+ C678 01 04 06 01  	db 1,4,6,1,6
+ 209+ C67C 06
+ 210+ C67D 04 06 06 01  	db 4,6,6,1,4
+ 210+ C681 04
+ 211+ C682 01 06 01 06  	db 1,6,1,6,1
+ 211+ C686 01
+ 212+ C687 04 01 06 01  	db 4,1,6,1,6
+ 212+ C68B 06
+ 213+ C68C
+ 214+ C68C
+ 215+ C68C
+ 216+ C68C
+ 217+ C68C
+ 218+ C68C
+ 219+ C68C
+ 220+ C68C
+ 221+ C68C
+ 222+ C68C
+ 223+ C68C
+ 224+ C68C
 # file closed: Niveles.asm
-3165  C68A
-3166  C68A
-3167  C68A              	SAVESNA "Amadeus.sna", START
-3168  C68A
-3169  C68A
-3170  C68A
-3171  C68A
+3165  C68C
+3166  C68C
+3167  C68C              	SAVESNA "Amadeus.sna", START
+3168  C68C
+3169  C68C
+3170  C68C
+3171  C68C
 # file closed: Banco_de_pruebas.asm

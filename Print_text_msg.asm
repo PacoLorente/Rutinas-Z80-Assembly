@@ -977,7 +977,7 @@ SPACE_ascii_code
 
 ; ----------------------------------------------------------
 ;
-;   19/2/26
+;   16/9/26
 ;
 ;   Print MAIN MENU.
 ;
@@ -985,9 +985,12 @@ SPACE_ascii_code
 ;       KEMPSTON
 ;       SINCLAIR
 ;       DEFINE
-
+;
+;   MODIFY: AF, HL, BC y DE.
 
 Print_Main_menu:
+
+    jr $
 
     ld hl,Keyboard                                          ; HL contiene el mensaje.
     ld b,0                                                  ; NO TEMPORIZADOR.
@@ -1185,13 +1188,20 @@ Exit_01
 ; -----------------------------------------------------
 
 ;   Find char. data.
+;
+;   INPUT: (HL) contiene el código ASCII del char. a imprimir.
+;
+;   MODIFY: HL y BC.
 
-Find_address
+;   OUTPUT: HL contendrá la dirección de memoria ROM donde se encuentran los 8 bytes que forman el caracter.
+;           (A)="0"
+
+Find_address:
 
     ld bc,ROM_ASCII
 
     ld l,(hl)
-    ld h,0
+    ld h,0                                  ;   Código ASCII del caracter a imprimir en HL.
 
     add hl,hl
     add hl,hl
@@ -1203,7 +1213,7 @@ Find_address
 
     ret
 
-Print_BIN
+Print_BIN:
 
     ld b,8                                  ;   Nº de lineas que forman el caracter.
 
