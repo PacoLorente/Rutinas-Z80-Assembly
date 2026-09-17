@@ -472,8 +472,6 @@ Print_text_msg:
 
     djnz 1B                                 ;   Aplica temporización.
 
-    jr $
-
     call BEEP
 
     ld b,1                                  ;   Activa retardo RND en el próximo char. a imprimir.
@@ -533,3 +531,137 @@ Print_BIN:
 
     ret
 
+; ----------------------------------------------------------------------------------------------
+;
+;   17/9/26
+;
+;   Herramienta para construir melodías y ruido con el SPEAKER.
+
+Sound_Generator:
+
+;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
+;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+;        (HL) = Contiene el sonido, (duración del semiciclo), NOTA.
+;
+
+;   MODIFY: A,HL,BC y DE.
+
+;   Exclusión:
+
+    ld hl,(Sound)
+    ld a,h
+    or l
+    ret z                   ; Salimos de la rutina si no hay sonido a ejecutar.
+
+    inc b
+    dec b
+    jr nz,Noise_efect
+
+Loop_2
+
+;   %xxxabccc
+
+;   %a ... Salida SPEAKER.
+;   %b ... MIC/EAR.
+;   %c ... BORDER Colour.
+
+
+    ld a,%00010000          ; Borde negro.
+    out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
+
+Delay_5 
+
+    dec hl                  ; 26 tstates mide el bucle Delay_5
+    ld a,h
+    or l
+    jr nz,Delay_5
+
+    ld hl,(Sound)           ; Recupera duración del semiciclo, 16 tstates.
+
+    xor a                   ; Borde negro.    ---     4 tstates
+    out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
+
+Delay_6 
+
+    dec hl
+    ld a,h
+    or l
+    jr nz,Delay_6
+
+; Hemos generado una onda sonora.
+; Averiguamos si existe incremento/decremento del delay; (variación del tono).
+
+    ld hl,(Sound)
+
+    inc e
+    dec e
+    jr z,1F                 ; E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+;                           ; (E)="0" indica que no hay variación en el tono.
+
+    ld b,e                  ; (B) contiene ahora el nº de incrementos/decrementos.
+    ld a,d                  ; (A) contiene ahora "1", si el sonido es ascendente y "0" si es descendente. 
+
+; Rayo de entrada o de salida ???
+
+    and a 
+    jr nz,Incrementa_delay
+
+Decrementa_delay
+
+    dec hl
+    djnz Decrementa_delay
+
+    jr 1F
+
+Incrementa_delay
+
+    inc hl
+    djnz Incrementa_delay
+
+; Descontamos la onda generada del total de ondas que tiene el efecto, (Sound).
+
+1 dec c                     ; Decrementa nº de ondas.
+
+    ld (Sound),hl
+
+    jr nz,Loop_2
+
+    ret
+
+;   Efecto de ruido, se puede utilizar, (entre otras cosas) para generar explosiones, disparos, etc.
+;   Este tipo de onda NO ES SIMÉTRICA, el semiciclo positivo y el negativo tienen una duración distinta. 
+;   Cada onda completa que compone el sonido es distinta a la anterior siendo el registro (C) el que contiene el_
+;   _nº de ondas que vamos a ejecutar.
+;   El registro R proporciona el nº pseudo aleatorio que construye los dos semiciclos de la onda.
+
+Noise_efect:
+
+Loop
+
+    ld a,r
+    ld b,a                  ; (B) contiene un nº pseudo aleatorio ($00 - $ff).
+
+    ld a,%00010000          ; Borde negro.
+    out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
+
+Delay_1 djnz Delay_1        ; Aplica Delay.
+
+    xor a
+    out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.    
+
+    ld a,r
+    ld b,a                  ; (B) contiene un nº pseudo aleatorio ($00 - $ff).
+
+Delay_2 djnz Delay_2        ; Aplica Delay.
+
+    dec h
+
+    dec c
+
+    jr nz,Loop
+
+    ld (Sound),hl
+
+    ret
