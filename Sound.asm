@@ -120,15 +120,20 @@ Done_melody:
 
 ; ----------------------------------------------------------------------------------------------
 ;
-;   11/4/26
+;   17/9/26
 ;
+;   Emite un BEEP utilizando el núcleo de audio [Sound_Generator].
+;
+;   NO MODIFICA NINGÚN REGISTRO.
 
 BEEP:
 
     push af
     push bc
     push de
-    push hl
+    push hl                                 ; STORE Regs.
+
+;   Parámetros de entrada para ejecutar [Sound_Generator].
 
 ;   Configuración de un BEEP.
 
@@ -136,17 +141,21 @@ BEEP:
 ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
 ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
 ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+;        (HL) = Contiene el sonido, (duración del semiciclo), NOTA.
+
 
     ld bc,$0002
     ld de,0
-    ld hl,$00d0         ;$00d0
+    ld hl,$00d0         
 
     ld (Sound),hl
+
     call Sound_Generator
+
     ld hl,0
     ld (Sound),hl
 
-    pop hl
+    pop hl                                  ; RECOVERY Regs.
     pop de
     pop bc
     pop af
@@ -155,7 +164,7 @@ BEEP:
 
 ; ----------------------------------------------------------------------------------------------
 ;
-;   28/1/26
+;   17/9/26
 ;
 
 Sound_Generator:
@@ -164,10 +173,14 @@ Sound_Generator:
 ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
 ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
 ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+;        (HL) = Contiene el sonido, (duración del semiciclo), NOTA.
+;
 
 ;   MODIFY: A,HL,BC y DE.
 
 ;   Exclusión:
+
+    jr $
 
     ld hl,(Sound)
     ld a,h

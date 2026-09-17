@@ -999,7 +999,7 @@ Print_Main_menu:
     call Print_text_msg
     pop hl
 
-    ld b,%01010000                                          ; Red bright.
+    ld b,%01010000                                          ; RED BRIGHT paper, BLACK ink.
     call Modify_first_char_attr
 
     ld hl,Kempstom                                          ; msg.
@@ -1013,7 +1013,7 @@ Print_Main_menu:
 
     inc l
 
-    ld b,%01110000                                          ; Yellow bright.
+    ld b,%01110000                                          ; YELLOW BRIGHT paper, BLACK ink.
     call Modify_first_char_attr
 
     ld hl,Interface                                         ; msg.
@@ -1025,7 +1025,7 @@ Print_Main_menu:
     call Print_text_msg
     pop hl
 
-    ld b,%01100000                                          ; Verde bright.
+    ld b,%01100000                                          ; GREEN BRIGHT paper, BLACK ink.
     call Modify_first_char_attr
 
     ld hl,Define                                            ; msg.
@@ -1037,7 +1037,7 @@ Print_Main_menu:
     call Print_text_msg
     pop hl
 
-    ld b,%01001000                                          ; Azul bright._
+    ld b,%01001000                                          ; BLUE BRIGHT paper, BLACK ink.
     call Modify_first_char_attr
 
     ret
@@ -1089,12 +1089,5 @@ Print_Game_Over:
 
     ret
 
-; ----------------------------------------------------------
 
-Modify_first_char_attr:
-
-    call Calcula_direccion_atributos
-    ld (hl),b
-
-    ret
 

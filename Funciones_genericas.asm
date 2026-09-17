@@ -36,6 +36,24 @@ Calcula_direccion_atributos:
 
     ret
 
+; ----------------------------------------------------------
+;
+;   17/7/26
+;
+;   Asigna atributos de pantalla a un caracter en concreto.
+;
+;   INPUT: (HL) contiene la dirección de pantalla del caracter al que queremos asignar attrs.
+;           (B) contiene los Attrs.
+ 
+;   MODIFY: AF y H.
+
+Modify_first_char_attr:
+
+    call Calcula_direccion_atributos
+    ld (hl),b
+
+    ret
+    
 ; ---------------------------------------------------
 ;
 ;   15/9/26
@@ -453,6 +471,8 @@ Print_text_msg:
     jr nz,2B
 
     djnz 1B                                 ;   Aplica temporización.
+
+    jr $
 
     call BEEP
 
