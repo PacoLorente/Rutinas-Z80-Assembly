@@ -658,7 +658,7 @@ Delay_2 djnz Delay_2        ; Aplica Delay.
 
     dec h
 
-    dec c
+    dec c                   ; Decrementa ondas completas generadas.
 
     jr nz,Loop
 

@@ -227,19 +227,30 @@ Clean_shot_effect:
 
 ;   -------------------------------------------------------------------------------------------
 ;
-;   24/04/26
+;   18/9/26
 ;
-;   Ejecuta el sonido de una explosión siempre que está se haya iniciado, [Init_Burst_sound] y no esté activo el_
-;   _inhibidor de efectos de sonido, (bit0 Ctrl_6).
+;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no esté activo el_
+;   _ inhibidor de efectos de sonido, (bit0 Ctrl_6).
+;
+;   Las explosiones de las entidades y Amadeus se generan con el módulo [Noise_efect] de la herramienta_
+;   _ [Sound_Generator].
+;
+;   La duración de la explosión está definido por el valor de (H), no es relevante el valor que contenga (L):
+;
+;   Burst_sound_init_value equ $35                ;   Longitud de la explosión de las entidades, (duración).  
+;   Amadeus_Burst_sound_init_value equ $70        ;   Longitud de la explosión de Amadeus, (duración).
+
+
+
+
 
 Play_burst_sound_effect:
 
 ;   Exclusiones:
 
-    ld hl,(Burst_sound)
-    ld a,h
-    or l
-    ret z                   ; RET si no hay sonido.
+    ld a,(Burst_sound)
+    and a
+    ret z                   ; RET si (Burst_sound) no está iniciado, (no hay explosión).
 
     ld a,(Ctrl_6)
     bit 0,a
@@ -247,8 +258,13 @@ Play_burst_sound_effect:
 
 ;   ----------------------
 
+    jr $
+
     set 0,a
     ld (Ctrl_6),a           ; Activa el inhibidor de sounds effects.
+
+    ld h,a
+    ld l,0                  ; (HL) contiene (Burst_sound).
 
     push hl                 ; Cantidad de explosión que queda por ejecutar.
 
@@ -318,5 +334,42 @@ Delay_8 djnz Delay_8        ; Aplica Delay.
 
     ret
 
+; ---------------------------------------------------------------
+;
+;   18/9/26
+;
+;   Inicializa la variable (Burst_sound) con el valor de la longitud de la onda que genera la explosión a ejecutar:
+;
+;   Burst_sound_init_value equ $35                   - Longitud de la explosión de las entidades, (duración).  
+;   Amadeus_Burst_sound_init_value equ $70           - Longitud de la explosión de Amadeus, (duración).
+;
+;   MODIFY: A y H.
+;
+;   OUTPUT: (Burst_sound) y H contienen la duración del semiciclo de la onda que ha de generar la explosión.
+
+
+Init_Burst_sound:
+
+    ld a,(Burst_sound)
+    and a
+    ret nz                                           ; RET si ya está iniciado el efecto.
+
+;   Init Burst_sound_efect.
+
+;   La explosión de Amadeus ha de ser más larga que la de las entidades.
+
+    ld h,Burst_sound_init_value
+
+    ld a,(Impacto_Amadeus)
+    and a
+    jr z,1F
+
+    ld h,Amadeus_Burst_sound_init_value
+    
+1 ld a,h 
+
+    ld (Burst_sound),a
+
+    ret
 
 

@@ -228,8 +228,8 @@ Attr_Moon_File5_3 equ $589e
 Laser_sound_init_value equ $00a0	
 Shield_sound_init_value equ $00c0
 Shot_sound_init_value equ $1801
-Burst_sound_init_value equ $3500				;	Longitud de la explosión de las entidades, (duración).	
-Amadeus_Burst_sound_init_value equ $7000		;	Longitud de la explosión de Amadeus, (duración).
+Burst_sound_init_value equ $35					;	Longitud de la explosión de las entidades, (duración).	
+Amadeus_Burst_sound_init_value equ $70			;	Longitud de la explosión de Amadeus, (duración).
 
 ;	Mensajes de texto.
 
@@ -874,7 +874,7 @@ Sound defw 0												; Esta variable almacenará el efecto de sonido a reprod
 Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
 Laser_sound defw Laser_sound_init_value
 Shot_sound defw 0
-Burst_sound defw 0
+Burst_sound db 0 											; Byte que define la duración de una explosión.
 Shield_sound defw 0
 
 ; Varios:
@@ -2970,35 +2970,6 @@ Siguiente_frame_explosion_Amadeus
 
 	ld (Pamm_Amadeus),hl
 	jr Borra_Amadeus_impactado
-
-; ---------------------------------------------------------------
-;
-;	12/2/26
-
-Init_Burst_sound:
-
-;	ret si ya está iniciado el efecto.
-
-	ld hl,(Burst_sound)
-	ld a,h
-	or l
-	ret nz
-
-;	Init Burst_sound_efect.
-
-;	La explosión de Amadeus ha de ser más larga que la de las entidades.
-
-	ld hl,Burst_sound_init_value
-
-	ld a,(Impacto_Amadeus)
-	and a
-	jr z,1F
-
-	ld hl,Amadeus_Burst_sound_init_value
-	
-1 ld (Burst_sound),hl
-
-	ret
 
 ; ---------------------------------------------------------------
 ;
