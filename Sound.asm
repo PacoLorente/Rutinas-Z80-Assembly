@@ -227,7 +227,7 @@ Clean_shot_effect:
 
 ;   -------------------------------------------------------------------------------------------
 ;
-;   18/9/26
+;   22/9/26
 ;
 ;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no esté activo el_
 ;   _ inhibidor de efectos de sonido, (bit0 Ctrl_6).
@@ -240,10 +240,6 @@ Clean_shot_effect:
 ;   Burst_sound_init_value equ $35                ;   Longitud de la explosión de las entidades, (duración).  
 ;   Amadeus_Burst_sound_init_value equ $70        ;   Longitud de la explosión de Amadeus, (duración).
 
-
-
-
-
 Play_burst_sound_effect:
 
 ;   Exclusiones:
@@ -252,16 +248,18 @@ Play_burst_sound_effect:
     and a
     ret z                   ; RET si (Burst_sound) no está iniciado, (no hay explosión).
 
+    ex af,af 
+
     ld a,(Ctrl_6)
     bit 0,a
     ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido".
 
 ;   ----------------------
 
-    jr $
-
     set 0,a
     ld (Ctrl_6),a           ; Activa el inhibidor de sounds effects.
+
+    ex af,af                ; Restore (Burst_sound).
 
     ld h,a
     ld l,0                  ; (HL) contiene (Burst_sound).
@@ -277,16 +275,17 @@ Play_burst_sound_effect:
     ld a,d                  ; Así podemos ejecutar una explosión con la duración que queramos.
     sub h
 
-    jr c,Clean_burst_efect
+    jr c,Clean_burst_efect  ; Burst end, (Clean_burst_efect).
 
-    ld (Burst_sound),hl
+    ld a,h
+    ld (Burst_sound),a
 
     ret
 
 Clean_burst_efect
 
-    ld hl,0
-    ld (Burst_sound),hl
+    xor a
+    ld (Burst_sound),a
 
     ret
 

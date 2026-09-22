@@ -403,7 +403,7 @@ Incrementa_FRAMES
 
 ;	Sound efects
 
-	call Play_burst_sound_effect
+	call Play_burst_sound_effect                                    ; v2. Ok.
 	call Play_shot_sound_effect
 
 ;	-------------------------------------------------------------
@@ -427,7 +427,7 @@ Incrementa_FRAMES
 	ld (Attr_Moon_File5_3),hl
 
 	ld hl,Ctrl_6
-	res 0,(hl) 														; Inicializa el inhibidor de efectos de sonido.
+	res 0,(hl) 														; Inhibidor de efectos de sonido DESACTIVADO.
 
 	ld a,(Ctrl_5)
 	bit 6,a
