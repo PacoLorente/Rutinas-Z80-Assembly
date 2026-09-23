@@ -226,10 +226,10 @@ Attr_Moon_File5_3 equ $589e
 ;	Sound efects.
 
 Laser_sound_init_value equ $00a0	
-Shield_sound_init_value equ $00c0
-Shot_sound_init_value equ $1801
-Burst_sound_init_value equ $35					;	Longitud de la explosión de las entidades, (duración).	
-Amadeus_Burst_sound_init_value equ $70			;	Longitud de la explosión de Amadeus, (duración).
+Shield_sound_init_value equ $c0
+Shot_sound_init_value equ $1601 				;	Valor inicial del efecto de disparo de Amadeus.
+Burst_sound_init_value equ $35					;	Longitud de la explosión de las entidades, (duración).
+Amadeus_Burst_sound_init_value equ $75			;	Longitud de la explosión de Amadeus, (duración).
 
 ;	Mensajes de texto.
 
@@ -350,6 +350,7 @@ Temporizacion_shield
 	jr z,Incrementa_FRAMES												;	No hay escudo. Se agotó el tiempo Shield.
 
 	dec (hl)															;	Decrementa tiempo Shield, (Shield).
+
 	inc hl
 
 	dec (hl)															;	Decrementa temporizador de estados, (Shield_2).
@@ -403,8 +404,8 @@ Incrementa_FRAMES
 
 ;	Sound efects
 
-	call Play_burst_sound_effect                                    ; v2. Ok.
-	call Play_shot_sound_effect
+	call Play_burst_sound_effect                                  		; v2. Ok.
+	call Play_shot_sound_effect 										; v2. Ok.
 
 ;	-------------------------------------------------------------
 ;
@@ -416,7 +417,7 @@ Incrementa_FRAMES
 
 ;	Moon.
 
-	ld hl,$4747 													; BRIGHT 1, BLACK paper, WHITE ink
+	ld hl,$4747 														; BRIGHT 1, BLACK paper, WHITE ink
 
 	ld (Attr_Moon_File4),hl
 	ld (Attr_Moon_File4_2),hl
@@ -2354,12 +2355,12 @@ DELAY:
 ;	13/07/24
 ;
 
-; Variables Shield.
+; Temporizaciones Shield, (Variables SHIELD).
 
 ; Datos_Shield db 4,1,4,1									; Tiempos. (Frecuencia del parpadeo de Amadeus).
 ; Puntero_datos_shield defw 0								; Señala distintos tiempos para introducirlos en (Shield_2).
-; Shield db 90												; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".
-; Shield_2 db 0 											; Almacena un tiempo, ( hacía el que apunta:  Puntero_datos_shield ).
+; Shield db 100												; Temporización principal. Indica el tiempo que el escudo está activo. No hay escudo cuando (Shield)="0".
+; Shield_2 db 0 											; Estado Shield, (tiempo encendido - tiempo apagado - tiempo encendido - tiempo apagado). 4,1,4,1.
 ; Shield_3 db 0
 
 Inicia_Shield:
@@ -2375,8 +2376,8 @@ Inicia_Shield:
 
 ;	Sonido, (Efecto_escudo).
 
-	ld hl,Shield_sound_init_value 							; Inicia sonido.
-	ld (Shield_sound),hl
+	ld a,Shield_sound_init_value 							; Inicia sonido.
+	ld (Shield_sound),a 									; $c0
 
 	xor a
 
@@ -2661,6 +2662,18 @@ Genera_explosion:
 ;	En primer lugar activamos el sonido de la explosión.
 
 	call Init_Burst_sound
+
+	call Play_burst_sound_effect
+
+
+
+
+
+
+
+
+
+
 
 	ld hl,Clock_explosion
 	dec (hl)

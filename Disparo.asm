@@ -1014,7 +1014,10 @@ Define_puntero_objeto_disparo
 ;   Iniciamos sonido.
 
     ld hl,Shot_sound_init_value
-    ld (Shot_sound),hl
+    ld (Shot_sound),hl                                       ; Valor inicial $1801. $16, (H) es el n° de ondas completas que mide el efecto, (duración).
+;                                                            ; $01, (L) es la nota inicial del efecto, (longitud de cada semiciclo).
+
+    call Play_shot_sound_effect                              ; Inicia el sonido del disparo.
 
 ;   Inicializamos contador.
 

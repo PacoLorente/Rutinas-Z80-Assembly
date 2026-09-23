@@ -163,13 +163,22 @@ BEEP:
     ret
 
 ; ----- ----- ----- ----- -----
-
-Play_shot_sound_effect:
-
+;
+;   23/9/26
+;
+;   El efecto del disparo de Amadeus es de tipo descendente.
+;
 ;   HL define el sonido.
 ;
-;   L define el retardo o longitud de cada semiciclo de la onda.
-;   H define el nº de ondas que vamos a generar, (longitud del sonido).
+;   Valor inicial $1601. $16, (H) es el n° de ondas completas que mide el efecto, (duración).
+;                        $01, (L) es la nota inicial del efecto, (longitud de cada semiciclo).
+;
+;   El efecto del disparo no activa el inhibidor de efectos de sonido, (Bit_0 Ctrl_6) pues el efecto de las explosiones y el del_
+;   _ escudo tienen prioridad sobre este efecto.
+;
+;   La rutina no se ejecuta si se está reproduciendo una explosión o un efecto SHIELD.
+
+Play_shot_sound_effect:
 
 ;   Exclusiones:
 
@@ -180,25 +189,25 @@ Play_shot_sound_effect:
 
     ld a,(Ctrl_6)
     bit 0,a
-    ret nz                  ; RET si el inhibidor de sonido está activo.
+    ret nz                  ; RET si el inhibidor de sonido está activo, (se está ejecutando una explosión).
 
     ld c,2                  ; Nº de ondas de sonido que vamos a ejecutar por FRAME.
 
 Loop_1
 
     ld a,%00010000          ; Borde negro.
-    out ($fe),a             ; Beeper ON.
+    out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
 
     ld b,l
 
-Delay_3 djnz Delay_3        ; Aplica Delay.
+Delay_3 djnz Delay_3
 
-    xor a
-    out ($fe),a
+    xor a                   ; Borde negro.
+    out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
 
     ld b,l
 
-Delay_4 djnz Delay_4        ; Aplica Delay.
+Delay_4 djnz Delay_4
 
 ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
 
@@ -223,14 +232,15 @@ Clean_shot_effect:
 
     ld hl,0
     ld c,1
+
     ret
 
 ;   -------------------------------------------------------------------------------------------
 ;
-;   22/9/26
+;   23/9/26
 ;
-;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no esté activo el_
-;   _ inhibidor de efectos de sonido, (bit0 Ctrl_6).
+;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no haya otra en curso,_
+;   _ o se esté ejecutando el efecto de sonido SHIELD, (Bit_0 Ctrl_6).
 ;
 ;   Las explosiones de las entidades y Amadeus se generan con el módulo [Noise_efect] de la herramienta_
 ;   _ [Sound_Generator].
@@ -238,7 +248,7 @@ Clean_shot_effect:
 ;   La duración de la explosión está definido por el valor de (H), no es relevante el valor que contenga (L):
 ;
 ;   Burst_sound_init_value equ $35                ;   Longitud de la explosión de las entidades, (duración).  
-;   Amadeus_Burst_sound_init_value equ $70        ;   Longitud de la explosión de Amadeus, (duración).
+;   Amadeus_Burst_sound_init_value equ $75        ;   Longitud de la explosión de Amadeus, (duración).
 
 Play_burst_sound_effect:
 
@@ -252,7 +262,7 @@ Play_burst_sound_effect:
 
     ld a,(Ctrl_6)
     bit 0,a
-    ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido".
+    ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido". (Explosión anterior en curso).
 
 ;   ----------------------
 
@@ -282,43 +292,56 @@ Play_burst_sound_effect:
 
     ret
 
-Clean_burst_efect
+Clean_burst_efect:
 
     xor a
     ld (Burst_sound),a
+
+    ld a,(Ctrl_6)
+    res 0,a
+    ld (Ctrl_6),a
 
     ret
 
 ;   -------------------------------------------------------------------------------------------
 ;
-;   11/4/26
+;   23/9/26
 
 Play_Shield_sound_effect:
 
-    ld hl,(Shield_sound)
-    ld a,h
-    or l
-    ret z
 
-    ld a,(Ctrl_6)
-    set 0,a
-    ld (Ctrl_6),a           ; Activa el Inhibidor de sonido.
+    jr $
+
+    ld a,(Shield_sound)
+    and a
+    ret z                   ; RET si no se ha iniciado SHIELD.
+
+    ld hl,Ctrl_6
+    set 0,(hl)              ; Activa el Inhibidor de sonido.
 
     ld c,2                  ; 2 ondas completas per frame.
 
 Loop_3
 
+    ex af,af
+
     ld a,%00010000          ; Borde negro.
     out ($fe),a             ; Beeper ON.
 
-    ld b,l
+    ex af,af
+
+    ld b,a
 
 Delay_7 djnz Delay_7        ; Aplica Delay.
+
+    ex af,af
 
     xor a
     out ($fe),a
 
-    ld b,l
+    ex af,af
+
+    ld b,a
 
 Delay_8 djnz Delay_8        ; Aplica Delay.
 
@@ -328,8 +351,11 @@ Delay_8 djnz Delay_8        ; Aplica Delay.
 
     jr nz,Loop_3
 
-    ld hl,0
-    ld (Shield_sound),hl
+    xor a
+    ld (Shield_sound),a
+
+    ld hl,Ctrl_6
+    res 0,(hl)              ; Desactiva el Inhibidor de sonido.
 
     ret
 
