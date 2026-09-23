@@ -659,7 +659,8 @@ Transicion_de_entrada:
 
 	push hl
 
-	ld bc,$01d0 								; B="1" efecto ruido. / C contiene el nº de ondas del sonido a ejecutar.
+	ld b,1
+	ld c,Construction_Amadeus_effect ; B="1" efecto ruido. / C contiene el nº de ondas del sonido a ejecutar.
 
 	call Sound_Generator
 

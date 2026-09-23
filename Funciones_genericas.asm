@@ -557,9 +557,9 @@ Sound_Generator:
 
     inc b
     dec b
-    jr nz,Noise_efect
+    jr nz,Noise_efect       ; Salta al módulo de ruido.
 
-Loop_2
+Loop_2:
 
 ;   %xxxabccc
 
@@ -571,7 +571,7 @@ Loop_2
     ld a,%00010000          ; Borde negro.
     out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
 
-Delay_5 
+Delay_5:
 
     dec hl                  ; 26 tstates mide el bucle Delay_5
     ld a,h
@@ -583,7 +583,7 @@ Delay_5
     xor a                   ; Borde negro.    ---     4 tstates
     out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
 
-Delay_6 
+Delay_6:
 
     dec hl
     ld a,h
@@ -608,14 +608,14 @@ Delay_6
     and a 
     jr nz,Incrementa_delay
 
-Decrementa_delay
+Decrementa_delay:
 
     dec hl
     djnz Decrementa_delay
 
     jr 1F
 
-Incrementa_delay
+Incrementa_delay:
 
     inc hl
     djnz Incrementa_delay
@@ -638,7 +638,7 @@ Incrementa_delay
 
 Noise_efect:
 
-Loop
+Loop:
 
     ld a,r
     ld b,a                  ; (B) contiene un nº pseudo aleatorio ($00 - $ff).

@@ -177,6 +177,12 @@ BEEP:
 ;   _ escudo tienen prioridad sobre este efecto.
 ;
 ;   La rutina no se ejecuta si se está reproduciendo una explosión o un efecto SHIELD.
+;
+;   INPUTS: (Shot_sound) <> "0".
+;
+;   MODIFY: AF, HL y BC.
+;
+;   OUTPUT: (Shot_sound) actualizado.
 
 Play_shot_sound_effect:
 
@@ -193,7 +199,7 @@ Play_shot_sound_effect:
 
     ld c,2                  ; Nº de ondas de sonido que vamos a ejecutar por FRAME.
 
-Loop_1
+Loop_1:
 
     ld a,%00010000          ; Borde negro.
     out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
@@ -239,8 +245,7 @@ Clean_shot_effect:
 ;
 ;   23/9/26
 ;
-;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no haya otra en curso,_
-;   _ o se esté ejecutando el efecto de sonido SHIELD, (Bit_0 Ctrl_6).
+;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no haya otra en curso, (Bit_0 Ctrl_6).
 ;
 ;   Las explosiones de las entidades y Amadeus se generan con el módulo [Noise_efect] de la herramienta_
 ;   _ [Sound_Generator].
@@ -249,6 +254,12 @@ Clean_shot_effect:
 ;
 ;   Burst_sound_init_value equ $35                ;   Longitud de la explosión de las entidades, (duración).  
 ;   Amadeus_Burst_sound_init_value equ $75        ;   Longitud de la explosión de Amadeus, (duración).
+;
+;   INPUTS: (Burst_sound) iniciado, <> "0".
+;
+;   MODIFY: AF',AF, HL, DE y BC.
+;
+;   OUTPUT: Actualiza (Burst_sound).
 
 Play_burst_sound_effect:
 
@@ -258,7 +269,7 @@ Play_burst_sound_effect:
     and a
     ret z                   ; RET si (Burst_sound) no está iniciado, (no hay explosión).
 
-    ex af,af 
+    ex af,af
 
     ld a,(Ctrl_6)
     bit 0,a
@@ -306,46 +317,50 @@ Clean_burst_efect:
 ;   -------------------------------------------------------------------------------------------
 ;
 ;   23/9/26
+;
+;   Shield_sound_effect es el efecto de sonido (in game time) con más prioridad de los tres, los otros dos efectos son: Burst_sound_efect y _
+;   _ Shield_sound_effect.
+;
+;   La rutina se ejecuta siempre que (Shield_sound) se haya iniciado, (su valor no sea "0"). Ignora el inhibidor de efectos de sonido debido _
+;   _a que el efecto se reproduce completamente cada vez que se ejecuta la rutina.
+;
+;   El efecto es una especie de BEEP corto. Su duración es de dos ondas completas y la duración del semiciclo está contenida en 1 byte.
+;
+;   INPUT: (Shield_sound) contiene (Shield_sound_init_value), ($c0).
+;
+;   MODIFY: AF'y BC.
 
 Play_Shield_sound_effect:
-
-
-    jr $
 
     ld a,(Shield_sound)
     and a
     ret z                   ; RET si no se ha iniciado SHIELD.
 
-    ld hl,Ctrl_6
-    set 0,(hl)              ; Activa el Inhibidor de sonido.
-
     ld c,2                  ; 2 ondas completas per frame.
 
-Loop_3
+Loop_3:
 
     ex af,af
 
-    ld a,%00010000          ; Borde negro.
+    ld a,%00010000          ; Black BORDER.
     out ($fe),a             ; Beeper ON.
 
     ex af,af
 
     ld b,a
 
-Delay_7 djnz Delay_7        ; Aplica Delay.
+Delay_7 djnz Delay_7
 
     ex af,af
 
-    xor a
-    out ($fe),a
+    xor a                   ; Black BORDER.
+    out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
 
     ex af,af
 
     ld b,a
 
-Delay_8 djnz Delay_8        ; Aplica Delay.
-
-; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
+Delay_8 djnz Delay_8
 
     dec c
 
@@ -353,9 +368,6 @@ Delay_8 djnz Delay_8        ; Aplica Delay.
 
     xor a
     ld (Shield_sound),a
-
-    ld hl,Ctrl_6
-    res 0,(hl)              ; Desactiva el Inhibidor de sonido.
 
     ret
 

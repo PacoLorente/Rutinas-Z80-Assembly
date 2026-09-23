@@ -225,11 +225,12 @@ Attr_Moon_File5_3 equ $589e
 
 ;	Sound efects.
 
-Laser_sound_init_value equ $00a0	
-Shield_sound_init_value equ $c0
-Shot_sound_init_value equ $1601 				;	Valor inicial del efecto de disparo de Amadeus.
+Laser_sound_init_value equ $00a0 				;	Valor inicial del efecto, (ascendente/descendente) de sonido del laser.
+Construction_Amadeus_effect equ $d0				; 	Longitud del efecto de sonido "construcción de Amadeus".
+Shield_sound_init_value equ $c0 				;	Valor del BEEP que construye SHIELD_sound_effect.
 Burst_sound_init_value equ $35					;	Longitud de la explosión de las entidades, (duración).
 Amadeus_Burst_sound_init_value equ $75			;	Longitud de la explosión de Amadeus, (duración).
+Shot_sound_init_value equ $1601 				;	Valor inicial del efecto de disparo de Amadeus.
 
 ;	Mensajes de texto.
 
@@ -367,7 +368,7 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 
 	call Inicia_Shield
 
-	call Play_Shield_sound_effect
+	call Play_Shield_sound_effect 										; v2. Ok.
 
 	ld a,(Shield)
 	and a
@@ -1075,7 +1076,7 @@ START:
 Main_menu:
 
 	call Clean_and_logo 									; v2. Ok.
-	call Print_Main_menu  									; [BEEP]
+	call Print_Main_menu  									; v2. Ok.
 	call Firma
 
 ;	Print Best Score if it exist.
@@ -2664,16 +2665,6 @@ Genera_explosion:
 	call Init_Burst_sound
 
 	call Play_burst_sound_effect
-
-
-
-
-
-
-
-
-
-
 
 	ld hl,Clock_explosion
 	dec (hl)
