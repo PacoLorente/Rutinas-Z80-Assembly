@@ -1,120 +1,229 @@
+; ----------------------------------------------------------
+;
+;   26/09/26
+;
+;   Voy a utilizar las siguientes variables de programa para almacenar las notas:
+;
+;   (Indice_Sprite_der) 
+;   (Indice_Sprite_izq) 
+;   (Puntero_DESPLZ_der) 
+
+Play_DONE_in_time:
+
+;   Extrae nota:
+
+    jr $
+
+    ld hl,(Puntero_musical)
+    call Extrae_address 
+
+
+
+    ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ; ----------------------------------------------------------------------------------------------
 ;
-;   13/4/26
+;   26/09/26
 ;
-
-Done_melody:
-
-
+;   Melodía DONE. NIVEL SUPERADO !!!
+;
+;   La melodía DONE se ejecuta en DI, (interrupciones deshabilitadas).
+;
+;   Está compuesta por 15 notes y 5 pausas.
+;
+;   Hay que introducir los parámetros de cada nota que forma la melodía y llamar a la función de sonido [Sound_Generator].
+;   Los parámetros son:
+;
 ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
 ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
 ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
 ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
-;		   HL = (NOTA).
+;          HL = (NOTA). Duracíon del semiciclo. 
+;
+;   MODIFY: NO MODIFY REGS. !!!
+
+Done_melody:
 
     push af
     push bc
     push de
-    push hl
+    push hl                                                 ; Store regs.
 
-	ld bc,$0014
-	ld de,$0005
-	ld hl,$015e
+Note_1:
+
+	ld bc,$0014                                             ; No ruido / 20 ondas completas
+	ld de,$0005                                             ; Nota descendente / 5 unid. decrease.
+	ld hl,$015e                                             ; Note init. value. 
+
 	ld (Sound),hl
-    call Sound_Generator 									; Up to Note_1
+    call Sound_Generator 		                            ; Tras la primera nota descendente (HL) se sitúa_	
+;                                                           ; _ en la primera nota de la melodía. (HL)=$00fa						
 
-    ld c,$14
-    ld e,0
+Note_2:
+
+    ld c,$14                                                ; Duración de la nueva nota, 20 ondas.
+    ld e,0                                                  ; No existe decremento. (sonido plano).
+
     ld (Sound),hl
-    call Sound_Generator                                    ; Stay in Note_1.
+    call Sound_Generator                                    ; Ejecuta nota.
 
-	ld c,$24
-	ld l,$a5
+Note_3:
+
+	ld c,$24                                                ; Duración de la nueva nota.
+	ld l,$a5                                                ; (HL) = $00a5. Nota, (duración de un semiciclo).
+;                                                           ; (E) = $00, no existe decremento. (sonido plano).
 	ld (Sound),hl
-    call Sound_Generator 									; Nota_2.
+    call Sound_Generator 									; Ejecuta nota.
+
+Pause_1:
 
     ld bc,$4000              
-	call DELAY 												; Pause entre notas.
+	call DELAY 												; PAUSE. Pausa entre notas, las tres primeras se ejecutan ligadas.
 
-	ld c,$14
-	ld l,$fa
-	ld (Sound),hl
-    call Sound_Generator 									; Nota_3.
+Note_4:
 
-	ld c,$21
-	ld l,$b7
+	ld c,$14                                                ; Duración de la nueva nota.
+	ld l,$fa                                                ; New note, (HL) = $00fa
+;                                                           ; (E) = $00, no existe decremento. (sonido plano).                                               
 	ld (Sound),hl
-    call Sound_Generator 									; Nota_4.
+    call Sound_Generator 									; Ejecuta nota.
+
+Note_5:
+
+	ld c,$21                                                ; Duración de la nueva nota.
+	ld l,$b7                                                ; New note, (HL) = $00b7
+;                                                           ; (E) = $00, no existe decremento. (sonido plano).   
+	ld (Sound),hl
+    call Sound_Generator 									; Ejecuta nota.
+
+Pause_2:
 
     ld bc,$4000             
-	call DELAY 												; Pause entre notas.
+	call DELAY 												; PAUSE.
 
-    ld c,$14
-	ld l,$fa
+Note_6:
+
+    ld c,$14                                                ; Duración de la nueva nota.
+	ld l,$fa                                                ; New note, (HL) = $00fa
+;                                                           ; (E) = $00, no existe decremento. (sonido plano).
 	ld (Sound),hl
-    call Sound_Generator 									; Nota_5.
+    call Sound_Generator 			                        ; PLAY NOTE.						
 
-	ld c,$24               ;$24
-	ld l,$cd
+Note_7:
+
+	ld c,$24                                                ; Duración de la nueva nota.          
+	ld l,$cd                                                ; New note, (HL) = $00cd
+;                                                           ; (E) = $00, no existe decremento. (sonido plano).
 	ld (Sound),hl
-    call Sound_Generator 									; Nota_6.
+    call Sound_Generator 									; PLAY NOTE.
 
-    ld c,$2d               
-    ld de,$0101
+Nota_8:
+
+    ld c,$2d                                                ; Duración de la nueva nota.         
+    ld de,$0101                                             ; Nota ascendente / 1 unid. increase..
+;                                                           ; (HL) sigue siendo $00cd, (subirá hasta la siguiente nota).
     ld (Sound),hl
-    call Sound_Generator                                    ; Down to Note_7.
+    call Sound_Generator                                    ; Down to Note_9: / PLAY NOTE.
+
+Pause_3:
 
     ld bc,$1000         
-	call DELAY 												; Pause entre notas.
+	call DELAY 												; PAUSE.
+
+Note_9:
 
     dec d
-    dec e
-    ld c,$16
+    dec e                                                   ; Prepara Nota descendente / "0" decrease. Sonido plano.
+;                                                           ; (HL) ha subido hasta $00fa.
+    ld c,$16                                                ; Duración, 22 ondas de sonido.                       
+
 	ld (Sound),hl
-    call Sound_Generator 									; Nota_7.
+    call Sound_Generator 									; PLAY NOTE.
+
+Note_10:
 
 	ld c,$21
 	ld l,$cd
+
 	ld (Sound),hl
-    call Sound_Generator 									; Nota_8.
+    call Sound_Generator 									
+
+Pause_4:
 
     ld bc,$4000            
-    call DELAY 												; Pause entre notas.
+    call DELAY 												; PAUSE.
+
+Note_11:
 
 	ld c,$21
 	ld l,$d4
+
 	ld (Sound),hl
-    call Sound_Generator 									; Nota_9.
+    call Sound_Generator 									
+
+Pause_5:
 
     ld bc,$5ff0
-    call DELAY 												; Pause entre notas.
+    call DELAY 												; PAUSE.
+
+Note_12:
 
 	ld c,$23                    
 	ld hl,$0117
-	ld (Sound),hl
-    call Sound_Generator 									; Nota_10.
 
-	ld c,$14
-    ld e,3
 	ld (Sound),hl
-    call Sound_Generator 									
+    call Sound_Generator 									; PLAY NOTE.
+
+Note_13:
+
+ 	ld c,$14                                                ; Duración.
+    ld e,3                                                  ; (D)="0" / Decrease "3".
+;                                                           ; (HL) down to $00db, (Note).
+	ld (Sound),hl
+    call Sound_Generator 	                                ; PLAY NOTE.								
+
+Note_14:
+
     ld c,$10
-    ld de,$0102
+    ld de,$0102                                             ; (D)="1" / Increase "2"
+;                                                           ; (HL) up to $00fb
     ld (Sound),hl
-    call Sound_Generator                                    ; Up to Note_11.
+    call Sound_Generator                                    ; PLAY NOTE.
 
-    dec l
-    dec e
-    dec e
 
-    ld c,$40
+Note_15:
+
+    dec l                                                   ; Note: $00fa.
+
+    dec e
+    dec e                                                   ; Clear increase.
+
+    ld c,$40                                                ; Duration.
+
     ld (Sound),hl
-    call Sound_Generator                                    ; End Note.
+    call Sound_Generator                                    ; PLAY NOTE.
 
     pop hl
     pop de
     pop bc
-    pop af
+    pop af                                                  ; Restore regs.
 
     ret
 

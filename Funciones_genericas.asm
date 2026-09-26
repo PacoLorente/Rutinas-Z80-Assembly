@@ -1,9 +1,29 @@
+; *************************************************************************************************************************************************************
+;
+;   13/9/26
+;
+;   Extrae la dirección de memoria que contiene un puntero (hl).
+;   
+;   INPUT: (HL) Puede estar sitúado en una tabla o índice.
+
+
+Extrae_address:
+
+    ld e,(hl)
+    inc hl
+    ld d,(hl)
+    dec hl
+
+    ex de,hl
+
+    ret
+
 ; ******************************************* Indica el tercio de pantalla en el que nos encontramos según el valor del registro H ********************************************************
 ; 
 ;   NOTA: Entrega "0", "1" o "2" en A en función del tercio en el que nos encontremos.
 ;
 ; *****************************************************************************************************************************************************************************************
-; 010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
+;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).  
 
 calcula_tercio:
 
@@ -574,6 +594,7 @@ Loop_2:
 Delay_5:
 
     dec hl                  ; 26 tstates mide el bucle Delay_5
+
     ld a,h
     or l
     jr nz,Delay_5
@@ -586,6 +607,7 @@ Delay_5:
 Delay_6:
 
     dec hl
+
     ld a,h
     or l
     jr nz,Delay_6

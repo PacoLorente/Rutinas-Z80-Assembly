@@ -434,6 +434,7 @@ Incrementa_FRAMES
 	ld a,(Ctrl_5)
 	bit 6,a
 	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
+	call nz,Play_DONE_in_time	 									; Toca la marcha funebre.
 
 	ld a,(Ctrl_1)
 	bit 0,a
@@ -878,6 +879,8 @@ Laser_sound defw Laser_sound_init_value
 Shot_sound defw 0
 Burst_sound db 0 											; Byte que define la duración de una explosión.
 Shield_sound defw 0
+
+Puntero_musical defw DONE_NOTES_MELODY_INDEX
 
 ; Varios:
 
@@ -1477,10 +1480,12 @@ Restore_keyboard_controls
 
 	inc hl
 	inc de
+
 	ld a,(hl)
 	ld (de),a
 	xor a
 	ld (hl),a
+
 	djnz Restore_keyboard_controls
 
 Game_over_00
@@ -2258,25 +2263,6 @@ Inicia_punteros_de_cajas:
 	ld (Indice_restore_caja),hl
 	call Extrae_address
 	ld (Puntero_restore_caja),hl
-
-	ret
-
-; *************************************************************************************************************************************************************
-
-;
-; 13/9/26
-;
-; Extrae la direccio? que contiene un puntero, (HL), también en HL.
-;
-; Destruye el puntero y DE !!!!!
-
-Extrae_address:
-
-	ld e,(hl)
-	inc hl
-	ld d,(hl)
-	dec hl
-	ex de,hl
 
 	ret
 

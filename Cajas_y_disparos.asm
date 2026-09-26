@@ -322,8 +322,204 @@ Definicion_Amadeus:
 	defw $50c1	                                    ; (Posicion_inicio).
 	db %01000101									; (Attr).
 
+; ---------------------------------------------
+; ---------------------------------------------
+; ---------------------------------------------
+; ---------------------------------------------
+; ---------------------------------------------
 
+DONE_NOTES_MELODY_INDEX:
 
+	defw Note_1x
+	defw Note_2x
+	defw Note_3x
+	defw Pause_1x
+	defw Note_4x
+	defw Note_5x
+	defw Pause_2x
+	defw Note_6x
+	defw Note_7x
+	defw Note_8x
+	defw Pause_3x
+	defw Note_9x
+	defw Note_10x
+	defw Pause_4x
+	defw Note_11x
+	defw Pause_5x
+	defw Note_12x
+	defw Note_13x
+	defw Note_14x
+	defw Note_15x
+	defw 0
 
+Note_1x:
 
+;	ld bc,$0014                                             ; No ruido / 20 ondas completas
+;	ld de,$0005                                             ; Nota descendente / 5 unid. decrease.
+;	ld hl,$015e                                             ; Note init. value. 
 
+	defw $0014
+	defw $0005
+	defw $015e 
+
+Note_2x:
+
+;    ld c,$14                                                ; Duración de la nueva nota, 20 ondas.
+;    ld e,0                                                  ; No existe decremento. (sonido plano).
+
+	defw $0014
+	defw $0000
+	defw $00fa
+
+Note_3x:
+
+;	ld c,$24                                                ; Duración de la nueva nota.
+;	ld l,$a5                                                ; (HL) = $00a5. Nota, (duración de un semiciclo).
+
+	defw $0024
+	defw $0000
+	defw $00a5
+
+Pause_1x:
+
+;   ld bc,$4000            
+
+	defw $4000
+
+Note_4x:
+
+;	ld c,$14                                                ; Duración de la nueva nota.
+;	ld l,$fa                                                ; New note, (HL) = $00fa
+
+	defw $0014
+	defw $0000
+	defw $00fa
+
+Note_5x:
+
+;	ld c,$21                                                ; Duración de la nueva nota.
+;	ld l,$b7                                                ; New note, (HL) = $00b7
+
+	defw $0021
+	defw $0000
+	defw $00b7
+
+Pause_2x:
+
+;   ld bc,$4000             
+
+	defw $4000
+
+Note_6x:
+
+;   ld c,$14                                                ; Duración de la nueva nota.
+;	ld l,$fa                                                ; New note, (HL) = $00fa
+
+	defw $0014
+	defw $0000
+	defw $00fa
+
+Note_7x:
+
+;	ld c,$24                                                ; Duración de la nueva nota.          
+;	ld l,$cd                                                ; New note, (HL) = $00cd
+
+	defw $0024
+	defw $0000
+	defw $00cd
+
+Note_8x:
+
+;    ld c,$2d                                                ; Duración de la nueva nota.         
+;    ld de,$0101                                             ; Nota ascendente / 1 unid. increase..
+
+	defw $002d
+	defw $0101
+	defw $00cd
+
+Pause_3x:
+
+;   ld bc,$1000         
+
+	defw $1000
+
+Note_9x:
+
+;    dec d
+;    dec e                                                  ; Prepara Nota descendente / "0" decrease. Sonido plano.
+;                                                           ; (HL) ha subido hasta $00fa.
+;    ld c,$16                                               ; Duración, 22 ondas de sonido.                
+
+	defw $0016
+	defw $0000
+	defw $00fa
+
+Note_10x:
+
+;	ld c,$21
+;	ld l,$cd
+
+	defw $0021
+	defw $0000
+	defw $00cd
+
+Pause_4x:
+
+;   ld bc,$4000          
+
+	defw $4000
+
+Note_11x:
+
+;	ld c,$21
+;	ld l,$d4
+
+	defw $0021
+	defw $0000
+	defw $00d4
+
+Pause_5x:
+
+;   ld bc,$5ff0
+
+	defw $5ff0
+
+Note_12x:
+
+;	ld c,$23                    
+;	ld hl,$0117
+
+	defw $0023
+	defw $0000
+	defw $0117
+
+Note_13x:
+
+; 	ld c,$14                                                ; Duración.
+;    ld e,3                                                 ; (D)="0" / Decrease "3".
+;                                                           ; (HL) down to $00db, (Note).
+
+	defw $0014
+	defw $0003
+	defw $0117
+
+Note_14x:
+
+;    ld c,$10
+;    ld de,$0102                                            ; (D)="1" / Increase "2"
+;                                                           ; (HL) up to $00fb
+
+	defw $0010
+	defw $0102
+	defw $00db
+
+Note_15x:
+
+;   dec l                                                   ; Note: $00fa.
+;   dec e
+;   dec e                                                   ; Clear increase.
+;   ld c,$40                                                ; Duration.
+
+	defw $0040
+	defw $0100
+	defw $00fa

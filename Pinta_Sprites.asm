@@ -68,7 +68,7 @@ Cartel_Best_Score:
 
 Firma:
 
-    jr $
+;    jr $
 
     ld hl,$50da                 ; Dirección de pantalla.
     ld de,Firma_Lorente_1       ; Data.
