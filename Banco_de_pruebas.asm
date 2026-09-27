@@ -434,7 +434,6 @@ Incrementa_FRAMES
 	ld a,(Ctrl_5)
 	bit 6,a
 	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
-	call nz,Play_DONE_in_time	 									; Toca la marcha funebre.
 
 	ld a,(Ctrl_1)
 	bit 0,a
@@ -1461,6 +1460,10 @@ Gestion_de_Amadeus:
 ;	Desactiva controles KEMPSTON.
 ;	Reponemos los controles KEYBOARD en caso de haber seleccionado joystick SINCLAIR.
 ;	Si la caja de 4 bytes (Sinclair_db_box) está vacía no habrá transvase de datos.
+
+
+	call Play_DONE_in_time
+
 
 	ld hl,Ctrl_7
 	res 1,(hl)

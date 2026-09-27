@@ -1087,9 +1087,6 @@ Print_Game_Over:
 
     call Print_text_msg
 
-    xor a 
-    inc a                                                   ; RET NZ
-
     ret
 
 

@@ -2,41 +2,112 @@
 ;
 ;   26/09/26
 ;
-;   Voy a utilizar las siguientes variables de programa para almacenar las notas:
+;   Voy a utilizar los 6 bytes de las variables:
 ;
-;   (Indice_Sprite_der) 
-;   (Indice_Sprite_izq) 
-;   (Puntero_DESPLZ_der) 
+;   (Indice_Sprite_der)
+;   (Indice_Sprite_izq)
+;   (Puntero_DESPLZ_der)
+;
+;   Para almacenar el perfil de la nota que está en ejecución.
+
 
 Play_DONE_in_time:
 
-;   Extrae nota:
+;    jr $
 
-    jr $
+;   Nota en ejecución??
+
+    ld hl,Indice_Sprite_der
+    ld a,(hl)
+    and a
+    jr z,New_note
+
+Nota_en_ejecucion:
+
+    ld hl,Indice_Sprite_der
+    jr 1F
+
+;   New note. Extrae nota:
+
+New_note:
 
     ld hl,(Puntero_musical)
     call Extrae_address 
 
+;   Detecta final de canción.
 
+    ld a,h
+    or l
+    ret z
+
+;   Actualiza (Puntero_musical).
+
+    inc de
+    inc de
+
+    ld (Puntero_musical),de
+
+;   Prepara registros para llamar a [Sound_Generator].
+
+1 ld (Stack),sp
+
+    ld sp,hl
+
+    pop bc
+    pop de
+    pop hl
+
+;   Vamos a ejecutar 8 ondas de sonido (per FRAME) como máximo.
+;   Comprobaremos que nos quedan más de ocho ondas por ejecutar y guardaremos la duración restante de la nota en la variable.
+
+    call Resta_ocho_ondas
+
+    and a
+    jr z,2F
+
+;   Guardamos la nota para seguir más tarde con la ejecución:
+
+    ld sp,Indice_Sprite_der+6                         ; Almacenaremos la nota en el almacén [[Numeros_aleatorios]], 6 bytes.
+
+    push hl
+    push de
+    push bc
+
+;   Siguiente fragmento de la nota guardado. Restauramos SP.
+
+2 ld sp,(Stack)
+
+;   Preparamos y ejecutamos la nota.
+
+    ld c,2                                           ; Duración de la nota.
+
+    ld (Sound),hl
+    call Sound_Generator
 
     ret
 
+; --------------------------------------------------------------------------
 
+Resta_ocho_ondas:
 
+    ld a,c
+    sub 2
 
+    jr c,Less_than_eight
+    jr z,Less_than_eight
 
+    ld c,a                                            ; Duracíon de la nota actualizada.
 
+    ret
 
+Less_than_eight:
 
+    ld hl,Indice_Sprite_der
 
+    xor a
+    ld (hl),a                                         ; Indica que pasamos a la siguiente nota.
 
-
-
-
-
-
-
-
+    ret
 
 ; ----------------------------------------------------------------------------------------------
 ;
