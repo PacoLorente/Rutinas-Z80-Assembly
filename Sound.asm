@@ -13,8 +13,6 @@
 
 Play_DONE_in_time:
 
-;    jr $
-
 ;   Nota en ejecución??
 
     ld hl,Indice_Sprite_der
@@ -45,7 +43,7 @@ New_note:
     inc de
     inc de
 
-    ld (Puntero_musical),de
+    ld (Puntero_musical),de                           ; (Puntero_musical) está situado en la siguiente nota del índice.
 
 ;   Prepara registros para llamar a [Sound_Generator].
 
@@ -53,14 +51,32 @@ New_note:
 
     ld sp,hl
 
-    pop bc
-    pop de
-    pop hl
+    pop bc                                            ; (B) <> "0" indica que vamos a efectuar una pausa, no nota musical.
+;                                                     ; (C) contendrá el n° de ondas que quedan por reproducir.
+
+;   Comprueba PAUSE.
+
+    inc b
+    dec b
+    jr z,3F
+
+;   PAUSE.
+
+Pause: djnz Pause                                     ; PAUSE.
+
+    ld sp,(Stack)
+
+    jr Less_than_two                                  ; RET indicando nueva nota.
+
+3 pop de                                              ; (D) Indica INCREASE cuando es "1" DECREASE cuando es "0".
+;                                                     ; (E) Indica el n° de incrementos/decrementos que se producen después de ejecutar cada onda completa.
+    pop hl                                            ; (HL) contiene la duración de cada semiciclo que forma la onda sonora, (nota).
 
 ;   Vamos a ejecutar 8 ondas de sonido (per FRAME) como máximo.
 ;   Comprobaremos que nos quedan más de ocho ondas por ejecutar y guardaremos la duración restante de la nota en la variable.
 
-    call Resta_ocho_ondas
+    call Resta_dos_ondas                             ; Únicamente vamos a ejecutar ocho ondas de la nota. Restamos 8 al total de n° de ondas antes de almacenar_
+;                                                     ; _ el resto de la nota en (Indice_Sprite_der).
 
     and a
     jr z,2F
@@ -88,24 +104,22 @@ New_note:
 
 ; --------------------------------------------------------------------------
 
-Resta_ocho_ondas:
+Resta_dos_ondas:
 
     ld a,c
     sub 2
 
-    jr c,Less_than_eight
-    jr z,Less_than_eight
+    jr c,Less_than_two
+    jr z,Less_than_two
 
-    ld c,a                                            ; Duracíon de la nota actualizada.
+    ld c,a                                           ; Duracíon de la nota actualizada.
 
     ret
 
-Less_than_eight:
-
-    ld hl,Indice_Sprite_der
+Less_than_two:
 
     xor a
-    ld (hl),a                                         ; Indica que pasamos a la siguiente nota.
+    ld (Indice_Sprite_der),a                         ; Indica que pasamos a la siguiente nota.
 
     ret
 

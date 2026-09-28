@@ -519,7 +519,7 @@
  368  8355
  369  8355 CD 5C 9B     	call Inicia_Shield
  370  8358
- 371  8358 CD DA C1     	call Play_Shield_sound_effect 										; v2. Ok.
+ 371  8358 CD E5 C1     	call Play_Shield_sound_effect 										; v2. Ok.
  372  835B
  373  835B 3A E1 94     	ld a,(Shield)
  374  835E A7           	and a
@@ -556,8 +556,8 @@
  405  8387
  406  8387              ;	Sound efects
  407  8387
- 408  8387 CD A5 C1     	call Play_burst_sound_effect                                  		; v2. Ok.
- 409  838A CD 75 C1     	call Play_shot_sound_effect 										; v2. Ok.
+ 408  8387 CD B0 C1     	call Play_burst_sound_effect                                  		; v2. Ok.
+ 409  838A CD 80 C1     	call Play_shot_sound_effect 										; v2. Ok.
  410  838D
  411  838D              ;	-------------------------------------------------------------
  412  838D              ;
@@ -584,11 +584,11 @@
  433  83A7
  434  83A7 3A BA 94     	ld a,(Ctrl_5)
  435  83AA CB 77        	bit 6,a
- 436  83AC C4 80 C6     	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
+ 436  83AC C4 8B C6     	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
  437  83AF
  438  83AF 3A 7C 94     	ld a,(Ctrl_1)
  439  83B2 CB 47        	bit 0,a
- 440  83B4 C4 62 C6     	call nz,Print_DONE 												; Imprime "DONE" si hemos eliminado a la última entidad del nivel.
+ 440  83B4 C4 6D C6     	call nz,Print_DONE 												; Imprime "DONE" si hemos eliminado a la última entidad del nivel.
  441  83B7
  442  83B7 C1           	pop bc
  443  83B8 D1           	pop de
@@ -3314,13 +3314,13 @@
  892  94F4              Variables_DRAW1: 											; Estas variables no se inicializan si avanzamos de nivel.
  893  94F4
  894  94F4 01           Nivel db 1													; Nivel actual del juego.
- 895  94F5 16 C7        Puntero_indice_NIVELES defw Indice_de_niveles
- 896  94F7 8E C6        Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
+ 895  94F5 21 C7        Puntero_indice_NIVELES defw Indice_de_niveles
+ 896  94F7 99 C6        Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
  897  94F9 03           Lives db 3
  898  94FA 03           Shields db 3 												; Nº de Shields
  899  94FB
- 900  94FB C8 C6        Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
- 901  94FD B6 C6        Puntero_de_vidas defw Indice_de_vidas
+ 900  94FB D3 C6        Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
+ 901  94FD C1 C6        Puntero_de_vidas defw Indice_de_vidas
  902  94FF
  903  94FF 00           Entidades_BCD_unidades db 0
  904  9500 00           Entidades_BCD_decenas db 0
@@ -3556,14 +3556,14 @@
 1078  96A1              Main_menu:
 1079  96A1
 1080  96A1 CD D3 A8     	call Clean_and_logo 									; v2. Ok.
-1081  96A4 CD 0D C6     	call Print_Main_menu  									; v2. Ok.
+1081  96A4 CD 18 C6     	call Print_Main_menu  									; v2. Ok.
 1082  96A7 CD 72 AD     	call Firma
 1083  96AA
 1084  96AA              ;	Print Best Score if it exist.
 1085  96AA
 1086  96AA 3A 18 95     	ld a,(Ctrl_7)
 1087  96AD CB 47        	bit 0,a
-1088  96AF C4 0E C2     	call nz,Print_new_best_score
+1088  96AF C4 19 C2     	call nz,Print_new_best_score
 1089  96B2
 1090  96B2 CD 61 A0     	call Main_menu_key										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 1091  96B5
@@ -3640,7 +3640,7 @@
 1162  970A
 1163  970A              ;	Imprime mensaje de nivel.
 1164  970A
-1165  970A CD DE C2     	call Print_level_msg
+1165  970A CD E9 C2     	call Print_level_msg
 1166  970D CD 96 A4     	call No_zeros
 1167  9710
 1168  9710 C1           	pop bc
@@ -3694,7 +3694,7 @@
 1216  9751 CB D6        	set 2,(hl)
 1217  9753 CB EE        	set 5,(hl)												; Imprimimos Amadeus.
 1218  9755
-1219  9755 CD FB C2     	call Clear_level_msg
+1219  9755 CD 06 C3     	call Clear_level_msg
 1220  9758
 1221  9758              ;	Transicion_de_entrada
 1222  9758
@@ -5129,9 +5129,9 @@
 2651  9C70
 2652  9C70              ;	En primer lugar activamos el sonido de la explosión.
 2653  9C70
-2654  9C70 CD FA C1     	call Init_Burst_sound
+2654  9C70 CD 05 C2     	call Init_Burst_sound
 2655  9C73
-2656  9C73 CD A5 C1     	call Play_burst_sound_effect
+2656  9C73 CD B0 C1     	call Play_burst_sound_effect
 2657  9C76
 2658  9C76 21 CB 94     	ld hl,Clock_explosion
 2659  9C79 35           	dec (hl)
@@ -5335,7 +5335,7 @@
 2857  9D43
 2858  9D43              ;	Autoriza sonido de explosión.
 2859  9D43
-2860  9D43 CD FA C1     	call Init_Burst_sound
+2860  9D43 CD 05 C2     	call Init_Burst_sound
 2861  9D46
 2862  9D46 21 CC 94     	ld hl,Clock_explosion_Amadeus
 2863  9D49 35           	dec (hl)
@@ -5566,7 +5566,7 @@
 3088  9E08 CD A8 B0         call Pinta_disparos_Amadeus
 3089  9E0B CD 93 99     	call Change_Disparos							; Intercambiamos los álbumes de disparos.
 3090  9E0E
-3091  9E0E CD 91 C0     	call Done_melody
+3091  9E0E CD 9C C0     	call Done_melody
 3092  9E11
 3093  9E11 01 FF 05     	ld bc,$05ff
 3094  9E14 CD 56 9B         call DELAY
@@ -5574,7 +5574,7 @@
 3096  9E17 21 B9 94     	ld hl,Ctrl_4
 3097  9E1A CB AE        	res 5,(hl)
 3098  9E1C
-3099  9E1C CD 71 C6     	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
+3099  9E1C CD 7C C6     	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
 3100  9E1F
 3101  9E1F CD 5A A9     	call Replace_Amadeus_attr_zone 					;	Repone los atributos de las 2 últimas líneas de pantalla para que la entrada de Amadeus del siguiente nivel sea azul.
 3102  9E22
@@ -6086,7 +6086,7 @@
  492+ 9F23
  493+ 9F23 10 F9            djnz 1B                                 ;   Aplica temporización.
  494+ 9F25
- 495+ 9F25 CD 57 C1         call BEEP
+ 495+ 9F25 CD 62 C1         call BEEP
  496+ 9F28
  497+ 9F28 06 01            ld b,1                                  ;   Activa retardo RND en el próximo char. a imprimir.
  498+ 9F2A
@@ -6390,7 +6390,7 @@
  103+ 9FDA F1           	pop af 													; KEYCODE en A.
  104+ 9FDB
  105+ 9FDB EB           	ex de,hl
- 106+ 9FDC CD D0 C2     	call ASCII_CODE_de_KEYCODE
+ 106+ 9FDC CD DB C2     	call ASCII_CODE_de_KEYCODE
  107+ 9FDF EB           	ex de,hl
  108+ 9FE0
  109+ 9FE0              ;	Imprimimos caracter:
@@ -6408,7 +6408,7 @@
  121+ 9FEA 1C           	inc e
  122+ 9FEB
  123+ 9FEB EB           	ex de,hl
- 124+ 9FEC CD 8A C2         call Flash
+ 124+ 9FEC CD 95 C2         call Flash
  125+ 9FEF EB           	ex de,hl
  126+ 9FF0
  127+ 9FF0              ;	Decrementa contador de chars.
@@ -6442,7 +6442,7 @@
  155+ A009
  156+ A009              ;	DEL char.
  157+ A009
- 158+ A009 CD 57 C1     	call BEEP
+ 158+ A009 CD 62 C1     	call BEEP
  159+ A00C
  160+ A00C 34           	inc (hl)
  161+ A00D 4E           	ld c,(hl) 												; INC counter.
@@ -6577,29 +6577,29 @@
  290+ A069
  291+ A069 7B           	ld a,e
  292+ A06A FE 11        	cp $11
- 293+ A06C CC 57 C1     	call z,BEEP												; "K" key_code.
- 294+ A06F CC B4 C4     	call z,Show_controls_keys
+ 293+ A06C CC 62 C1     	call z,BEEP												; "K" key_code.
+ 294+ A06F CC BF C4     	call z,Show_controls_keys
  295+ A072 C8           	ret z
  296+ A073
  297+ A073              ;	"E" key was pressed ?
  298+ A073
  299+ A073 FE 15        	cp $15 													; "E" key_code.
- 300+ A075 CC 57 C1     	call z,BEEP
+ 300+ A075 CC 62 C1     	call z,BEEP
  301+ A078 CC D2 A1     	call z,Active_kempstom_joystick
  302+ A07B C8           	ret z
  303+ A07C
  304+ A07C              ;	"S" key was pressed ?
  305+ A07C
  306+ A07C FE 1E        	cp $1e 													; "S" key_code.
- 307+ A07E CC 57 C1     	call z,BEEP
+ 307+ A07E CC 62 C1     	call z,BEEP
  308+ A081 CC EC A1     	call z,Active_sinclair_joystick
  309+ A084 C8           	ret z
  310+ A085
  311+ A085              ;	"D" key was pressed ?
  312+ A085
  313+ A085 FE 16        	cp $16
- 314+ A087 CC 57 C1     	call z,BEEP
- 315+ A08A CC 2F C3     	call z,Define_menu 										; "D" key_code.
+ 314+ A087 CC 62 C1     	call z,BEEP
+ 315+ A08A CC 3A C3     	call z,Define_menu 										; "D" key_code.
  316+ A08D C8           	ret z
  317+ A08E
  318+ A08E 18 D1        	jr Main_menu_key
@@ -6781,7 +6781,7 @@
  494+ A14C
  495+ A14C              ;	Order to play.
  496+ A14C
- 497+ A14C CD 57 C1     	call BEEP
+ 497+ A14C CD 62 C1     	call BEEP
  498+ A14F
  499+ A14F 21 00 00     	ld hl,0
  500+ A152 22 D4 94     	ld (Start_counter),hl 									; Inicializa temporizador.
@@ -6796,7 +6796,7 @@
  509+ A157
  510+ A157 22 D4 94     	ld (Start_counter),hl
  511+ A15A
- 512+ A15A CD AC C5     	call Clean_Show_controls_menu 							; Borra las líneas de la pantalla de CONTROLES.
+ 512+ A15A CD B7 C5     	call Clean_Show_controls_menu 							; Borra las líneas de la pantalla de CONTROLES.
  513+ A15D
  514+ A15D 21 BB 94     	ld hl,Ctrl_6
  515+ A160 CB CE        	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
@@ -6841,7 +6841,7 @@
  554+ A171
  555+ A171              Order_to_play
  556+ A171
- 557+ A171 CD 57 C1     	call BEEP
+ 557+ A171 CD 62 C1     	call BEEP
  558+ A174
  559+ A174 3E 05        	ld a,$05
  560+ A176 32 D6 94     	ld (Start_counter_2),a
@@ -6849,7 +6849,7 @@
  562+ A17C 22 D4 94     	ld (Start_counter),hl 									; Inicializa temporizador.
  563+ A17F
  564+ A17F 21 C0 50         ld hl,Line_22
- 565+ A182 CD D1 C5         call CLean_file  										; Clean "Press FIRE to START", (Line_22).
+ 565+ A182 CD DC C5         call CLean_file  										; Clean "Press FIRE to START", (Line_22).
  566+ A185
  567+ A185 C9           	ret
  568+ A186
@@ -6866,7 +6866,7 @@
  579+ A192              ;	Clean Kempston menu.
  580+ A192
  581+ A192 21 C0 50         ld hl,Line_22
- 582+ A195 CD D1 C5         call CLean_file 										; Borra "Press Fire to START".
+ 582+ A195 CD DC C5         call CLean_file 										; Borra "Press Fire to START".
  583+ A198
  584+ A198 C9           	ret
  585+ A199
@@ -6905,7 +6905,7 @@
  618+ A1B7              ;	Clean Kempston menu.
  619+ A1B7
  620+ A1B7 21 C0 50         ld hl,Line_22
- 621+ A1BA CD D1 C5         call CLean_file 										; Borra "Press Fire to START".
+ 621+ A1BA CD DC C5         call CLean_file 										; Borra "Press Fire to START".
  622+ A1BD
  623+ A1BD              ;	Recuperar key_codes de la caja.
  624+ A1BD
@@ -6950,7 +6950,7 @@
  663+ A1D7
  664+ A1D7              ;	Fijamos
  665+ A1D7
- 666+ A1D7 CD 7B C5     	call Clean_main_menu
+ 666+ A1D7 CD 86 C5     	call Clean_main_menu
  667+ A1DA
  668+ A1DA 21 E8 95     	ld hl,a6                                                ; "Press FIRE to START"
  669+ A1DD 11 C7 50         ld de,Line_22 + 7
@@ -6975,7 +6975,7 @@
  688+ A1EC              ;	"5" Disparo   ..... Key code $04
  689+ A1EC
  690+ A1EC
- 691+ A1EC CD 7B C5     	call Clean_main_menu
+ 691+ A1EC CD 86 C5     	call Clean_main_menu
  692+ A1EF
  693+ A1EF 21 E8 95     	ld hl,a6                                                ; "Press FIRE to START"
  694+ A1F2 11 C7 50         ld de,Line_22 + 7
@@ -7100,10 +7100,10 @@
   24+ A25B 35           	dec (hl)
   25+ A25C C0           	ret nz
   26+ A25D
-  27+ A25D 21 16 C7     	ld hl,Indice_de_niveles
+  27+ A25D 21 21 C7     	ld hl,Indice_de_niveles
   28+ A260 22 F5 94     	ld (Puntero_indice_NIVELES),hl
   29+ A263
-  30+ A263 21 8E C6     	ld hl,Msg_level_index
+  30+ A263 21 99 C6     	ld hl,Msg_level_index
   31+ A266 22 F7 94     	ld (Puntero_de_mensajes_de_niveles),hl
   32+ A269
   33+ A269 C9           	ret
@@ -7198,10 +7198,10 @@
  122+ A2CC 21 F4 94     	ld hl,Nivel
  123+ A2CF 36 01        	ld (hl),1
  124+ A2D1
- 125+ A2D1 21 16 C7     	ld hl,Indice_de_niveles
+ 125+ A2D1 21 21 C7     	ld hl,Indice_de_niveles
  126+ A2D4 22 F5 94     	ld (Puntero_indice_NIVELES),hl
  127+ A2D7
- 128+ A2D7 21 8E C6     	ld hl,Msg_level_index
+ 128+ A2D7 21 99 C6     	ld hl,Msg_level_index
  129+ A2DA 22 F7 94     	ld (Puntero_de_mensajes_de_niveles),hl
  130+ A2DD
  131+ A2DD 21 F9 94     	ld hl,Lives
@@ -7209,9 +7209,9 @@
  133+ A2E2 23           	inc hl
  134+ A2E3 36 03        	ld (hl),3
  135+ A2E5
- 136+ A2E5 21 C8 C6     	ld hl,Indice_de_escudos
+ 136+ A2E5 21 D3 C6     	ld hl,Indice_de_escudos
  137+ A2E8 22 FB 94     	ld (Puntero_de_escudos),hl
- 138+ A2EB 21 B6 C6     	ld hl,Indice_de_vidas
+ 138+ A2EB 21 C1 C6     	ld hl,Indice_de_vidas
  139+ A2EE 22 FD 94     	ld (Puntero_de_vidas),hl
  140+ A2F1
  141+ A2F1 3E 46        	ld a,%01000110
@@ -8346,7 +8346,7 @@
 1270+ A641
 1271+ A641 CD 6A A7     	call Calcula_salto_en_BC
 1272+ A644
-1273+ A644 21 DA C6     	ld hl,Indice_de_tablas_Random
+1273+ A644 21 E5 C6     	ld hl,Indice_de_tablas_Random
 1274+ A647 A7           	and a
 1275+ A648 ED 4A        	adc hl,bc
 1276+ A64A 22 6E 94     	ld (Puntero_tabla_Random),hl
@@ -9264,7 +9264,7 @@
   79+ A901 22 19 95     	ld (Score_hex_max),hl 						; we´ve a new max.score.
   80+ A904
   81+ A904 CD D3 A8     	call Clean_and_logo
-  82+ A907 CD 67 C2     	call New_best_msg
+  82+ A907 CD 72 C2     	call New_best_msg
   83+ A90A
   84+ A90A              ; 	Reutilizamos variables para evitar la repetición de teclas.
   85+ A90A              ;
@@ -15683,7 +15683,7 @@
 1017+ BEE1 22 E9 94         ld (Shot_sound),hl                                       ; Valor inicial $1801. $16, (H) es el n° de ondas completas que mide el efecto, (duración).
 1018+ BEE4              ;                                                            ; $01, (L) es la nota inicial del efecto, (longitud de cada semiciclo).
 1019+ BEE4
-1020+ BEE4 CD 75 C1         call Play_shot_sound_effect                              ; Inicia el sonido del disparo.
+1020+ BEE4 CD 80 C1         call Play_shot_sound_effect                              ; Inicia el sonido del disparo.
 1021+ BEE7
 1022+ BEE7              ;   Inicializamos contador.
 1023+ BEE7
@@ -16133,1933 +16133,1947 @@
   13+ C046
   14+ C046              Play_DONE_in_time:
   15+ C046
-  16+ C046              ;    jr $
+  16+ C046              ;   Nota en ejecución??
   17+ C046
-  18+ C046              ;   Nota en ejecución??
-  19+ C046
-  20+ C046 21 5C 94         ld hl,Indice_Sprite_der
-  21+ C049 7E               ld a,(hl)
-  22+ C04A A7               and a
-  23+ C04B 28 05            jr z,New_note
+  18+ C046 21 5C 94         ld hl,Indice_Sprite_der
+  19+ C049 7E               ld a,(hl)
+  20+ C04A A7               and a
+  21+ C04B 28 05            jr z,New_note
+  22+ C04D
+  23+ C04D              Nota_en_ejecucion:
   24+ C04D
-  25+ C04D              Nota_en_ejecucion:
-  26+ C04D
-  27+ C04D 21 5C 94         ld hl,Indice_Sprite_der
-  28+ C050 18 0F            jr 1F
+  25+ C04D 21 5C 94         ld hl,Indice_Sprite_der
+  26+ C050 18 0F            jr 1F
+  27+ C052
+  28+ C052              ;   New note. Extrae nota:
   29+ C052
-  30+ C052              ;   New note. Extrae nota:
+  30+ C052              New_note:
   31+ C052
-  32+ C052              New_note:
-  33+ C052
-  34+ C052 2A EE 94         ld hl,(Puntero_musical)
-  35+ C055 CD 2E 9E         call Extrae_address
+  32+ C052 2A EE 94         ld hl,(Puntero_musical)
+  33+ C055 CD 2E 9E         call Extrae_address
+  34+ C058
+  35+ C058              ;   Detecta final de canción.
   36+ C058
-  37+ C058              ;   Detecta final de canción.
-  38+ C058
-  39+ C058 7C               ld a,h
-  40+ C059 B5               or l
-  41+ C05A C8               ret z
+  37+ C058 7C               ld a,h
+  38+ C059 B5               or l
+  39+ C05A C8               ret z
+  40+ C05B
+  41+ C05B              ;   Actualiza (Puntero_musical).
   42+ C05B
-  43+ C05B              ;   Actualiza (Puntero_musical).
-  44+ C05B
-  45+ C05B 13               inc de
-  46+ C05C 13               inc de
-  47+ C05D
-  48+ C05D ED 53 EE 94      ld (Puntero_musical),de
+  43+ C05B 13               inc de
+  44+ C05C 13               inc de
+  45+ C05D
+  46+ C05D ED 53 EE 94      ld (Puntero_musical),de                           ; (Puntero_musical) está situado en la siguiente nota del índice.
+  47+ C061
+  48+ C061              ;   Prepara registros para llamar a [Sound_Generator].
   49+ C061
-  50+ C061              ;   Prepara registros para llamar a [Sound_Generator].
-  51+ C061
-  52+ C061 ED 73 8E 94  1 ld (Stack),sp
-  53+ C065
-  54+ C065 F9               ld sp,hl
-  55+ C066
-  56+ C066 C1               pop bc
-  57+ C067 D1               pop de
-  58+ C068 E1               pop hl
-  59+ C069
-  60+ C069              ;   Vamos a ejecutar 8 ondas de sonido (per FRAME) como máximo.
-  61+ C069              ;   Comprobaremos que nos quedan más de ocho ondas por ejecutar y guardaremos la duración restante de la nota en la variable.
-  62+ C069
-  63+ C069 CD 82 C0         call Resta_ocho_ondas
-  64+ C06C
-  65+ C06C A7               and a
-  66+ C06D 28 06            jr z,2F
-  67+ C06F
-  68+ C06F              ;   Guardamos la nota para seguir más tarde con la ejecución:
-  69+ C06F
-  70+ C06F 31 62 94         ld sp,Indice_Sprite_der+6                         ; Almacenaremos la nota en el almacén [[Numeros_aleatorios]], 6 bytes.
-  71+ C072
-  72+ C072 E5               push hl
-  73+ C073 D5               push de
-  74+ C074 C5               push bc
-  75+ C075
-  76+ C075              ;   Siguiente fragmento de la nota guardado. Restauramos SP.
+  50+ C061 ED 73 8E 94  1 ld (Stack),sp
+  51+ C065
+  52+ C065 F9               ld sp,hl
+  53+ C066
+  54+ C066 C1               pop bc                                            ; (B) <> "0" indica que vamos a efectuar una pausa, no nota musical.
+  55+ C067              ;                                                     ; (C) contendrá el n° de ondas que quedan por reproducir.
+  56+ C067
+  57+ C067              ;   Comprueba PAUSE.
+  58+ C067
+  59+ C067 04               inc b
+  60+ C068 05               dec b
+  61+ C069 28 08            jr z,3F
+  62+ C06B
+  63+ C06B              ;   PAUSE.
+  64+ C06B
+  65+ C06B 10 FE        Pause: djnz Pause                                     ; PAUSE.
+  66+ C06D
+  67+ C06D ED 7B 8E 94      ld sp,(Stack)
+  68+ C071
+  69+ C071 18 24            jr Less_than_two                                  ; RET indicando nueva nota.
+  70+ C073
+  71+ C073 D1           3 pop de                                              ; (D) Indica INCREASE cuando es "1" DECREASE cuando es "0".
+  72+ C074              ;                                                     ; (E) Indica el n° de incrementos/decrementos que se producen después de ejecutar cada onda completa.
+  73+ C074 E1               pop hl                                            ; (HL) contiene la duración de cada semiciclo que forma la onda sonora, (nota).
+  74+ C075
+  75+ C075              ;   Vamos a ejecutar 8 ondas de sonido (per FRAME) como máximo.
+  76+ C075              ;   Comprobaremos que nos quedan más de ocho ondas por ejecutar y guardaremos la duración restante de la nota en la variable.
   77+ C075
-  78+ C075 ED 7B 8E 94  2 ld sp,(Stack)
-  79+ C079
-  80+ C079              ;   Preparamos y ejecutamos la nota.
-  81+ C079
-  82+ C079 0E 02            ld c,2                                           ; Duración de la nota.
+  78+ C075 CD 8E C0         call Resta_dos_ondas                             ; Únicamente vamos a ejecutar ocho ondas de la nota. Restamos 8 al total de n° de ondas antes de almacenar_
+  79+ C078              ;                                                     ; _ el resto de la nota en (Indice_Sprite_der).
+  80+ C078
+  81+ C078 A7               and a
+  82+ C079 28 06            jr z,2F
   83+ C07B
-  84+ C07B 22 E4 94         ld (Sound),hl
-  85+ C07E CD 45 9F         call Sound_Generator
-  86+ C081
-  87+ C081 C9               ret
-  88+ C082
-  89+ C082              ; --------------------------------------------------------------------------
-  90+ C082
-  91+ C082              Resta_ocho_ondas:
-  92+ C082
-  93+ C082 79               ld a,c
-  94+ C083 D6 02            sub 2
+  84+ C07B              ;   Guardamos la nota para seguir más tarde con la ejecución:
+  85+ C07B
+  86+ C07B 31 62 94         ld sp,Indice_Sprite_der+6                         ; Almacenaremos la nota en el almacén [[Numeros_aleatorios]], 6 bytes.
+  87+ C07E
+  88+ C07E E5               push hl
+  89+ C07F D5               push de
+  90+ C080 C5               push bc
+  91+ C081
+  92+ C081              ;   Siguiente fragmento de la nota guardado. Restauramos SP.
+  93+ C081
+  94+ C081 ED 7B 8E 94  2 ld sp,(Stack)
   95+ C085
-  96+ C085 38 04            jr c,Less_than_eight
-  97+ C087 28 02            jr z,Less_than_eight
-  98+ C089
-  99+ C089 4F               ld c,a                                            ; Duracíon de la nota actualizada.
- 100+ C08A
- 101+ C08A C9               ret
- 102+ C08B
- 103+ C08B              Less_than_eight:
- 104+ C08B
- 105+ C08B 21 5C 94         ld hl,Indice_Sprite_der
+  96+ C085              ;   Preparamos y ejecutamos la nota.
+  97+ C085
+  98+ C085 0E 02            ld c,2                                           ; Duración de la nota.
+  99+ C087
+ 100+ C087 22 E4 94         ld (Sound),hl
+ 101+ C08A CD 45 9F         call Sound_Generator
+ 102+ C08D
+ 103+ C08D C9               ret
+ 104+ C08E
+ 105+ C08E              ; --------------------------------------------------------------------------
  106+ C08E
- 107+ C08E AF               xor a
- 108+ C08F 77               ld (hl),a                                         ; Indica que pasamos a la siguiente nota.
- 109+ C090
- 110+ C090 C9               ret
+ 107+ C08E              Resta_dos_ondas:
+ 108+ C08E
+ 109+ C08E 79               ld a,c
+ 110+ C08F D6 02            sub 2
  111+ C091
- 112+ C091              ; ----------------------------------------------------------------------------------------------
- 113+ C091              ;
- 114+ C091              ;   26/09/26
- 115+ C091              ;
- 116+ C091              ;   Melodía DONE. NIVEL SUPERADO !!!
- 117+ C091              ;
- 118+ C091              ;   La melodía DONE se ejecuta en DI, (interrupciones deshabilitadas).
- 119+ C091              ;
- 120+ C091              ;   Está compuesta por 15 notes y 5 pausas.
- 121+ C091              ;
- 122+ C091              ;   Hay que introducir los parámetros de cada nota que forma la melodía y llamar a la función de sonido [Sound_Generator].
- 123+ C091              ;   Los parámetros son:
- 124+ C091              ;
- 125+ C091              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
- 126+ C091              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
- 127+ C091              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
- 128+ C091              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
- 129+ C091              ;          HL = (NOTA). Duracíon del semiciclo.
- 130+ C091              ;
- 131+ C091              ;   MODIFY: NO MODIFY REGS. !!!
- 132+ C091
- 133+ C091              Done_melody:
- 134+ C091
- 135+ C091 F5               push af
- 136+ C092 C5               push bc
- 137+ C093 D5               push de
- 138+ C094 E5               push hl                                                 ; Store regs.
- 139+ C095
- 140+ C095              Note_1:
- 141+ C095
- 142+ C095 01 14 00     	ld bc,$0014                                             ; No ruido / 20 ondas completas
- 143+ C098 11 05 00     	ld de,$0005                                             ; Nota descendente / 5 unid. decrease.
- 144+ C09B 21 5E 01     	ld hl,$015e                                             ; Note init. value.
- 145+ C09E
- 146+ C09E 22 E4 94     	ld (Sound),hl
- 147+ C0A1 CD 45 9F         call Sound_Generator 		                            ; Tras la primera nota descendente (HL) se sitúa_
- 148+ C0A4              ;                                                           ; _ en la primera nota de la melodía. (HL)=$00fa
- 149+ C0A4
- 150+ C0A4              Note_2:
- 151+ C0A4
- 152+ C0A4 0E 14            ld c,$14                                                ; Duración de la nueva nota, 20 ondas.
- 153+ C0A6 1E 00            ld e,0                                                  ; No existe decremento. (sonido plano).
- 154+ C0A8
- 155+ C0A8 22 E4 94         ld (Sound),hl
- 156+ C0AB CD 45 9F         call Sound_Generator                                    ; Ejecuta nota.
- 157+ C0AE
- 158+ C0AE              Note_3:
- 159+ C0AE
- 160+ C0AE 0E 24        	ld c,$24                                                ; Duración de la nueva nota.
- 161+ C0B0 2E A5        	ld l,$a5                                                ; (HL) = $00a5. Nota, (duración de un semiciclo).
- 162+ C0B2              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 163+ C0B2 22 E4 94     	ld (Sound),hl
- 164+ C0B5 CD 45 9F         call Sound_Generator 									; Ejecuta nota.
- 165+ C0B8
- 166+ C0B8              Pause_1:
- 167+ C0B8
- 168+ C0B8 01 00 40         ld bc,$4000
- 169+ C0BB CD 56 9B     	call DELAY 												; PAUSE. Pausa entre notas, las tres primeras se ejecutan ligadas.
- 170+ C0BE
- 171+ C0BE              Note_4:
- 172+ C0BE
- 173+ C0BE 0E 14        	ld c,$14                                                ; Duración de la nueva nota.
- 174+ C0C0 2E FA        	ld l,$fa                                                ; New note, (HL) = $00fa
- 175+ C0C2              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 176+ C0C2 22 E4 94     	ld (Sound),hl
- 177+ C0C5 CD 45 9F         call Sound_Generator 									; Ejecuta nota.
- 178+ C0C8
- 179+ C0C8              Note_5:
- 180+ C0C8
- 181+ C0C8 0E 21        	ld c,$21                                                ; Duración de la nueva nota.
- 182+ C0CA 2E B7        	ld l,$b7                                                ; New note, (HL) = $00b7
- 183+ C0CC              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 184+ C0CC 22 E4 94     	ld (Sound),hl
- 185+ C0CF CD 45 9F         call Sound_Generator 									; Ejecuta nota.
- 186+ C0D2
- 187+ C0D2              Pause_2:
- 188+ C0D2
- 189+ C0D2 01 00 40         ld bc,$4000
- 190+ C0D5 CD 56 9B     	call DELAY 												; PAUSE.
- 191+ C0D8
- 192+ C0D8              Note_6:
- 193+ C0D8
- 194+ C0D8 0E 14            ld c,$14                                                ; Duración de la nueva nota.
- 195+ C0DA 2E FA        	ld l,$fa                                                ; New note, (HL) = $00fa
- 196+ C0DC              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 197+ C0DC 22 E4 94     	ld (Sound),hl
- 198+ C0DF CD 45 9F         call Sound_Generator 			                        ; PLAY NOTE.
- 199+ C0E2
- 200+ C0E2              Note_7:
- 201+ C0E2
- 202+ C0E2 0E 24        	ld c,$24                                                ; Duración de la nueva nota.
- 203+ C0E4 2E CD        	ld l,$cd                                                ; New note, (HL) = $00cd
- 204+ C0E6              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 205+ C0E6 22 E4 94     	ld (Sound),hl
- 206+ C0E9 CD 45 9F         call Sound_Generator 									; PLAY NOTE.
- 207+ C0EC
- 208+ C0EC              Nota_8:
- 209+ C0EC
- 210+ C0EC 0E 2D            ld c,$2d                                                ; Duración de la nueva nota.
- 211+ C0EE 11 01 01         ld de,$0101                                             ; Nota ascendente / 1 unid. increase..
- 212+ C0F1              ;                                                           ; (HL) sigue siendo $00cd, (subirá hasta la siguiente nota).
- 213+ C0F1 22 E4 94         ld (Sound),hl
- 214+ C0F4 CD 45 9F         call Sound_Generator                                    ; Down to Note_9: / PLAY NOTE.
- 215+ C0F7
- 216+ C0F7              Pause_3:
- 217+ C0F7
- 218+ C0F7 01 00 10         ld bc,$1000
- 219+ C0FA CD 56 9B     	call DELAY 												; PAUSE.
- 220+ C0FD
- 221+ C0FD              Note_9:
- 222+ C0FD
- 223+ C0FD 15               dec d
- 224+ C0FE 1D               dec e                                                   ; Prepara Nota descendente / "0" decrease. Sonido plano.
- 225+ C0FF              ;                                                           ; (HL) ha subido hasta $00fa.
- 226+ C0FF 0E 16            ld c,$16                                                ; Duración, 22 ondas de sonido.
- 227+ C101
- 228+ C101 22 E4 94     	ld (Sound),hl
- 229+ C104 CD 45 9F         call Sound_Generator 									; PLAY NOTE.
- 230+ C107
- 231+ C107              Note_10:
- 232+ C107
- 233+ C107 0E 21        	ld c,$21
- 234+ C109 2E CD        	ld l,$cd
- 235+ C10B
- 236+ C10B 22 E4 94     	ld (Sound),hl
- 237+ C10E CD 45 9F         call Sound_Generator
- 238+ C111
- 239+ C111              Pause_4:
- 240+ C111
- 241+ C111 01 00 40         ld bc,$4000
- 242+ C114 CD 56 9B         call DELAY 												; PAUSE.
- 243+ C117
- 244+ C117              Note_11:
- 245+ C117
- 246+ C117 0E 21        	ld c,$21
- 247+ C119 2E D4        	ld l,$d4
- 248+ C11B
- 249+ C11B 22 E4 94     	ld (Sound),hl
- 250+ C11E CD 45 9F         call Sound_Generator
- 251+ C121
- 252+ C121              Pause_5:
- 253+ C121
- 254+ C121 01 F0 5F         ld bc,$5ff0
- 255+ C124 CD 56 9B         call DELAY 												; PAUSE.
- 256+ C127
- 257+ C127              Note_12:
- 258+ C127
- 259+ C127 0E 23        	ld c,$23
- 260+ C129 21 17 01     	ld hl,$0117
- 261+ C12C
- 262+ C12C 22 E4 94     	ld (Sound),hl
- 263+ C12F CD 45 9F         call Sound_Generator 									; PLAY NOTE.
- 264+ C132
- 265+ C132              Note_13:
- 266+ C132
- 267+ C132 0E 14         	ld c,$14                                                ; Duración.
- 268+ C134 1E 03            ld e,3                                                  ; (D)="0" / Decrease "3".
- 269+ C136              ;                                                           ; (HL) down to $00db, (Note).
- 270+ C136 22 E4 94     	ld (Sound),hl
- 271+ C139 CD 45 9F         call Sound_Generator 	                                ; PLAY NOTE.
- 272+ C13C
- 273+ C13C              Note_14:
- 274+ C13C
- 275+ C13C 0E 10            ld c,$10
- 276+ C13E 11 02 01         ld de,$0102                                             ; (D)="1" / Increase "2"
- 277+ C141              ;                                                           ; (HL) up to $00fb
- 278+ C141 22 E4 94         ld (Sound),hl
- 279+ C144 CD 45 9F         call Sound_Generator                                    ; PLAY NOTE.
- 280+ C147
- 281+ C147
- 282+ C147              Note_15:
- 283+ C147
- 284+ C147 2D               dec l                                                   ; Note: $00fa.
- 285+ C148
- 286+ C148 1D               dec e
- 287+ C149 1D               dec e                                                   ; Clear increase.
- 288+ C14A
- 289+ C14A 0E 40            ld c,$40                                                ; Duration.
- 290+ C14C
- 291+ C14C 22 E4 94         ld (Sound),hl
- 292+ C14F CD 45 9F         call Sound_Generator                                    ; PLAY NOTE.
- 293+ C152
- 294+ C152 E1               pop hl
- 295+ C153 D1               pop de
- 296+ C154 C1               pop bc
- 297+ C155 F1               pop af                                                  ; Restore regs.
- 298+ C156
- 299+ C156 C9               ret
- 300+ C157
- 301+ C157              ; ----------------------------------------------------------------------------------------------
- 302+ C157              ;
- 303+ C157              ;   17/9/26
- 304+ C157              ;
- 305+ C157              ;   Emite un BEEP utilizando el núcleo de audio [Sound_Generator].
- 306+ C157              ;
- 307+ C157              ;   NO MODIFICA NINGÚN REGISTRO.
- 308+ C157
- 309+ C157              BEEP:
- 310+ C157
- 311+ C157 F5               push af
- 312+ C158 C5               push bc
- 313+ C159 D5               push de
- 314+ C15A E5               push hl                                 ; STORE Regs.
- 315+ C15B
- 316+ C15B              ;   Parámetros de entrada para ejecutar [Sound_Generator].
- 317+ C15B
- 318+ C15B              ;   Configuración de un BEEP.
- 319+ C15B
- 320+ C15B              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
- 321+ C15B              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
- 322+ C15B              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
- 323+ C15B              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
- 324+ C15B              ;        (HL) = Contiene el sonido, (duración del semiciclo), NOTA.
- 325+ C15B
- 326+ C15B
- 327+ C15B 01 02 00         ld bc,$0002
- 328+ C15E 11 00 00         ld de,0
- 329+ C161 21 D0 00         ld hl,$00d0
- 330+ C164
- 331+ C164 22 E4 94         ld (Sound),hl
- 332+ C167
- 333+ C167 CD 45 9F         call Sound_Generator
- 334+ C16A
- 335+ C16A 21 00 00         ld hl,0
- 336+ C16D 22 E4 94         ld (Sound),hl
- 337+ C170
- 338+ C170 E1               pop hl                                  ; RECOVERY Regs.
- 339+ C171 D1               pop de
- 340+ C172 C1               pop bc
- 341+ C173 F1               pop af
- 342+ C174
- 343+ C174 C9               ret
- 344+ C175
- 345+ C175              ; ----- ----- ----- ----- -----
- 346+ C175              ;
- 347+ C175              ;   23/9/26
- 348+ C175              ;
- 349+ C175              ;   El efecto del disparo de Amadeus es de tipo descendente.
- 350+ C175              ;
- 351+ C175              ;   HL define el sonido.
- 352+ C175              ;
- 353+ C175              ;   Valor inicial $1601. $16, (H) es el n° de ondas completas que mide el efecto, (duración).
- 354+ C175              ;                        $01, (L) es la nota inicial del efecto, (longitud de cada semiciclo).
- 355+ C175              ;
- 356+ C175              ;   El efecto del disparo no activa el inhibidor de efectos de sonido, (Bit_0 Ctrl_6) pues el efecto de las explosiones y el del_
- 357+ C175              ;   _ escudo tienen prioridad sobre este efecto.
- 358+ C175              ;
- 359+ C175              ;   La rutina no se ejecuta si se está reproduciendo una explosión o un efecto SHIELD.
- 360+ C175              ;
- 361+ C175              ;   INPUTS: (Shot_sound) <> "0".
- 362+ C175              ;
- 363+ C175              ;   MODIFY: AF, HL y BC.
- 364+ C175              ;
- 365+ C175              ;   OUTPUT: (Shot_sound) actualizado.
- 366+ C175
- 367+ C175              Play_shot_sound_effect:
- 368+ C175
- 369+ C175              ;   Exclusiones:
- 370+ C175
- 371+ C175 2A E9 94         ld hl,(Shot_sound)
- 372+ C178 7C               ld a,h
- 373+ C179 B5               or l
- 374+ C17A C8               ret z                   ; RET si no se ha producido disparo.
- 375+ C17B
- 376+ C17B 3A BB 94         ld a,(Ctrl_6)
- 377+ C17E CB 47            bit 0,a
- 378+ C180 C0               ret nz                  ; RET si el inhibidor de sonido está activo, (se está ejecutando una explosión).
- 379+ C181
- 380+ C181 0E 02            ld c,2                  ; Nº de ondas de sonido que vamos a ejecutar por FRAME.
- 381+ C183
- 382+ C183              Loop_1:
- 383+ C183
- 384+ C183 3E 10            ld a,%00010000          ; Borde negro.
- 385+ C185 D3 FE            out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
- 386+ C187
- 387+ C187 45               ld b,l
- 388+ C188
- 389+ C188 10 FE        Delay_3 djnz Delay_3
- 390+ C18A
- 391+ C18A AF               xor a                   ; Borde negro.
- 392+ C18B D3 FE            out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
- 393+ C18D
- 394+ C18D 45               ld b,l
+ 112+ C091 38 04            jr c,Less_than_two
+ 113+ C093 28 02            jr z,Less_than_two
+ 114+ C095
+ 115+ C095 4F               ld c,a                                           ; Duracíon de la nota actualizada.
+ 116+ C096
+ 117+ C096 C9               ret
+ 118+ C097
+ 119+ C097              Less_than_two:
+ 120+ C097
+ 121+ C097 AF               xor a
+ 122+ C098 32 5C 94         ld (Indice_Sprite_der),a                         ; Indica que pasamos a la siguiente nota.
+ 123+ C09B
+ 124+ C09B C9               ret
+ 125+ C09C
+ 126+ C09C              ; ----------------------------------------------------------------------------------------------
+ 127+ C09C              ;
+ 128+ C09C              ;   26/09/26
+ 129+ C09C              ;
+ 130+ C09C              ;   Melodía DONE. NIVEL SUPERADO !!!
+ 131+ C09C              ;
+ 132+ C09C              ;   La melodía DONE se ejecuta en DI, (interrupciones deshabilitadas).
+ 133+ C09C              ;
+ 134+ C09C              ;   Está compuesta por 15 notes y 5 pausas.
+ 135+ C09C              ;
+ 136+ C09C              ;   Hay que introducir los parámetros de cada nota que forma la melodía y llamar a la función de sonido [Sound_Generator].
+ 137+ C09C              ;   Los parámetros son:
+ 138+ C09C              ;
+ 139+ C09C              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
+ 140+ C09C              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+ 141+ C09C              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+ 142+ C09C              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+ 143+ C09C              ;          HL = (NOTA). Duracíon del semiciclo.
+ 144+ C09C              ;
+ 145+ C09C              ;   MODIFY: NO MODIFY REGS. !!!
+ 146+ C09C
+ 147+ C09C              Done_melody:
+ 148+ C09C
+ 149+ C09C F5               push af
+ 150+ C09D C5               push bc
+ 151+ C09E D5               push de
+ 152+ C09F E5               push hl                                                 ; Store regs.
+ 153+ C0A0
+ 154+ C0A0              Note_1:
+ 155+ C0A0
+ 156+ C0A0 01 14 00     	ld bc,$0014                                             ; No ruido / 20 ondas completas
+ 157+ C0A3 11 05 00     	ld de,$0005                                             ; Nota descendente / 5 unid. decrease.
+ 158+ C0A6 21 5E 01     	ld hl,$015e                                             ; Note init. value.
+ 159+ C0A9
+ 160+ C0A9 22 E4 94     	ld (Sound),hl
+ 161+ C0AC CD 45 9F         call Sound_Generator 		                            ; Tras la primera nota descendente (HL) se sitúa_
+ 162+ C0AF              ;                                                           ; _ en la primera nota de la melodía. (HL)=$00fa
+ 163+ C0AF
+ 164+ C0AF              Note_2:
+ 165+ C0AF
+ 166+ C0AF 0E 14            ld c,$14                                                ; Duración de la nueva nota, 20 ondas.
+ 167+ C0B1 1E 00            ld e,0                                                  ; No existe decremento. (sonido plano).
+ 168+ C0B3
+ 169+ C0B3 22 E4 94         ld (Sound),hl
+ 170+ C0B6 CD 45 9F         call Sound_Generator                                    ; Ejecuta nota.
+ 171+ C0B9
+ 172+ C0B9              Note_3:
+ 173+ C0B9
+ 174+ C0B9 0E 24        	ld c,$24                                                ; Duración de la nueva nota.
+ 175+ C0BB 2E A5        	ld l,$a5                                                ; (HL) = $00a5. Nota, (duración de un semiciclo).
+ 176+ C0BD              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 177+ C0BD 22 E4 94     	ld (Sound),hl
+ 178+ C0C0 CD 45 9F         call Sound_Generator 									; Ejecuta nota.
+ 179+ C0C3
+ 180+ C0C3              Pause_1:
+ 181+ C0C3
+ 182+ C0C3 01 00 40         ld bc,$4000
+ 183+ C0C6 CD 56 9B     	call DELAY 												; PAUSE. Pausa entre notas, las tres primeras se ejecutan ligadas.
+ 184+ C0C9
+ 185+ C0C9              Note_4:
+ 186+ C0C9
+ 187+ C0C9 0E 14        	ld c,$14                                                ; Duración de la nueva nota.
+ 188+ C0CB 2E FA        	ld l,$fa                                                ; New note, (HL) = $00fa
+ 189+ C0CD              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 190+ C0CD 22 E4 94     	ld (Sound),hl
+ 191+ C0D0 CD 45 9F         call Sound_Generator 									; Ejecuta nota.
+ 192+ C0D3
+ 193+ C0D3              Note_5:
+ 194+ C0D3
+ 195+ C0D3 0E 21        	ld c,$21                                                ; Duración de la nueva nota.
+ 196+ C0D5 2E B7        	ld l,$b7                                                ; New note, (HL) = $00b7
+ 197+ C0D7              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 198+ C0D7 22 E4 94     	ld (Sound),hl
+ 199+ C0DA CD 45 9F         call Sound_Generator 									; Ejecuta nota.
+ 200+ C0DD
+ 201+ C0DD              Pause_2:
+ 202+ C0DD
+ 203+ C0DD 01 00 40         ld bc,$4000
+ 204+ C0E0 CD 56 9B     	call DELAY 												; PAUSE.
+ 205+ C0E3
+ 206+ C0E3              Note_6:
+ 207+ C0E3
+ 208+ C0E3 0E 14            ld c,$14                                                ; Duración de la nueva nota.
+ 209+ C0E5 2E FA        	ld l,$fa                                                ; New note, (HL) = $00fa
+ 210+ C0E7              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 211+ C0E7 22 E4 94     	ld (Sound),hl
+ 212+ C0EA CD 45 9F         call Sound_Generator 			                        ; PLAY NOTE.
+ 213+ C0ED
+ 214+ C0ED              Note_7:
+ 215+ C0ED
+ 216+ C0ED 0E 24        	ld c,$24                                                ; Duración de la nueva nota.
+ 217+ C0EF 2E CD        	ld l,$cd                                                ; New note, (HL) = $00cd
+ 218+ C0F1              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 219+ C0F1 22 E4 94     	ld (Sound),hl
+ 220+ C0F4 CD 45 9F         call Sound_Generator 									; PLAY NOTE.
+ 221+ C0F7
+ 222+ C0F7              Nota_8:
+ 223+ C0F7
+ 224+ C0F7 0E 2D            ld c,$2d                                                ; Duración de la nueva nota.
+ 225+ C0F9 11 01 01         ld de,$0101                                             ; Nota ascendente / 1 unid. increase..
+ 226+ C0FC              ;                                                           ; (HL) sigue siendo $00cd, (subirá hasta la siguiente nota).
+ 227+ C0FC 22 E4 94         ld (Sound),hl
+ 228+ C0FF CD 45 9F         call Sound_Generator                                    ; Down to Note_9: / PLAY NOTE.
+ 229+ C102
+ 230+ C102              Pause_3:
+ 231+ C102
+ 232+ C102 01 00 10         ld bc,$1000
+ 233+ C105 CD 56 9B     	call DELAY 												; PAUSE.
+ 234+ C108
+ 235+ C108              Note_9:
+ 236+ C108
+ 237+ C108 15               dec d
+ 238+ C109 1D               dec e                                                   ; Prepara Nota descendente / "0" decrease. Sonido plano.
+ 239+ C10A              ;                                                           ; (HL) ha subido hasta $00fa.
+ 240+ C10A 0E 16            ld c,$16                                                ; Duración, 22 ondas de sonido.
+ 241+ C10C
+ 242+ C10C 22 E4 94     	ld (Sound),hl
+ 243+ C10F CD 45 9F         call Sound_Generator 									; PLAY NOTE.
+ 244+ C112
+ 245+ C112              Note_10:
+ 246+ C112
+ 247+ C112 0E 21        	ld c,$21
+ 248+ C114 2E CD        	ld l,$cd
+ 249+ C116
+ 250+ C116 22 E4 94     	ld (Sound),hl
+ 251+ C119 CD 45 9F         call Sound_Generator
+ 252+ C11C
+ 253+ C11C              Pause_4:
+ 254+ C11C
+ 255+ C11C 01 00 40         ld bc,$4000
+ 256+ C11F CD 56 9B         call DELAY 												; PAUSE.
+ 257+ C122
+ 258+ C122              Note_11:
+ 259+ C122
+ 260+ C122 0E 21        	ld c,$21
+ 261+ C124 2E D4        	ld l,$d4
+ 262+ C126
+ 263+ C126 22 E4 94     	ld (Sound),hl
+ 264+ C129 CD 45 9F         call Sound_Generator
+ 265+ C12C
+ 266+ C12C              Pause_5:
+ 267+ C12C
+ 268+ C12C 01 F0 5F         ld bc,$5ff0
+ 269+ C12F CD 56 9B         call DELAY 												; PAUSE.
+ 270+ C132
+ 271+ C132              Note_12:
+ 272+ C132
+ 273+ C132 0E 23        	ld c,$23
+ 274+ C134 21 17 01     	ld hl,$0117
+ 275+ C137
+ 276+ C137 22 E4 94     	ld (Sound),hl
+ 277+ C13A CD 45 9F         call Sound_Generator 									; PLAY NOTE.
+ 278+ C13D
+ 279+ C13D              Note_13:
+ 280+ C13D
+ 281+ C13D 0E 14         	ld c,$14                                                ; Duración.
+ 282+ C13F 1E 03            ld e,3                                                  ; (D)="0" / Decrease "3".
+ 283+ C141              ;                                                           ; (HL) down to $00db, (Note).
+ 284+ C141 22 E4 94     	ld (Sound),hl
+ 285+ C144 CD 45 9F         call Sound_Generator 	                                ; PLAY NOTE.
+ 286+ C147
+ 287+ C147              Note_14:
+ 288+ C147
+ 289+ C147 0E 10            ld c,$10
+ 290+ C149 11 02 01         ld de,$0102                                             ; (D)="1" / Increase "2"
+ 291+ C14C              ;                                                           ; (HL) up to $00fb
+ 292+ C14C 22 E4 94         ld (Sound),hl
+ 293+ C14F CD 45 9F         call Sound_Generator                                    ; PLAY NOTE.
+ 294+ C152
+ 295+ C152
+ 296+ C152              Note_15:
+ 297+ C152
+ 298+ C152 2D               dec l                                                   ; Note: $00fa.
+ 299+ C153
+ 300+ C153 1D               dec e
+ 301+ C154 1D               dec e                                                   ; Clear increase.
+ 302+ C155
+ 303+ C155 0E 40            ld c,$40                                                ; Duration.
+ 304+ C157
+ 305+ C157 22 E4 94         ld (Sound),hl
+ 306+ C15A CD 45 9F         call Sound_Generator                                    ; PLAY NOTE.
+ 307+ C15D
+ 308+ C15D E1               pop hl
+ 309+ C15E D1               pop de
+ 310+ C15F C1               pop bc
+ 311+ C160 F1               pop af                                                  ; Restore regs.
+ 312+ C161
+ 313+ C161 C9               ret
+ 314+ C162
+ 315+ C162              ; ----------------------------------------------------------------------------------------------
+ 316+ C162              ;
+ 317+ C162              ;   17/9/26
+ 318+ C162              ;
+ 319+ C162              ;   Emite un BEEP utilizando el núcleo de audio [Sound_Generator].
+ 320+ C162              ;
+ 321+ C162              ;   NO MODIFICA NINGÚN REGISTRO.
+ 322+ C162
+ 323+ C162              BEEP:
+ 324+ C162
+ 325+ C162 F5               push af
+ 326+ C163 C5               push bc
+ 327+ C164 D5               push de
+ 328+ C165 E5               push hl                                 ; STORE Regs.
+ 329+ C166
+ 330+ C166              ;   Parámetros de entrada para ejecutar [Sound_Generator].
+ 331+ C166
+ 332+ C166              ;   Configuración de un BEEP.
+ 333+ C166
+ 334+ C166              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
+ 335+ C166              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+ 336+ C166              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+ 337+ C166              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+ 338+ C166              ;        (HL) = Contiene el sonido, (duración del semiciclo), NOTA.
+ 339+ C166
+ 340+ C166
+ 341+ C166 01 02 00         ld bc,$0002
+ 342+ C169 11 00 00         ld de,0
+ 343+ C16C 21 D0 00         ld hl,$00d0
+ 344+ C16F
+ 345+ C16F 22 E4 94         ld (Sound),hl
+ 346+ C172
+ 347+ C172 CD 45 9F         call Sound_Generator
+ 348+ C175
+ 349+ C175 21 00 00         ld hl,0
+ 350+ C178 22 E4 94         ld (Sound),hl
+ 351+ C17B
+ 352+ C17B E1               pop hl                                  ; RECOVERY Regs.
+ 353+ C17C D1               pop de
+ 354+ C17D C1               pop bc
+ 355+ C17E F1               pop af
+ 356+ C17F
+ 357+ C17F C9               ret
+ 358+ C180
+ 359+ C180              ; ----- ----- ----- ----- -----
+ 360+ C180              ;
+ 361+ C180              ;   23/9/26
+ 362+ C180              ;
+ 363+ C180              ;   El efecto del disparo de Amadeus es de tipo descendente.
+ 364+ C180              ;
+ 365+ C180              ;   HL define el sonido.
+ 366+ C180              ;
+ 367+ C180              ;   Valor inicial $1601. $16, (H) es el n° de ondas completas que mide el efecto, (duración).
+ 368+ C180              ;                        $01, (L) es la nota inicial del efecto, (longitud de cada semiciclo).
+ 369+ C180              ;
+ 370+ C180              ;   El efecto del disparo no activa el inhibidor de efectos de sonido, (Bit_0 Ctrl_6) pues el efecto de las explosiones y el del_
+ 371+ C180              ;   _ escudo tienen prioridad sobre este efecto.
+ 372+ C180              ;
+ 373+ C180              ;   La rutina no se ejecuta si se está reproduciendo una explosión o un efecto SHIELD.
+ 374+ C180              ;
+ 375+ C180              ;   INPUTS: (Shot_sound) <> "0".
+ 376+ C180              ;
+ 377+ C180              ;   MODIFY: AF, HL y BC.
+ 378+ C180              ;
+ 379+ C180              ;   OUTPUT: (Shot_sound) actualizado.
+ 380+ C180
+ 381+ C180              Play_shot_sound_effect:
+ 382+ C180
+ 383+ C180              ;   Exclusiones:
+ 384+ C180
+ 385+ C180 2A E9 94         ld hl,(Shot_sound)
+ 386+ C183 7C               ld a,h
+ 387+ C184 B5               or l
+ 388+ C185 C8               ret z                   ; RET si no se ha producido disparo.
+ 389+ C186
+ 390+ C186 3A BB 94         ld a,(Ctrl_6)
+ 391+ C189 CB 47            bit 0,a
+ 392+ C18B C0               ret nz                  ; RET si el inhibidor de sonido está activo, (se está ejecutando una explosión).
+ 393+ C18C
+ 394+ C18C 0E 02            ld c,2                  ; Nº de ondas de sonido que vamos a ejecutar por FRAME.
  395+ C18E
- 396+ C18E 10 FE        Delay_4 djnz Delay_4
- 397+ C190
- 398+ C190              ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
- 399+ C190
- 400+ C190 2C               inc l
- 401+ C191 2C               inc l
- 402+ C192 2C               inc l
- 403+ C193 2C               inc l
- 404+ C194
- 405+ C194 25               dec h
- 406+ C195
- 407+ C195 CC 9F C1         call z,Clean_shot_effect
- 408+ C198
- 409+ C198 0D               dec c
- 410+ C199
- 411+ C199 20 E8            jr nz,Loop_1
- 412+ C19B
- 413+ C19B 22 E9 94         ld (Shot_sound),hl
- 414+ C19E
- 415+ C19E C9               ret
- 416+ C19F
- 417+ C19F              Clean_shot_effect:
+ 396+ C18E              Loop_1:
+ 397+ C18E
+ 398+ C18E 3E 10            ld a,%00010000          ; Borde negro.
+ 399+ C190 D3 FE            out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
+ 400+ C192
+ 401+ C192 45               ld b,l
+ 402+ C193
+ 403+ C193 10 FE        Delay_3 djnz Delay_3
+ 404+ C195
+ 405+ C195 AF               xor a                   ; Borde negro.
+ 406+ C196 D3 FE            out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
+ 407+ C198
+ 408+ C198 45               ld b,l
+ 409+ C199
+ 410+ C199 10 FE        Delay_4 djnz Delay_4
+ 411+ C19B
+ 412+ C19B              ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
+ 413+ C19B
+ 414+ C19B 2C               inc l
+ 415+ C19C 2C               inc l
+ 416+ C19D 2C               inc l
+ 417+ C19E 2C               inc l
  418+ C19F
- 419+ C19F 21 00 00         ld hl,0
- 420+ C1A2 0E 01            ld c,1
- 421+ C1A4
- 422+ C1A4 C9               ret
- 423+ C1A5
- 424+ C1A5              ;   -------------------------------------------------------------------------------------------
- 425+ C1A5              ;
- 426+ C1A5              ;   23/9/26
- 427+ C1A5              ;
- 428+ C1A5              ;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no haya otra en curso, (Bit_0 Ctrl_6).
- 429+ C1A5              ;
- 430+ C1A5              ;   Las explosiones de las entidades y Amadeus se generan con el módulo [Noise_efect] de la herramienta_
- 431+ C1A5              ;   _ [Sound_Generator].
- 432+ C1A5              ;
- 433+ C1A5              ;   La duración de la explosión está definido por el valor de (H), no es relevante el valor que contenga (L):
- 434+ C1A5              ;
- 435+ C1A5              ;   Burst_sound_init_value equ $35                ;   Longitud de la explosión de las entidades, (duración).
- 436+ C1A5              ;   Amadeus_Burst_sound_init_value equ $75        ;   Longitud de la explosión de Amadeus, (duración).
- 437+ C1A5              ;
- 438+ C1A5              ;   INPUTS: (Burst_sound) iniciado, <> "0".
- 439+ C1A5              ;
- 440+ C1A5              ;   MODIFY: AF',AF, HL, DE y BC.
- 441+ C1A5              ;
- 442+ C1A5              ;   OUTPUT: Actualiza (Burst_sound).
- 443+ C1A5
- 444+ C1A5              Play_burst_sound_effect:
- 445+ C1A5
- 446+ C1A5              ;   Exclusiones:
- 447+ C1A5
- 448+ C1A5 3A EB 94         ld a,(Burst_sound)
- 449+ C1A8 A7               and a
- 450+ C1A9 C8               ret z                   ; RET si (Burst_sound) no está iniciado, (no hay explosión).
- 451+ C1AA
- 452+ C1AA 08               ex af,af
- 453+ C1AB
- 454+ C1AB 3A BB 94         ld a,(Ctrl_6)
- 455+ C1AE CB 47            bit 0,a
- 456+ C1B0 C0               ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido". (Explosión anterior en curso).
- 457+ C1B1
- 458+ C1B1              ;   ----------------------
- 459+ C1B1
- 460+ C1B1 CB C7            set 0,a
- 461+ C1B3 32 BB 94         ld (Ctrl_6),a           ; Activa el inhibidor de sounds effects.
- 462+ C1B6
- 463+ C1B6 08               ex af,af                ; Restore (Burst_sound).
- 464+ C1B7
- 465+ C1B7 67               ld h,a
- 466+ C1B8 2E 00            ld l,0                  ; (HL) contiene (Burst_sound).
- 467+ C1BA
- 468+ C1BA E5               push hl                 ; Cantidad de explosión que queda por ejecutar.
- 469+ C1BB
- 470+ C1BB 22 E4 94         ld (Sound),hl           ; Cargamos el sonido de la explosión en (Sound) y definimos el nº de ondas a reproducir.
- 471+ C1BE 0E 03            ld c,3
- 472+ C1C0 CD 7E 9F         call Noise_efect
- 473+ C1C3
- 474+ C1C3 D1               pop de                  ; Hemos de averiguar que la explosión no tiene valor negativo. Evitamos que entre en un bucle infinito de ejecución.
- 475+ C1C4
- 476+ C1C4 7A               ld a,d                  ; Así podemos ejecutar una explosión con la duración que queramos.
- 477+ C1C5 94               sub h
- 478+ C1C6
- 479+ C1C6 38 05            jr c,Clean_burst_efect  ; Burst end, (Clean_burst_efect).
- 480+ C1C8
- 481+ C1C8 7C               ld a,h
- 482+ C1C9 32 EB 94         ld (Burst_sound),a
- 483+ C1CC
- 484+ C1CC C9               ret
- 485+ C1CD
- 486+ C1CD              Clean_burst_efect:
- 487+ C1CD
- 488+ C1CD AF               xor a
- 489+ C1CE 32 EB 94         ld (Burst_sound),a
- 490+ C1D1
- 491+ C1D1 3A BB 94         ld a,(Ctrl_6)
- 492+ C1D4 CB 87            res 0,a
- 493+ C1D6 32 BB 94         ld (Ctrl_6),a
- 494+ C1D9
- 495+ C1D9 C9               ret
- 496+ C1DA
- 497+ C1DA              ;   -------------------------------------------------------------------------------------------
- 498+ C1DA              ;
- 499+ C1DA              ;   23/9/26
- 500+ C1DA              ;
- 501+ C1DA              ;   Shield_sound_effect es el efecto de sonido (in game time) con más prioridad de los tres, los otros dos efectos son: Burst_sound_efect y _
- 502+ C1DA              ;   _ Shield_sound_effect.
- 503+ C1DA              ;
- 504+ C1DA              ;   La rutina se ejecuta siempre que (Shield_sound) se haya iniciado, (su valor no sea "0"). Ignora el inhibidor de efectos de sonido debido _
- 505+ C1DA              ;   _a que el efecto se reproduce completamente cada vez que se ejecuta la rutina.
- 506+ C1DA              ;
- 507+ C1DA              ;   El efecto es una especie de BEEP corto. Su duración es de dos ondas completas y la duración del semiciclo está contenida en 1 byte.
- 508+ C1DA              ;
- 509+ C1DA              ;   INPUT: (Shield_sound) contiene (Shield_sound_init_value), ($c0).
- 510+ C1DA              ;
- 511+ C1DA              ;   MODIFY: AF'y BC.
- 512+ C1DA
- 513+ C1DA              Play_Shield_sound_effect:
- 514+ C1DA
- 515+ C1DA 3A EC 94         ld a,(Shield_sound)
- 516+ C1DD A7               and a
- 517+ C1DE C8               ret z                   ; RET si no se ha iniciado SHIELD.
- 518+ C1DF
- 519+ C1DF 0E 02            ld c,2                  ; 2 ondas completas per frame.
- 520+ C1E1
- 521+ C1E1              Loop_3:
- 522+ C1E1
- 523+ C1E1 08               ex af,af
- 524+ C1E2
- 525+ C1E2 3E 10            ld a,%00010000          ; Black BORDER.
- 526+ C1E4 D3 FE            out ($fe),a             ; Beeper ON.
- 527+ C1E6
- 528+ C1E6 08               ex af,af
- 529+ C1E7
- 530+ C1E7 47               ld b,a
- 531+ C1E8
- 532+ C1E8 10 FE        Delay_7 djnz Delay_7
- 533+ C1EA
- 534+ C1EA 08               ex af,af
- 535+ C1EB
- 536+ C1EB AF               xor a                   ; Black BORDER.
- 537+ C1EC D3 FE            out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
- 538+ C1EE
- 539+ C1EE 08               ex af,af
- 540+ C1EF
- 541+ C1EF 47               ld b,a
- 542+ C1F0
- 543+ C1F0 10 FE        Delay_8 djnz Delay_8
- 544+ C1F2
- 545+ C1F2 0D               dec c
- 546+ C1F3
- 547+ C1F3 20 EC            jr nz,Loop_3
- 548+ C1F5
- 549+ C1F5 AF               xor a
- 550+ C1F6 32 EC 94         ld (Shield_sound),a
- 551+ C1F9
- 552+ C1F9 C9               ret
- 553+ C1FA
- 554+ C1FA              ; ---------------------------------------------------------------
- 555+ C1FA              ;
- 556+ C1FA              ;   18/9/26
- 557+ C1FA              ;
- 558+ C1FA              ;   Inicializa la variable (Burst_sound) con el valor de la longitud de la onda que genera la explosión a ejecutar:
- 559+ C1FA              ;
- 560+ C1FA              ;   Burst_sound_init_value equ $35                   - Longitud de la explosión de las entidades, (duración).
- 561+ C1FA              ;   Amadeus_Burst_sound_init_value equ $70           - Longitud de la explosión de Amadeus, (duración).
- 562+ C1FA              ;
- 563+ C1FA              ;   MODIFY: A y H.
- 564+ C1FA              ;
- 565+ C1FA              ;   OUTPUT: (Burst_sound) y H contienen la duración del semiciclo de la onda que ha de generar la explosión.
- 566+ C1FA
- 567+ C1FA
- 568+ C1FA              Init_Burst_sound:
- 569+ C1FA
- 570+ C1FA 3A EB 94         ld a,(Burst_sound)
- 571+ C1FD A7               and a
- 572+ C1FE C0               ret nz                                           ; RET si ya está iniciado el efecto.
- 573+ C1FF
- 574+ C1FF              ;   Init Burst_sound_efect.
- 575+ C1FF
- 576+ C1FF              ;   La explosión de Amadeus ha de ser más larga que la de las entidades.
- 577+ C1FF
- 578+ C1FF 26 35            ld h,Burst_sound_init_value
- 579+ C201
- 580+ C201 3A CF 90         ld a,(Impacto_Amadeus)
- 581+ C204 A7               and a
- 582+ C205 28 02            jr z,1F
- 583+ C207
- 584+ C207 26 75            ld h,Amadeus_Burst_sound_init_value
- 585+ C209
- 586+ C209 7C           1 ld a,h
+ 419+ C19F 25               dec h
+ 420+ C1A0
+ 421+ C1A0 CC AA C1         call z,Clean_shot_effect
+ 422+ C1A3
+ 423+ C1A3 0D               dec c
+ 424+ C1A4
+ 425+ C1A4 20 E8            jr nz,Loop_1
+ 426+ C1A6
+ 427+ C1A6 22 E9 94         ld (Shot_sound),hl
+ 428+ C1A9
+ 429+ C1A9 C9               ret
+ 430+ C1AA
+ 431+ C1AA              Clean_shot_effect:
+ 432+ C1AA
+ 433+ C1AA 21 00 00         ld hl,0
+ 434+ C1AD 0E 01            ld c,1
+ 435+ C1AF
+ 436+ C1AF C9               ret
+ 437+ C1B0
+ 438+ C1B0              ;   -------------------------------------------------------------------------------------------
+ 439+ C1B0              ;
+ 440+ C1B0              ;   23/9/26
+ 441+ C1B0              ;
+ 442+ C1B0              ;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no haya otra en curso, (Bit_0 Ctrl_6).
+ 443+ C1B0              ;
+ 444+ C1B0              ;   Las explosiones de las entidades y Amadeus se generan con el módulo [Noise_efect] de la herramienta_
+ 445+ C1B0              ;   _ [Sound_Generator].
+ 446+ C1B0              ;
+ 447+ C1B0              ;   La duración de la explosión está definido por el valor de (H), no es relevante el valor que contenga (L):
+ 448+ C1B0              ;
+ 449+ C1B0              ;   Burst_sound_init_value equ $35                ;   Longitud de la explosión de las entidades, (duración).
+ 450+ C1B0              ;   Amadeus_Burst_sound_init_value equ $75        ;   Longitud de la explosión de Amadeus, (duración).
+ 451+ C1B0              ;
+ 452+ C1B0              ;   INPUTS: (Burst_sound) iniciado, <> "0".
+ 453+ C1B0              ;
+ 454+ C1B0              ;   MODIFY: AF',AF, HL, DE y BC.
+ 455+ C1B0              ;
+ 456+ C1B0              ;   OUTPUT: Actualiza (Burst_sound).
+ 457+ C1B0
+ 458+ C1B0              Play_burst_sound_effect:
+ 459+ C1B0
+ 460+ C1B0              ;   Exclusiones:
+ 461+ C1B0
+ 462+ C1B0 3A EB 94         ld a,(Burst_sound)
+ 463+ C1B3 A7               and a
+ 464+ C1B4 C8               ret z                   ; RET si (Burst_sound) no está iniciado, (no hay explosión).
+ 465+ C1B5
+ 466+ C1B5 08               ex af,af
+ 467+ C1B6
+ 468+ C1B6 3A BB 94         ld a,(Ctrl_6)
+ 469+ C1B9 CB 47            bit 0,a
+ 470+ C1BB C0               ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido". (Explosión anterior en curso).
+ 471+ C1BC
+ 472+ C1BC              ;   ----------------------
+ 473+ C1BC
+ 474+ C1BC CB C7            set 0,a
+ 475+ C1BE 32 BB 94         ld (Ctrl_6),a           ; Activa el inhibidor de sounds effects.
+ 476+ C1C1
+ 477+ C1C1 08               ex af,af                ; Restore (Burst_sound).
+ 478+ C1C2
+ 479+ C1C2 67               ld h,a
+ 480+ C1C3 2E 00            ld l,0                  ; (HL) contiene (Burst_sound).
+ 481+ C1C5
+ 482+ C1C5 E5               push hl                 ; Cantidad de explosión que queda por ejecutar.
+ 483+ C1C6
+ 484+ C1C6 22 E4 94         ld (Sound),hl           ; Cargamos el sonido de la explosión en (Sound) y definimos el nº de ondas a reproducir.
+ 485+ C1C9 0E 03            ld c,3
+ 486+ C1CB CD 7E 9F         call Noise_efect
+ 487+ C1CE
+ 488+ C1CE D1               pop de                  ; Hemos de averiguar que la explosión no tiene valor negativo. Evitamos que entre en un bucle infinito de ejecución.
+ 489+ C1CF
+ 490+ C1CF 7A               ld a,d                  ; Así podemos ejecutar una explosión con la duración que queramos.
+ 491+ C1D0 94               sub h
+ 492+ C1D1
+ 493+ C1D1 38 05            jr c,Clean_burst_efect  ; Burst end, (Clean_burst_efect).
+ 494+ C1D3
+ 495+ C1D3 7C               ld a,h
+ 496+ C1D4 32 EB 94         ld (Burst_sound),a
+ 497+ C1D7
+ 498+ C1D7 C9               ret
+ 499+ C1D8
+ 500+ C1D8              Clean_burst_efect:
+ 501+ C1D8
+ 502+ C1D8 AF               xor a
+ 503+ C1D9 32 EB 94         ld (Burst_sound),a
+ 504+ C1DC
+ 505+ C1DC 3A BB 94         ld a,(Ctrl_6)
+ 506+ C1DF CB 87            res 0,a
+ 507+ C1E1 32 BB 94         ld (Ctrl_6),a
+ 508+ C1E4
+ 509+ C1E4 C9               ret
+ 510+ C1E5
+ 511+ C1E5              ;   -------------------------------------------------------------------------------------------
+ 512+ C1E5              ;
+ 513+ C1E5              ;   23/9/26
+ 514+ C1E5              ;
+ 515+ C1E5              ;   Shield_sound_effect es el efecto de sonido (in game time) con más prioridad de los tres, los otros dos efectos son: Burst_sound_efect y _
+ 516+ C1E5              ;   _ Shield_sound_effect.
+ 517+ C1E5              ;
+ 518+ C1E5              ;   La rutina se ejecuta siempre que (Shield_sound) se haya iniciado, (su valor no sea "0"). Ignora el inhibidor de efectos de sonido debido _
+ 519+ C1E5              ;   _a que el efecto se reproduce completamente cada vez que se ejecuta la rutina.
+ 520+ C1E5              ;
+ 521+ C1E5              ;   El efecto es una especie de BEEP corto. Su duración es de dos ondas completas y la duración del semiciclo está contenida en 1 byte.
+ 522+ C1E5              ;
+ 523+ C1E5              ;   INPUT: (Shield_sound) contiene (Shield_sound_init_value), ($c0).
+ 524+ C1E5              ;
+ 525+ C1E5              ;   MODIFY: AF'y BC.
+ 526+ C1E5
+ 527+ C1E5              Play_Shield_sound_effect:
+ 528+ C1E5
+ 529+ C1E5 3A EC 94         ld a,(Shield_sound)
+ 530+ C1E8 A7               and a
+ 531+ C1E9 C8               ret z                   ; RET si no se ha iniciado SHIELD.
+ 532+ C1EA
+ 533+ C1EA 0E 02            ld c,2                  ; 2 ondas completas per frame.
+ 534+ C1EC
+ 535+ C1EC              Loop_3:
+ 536+ C1EC
+ 537+ C1EC 08               ex af,af
+ 538+ C1ED
+ 539+ C1ED 3E 10            ld a,%00010000          ; Black BORDER.
+ 540+ C1EF D3 FE            out ($fe),a             ; Beeper ON.
+ 541+ C1F1
+ 542+ C1F1 08               ex af,af
+ 543+ C1F2
+ 544+ C1F2 47               ld b,a
+ 545+ C1F3
+ 546+ C1F3 10 FE        Delay_7 djnz Delay_7
+ 547+ C1F5
+ 548+ C1F5 08               ex af,af
+ 549+ C1F6
+ 550+ C1F6 AF               xor a                   ; Black BORDER.
+ 551+ C1F7 D3 FE            out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
+ 552+ C1F9
+ 553+ C1F9 08               ex af,af
+ 554+ C1FA
+ 555+ C1FA 47               ld b,a
+ 556+ C1FB
+ 557+ C1FB 10 FE        Delay_8 djnz Delay_8
+ 558+ C1FD
+ 559+ C1FD 0D               dec c
+ 560+ C1FE
+ 561+ C1FE 20 EC            jr nz,Loop_3
+ 562+ C200
+ 563+ C200 AF               xor a
+ 564+ C201 32 EC 94         ld (Shield_sound),a
+ 565+ C204
+ 566+ C204 C9               ret
+ 567+ C205
+ 568+ C205              ; ---------------------------------------------------------------
+ 569+ C205              ;
+ 570+ C205              ;   18/9/26
+ 571+ C205              ;
+ 572+ C205              ;   Inicializa la variable (Burst_sound) con el valor de la longitud de la onda que genera la explosión a ejecutar:
+ 573+ C205              ;
+ 574+ C205              ;   Burst_sound_init_value equ $35                   - Longitud de la explosión de las entidades, (duración).
+ 575+ C205              ;   Amadeus_Burst_sound_init_value equ $70           - Longitud de la explosión de Amadeus, (duración).
+ 576+ C205              ;
+ 577+ C205              ;   MODIFY: A y H.
+ 578+ C205              ;
+ 579+ C205              ;   OUTPUT: (Burst_sound) y H contienen la duración del semiciclo de la onda que ha de generar la explosión.
+ 580+ C205
+ 581+ C205
+ 582+ C205              Init_Burst_sound:
+ 583+ C205
+ 584+ C205 3A EB 94         ld a,(Burst_sound)
+ 585+ C208 A7               and a
+ 586+ C209 C0               ret nz                                           ; RET si ya está iniciado el efecto.
  587+ C20A
- 588+ C20A 32 EB 94         ld (Burst_sound),a
- 589+ C20D
- 590+ C20D C9               ret
- 591+ C20E
- 592+ C20E
+ 588+ C20A              ;   Init Burst_sound_efect.
+ 589+ C20A
+ 590+ C20A              ;   La explosión de Amadeus ha de ser más larga que la de las entidades.
+ 591+ C20A
+ 592+ C20A 26 35            ld h,Burst_sound_init_value
+ 593+ C20C
+ 594+ C20C 3A CF 90         ld a,(Impacto_Amadeus)
+ 595+ C20F A7               and a
+ 596+ C210 28 02            jr z,1F
+ 597+ C212
+ 598+ C212 26 75            ld h,Amadeus_Burst_sound_init_value
+ 599+ C214
+ 600+ C214 7C           1 ld a,h
+ 601+ C215
+ 602+ C215 32 EB 94         ld (Burst_sound),a
+ 603+ C218
+ 604+ C218 C9               ret
+ 605+ C219
+ 606+ C219
 # file closed: Sound.asm
-3127  C20E              	include "Print_text_msg.asm"
+3127  C219              	include "Print_text_msg.asm"
 # file opened: Print_text_msg.asm
-   1+ C20E              ; ----------------------------------------------------------
-   2+ C20E              ;
-   3+ C20E              ;   16/6/26
-   4+ C20E              ;
-   5+ C20E
-   6+ C20E              Print_new_best_score:
-   7+ C20E
-   8+ C20E CD 0F AD     	call Cartel_Best_Score                      ; Imprime el Cartel "Best Score" en la esquina inferior izquierda de la pantalla_
-   9+ C211              ;                                               ; _del menú principal.
-  10+ C211
-  11+ C211              ;   Print msg.
-  12+ C211
-  13+ C211 11 C1 50         ld de,Line_22+1
-  14+ C214
-  15+ C214 3E 47            ld a,%01000111
-  16+ C216 06 00            ld b,0
-  17+ C218 21 21 95         ld hl,Nombre_del_campeon
-  18+ C21B CD F2 9E         call Print_text_msg
-  19+ C21E
-  20+ C21E 1C               inc e
-  21+ C21F 1C               inc e
-  22+ C220
-  23+ C220 3E 47            ld a,%01000111
-  24+ C222 06 00            ld b,0
-  25+ C224 21 2F 96         ld hl,a10
-  26+ C227 CD F2 9E         call Print_text_msg
-  27+ C22A
-  28+ C22A 1C               inc e
-  29+ C22B 1C               inc e
-  30+ C22C
-  31+ C22C 3E C5            ld a,%11000101
-  32+ C22E 06 00            ld b,0
-  33+ C230 21 1B 95         ld hl,Score_max_msg
-  34+ C233 CD F2 9E         call Print_text_msg
-  35+ C236
-  36+ C236 C9           	ret
-  37+ C237
-  38+ C237              ; ----------------------------------------------------------
-  39+ C237              ;
-  40+ C237              ;   20/5/26
-  41+ C237              ;
-  42+ C237
-  43+ C237              Print_New_Record:
-  44+ C237
-  45+ C237 CD 5B C2         call Mide_msg
-  46+ C23A
-  47+ C23A              ;   Centramos el msg. en función del nº de dígitos.
-  48+ C23A
-  49+ C23A 11 8E 48         ld de,Line_12 + 14
-  50+ C23D CD 4B C2         call Centra_New_Record_msg
-  51+ C240
-  52+ C240              ;   Print msg.
-  53+ C240
-  54+ C240 3E 47            ld a,%01000111
-  55+ C242 06 00            ld b,0
-  56+ C244 21 1B 95         ld hl,Score_max_msg
-  57+ C247 CD F2 9E         call Print_text_msg
-  58+ C24A
-  59+ C24A C9               ret
-  60+ C24B
-  61+ C24B              ; ----------------------------------------------------------
-  62+ C24B              ;
-  63+ C24B              ;   20/5/26
-  64+ C24B              ;
-  65+ C24B              ;   INPUTS: C contiene el nº de dígitos que tiene el msg a centrar.
-  66+ C24B              ;           E nº de columna, (dirección de pantalla).
-  67+ C24B
-  68+ C24B
-  69+ C24B              Centra_New_Record_msg:
-  70+ C24B
-  71+ C24B 3E 05            ld a,5
-  72+ C24D B9               cp c
-  73+ C24E C8               ret z
-  74+ C24F
-  75+ C24F 3D               dec a
-  76+ C250
-  77+ C250 B9               cp c
-  78+ C251 C8               ret z
-  79+ C252
-  80+ C252 1C               inc e
-  81+ C253
-  82+ C253 3D               dec a
-  83+ C254 B9               cp c
-  84+ C255 C8               ret z
-  85+ C256
-  86+ C256 3D               dec a
-  87+ C257 B9               cp c
-  88+ C258 C8               ret z
-  89+ C259
-  90+ C259 1C               inc e
-  91+ C25A
-  92+ C25A C9               ret
-  93+ C25B
-  94+ C25B              ; ----------------------------------------------------------
-  95+ C25B              ;
-  96+ C25B              ;   21/05/26
-  97+ C25B              ;
-  98+ C25B              ;   MODIFY: A,C y HL
-  99+ C25B              ;   OUTPUT: C contiene el nº de dígitos, (chars) que tiene el msg. de la máx. puntuación.
- 100+ C25B
- 101+ C25B              Mide_msg:
- 102+ C25B
- 103+ C25B 21 1A 95         ld hl,Score_max_msg-1
- 104+ C25E 0E FF            ld c,$ff
- 105+ C260
- 106+ C260 23           1 inc hl
- 107+ C261 0C               inc c
- 108+ C262
- 109+ C262 7E               ld a,(hl)
- 110+ C263 A7               and a
- 111+ C264 20 FA            jr nz,1B
- 112+ C266
- 113+ C266 C9               ret
- 114+ C267
- 115+ C267              ; ----------------------------------------------------------
- 116+ C267              ;
- 117+ C267              ;   13/5/26
- 118+ C267              ;
- 119+ C267
- 120+ C267              New_best_msg:
- 121+ C267
- 122+ C267 21 06 96         ld hl,a8                                                ; "New Best Score!.".
- 123+ C26A 11 29 48         ld de,Line_9 + 9
- 124+ C26D 3E 45            ld a,%01000101                                          ; attrs. black paper, cyan ink.
- 125+ C26F 06 00            ld b,0
- 126+ C271 CD F2 9E         call Print_text_msg
- 127+ C274
- 128+ C274 CD A6 C2         call Make_Score_max_msg                                 ; Construye un mensaje de texto con la puntuación máx. obtenida.
- 129+ C277
- 130+ C277 CD 37 C2         call Print_New_Record
- 131+ C27A
- 132+ C27A 21 16 96         ld hl,a9                                                ; "Enter your name".
- 133+ C27D 11 04 50         ld de,Line_16 + 4
- 134+ C280 3E 46            ld a,%01000110                                          ; attrs. black paper, yellow ink.
- 135+ C282 06 00            ld b,0
- 136+ C284 CD F2 9E         call Print_text_msg
- 137+ C287
- 138+ C287              ;   Attrs. en la zona del nombre.
- 139+ C287
- 140+ C287 21 8E 50         ld hl,Line_20 + 14
- 141+ C28A
- 142+ C28A              Flash:
- 143+ C28A
- 144+ C28A 26 5A            ld h,$5a                                                ; Siempre FLASH en el 3er tercio de pantalla.
- 145+ C28C
- 146+ C28C 3E C7            ld a,%11000111                                          ; FLASH, (next to char. printed).
- 147+ C28E 77               ld (hl),a
- 148+ C28F
- 149+ C28F 3A BB 94         ld a,(Ctrl_6)
- 150+ C292 CB 67            bit 4,a                                                 ; FLAG. Indica DELETE a subrutina FLASH.
- 151+ C294 C8               ret z
- 152+ C295
- 153+ C295 CB A7            res 4,a
- 154+ C297 32 BB 94         ld (Ctrl_6),a
- 155+ C29A
- 156+ C29A AF               xor a
- 157+ C29B 77               ld (hl),a
- 158+ C29C
- 159+ C29C 1B               dec de
- 160+ C29D 12               ld (de),a
- 161+ C29E ED 53 27 95      ld (Puntero_del_nombre_del_campeon),de                  ; Actualizamos puntero.
- 162+ C2A2
- 163+ C2A2 0C               inc c
- 164+ C2A3
- 165+ C2A3 2D               dec l
- 166+ C2A4 18 E4            jr Flash
- 167+ C2A6
- 168+ C2A6              ; ------------------------------------------------------------------------
- 169+ C2A6              ;
- 170+ C2A6              ;	15/5/26
- 171+ C2A6              ;
- 172+ C2A6              ;	Construye un mensaje de texto con la puntuación obtenida, (Score_hex_max). Este es el nuevo máximo.
- 173+ C2A6
- 174+ C2A6
- 175+ C2A6              Make_Score_max_msg:
- 176+ C2A6
- 177+ C2A6              ;   Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
- 178+ C2A6
- 179+ C2A6              ;   Necesito fabricar un msg. con la máxima puntuación.
- 180+ C2A6              ;   Para ello necesitamos el ASCII CODE de cada dígito del marcador SCORE.
- 181+ C2A6
- 182+ C2A6 01 00 05         ld bc,$0500                              ; El marcador SCORE consta de 5 dígitos decimales.
- 183+ C2A9 21 0C 95         ld hl,Score_BCD_decenas_de_millar        ; Para evitar imprimir "0", crearemos el mensaje de izquierda a derecha.
- 184+ C2AC              ;                                            ; Inicialmente (Score_BCD_decenas_de_millar).
- 185+ C2AC 11 1B 95         ld de,Score_max_msg
- 186+ C2AF
- 187+ C2AF              KEY_CODE_de_BCD:
- 188+ C2AF
- 189+ C2AF 7E           1 ld a,(hl)
- 190+ C2B0 A7               and a
- 191+ C2B1 20 07            jr nz,3F
- 192+ C2B3
- 193+ C2B3              ;   El dígito es "0".
- 194+ C2B3
- 195+ C2B3 0C               inc c
- 196+ C2B4 0D               dec c
- 197+ C2B5 20 03            jr nz,3F
- 198+ C2B7
- 199+ C2B7 1B               dec de                                   ; No queremos "0"´s delante de la cantidad.
- 200+ C2B8 18 11            jr Next_digit                            ; Aún no hemos impreso ningún dígito de mayor peso.
- 201+ C2BA
- 202+ C2BA D5           3 push de                                    ; PUSH Score_max_msg.
- 203+ C2BB
- 204+ C2BB 11 2C 95         ld de,Non_authorized_KEY_CODES+2         ; KEY_CODE numbers list.
- 205+ C2BE
- 206+ C2BE A7               and a
- 207+ C2BF 28 04            jr z,4F
- 208+ C2C1
- 209+ C2C1 13           2 inc de
- 210+ C2C2 3D               dec a
- 211+ C2C3 20 FC            jr nz,2B                                 ; Nos situamos en el KEY_CODE correspondiente a este dígito.
- 212+ C2C5
- 213+ C2C5 1A           4 ld a,(de)                                  ; KEY_CODE en A.
- 214+ C2C6
- 215+ C2C6 D1               pop de                                   ; Score_max_msg en DE.
- 216+ C2C7
- 217+ C2C7 CD D0 C2         call ASCII_CODE_de_KEYCODE
- 218+ C2CA
- 219+ C2CA 0C               inc c                                    ; Indica que a partir de ahora se imprimen todos los "0".
- 220+ C2CB
- 221+ C2CB              Next_digit:
- 222+ C2CB
- 223+ C2CB 13               inc de                                   ; Siguiente char del msg. que estamos creando.
- 224+ C2CC 2B               dec hl                                   ; Siguiente díguito decimal a traducir, (centenas, decenas, ...).
- 225+ C2CD
- 226+ C2CD 10 E0            djnz 1B                                  ; Digit counter.
- 227+ C2CF
- 228+ C2CF C9            	ret
- 229+ C2D0
- 230+ C2D0              ; ---------------------------------------
- 231+ C2D0
- 232+ C2D0              ASCII_CODE_de_KEYCODE:
- 233+ C2D0
- 234+ C2D0              ;   A contiene el código ASCII.
- 235+ C2D0              ;   DE apunta al msg, (Score_max_msg).
- 236+ C2D0
- 237+ C2D0 E5               push hl
- 238+ C2D1 C5               push bc
- 239+ C2D2
- 240+ C2D2 4F               ld c,a
- 241+ C2D3 06 00            ld b,0
- 242+ C2D5
- 243+ C2D5 21 3C 95         ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
- 244+ C2D8 09               add hl,bc
- 245+ C2D9
- 246+ C2D9 7E               ld a,(hl)
- 247+ C2DA 12               ld (de),a                                                 ; ASCII_code almacenado.
- 248+ C2DB
- 249+ C2DB C1               pop bc
- 250+ C2DC E1               pop hl
- 251+ C2DD
- 252+ C2DD C9               ret
- 253+ C2DE
- 254+ C2DE              ; ----------------------------------------------------------
- 255+ C2DE              ;
- 256+ C2DE              ;   25/3/26
- 257+ C2DE              ;
- 258+ C2DE
- 259+ C2DE              Print_level_msg:
- 260+ C2DE
- 261+ C2DE 2A F7 94         ld hl,(Puntero_de_mensajes_de_niveles)
- 262+ C2E1 CD 2E 9E         call Extrae_address
- 263+ C2E4
- 264+ C2E4              ;   HL apunta al 1er .db del mensaje de niveles, (centrado en pantalla del msg).
- 265+ C2E4
- 266+ C2E4 11 26 48         ld de,Fila_msg_de_nivel                                     ; Línea de impresión de los mensajes de nivel $4826.
- 267+ C2E7
- 268+ C2E7 46               ld b,(hl)
- 269+ C2E8 48               ld c,b                                                      ; Columnas a incrementar el carro de impresión en B y C.
- 270+ C2E9
- 271+ C2E9 1C           1 inc e
- 272+ C2EA 10 FD            djnz 1B                                                     ; DE contiene la dirección donde imprimiremos el 1er char.
- 273+ C2EC
- 274+ C2EC 23               inc hl                                                      ; HL apunta al 2º .db del mensaje de niveles, (nº de caracteres que tiene el msg).
- 275+ C2ED
- 276+ C2ED 46               ld b,(hl)
- 277+ C2EE ED 43 3A 95      ld (Desplazamiento_level_msg),bc                            ; Guarda el desplazamiento del carro, (para centrar el mensage) y el nº de chars.
- 278+ C2F2              ;                                                               ; Estos datos son necesarios para borrar el mensaje más adelante.
- 279+ C2F2              ;                                                               ; (B) contiene la longitud del msg.
- 280+ C2F2              ;                                                               ; (C) contiene el n° de columnas a sumar a $4826.
- 281+ C2F2 23               inc hl
- 282+ C2F3
- 283+ C2F3              ;   HL apunta al "msg" a imprimir. Asignamos attrs. y temporización.
- 284+ C2F3
- 285+ C2F3 3E 47            ld a,%01000111                                              ; attrs. Paper white, black ink.
- 286+ C2F5              ;    ld b,150                                                   ; TEMPORIZADOR DE CARACTERES ON !!!
- 287+ C2F5 06 01            ld b,1
- 288+ C2F7
- 289+ C2F7 CD F2 9E         call Print_text_msg
- 290+ C2FA
- 291+ C2FA C9               ret
- 292+ C2FB
- 293+ C2FB              ; -------------------------------------------------------
- 294+ C2FB              ;
- 295+ C2FB              ;   27/03/26
- 296+ C2FB
- 297+ C2FB              Clear_level_msg:
- 298+ C2FB
- 299+ C2FB 21 26 48         ld hl,Fila_msg_de_nivel
- 300+ C2FE
- 301+ C2FE 3A 3A 95         ld a,(Desplazamiento_level_msg)
- 302+ C301 47               ld b,a
- 303+ C302
- 304+ C302 2C           1 inc l
- 305+ C303 10 FD            djnz 1B
- 306+ C305
- 307+ C305 3A 3B 95         ld a,(Counter_msg_char)
- 308+ C308 3D               dec a
- 309+ C309 47               ld b,a
- 310+ C30A
- 311+ C30A 2C           2 inc l
- 312+ C30B 10 FD            djnz 2B                                                     ; HL está situado en el último char. a borrar.
- 313+ C30D
- 314+ C30D 3C               inc a
- 315+ C30E
- 316+ C30E 47               ld b,a
- 317+ C30F
- 318+ C30F              ;   Estamos en el último char. del mensaje de nivel.
- 319+ C30F
- 320+ C30F 1E FE        5 ld e,%11111110                                              ; Utilizaremos esta máscara para ir borrando. Comenzamos con el último bit.
- 321+ C311
- 322+ C311 C5               push bc                                                   ; PUSH nº de chars -1.
- 323+ C312
- 324+ C312 06 08            ld b,8                                                    ; 8 bits. 8 interacciones para borrar un byte.
- 325+ C314 C5           4 push bc
- 326+ C315
- 327+ C315 06 08            ld b,8
- 328+ C317
- 329+ C317 E5               push hl
- 330+ C318
- 331+ C318 7E           3 ld a,(hl)
- 332+ C319 A3               and e
- 333+ C31A 77               ld (hl),a
- 334+ C31B 24               inc h
- 335+ C31C 10 FA            djnz 3B
- 336+ C31E
- 337+ C31E 01 00 06         ld bc,$0600                                               ; Velocidad del borrado del mensaje.
- 338+ C321 CD 56 9B         call DELAY
- 339+ C324
- 340+ C324 E1               pop hl
- 341+ C325
- 342+ C325 CB 23            sla e
- 343+ C327
- 344+ C327 C1               pop bc
- 345+ C328 10 EA            djnz 4B
- 346+ C32A
- 347+ C32A 2D               dec l
- 348+ C32B C1               pop bc
- 349+ C32C 10 E1            djnz 5B
- 350+ C32E
- 351+ C32E C9               ret
- 352+ C32F
- 353+ C32F              ; ----------------------------------------------------------
- 354+ C32F              ;
- 355+ C32F              ;   11/3/26
- 356+ C32F              ;
- 357+ C32F
- 358+ C32F              Define_menu:
- 359+ C32F
- 360+ C32F              ;   Borramos el menú principal.
- 361+ C32F
- 362+ C32F CD 7B C5         call Clean_main_menu
- 363+ C332
- 364+ C332              ;   Imprime DEFINE MENU:
- 365+ C332
- 366+ C332              ;   Title.
- 367+ C332
- 368+ C332 21 3B 96         ld hl,b0                                                ; "DEFINE CONTROLS KEYS:".
- 369+ C335 11 09 48         ld de,Line_8 + 9
- 370+ C338 3E 46            ld a,%01000110                                          ; attrs. Yellow ink.
- 371+ C33A 06 00            ld b,0
- 372+ C33C CD F2 9E         call Print_text_msg
- 373+ C33F
- 374+ C33F              ;   LEFT. -----------------------------------------------------------------------------------------------------------------
- 375+ C33F
- 376+ C33F 21 4B 96         ld hl,b1                                                ; "LEFT".
- 377+ C342 11 8C 48         ld de,Line_12 + 12
- 378+ C345 3E C7            ld a,%11000111                                          ; attrs. Flash White.
- 379+ C347 06 00            ld b,0
- 380+ C349 CD F2 9E         call Print_text_msg
- 381+ C34C
- 382+ C34C              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
- 383+ C34C
- 384+ C34C 01 FF FF         ld bc,$ffff
- 385+ C34F CD 56 9B         call DELAY
- 386+ C352
- 387+ C352 D5               push de                                                 ; Guardo la posición del carro de impresión.
- 388+ C353
- 389+ C353 21 7B 96         ld hl,Move_LEFT
- 390+ C356 11 7F 96         ld de,Move_LEFT_ASCII_CODE
- 391+ C359 CD 49 C4         call Define_key                                         ; Almacena Key_code y ASCII_code en sus respectivas variables.
- 392+ C35C
- 393+ C35C 21 7A 96         ld hl,No_repeat_key_code
- 394+ C35F 34               inc (hl)
- 395+ C360
- 396+ C360 21 8C 48         ld hl,Line_12+12
- 397+ C363 06 04            ld b,4
- 398+ C365 CD AA C4         call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
- 399+ C368
- 400+ C368              ; Imprime tecla pulsada, (LEFT).
- 401+ C368
- 402+ C368 21 7F 96         ld hl,Move_LEFT_ASCII_CODE
- 403+ C36B D1               pop de                                                  ; Recupera posición del carro de impresión.
- 404+ C36C
- 405+ C36C 1C               inc e
- 406+ C36D 1C               inc e
- 407+ C36E 1C               inc e
- 408+ C36F 1C               inc e
- 409+ C370
- 410+ C370 3E 68            ld a,%01101000
- 411+ C372 06 00            ld b,0
- 412+ C374 CD F2 9E         call Print_text_msg
- 413+ C377
- 414+ C377              ;   RIGHT. -----------------------------------------------------------------------------------------------------------------
- 415+ C377
- 416+ C377 21 50 96         ld hl,b2                                                ; "RIGHT".
- 417+ C37A 11 CC 48         ld de,Line_14 + 12
- 418+ C37D 3E C7            ld a,%11000111                                          ; attrs. Flash White.
- 419+ C37F 06 00            ld b,0
- 420+ C381 CD F2 9E         call Print_text_msg
- 421+ C384
- 422+ C384              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move LEFT).
- 423+ C384
- 424+ C384 01 FF FF         ld bc,$ffff
- 425+ C387 CD 56 9B         call DELAY
- 426+ C38A
- 427+ C38A D5               push de                                                 ; Guardo la posición del carro de impresión.
- 428+ C38B
- 429+ C38B 21 7C 96         ld hl,Move_RIGHT
- 430+ C38E 11 85 96         ld de,Move_RIGHT_ASCII_CODE
- 431+ C391 CD 49 C4         call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
- 432+ C394
- 433+ C394 21 7A 96         ld hl,No_repeat_key_code
- 434+ C397 34               inc (hl)
- 435+ C398
- 436+ C398 21 CC 48         ld hl,Line_14+12
- 437+ C39B 06 05            ld b,5
- 438+ C39D CD AA C4         call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
- 439+ C3A0
- 440+ C3A0              ; Imprime tecla pulsada, (RIGHT).
- 441+ C3A0
- 442+ C3A0 21 85 96         ld hl,Move_RIGHT_ASCII_CODE
- 443+ C3A3 D1               pop de                                                  ; Recupera posición del carro de impresión.
- 444+ C3A4
- 445+ C3A4 1C               inc e
- 446+ C3A5 1C               inc e
- 447+ C3A6 1C               inc e
- 448+ C3A7
- 449+ C3A7 3E 68            ld a,%01101000
- 450+ C3A9 06 00            ld b,0
- 451+ C3AB CD F2 9E         call Print_text_msg
- 452+ C3AE
- 453+ C3AE              ;   FIRE. -----------------------------------------------------------------------------------------------------------------
- 454+ C3AE
- 455+ C3AE 21 56 96         ld hl,b3                                                ; "FIRE".
- 456+ C3B1 11 0C 50         ld de,Line_16 + 12
- 457+ C3B4 3E C7            ld a,%11000111                                          ; attrs. Flash White.
- 458+ C3B6 06 00            ld b,0
- 459+ C3B8 CD F2 9E         call Print_text_msg
- 460+ C3BB
- 461+ C3BB              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_RIGHT).
- 462+ C3BB
- 463+ C3BB 01 FF FF         ld bc,$ffff
- 464+ C3BE CD 56 9B         call DELAY
- 465+ C3C1
- 466+ C3C1 D5               push de                                                 ; Guardo la posición del carro de impresión.
- 467+ C3C2
- 468+ C3C2 21 7D 96         ld hl,Move_FIRE
- 469+ C3C5 11 8B 96         ld de,Move_FIRE_ASCII_CODE
- 470+ C3C8 CD 49 C4         call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
- 471+ C3CB
- 472+ C3CB 21 7A 96         ld hl,No_repeat_key_code
- 473+ C3CE 34               inc (hl)
- 474+ C3CF
- 475+ C3CF 21 0C 50         ld hl,Line_16+12
- 476+ C3D2 06 04            ld b,4
- 477+ C3D4 CD AA C4         call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
- 478+ C3D7
- 479+ C3D7              ; Imprime tecla pulsada, (FIRE).
- 480+ C3D7
- 481+ C3D7 21 8B 96         ld hl,Move_FIRE_ASCII_CODE
- 482+ C3DA D1               pop de                                                  ; Recupera posición del carro de impresión.
- 483+ C3DB
- 484+ C3DB 1C               inc e
- 485+ C3DC 1C               inc e
- 486+ C3DD 1C               inc e
- 487+ C3DE 1C               inc e
- 488+ C3DF
- 489+ C3DF 3E 68            ld a,%01101000
- 490+ C3E1 06 00            ld b,0
- 491+ C3E3 CD F2 9E         call Print_text_msg
- 492+ C3E6
- 493+ C3E6              ;   SHIELD. -----------------------------------------------------------------------------------------------------------------
- 494+ C3E6
- 495+ C3E6 21 5B 96         ld hl,b4                                                ; "SHIELD".
- 496+ C3E9 11 4C 50         ld de,Line_18 + 12
- 497+ C3EC 3E C7            ld a,%11000111                                          ; attrs. Flash White.
- 498+ C3EE 06 00            ld b,0
- 499+ C3F0 CD F2 9E         call Print_text_msg
- 500+ C3F3
- 501+ C3F3              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_FIRE).
- 502+ C3F3
- 503+ C3F3 01 FF FF         ld bc,$ffff
- 504+ C3F6 CD 56 9B         call DELAY
- 505+ C3F9
- 506+ C3F9 D5               push de                                                 ; Guardo la posición del carro de impresión.
- 507+ C3FA
- 508+ C3FA 21 7E 96         ld hl,Move_SHIELD
- 509+ C3FD 11 91 96         ld de,Move_SHIELD_ASCII_CODE
- 510+ C400 CD 49 C4         call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
- 511+ C403
- 512+ C403 21 4C 50         ld hl,Line_18+12
- 513+ C406 06 06            ld b,6
- 514+ C408 CD AA C4         call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
- 515+ C40B
- 516+ C40B              ; Imprime tecla pulsada, (FIRE).
- 517+ C40B
- 518+ C40B 21 91 96         ld hl,Move_SHIELD_ASCII_CODE
- 519+ C40E D1               pop de                                                  ; Recupera posición del carro de impresión.
- 520+ C40F
- 521+ C40F 1C               inc e
- 522+ C410 1C               inc e
- 523+ C411
- 524+ C411 3E 68            ld a,%01101000
- 525+ C413 06 00            ld b,0
- 526+ C415 CD F2 9E         call Print_text_msg
- 527+ C418
- 528+ C418              ; Teclas definidas.
- 529+ C418
- 530+ C418 01 FF FF         ld bc,$ffff
- 531+ C41B CD 56 9B         call DELAY
- 532+ C41E 01 FF FF         ld bc,$ffff
- 533+ C421 CD 56 9B         call DELAY
- 534+ C424 01 FF FF         ld bc,$ffff
- 535+ C427 CD 56 9B         call DELAY
- 536+ C42A 01 FF FF         ld bc,$ffff
- 537+ C42D CD 56 9B         call DELAY                                              ; DELAY before exit to Main menu.
- 538+ C430 01 FF FF         ld bc,$ffff
- 539+ C433 CD 56 9B         call DELAY
- 540+ C436 01 FF FF         ld bc,$ffff
- 541+ C439 CD 56 9B         call DELAY                                              ; DELAY before exit to Main menu.
- 542+ C43C
- 543+ C43C              ; Clean Define menu.
- 544+ C43C
- 545+ C43C CD 5C C5         call Clean_Define_menu
- 546+ C43F
- 547+ C43F 21 BB 94         ld hl,Ctrl_6
- 548+ C442 CB CE            set 1,(hl)                                              ; Bit 1 "1", means: Return to Main menu.
- 549+ C444
- 550+ C444 AF               xor a
- 551+ C445
- 552+ C445 32 7A 96         ld (No_repeat_key_code),a
- 553+ C448
- 554+ C448 C9               ret
- 555+ C449
- 556+ C449              ; -----------------------------------------------------------------------------------------------------------
- 557+ C449              ;
- 558+ C449              ;   10/04/26
- 559+ C449              ;
- 560+ C449              ;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
- 561+ C449              ;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
- 562+ C449
- 563+ C449
- 564+ C449              Define_key:
- 565+ C449
- 566+ C449 E5               push hl
- 567+ C44A D5               push de
- 568+ C44B
- 569+ C44B CD 54 A0     3 call ROM_Key_Scan                                         ; Scan keyboard.
- 570+ C44E
- 571+ C44E              ;   Guarda el correspondiente KEY CODE / KEY ASCII CODE.
- 572+ C44E
- 573+ C44E              ;    ld a,e                                                  ; Key code en A.
- 574+ C44E
- 575+ C44E              ;   Hay que evitar que se "defina" la misma tecla para realizar distintas funciones.
- 576+ C44E
- 577+ C44E 3A 7A 96         ld a,(No_repeat_key_code)
- 578+ C451 A7               and a
- 579+ C452 28 0B            jr z,2F                                                 ; (A)="0" Indica que estamos definiendo Move_LEFT.
- 580+ C454
- 581+ C454 47               ld b,a                                                  ; B contiene el nº de teclas definidas-1.
- 582+ C455
- 583+ C455 21 7B 96         ld hl,Move_LEFT
- 584+ C458 7E           4 ld a,(hl)                                                 ; KEY_CODE de Move_LEFT en A.
- 585+ C459 BB               cp e                                                    ; Comparo con el Key_code recién adquirido.
- 586+ C45A 28 EF            jr z,3B                                                 ; Esta tecla ya se definió anteriormente. Volvemos a escanear el teclado.
- 587+ C45C
- 588+ C45C 23               inc hl                                                  ; Next key_code to compare.
- 589+ C45D
- 590+ C45D 10 F9            djnz 4B
- 591+ C45F
- 592+ C45F 7B           2 ld a,e                                                    ; KEY_code en A.
- 593+ C460
- 594+ C460 D1               pop de
- 595+ C461 E1               pop hl
- 596+ C462
- 597+ C462 77               ld (hl),a                                               ; Key_code almacenado.
- 598+ C463
- 599+ C463              ;   Sonido, (BEEP) de la pulsación de las teclas, (cuando está autorizada). No se ejecuta [BEEP] si la tecla ya está definida.
- 600+ C463
- 601+ C463 CD 57 C1         call BEEP
- 602+ C466
- 603+ C466              ;   Special Key_code ???
- 604+ C466
- 605+ C466 FE 18            cp $18
- 606+ C468 28 1C            jr z,Print_SYMB
- 607+ C46A FE 20            cp $20
- 608+ C46C 28 1F            jr z,Print_SPACE
- 609+ C46E FE 21            cp $21
- 610+ C470 28 22            jr z,Print_ENTER
- 611+ C472 FE 27            cp $27
- 612+ C474 28 25            jr z,Print_CAPS
- 613+ C476
- 614+ C476              ;   No special key_code.
- 615+ C476
- 616+ C476              ;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
- 617+ C476
- 618+ C476 4F               ld c,a
- 619+ C477 06 00            ld b,0
- 620+ C479
- 621+ C479 21 3C 95         ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
- 622+ C47C
- 623+ C47C 09               add hl,bc
- 624+ C47D
- 625+ C47D 06 04            ld b,4                                                  ; Contador de "0" para limpiar .db después de almacenar el ASCII_code.
- 626+ C47F
- 627+ C47F 7E               ld a,(hl)
- 628+ C480 12           1 ld (de),a                                                 ; ASCII_code almacenado.
- 629+ C481 AF               xor a                                                   ; Ahora almacenamos "0"´s.
- 630+ C482 13               inc de
- 631+ C483 10 FB            djnz 1B
- 632+ C485
- 633+ C485 C9               ret
- 634+ C486
- 635+ C486              Print_SYMB
- 636+ C486
- 637+ C486 21 62 96         ld hl,Symbol_key
- 638+ C489 CD A2 C4         call Get_ascii_message
- 639+ C48C C8               ret z
- 640+ C48D
- 641+ C48D              Print_SPACE
- 642+ C48D
- 643+ C48D 21 68 96         ld hl,Space_key
- 644+ C490 CD A2 C4         call Get_ascii_message
- 645+ C493 C8               ret z
- 646+ C494
- 647+ C494              Print_ENTER
- 648+ C494
- 649+ C494 21 6E 96         ld hl,Enter_key
- 650+ C497 CD A2 C4         call Get_ascii_message
- 651+ C49A C8               ret z
- 652+ C49B
- 653+ C49B              Print_CAPS
- 654+ C49B
- 655+ C49B 21 74 96         ld hl,Caps_key
- 656+ C49E CD A2 C4         call Get_ascii_message
- 657+ C4A1 C8               ret z
- 658+ C4A2
- 659+ C4A2              Get_ascii_message:
- 660+ C4A2
- 661+ C4A2 7E               ld a,(hl)
- 662+ C4A3 12               ld (de),a
- 663+ C4A4
- 664+ C4A4 A7               and a
- 665+ C4A5 C8               ret z
- 666+ C4A6
- 667+ C4A6 23               inc hl
- 668+ C4A7 13               inc de
- 669+ C4A8
- 670+ C4A8 18 F8            jr Get_ascii_message
- 671+ C4AA
- 672+ C4AA              ; Modifica attrs. de left. NO FLASH NOW. Key pressed.
- 673+ C4AA
- 674+ C4AA              Modifica_atributos:
- 675+ C4AA
- 676+ C4AA CD 3E 9E         call Calcula_direccion_atributos
- 677+ C4AD 3E 47            ld a,%01000111
- 678+ C4AF
- 679+ C4AF 77           1 ld (hl),a
- 680+ C4B0 2C               inc l
- 681+ C4B1 10 FC            djnz 1B
- 682+ C4B3
- 683+ C4B3 C9               ret
- 684+ C4B4
- 685+ C4B4              ; ----------------------------------------------------------
- 686+ C4B4              ;
- 687+ C4B4              ;   10/3/26
- 688+ C4B4              ;
- 689+ C4B4
- 690+ C4B4              Show_controls_keys:
- 691+ C4B4
- 692+ C4B4              ;   Hay que corregir la posición donde escribiremos la primera línea de texto si hemos definido "SPACE" o "Enter"_
- 693+ C4B4              ;   _como alguna de las teclas de movimiento de Amadeus
- 694+ C4B4
- 695+ C4B4              ;   Borramos el menú principal.
- 696+ C4B4
- 697+ C4B4 CD 7B C5         call Clean_main_menu
- 698+ C4B7
- 699+ C4B7              ;   Imprimimos CONTROLES.
- 700+ C4B7
- 701+ C4B7 21 FC 95         ld hl,a7                                                ; "Controls:".
- 702+ C4BA 11 0C 48         ld de,Line_8 + 12
- 703+ C4BD 06 00            ld b,0
- 704+ C4BF 3E 46            ld a,%01000110                                          ; attrs.
- 705+ C4C1 CD F2 9E         call Print_text_msg                                     ; Print "Controls:".
- 706+ C4C4
- 707+ C4C4 21 7B 96         ld hl,Move_LEFT
- 708+ C4C7 11 86 48         ld de,Line_12 + 6                                       ; Posición de inicio de línea.
- 709+ C4CA
- 710+ C4CA CD DC C5         call Corrige_inicio_de_linea
- 711+ C4CD
- 712+ C4CD 23               inc hl
- 713+ C4CE
- 714+ C4CE CD DC C5         call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales).
- 715+ C4D1
- 716+ C4D1 21 A8 95         ld hl,a0                                                ; "Press ".
- 717+ C4D4 3E 47            ld a,%01000111                                          ; attrs.
- 718+ C4D6 06 00            ld b,0
- 719+ C4D8 CD F2 9E         call Print_text_msg                                     ; Print "Press ".
- 720+ C4DB
- 721+ C4DB 1C               inc e
- 722+ C4DC
- 723+ C4DC              ;   Next msn
- 724+ C4DC
- 725+ C4DC 21 7F 96         ld hl,Move_LEFT_ASCII_CODE                              ; Move_LEFT_ASCII_CODE -----
- 726+ C4DF CD F4 C5         call Print_ctrl_key                                     ; Print (LEFT_ASCII_CODE).
- 727+ C4E2
- 728+ C4E2 1C               inc e
- 729+ C4E3
- 730+ C4E3              ;   Next msn
- 731+ C4E3
- 732+ C4E3 21 AF 95         ld hl,a1                                                ; "or ".
- 733+ C4E6 3E 47            ld a,%01000111                                          ; attrs.
- 734+ C4E8 06 00            ld b,0
- 735+ C4EA CD F2 9E         call Print_text_msg                                     ; Print "or ".
- 736+ C4ED
- 737+ C4ED 1C               inc e
- 738+ C4EE
- 739+ C4EE              ;   Next msn
- 740+ C4EE
- 741+ C4EE 21 85 96         ld hl,Move_RIGHT_ASCII_CODE                             ; Move_RIGHT_ASCII_CODE -----
- 742+ C4F1 CD F4 C5         call Print_ctrl_key                                     ; Print (RIGHT_ASCII_CODE).
- 743+ C4F4
- 744+ C4F4 1C               inc e
- 745+ C4F5
- 746+ C4F5              ;   Next msn
- 747+ C4F5
- 748+ C4F5 21 B4 95         ld hl,a2                                                ; " to move ".
- 749+ C4F8 3E 47            ld a,%01000111                                          ; attrs.
- 750+ C4FA 06 00            ld b,0
- 751+ C4FC CD F2 9E         call Print_text_msg                                     ; Print " to move".
- 752+ C4FF
- 753+ C4FF 1C               inc e
- 754+ C500
- 755+ C500              ;   Next msn
- 756+ C500
- 757+ C500 21 BE 95         ld hl,a3                                                ; " LEFT and RIGHT.".
- 758+ C503 11 C8 48         ld de,Line_14 + 8
- 759+ C506 3E 47            ld a,%01000111                                          ; attrs.
- 760+ C508 06 00            ld b,0
- 761+ C50A CD F2 9E         call Print_text_msg                                     ; Print " LEFT and RIGHT.".
- 762+ C50D
- 763+ C50D 1C               inc e
- 764+ C50E
- 765+ C50E              ;   Hay que corregir la posición donde escribiremos la tercera línea de texto si hemos definido "SPACE" o "Enter"_
- 766+ C50E              ;   _como alguna de las teclas de disparo o shield.
- 767+ C50E
- 768+ C50E 21 7D 96         ld hl,Move_FIRE
- 769+ C511 11 06 50         ld de,Line_16 + 6                                       ; Posición de inicio de línea.
- 770+ C514
- 771+ C514 CD DC C5         call Corrige_inicio_de_linea
- 772+ C517
- 773+ C517 23               inc hl
- 774+ C518
- 775+ C518 CD DC C5         call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales).
- 776+ C51B
- 777+ C51B              ;   Next msn
- 778+ C51B
- 779+ C51B 21 A8 95         ld hl,a0                                                ; "Press ".
- 780+ C51E 3E 47            ld a,%01000111                                          ; attrs.
- 781+ C520 06 00            ld b,0
- 782+ C522 CD F2 9E         call Print_text_msg
- 783+ C525
- 784+ C525 1C               inc e                                                   ; Print "Press ".
- 785+ C526
- 786+ C526              ;   Next msn
- 787+ C526
- 788+ C526 21 8B 96         ld hl,Move_FIRE_ASCII_CODE                              ; Move_FIRE_ASCII_CODE -----
- 789+ C529 CD F4 C5         call Print_ctrl_key                                     ; Print (FIRE_ASCII_CODE).
- 790+ C52C
- 791+ C52C 1C               inc e
- 792+ C52D
- 793+ C52D              ;   Next msn
- 794+ C52D
- 795+ C52D 21 CF 95         ld hl,a4                                                ; " to FIRE and ".
- 796+ C530 3E 47            ld a,%01000111                                          ; attrs.
- 797+ C532 06 00            ld b,0
- 798+ C534 CD F2 9E         call Print_text_msg                                     ; Print " to FIRE and ".
- 799+ C537
- 800+ C537 1C               inc e
- 801+ C538
- 802+ C538              ;   Next msn
- 803+ C538
- 804+ C538 21 91 96         ld hl,Move_SHIELD_ASCII_CODE                            ; Move_SHIELD_ASCII_CODE -----
- 805+ C53B CD F4 C5         call Print_ctrl_key                                     ; Print (SHIELD_ASCII_CODE).
- 806+ C53E
- 807+ C53E              ;   Next msn
- 808+ C53E
- 809+ C53E 21 DD 95         ld hl,a5                                                ; "SHIELD".
- 810+ C541 11 4B 50         ld de,Line_18 + 11
- 811+ C544 3E 47            ld a,%01000111                                          ; attrs.
- 812+ C546 06 00            ld b,0
- 813+ C548 CD F2 9E         call Print_text_msg                                     ; Print " to FIRE and ".
- 814+ C54B
- 815+ C54B              ;   Next msn
- 816+ C54B
- 817+ C54B 21 E8 95         ld hl,a6                                                ; "Press FIRE to START"
- 818+ C54E 11 C7 50         ld de,Line_22 + 7
- 819+ C551 3E C5            ld a,%11000101                                          ; attrs.
- 820+ C553 06 00            ld b,0
- 821+ C555 CD F2 9E         call Print_text_msg                                     ; Print "Press FIRE to START".
- 822+ C558
- 823+ C558              ;   Scan KEYBOARD to START GAME.
- 824+ C558
- 825+ C558 CD 38 A1         call Press_START
- 826+ C55B
- 827+ C55B C9           	ret
- 828+ C55C
- 829+ C55C              ; ----------------------------------------------------------
- 830+ C55C              ;
- 831+ C55C              ;   9/3/26
- 832+ C55C              ;
- 833+ C55C              ;   CLEAN MENUS ROUTINES.
- 834+ C55C
- 835+ C55C              Clean_Define_menu:
- 836+ C55C
- 837+ C55C 21 00 48         ld hl,Line_8
- 838+ C55F CD D1 C5         call CLean_file
- 839+ C562
- 840+ C562 21 80 48         ld hl,Line_12
- 841+ C565 CD D1 C5         call CLean_file
- 842+ C568
- 843+ C568 21 C0 48         ld hl,Line_14
- 844+ C56B CD D1 C5         call CLean_file
- 845+ C56E
- 846+ C56E 21 00 50         ld hl,Line_16
- 847+ C571 CD D1 C5         call CLean_file
- 848+ C574
- 849+ C574 21 40 50         ld hl,Line_18
- 850+ C577 CD D1 C5         call CLean_file
- 851+ C57A
- 852+ C57A C9               ret
- 853+ C57B
- 854+ C57B              Clean_main_menu:
- 855+ C57B
- 856+ C57B 21 20 48         ld hl,Line_9
- 857+ C57E CD D1 C5         call CLean_file
- 858+ C581
- 859+ C581 21 60 48         ld hl,Line_11
- 860+ C584 CD D1 C5         call CLean_file
- 861+ C587
- 862+ C587 21 A0 48         ld hl,Line_13
- 863+ C58A CD D1 C5         call CLean_file
- 864+ C58D
- 865+ C58D 21 E0 48         ld hl,Line_15
- 866+ C590 CD D1 C5         call CLean_file
- 867+ C593
- 868+ C593 21 C0 50         ld hl,Line_22
- 869+ C596 CD D1 C5         call CLean_file
- 870+ C599
- 871+ C599 21 60 50         ld hl,Line_19
- 872+ C59C CD D1 C5         call CLean_file
- 873+ C59F
- 874+ C59F 21 80 50         ld hl,Line_20
- 875+ C5A2 CD D1 C5         call CLean_file
- 876+ C5A5
- 877+ C5A5 21 A0 50         ld hl,Line_21
- 878+ C5A8 CD D1 C5         call CLean_file
- 879+ C5AB
- 880+ C5AB C9               ret
- 881+ C5AC
- 882+ C5AC              Clean_Show_controls_menu:
- 883+ C5AC
- 884+ C5AC 21 00 48         ld hl,Line_8
- 885+ C5AF CD D1 C5         call CLean_file
- 886+ C5B2
- 887+ C5B2 21 80 48         ld hl,Line_12
- 888+ C5B5 CD D1 C5         call CLean_file
- 889+ C5B8
- 890+ C5B8 21 C0 48         ld hl,Line_14
- 891+ C5BB CD D1 C5         call CLean_file
- 892+ C5BE
- 893+ C5BE 21 00 50         ld hl,Line_16
- 894+ C5C1 CD D1 C5         call CLean_file
- 895+ C5C4
- 896+ C5C4 21 40 50         ld hl,Line_18
- 897+ C5C7 CD D1 C5         call CLean_file
- 898+ C5CA
- 899+ C5CA 21 C0 50         ld hl,Line_22
- 900+ C5CD CD D1 C5         call CLean_file
- 901+ C5D0
- 902+ C5D0 C9               ret
- 903+ C5D1
- 904+ C5D1              CLean_file
- 905+ C5D1
- 906+ C5D1 CD 3E 9E         call Calcula_direccion_atributos
- 907+ C5D4
- 908+ C5D4 06 20            ld b,32
- 909+ C5D6 AF               xor a
- 910+ C5D7
- 911+ C5D7 77           1 ld (hl),a
- 912+ C5D8 23               inc hl
- 913+ C5D9 10 FC            djnz 1B
- 914+ C5DB
- 915+ C5DB C9               ret
- 916+ C5DC
- 917+ C5DC              ; ----------------------------------------------------------
- 918+ C5DC              ;
- 919+ C5DC              ;   28/2/26
- 920+ C5DC              ;
- 921+ C5DC
- 922+ C5DC              Corrige_inicio_de_linea:
- 923+ C5DC
- 924+ C5DC              ;  Comprueba Move_LEFT_ASCII_CODE:
- 925+ C5DC
- 926+ C5DC 3E 18            ld a,$18                                                ; "SYMBOL SHIFT" ascii code.
- 927+ C5DE BE               cp (hl)
- 928+ C5DF 28 10            jr z,Retrocede_carro
- 929+ C5E1
- 930+ C5E1 3E 20            ld a,$20                                                ; "SPACE" ascii code.
- 931+ C5E3 BE               cp (hl)
- 932+ C5E4 28 0B            jr z,Retrocede_carro
- 933+ C5E6
- 934+ C5E6 3E 21            ld a,$21                                                ; "ENTER" ascii code.
- 935+ C5E8 BE               cp (hl)
- 936+ C5E9 28 06            jr z,Retrocede_carro
- 937+ C5EB
- 938+ C5EB 3E 27            ld a,$27                                                ; "CAPS SHIFT" ascii code.
- 939+ C5ED BE               cp (hl)
- 940+ C5EE 28 01            jr z,Retrocede_carro
- 941+ C5F0
- 942+ C5F0 C9               ret
- 943+ C5F1
- 944+ C5F1              ; --------------------------------
- 945+ C5F1
- 946+ C5F1              Retrocede_carro
- 947+ C5F1
- 948+ C5F1 1D               dec e
- 949+ C5F2 1D               dec e
- 950+ C5F3
- 951+ C5F3 C9               ret
- 952+ C5F4
- 953+ C5F4              ; -----------------------------------------------
- 954+ C5F4
- 955+ C5F4              Print_ctrl_key:
- 956+ C5F4
- 957+ C5F4 7E               ld a,(hl)
- 958+ C5F5 FE 0D            cp $0d                                                  ; ENTER ascii code.
- 959+ C5F7 28 0A            jr z,Enter_ascii_code
- 960+ C5F9 FE 20            cp $20
- 961+ C5FB 28 0B            jr z,SPACE_ascii_code                                   ; SPACE ascii code.
- 962+ C5FD
- 963+ C5FD 3E 70        1 ld a,%01110000                                            ; attrs.
- 964+ C5FF CD F2 9E         call Print_text_msg
- 965+ C602
- 966+ C602 C9               ret
- 967+ C603
- 968+ C603              Enter_ascii_code
- 969+ C603
- 970+ C603 21 6E 96         ld hl,Enter_key
- 971+ C606 18 F5            jr 1B
- 972+ C608
- 973+ C608              SPACE_ascii_code
- 974+ C608
- 975+ C608 21 68 96         ld hl,Space_key
- 976+ C60B 18 F0            jr 1B
- 977+ C60D
- 978+ C60D              ; ----------------------------------------------------------
- 979+ C60D              ;
- 980+ C60D              ;   16/9/26
- 981+ C60D              ;
- 982+ C60D              ;   Print MAIN MENU.
- 983+ C60D              ;
- 984+ C60D              ;       KEYBOARD
- 985+ C60D              ;       KEMPSTON
- 986+ C60D              ;       SINCLAIR
- 987+ C60D              ;       DEFINE
- 988+ C60D              ;
- 989+ C60D              ;   MODIFY: AF, HL, BC y DE.
- 990+ C60D
- 991+ C60D              Print_Main_menu:
- 992+ C60D
- 993+ C60D 21 64 95         ld hl,Keyboard                                          ; HL contiene el mensaje.
- 994+ C610 06 00            ld b,0                                                  ; NO TEMPORIZADOR.
- 995+ C612 11 2C 48         ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
- 996+ C615 3E 47            ld a,%01000111                                          ; attrs. Ink white.
- 997+ C617
- 998+ C617 D5               push de
- 999+ C618 CD F2 9E         call Print_text_msg
-1000+ C61B E1               pop hl
-1001+ C61C
-1002+ C61C 06 50            ld b,%01010000                                          ; RED BRIGHT paper, BLACK ink.
-1003+ C61E CD 46 9E         call Modify_first_char_attr
-1004+ C621
-1005+ C621 21 6D 95         ld hl,Kempstom                                          ; msg.
-1006+ C624 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1007+ C627 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1008+ C62A 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1009+ C62C
-1010+ C62C D5               push de
-1011+ C62D CD F2 9E         call Print_text_msg
-1012+ C630 E1               pop hl
-1013+ C631
-1014+ C631 2C               inc l
-1015+ C632
-1016+ C632 06 70            ld b,%01110000                                          ; YELLOW BRIGHT paper, BLACK ink.
-1017+ C634 CD 46 9E         call Modify_first_char_attr
-1018+ C637
-1019+ C637 21 76 95         ld hl,Interface                                         ; msg.
-1020+ C63A 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1021+ C63D 11 AC 48         ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1022+ C640 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1023+ C642
-1024+ C642 D5               push de
-1025+ C643 CD F2 9E         call Print_text_msg
-1026+ C646 E1               pop hl
-1027+ C647
-1028+ C647 06 60            ld b,%01100000                                          ; GREEN BRIGHT paper, BLACK ink.
-1029+ C649 CD 46 9E         call Modify_first_char_attr
-1030+ C64C
-1031+ C64C 21 7F 95         ld hl,Define                                            ; msg.
-1032+ C64F 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1033+ C652 11 EC 48         ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1034+ C655 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1035+ C657
-1036+ C657 D5               push de
-1037+ C658 CD F2 9E         call Print_text_msg
-1038+ C65B E1               pop hl
-1039+ C65C
-1040+ C65C 06 48            ld b,%01001000                                          ; BLUE BRIGHT paper, BLACK ink.
-1041+ C65E CD 46 9E         call Modify_first_char_attr
-1042+ C661
-1043+ C661 C9               ret
-1044+ C662
-1045+ C662              ; ----------------------------------------------------------
-1046+ C662              ;
-1047+ C662              ;   21/07/26
-1048+ C662              ;
-1049+ C662
-1050+ C662              Print_DONE:
-1051+ C662
-1052+ C662 01 00 00         ld bc,0
-1053+ C665 21 99 95         ld hl,Done                                              ; msg.
-1054+ C668 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
-1055+ C66B 3E E0            ld a,%11100000                                          ; attrs.
-1056+ C66D
-1057+ C66D CD F2 9E         call Print_text_msg
-1058+ C670
-1059+ C670 C9               ret
-1060+ C671
-1061+ C671              Clean_DONE
-1062+ C671
-1063+ C671 21 36 96         ld hl,a12                                               ; msg., "    ",
-1064+ C674 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
-1065+ C677 3E 00            ld a,0                                                  ; attrs.
-1066+ C679
-1067+ C679 CD F2 9E         call Print_text_msg
-1068+ C67C
-1069+ C67C C9               ret
-1070+ C67D
-1071+ C67D AF               xor a
-1072+ C67E 3C               inc a                                                   ; Fuerza NZ a la salida.
-1073+ C67F
-1074+ C67F C9               ret
-1075+ C680
-1076+ C680              ; ----------------------------------------------------------
-1077+ C680              ;
-1078+ C680              ;   29/4/26
-1079+ C680              ;
-1080+ C680
-1081+ C680              Print_Game_Over:
-1082+ C680
-1083+ C680 21 9E 95         ld hl,Game_Over                                         ; msg.
-1084+ C683 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1085+ C686 3E 50            ld a,%01010000                                          ; attrs.
-1086+ C688 06 00            ld b,0
-1087+ C68A
-1088+ C68A CD F2 9E         call Print_text_msg
-1089+ C68D
-1090+ C68D C9               ret
-1091+ C68E
-1092+ C68E
-1093+ C68E
+   1+ C219              ; ----------------------------------------------------------
+   2+ C219              ;
+   3+ C219              ;   16/6/26
+   4+ C219              ;
+   5+ C219
+   6+ C219              Print_new_best_score:
+   7+ C219
+   8+ C219 CD 0F AD     	call Cartel_Best_Score                      ; Imprime el Cartel "Best Score" en la esquina inferior izquierda de la pantalla_
+   9+ C21C              ;                                               ; _del menú principal.
+  10+ C21C
+  11+ C21C              ;   Print msg.
+  12+ C21C
+  13+ C21C 11 C1 50         ld de,Line_22+1
+  14+ C21F
+  15+ C21F 3E 47            ld a,%01000111
+  16+ C221 06 00            ld b,0
+  17+ C223 21 21 95         ld hl,Nombre_del_campeon
+  18+ C226 CD F2 9E         call Print_text_msg
+  19+ C229
+  20+ C229 1C               inc e
+  21+ C22A 1C               inc e
+  22+ C22B
+  23+ C22B 3E 47            ld a,%01000111
+  24+ C22D 06 00            ld b,0
+  25+ C22F 21 2F 96         ld hl,a10
+  26+ C232 CD F2 9E         call Print_text_msg
+  27+ C235
+  28+ C235 1C               inc e
+  29+ C236 1C               inc e
+  30+ C237
+  31+ C237 3E C5            ld a,%11000101
+  32+ C239 06 00            ld b,0
+  33+ C23B 21 1B 95         ld hl,Score_max_msg
+  34+ C23E CD F2 9E         call Print_text_msg
+  35+ C241
+  36+ C241 C9           	ret
+  37+ C242
+  38+ C242              ; ----------------------------------------------------------
+  39+ C242              ;
+  40+ C242              ;   20/5/26
+  41+ C242              ;
+  42+ C242
+  43+ C242              Print_New_Record:
+  44+ C242
+  45+ C242 CD 66 C2         call Mide_msg
+  46+ C245
+  47+ C245              ;   Centramos el msg. en función del nº de dígitos.
+  48+ C245
+  49+ C245 11 8E 48         ld de,Line_12 + 14
+  50+ C248 CD 56 C2         call Centra_New_Record_msg
+  51+ C24B
+  52+ C24B              ;   Print msg.
+  53+ C24B
+  54+ C24B 3E 47            ld a,%01000111
+  55+ C24D 06 00            ld b,0
+  56+ C24F 21 1B 95         ld hl,Score_max_msg
+  57+ C252 CD F2 9E         call Print_text_msg
+  58+ C255
+  59+ C255 C9               ret
+  60+ C256
+  61+ C256              ; ----------------------------------------------------------
+  62+ C256              ;
+  63+ C256              ;   20/5/26
+  64+ C256              ;
+  65+ C256              ;   INPUTS: C contiene el nº de dígitos que tiene el msg a centrar.
+  66+ C256              ;           E nº de columna, (dirección de pantalla).
+  67+ C256
+  68+ C256
+  69+ C256              Centra_New_Record_msg:
+  70+ C256
+  71+ C256 3E 05            ld a,5
+  72+ C258 B9               cp c
+  73+ C259 C8               ret z
+  74+ C25A
+  75+ C25A 3D               dec a
+  76+ C25B
+  77+ C25B B9               cp c
+  78+ C25C C8               ret z
+  79+ C25D
+  80+ C25D 1C               inc e
+  81+ C25E
+  82+ C25E 3D               dec a
+  83+ C25F B9               cp c
+  84+ C260 C8               ret z
+  85+ C261
+  86+ C261 3D               dec a
+  87+ C262 B9               cp c
+  88+ C263 C8               ret z
+  89+ C264
+  90+ C264 1C               inc e
+  91+ C265
+  92+ C265 C9               ret
+  93+ C266
+  94+ C266              ; ----------------------------------------------------------
+  95+ C266              ;
+  96+ C266              ;   21/05/26
+  97+ C266              ;
+  98+ C266              ;   MODIFY: A,C y HL
+  99+ C266              ;   OUTPUT: C contiene el nº de dígitos, (chars) que tiene el msg. de la máx. puntuación.
+ 100+ C266
+ 101+ C266              Mide_msg:
+ 102+ C266
+ 103+ C266 21 1A 95         ld hl,Score_max_msg-1
+ 104+ C269 0E FF            ld c,$ff
+ 105+ C26B
+ 106+ C26B 23           1 inc hl
+ 107+ C26C 0C               inc c
+ 108+ C26D
+ 109+ C26D 7E               ld a,(hl)
+ 110+ C26E A7               and a
+ 111+ C26F 20 FA            jr nz,1B
+ 112+ C271
+ 113+ C271 C9               ret
+ 114+ C272
+ 115+ C272              ; ----------------------------------------------------------
+ 116+ C272              ;
+ 117+ C272              ;   13/5/26
+ 118+ C272              ;
+ 119+ C272
+ 120+ C272              New_best_msg:
+ 121+ C272
+ 122+ C272 21 06 96         ld hl,a8                                                ; "New Best Score!.".
+ 123+ C275 11 29 48         ld de,Line_9 + 9
+ 124+ C278 3E 45            ld a,%01000101                                          ; attrs. black paper, cyan ink.
+ 125+ C27A 06 00            ld b,0
+ 126+ C27C CD F2 9E         call Print_text_msg
+ 127+ C27F
+ 128+ C27F CD B1 C2         call Make_Score_max_msg                                 ; Construye un mensaje de texto con la puntuación máx. obtenida.
+ 129+ C282
+ 130+ C282 CD 42 C2         call Print_New_Record
+ 131+ C285
+ 132+ C285 21 16 96         ld hl,a9                                                ; "Enter your name".
+ 133+ C288 11 04 50         ld de,Line_16 + 4
+ 134+ C28B 3E 46            ld a,%01000110                                          ; attrs. black paper, yellow ink.
+ 135+ C28D 06 00            ld b,0
+ 136+ C28F CD F2 9E         call Print_text_msg
+ 137+ C292
+ 138+ C292              ;   Attrs. en la zona del nombre.
+ 139+ C292
+ 140+ C292 21 8E 50         ld hl,Line_20 + 14
+ 141+ C295
+ 142+ C295              Flash:
+ 143+ C295
+ 144+ C295 26 5A            ld h,$5a                                                ; Siempre FLASH en el 3er tercio de pantalla.
+ 145+ C297
+ 146+ C297 3E C7            ld a,%11000111                                          ; FLASH, (next to char. printed).
+ 147+ C299 77               ld (hl),a
+ 148+ C29A
+ 149+ C29A 3A BB 94         ld a,(Ctrl_6)
+ 150+ C29D CB 67            bit 4,a                                                 ; FLAG. Indica DELETE a subrutina FLASH.
+ 151+ C29F C8               ret z
+ 152+ C2A0
+ 153+ C2A0 CB A7            res 4,a
+ 154+ C2A2 32 BB 94         ld (Ctrl_6),a
+ 155+ C2A5
+ 156+ C2A5 AF               xor a
+ 157+ C2A6 77               ld (hl),a
+ 158+ C2A7
+ 159+ C2A7 1B               dec de
+ 160+ C2A8 12               ld (de),a
+ 161+ C2A9 ED 53 27 95      ld (Puntero_del_nombre_del_campeon),de                  ; Actualizamos puntero.
+ 162+ C2AD
+ 163+ C2AD 0C               inc c
+ 164+ C2AE
+ 165+ C2AE 2D               dec l
+ 166+ C2AF 18 E4            jr Flash
+ 167+ C2B1
+ 168+ C2B1              ; ------------------------------------------------------------------------
+ 169+ C2B1              ;
+ 170+ C2B1              ;	15/5/26
+ 171+ C2B1              ;
+ 172+ C2B1              ;	Construye un mensaje de texto con la puntuación obtenida, (Score_hex_max). Este es el nuevo máximo.
+ 173+ C2B1
+ 174+ C2B1
+ 175+ C2B1              Make_Score_max_msg:
+ 176+ C2B1
+ 177+ C2B1              ;   Non_authorized_KEY_CODES db $18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
+ 178+ C2B1
+ 179+ C2B1              ;   Necesito fabricar un msg. con la máxima puntuación.
+ 180+ C2B1              ;   Para ello necesitamos el ASCII CODE de cada dígito del marcador SCORE.
+ 181+ C2B1
+ 182+ C2B1 01 00 05         ld bc,$0500                              ; El marcador SCORE consta de 5 dígitos decimales.
+ 183+ C2B4 21 0C 95         ld hl,Score_BCD_decenas_de_millar        ; Para evitar imprimir "0", crearemos el mensaje de izquierda a derecha.
+ 184+ C2B7              ;                                            ; Inicialmente (Score_BCD_decenas_de_millar).
+ 185+ C2B7 11 1B 95         ld de,Score_max_msg
+ 186+ C2BA
+ 187+ C2BA              KEY_CODE_de_BCD:
+ 188+ C2BA
+ 189+ C2BA 7E           1 ld a,(hl)
+ 190+ C2BB A7               and a
+ 191+ C2BC 20 07            jr nz,3F
+ 192+ C2BE
+ 193+ C2BE              ;   El dígito es "0".
+ 194+ C2BE
+ 195+ C2BE 0C               inc c
+ 196+ C2BF 0D               dec c
+ 197+ C2C0 20 03            jr nz,3F
+ 198+ C2C2
+ 199+ C2C2 1B               dec de                                   ; No queremos "0"´s delante de la cantidad.
+ 200+ C2C3 18 11            jr Next_digit                            ; Aún no hemos impreso ningún dígito de mayor peso.
+ 201+ C2C5
+ 202+ C2C5 D5           3 push de                                    ; PUSH Score_max_msg.
+ 203+ C2C6
+ 204+ C2C6 11 2C 95         ld de,Non_authorized_KEY_CODES+2         ; KEY_CODE numbers list.
+ 205+ C2C9
+ 206+ C2C9 A7               and a
+ 207+ C2CA 28 04            jr z,4F
+ 208+ C2CC
+ 209+ C2CC 13           2 inc de
+ 210+ C2CD 3D               dec a
+ 211+ C2CE 20 FC            jr nz,2B                                 ; Nos situamos en el KEY_CODE correspondiente a este dígito.
+ 212+ C2D0
+ 213+ C2D0 1A           4 ld a,(de)                                  ; KEY_CODE en A.
+ 214+ C2D1
+ 215+ C2D1 D1               pop de                                   ; Score_max_msg en DE.
+ 216+ C2D2
+ 217+ C2D2 CD DB C2         call ASCII_CODE_de_KEYCODE
+ 218+ C2D5
+ 219+ C2D5 0C               inc c                                    ; Indica que a partir de ahora se imprimen todos los "0".
+ 220+ C2D6
+ 221+ C2D6              Next_digit:
+ 222+ C2D6
+ 223+ C2D6 13               inc de                                   ; Siguiente char del msg. que estamos creando.
+ 224+ C2D7 2B               dec hl                                   ; Siguiente díguito decimal a traducir, (centenas, decenas, ...).
+ 225+ C2D8
+ 226+ C2D8 10 E0            djnz 1B                                  ; Digit counter.
+ 227+ C2DA
+ 228+ C2DA C9            	ret
+ 229+ C2DB
+ 230+ C2DB              ; ---------------------------------------
+ 231+ C2DB
+ 232+ C2DB              ASCII_CODE_de_KEYCODE:
+ 233+ C2DB
+ 234+ C2DB              ;   A contiene el código ASCII.
+ 235+ C2DB              ;   DE apunta al msg, (Score_max_msg).
+ 236+ C2DB
+ 237+ C2DB E5               push hl
+ 238+ C2DC C5               push bc
+ 239+ C2DD
+ 240+ C2DD 4F               ld c,a
+ 241+ C2DE 06 00            ld b,0
+ 242+ C2E0
+ 243+ C2E0 21 3C 95         ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
+ 244+ C2E3 09               add hl,bc
+ 245+ C2E4
+ 246+ C2E4 7E               ld a,(hl)
+ 247+ C2E5 12               ld (de),a                                                 ; ASCII_code almacenado.
+ 248+ C2E6
+ 249+ C2E6 C1               pop bc
+ 250+ C2E7 E1               pop hl
+ 251+ C2E8
+ 252+ C2E8 C9               ret
+ 253+ C2E9
+ 254+ C2E9              ; ----------------------------------------------------------
+ 255+ C2E9              ;
+ 256+ C2E9              ;   25/3/26
+ 257+ C2E9              ;
+ 258+ C2E9
+ 259+ C2E9              Print_level_msg:
+ 260+ C2E9
+ 261+ C2E9 2A F7 94         ld hl,(Puntero_de_mensajes_de_niveles)
+ 262+ C2EC CD 2E 9E         call Extrae_address
+ 263+ C2EF
+ 264+ C2EF              ;   HL apunta al 1er .db del mensaje de niveles, (centrado en pantalla del msg).
+ 265+ C2EF
+ 266+ C2EF 11 26 48         ld de,Fila_msg_de_nivel                                     ; Línea de impresión de los mensajes de nivel $4826.
+ 267+ C2F2
+ 268+ C2F2 46               ld b,(hl)
+ 269+ C2F3 48               ld c,b                                                      ; Columnas a incrementar el carro de impresión en B y C.
+ 270+ C2F4
+ 271+ C2F4 1C           1 inc e
+ 272+ C2F5 10 FD            djnz 1B                                                     ; DE contiene la dirección donde imprimiremos el 1er char.
+ 273+ C2F7
+ 274+ C2F7 23               inc hl                                                      ; HL apunta al 2º .db del mensaje de niveles, (nº de caracteres que tiene el msg).
+ 275+ C2F8
+ 276+ C2F8 46               ld b,(hl)
+ 277+ C2F9 ED 43 3A 95      ld (Desplazamiento_level_msg),bc                            ; Guarda el desplazamiento del carro, (para centrar el mensage) y el nº de chars.
+ 278+ C2FD              ;                                                               ; Estos datos son necesarios para borrar el mensaje más adelante.
+ 279+ C2FD              ;                                                               ; (B) contiene la longitud del msg.
+ 280+ C2FD              ;                                                               ; (C) contiene el n° de columnas a sumar a $4826.
+ 281+ C2FD 23               inc hl
+ 282+ C2FE
+ 283+ C2FE              ;   HL apunta al "msg" a imprimir. Asignamos attrs. y temporización.
+ 284+ C2FE
+ 285+ C2FE 3E 47            ld a,%01000111                                              ; attrs. Paper white, black ink.
+ 286+ C300              ;    ld b,150                                                   ; TEMPORIZADOR DE CARACTERES ON !!!
+ 287+ C300 06 01            ld b,1
+ 288+ C302
+ 289+ C302 CD F2 9E         call Print_text_msg
+ 290+ C305
+ 291+ C305 C9               ret
+ 292+ C306
+ 293+ C306              ; -------------------------------------------------------
+ 294+ C306              ;
+ 295+ C306              ;   27/03/26
+ 296+ C306
+ 297+ C306              Clear_level_msg:
+ 298+ C306
+ 299+ C306 21 26 48         ld hl,Fila_msg_de_nivel
+ 300+ C309
+ 301+ C309 3A 3A 95         ld a,(Desplazamiento_level_msg)
+ 302+ C30C 47               ld b,a
+ 303+ C30D
+ 304+ C30D 2C           1 inc l
+ 305+ C30E 10 FD            djnz 1B
+ 306+ C310
+ 307+ C310 3A 3B 95         ld a,(Counter_msg_char)
+ 308+ C313 3D               dec a
+ 309+ C314 47               ld b,a
+ 310+ C315
+ 311+ C315 2C           2 inc l
+ 312+ C316 10 FD            djnz 2B                                                     ; HL está situado en el último char. a borrar.
+ 313+ C318
+ 314+ C318 3C               inc a
+ 315+ C319
+ 316+ C319 47               ld b,a
+ 317+ C31A
+ 318+ C31A              ;   Estamos en el último char. del mensaje de nivel.
+ 319+ C31A
+ 320+ C31A 1E FE        5 ld e,%11111110                                              ; Utilizaremos esta máscara para ir borrando. Comenzamos con el último bit.
+ 321+ C31C
+ 322+ C31C C5               push bc                                                   ; PUSH nº de chars -1.
+ 323+ C31D
+ 324+ C31D 06 08            ld b,8                                                    ; 8 bits. 8 interacciones para borrar un byte.
+ 325+ C31F C5           4 push bc
+ 326+ C320
+ 327+ C320 06 08            ld b,8
+ 328+ C322
+ 329+ C322 E5               push hl
+ 330+ C323
+ 331+ C323 7E           3 ld a,(hl)
+ 332+ C324 A3               and e
+ 333+ C325 77               ld (hl),a
+ 334+ C326 24               inc h
+ 335+ C327 10 FA            djnz 3B
+ 336+ C329
+ 337+ C329 01 00 06         ld bc,$0600                                               ; Velocidad del borrado del mensaje.
+ 338+ C32C CD 56 9B         call DELAY
+ 339+ C32F
+ 340+ C32F E1               pop hl
+ 341+ C330
+ 342+ C330 CB 23            sla e
+ 343+ C332
+ 344+ C332 C1               pop bc
+ 345+ C333 10 EA            djnz 4B
+ 346+ C335
+ 347+ C335 2D               dec l
+ 348+ C336 C1               pop bc
+ 349+ C337 10 E1            djnz 5B
+ 350+ C339
+ 351+ C339 C9               ret
+ 352+ C33A
+ 353+ C33A              ; ----------------------------------------------------------
+ 354+ C33A              ;
+ 355+ C33A              ;   11/3/26
+ 356+ C33A              ;
+ 357+ C33A
+ 358+ C33A              Define_menu:
+ 359+ C33A
+ 360+ C33A              ;   Borramos el menú principal.
+ 361+ C33A
+ 362+ C33A CD 86 C5         call Clean_main_menu
+ 363+ C33D
+ 364+ C33D              ;   Imprime DEFINE MENU:
+ 365+ C33D
+ 366+ C33D              ;   Title.
+ 367+ C33D
+ 368+ C33D 21 3B 96         ld hl,b0                                                ; "DEFINE CONTROLS KEYS:".
+ 369+ C340 11 09 48         ld de,Line_8 + 9
+ 370+ C343 3E 46            ld a,%01000110                                          ; attrs. Yellow ink.
+ 371+ C345 06 00            ld b,0
+ 372+ C347 CD F2 9E         call Print_text_msg
+ 373+ C34A
+ 374+ C34A              ;   LEFT. -----------------------------------------------------------------------------------------------------------------
+ 375+ C34A
+ 376+ C34A 21 4B 96         ld hl,b1                                                ; "LEFT".
+ 377+ C34D 11 8C 48         ld de,Line_12 + 12
+ 378+ C350 3E C7            ld a,%11000111                                          ; attrs. Flash White.
+ 379+ C352 06 00            ld b,0
+ 380+ C354 CD F2 9E         call Print_text_msg
+ 381+ C357
+ 382+ C357              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
+ 383+ C357
+ 384+ C357 01 FF FF         ld bc,$ffff
+ 385+ C35A CD 56 9B         call DELAY
+ 386+ C35D
+ 387+ C35D D5               push de                                                 ; Guardo la posición del carro de impresión.
+ 388+ C35E
+ 389+ C35E 21 7B 96         ld hl,Move_LEFT
+ 390+ C361 11 7F 96         ld de,Move_LEFT_ASCII_CODE
+ 391+ C364 CD 54 C4         call Define_key                                         ; Almacena Key_code y ASCII_code en sus respectivas variables.
+ 392+ C367
+ 393+ C367 21 7A 96         ld hl,No_repeat_key_code
+ 394+ C36A 34               inc (hl)
+ 395+ C36B
+ 396+ C36B 21 8C 48         ld hl,Line_12+12
+ 397+ C36E 06 04            ld b,4
+ 398+ C370 CD B5 C4         call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+ 399+ C373
+ 400+ C373              ; Imprime tecla pulsada, (LEFT).
+ 401+ C373
+ 402+ C373 21 7F 96         ld hl,Move_LEFT_ASCII_CODE
+ 403+ C376 D1               pop de                                                  ; Recupera posición del carro de impresión.
+ 404+ C377
+ 405+ C377 1C               inc e
+ 406+ C378 1C               inc e
+ 407+ C379 1C               inc e
+ 408+ C37A 1C               inc e
+ 409+ C37B
+ 410+ C37B 3E 68            ld a,%01101000
+ 411+ C37D 06 00            ld b,0
+ 412+ C37F CD F2 9E         call Print_text_msg
+ 413+ C382
+ 414+ C382              ;   RIGHT. -----------------------------------------------------------------------------------------------------------------
+ 415+ C382
+ 416+ C382 21 50 96         ld hl,b2                                                ; "RIGHT".
+ 417+ C385 11 CC 48         ld de,Line_14 + 12
+ 418+ C388 3E C7            ld a,%11000111                                          ; attrs. Flash White.
+ 419+ C38A 06 00            ld b,0
+ 420+ C38C CD F2 9E         call Print_text_msg
+ 421+ C38F
+ 422+ C38F              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move LEFT).
+ 423+ C38F
+ 424+ C38F 01 FF FF         ld bc,$ffff
+ 425+ C392 CD 56 9B         call DELAY
+ 426+ C395
+ 427+ C395 D5               push de                                                 ; Guardo la posición del carro de impresión.
+ 428+ C396
+ 429+ C396 21 7C 96         ld hl,Move_RIGHT
+ 430+ C399 11 85 96         ld de,Move_RIGHT_ASCII_CODE
+ 431+ C39C CD 54 C4         call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
+ 432+ C39F
+ 433+ C39F 21 7A 96         ld hl,No_repeat_key_code
+ 434+ C3A2 34               inc (hl)
+ 435+ C3A3
+ 436+ C3A3 21 CC 48         ld hl,Line_14+12
+ 437+ C3A6 06 05            ld b,5
+ 438+ C3A8 CD B5 C4         call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+ 439+ C3AB
+ 440+ C3AB              ; Imprime tecla pulsada, (RIGHT).
+ 441+ C3AB
+ 442+ C3AB 21 85 96         ld hl,Move_RIGHT_ASCII_CODE
+ 443+ C3AE D1               pop de                                                  ; Recupera posición del carro de impresión.
+ 444+ C3AF
+ 445+ C3AF 1C               inc e
+ 446+ C3B0 1C               inc e
+ 447+ C3B1 1C               inc e
+ 448+ C3B2
+ 449+ C3B2 3E 68            ld a,%01101000
+ 450+ C3B4 06 00            ld b,0
+ 451+ C3B6 CD F2 9E         call Print_text_msg
+ 452+ C3B9
+ 453+ C3B9              ;   FIRE. -----------------------------------------------------------------------------------------------------------------
+ 454+ C3B9
+ 455+ C3B9 21 56 96         ld hl,b3                                                ; "FIRE".
+ 456+ C3BC 11 0C 50         ld de,Line_16 + 12
+ 457+ C3BF 3E C7            ld a,%11000111                                          ; attrs. Flash White.
+ 458+ C3C1 06 00            ld b,0
+ 459+ C3C3 CD F2 9E         call Print_text_msg
+ 460+ C3C6
+ 461+ C3C6              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_RIGHT).
+ 462+ C3C6
+ 463+ C3C6 01 FF FF         ld bc,$ffff
+ 464+ C3C9 CD 56 9B         call DELAY
+ 465+ C3CC
+ 466+ C3CC D5               push de                                                 ; Guardo la posición del carro de impresión.
+ 467+ C3CD
+ 468+ C3CD 21 7D 96         ld hl,Move_FIRE
+ 469+ C3D0 11 8B 96         ld de,Move_FIRE_ASCII_CODE
+ 470+ C3D3 CD 54 C4         call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
+ 471+ C3D6
+ 472+ C3D6 21 7A 96         ld hl,No_repeat_key_code
+ 473+ C3D9 34               inc (hl)
+ 474+ C3DA
+ 475+ C3DA 21 0C 50         ld hl,Line_16+12
+ 476+ C3DD 06 04            ld b,4
+ 477+ C3DF CD B5 C4         call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+ 478+ C3E2
+ 479+ C3E2              ; Imprime tecla pulsada, (FIRE).
+ 480+ C3E2
+ 481+ C3E2 21 8B 96         ld hl,Move_FIRE_ASCII_CODE
+ 482+ C3E5 D1               pop de                                                  ; Recupera posición del carro de impresión.
+ 483+ C3E6
+ 484+ C3E6 1C               inc e
+ 485+ C3E7 1C               inc e
+ 486+ C3E8 1C               inc e
+ 487+ C3E9 1C               inc e
+ 488+ C3EA
+ 489+ C3EA 3E 68            ld a,%01101000
+ 490+ C3EC 06 00            ld b,0
+ 491+ C3EE CD F2 9E         call Print_text_msg
+ 492+ C3F1
+ 493+ C3F1              ;   SHIELD. -----------------------------------------------------------------------------------------------------------------
+ 494+ C3F1
+ 495+ C3F1 21 5B 96         ld hl,b4                                                ; "SHIELD".
+ 496+ C3F4 11 4C 50         ld de,Line_18 + 12
+ 497+ C3F7 3E C7            ld a,%11000111                                          ; attrs. Flash White.
+ 498+ C3F9 06 00            ld b,0
+ 499+ C3FB CD F2 9E         call Print_text_msg
+ 500+ C3FE
+ 501+ C3FE              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_FIRE).
+ 502+ C3FE
+ 503+ C3FE 01 FF FF         ld bc,$ffff
+ 504+ C401 CD 56 9B         call DELAY
+ 505+ C404
+ 506+ C404 D5               push de                                                 ; Guardo la posición del carro de impresión.
+ 507+ C405
+ 508+ C405 21 7E 96         ld hl,Move_SHIELD
+ 509+ C408 11 91 96         ld de,Move_SHIELD_ASCII_CODE
+ 510+ C40B CD 54 C4         call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
+ 511+ C40E
+ 512+ C40E 21 4C 50         ld hl,Line_18+12
+ 513+ C411 06 06            ld b,6
+ 514+ C413 CD B5 C4         call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+ 515+ C416
+ 516+ C416              ; Imprime tecla pulsada, (FIRE).
+ 517+ C416
+ 518+ C416 21 91 96         ld hl,Move_SHIELD_ASCII_CODE
+ 519+ C419 D1               pop de                                                  ; Recupera posición del carro de impresión.
+ 520+ C41A
+ 521+ C41A 1C               inc e
+ 522+ C41B 1C               inc e
+ 523+ C41C
+ 524+ C41C 3E 68            ld a,%01101000
+ 525+ C41E 06 00            ld b,0
+ 526+ C420 CD F2 9E         call Print_text_msg
+ 527+ C423
+ 528+ C423              ; Teclas definidas.
+ 529+ C423
+ 530+ C423 01 FF FF         ld bc,$ffff
+ 531+ C426 CD 56 9B         call DELAY
+ 532+ C429 01 FF FF         ld bc,$ffff
+ 533+ C42C CD 56 9B         call DELAY
+ 534+ C42F 01 FF FF         ld bc,$ffff
+ 535+ C432 CD 56 9B         call DELAY
+ 536+ C435 01 FF FF         ld bc,$ffff
+ 537+ C438 CD 56 9B         call DELAY                                              ; DELAY before exit to Main menu.
+ 538+ C43B 01 FF FF         ld bc,$ffff
+ 539+ C43E CD 56 9B         call DELAY
+ 540+ C441 01 FF FF         ld bc,$ffff
+ 541+ C444 CD 56 9B         call DELAY                                              ; DELAY before exit to Main menu.
+ 542+ C447
+ 543+ C447              ; Clean Define menu.
+ 544+ C447
+ 545+ C447 CD 67 C5         call Clean_Define_menu
+ 546+ C44A
+ 547+ C44A 21 BB 94         ld hl,Ctrl_6
+ 548+ C44D CB CE            set 1,(hl)                                              ; Bit 1 "1", means: Return to Main menu.
+ 549+ C44F
+ 550+ C44F AF               xor a
+ 551+ C450
+ 552+ C450 32 7A 96         ld (No_repeat_key_code),a
+ 553+ C453
+ 554+ C453 C9               ret
+ 555+ C454
+ 556+ C454              ; -----------------------------------------------------------------------------------------------------------
+ 557+ C454              ;
+ 558+ C454              ;   10/04/26
+ 559+ C454              ;
+ 560+ C454              ;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
+ 561+ C454              ;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
+ 562+ C454
+ 563+ C454
+ 564+ C454              Define_key:
+ 565+ C454
+ 566+ C454 E5               push hl
+ 567+ C455 D5               push de
+ 568+ C456
+ 569+ C456 CD 54 A0     3 call ROM_Key_Scan                                         ; Scan keyboard.
+ 570+ C459
+ 571+ C459              ;   Guarda el correspondiente KEY CODE / KEY ASCII CODE.
+ 572+ C459
+ 573+ C459              ;    ld a,e                                                  ; Key code en A.
+ 574+ C459
+ 575+ C459              ;   Hay que evitar que se "defina" la misma tecla para realizar distintas funciones.
+ 576+ C459
+ 577+ C459 3A 7A 96         ld a,(No_repeat_key_code)
+ 578+ C45C A7               and a
+ 579+ C45D 28 0B            jr z,2F                                                 ; (A)="0" Indica que estamos definiendo Move_LEFT.
+ 580+ C45F
+ 581+ C45F 47               ld b,a                                                  ; B contiene el nº de teclas definidas-1.
+ 582+ C460
+ 583+ C460 21 7B 96         ld hl,Move_LEFT
+ 584+ C463 7E           4 ld a,(hl)                                                 ; KEY_CODE de Move_LEFT en A.
+ 585+ C464 BB               cp e                                                    ; Comparo con el Key_code recién adquirido.
+ 586+ C465 28 EF            jr z,3B                                                 ; Esta tecla ya se definió anteriormente. Volvemos a escanear el teclado.
+ 587+ C467
+ 588+ C467 23               inc hl                                                  ; Next key_code to compare.
+ 589+ C468
+ 590+ C468 10 F9            djnz 4B
+ 591+ C46A
+ 592+ C46A 7B           2 ld a,e                                                    ; KEY_code en A.
+ 593+ C46B
+ 594+ C46B D1               pop de
+ 595+ C46C E1               pop hl
+ 596+ C46D
+ 597+ C46D 77               ld (hl),a                                               ; Key_code almacenado.
+ 598+ C46E
+ 599+ C46E              ;   Sonido, (BEEP) de la pulsación de las teclas, (cuando está autorizada). No se ejecuta [BEEP] si la tecla ya está definida.
+ 600+ C46E
+ 601+ C46E CD 62 C1         call BEEP
+ 602+ C471
+ 603+ C471              ;   Special Key_code ???
+ 604+ C471
+ 605+ C471 FE 18            cp $18
+ 606+ C473 28 1C            jr z,Print_SYMB
+ 607+ C475 FE 20            cp $20
+ 608+ C477 28 1F            jr z,Print_SPACE
+ 609+ C479 FE 21            cp $21
+ 610+ C47B 28 22            jr z,Print_ENTER
+ 611+ C47D FE 27            cp $27
+ 612+ C47F 28 25            jr z,Print_CAPS
+ 613+ C481
+ 614+ C481              ;   No special key_code.
+ 615+ C481
+ 616+ C481              ;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
+ 617+ C481
+ 618+ C481 4F               ld c,a
+ 619+ C482 06 00            ld b,0
+ 620+ C484
+ 621+ C484 21 3C 95         ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
+ 622+ C487
+ 623+ C487 09               add hl,bc
+ 624+ C488
+ 625+ C488 06 04            ld b,4                                                  ; Contador de "0" para limpiar .db después de almacenar el ASCII_code.
+ 626+ C48A
+ 627+ C48A 7E               ld a,(hl)
+ 628+ C48B 12           1 ld (de),a                                                 ; ASCII_code almacenado.
+ 629+ C48C AF               xor a                                                   ; Ahora almacenamos "0"´s.
+ 630+ C48D 13               inc de
+ 631+ C48E 10 FB            djnz 1B
+ 632+ C490
+ 633+ C490 C9               ret
+ 634+ C491
+ 635+ C491              Print_SYMB
+ 636+ C491
+ 637+ C491 21 62 96         ld hl,Symbol_key
+ 638+ C494 CD AD C4         call Get_ascii_message
+ 639+ C497 C8               ret z
+ 640+ C498
+ 641+ C498              Print_SPACE
+ 642+ C498
+ 643+ C498 21 68 96         ld hl,Space_key
+ 644+ C49B CD AD C4         call Get_ascii_message
+ 645+ C49E C8               ret z
+ 646+ C49F
+ 647+ C49F              Print_ENTER
+ 648+ C49F
+ 649+ C49F 21 6E 96         ld hl,Enter_key
+ 650+ C4A2 CD AD C4         call Get_ascii_message
+ 651+ C4A5 C8               ret z
+ 652+ C4A6
+ 653+ C4A6              Print_CAPS
+ 654+ C4A6
+ 655+ C4A6 21 74 96         ld hl,Caps_key
+ 656+ C4A9 CD AD C4         call Get_ascii_message
+ 657+ C4AC C8               ret z
+ 658+ C4AD
+ 659+ C4AD              Get_ascii_message:
+ 660+ C4AD
+ 661+ C4AD 7E               ld a,(hl)
+ 662+ C4AE 12               ld (de),a
+ 663+ C4AF
+ 664+ C4AF A7               and a
+ 665+ C4B0 C8               ret z
+ 666+ C4B1
+ 667+ C4B1 23               inc hl
+ 668+ C4B2 13               inc de
+ 669+ C4B3
+ 670+ C4B3 18 F8            jr Get_ascii_message
+ 671+ C4B5
+ 672+ C4B5              ; Modifica attrs. de left. NO FLASH NOW. Key pressed.
+ 673+ C4B5
+ 674+ C4B5              Modifica_atributos:
+ 675+ C4B5
+ 676+ C4B5 CD 3E 9E         call Calcula_direccion_atributos
+ 677+ C4B8 3E 47            ld a,%01000111
+ 678+ C4BA
+ 679+ C4BA 77           1 ld (hl),a
+ 680+ C4BB 2C               inc l
+ 681+ C4BC 10 FC            djnz 1B
+ 682+ C4BE
+ 683+ C4BE C9               ret
+ 684+ C4BF
+ 685+ C4BF              ; ----------------------------------------------------------
+ 686+ C4BF              ;
+ 687+ C4BF              ;   10/3/26
+ 688+ C4BF              ;
+ 689+ C4BF
+ 690+ C4BF              Show_controls_keys:
+ 691+ C4BF
+ 692+ C4BF              ;   Hay que corregir la posición donde escribiremos la primera línea de texto si hemos definido "SPACE" o "Enter"_
+ 693+ C4BF              ;   _como alguna de las teclas de movimiento de Amadeus
+ 694+ C4BF
+ 695+ C4BF              ;   Borramos el menú principal.
+ 696+ C4BF
+ 697+ C4BF CD 86 C5         call Clean_main_menu
+ 698+ C4C2
+ 699+ C4C2              ;   Imprimimos CONTROLES.
+ 700+ C4C2
+ 701+ C4C2 21 FC 95         ld hl,a7                                                ; "Controls:".
+ 702+ C4C5 11 0C 48         ld de,Line_8 + 12
+ 703+ C4C8 06 00            ld b,0
+ 704+ C4CA 3E 46            ld a,%01000110                                          ; attrs.
+ 705+ C4CC CD F2 9E         call Print_text_msg                                     ; Print "Controls:".
+ 706+ C4CF
+ 707+ C4CF 21 7B 96         ld hl,Move_LEFT
+ 708+ C4D2 11 86 48         ld de,Line_12 + 6                                       ; Posición de inicio de línea.
+ 709+ C4D5
+ 710+ C4D5 CD E7 C5         call Corrige_inicio_de_linea
+ 711+ C4D8
+ 712+ C4D8 23               inc hl
+ 713+ C4D9
+ 714+ C4D9 CD E7 C5         call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales).
+ 715+ C4DC
+ 716+ C4DC 21 A8 95         ld hl,a0                                                ; "Press ".
+ 717+ C4DF 3E 47            ld a,%01000111                                          ; attrs.
+ 718+ C4E1 06 00            ld b,0
+ 719+ C4E3 CD F2 9E         call Print_text_msg                                     ; Print "Press ".
+ 720+ C4E6
+ 721+ C4E6 1C               inc e
+ 722+ C4E7
+ 723+ C4E7              ;   Next msn
+ 724+ C4E7
+ 725+ C4E7 21 7F 96         ld hl,Move_LEFT_ASCII_CODE                              ; Move_LEFT_ASCII_CODE -----
+ 726+ C4EA CD FF C5         call Print_ctrl_key                                     ; Print (LEFT_ASCII_CODE).
+ 727+ C4ED
+ 728+ C4ED 1C               inc e
+ 729+ C4EE
+ 730+ C4EE              ;   Next msn
+ 731+ C4EE
+ 732+ C4EE 21 AF 95         ld hl,a1                                                ; "or ".
+ 733+ C4F1 3E 47            ld a,%01000111                                          ; attrs.
+ 734+ C4F3 06 00            ld b,0
+ 735+ C4F5 CD F2 9E         call Print_text_msg                                     ; Print "or ".
+ 736+ C4F8
+ 737+ C4F8 1C               inc e
+ 738+ C4F9
+ 739+ C4F9              ;   Next msn
+ 740+ C4F9
+ 741+ C4F9 21 85 96         ld hl,Move_RIGHT_ASCII_CODE                             ; Move_RIGHT_ASCII_CODE -----
+ 742+ C4FC CD FF C5         call Print_ctrl_key                                     ; Print (RIGHT_ASCII_CODE).
+ 743+ C4FF
+ 744+ C4FF 1C               inc e
+ 745+ C500
+ 746+ C500              ;   Next msn
+ 747+ C500
+ 748+ C500 21 B4 95         ld hl,a2                                                ; " to move ".
+ 749+ C503 3E 47            ld a,%01000111                                          ; attrs.
+ 750+ C505 06 00            ld b,0
+ 751+ C507 CD F2 9E         call Print_text_msg                                     ; Print " to move".
+ 752+ C50A
+ 753+ C50A 1C               inc e
+ 754+ C50B
+ 755+ C50B              ;   Next msn
+ 756+ C50B
+ 757+ C50B 21 BE 95         ld hl,a3                                                ; " LEFT and RIGHT.".
+ 758+ C50E 11 C8 48         ld de,Line_14 + 8
+ 759+ C511 3E 47            ld a,%01000111                                          ; attrs.
+ 760+ C513 06 00            ld b,0
+ 761+ C515 CD F2 9E         call Print_text_msg                                     ; Print " LEFT and RIGHT.".
+ 762+ C518
+ 763+ C518 1C               inc e
+ 764+ C519
+ 765+ C519              ;   Hay que corregir la posición donde escribiremos la tercera línea de texto si hemos definido "SPACE" o "Enter"_
+ 766+ C519              ;   _como alguna de las teclas de disparo o shield.
+ 767+ C519
+ 768+ C519 21 7D 96         ld hl,Move_FIRE
+ 769+ C51C 11 06 50         ld de,Line_16 + 6                                       ; Posición de inicio de línea.
+ 770+ C51F
+ 771+ C51F CD E7 C5         call Corrige_inicio_de_linea
+ 772+ C522
+ 773+ C522 23               inc hl
+ 774+ C523
+ 775+ C523 CD E7 C5         call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales).
+ 776+ C526
+ 777+ C526              ;   Next msn
+ 778+ C526
+ 779+ C526 21 A8 95         ld hl,a0                                                ; "Press ".
+ 780+ C529 3E 47            ld a,%01000111                                          ; attrs.
+ 781+ C52B 06 00            ld b,0
+ 782+ C52D CD F2 9E         call Print_text_msg
+ 783+ C530
+ 784+ C530 1C               inc e                                                   ; Print "Press ".
+ 785+ C531
+ 786+ C531              ;   Next msn
+ 787+ C531
+ 788+ C531 21 8B 96         ld hl,Move_FIRE_ASCII_CODE                              ; Move_FIRE_ASCII_CODE -----
+ 789+ C534 CD FF C5         call Print_ctrl_key                                     ; Print (FIRE_ASCII_CODE).
+ 790+ C537
+ 791+ C537 1C               inc e
+ 792+ C538
+ 793+ C538              ;   Next msn
+ 794+ C538
+ 795+ C538 21 CF 95         ld hl,a4                                                ; " to FIRE and ".
+ 796+ C53B 3E 47            ld a,%01000111                                          ; attrs.
+ 797+ C53D 06 00            ld b,0
+ 798+ C53F CD F2 9E         call Print_text_msg                                     ; Print " to FIRE and ".
+ 799+ C542
+ 800+ C542 1C               inc e
+ 801+ C543
+ 802+ C543              ;   Next msn
+ 803+ C543
+ 804+ C543 21 91 96         ld hl,Move_SHIELD_ASCII_CODE                            ; Move_SHIELD_ASCII_CODE -----
+ 805+ C546 CD FF C5         call Print_ctrl_key                                     ; Print (SHIELD_ASCII_CODE).
+ 806+ C549
+ 807+ C549              ;   Next msn
+ 808+ C549
+ 809+ C549 21 DD 95         ld hl,a5                                                ; "SHIELD".
+ 810+ C54C 11 4B 50         ld de,Line_18 + 11
+ 811+ C54F 3E 47            ld a,%01000111                                          ; attrs.
+ 812+ C551 06 00            ld b,0
+ 813+ C553 CD F2 9E         call Print_text_msg                                     ; Print " to FIRE and ".
+ 814+ C556
+ 815+ C556              ;   Next msn
+ 816+ C556
+ 817+ C556 21 E8 95         ld hl,a6                                                ; "Press FIRE to START"
+ 818+ C559 11 C7 50         ld de,Line_22 + 7
+ 819+ C55C 3E C5            ld a,%11000101                                          ; attrs.
+ 820+ C55E 06 00            ld b,0
+ 821+ C560 CD F2 9E         call Print_text_msg                                     ; Print "Press FIRE to START".
+ 822+ C563
+ 823+ C563              ;   Scan KEYBOARD to START GAME.
+ 824+ C563
+ 825+ C563 CD 38 A1         call Press_START
+ 826+ C566
+ 827+ C566 C9           	ret
+ 828+ C567
+ 829+ C567              ; ----------------------------------------------------------
+ 830+ C567              ;
+ 831+ C567              ;   9/3/26
+ 832+ C567              ;
+ 833+ C567              ;   CLEAN MENUS ROUTINES.
+ 834+ C567
+ 835+ C567              Clean_Define_menu:
+ 836+ C567
+ 837+ C567 21 00 48         ld hl,Line_8
+ 838+ C56A CD DC C5         call CLean_file
+ 839+ C56D
+ 840+ C56D 21 80 48         ld hl,Line_12
+ 841+ C570 CD DC C5         call CLean_file
+ 842+ C573
+ 843+ C573 21 C0 48         ld hl,Line_14
+ 844+ C576 CD DC C5         call CLean_file
+ 845+ C579
+ 846+ C579 21 00 50         ld hl,Line_16
+ 847+ C57C CD DC C5         call CLean_file
+ 848+ C57F
+ 849+ C57F 21 40 50         ld hl,Line_18
+ 850+ C582 CD DC C5         call CLean_file
+ 851+ C585
+ 852+ C585 C9               ret
+ 853+ C586
+ 854+ C586              Clean_main_menu:
+ 855+ C586
+ 856+ C586 21 20 48         ld hl,Line_9
+ 857+ C589 CD DC C5         call CLean_file
+ 858+ C58C
+ 859+ C58C 21 60 48         ld hl,Line_11
+ 860+ C58F CD DC C5         call CLean_file
+ 861+ C592
+ 862+ C592 21 A0 48         ld hl,Line_13
+ 863+ C595 CD DC C5         call CLean_file
+ 864+ C598
+ 865+ C598 21 E0 48         ld hl,Line_15
+ 866+ C59B CD DC C5         call CLean_file
+ 867+ C59E
+ 868+ C59E 21 C0 50         ld hl,Line_22
+ 869+ C5A1 CD DC C5         call CLean_file
+ 870+ C5A4
+ 871+ C5A4 21 60 50         ld hl,Line_19
+ 872+ C5A7 CD DC C5         call CLean_file
+ 873+ C5AA
+ 874+ C5AA 21 80 50         ld hl,Line_20
+ 875+ C5AD CD DC C5         call CLean_file
+ 876+ C5B0
+ 877+ C5B0 21 A0 50         ld hl,Line_21
+ 878+ C5B3 CD DC C5         call CLean_file
+ 879+ C5B6
+ 880+ C5B6 C9               ret
+ 881+ C5B7
+ 882+ C5B7              Clean_Show_controls_menu:
+ 883+ C5B7
+ 884+ C5B7 21 00 48         ld hl,Line_8
+ 885+ C5BA CD DC C5         call CLean_file
+ 886+ C5BD
+ 887+ C5BD 21 80 48         ld hl,Line_12
+ 888+ C5C0 CD DC C5         call CLean_file
+ 889+ C5C3
+ 890+ C5C3 21 C0 48         ld hl,Line_14
+ 891+ C5C6 CD DC C5         call CLean_file
+ 892+ C5C9
+ 893+ C5C9 21 00 50         ld hl,Line_16
+ 894+ C5CC CD DC C5         call CLean_file
+ 895+ C5CF
+ 896+ C5CF 21 40 50         ld hl,Line_18
+ 897+ C5D2 CD DC C5         call CLean_file
+ 898+ C5D5
+ 899+ C5D5 21 C0 50         ld hl,Line_22
+ 900+ C5D8 CD DC C5         call CLean_file
+ 901+ C5DB
+ 902+ C5DB C9               ret
+ 903+ C5DC
+ 904+ C5DC              CLean_file
+ 905+ C5DC
+ 906+ C5DC CD 3E 9E         call Calcula_direccion_atributos
+ 907+ C5DF
+ 908+ C5DF 06 20            ld b,32
+ 909+ C5E1 AF               xor a
+ 910+ C5E2
+ 911+ C5E2 77           1 ld (hl),a
+ 912+ C5E3 23               inc hl
+ 913+ C5E4 10 FC            djnz 1B
+ 914+ C5E6
+ 915+ C5E6 C9               ret
+ 916+ C5E7
+ 917+ C5E7              ; ----------------------------------------------------------
+ 918+ C5E7              ;
+ 919+ C5E7              ;   28/2/26
+ 920+ C5E7              ;
+ 921+ C5E7
+ 922+ C5E7              Corrige_inicio_de_linea:
+ 923+ C5E7
+ 924+ C5E7              ;  Comprueba Move_LEFT_ASCII_CODE:
+ 925+ C5E7
+ 926+ C5E7 3E 18            ld a,$18                                                ; "SYMBOL SHIFT" ascii code.
+ 927+ C5E9 BE               cp (hl)
+ 928+ C5EA 28 10            jr z,Retrocede_carro
+ 929+ C5EC
+ 930+ C5EC 3E 20            ld a,$20                                                ; "SPACE" ascii code.
+ 931+ C5EE BE               cp (hl)
+ 932+ C5EF 28 0B            jr z,Retrocede_carro
+ 933+ C5F1
+ 934+ C5F1 3E 21            ld a,$21                                                ; "ENTER" ascii code.
+ 935+ C5F3 BE               cp (hl)
+ 936+ C5F4 28 06            jr z,Retrocede_carro
+ 937+ C5F6
+ 938+ C5F6 3E 27            ld a,$27                                                ; "CAPS SHIFT" ascii code.
+ 939+ C5F8 BE               cp (hl)
+ 940+ C5F9 28 01            jr z,Retrocede_carro
+ 941+ C5FB
+ 942+ C5FB C9               ret
+ 943+ C5FC
+ 944+ C5FC              ; --------------------------------
+ 945+ C5FC
+ 946+ C5FC              Retrocede_carro
+ 947+ C5FC
+ 948+ C5FC 1D               dec e
+ 949+ C5FD 1D               dec e
+ 950+ C5FE
+ 951+ C5FE C9               ret
+ 952+ C5FF
+ 953+ C5FF              ; -----------------------------------------------
+ 954+ C5FF
+ 955+ C5FF              Print_ctrl_key:
+ 956+ C5FF
+ 957+ C5FF 7E               ld a,(hl)
+ 958+ C600 FE 0D            cp $0d                                                  ; ENTER ascii code.
+ 959+ C602 28 0A            jr z,Enter_ascii_code
+ 960+ C604 FE 20            cp $20
+ 961+ C606 28 0B            jr z,SPACE_ascii_code                                   ; SPACE ascii code.
+ 962+ C608
+ 963+ C608 3E 70        1 ld a,%01110000                                            ; attrs.
+ 964+ C60A CD F2 9E         call Print_text_msg
+ 965+ C60D
+ 966+ C60D C9               ret
+ 967+ C60E
+ 968+ C60E              Enter_ascii_code
+ 969+ C60E
+ 970+ C60E 21 6E 96         ld hl,Enter_key
+ 971+ C611 18 F5            jr 1B
+ 972+ C613
+ 973+ C613              SPACE_ascii_code
+ 974+ C613
+ 975+ C613 21 68 96         ld hl,Space_key
+ 976+ C616 18 F0            jr 1B
+ 977+ C618
+ 978+ C618              ; ----------------------------------------------------------
+ 979+ C618              ;
+ 980+ C618              ;   16/9/26
+ 981+ C618              ;
+ 982+ C618              ;   Print MAIN MENU.
+ 983+ C618              ;
+ 984+ C618              ;       KEYBOARD
+ 985+ C618              ;       KEMPSTON
+ 986+ C618              ;       SINCLAIR
+ 987+ C618              ;       DEFINE
+ 988+ C618              ;
+ 989+ C618              ;   MODIFY: AF, HL, BC y DE.
+ 990+ C618
+ 991+ C618              Print_Main_menu:
+ 992+ C618
+ 993+ C618 21 64 95         ld hl,Keyboard                                          ; HL contiene el mensaje.
+ 994+ C61B 06 00            ld b,0                                                  ; NO TEMPORIZADOR.
+ 995+ C61D 11 2C 48         ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
+ 996+ C620 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+ 997+ C622
+ 998+ C622 D5               push de
+ 999+ C623 CD F2 9E         call Print_text_msg
+1000+ C626 E1               pop hl
+1001+ C627
+1002+ C627 06 50            ld b,%01010000                                          ; RED BRIGHT paper, BLACK ink.
+1003+ C629 CD 46 9E         call Modify_first_char_attr
+1004+ C62C
+1005+ C62C 21 6D 95         ld hl,Kempstom                                          ; msg.
+1006+ C62F 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1007+ C632 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1008+ C635 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1009+ C637
+1010+ C637 D5               push de
+1011+ C638 CD F2 9E         call Print_text_msg
+1012+ C63B E1               pop hl
+1013+ C63C
+1014+ C63C 2C               inc l
+1015+ C63D
+1016+ C63D 06 70            ld b,%01110000                                          ; YELLOW BRIGHT paper, BLACK ink.
+1017+ C63F CD 46 9E         call Modify_first_char_attr
+1018+ C642
+1019+ C642 21 76 95         ld hl,Interface                                         ; msg.
+1020+ C645 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1021+ C648 11 AC 48         ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1022+ C64B 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1023+ C64D
+1024+ C64D D5               push de
+1025+ C64E CD F2 9E         call Print_text_msg
+1026+ C651 E1               pop hl
+1027+ C652
+1028+ C652 06 60            ld b,%01100000                                          ; GREEN BRIGHT paper, BLACK ink.
+1029+ C654 CD 46 9E         call Modify_first_char_attr
+1030+ C657
+1031+ C657 21 7F 95         ld hl,Define                                            ; msg.
+1032+ C65A 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1033+ C65D 11 EC 48         ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1034+ C660 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1035+ C662
+1036+ C662 D5               push de
+1037+ C663 CD F2 9E         call Print_text_msg
+1038+ C666 E1               pop hl
+1039+ C667
+1040+ C667 06 48            ld b,%01001000                                          ; BLUE BRIGHT paper, BLACK ink.
+1041+ C669 CD 46 9E         call Modify_first_char_attr
+1042+ C66C
+1043+ C66C C9               ret
+1044+ C66D
+1045+ C66D              ; ----------------------------------------------------------
+1046+ C66D              ;
+1047+ C66D              ;   21/07/26
+1048+ C66D              ;
+1049+ C66D
+1050+ C66D              Print_DONE:
+1051+ C66D
+1052+ C66D 01 00 00         ld bc,0
+1053+ C670 21 99 95         ld hl,Done                                              ; msg.
+1054+ C673 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
+1055+ C676 3E E0            ld a,%11100000                                          ; attrs.
+1056+ C678
+1057+ C678 CD F2 9E         call Print_text_msg
+1058+ C67B
+1059+ C67B C9               ret
+1060+ C67C
+1061+ C67C              Clean_DONE
+1062+ C67C
+1063+ C67C 21 36 96         ld hl,a12                                               ; msg., "    ",
+1064+ C67F 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
+1065+ C682 3E 00            ld a,0                                                  ; attrs.
+1066+ C684
+1067+ C684 CD F2 9E         call Print_text_msg
+1068+ C687
+1069+ C687 C9               ret
+1070+ C688
+1071+ C688 AF               xor a
+1072+ C689 3C               inc a                                                   ; Fuerza NZ a la salida.
+1073+ C68A
+1074+ C68A C9               ret
+1075+ C68B
+1076+ C68B              ; ----------------------------------------------------------
+1077+ C68B              ;
+1078+ C68B              ;   29/4/26
+1079+ C68B              ;
+1080+ C68B
+1081+ C68B              Print_Game_Over:
+1082+ C68B
+1083+ C68B 21 9E 95         ld hl,Game_Over                                         ; msg.
+1084+ C68E 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1085+ C691 3E 50            ld a,%01010000                                          ; attrs.
+1086+ C693 06 00            ld b,0
+1087+ C695
+1088+ C695 CD F2 9E         call Print_text_msg
+1089+ C698
+1090+ C698 C9               ret
+1091+ C699
+1092+ C699
+1093+ C699
 # file closed: Print_text_msg.asm
-3128  C68E              	include "Niveles.asm"
+3128  C699              	include "Niveles.asm"
 # file opened: Niveles.asm
-   1+ C68E              ; ------------------------------------------------------------------
-   2+ C68E              ;
-   3+ C68E              ; 	5/7/26
-   4+ C68E              ;
-   5+ C68E
-   6+ C68E              ;	Fila donde se imprimen los msg: $4826
-   7+ C68E
-   8+ C68E              Msg_level_index:
-   9+ C68E
-  10+ C68E 98 C6        	defw Msg_1
-  11+ C690 A0 C6        	defw Msg_2
-  12+ C692 A7 C6        	defw Msg_3
-  13+ C694              ;	defw Msg_4
-  14+ C694
-  15+ C694 00 00        	defw 0
-  16+ C696 00 00        	defw 0
-  17+ C698
-  18+ C698 08 05        Msg_1 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
-  19+ C69A 46 4C 49 45  	defm "FLIES",0
-  19+ C69E 53 00
-  20+ C6A0
-  21+ C6A0 08 05        Msg_2 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
-  22+ C6A2 55 46 4F 53  	defm "UFOS",0
-  22+ C6A6 00
-  23+ C6A7
-  24+ C6A7 04 0C        Msg_3 db 4,12
-  25+ C6A9 46 4C 49 45  	defm "FLIES & UFOS",0
-  25+ C6AD 53 20 26 20
-  25+ C6B1 55 46 4F 53
-  25+ C6B5 00
-  26+ C6B6
-  27+ C6B6              ; --------------------------------------------------------------------------------------------------------------
-  28+ C6B6
-  29+ C6B6              Indice_de_vidas
-  30+ C6B6
-  31+ C6B6 01 40 80 8A  	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
-  31+ C6BA 02 03
-  32+ C6BC 03 40 00 8B  	defw Vida_2,Amadeus_Fb,$0302
-  32+ C6C0 02 03
-  33+ C6C2 06 40 80 8A  	defw Vida_3,Amadeus,$0302
-  33+ C6C6 02 03
-  34+ C6C8
-  35+ C6C8              Indice_de_escudos
-  36+ C6C8
-  37+ C6C8 41 40 30 85  	defw Escudo_1,Escudo_00,$0201
-  37+ C6CC 01 02
-  38+ C6CE 43 40 40 85  	defw Escudo_2,Escudo_00_Fb,$0301
-  38+ C6D2 01 03
-  39+ C6D4 46 40 30 85  	defw Escudo_3,Escudo_00,$0201
-  39+ C6D8 01 02
-  40+ C6DA
-  41+ C6DA              ; --------------------------------------------------------------------------------------------------------------
-  42+ C6DA
-  43+ C6DA
-  44+ C6DA
-  45+ C6DA              Indice_de_tablas_Random
-  46+ C6DA
-  47+ C6DA              ; Entidades (Tipo) (1), (2) y (3). Son entidades (tipo) BadSat.
-  48+ C6DA
-  49+ C6DA E2 C6        	defw Tabla_Random_BadSat
-  50+ C6DC 00 C7        	defw Tabla_Random_Badplate
-  51+ C6DE 00 00        	defw 0
-  52+ C6E0
-  53+ C6E0              ;	...
-  54+ C6E0              ;	...
-  55+ C6E0              ;	+ Tablas ...
-  56+ C6E0
-  57+ C6E0 00 00        	defw 0
-  58+ C6E2
-  59+ C6E2              ; --------------------------------------------------------------------------------------------------------------
-  60+ C6E2              ;
-  61+ C6E2              ;	4/3/25
-  62+ C6E2              ;
-  63+ C6E2              ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
-  64+ C6E2              ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio.
-  65+ C6E2              ;
-  66+ C6E2              ;	El siguiente .defw indica:
-  67+ C6E2              ;
-  68+ C6E2              ;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
-  69+ C6E2              ;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
-  70+ C6E2              ;
-  71+ C6E2              ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
-  72+ C6E2              ;
-  73+ C6E2              ; ----- ----- ----- ----- -----
-  74+ C6E2              ;
-  75+ C6E2              ;   Factor RANDOM --- BadSat.
-  76+ C6E2
-  77+ C6E2              ; Random_1_1_10 (1-10) Bajo_decelerando
-  78+ C6E2              ; Random_2_1_15 (1-15) Derecha_y_subiendo
-  79+ C6E2
-  80+ C6E2              ; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
-  81+ C6E2              ; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
-  82+ C6E2
-  83+ C6E2              ; Random_5_1_15 (1-5) Izquierda_y_subiendo
-  84+ C6E2
-  85+ C6E2              ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
-  86+ C6E2              ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
-  87+ C6E2              ;
-  88+ C6E2              ; ----- ----- ----- ----- -----
-  89+ C6E2              ;
-  90+ C6E2              ;   Factor RANDOM --- BadPlate.
-  91+ C6E2
-  92+ C6E2              ; Random_1_1_10 (1-10) Bajo_decelerando
-  93+ C6E2              ; Random_8_1_15 (1-15) Tira_pa_la_derecha
-  94+ C6E2
-  95+ C6E2              ; Random_9_1_15 (1-15) Tira_pa_la_izq
-  96+ C6E2              ; Random_A_1_15 (1-15) Diagonal_bajando_izq
-  97+ C6E2              ; Random_B_1_15 (1-15) Diagonal_bajando_derecha
-  98+ C6E2              ;
-  99+ C6E2              ; ----- ----- ----- ----- -----
- 100+ C6E2
- 101+ C6E2              Tabla_Random_BadSat
- 102+ C6E2
- 103+ C6E2 01 0A        	defw $0a01
- 104+ C6E4 B0 92        	defw Random_1_1_10
- 105+ C6E6
- 106+ C6E6 01 0F        	defw $0f01
- 107+ C6E8 2D 93        	defw Random_2_1_15
- 108+ C6EA
- 109+ C6EA 00 01        	db 0,1 				;	1 repetición.
- 110+ C6EC 01 0F        	defw $0f01
- 111+ C6EE 5F 93        	defw Random_3_1_15	;	Igual
- 112+ C6F0 69 93        	defw Random_4_1_15	;	Igual
- 113+ C6F2
- 114+ C6F2 01 0F        	defw $0f01
- 115+ C6F4 D7 93        	defw Random_5_1_15
- 116+ C6F6
- 117+ C6F6 00 01        	db 0,1
- 118+ C6F8 01 0F        	defw $0f01
- 119+ C6FA 09 94        	defw Random_6_1_15	;	Igual
- 120+ C6FC 13 94        	defw Random_7_1_15	;	Igual
- 121+ C6FE
- 122+ C6FE 00 00        	defw 0 				;	Indica FIN de la tabla RANDOM.
- 123+ C700
- 124+ C700              Tabla_Random_Badplate
- 125+ C700
- 126+ C700 01 0A        	defw $0a01
- 127+ C702 B0 92        	defw Random_1_1_10
- 128+ C704
- 129+ C704 01 0F        	defw $0f01
- 130+ C706 9C 92        	defw Random_8_1_15
- 131+ C708
- 132+ C708 01 0F        	defw $0f01
- 133+ C70A A1 92        	defw Random_9_1_15
- 134+ C70C
- 135+ C70C 01 03        	defw $0301
- 136+ C70E A6 92        	defw Random_A_1_3
- 137+ C710
- 138+ C710 01 03        	defw $0301
- 139+ C712 AB 92        	defw Random_B_1_3
- 140+ C714
- 141+ C714 00 00        	defw 0				;	Indica FIN de la tabla RANDOM.
- 142+ C716
- 143+ C716              ; ----------------------------------------------------------------------
- 144+ C716              ;
- 145+ C716              ;	19/11/25
- 146+ C716
- 147+ C716              Indice_de_niveles:
- 148+ C716
- 149+ C716 1E C7        	defw Nivel_1
- 150+ C718 25 C7        	defw Nivel_2
- 151+ C71A 3E C7        	defw Nivel_3
- 152+ C71C              ;	defw Nivel_4
- 153+ C71C
- 154+ C71C              ;	...
- 155+ C71C              ;	...
- 156+ C71C              ;	+ Niveles ...
- 157+ C71C
- 158+ C71C 00 00        	defw 0
- 159+ C71E              ;	defw 0
- 160+ C71E
- 161+ C71E              ; NIVEL_1. Tres clases de entidades tipo BadSat.
- 162+ C71E
- 163+ C71E F0 0A 70 70  Nivel_1 db $f0,$0a,$70,$70 						; FLIES !!!
- 164+ C722
- 165+ C722              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 166+ C722              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 167+ C722              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 168+ C722              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 169+ C722              ;	db 20 										; Nº de entidades que tiene el nivel.
- 170+ C722
- 171+ C722 02           	db 2
- 172+ C723
- 173+ C723
- 174+ C723 03 04        	db 3,4
- 175+ C725              ;	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
- 176+ C725              ;	db 3,2,1,2,2
- 177+ C725              ;	db 1,3,1,3,2
- 178+ C725              ;	db 1,3,3,2,2
- 179+ C725
- 180+ C725              ; ---------------------------------------------------------------------------------------
- 181+ C725
- 182+ C725              ; Nivel_2. UFO´s
- 183+ C725
- 184+ C725 C0 15 50 70  Nivel_2 db $C0,$15,$50,$70 						; UFOS !!!
- 185+ C729
- 186+ C729              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 187+ C729              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 188+ C729              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 189+ C729              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 190+ C729 14           	db 20
- 191+ C72A
- 192+ C72A 04 05 06 04  	db 4,5,6,4,5
- 192+ C72E 05
- 193+ C72F 05 05 06 04  	db 5,5,6,4,6
- 193+ C733 06
- 194+ C734 04 05 06 05  	db 4,5,6,5,4
- 194+ C738 04
- 195+ C739 04 06 06 04  	db 4,6,6,4,5
- 195+ C73D 05
- 196+ C73E
- 197+ C73E
- 198+ C73E              ; ---------------------------------------------------------------------------------------
- 199+ C73E
- 200+ C73E              ; Nivel_3. Flies & UFOS.
- 201+ C73E
- 202+ C73E B0 15 50 70  Nivel_3 db $b0,$15,$50,$70 						; UFOS !!!
- 203+ C742
- 204+ C742              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 205+ C742              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 206+ C742              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 207+ C742              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 208+ C742
- 209+ C742 14           	db 20
- 210+ C743
- 211+ C743 01 04 06 01  	db 1,4,6,1,6
- 211+ C747 06
- 212+ C748 04 06 06 01  	db 4,6,6,1,4
- 212+ C74C 04
- 213+ C74D 01 06 01 06  	db 1,6,1,6,1
- 213+ C751 01
- 214+ C752 04 01 06 01  	db 4,1,6,1,6
- 214+ C756 06
- 215+ C757
- 216+ C757
- 217+ C757
- 218+ C757
- 219+ C757
- 220+ C757
- 221+ C757
- 222+ C757
- 223+ C757
- 224+ C757
- 225+ C757
- 226+ C757
+   1+ C699              ; ------------------------------------------------------------------
+   2+ C699              ;
+   3+ C699              ; 	5/7/26
+   4+ C699              ;
+   5+ C699
+   6+ C699              ;	Fila donde se imprimen los msg: $4826
+   7+ C699
+   8+ C699              Msg_level_index:
+   9+ C699
+  10+ C699 A3 C6        	defw Msg_1
+  11+ C69B AB C6        	defw Msg_2
+  12+ C69D B2 C6        	defw Msg_3
+  13+ C69F              ;	defw Msg_4
+  14+ C69F
+  15+ C69F 00 00        	defw 0
+  16+ C6A1 00 00        	defw 0
+  17+ C6A3
+  18+ C6A3 08 05        Msg_1 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
+  19+ C6A5 46 4C 49 45  	defm "FLIES",0
+  19+ C6A9 53 00
+  20+ C6AB
+  21+ C6AB 08 05        Msg_2 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
+  22+ C6AD 55 46 4F 53  	defm "UFOS",0
+  22+ C6B1 00
+  23+ C6B2
+  24+ C6B2 04 0C        Msg_3 db 4,12
+  25+ C6B4 46 4C 49 45  	defm "FLIES & UFOS",0
+  25+ C6B8 53 20 26 20
+  25+ C6BC 55 46 4F 53
+  25+ C6C0 00
+  26+ C6C1
+  27+ C6C1              ; --------------------------------------------------------------------------------------------------------------
+  28+ C6C1
+  29+ C6C1              Indice_de_vidas
+  30+ C6C1
+  31+ C6C1 01 40 80 8A  	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
+  31+ C6C5 02 03
+  32+ C6C7 03 40 00 8B  	defw Vida_2,Amadeus_Fb,$0302
+  32+ C6CB 02 03
+  33+ C6CD 06 40 80 8A  	defw Vida_3,Amadeus,$0302
+  33+ C6D1 02 03
+  34+ C6D3
+  35+ C6D3              Indice_de_escudos
+  36+ C6D3
+  37+ C6D3 41 40 30 85  	defw Escudo_1,Escudo_00,$0201
+  37+ C6D7 01 02
+  38+ C6D9 43 40 40 85  	defw Escudo_2,Escudo_00_Fb,$0301
+  38+ C6DD 01 03
+  39+ C6DF 46 40 30 85  	defw Escudo_3,Escudo_00,$0201
+  39+ C6E3 01 02
+  40+ C6E5
+  41+ C6E5              ; --------------------------------------------------------------------------------------------------------------
+  42+ C6E5
+  43+ C6E5
+  44+ C6E5
+  45+ C6E5              Indice_de_tablas_Random
+  46+ C6E5
+  47+ C6E5              ; Entidades (Tipo) (1), (2) y (3). Son entidades (tipo) BadSat.
+  48+ C6E5
+  49+ C6E5 ED C6        	defw Tabla_Random_BadSat
+  50+ C6E7 0B C7        	defw Tabla_Random_Badplate
+  51+ C6E9 00 00        	defw 0
+  52+ C6EB
+  53+ C6EB              ;	...
+  54+ C6EB              ;	...
+  55+ C6EB              ;	+ Tablas ...
+  56+ C6EB
+  57+ C6EB 00 00        	defw 0
+  58+ C6ED
+  59+ C6ED              ; --------------------------------------------------------------------------------------------------------------
+  60+ C6ED              ;
+  61+ C6ED              ;	4/3/25
+  62+ C6ED              ;
+  63+ C6ED              ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
+  64+ C6ED              ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio.
+  65+ C6ED              ;
+  66+ C6ED              ;	El siguiente .defw indica:
+  67+ C6ED              ;
+  68+ C6ED              ;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
+  69+ C6ED              ;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
+  70+ C6ED              ;
+  71+ C6ED              ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
+  72+ C6ED              ;
+  73+ C6ED              ; ----- ----- ----- ----- -----
+  74+ C6ED              ;
+  75+ C6ED              ;   Factor RANDOM --- BadSat.
+  76+ C6ED
+  77+ C6ED              ; Random_1_1_10 (1-10) Bajo_decelerando
+  78+ C6ED              ; Random_2_1_15 (1-15) Derecha_y_subiendo
+  79+ C6ED
+  80+ C6ED              ; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
+  81+ C6ED              ; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
+  82+ C6ED
+  83+ C6ED              ; Random_5_1_15 (1-5) Izquierda_y_subiendo
+  84+ C6ED
+  85+ C6ED              ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
+  86+ C6ED              ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
+  87+ C6ED              ;
+  88+ C6ED              ; ----- ----- ----- ----- -----
+  89+ C6ED              ;
+  90+ C6ED              ;   Factor RANDOM --- BadPlate.
+  91+ C6ED
+  92+ C6ED              ; Random_1_1_10 (1-10) Bajo_decelerando
+  93+ C6ED              ; Random_8_1_15 (1-15) Tira_pa_la_derecha
+  94+ C6ED
+  95+ C6ED              ; Random_9_1_15 (1-15) Tira_pa_la_izq
+  96+ C6ED              ; Random_A_1_15 (1-15) Diagonal_bajando_izq
+  97+ C6ED              ; Random_B_1_15 (1-15) Diagonal_bajando_derecha
+  98+ C6ED              ;
+  99+ C6ED              ; ----- ----- ----- ----- -----
+ 100+ C6ED
+ 101+ C6ED              Tabla_Random_BadSat
+ 102+ C6ED
+ 103+ C6ED 01 0A        	defw $0a01
+ 104+ C6EF B0 92        	defw Random_1_1_10
+ 105+ C6F1
+ 106+ C6F1 01 0F        	defw $0f01
+ 107+ C6F3 2D 93        	defw Random_2_1_15
+ 108+ C6F5
+ 109+ C6F5 00 01        	db 0,1 				;	1 repetición.
+ 110+ C6F7 01 0F        	defw $0f01
+ 111+ C6F9 5F 93        	defw Random_3_1_15	;	Igual
+ 112+ C6FB 69 93        	defw Random_4_1_15	;	Igual
+ 113+ C6FD
+ 114+ C6FD 01 0F        	defw $0f01
+ 115+ C6FF D7 93        	defw Random_5_1_15
+ 116+ C701
+ 117+ C701 00 01        	db 0,1
+ 118+ C703 01 0F        	defw $0f01
+ 119+ C705 09 94        	defw Random_6_1_15	;	Igual
+ 120+ C707 13 94        	defw Random_7_1_15	;	Igual
+ 121+ C709
+ 122+ C709 00 00        	defw 0 				;	Indica FIN de la tabla RANDOM.
+ 123+ C70B
+ 124+ C70B              Tabla_Random_Badplate
+ 125+ C70B
+ 126+ C70B 01 0A        	defw $0a01
+ 127+ C70D B0 92        	defw Random_1_1_10
+ 128+ C70F
+ 129+ C70F 01 0F        	defw $0f01
+ 130+ C711 9C 92        	defw Random_8_1_15
+ 131+ C713
+ 132+ C713 01 0F        	defw $0f01
+ 133+ C715 A1 92        	defw Random_9_1_15
+ 134+ C717
+ 135+ C717 01 03        	defw $0301
+ 136+ C719 A6 92        	defw Random_A_1_3
+ 137+ C71B
+ 138+ C71B 01 03        	defw $0301
+ 139+ C71D AB 92        	defw Random_B_1_3
+ 140+ C71F
+ 141+ C71F 00 00        	defw 0				;	Indica FIN de la tabla RANDOM.
+ 142+ C721
+ 143+ C721              ; ----------------------------------------------------------------------
+ 144+ C721              ;
+ 145+ C721              ;	19/11/25
+ 146+ C721
+ 147+ C721              Indice_de_niveles:
+ 148+ C721
+ 149+ C721 29 C7        	defw Nivel_1
+ 150+ C723 30 C7        	defw Nivel_2
+ 151+ C725 49 C7        	defw Nivel_3
+ 152+ C727              ;	defw Nivel_4
+ 153+ C727
+ 154+ C727              ;	...
+ 155+ C727              ;	...
+ 156+ C727              ;	+ Niveles ...
+ 157+ C727
+ 158+ C727 00 00        	defw 0
+ 159+ C729              ;	defw 0
+ 160+ C729
+ 161+ C729              ; NIVEL_1. Tres clases de entidades tipo BadSat.
+ 162+ C729
+ 163+ C729 F0 0A 70 70  Nivel_1 db $f0,$0a,$70,$70 						; FLIES !!!
+ 164+ C72D
+ 165+ C72D              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 166+ C72D              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 167+ C72D              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 168+ C72D              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 169+ C72D              ;	db 20 										; Nº de entidades que tiene el nivel.
+ 170+ C72D
+ 171+ C72D 02           	db 2
+ 172+ C72E
+ 173+ C72E
+ 174+ C72E 03 04        	db 3,4
+ 175+ C730              ;	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
+ 176+ C730              ;	db 3,2,1,2,2
+ 177+ C730              ;	db 1,3,1,3,2
+ 178+ C730              ;	db 1,3,3,2,2
+ 179+ C730
+ 180+ C730              ; ---------------------------------------------------------------------------------------
+ 181+ C730
+ 182+ C730              ; Nivel_2. UFO´s
+ 183+ C730
+ 184+ C730 C0 15 50 70  Nivel_2 db $C0,$15,$50,$70 						; UFOS !!!
+ 185+ C734
+ 186+ C734              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 187+ C734              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 188+ C734              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 189+ C734              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 190+ C734 14           	db 20
+ 191+ C735
+ 192+ C735 04 05 06 04  	db 4,5,6,4,5
+ 192+ C739 05
+ 193+ C73A 05 05 06 04  	db 5,5,6,4,6
+ 193+ C73E 06
+ 194+ C73F 04 05 06 05  	db 4,5,6,5,4
+ 194+ C743 04
+ 195+ C744 04 06 06 04  	db 4,6,6,4,5
+ 195+ C748 05
+ 196+ C749
+ 197+ C749
+ 198+ C749              ; ---------------------------------------------------------------------------------------
+ 199+ C749
+ 200+ C749              ; Nivel_3. Flies & UFOS.
+ 201+ C749
+ 202+ C749 B0 15 50 70  Nivel_3 db $b0,$15,$50,$70 						; UFOS !!!
+ 203+ C74D
+ 204+ C74D              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 205+ C74D              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 206+ C74D              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 207+ C74D              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 208+ C74D
+ 209+ C74D 14           	db 20
+ 210+ C74E
+ 211+ C74E 01 04 06 01  	db 1,4,6,1,6
+ 211+ C752 06
+ 212+ C753 04 06 06 01  	db 4,6,6,1,4
+ 212+ C757 04
+ 213+ C758 01 06 01 06  	db 1,6,1,6,1
+ 213+ C75C 01
+ 214+ C75D 04 01 06 01  	db 4,1,6,1,6
+ 214+ C761 06
+ 215+ C762
+ 216+ C762
+ 217+ C762
+ 218+ C762
+ 219+ C762
+ 220+ C762
+ 221+ C762
+ 222+ C762
+ 223+ C762
+ 224+ C762
+ 225+ C762
+ 226+ C762
 # file closed: Niveles.asm
-3129  C757
-3130  C757
-3131  C757              	SAVESNA "Amadeus.sna", START
-3132  C757
-3133  C757
-3134  C757
-3135  C757
+3129  C762
+3130  C762
+3131  C762              	SAVESNA "Amadeus.sna", START
+3132  C762
+3133  C762
+3134  C762
+3135  C762
 # file closed: Banco_de_pruebas.asm
