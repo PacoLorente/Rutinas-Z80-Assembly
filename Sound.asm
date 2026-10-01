@@ -9,7 +9,8 @@
 ;   (Puntero_DESPLZ_der)
 ;
 ;   Para almacenar el perfil de la nota que está en ejecución.
-
+;
+;   Con una rutina de sonido `IN TIME´, ejecutando unicamente una onda. La nota más alta que podremos ejecutar es $01b0.
 
 Play_DONE_in_time:
 
@@ -52,35 +53,17 @@ New_note:
     ld sp,hl
 
     pop bc                                            ; (B) <> "0" indica que vamos a efectuar una pausa, no nota musical.
-;                                                     ; (C) contendrá el n° de ondas que quedan por reproducir.
 
-;   Comprueba PAUSE.
+    dec c
 
-    inc b
-    dec b
-    jr z,3F
-
-;   PAUSE.
-
-Pause: djnz Pause                                     ; PAUSE.
-
-    ld sp,(Stack)
-
-    jr Less_than_two                                  ; RET indicando nueva nota.
-
-3 pop de                                              ; (D) Indica INCREASE cuando es "1" DECREASE cuando es "0".
+    pop de                                            ; (D) Indica INCREASE cuando es "1" DECREASE cuando es "0".
 ;                                                     ; (E) Indica el n° de incrementos/decrementos que se producen después de ejecutar cada onda completa.
     pop hl                                            ; (HL) contiene la duración de cada semiciclo que forma la onda sonora, (nota).
 
+    jr z,Last_note
+
 ;   Vamos a ejecutar 8 ondas de sonido (per FRAME) como máximo.
 ;   Comprobaremos que nos quedan más de ocho ondas por ejecutar y guardaremos la duración restante de la nota en la variable.
-
-    call Resta_dos_ondas                             ; Únicamente vamos a ejecutar ocho ondas de la nota. Restamos 8 al total de n° de ondas antes de almacenar_
-;                                                     ; _ el resto de la nota en (Indice_Sprite_der).
-
-    and a
-    jr z,2F
-
 ;   Guardamos la nota para seguir más tarde con la ejecución:
 
     ld sp,Indice_Sprite_der+6                         ; Almacenaremos la nota en el almacén [[Numeros_aleatorios]], 6 bytes.
@@ -95,33 +78,20 @@ Pause: djnz Pause                                     ; PAUSE.
 
 ;   Preparamos y ejecutamos la nota.
 
-    ld c,2                                           ; Duración de la nota.
+    ld c,1                                           ; Duración de la nota.
 
     ld (Sound),hl
+
     call Sound_Generator
 
     ret
 
-; --------------------------------------------------------------------------
-
-Resta_dos_ondas:
-
-    ld a,c
-    sub 2
-
-    jr c,Less_than_two
-    jr z,Less_than_two
-
-    ld c,a                                           ; Duracíon de la nota actualizada.
-
-    ret
-
-Less_than_two:
+Last_note:
 
     xor a
     ld (Indice_Sprite_der),a                         ; Indica que pasamos a la siguiente nota.
 
-    ret
+    jr 2B
 
 ; ----------------------------------------------------------------------------------------------
 ;
