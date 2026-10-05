@@ -332,10 +332,12 @@ DONE_NOTES_MELODY_INDEX:
 
 	defw Note_1x
 	defw Note_2x
+	defw Note_3x
 
 	defw 0
 
-	defw Note_3x
+
+
 	defw Pause_1x
 	defw Note_4x
 	defw Note_5x
@@ -361,27 +363,27 @@ Note_1x:
 ;	ld de,$0005                                             ; Nota descendente / 5 unid. decrease.
 ;	ld hl,$015e                                             ; Note init. value. 
 
-	defw $0050
-	defw $0000
-	defw $0370 												; $0350
+	defw $0030
+	defw $0200
+	defw $0180 												; $01b0
 
 Note_2x:
 
 ;    ld c,$14                                               ; Duración de la nueva nota, 20 ondas.
 ;    ld e,0                                                 ; No existe decremento. (sonido plano).
 
-	defw $0090
-	defw $0000
-	defw $0100
+	defw $0030
+	defw $0200
+	defw $0155
 
 Note_3x:
 
 ;	ld c,$24                                                ; Duración de la nueva nota.
 ;	ld l,$a5                                                ; (HL) = $00a5. Nota, (duración de un semiciclo).
 
-	defw $0024
-	defw $0000
-	defw $00a5
+	defw $0050
+	defw $0200
+	defw $0180
 
 Pause_1x:
 

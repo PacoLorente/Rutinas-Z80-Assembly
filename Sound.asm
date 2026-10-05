@@ -16,17 +16,14 @@ Play_DONE_in_time:
 
 ;   Nota en ejecución??
 
-    ld hl,Indice_Sprite_der
+    ld hl,Indice_Sprite_der                           ; Caja de nota en ejecución.
     ld a,(hl)
     and a
-    jr z,New_note
+    jr z,New_note                                     ; Caja vacía o anterior nota finalizada. Adquiere una nueva nota del índice de notas de la canción.
 
-Nota_en_ejecucion:
+    jr Get_note                                       ; No hemos terminado de ejecutar la nota. Recuperamos el 'resto' de la nota de la caja.
 
-    ld hl,Indice_Sprite_der
-    jr 1F
-
-;   New note. Extrae nota:
+;   Extrae una nueva, (o primera nota) del índice de notas de la canción.
 
 New_note:
 
@@ -39,34 +36,62 @@ New_note:
     or l
     ret z
 
-;   Actualiza (Puntero_musical).
+;   Actualiza el puntero de notas, (Puntero_musical).
 
     inc de
     inc de
 
     ld (Puntero_musical),de                           ; (Puntero_musical) está situado en la siguiente nota del índice.
 
-;   Prepara registros para llamar a [Sound_Generator].
+Get_note:
 
-1 ld (Stack),sp
+    ld (Stack),sp
 
     ld sp,hl
 
-    pop bc                                            ; (B) <> "0" indica que vamos a efectuar una pausa, no nota musical.
+    pop bc                                            ; (B) indica PAUSE. "Z" NO PAUSE, "NZ" PAUSE.
 
-    dec c
+    inc b
+    dec b
+    jr nz, Aplica_pausa
 
-    pop de                                            ; (D) Indica INCREASE cuando es "1" DECREASE cuando es "0".
-;                                                     ; (E) Indica el n° de incrementos/decrementos que se producen después de ejecutar cada onda completa.
+    pop de
     pop hl                                            ; (HL) contiene la duración de cada semiciclo que forma la onda sonora, (nota).
 
+;   Tenemos la nota cargada en os registros.
+;   Determinamos si la nota se ejecuta con incremento o decremento.
+
+;   (D)="0" Nota sin incremento o decremento.
+;   (D)="1" Note with INCREASE.
+;   (D)="2" Note with DECREASE.
+
+    inc d
+    dec d
+    jr z,3F
+
+    dec d
+    jr nz, Note_Decrease
+
+Note_Increase:
+
+    inc hl
+    inc hl
+    jr 3F
+
+Note_Decrease:
+
+    dec hl
+    dec hl
+
+3 dec c
+    dec c
+
     jr z,Last_note
+    jr c,Last_note
 
-;   Vamos a ejecutar 8 ondas de sonido (per FRAME) como máximo.
-;   Comprobaremos que nos quedan más de ocho ondas por ejecutar y guardaremos la duración restante de la nota en la variable.
-;   Guardamos la nota para seguir más tarde con la ejecución:
+;   Guardamos la nota incrementda/decrementada para seguir más tarde con la ejecución:
 
-    ld sp,Indice_Sprite_der+6                         ; Almacenaremos la nota en el almacén [[Numeros_aleatorios]], 6 bytes.
+    ld sp,Indice_Sprite_der+6                         ; Almacenaremos la nota en la caja de notas, (6 bytes). No hemos terminado con la ejecución.
 
     push hl
     push de
@@ -78,7 +103,7 @@ New_note:
 
 ;   Preparamos y ejecutamos la nota.
 
-    ld c,1                                           ; Duración de la nota.
+    ld c,2                                           ; Duración de la nota.
 
     ld (Sound),hl
 
@@ -92,6 +117,11 @@ Last_note:
     ld (Indice_Sprite_der),a                         ; Indica que pasamos a la siguiente nota.
 
     jr 2B
+
+Aplica_pausa:
+
+    jr $
+
 
 ; ----------------------------------------------------------------------------------------------
 ;
