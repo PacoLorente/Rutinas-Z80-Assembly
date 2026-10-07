@@ -151,7 +151,7 @@ Note_1:
 	ld hl,$015e                                             ; Note init. value. 
 
 	ld (Sound),hl
-    call Sound_Generator 		                            ; Tras la primera nota descendente (HL) se sitúa_	
+    call Sound_Generator    ; v2. Ok.                       ; Tras la primera nota descendente (HL) se sitúa_
 ;                                                           ; _ en la primera nota de la melodía. (HL)=$00fa						
 
 Note_2:
@@ -337,7 +337,7 @@ BEEP:
 
     ld (Sound),hl
 
-    call Sound_Generator
+    call Sound_Generator    ; v2. Ok.
 
     ld hl,0
     ld (Sound),hl

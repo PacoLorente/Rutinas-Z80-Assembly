@@ -155,7 +155,7 @@ CAPS_SHIFT
 
 ;	DEL char.
 
-	call BEEP
+	call BEEP	; v2. Ok.
 
 	inc (hl)
 	ld c,(hl) 												; INC counter.
@@ -494,7 +494,7 @@ Press_START:
 
 ;	Order to play.
 
-	call BEEP
+	call BEEP	; v2. Ok.
 
 	ld hl,0
 	ld (Start_counter),hl 									; Inicializa temporizador.
@@ -554,7 +554,7 @@ Press_START_KEMPSTON:
 
 Order_to_play
 
-	call BEEP
+	call BEEP	; v2. Ok.
 
 	ld a,$05
 	ld (Start_counter_2),a 									

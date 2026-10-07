@@ -2650,9 +2650,8 @@ Genera_explosion:
 
 ;	En primer lugar activamos el sonido de la explosión.
 
-	call Init_Burst_sound
-
-	call Play_burst_sound_effect
+	call Init_Burst_sound	; v2. Ok.
+	call Play_burst_sound_effect	; v2. Ok.
 
 	ld hl,Clock_explosion
 	dec (hl)
@@ -2856,7 +2855,7 @@ Genera_explosion_Amadeus:
 
 ;	Autoriza sonido de explosión.
 
-	call Init_Burst_sound
+	call Init_Burst_sound	; v2. Ok.
 
 	ld hl,Clock_explosion_Amadeus
 	dec (hl)
@@ -3087,7 +3086,7 @@ Next_level:
     call Pinta_disparos_Amadeus
 	call Change_Disparos							; Intercambiamos los álbumes de disparos.
 
-	call Done_melody
+	call Done_melody	; v2. Ok.
 
 	ld bc,$05ff
     call DELAY

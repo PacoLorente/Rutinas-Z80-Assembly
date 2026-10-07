@@ -4984,468 +4984,467 @@
 2650  9C10
 2651  9C10              ;	En primer lugar activamos el sonido de la explosión.
 2652  9C10
-2653  9C10 CD 93 C1     	call Init_Burst_sound
-2654  9C13
-2655  9C13 CD 3E C1     	call Play_burst_sound_effect
-2656  9C16
-2657  9C16 21 6B 94     	ld hl,Clock_explosion
-2658  9C19 35           	dec (hl)
-2659  9C1A 28 1B        	jr z,Siguiente_frame_explosion							; Gestionamos la siguiente entidad.
-2660  9C1C
-2661  9C1C              Borra_entidad_colisionada:
-2662  9C1C
-2663  9C1C 3A F3 93     	ld a,(Filas)
-2664  9C1F A7           	and a
-2665  9C20 20 05        	jr nz,1F
-2666  9C22
-2667  9C22 3E 46        	ld a,%01000110
-2668  9C24 DD 77 0B     	ld (ix+11),a 											; Cambia a AMARILLO los attrs. de la entidad.
-2669  9C27
-2670  9C27 DD E5        1 push ix 													; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
-2671  9C29
-2672  9C29 CD A8 9A     	call Cargamos_registros_con_explosion
-2673  9C2C CD BF 9C     	call calcula_CColumnass_Explosion_entidad
-2674  9C2F
-2675  9C2F              ;	HL e IX contienen (Puntero_de_impresion). de la explosión.
-2676  9C2F              ;	DE contiene (Puntero_objeto).
-2677  9C2F
-2678  9C2F DD E1        	pop ix													; Pop 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
-2679  9C31 CD BF AA     	call Explosion_scanlines_generator
-2680  9C34
-2681  9C34 AF           	xor a
-2682  9C35 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
-2683  9C36
-2684  9C36 C9           	ret
-2685  9C37
-2686  9C37              Siguiente_frame_explosion:
-2687  9C37
-2688  9C37 3E 42        	ld a,%01000010  										; Rojo.
-2689  9C39 DD 77 0B     	ld (ix+11),a
-2690  9C3C
-2691  9C3C 3A F3 93     	ld a,(Filas)
-2692  9C3F EE 01        	xor 1
-2693  9C41 32 F3 93     	ld (Filas),a 											; 2ª función de (Filas). Ahora almacena 1 bit que alterna su estado para cambiar los attr. de la explosión.
-2694  9C44              ;															; _de la explosión amarillo-rojo.
-2695  9C44
-2696  9C44 36 04        	ld (hl),4 												; Inicializamos (Clock_explosion), (velocidad de la explosión).
-2697  9C46
-2698  9C46              ; Avanza Frame de explosión.
-2699  9C46
-2700  9C46 DD 6E 06     	ld l,(ix+6)
-2701  9C49 DD 66 07     	ld h,(ix+7)												; ld hl,(Puntero_de_almacen_de_mov_masticados).
-2702  9C4C
-2703  9C4C 01 64 8B     	ld bc,Indice_Explosion_entidades+4
-2704  9C4F
-2705  9C4F 79           	ld a,c
-2706  9C50 95           	sub l
-2707  9C51 20 61        	jr nz,1F
-2708  9C53
-2709  9C53              ; Fín de la entidad !!!!!!!!!!!!!
-2710  9C53              ; Gestionamos entidades !!!!!!!!!!!!!!!!!!!!!!!!!!
-2711  9C53
-2712  9C53              ; Numero_de_entidades db 0									; Nº total de entidades maliciosas que contiene el nivel.
-2713  9C53              ; Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de entidades. (6 Cajas).
-2714  9C53              ; Entidades_en_curso db 0									; Entidades en pantalla.
-2715  9C53
-2716  9C53 CD 67 9D     	call Incrementa_Score
-2717  9C56 CD AC A7     	call Score_a_BCD
-2718  9C59 CD 27 A8     	call Actualiza_Punteros_Score 							; Actualizamos los dígitos BCD del marcador Score, (Score_hex) y fijamos los punteros BCD_Score.
-2719  9C5C
-2720  9C5C CD 52 9D     	call Decrementa_techo 									; Cada vez que eliminamos a una entidad decrementamos el valor de (Max_time_to_appear_entities).
-2721  9C5F
-2722  9C5F              ; La entidad eliminada, es la última del nivel ?
-2723  9C5F
-2724  9C5F 3A 27 94     	ld a,(Numero_de_entidades)
-2725  9C62 A7           	and a
-2726  9C63 28 3F        	jr z,2F
-2727  9C65
-2728  9C65              ; Decrementa (Numero_de_entidades)
-2729  9C65
-2730  9C65 3D           	dec a
-2731  9C66 32 27 94     	ld (Numero_de_entidades),a
-2732  9C69
-2733  9C69 21 29 94     	ld hl,Entidades_en_curso
-2734  9C6C 35           	dec (hl)
-2735  9C6D
-2736  9C6D 21 28 94     	ld hl,Numero_parcial_de_entidades
-2737  9C70 86           	add (hl)
-2738  9C71
-2739  9C71              ; ----------------------------------
-2740  9C71
-2741  9C71 C4 70 A7     	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
-2742  9C74
-2743  9C74              ; Restauramos una nueva entidad de la caja "Master" correspondiente.
-2744  9C74              ; IX apunta al 1er .db de la entidad eliminada.
-2745  9C74
-2746  9C74 2A 79 94     	ld hl,(Puntero_de_entidades)
-2747  9C77 7E           	ld a,(hl) 												; Clase de la siguiente entidad que hay que reponer en la caja.
-2748  9C78
-2749  9C78 23           	inc hl
-2750  9C79
-2751  9C79 22 79 94     	ld (Puntero_de_entidades),hl
-2752  9C7C
-2753  9C7C CD CD A5     	call Obtiene_datos_de_Caja_Master						; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
-2754  9C7F
-2755  9C7F DD E5        	push ix
-2756  9C81 D1           	pop de
-2757  9C82
-2758  9C82 01 0C 00     	ld bc,12
-2759  9C85 ED B0        	ldir
-2760  9C87
-2761  9C87              ; Generamos (Puntero_de_impresion) y coordenadas de la nueva entidad restaurada.
-2762  9C87
-2763  9C87 CD 78 9A     	call Take_movement
-2764  9C8A CD 06 AB     	call Decodifica_Puntero_de_impresion
-2765  9C8D
-2766  9C8D DD 6E 04     	ld l,(ix+4)
-2767  9C90 2C           	inc l
-2768  9C91 DD 66 05     	ld h,(ix+5)												; (Puntero_de_impresion) en HL.
-2769  9C94
-2770  9C94 CD EA AA     	call Genera_coordenadas
-2771  9C97
-2772  9C97 ED 4B F5 93  	ld bc,(Coordenada_X)
-2773  9C9B
-2774  9C9B DD 71 0C     	ld (ix+12),c
-2775  9C9E DD 70 0D     	ld (ix+13),b												; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
-2776  9CA1
-2777  9CA1 AF           	xor a
-2778  9CA2 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
-2779  9CA3
-2780  9CA3 C9           	ret
-2781  9CA4
-2782  9CA4              ; Decrementa (Numero_parcial_de_entidades) y (Entidades_en_curso).
-2783  9CA4
-2784  9CA4 21 28 94     2 ld hl,Numero_parcial_de_entidades
-2785  9CA7 35           	dec (hl)
-2786  9CA8
-2787  9CA8 7E           	ld a,(hl)
-2788  9CA9 CD 70 A7     	call M_entidades_a_BCD									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
-2789  9CAC
-2790  9CAC 23           	inc hl
-2791  9CAD 35           	dec (hl)
-2792  9CAE
-2793  9CAE CD 12 9B     	call Limpia_caja_de_entidades
-2794  9CB1 C3 1C 9C     	jp Borra_entidad_colisionada
-2795  9CB4
-2796  9CB4 23           1 inc hl
-2797  9CB5 23           	inc hl
-2798  9CB6
-2799  9CB6 DD 75 06     	ld (ix+6),l
-2800  9CB9 DD 74 07     	ld (ix+7),h												; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
-2801  9CBC
-2802  9CBC C3 1C 9C     	jp Borra_entidad_colisionada
-2803  9CBF
-2804  9CBF              ; ----- ----- ----- ----- -----
-2805  9CBF              ;
-2806  9CBF              ;	14/9/26
-2807  9CBF
-2808  9CBF              calcula_CColumnass_Explosion_entidad:
-2809  9CBF
-2810  9CBF 7D           	ld a,l
-2811  9CC0 E6 1F        	and $1f
-2812  9CC2 28 18        	jr z,Aparece_izquierda
-2813  9CC4
-2814  9CC4 08           	ex af,af
-2815  9CC5
-2816  9CC5 3E 03        	ld a,3
-2817  9CC7 32 07 94     	ld (Columnas),a
-2818  9CCA
-2819  9CCA 08           	ex af,af
-2820  9CCB
-2821  9CCB FE 1E        	cp $1e
-2822  9CCD D8           	ret c
-2823  9CCE
-2824  9CCE 28 06        	jr z,Dos_columnas_derecha
-2825  9CD0
-2826  9CD0              Aparece_derecha:
-2827  9CD0
-2828  9CD0 3E 01        	ld a,1
-2829  9CD2 32 07 94     	ld (Columnas),a
-2830  9CD5
-2831  9CD5 C9           	ret
-2832  9CD6
-2833  9CD6              Dos_columnas_derecha:
-2834  9CD6
-2835  9CD6 3E 02        	ld a,2
-2836  9CD8 32 07 94     	ld (Columnas),a
-2837  9CDB
-2838  9CDB C9           	ret
-2839  9CDC
-2840  9CDC              Aparece_izquierda:
-2841  9CDC
-2842  9CDC 3C           	inc a
-2843  9CDD 3C           	inc a
-2844  9CDE 32 07 94     	ld (Columnas),a
-2845  9CE1
-2846  9CE1 1C           	inc e
-2847  9CE2
-2848  9CE2 C9           	ret
-2849  9CE3
-2850  9CE3              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-2851  9CE3              ;
-2852  9CE3              ;	24/07/25
-2853  9CE3              ;
-2854  9CE3
-2855  9CE3              Genera_explosion_Amadeus:
-2856  9CE3
-2857  9CE3              ;	Autoriza sonido de explosión.
-2858  9CE3
-2859  9CE3 CD 93 C1     	call Init_Burst_sound
-2860  9CE6
-2861  9CE6 21 6C 94     	ld hl,Clock_explosion_Amadeus
-2862  9CE9 35           	dec (hl)
-2863  9CEA 28 26        	jr z,Siguiente_frame_explosion_Amadeus					; Gestionamos la siguiente entidad.
-2864  9CEC
-2865  9CEC              Borra_Amadeus_impactado
-2866  9CEC
-2867  9CEC 3A F4 93     	ld a,(Columns)
-2868  9CEF A7           	and a
-2869  9CF0
-2870  9CF0 20 05        	jr nz,3F
-2871  9CF2
-2872  9CF2 3E 46        	ld a,%01000110 											; Amarillo.
-2873  9CF4 32 D7 90     	ld (Attr_Amadeus),a
-2874  9CF7
-2875  9CF7 CD 23 99     3 call Change_Amadeus
-2876  9CFA CD 98 AB     	call Cargamos_registros_con_explosion_Amadeus
-2877  9CFD
-2878  9CFD              ;	Situación actual:
-2879  9CFD              ;
-2880  9CFD              ;	DE y HL contienen (Puntero_objeto) de la explosión de Amadeus.
-2881  9CFD              ;	IX contiene el (Puntero_de_impresión) de la nave.
-2882  9CFD
-2883  9CFD              ;	Detecta si Amadeus esta pegado al extremo derecho de la pantalla.
-2884  9CFD              ;	IX contiene (Puntero_de_impresion) de Amadeus.
-2885  9CFD
-2886  9CFD DD 7D        	ld a,ixl
-2887  9CFF E6 1F        	and $1f
-2888  9D01 FE 1E        	cp $1e
-2889  9D03 20 02        	jr nz,2F
-2890  9D05
-2891  9D05              ;	La explosión de Amadeus ocupa tres columnas por lo que corregiremos su (Puntero_de_impresion) para_
-2892  9D05              ;	_que no aparezca parte de la explosión en la 1ª columna de pantalla.
-2893  9D05
-2894  9D05 DD 2D        	dec ixl 												; ($1d).
-2895  9D07
-2896  9D07 CD 2D AB     2 call Genera_datos_de_impresion_Amadeus
-2897  9D0A
-2898  9D0A 21 58 94     	ld hl,Ctrl_3
-2899  9D0D CB EE        	set 5,(hl)												; Indicamos que hay movimiento, (se modifica el Sprite debido a la explosión).
-2900  9D0F
-2901  9D0F AF           	xor a
-2902  9D10 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
-2903  9D11
-2904  9D11 C9           	ret
-2905  9D12
-2906  9D12              Siguiente_frame_explosion_Amadeus
-2907  9D12
-2908  9D12 36 05        	ld (hl),5 												; Inicializamos (Clock_explosion_Amadeus), (velocidad de la explosión).
-2909  9D14
-2910  9D14 3E 42        	ld a,%01000010  										; Rojo.
-2911  9D16 32 D7 90     	ld (Attr_Amadeus),a
-2912  9D19
-2913  9D19 3A F4 93     	ld a,(Columns)
-2914  9D1C EE 01        	xor 1
-2915  9D1E 32 F4 93     	ld (Columns),a
-2916  9D21
-2917  9D21              ; Avanza Frame de explosión.
-2918  9D21
-2919  9D21 2A D2 90     	ld hl,(Pamm_Amadeus)
-2920  9D24 01 FA 8B     	ld bc,Indice_Explosion_Amadeus+4
-2921  9D27
-2922  9D27 79           	ld a,c
-2923  9D28 95           	sub l
-2924  9D29 20 20        	jr nz,1F
-2925  9D2B
-2926  9D2B              ; Fín de Amadeus !!!!!!!!!!!!!
-2927  9D2B              ; Activamos el FLAG de Amadeus destruido, ( bit_6 Ctrl_3 ).
-2928  9D2B
-2929  9D2B AF           	xor a
-2930  9D2C 32 CF 90     	ld (Impacto_Amadeus),a
-2931  9D2F
-2932  9D2F 21 58 94     	ld hl,Ctrl_3
-2933  9D32 CB F6        	set 6,(hl)												; Indica que Amadeus ha sido destruido. Ya se imprimió en pantalla la última explosión.
-2934  9D34
-2935  9D34 21 59 94     	ld hl,Ctrl_4
-2936  9D37 CB F6        	set 6,(hl)												; Indica al reloj que ha de borrar una vida de la pantalla.
-2937  9D39
-2938  9D39              ;	Evitamos que la rutina [Pintando_Amadeus] llame a la rutina de pintado, [Pinta_sprites] y vuelva a pintar la última explosión.
-2939  9D39              ;	Hace que la rutina [Pintando_Amadeus] interprete que (Album_de_pintado_Amadeus) está vacío.
-2940  9D39
-2941  9D39 AF           	xor a
-2942  9D3A
-2943  9D3A 2A 38 94     	ld hl,(Album_de_borrado_Amadeus)
-2944  9D3D 77           	ld (hl),a
-2945  9D3E
-2946  9D3E 23           	inc hl
-2947  9D3F
-2948  9D3F 77           	ld (hl),a
-2949  9D40
-2950  9D40 CD 23 99     	call Change_Amadeus
-2951  9D43
-2952  9D43 21 58 94     	ld hl,Ctrl_3
-2953  9D46 CB EE        	set 5,(hl)												; Indicamos que hay movimiento, (se modifica el Sprite debido a la explosión).
-2954  9D48
-2955  9D48 AF           	xor a
-2956  9D49 3C           	inc a
-2957  9D4A
-2958  9D4A C9           	ret
-2959  9D4B
-2960  9D4B 23           1 inc hl
-2961  9D4C 23           	inc hl
-2962  9D4D
-2963  9D4D 22 D2 90     	ld (Pamm_Amadeus),hl
-2964  9D50 18 9A        	jr Borra_Amadeus_impactado
-2965  9D52
-2966  9D52              ; ---------------------------------------------------------------
-2967  9D52              ;
-2968  9D52              ;	29/06/26
-2969  9D52              ;
-2970  9D52              ;	Decrementa el valor de (Max_time_to_appear_entities) en (Decrease_top_time_entities) unidades.
-2971  9D52              ;	(Max_time_to_appear_entities) nunca será mayor que (Min_time_to_appear_entities).
-2972  9D52
-2973  9D52              Decrementa_techo:
-2974  9D52
-2975  9D52 21 90 94     	ld hl, Max_time_to_appear_entities
-2976  9D55 7E           	ld a,(hl)
-2977  9D56
-2978  9D56 23           	inc hl
-2979  9D57
-2980  9D57 96           	sub (hl)
-2981  9D58
-2982  9D58 CC 58 9D     	call z,$
-2983  9D5B DC 5B 9D     	call c,$
-2984  9D5E
-2985  9D5E              ;	New TOP-time in A.
-2986  9D5E
-2987  9D5E 23           	inc hl
-2988  9D5F
-2989  9D5F BE           	cp (hl)
-2990  9D60
-2991  9D60 30 01        	jr nc,1F
-2992  9D62
-2993  9D62              ;	Si estamos por debajo del valor mínimo corregimos:
-2994  9D62
-2995  9D62 7E           	ld a,(hl)
-2996  9D63
-2997  9D63 2B           1 dec hl
-2998  9D64 2B           	dec hl
-2999  9D65
-3000  9D65 77           	ld (hl),a
-3001  9D66
-3002  9D66 C9           	ret
-3003  9D67
-3004  9D67              ; ------------------------------
-3005  9D67              ;
-3006  9D67              ;	24/6/26
-3007  9D67              ;
-3008  9D67              ;	INPUTS: IX apunta al prumer .db (Clase) de la caja de entidades.
-3009  9D67
-3010  9D67              Incrementa_Score:
-3011  9D67
-3012  9D67 DD 7E 01     	ld a,(ix+1)
-3013  9D6A 47           	ld b,a 									; (Tipo) de entidad en B. BadSat, Badplate, ...
-3014  9D6B
-3015  9D6B 21 EF 84     	ld hl,Tabla_de_puntuacion -1
-3016  9D6E 23           1 inc hl
-3017  9D6F 10 FD        	djnz 1B
-3018  9D71
-3019  9D71 4E           	ld c,(hl) 								; C contiene la puntuación BASE.
-3020  9D72
-3021  9D72              ;											; Tabla_de_puntuacion base, (1er tercio de pantalla).
-3022  9D72
-3023  9D72              ;											; db 20 ..... $14 Tipo BadSat
-3024  9D72              ;          									; db 30 ..... $1e Tipo Badplate
-3025  9D72              ;     										; db 40 .....
-3026  9D72              ;          	                                ; db 50 .....
-3027  9D72              ;                                           ; db 60 .....
-3028  9D72
-3029  9D72 DD 6E 04     	ld l,(ix+4)
-3030  9D75 DD 66 05     	ld h,(ix+5) 							; Carga HL con el (Puntero_de_impresion) de esta entidad para calcular en que tercio de la pantalla se encuentra.
-3031  9D78
-3032  9D78 CD D4 9D     	call calcula_tercio
-3033  9D7B 28 08        	jr z,vel                                ; Puntuación BASE en el 1er tercio de pantalla.
-3034  9D7D
-3035  9D7D 0D           	dec c
-3036  9D7E 0D           	dec c
-3037  9D7F 0D           	dec c
-3038  9D80
-3039  9D80 3D           	dec a
-3040  9D81 28 02        	jr z,vel 								; (Puntuación Base)-3 en el 2º tercio.
-3041  9D83
-3042  9D83 0D           	dec c
-3043  9D84 0D           	dec c 									; (Puntuación Base)-5 en el 3er tercio.
-3044  9D85
-3045  9D85              vel
-3046  9D85
-3047  9D85 DD 7E 0A     	ld a,(ix+10)
-3048  9D88
-3049  9D88 81           	add c
-3050  9D89 4F           	ld c,a 									; A la puntuación le sumamos el perfil de velocidad.
-3051  9D8A
-3052  9D8A              suma
-3053  9D8A
-3054  9D8A A7           	and a
-3055  9D8B 2A A6 94     	ld hl,(Score_hex)
-3056  9D8E ED 4A        	adc hl,bc
-3057  9D90
-3058  9D90 22 A6 94     	ld (Score_hex),hl
-3059  9D93
-3060  9D93 C9           	ret
-3061  9D94
-3062  9D94              ; ------------------------------------------------------------------------
-3063  9D94              ;
-3064  9D94              ;	08/04/26
-3065  9D94              ;
-3066  9D94              ;	Inizializa el siguiente nivel.
-3067  9D94
-3068  9D94              Next_level:
-3069  9D94
-3070  9D94 F3           	di
-3071  9D95
-3072  9D95              ;	Eliminamos el disparo de Amadeus y su sonido.
-3073  9D95
-3074  9D95 AF               xor a
-3075  9D96
-3076  9D96 06 04            ld b,4
-3077  9D98 21 58 90         ld hl,Disparo_Amad
-3078  9D9B
-3079  9D9B 77           1 ld (hl),a
-3080  9D9C 23               inc hl
-3081  9D9D 10 FC            djnz 1B
-3082  9D9F
-3083  9D9F 21 00 00     	ld hl,0
-3084  9DA2 22 89 94     	ld (Shot_sound),hl
-3085  9DA5
-3086  9DA5 CD 33 99     	call Change_Disparos							; Intercambiamos los álbumes de disparos.
-3087  9DA8 CD 48 B0         call Pinta_disparos_Amadeus
-3088  9DAB CD 33 99     	call Change_Disparos							; Intercambiamos los álbumes de disparos.
-3089  9DAE
-3090  9DAE CD 2A C0     	call Done_melody
-3091  9DB1
-3092  9DB1 01 FF 05     	ld bc,$05ff
-3093  9DB4 CD F6 9A         call DELAY
-3094  9DB7
-3095  9DB7 21 59 94     	ld hl,Ctrl_4
-3096  9DBA CB AE        	res 5,(hl)
-3097  9DBC
-3098  9DBC CD 0A C6     	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
-3099  9DBF
-3100  9DBF CD FA A8     	call Replace_Amadeus_attr_zone 					;	Repone los atributos de las 2 últimas líneas de pantalla para que la entrada de Amadeus del siguiente nivel sea azul.
-3101  9DC2
-3102  9DC2 CD A9 A2     	call Clean_boxes_and_albums
-3103  9DC5
-3104  9DC5 CD 17 A2     	call Inicializa_Variables_DRAW
-3105  9DC8
-3106  9DC8 CD E5 A1     	call Actualiza_punteros_de_Nivel
-3107  9DCB
-3108  9DCB C3 7C 96     	jp Init_level
-3109  9DCE
-3110  9DCE              ;	-----------------------------------------------------------------------------------------
-3111  9DCE
-3112  9DCE              ;	Rutinas consecutivas, no hay bytes libres entre ellas.
-3113  9DCE
-3114  9DCE              	include "Funciones_genericas.asm"
+2653  9C10 CD 93 C1     	call Init_Burst_sound	; v2. Ok.
+2654  9C13 CD 3E C1     	call Play_burst_sound_effect	; v2. Ok.
+2655  9C16
+2656  9C16 21 6B 94     	ld hl,Clock_explosion
+2657  9C19 35           	dec (hl)
+2658  9C1A 28 1B        	jr z,Siguiente_frame_explosion							; Gestionamos la siguiente entidad.
+2659  9C1C
+2660  9C1C              Borra_entidad_colisionada:
+2661  9C1C
+2662  9C1C 3A F3 93     	ld a,(Filas)
+2663  9C1F A7           	and a
+2664  9C20 20 05        	jr nz,1F
+2665  9C22
+2666  9C22 3E 46        	ld a,%01000110
+2667  9C24 DD 77 0B     	ld (ix+11),a 											; Cambia a AMARILLO los attrs. de la entidad.
+2668  9C27
+2669  9C27 DD E5        1 push ix 													; Push 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+2670  9C29
+2671  9C29 CD A8 9A     	call Cargamos_registros_con_explosion
+2672  9C2C CD BF 9C     	call calcula_CColumnass_Explosion_entidad
+2673  9C2F
+2674  9C2F              ;	HL e IX contienen (Puntero_de_impresion). de la explosión.
+2675  9C2F              ;	DE contiene (Puntero_objeto).
+2676  9C2F
+2677  9C2F DD E1        	pop ix													; Pop 1er .db (Clase) de la entidad, (caja de entidades correspondiente).
+2678  9C31 CD BF AA     	call Explosion_scanlines_generator
+2679  9C34
+2680  9C34 AF           	xor a
+2681  9C35 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
+2682  9C36
+2683  9C36 C9           	ret
+2684  9C37
+2685  9C37              Siguiente_frame_explosion:
+2686  9C37
+2687  9C37 3E 42        	ld a,%01000010  										; Rojo.
+2688  9C39 DD 77 0B     	ld (ix+11),a
+2689  9C3C
+2690  9C3C 3A F3 93     	ld a,(Filas)
+2691  9C3F EE 01        	xor 1
+2692  9C41 32 F3 93     	ld (Filas),a 											; 2ª función de (Filas). Ahora almacena 1 bit que alterna su estado para cambiar los attr. de la explosión.
+2693  9C44              ;															; _de la explosión amarillo-rojo.
+2694  9C44
+2695  9C44 36 04        	ld (hl),4 												; Inicializamos (Clock_explosion), (velocidad de la explosión).
+2696  9C46
+2697  9C46              ; Avanza Frame de explosión.
+2698  9C46
+2699  9C46 DD 6E 06     	ld l,(ix+6)
+2700  9C49 DD 66 07     	ld h,(ix+7)												; ld hl,(Puntero_de_almacen_de_mov_masticados).
+2701  9C4C
+2702  9C4C 01 64 8B     	ld bc,Indice_Explosion_entidades+4
+2703  9C4F
+2704  9C4F 79           	ld a,c
+2705  9C50 95           	sub l
+2706  9C51 20 61        	jr nz,1F
+2707  9C53
+2708  9C53              ; Fín de la entidad !!!!!!!!!!!!!
+2709  9C53              ; Gestionamos entidades !!!!!!!!!!!!!!!!!!!!!!!!!!
+2710  9C53
+2711  9C53              ; Numero_de_entidades db 0									; Nº total de entidades maliciosas que contiene el nivel.
+2712  9C53              ; Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de entidades. (6 Cajas).
+2713  9C53              ; Entidades_en_curso db 0									; Entidades en pantalla.
+2714  9C53
+2715  9C53 CD 67 9D     	call Incrementa_Score
+2716  9C56 CD AC A7     	call Score_a_BCD
+2717  9C59 CD 27 A8     	call Actualiza_Punteros_Score 							; Actualizamos los dígitos BCD del marcador Score, (Score_hex) y fijamos los punteros BCD_Score.
+2718  9C5C
+2719  9C5C CD 52 9D     	call Decrementa_techo 									; Cada vez que eliminamos a una entidad decrementamos el valor de (Max_time_to_appear_entities).
+2720  9C5F
+2721  9C5F              ; La entidad eliminada, es la última del nivel ?
+2722  9C5F
+2723  9C5F 3A 27 94     	ld a,(Numero_de_entidades)
+2724  9C62 A7           	and a
+2725  9C63 28 3F        	jr z,2F
+2726  9C65
+2727  9C65              ; Decrementa (Numero_de_entidades)
+2728  9C65
+2729  9C65 3D           	dec a
+2730  9C66 32 27 94     	ld (Numero_de_entidades),a
+2731  9C69
+2732  9C69 21 29 94     	ld hl,Entidades_en_curso
+2733  9C6C 35           	dec (hl)
+2734  9C6D
+2735  9C6D 21 28 94     	ld hl,Numero_parcial_de_entidades
+2736  9C70 86           	add (hl)
+2737  9C71
+2738  9C71              ; ----------------------------------
+2739  9C71
+2740  9C71 C4 70 A7     	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
+2741  9C74
+2742  9C74              ; Restauramos una nueva entidad de la caja "Master" correspondiente.
+2743  9C74              ; IX apunta al 1er .db de la entidad eliminada.
+2744  9C74
+2745  9C74 2A 79 94     	ld hl,(Puntero_de_entidades)
+2746  9C77 7E           	ld a,(hl) 												; Clase de la siguiente entidad que hay que reponer en la caja.
+2747  9C78
+2748  9C78 23           	inc hl
+2749  9C79
+2750  9C79 22 79 94     	ld (Puntero_de_entidades),hl
+2751  9C7C
+2752  9C7C CD CD A5     	call Obtiene_datos_de_Caja_Master						; HL apunta al 1er .db, (Tipo) de la "Caja Master" correspondiente al (Tipo) de entidad.
+2753  9C7F
+2754  9C7F DD E5        	push ix
+2755  9C81 D1           	pop de
+2756  9C82
+2757  9C82 01 0C 00     	ld bc,12
+2758  9C85 ED B0        	ldir
+2759  9C87
+2760  9C87              ; Generamos (Puntero_de_impresion) y coordenadas de la nueva entidad restaurada.
+2761  9C87
+2762  9C87 CD 78 9A     	call Take_movement
+2763  9C8A CD 06 AB     	call Decodifica_Puntero_de_impresion
+2764  9C8D
+2765  9C8D DD 6E 04     	ld l,(ix+4)
+2766  9C90 2C           	inc l
+2767  9C91 DD 66 05     	ld h,(ix+5)												; (Puntero_de_impresion) en HL.
+2768  9C94
+2769  9C94 CD EA AA     	call Genera_coordenadas
+2770  9C97
+2771  9C97 ED 4B F5 93  	ld bc,(Coordenada_X)
+2772  9C9B
+2773  9C9B DD 71 0C     	ld (ix+12),c
+2774  9C9E DD 70 0D     	ld (ix+13),b												; (Coordenada_X) y (Coordenada_Y) en caja de entidad.
+2775  9CA1
+2776  9CA1 AF           	xor a
+2777  9CA2 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
+2778  9CA3
+2779  9CA3 C9           	ret
+2780  9CA4
+2781  9CA4              ; Decrementa (Numero_parcial_de_entidades) y (Entidades_en_curso).
+2782  9CA4
+2783  9CA4 21 28 94     2 ld hl,Numero_parcial_de_entidades
+2784  9CA7 35           	dec (hl)
+2785  9CA8
+2786  9CA8 7E           	ld a,(hl)
+2787  9CA9 CD 70 A7     	call M_entidades_a_BCD									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
+2788  9CAC
+2789  9CAC 23           	inc hl
+2790  9CAD 35           	dec (hl)
+2791  9CAE
+2792  9CAE CD 12 9B     	call Limpia_caja_de_entidades
+2793  9CB1 C3 1C 9C     	jp Borra_entidad_colisionada
+2794  9CB4
+2795  9CB4 23           1 inc hl
+2796  9CB5 23           	inc hl
+2797  9CB6
+2798  9CB6 DD 75 06     	ld (ix+6),l
+2799  9CB9 DD 74 07     	ld (ix+7),h												; (Puntero_de_almacen_de_mov_masticados) a la siguiente explosión.
+2800  9CBC
+2801  9CBC C3 1C 9C     	jp Borra_entidad_colisionada
+2802  9CBF
+2803  9CBF              ; ----- ----- ----- ----- -----
+2804  9CBF              ;
+2805  9CBF              ;	14/9/26
+2806  9CBF
+2807  9CBF              calcula_CColumnass_Explosion_entidad:
+2808  9CBF
+2809  9CBF 7D           	ld a,l
+2810  9CC0 E6 1F        	and $1f
+2811  9CC2 28 18        	jr z,Aparece_izquierda
+2812  9CC4
+2813  9CC4 08           	ex af,af
+2814  9CC5
+2815  9CC5 3E 03        	ld a,3
+2816  9CC7 32 07 94     	ld (Columnas),a
+2817  9CCA
+2818  9CCA 08           	ex af,af
+2819  9CCB
+2820  9CCB FE 1E        	cp $1e
+2821  9CCD D8           	ret c
+2822  9CCE
+2823  9CCE 28 06        	jr z,Dos_columnas_derecha
+2824  9CD0
+2825  9CD0              Aparece_derecha:
+2826  9CD0
+2827  9CD0 3E 01        	ld a,1
+2828  9CD2 32 07 94     	ld (Columnas),a
+2829  9CD5
+2830  9CD5 C9           	ret
+2831  9CD6
+2832  9CD6              Dos_columnas_derecha:
+2833  9CD6
+2834  9CD6 3E 02        	ld a,2
+2835  9CD8 32 07 94     	ld (Columnas),a
+2836  9CDB
+2837  9CDB C9           	ret
+2838  9CDC
+2839  9CDC              Aparece_izquierda:
+2840  9CDC
+2841  9CDC 3C           	inc a
+2842  9CDD 3C           	inc a
+2843  9CDE 32 07 94     	ld (Columnas),a
+2844  9CE1
+2845  9CE1 1C           	inc e
+2846  9CE2
+2847  9CE2 C9           	ret
+2848  9CE3
+2849  9CE3              ; ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+2850  9CE3              ;
+2851  9CE3              ;	24/07/25
+2852  9CE3              ;
+2853  9CE3
+2854  9CE3              Genera_explosion_Amadeus:
+2855  9CE3
+2856  9CE3              ;	Autoriza sonido de explosión.
+2857  9CE3
+2858  9CE3 CD 93 C1     	call Init_Burst_sound	; v2. Ok.
+2859  9CE6
+2860  9CE6 21 6C 94     	ld hl,Clock_explosion_Amadeus
+2861  9CE9 35           	dec (hl)
+2862  9CEA 28 26        	jr z,Siguiente_frame_explosion_Amadeus					; Gestionamos la siguiente entidad.
+2863  9CEC
+2864  9CEC              Borra_Amadeus_impactado
+2865  9CEC
+2866  9CEC 3A F4 93     	ld a,(Columns)
+2867  9CEF A7           	and a
+2868  9CF0
+2869  9CF0 20 05        	jr nz,3F
+2870  9CF2
+2871  9CF2 3E 46        	ld a,%01000110 											; Amarillo.
+2872  9CF4 32 D7 90     	ld (Attr_Amadeus),a
+2873  9CF7
+2874  9CF7 CD 23 99     3 call Change_Amadeus
+2875  9CFA CD 98 AB     	call Cargamos_registros_con_explosion_Amadeus
+2876  9CFD
+2877  9CFD              ;	Situación actual:
+2878  9CFD              ;
+2879  9CFD              ;	DE y HL contienen (Puntero_objeto) de la explosión de Amadeus.
+2880  9CFD              ;	IX contiene el (Puntero_de_impresión) de la nave.
+2881  9CFD
+2882  9CFD              ;	Detecta si Amadeus esta pegado al extremo derecho de la pantalla.
+2883  9CFD              ;	IX contiene (Puntero_de_impresion) de Amadeus.
+2884  9CFD
+2885  9CFD DD 7D        	ld a,ixl
+2886  9CFF E6 1F        	and $1f
+2887  9D01 FE 1E        	cp $1e
+2888  9D03 20 02        	jr nz,2F
+2889  9D05
+2890  9D05              ;	La explosión de Amadeus ocupa tres columnas por lo que corregiremos su (Puntero_de_impresion) para_
+2891  9D05              ;	_que no aparezca parte de la explosión en la 1ª columna de pantalla.
+2892  9D05
+2893  9D05 DD 2D        	dec ixl 												; ($1d).
+2894  9D07
+2895  9D07 CD 2D AB     2 call Genera_datos_de_impresion_Amadeus
+2896  9D0A
+2897  9D0A 21 58 94     	ld hl,Ctrl_3
+2898  9D0D CB EE        	set 5,(hl)												; Indicamos que hay movimiento, (se modifica el Sprite debido a la explosión).
+2899  9D0F
+2900  9D0F AF           	xor a
+2901  9D10 3C           	inc a 													; Necesario NZ a la salida de la subrutina.
+2902  9D11
+2903  9D11 C9           	ret
+2904  9D12
+2905  9D12              Siguiente_frame_explosion_Amadeus
+2906  9D12
+2907  9D12 36 05        	ld (hl),5 												; Inicializamos (Clock_explosion_Amadeus), (velocidad de la explosión).
+2908  9D14
+2909  9D14 3E 42        	ld a,%01000010  										; Rojo.
+2910  9D16 32 D7 90     	ld (Attr_Amadeus),a
+2911  9D19
+2912  9D19 3A F4 93     	ld a,(Columns)
+2913  9D1C EE 01        	xor 1
+2914  9D1E 32 F4 93     	ld (Columns),a
+2915  9D21
+2916  9D21              ; Avanza Frame de explosión.
+2917  9D21
+2918  9D21 2A D2 90     	ld hl,(Pamm_Amadeus)
+2919  9D24 01 FA 8B     	ld bc,Indice_Explosion_Amadeus+4
+2920  9D27
+2921  9D27 79           	ld a,c
+2922  9D28 95           	sub l
+2923  9D29 20 20        	jr nz,1F
+2924  9D2B
+2925  9D2B              ; Fín de Amadeus !!!!!!!!!!!!!
+2926  9D2B              ; Activamos el FLAG de Amadeus destruido, ( bit_6 Ctrl_3 ).
+2927  9D2B
+2928  9D2B AF           	xor a
+2929  9D2C 32 CF 90     	ld (Impacto_Amadeus),a
+2930  9D2F
+2931  9D2F 21 58 94     	ld hl,Ctrl_3
+2932  9D32 CB F6        	set 6,(hl)												; Indica que Amadeus ha sido destruido. Ya se imprimió en pantalla la última explosión.
+2933  9D34
+2934  9D34 21 59 94     	ld hl,Ctrl_4
+2935  9D37 CB F6        	set 6,(hl)												; Indica al reloj que ha de borrar una vida de la pantalla.
+2936  9D39
+2937  9D39              ;	Evitamos que la rutina [Pintando_Amadeus] llame a la rutina de pintado, [Pinta_sprites] y vuelva a pintar la última explosión.
+2938  9D39              ;	Hace que la rutina [Pintando_Amadeus] interprete que (Album_de_pintado_Amadeus) está vacío.
+2939  9D39
+2940  9D39 AF           	xor a
+2941  9D3A
+2942  9D3A 2A 38 94     	ld hl,(Album_de_borrado_Amadeus)
+2943  9D3D 77           	ld (hl),a
+2944  9D3E
+2945  9D3E 23           	inc hl
+2946  9D3F
+2947  9D3F 77           	ld (hl),a
+2948  9D40
+2949  9D40 CD 23 99     	call Change_Amadeus
+2950  9D43
+2951  9D43 21 58 94     	ld hl,Ctrl_3
+2952  9D46 CB EE        	set 5,(hl)												; Indicamos que hay movimiento, (se modifica el Sprite debido a la explosión).
+2953  9D48
+2954  9D48 AF           	xor a
+2955  9D49 3C           	inc a
+2956  9D4A
+2957  9D4A C9           	ret
+2958  9D4B
+2959  9D4B 23           1 inc hl
+2960  9D4C 23           	inc hl
+2961  9D4D
+2962  9D4D 22 D2 90     	ld (Pamm_Amadeus),hl
+2963  9D50 18 9A        	jr Borra_Amadeus_impactado
+2964  9D52
+2965  9D52              ; ---------------------------------------------------------------
+2966  9D52              ;
+2967  9D52              ;	29/06/26
+2968  9D52              ;
+2969  9D52              ;	Decrementa el valor de (Max_time_to_appear_entities) en (Decrease_top_time_entities) unidades.
+2970  9D52              ;	(Max_time_to_appear_entities) nunca será mayor que (Min_time_to_appear_entities).
+2971  9D52
+2972  9D52              Decrementa_techo:
+2973  9D52
+2974  9D52 21 90 94     	ld hl, Max_time_to_appear_entities
+2975  9D55 7E           	ld a,(hl)
+2976  9D56
+2977  9D56 23           	inc hl
+2978  9D57
+2979  9D57 96           	sub (hl)
+2980  9D58
+2981  9D58 CC 58 9D     	call z,$
+2982  9D5B DC 5B 9D     	call c,$
+2983  9D5E
+2984  9D5E              ;	New TOP-time in A.
+2985  9D5E
+2986  9D5E 23           	inc hl
+2987  9D5F
+2988  9D5F BE           	cp (hl)
+2989  9D60
+2990  9D60 30 01        	jr nc,1F
+2991  9D62
+2992  9D62              ;	Si estamos por debajo del valor mínimo corregimos:
+2993  9D62
+2994  9D62 7E           	ld a,(hl)
+2995  9D63
+2996  9D63 2B           1 dec hl
+2997  9D64 2B           	dec hl
+2998  9D65
+2999  9D65 77           	ld (hl),a
+3000  9D66
+3001  9D66 C9           	ret
+3002  9D67
+3003  9D67              ; ------------------------------
+3004  9D67              ;
+3005  9D67              ;	24/6/26
+3006  9D67              ;
+3007  9D67              ;	INPUTS: IX apunta al prumer .db (Clase) de la caja de entidades.
+3008  9D67
+3009  9D67              Incrementa_Score:
+3010  9D67
+3011  9D67 DD 7E 01     	ld a,(ix+1)
+3012  9D6A 47           	ld b,a 									; (Tipo) de entidad en B. BadSat, Badplate, ...
+3013  9D6B
+3014  9D6B 21 EF 84     	ld hl,Tabla_de_puntuacion -1
+3015  9D6E 23           1 inc hl
+3016  9D6F 10 FD        	djnz 1B
+3017  9D71
+3018  9D71 4E           	ld c,(hl) 								; C contiene la puntuación BASE.
+3019  9D72
+3020  9D72              ;											; Tabla_de_puntuacion base, (1er tercio de pantalla).
+3021  9D72
+3022  9D72              ;											; db 20 ..... $14 Tipo BadSat
+3023  9D72              ;          									; db 30 ..... $1e Tipo Badplate
+3024  9D72              ;     										; db 40 .....
+3025  9D72              ;          	                                ; db 50 .....
+3026  9D72              ;                                           ; db 60 .....
+3027  9D72
+3028  9D72 DD 6E 04     	ld l,(ix+4)
+3029  9D75 DD 66 05     	ld h,(ix+5) 							; Carga HL con el (Puntero_de_impresion) de esta entidad para calcular en que tercio de la pantalla se encuentra.
+3030  9D78
+3031  9D78 CD D4 9D     	call calcula_tercio
+3032  9D7B 28 08        	jr z,vel                                ; Puntuación BASE en el 1er tercio de pantalla.
+3033  9D7D
+3034  9D7D 0D           	dec c
+3035  9D7E 0D           	dec c
+3036  9D7F 0D           	dec c
+3037  9D80
+3038  9D80 3D           	dec a
+3039  9D81 28 02        	jr z,vel 								; (Puntuación Base)-3 en el 2º tercio.
+3040  9D83
+3041  9D83 0D           	dec c
+3042  9D84 0D           	dec c 									; (Puntuación Base)-5 en el 3er tercio.
+3043  9D85
+3044  9D85              vel
+3045  9D85
+3046  9D85 DD 7E 0A     	ld a,(ix+10)
+3047  9D88
+3048  9D88 81           	add c
+3049  9D89 4F           	ld c,a 									; A la puntuación le sumamos el perfil de velocidad.
+3050  9D8A
+3051  9D8A              suma
+3052  9D8A
+3053  9D8A A7           	and a
+3054  9D8B 2A A6 94     	ld hl,(Score_hex)
+3055  9D8E ED 4A        	adc hl,bc
+3056  9D90
+3057  9D90 22 A6 94     	ld (Score_hex),hl
+3058  9D93
+3059  9D93 C9           	ret
+3060  9D94
+3061  9D94              ; ------------------------------------------------------------------------
+3062  9D94              ;
+3063  9D94              ;	08/04/26
+3064  9D94              ;
+3065  9D94              ;	Inizializa el siguiente nivel.
+3066  9D94
+3067  9D94              Next_level:
+3068  9D94
+3069  9D94 F3           	di
+3070  9D95
+3071  9D95              ;	Eliminamos el disparo de Amadeus y su sonido.
+3072  9D95
+3073  9D95 AF               xor a
+3074  9D96
+3075  9D96 06 04            ld b,4
+3076  9D98 21 58 90         ld hl,Disparo_Amad
+3077  9D9B
+3078  9D9B 77           1 ld (hl),a
+3079  9D9C 23               inc hl
+3080  9D9D 10 FC            djnz 1B
+3081  9D9F
+3082  9D9F 21 00 00     	ld hl,0
+3083  9DA2 22 89 94     	ld (Shot_sound),hl
+3084  9DA5
+3085  9DA5 CD 33 99     	call Change_Disparos							; Intercambiamos los álbumes de disparos.
+3086  9DA8 CD 48 B0         call Pinta_disparos_Amadeus
+3087  9DAB CD 33 99     	call Change_Disparos							; Intercambiamos los álbumes de disparos.
+3088  9DAE
+3089  9DAE CD 2A C0     	call Done_melody	; v2. Ok.
+3090  9DB1
+3091  9DB1 01 FF 05     	ld bc,$05ff
+3092  9DB4 CD F6 9A         call DELAY
+3093  9DB7
+3094  9DB7 21 59 94     	ld hl,Ctrl_4
+3095  9DBA CB AE        	res 5,(hl)
+3096  9DBC
+3097  9DBC CD 0A C6     	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
+3098  9DBF
+3099  9DBF CD FA A8     	call Replace_Amadeus_attr_zone 					;	Repone los atributos de las 2 últimas líneas de pantalla para que la entrada de Amadeus del siguiente nivel sea azul.
+3100  9DC2
+3101  9DC2 CD A9 A2     	call Clean_boxes_and_albums
+3102  9DC5
+3103  9DC5 CD 17 A2     	call Inicializa_Variables_DRAW
+3104  9DC8
+3105  9DC8 CD E5 A1     	call Actualiza_punteros_de_Nivel
+3106  9DCB
+3107  9DCB C3 7C 96     	jp Init_level
+3108  9DCE
+3109  9DCE              ;	-----------------------------------------------------------------------------------------
+3110  9DCE
+3111  9DCE              ;	Rutinas consecutivas, no hay bytes libres entre ellas.
+3112  9DCE
+3113  9DCE              	include "Funciones_genericas.asm"
 # file opened: Funciones_genericas.asm
    1+ 9DCE              ; *************************************************************************************************************************************************************
    2+ 9DCE              ;
@@ -6138,7 +6137,7 @@
  689+ 9F36 C9               ret
  690+ 9F37
 # file closed: Funciones_genericas.asm
-3115  9F37              	include "Rutinas_de_teclado.asm"
+3114  9F37              	include "Rutinas_de_teclado.asm"
 # file opened: Rutinas_de_teclado.asm
    1+ 9F37
    2+ 9F37              ; ------------------------------------------------------------------------
@@ -6297,7 +6296,7 @@
  155+ 9FA9
  156+ 9FA9              ;	DEL char.
  157+ 9FA9
- 158+ 9FA9 CD F0 C0     	call BEEP
+ 158+ 9FA9 CD F0 C0     	call BEEP	; v2. Ok.
  159+ 9FAC
  160+ 9FAC 34           	inc (hl)
  161+ 9FAD 4E           	ld c,(hl) 												; INC counter.
@@ -6636,7 +6635,7 @@
  494+ A0EC
  495+ A0EC              ;	Order to play.
  496+ A0EC
- 497+ A0EC CD F0 C0     	call BEEP
+ 497+ A0EC CD F0 C0     	call BEEP	; v2. Ok.
  498+ A0EF
  499+ A0EF 21 00 00     	ld hl,0
  500+ A0F2 22 74 94     	ld (Start_counter),hl 									; Inicializa temporizador.
@@ -6696,7 +6695,7 @@
  554+ A111
  555+ A111              Order_to_play
  556+ A111
- 557+ A111 CD F0 C0     	call BEEP
+ 557+ A111 CD F0 C0     	call BEEP	; v2. Ok.
  558+ A114
  559+ A114 3E 05        	ld a,$05
  560+ A116 32 76 94     	ld (Start_counter_2),a
@@ -6866,7 +6865,7 @@
  724+ A1B8              ; FLAG. Indica DELETE a subrutina FLASH.
  725+ A1B8
 # file closed: Rutinas_de_teclado.asm
-3116  A1B8              	include "RND_Derivando.asm"
+3115  A1B8              	include "RND_Derivando.asm"
 # file opened: RND_Derivando.asm
    1+ A1B8              ; ******************************************************************************************************************************************************************************************
    2+ A1B8              ;
@@ -6927,7 +6926,7 @@
   57+ A1E5
   58+ A1E5
 # file closed: RND_Derivando.asm
-3117  A1E5              	include "Rutinas_de_inicio_y_niveles.asm"
+3116  A1E5              	include "Rutinas_de_inicio_y_niveles.asm"
 # file opened: Rutinas_de_inicio_y_niveles.asm
    1+ A1E5              ; -----------------------------------------------------------------------
    2+ A1E5              ;
@@ -9036,7 +9035,7 @@
 2105+ A873
 2106+ A873
 # file closed: Rutinas_de_inicio_y_niveles.asm
-3118  A873              	include "Transiciones_y_efectos.asm"
+3117  A873              	include "Transiciones_y_efectos.asm"
 # file opened: Transiciones_y_efectos.asm
    1+ A873              ; ----------------------------------------------------------
    2+ A873              ;
@@ -9831,7 +9830,7 @@
  791+ AAB5 18 D7        	jr Construye_rayo
  792+ AAB7
 # file closed: Transiciones_y_efectos.asm
-3119  AAB7              	include "Genera_datos_de_impresion.asm"
+3118  AAB7              	include "Genera_datos_de_impresion.asm"
 # file opened: Genera_datos_de_impresion.asm
    1+ AAB7              ; ---------------------------------------------------------------------------------------------------------------------------------------
    2+ AAB7              ;
@@ -10484,7 +10483,7 @@
  649+ ACAD 18 B6            jr 1B
  650+ ACAF
 # file closed: Genera_datos_de_impresion.asm
-3120  ACAF              	include "Pinta_Sprites.asm"
+3119  ACAF              	include "Pinta_Sprites.asm"
 # file opened: Pinta_Sprites.asm
    1+ ACAF              ; ---------------------------------------------------------------------------
    2+ ACAF              ;
@@ -12481,7 +12480,7 @@
 1990+ B453 C9               ret
 1991+ B454
 # file closed: Pinta_Sprites.asm
-3121  B454              	include "Draw_XOR.asm"
+3120  B454              	include "Draw_XOR.asm"
 # file opened: Draw_XOR.asm
    1+ B454              ; ------------------------------------------------------------------
    2+ B454              ;
@@ -13269,7 +13268,7 @@
  784+ B6C5
  785+ B6C5
 # file closed: Draw_XOR.asm
-3122  B6C5              	include "Direcciones.asm"
+3121  B6C5              	include "Direcciones.asm"
 # file opened: Direcciones.asm
    1+ B6C5              ; ******************************************************************************************************************************************************************************************
    2+ B6C5              ;
@@ -14129,7 +14128,7 @@
  856+ BA12 C9           	ret
  857+ BA13
 # file closed: Direcciones.asm
-3123  BA13              	include "Movimiento.asm"
+3122  BA13              	include "Movimiento.asm"
 # file opened: Movimiento.asm
    1+ BA13              ; ----- ----- ----- ----- -----
    2+ BA13              ;
@@ -14519,7 +14518,7 @@
  386+ BB76 C9           4 ret
  387+ BB77
 # file closed: Movimiento.asm
-3124  BB77              	include "Disparo.asm"
+3123  BB77              	include "Disparo.asm"
 # file opened: Disparo.asm
    1+ BB77              ;------------------------------------------
    2+ BB77              ;
@@ -15540,7 +15539,7 @@
 1017+ BE81 22 89 94         ld (Shot_sound),hl                                       ; Valor inicial $1801. $16, (H) es el n° de ondas completas que mide el efecto, (duración).
 1018+ BE84              ;                                                            ; $01, (L) es la nota inicial del efecto, (longitud de cada semiciclo).
 1019+ BE84
-1020+ BE84 CD 0E C1         call Play_shot_sound_effect                              ; Inicia el sonido del disparo.
+1020+ BE84 CD 0E C1         call Play_shot_sound_effect ; v2. Ok.                    ; Inicia el sonido del disparo.
 1021+ BE87
 1022+ BE87              ;   Inicializamos contador.
 1023+ BE87
@@ -15973,7 +15972,7 @@
 1450+ BFE6
 1451+ BFE6
 # file closed: Disparo.asm
-3125  BFE6              	include "Sound.asm"
+3124  BFE6              	include "Sound.asm"
 # file opened: Sound.asm
    1+ BFE6              ; ----------------------------------------------------------
    2+ BFE6              ;
@@ -16046,540 +16045,536 @@
   69+ C006              ;   Tenemos la nota cargada en os registros.
   70+ C006              ;   Determinamos si la nota se ejecuta con incremento o decremento.
   71+ C006
-  72+ C006              ;   (D)="0" Nota sin incremento o decremento.
-  73+ C006              ;   (D)="1" Note with INCREASE.
-  74+ C006              ;   (D)="2" Note with DECREASE.
-  75+ C006
-  76+ C006 14               inc d
-  77+ C007 15               dec d
-  78+ C008 28 03            jr z,Note_Decrease
-  79+ C00A
-  80+ C00A              Note_Increase:
-  81+ C00A
-  82+ C00A 2C               inc l
-  83+ C00B
-  84+ C00B 18 01            jr 3F
-  85+ C00D
-  86+ C00D              Note_Decrease:
-  87+ C00D
-  88+ C00D 2D               dec l
-  89+ C00E
-  90+ C00E 0D           3 dec c
-  91+ C00F
-  92+ C00F 28 13            jr z,Last_note
-  93+ C011
-  94+ C011              ;   Guardamos la nota incrementda/decrementada para seguir más tarde con la ejecución:
-  95+ C011
-  96+ C011 31 02 94         ld sp,Indice_Sprite_der+6                         ; Almacenaremos la nota en la caja de notas, (6 bytes). No hemos terminado con la ejecución.
-  97+ C014
-  98+ C014 E5               push hl
-  99+ C015 D5               push de
- 100+ C016 C5               push bc
- 101+ C017
- 102+ C017              ;   Siguiente fragmento de la nota guardado. Restauramos SP.
- 103+ C017
- 104+ C017 ED 7B 2E 94  2 ld sp,(Stack)
- 105+ C01B
- 106+ C01B              ;   Preparamos y ejecutamos la nota.
- 107+ C01B
- 108+ C01B 0E 04            ld c,4
- 109+ C01D
- 110+ C01D 22 84 94         ld (Sound),hl
- 111+ C020
- 112+ C020 CD E5 9E         call Sound_Generator    ; v2. Ok.
- 113+ C023
- 114+ C023 C9               ret
- 115+ C024
- 116+ C024              Last_note:
- 117+ C024
- 118+ C024 AF               xor a
- 119+ C025 32 FC 93         ld (Indice_Sprite_der),a                         ; Indica que pasamos a la siguiente nota.
- 120+ C028
- 121+ C028 18 ED            jr 2B
- 122+ C02A
- 123+ C02A              ; ----------------------------------------------------------------------------------------------
+  72+ C006 14               inc d
+  73+ C007 15               dec d
+  74+ C008 28 03            jr z,Note_Decrease
+  75+ C00A
+  76+ C00A              Note_Increase:
+  77+ C00A
+  78+ C00A 2C               inc l
+  79+ C00B
+  80+ C00B 18 01            jr 3F
+  81+ C00D
+  82+ C00D              Note_Decrease:
+  83+ C00D
+  84+ C00D 2D               dec l
+  85+ C00E
+  86+ C00E 0D           3 dec c
+  87+ C00F
+  88+ C00F 28 13            jr z,Last_note
+  89+ C011
+  90+ C011              ;   Guardamos la nota incrementda/decrementada para seguir más tarde con la ejecución:
+  91+ C011
+  92+ C011 31 02 94         ld sp,Indice_Sprite_der+6                         ; Almacenaremos la nota en la caja de notas, (6 bytes). No hemos terminado con la ejecución.
+  93+ C014
+  94+ C014 E5               push hl
+  95+ C015 D5               push de
+  96+ C016 C5               push bc
+  97+ C017
+  98+ C017              ;   Siguiente fragmento de la nota guardado. Restauramos SP.
+  99+ C017
+ 100+ C017 ED 7B 2E 94  2 ld sp,(Stack)
+ 101+ C01B
+ 102+ C01B              ;   Preparamos y ejecutamos la nota.
+ 103+ C01B
+ 104+ C01B 0E 04            ld c,4
+ 105+ C01D
+ 106+ C01D 22 84 94         ld (Sound),hl
+ 107+ C020
+ 108+ C020 CD E5 9E         call Sound_Generator    ; v2. Ok.
+ 109+ C023
+ 110+ C023 C9               ret
+ 111+ C024
+ 112+ C024              Last_note:
+ 113+ C024
+ 114+ C024 AF               xor a
+ 115+ C025 32 FC 93         ld (Indice_Sprite_der),a                         ; Indica que pasamos a la siguiente nota.
+ 116+ C028
+ 117+ C028 18 ED            jr 2B
+ 118+ C02A
+ 119+ C02A              ; ----------------------------------------------------------------------------------------------
+ 120+ C02A              ;
+ 121+ C02A              ;   26/09/26
+ 122+ C02A              ;
+ 123+ C02A              ;   Melodía DONE. NIVEL SUPERADO !!!
  124+ C02A              ;
- 125+ C02A              ;   26/09/26
+ 125+ C02A              ;   La melodía DONE se ejecuta en DI, (interrupciones deshabilitadas).
  126+ C02A              ;
- 127+ C02A              ;   Melodía DONE. NIVEL SUPERADO !!!
+ 127+ C02A              ;   Está compuesta por 15 notes y 5 pausas.
  128+ C02A              ;
- 129+ C02A              ;   La melodía DONE se ejecuta en DI, (interrupciones deshabilitadas).
- 130+ C02A              ;
- 131+ C02A              ;   Está compuesta por 15 notes y 5 pausas.
- 132+ C02A              ;
- 133+ C02A              ;   Hay que introducir los parámetros de cada nota que forma la melodía y llamar a la función de sonido [Sound_Generator].
- 134+ C02A              ;   Los parámetros son:
- 135+ C02A              ;
- 136+ C02A              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
- 137+ C02A              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
- 138+ C02A              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
- 139+ C02A              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
- 140+ C02A              ;          HL = (NOTA). Duracíon del semiciclo.
- 141+ C02A              ;
- 142+ C02A              ;   MODIFY: NO MODIFY REGS. !!!
- 143+ C02A
- 144+ C02A              Done_melody:
- 145+ C02A
- 146+ C02A F5               push af
- 147+ C02B C5               push bc
- 148+ C02C D5               push de
- 149+ C02D E5               push hl                                                 ; Store regs.
- 150+ C02E
- 151+ C02E              Note_1:
- 152+ C02E
- 153+ C02E 01 14 00     	ld bc,$0014                                             ; No ruido / 20 ondas completas
- 154+ C031 11 05 00     	ld de,$0005                                             ; Nota descendente / 5 unid. decrease.
- 155+ C034 21 5E 01     	ld hl,$015e                                             ; Note init. value.
- 156+ C037
- 157+ C037 22 84 94     	ld (Sound),hl
- 158+ C03A CD E5 9E         call Sound_Generator 		                            ; Tras la primera nota descendente (HL) se sitúa_
- 159+ C03D              ;                                                           ; _ en la primera nota de la melodía. (HL)=$00fa
- 160+ C03D
- 161+ C03D              Note_2:
- 162+ C03D
- 163+ C03D 0E 14            ld c,$14                                                ; Duración de la nueva nota, 20 ondas.
- 164+ C03F 1E 00            ld e,0                                                  ; No existe decremento. (sonido plano).
- 165+ C041
- 166+ C041 22 84 94         ld (Sound),hl
- 167+ C044 CD E5 9E         call Sound_Generator                                    ; Ejecuta nota.
- 168+ C047
- 169+ C047              Note_3:
- 170+ C047
- 171+ C047 0E 24        	ld c,$24                                                ; Duración de la nueva nota.
- 172+ C049 2E A5        	ld l,$a5                                                ; (HL) = $00a5. Nota, (duración de un semiciclo).
- 173+ C04B              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 174+ C04B 22 84 94     	ld (Sound),hl
- 175+ C04E CD E5 9E         call Sound_Generator 									; Ejecuta nota.
- 176+ C051
- 177+ C051              Pause_1:
- 178+ C051
- 179+ C051 01 00 40         ld bc,$4000
- 180+ C054 CD F6 9A     	call DELAY 												; PAUSE. Pausa entre notas, las tres primeras se ejecutan ligadas.
- 181+ C057
- 182+ C057              Note_4:
- 183+ C057
- 184+ C057 0E 14        	ld c,$14                                                ; Duración de la nueva nota.
- 185+ C059 2E FA        	ld l,$fa                                                ; New note, (HL) = $00fa
- 186+ C05B              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 187+ C05B 22 84 94     	ld (Sound),hl
- 188+ C05E CD E5 9E         call Sound_Generator 									; Ejecuta nota.
- 189+ C061
- 190+ C061              Note_5:
- 191+ C061
- 192+ C061 0E 21        	ld c,$21                                                ; Duración de la nueva nota.
- 193+ C063 2E B7        	ld l,$b7                                                ; New note, (HL) = $00b7
- 194+ C065              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 195+ C065 22 84 94     	ld (Sound),hl
- 196+ C068 CD E5 9E         call Sound_Generator 									; Ejecuta nota.
- 197+ C06B
- 198+ C06B              Pause_2:
- 199+ C06B
- 200+ C06B 01 00 40         ld bc,$4000
- 201+ C06E CD F6 9A     	call DELAY 												; PAUSE.
- 202+ C071
- 203+ C071              Note_6:
- 204+ C071
- 205+ C071 0E 14            ld c,$14                                                ; Duración de la nueva nota.
- 206+ C073 2E FA        	ld l,$fa                                                ; New note, (HL) = $00fa
- 207+ C075              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 208+ C075 22 84 94     	ld (Sound),hl
- 209+ C078 CD E5 9E         call Sound_Generator 			                        ; PLAY NOTE.
- 210+ C07B
- 211+ C07B              Note_7:
- 212+ C07B
- 213+ C07B 0E 24        	ld c,$24                                                ; Duración de la nueva nota.
- 214+ C07D 2E CD        	ld l,$cd                                                ; New note, (HL) = $00cd
- 215+ C07F              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
- 216+ C07F 22 84 94     	ld (Sound),hl
- 217+ C082 CD E5 9E         call Sound_Generator 									; PLAY NOTE.
- 218+ C085
- 219+ C085              Nota_8:
- 220+ C085
- 221+ C085 0E 2D            ld c,$2d                                                ; Duración de la nueva nota.
- 222+ C087 11 01 01         ld de,$0101                                             ; Nota ascendente / 1 unid. increase..
- 223+ C08A              ;                                                           ; (HL) sigue siendo $00cd, (subirá hasta la siguiente nota).
- 224+ C08A 22 84 94         ld (Sound),hl
- 225+ C08D CD E5 9E         call Sound_Generator                                    ; Down to Note_9: / PLAY NOTE.
- 226+ C090
- 227+ C090              Pause_3:
- 228+ C090
- 229+ C090 01 00 10         ld bc,$1000
- 230+ C093 CD F6 9A     	call DELAY 												; PAUSE.
- 231+ C096
- 232+ C096              Note_9:
- 233+ C096
- 234+ C096 15               dec d
- 235+ C097 1D               dec e                                                   ; Prepara Nota descendente / "0" decrease. Sonido plano.
- 236+ C098              ;                                                           ; (HL) ha subido hasta $00fa.
- 237+ C098 0E 16            ld c,$16                                                ; Duración, 22 ondas de sonido.
- 238+ C09A
- 239+ C09A 22 84 94     	ld (Sound),hl
- 240+ C09D CD E5 9E         call Sound_Generator 									; PLAY NOTE.
- 241+ C0A0
- 242+ C0A0              Note_10:
- 243+ C0A0
- 244+ C0A0 0E 21        	ld c,$21
- 245+ C0A2 2E CD        	ld l,$cd
- 246+ C0A4
- 247+ C0A4 22 84 94     	ld (Sound),hl
- 248+ C0A7 CD E5 9E         call Sound_Generator
- 249+ C0AA
- 250+ C0AA              Pause_4:
- 251+ C0AA
- 252+ C0AA 01 00 40         ld bc,$4000
- 253+ C0AD CD F6 9A         call DELAY 												; PAUSE.
- 254+ C0B0
- 255+ C0B0              Note_11:
- 256+ C0B0
- 257+ C0B0 0E 21        	ld c,$21
- 258+ C0B2 2E D4        	ld l,$d4
- 259+ C0B4
- 260+ C0B4 22 84 94     	ld (Sound),hl
- 261+ C0B7 CD E5 9E         call Sound_Generator
- 262+ C0BA
- 263+ C0BA              Pause_5:
- 264+ C0BA
- 265+ C0BA 01 F0 5F         ld bc,$5ff0
- 266+ C0BD CD F6 9A         call DELAY 												; PAUSE.
- 267+ C0C0
- 268+ C0C0              Note_12:
- 269+ C0C0
- 270+ C0C0 0E 23        	ld c,$23
- 271+ C0C2 21 17 01     	ld hl,$0117
- 272+ C0C5
- 273+ C0C5 22 84 94     	ld (Sound),hl
- 274+ C0C8 CD E5 9E         call Sound_Generator 									; PLAY NOTE.
- 275+ C0CB
- 276+ C0CB              Note_13:
- 277+ C0CB
- 278+ C0CB 0E 14         	ld c,$14                                                ; Duración.
- 279+ C0CD 1E 03            ld e,3                                                  ; (D)="0" / Decrease "3".
- 280+ C0CF              ;                                                           ; (HL) down to $00db, (Note).
- 281+ C0CF 22 84 94     	ld (Sound),hl
- 282+ C0D2 CD E5 9E         call Sound_Generator 	                                ; PLAY NOTE.
- 283+ C0D5
- 284+ C0D5              Note_14:
- 285+ C0D5
- 286+ C0D5 0E 10            ld c,$10
- 287+ C0D7 11 02 01         ld de,$0102                                             ; (D)="1" / Increase "2"
- 288+ C0DA              ;                                                           ; (HL) up to $00fb
- 289+ C0DA 22 84 94         ld (Sound),hl
- 290+ C0DD CD E5 9E         call Sound_Generator                                    ; PLAY NOTE.
- 291+ C0E0
- 292+ C0E0
- 293+ C0E0              Note_15:
- 294+ C0E0
- 295+ C0E0 2D               dec l                                                   ; Note: $00fa.
- 296+ C0E1
- 297+ C0E1 1D               dec e
- 298+ C0E2 1D               dec e                                                   ; Clear increase.
- 299+ C0E3
- 300+ C0E3 0E 40            ld c,$40                                                ; Duration.
- 301+ C0E5
- 302+ C0E5 22 84 94         ld (Sound),hl
- 303+ C0E8 CD E5 9E         call Sound_Generator                                    ; PLAY NOTE.
- 304+ C0EB
- 305+ C0EB E1               pop hl
- 306+ C0EC D1               pop de
- 307+ C0ED C1               pop bc
- 308+ C0EE F1               pop af                                                  ; Restore regs.
- 309+ C0EF
- 310+ C0EF C9               ret
- 311+ C0F0
- 312+ C0F0              ; ----------------------------------------------------------------------------------------------
+ 129+ C02A              ;   Hay que introducir los parámetros de cada nota que forma la melodía y llamar a la función de sonido [Sound_Generator].
+ 130+ C02A              ;   Los parámetros son:
+ 131+ C02A              ;
+ 132+ C02A              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido, (duración de la nota).
+ 133+ C02A              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+ 134+ C02A              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+ 135+ C02A              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+ 136+ C02A              ;          HL = (NOTA). Duracíon del semiciclo.
+ 137+ C02A              ;
+ 138+ C02A              ;   MODIFY: NO MODIFY REGS. !!!
+ 139+ C02A
+ 140+ C02A              Done_melody:
+ 141+ C02A
+ 142+ C02A F5               push af
+ 143+ C02B C5               push bc
+ 144+ C02C D5               push de
+ 145+ C02D E5               push hl                                                 ; Store regs.
+ 146+ C02E
+ 147+ C02E              Note_1:
+ 148+ C02E
+ 149+ C02E 01 14 00     	ld bc,$0014                                             ; No ruido / 20 ondas completas
+ 150+ C031 11 05 00     	ld de,$0005                                             ; Nota descendente / 5 unid. decrease.
+ 151+ C034 21 5E 01     	ld hl,$015e                                             ; Note init. value.
+ 152+ C037
+ 153+ C037 22 84 94     	ld (Sound),hl
+ 154+ C03A CD E5 9E         call Sound_Generator    ; v2. Ok.                       ; Tras la primera nota descendente (HL) se sitúa_
+ 155+ C03D              ;                                                           ; _ en la primera nota de la melodía. (HL)=$00fa
+ 156+ C03D
+ 157+ C03D              Note_2:
+ 158+ C03D
+ 159+ C03D 0E 14            ld c,$14                                                ; Duración de la nueva nota, 20 ondas.
+ 160+ C03F 1E 00            ld e,0                                                  ; No existe decremento. (sonido plano).
+ 161+ C041
+ 162+ C041 22 84 94         ld (Sound),hl
+ 163+ C044 CD E5 9E         call Sound_Generator                                    ; Ejecuta nota.
+ 164+ C047
+ 165+ C047              Note_3:
+ 166+ C047
+ 167+ C047 0E 24        	ld c,$24                                                ; Duración de la nueva nota.
+ 168+ C049 2E A5        	ld l,$a5                                                ; (HL) = $00a5. Nota, (duración de un semiciclo).
+ 169+ C04B              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 170+ C04B 22 84 94     	ld (Sound),hl
+ 171+ C04E CD E5 9E         call Sound_Generator 									; Ejecuta nota.
+ 172+ C051
+ 173+ C051              Pause_1:
+ 174+ C051
+ 175+ C051 01 00 40         ld bc,$4000
+ 176+ C054 CD F6 9A     	call DELAY 												; PAUSE. Pausa entre notas, las tres primeras se ejecutan ligadas.
+ 177+ C057
+ 178+ C057              Note_4:
+ 179+ C057
+ 180+ C057 0E 14        	ld c,$14                                                ; Duración de la nueva nota.
+ 181+ C059 2E FA        	ld l,$fa                                                ; New note, (HL) = $00fa
+ 182+ C05B              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 183+ C05B 22 84 94     	ld (Sound),hl
+ 184+ C05E CD E5 9E         call Sound_Generator 									; Ejecuta nota.
+ 185+ C061
+ 186+ C061              Note_5:
+ 187+ C061
+ 188+ C061 0E 21        	ld c,$21                                                ; Duración de la nueva nota.
+ 189+ C063 2E B7        	ld l,$b7                                                ; New note, (HL) = $00b7
+ 190+ C065              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 191+ C065 22 84 94     	ld (Sound),hl
+ 192+ C068 CD E5 9E         call Sound_Generator 									; Ejecuta nota.
+ 193+ C06B
+ 194+ C06B              Pause_2:
+ 195+ C06B
+ 196+ C06B 01 00 40         ld bc,$4000
+ 197+ C06E CD F6 9A     	call DELAY 												; PAUSE.
+ 198+ C071
+ 199+ C071              Note_6:
+ 200+ C071
+ 201+ C071 0E 14            ld c,$14                                                ; Duración de la nueva nota.
+ 202+ C073 2E FA        	ld l,$fa                                                ; New note, (HL) = $00fa
+ 203+ C075              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 204+ C075 22 84 94     	ld (Sound),hl
+ 205+ C078 CD E5 9E         call Sound_Generator 			                        ; PLAY NOTE.
+ 206+ C07B
+ 207+ C07B              Note_7:
+ 208+ C07B
+ 209+ C07B 0E 24        	ld c,$24                                                ; Duración de la nueva nota.
+ 210+ C07D 2E CD        	ld l,$cd                                                ; New note, (HL) = $00cd
+ 211+ C07F              ;                                                           ; (E) = $00, no existe decremento. (sonido plano).
+ 212+ C07F 22 84 94     	ld (Sound),hl
+ 213+ C082 CD E5 9E         call Sound_Generator 									; PLAY NOTE.
+ 214+ C085
+ 215+ C085              Nota_8:
+ 216+ C085
+ 217+ C085 0E 2D            ld c,$2d                                                ; Duración de la nueva nota.
+ 218+ C087 11 01 01         ld de,$0101                                             ; Nota ascendente / 1 unid. increase..
+ 219+ C08A              ;                                                           ; (HL) sigue siendo $00cd, (subirá hasta la siguiente nota).
+ 220+ C08A 22 84 94         ld (Sound),hl
+ 221+ C08D CD E5 9E         call Sound_Generator                                    ; Down to Note_9: / PLAY NOTE.
+ 222+ C090
+ 223+ C090              Pause_3:
+ 224+ C090
+ 225+ C090 01 00 10         ld bc,$1000
+ 226+ C093 CD F6 9A     	call DELAY 												; PAUSE.
+ 227+ C096
+ 228+ C096              Note_9:
+ 229+ C096
+ 230+ C096 15               dec d
+ 231+ C097 1D               dec e                                                   ; Prepara Nota descendente / "0" decrease. Sonido plano.
+ 232+ C098              ;                                                           ; (HL) ha subido hasta $00fa.
+ 233+ C098 0E 16            ld c,$16                                                ; Duración, 22 ondas de sonido.
+ 234+ C09A
+ 235+ C09A 22 84 94     	ld (Sound),hl
+ 236+ C09D CD E5 9E         call Sound_Generator 									; PLAY NOTE.
+ 237+ C0A0
+ 238+ C0A0              Note_10:
+ 239+ C0A0
+ 240+ C0A0 0E 21        	ld c,$21
+ 241+ C0A2 2E CD        	ld l,$cd
+ 242+ C0A4
+ 243+ C0A4 22 84 94     	ld (Sound),hl
+ 244+ C0A7 CD E5 9E         call Sound_Generator
+ 245+ C0AA
+ 246+ C0AA              Pause_4:
+ 247+ C0AA
+ 248+ C0AA 01 00 40         ld bc,$4000
+ 249+ C0AD CD F6 9A         call DELAY 												; PAUSE.
+ 250+ C0B0
+ 251+ C0B0              Note_11:
+ 252+ C0B0
+ 253+ C0B0 0E 21        	ld c,$21
+ 254+ C0B2 2E D4        	ld l,$d4
+ 255+ C0B4
+ 256+ C0B4 22 84 94     	ld (Sound),hl
+ 257+ C0B7 CD E5 9E         call Sound_Generator
+ 258+ C0BA
+ 259+ C0BA              Pause_5:
+ 260+ C0BA
+ 261+ C0BA 01 F0 5F         ld bc,$5ff0
+ 262+ C0BD CD F6 9A         call DELAY 												; PAUSE.
+ 263+ C0C0
+ 264+ C0C0              Note_12:
+ 265+ C0C0
+ 266+ C0C0 0E 23        	ld c,$23
+ 267+ C0C2 21 17 01     	ld hl,$0117
+ 268+ C0C5
+ 269+ C0C5 22 84 94     	ld (Sound),hl
+ 270+ C0C8 CD E5 9E         call Sound_Generator 									; PLAY NOTE.
+ 271+ C0CB
+ 272+ C0CB              Note_13:
+ 273+ C0CB
+ 274+ C0CB 0E 14         	ld c,$14                                                ; Duración.
+ 275+ C0CD 1E 03            ld e,3                                                  ; (D)="0" / Decrease "3".
+ 276+ C0CF              ;                                                           ; (HL) down to $00db, (Note).
+ 277+ C0CF 22 84 94     	ld (Sound),hl
+ 278+ C0D2 CD E5 9E         call Sound_Generator 	                                ; PLAY NOTE.
+ 279+ C0D5
+ 280+ C0D5              Note_14:
+ 281+ C0D5
+ 282+ C0D5 0E 10            ld c,$10
+ 283+ C0D7 11 02 01         ld de,$0102                                             ; (D)="1" / Increase "2"
+ 284+ C0DA              ;                                                           ; (HL) up to $00fb
+ 285+ C0DA 22 84 94         ld (Sound),hl
+ 286+ C0DD CD E5 9E         call Sound_Generator                                    ; PLAY NOTE.
+ 287+ C0E0
+ 288+ C0E0
+ 289+ C0E0              Note_15:
+ 290+ C0E0
+ 291+ C0E0 2D               dec l                                                   ; Note: $00fa.
+ 292+ C0E1
+ 293+ C0E1 1D               dec e
+ 294+ C0E2 1D               dec e                                                   ; Clear increase.
+ 295+ C0E3
+ 296+ C0E3 0E 40            ld c,$40                                                ; Duration.
+ 297+ C0E5
+ 298+ C0E5 22 84 94         ld (Sound),hl
+ 299+ C0E8 CD E5 9E         call Sound_Generator                                    ; PLAY NOTE.
+ 300+ C0EB
+ 301+ C0EB E1               pop hl
+ 302+ C0EC D1               pop de
+ 303+ C0ED C1               pop bc
+ 304+ C0EE F1               pop af                                                  ; Restore regs.
+ 305+ C0EF
+ 306+ C0EF C9               ret
+ 307+ C0F0
+ 308+ C0F0              ; ----------------------------------------------------------------------------------------------
+ 309+ C0F0              ;
+ 310+ C0F0              ;   17/9/26
+ 311+ C0F0              ;
+ 312+ C0F0              ;   Emite un BEEP utilizando el núcleo de audio [Sound_Generator].
  313+ C0F0              ;
- 314+ C0F0              ;   17/9/26
- 315+ C0F0              ;
- 316+ C0F0              ;   Emite un BEEP utilizando el núcleo de audio [Sound_Generator].
- 317+ C0F0              ;
- 318+ C0F0              ;   NO MODIFICA NINGÚN REGISTRO.
- 319+ C0F0
- 320+ C0F0              BEEP:
- 321+ C0F0
- 322+ C0F0 F5               push af
- 323+ C0F1 C5               push bc
- 324+ C0F2 D5               push de
- 325+ C0F3 E5               push hl                                 ; STORE Regs.
+ 314+ C0F0              ;   NO MODIFICA NINGÚN REGISTRO.
+ 315+ C0F0
+ 316+ C0F0              BEEP:
+ 317+ C0F0
+ 318+ C0F0 F5               push af
+ 319+ C0F1 C5               push bc
+ 320+ C0F2 D5               push de
+ 321+ C0F3 E5               push hl                                 ; STORE Regs.
+ 322+ C0F4
+ 323+ C0F4              ;   Parámetros de entrada para ejecutar [Sound_Generator].
+ 324+ C0F4
+ 325+ C0F4              ;   Configuración de un BEEP.
  326+ C0F4
- 327+ C0F4              ;   Parámetros de entrada para ejecutar [Sound_Generator].
- 328+ C0F4
- 329+ C0F4              ;   Configuración de un BEEP.
- 330+ C0F4
- 331+ C0F4              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
- 332+ C0F4              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
- 333+ C0F4              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
- 334+ C0F4              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
- 335+ C0F4              ;        (HL) = Contiene el sonido, (duración del semiciclo), NOTA.
- 336+ C0F4
- 337+ C0F4
- 338+ C0F4 01 02 00         ld bc,$0002
- 339+ C0F7 11 00 00         ld de,0
- 340+ C0FA 21 D0 00         ld hl,$00d0
- 341+ C0FD
- 342+ C0FD 22 84 94         ld (Sound),hl
- 343+ C100
- 344+ C100 CD E5 9E         call Sound_Generator
- 345+ C103
- 346+ C103 21 00 00         ld hl,0
- 347+ C106 22 84 94         ld (Sound),hl
- 348+ C109
- 349+ C109 E1               pop hl                                  ; RECOVERY Regs.
- 350+ C10A D1               pop de
- 351+ C10B C1               pop bc
- 352+ C10C F1               pop af
- 353+ C10D
- 354+ C10D C9               ret
- 355+ C10E
- 356+ C10E              ; ----- ----- ----- ----- -----
+ 327+ C0F4              ;   INPUTS: C contiene el nº de veces que vamos a generar la onda del sonido.
+ 328+ C0F4              ;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+ 329+ C0F4              ;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+ 330+ C0F4              ;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+ 331+ C0F4              ;        (HL) = Contiene el sonido, (duración del semiciclo), NOTA.
+ 332+ C0F4
+ 333+ C0F4
+ 334+ C0F4 01 02 00         ld bc,$0002
+ 335+ C0F7 11 00 00         ld de,0
+ 336+ C0FA 21 D0 00         ld hl,$00d0
+ 337+ C0FD
+ 338+ C0FD 22 84 94         ld (Sound),hl
+ 339+ C100
+ 340+ C100 CD E5 9E         call Sound_Generator    ; v2. Ok.
+ 341+ C103
+ 342+ C103 21 00 00         ld hl,0
+ 343+ C106 22 84 94         ld (Sound),hl
+ 344+ C109
+ 345+ C109 E1               pop hl                                  ; RECOVERY Regs.
+ 346+ C10A D1               pop de
+ 347+ C10B C1               pop bc
+ 348+ C10C F1               pop af
+ 349+ C10D
+ 350+ C10D C9               ret
+ 351+ C10E
+ 352+ C10E              ; ----- ----- ----- ----- -----
+ 353+ C10E              ;
+ 354+ C10E              ;   23/9/26
+ 355+ C10E              ;
+ 356+ C10E              ;   El efecto del disparo de Amadeus es de tipo descendente.
  357+ C10E              ;
- 358+ C10E              ;   23/9/26
+ 358+ C10E              ;   HL define el sonido.
  359+ C10E              ;
- 360+ C10E              ;   El efecto del disparo de Amadeus es de tipo descendente.
- 361+ C10E              ;
- 362+ C10E              ;   HL define el sonido.
- 363+ C10E              ;
- 364+ C10E              ;   Valor inicial $1601. $16, (H) es el n° de ondas completas que mide el efecto, (duración).
- 365+ C10E              ;                        $01, (L) es la nota inicial del efecto, (longitud de cada semiciclo).
- 366+ C10E              ;
- 367+ C10E              ;   El efecto del disparo no activa el inhibidor de efectos de sonido, (Bit_0 Ctrl_6) pues el efecto de las explosiones y el del_
- 368+ C10E              ;   _ escudo tienen prioridad sobre este efecto.
+ 360+ C10E              ;   Valor inicial $1601. $16, (H) es el n° de ondas completas que mide el efecto, (duración).
+ 361+ C10E              ;                        $01, (L) es la nota inicial del efecto, (longitud de cada semiciclo).
+ 362+ C10E              ;
+ 363+ C10E              ;   El efecto del disparo no activa el inhibidor de efectos de sonido, (Bit_0 Ctrl_6) pues el efecto de las explosiones y el del_
+ 364+ C10E              ;   _ escudo tienen prioridad sobre este efecto.
+ 365+ C10E              ;
+ 366+ C10E              ;   La rutina no se ejecuta si se está reproduciendo una explosión o un efecto SHIELD.
+ 367+ C10E              ;
+ 368+ C10E              ;   INPUTS: (Shot_sound) <> "0".
  369+ C10E              ;
- 370+ C10E              ;   La rutina no se ejecuta si se está reproduciendo una explosión o un efecto SHIELD.
+ 370+ C10E              ;   MODIFY: AF, HL y BC.
  371+ C10E              ;
- 372+ C10E              ;   INPUTS: (Shot_sound) <> "0".
- 373+ C10E              ;
- 374+ C10E              ;   MODIFY: AF, HL y BC.
- 375+ C10E              ;
- 376+ C10E              ;   OUTPUT: (Shot_sound) actualizado.
+ 372+ C10E              ;   OUTPUT: (Shot_sound) actualizado.
+ 373+ C10E
+ 374+ C10E              Play_shot_sound_effect:
+ 375+ C10E
+ 376+ C10E              ;   Exclusiones:
  377+ C10E
- 378+ C10E              Play_shot_sound_effect:
- 379+ C10E
- 380+ C10E              ;   Exclusiones:
- 381+ C10E
- 382+ C10E 2A 89 94         ld hl,(Shot_sound)
- 383+ C111 7C               ld a,h
- 384+ C112 B5               or l
- 385+ C113 C8               ret z                   ; RET si no se ha producido disparo.
- 386+ C114
- 387+ C114 3A 5B 94         ld a,(Ctrl_6)
- 388+ C117 CB 47            bit 0,a
- 389+ C119 C0               ret nz                  ; RET si el inhibidor de sonido está activo, (se está ejecutando una explosión).
- 390+ C11A
- 391+ C11A 0E 02            ld c,2                  ; Nº de ondas de sonido que vamos a ejecutar por FRAME.
- 392+ C11C
- 393+ C11C              Loop_1:
- 394+ C11C
- 395+ C11C 3E 10            ld a,%00010000          ; Borde negro.
- 396+ C11E D3 FE            out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
- 397+ C120
- 398+ C120 45               ld b,l
- 399+ C121
- 400+ C121 10 FE        Delay_3 djnz Delay_3
- 401+ C123
- 402+ C123 AF               xor a                   ; Borde negro.
- 403+ C124 D3 FE            out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
- 404+ C126
- 405+ C126 45               ld b,l
- 406+ C127
- 407+ C127 10 FE        Delay_4 djnz Delay_4
- 408+ C129
- 409+ C129              ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
- 410+ C129
- 411+ C129 2C               inc l
- 412+ C12A 2C               inc l
- 413+ C12B 2C               inc l
- 414+ C12C 2C               inc l
- 415+ C12D
- 416+ C12D 25               dec h
- 417+ C12E
- 418+ C12E CC 38 C1         call z,Clean_shot_effect
- 419+ C131
- 420+ C131 0D               dec c
- 421+ C132
- 422+ C132 20 E8            jr nz,Loop_1
- 423+ C134
- 424+ C134 22 89 94         ld (Shot_sound),hl
- 425+ C137
- 426+ C137 C9               ret
- 427+ C138
- 428+ C138              Clean_shot_effect:
- 429+ C138
- 430+ C138 21 00 00         ld hl,0
- 431+ C13B 0E 01            ld c,1
- 432+ C13D
- 433+ C13D C9               ret
- 434+ C13E
- 435+ C13E              ;   -------------------------------------------------------------------------------------------
+ 378+ C10E 2A 89 94         ld hl,(Shot_sound)
+ 379+ C111 7C               ld a,h
+ 380+ C112 B5               or l
+ 381+ C113 C8               ret z                   ; RET si no se ha producido disparo.
+ 382+ C114
+ 383+ C114 3A 5B 94         ld a,(Ctrl_6)
+ 384+ C117 CB 47            bit 0,a
+ 385+ C119 C0               ret nz                  ; RET si el inhibidor de sonido está activo, (se está ejecutando una explosión).
+ 386+ C11A
+ 387+ C11A 0E 02            ld c,2                  ; Nº de ondas de sonido que vamos a ejecutar por FRAME.
+ 388+ C11C
+ 389+ C11C              Loop_1:
+ 390+ C11C
+ 391+ C11C 3E 10            ld a,%00010000          ; Borde negro.
+ 392+ C11E D3 FE            out ($fe),a             ; Semiciclo POSITIVO de la onda, BEEPER ON.
+ 393+ C120
+ 394+ C120 45               ld b,l
+ 395+ C121
+ 396+ C121 10 FE        Delay_3 djnz Delay_3
+ 397+ C123
+ 398+ C123 AF               xor a                   ; Borde negro.
+ 399+ C124 D3 FE            out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
+ 400+ C126
+ 401+ C126 45               ld b,l
+ 402+ C127
+ 403+ C127 10 FE        Delay_4 djnz Delay_4
+ 404+ C129
+ 405+ C129              ; Hemos generado una onda sonora. La siguiente onda generará un sonido más grave, para ello incrementamos el Delay de la señal.
+ 406+ C129
+ 407+ C129 2C               inc l
+ 408+ C12A 2C               inc l
+ 409+ C12B 2C               inc l
+ 410+ C12C 2C               inc l
+ 411+ C12D
+ 412+ C12D 25               dec h
+ 413+ C12E
+ 414+ C12E CC 38 C1         call z,Clean_shot_effect
+ 415+ C131
+ 416+ C131 0D               dec c
+ 417+ C132
+ 418+ C132 20 E8            jr nz,Loop_1
+ 419+ C134
+ 420+ C134 22 89 94         ld (Shot_sound),hl
+ 421+ C137
+ 422+ C137 C9               ret
+ 423+ C138
+ 424+ C138              Clean_shot_effect:
+ 425+ C138
+ 426+ C138 21 00 00         ld hl,0
+ 427+ C13B 0E 01            ld c,1
+ 428+ C13D
+ 429+ C13D C9               ret
+ 430+ C13E
+ 431+ C13E              ;   -------------------------------------------------------------------------------------------
+ 432+ C13E              ;
+ 433+ C13E              ;   23/9/26
+ 434+ C13E              ;
+ 435+ C13E              ;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no haya otra en curso, (Bit_0 Ctrl_6).
  436+ C13E              ;
- 437+ C13E              ;   23/9/26
- 438+ C13E              ;
- 439+ C13E              ;   Ejecuta el sonido de una explosión siempre que (Burst_sound) se haya iniciado y no haya otra en curso, (Bit_0 Ctrl_6).
- 440+ C13E              ;
- 441+ C13E              ;   Las explosiones de las entidades y Amadeus se generan con el módulo [Noise_efect] de la herramienta_
- 442+ C13E              ;   _ [Sound_Generator].
- 443+ C13E              ;
- 444+ C13E              ;   La duración de la explosión está definido por el valor de (H), no es relevante el valor que contenga (L):
- 445+ C13E              ;
- 446+ C13E              ;   Burst_sound_init_value equ $35                ;   Longitud de la explosión de las entidades, (duración).
- 447+ C13E              ;   Amadeus_Burst_sound_init_value equ $75        ;   Longitud de la explosión de Amadeus, (duración).
+ 437+ C13E              ;   Las explosiones de las entidades y Amadeus se generan con el módulo [Noise_efect] de la herramienta_
+ 438+ C13E              ;   _ [Sound_Generator].
+ 439+ C13E              ;
+ 440+ C13E              ;   La duración de la explosión está definido por el valor de (H), no es relevante el valor que contenga (L):
+ 441+ C13E              ;
+ 442+ C13E              ;   Burst_sound_init_value equ $35                ;   Longitud de la explosión de las entidades, (duración).
+ 443+ C13E              ;   Amadeus_Burst_sound_init_value equ $75        ;   Longitud de la explosión de Amadeus, (duración).
+ 444+ C13E              ;
+ 445+ C13E              ;   INPUTS: (Burst_sound) iniciado, <> "0".
+ 446+ C13E              ;
+ 447+ C13E              ;   MODIFY: AF',AF, HL, DE y BC.
  448+ C13E              ;
- 449+ C13E              ;   INPUTS: (Burst_sound) iniciado, <> "0".
- 450+ C13E              ;
- 451+ C13E              ;   MODIFY: AF',AF, HL, DE y BC.
- 452+ C13E              ;
- 453+ C13E              ;   OUTPUT: Actualiza (Burst_sound).
+ 449+ C13E              ;   OUTPUT: Actualiza (Burst_sound).
+ 450+ C13E
+ 451+ C13E              Play_burst_sound_effect:
+ 452+ C13E
+ 453+ C13E              ;   Exclusiones:
  454+ C13E
- 455+ C13E              Play_burst_sound_effect:
- 456+ C13E
- 457+ C13E              ;   Exclusiones:
- 458+ C13E
- 459+ C13E 3A 8B 94         ld a,(Burst_sound)
- 460+ C141 A7               and a
- 461+ C142 C8               ret z                   ; RET si (Burst_sound) no está iniciado, (no hay explosión).
- 462+ C143
- 463+ C143 08               ex af,af
- 464+ C144
- 465+ C144 3A 5B 94         ld a,(Ctrl_6)
- 466+ C147 CB 47            bit 0,a
- 467+ C149 C0               ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido". (Explosión anterior en curso).
- 468+ C14A
- 469+ C14A              ;   ----------------------
- 470+ C14A
- 471+ C14A CB C7            set 0,a
- 472+ C14C 32 5B 94         ld (Ctrl_6),a           ; Activa el inhibidor de sounds effects.
- 473+ C14F
- 474+ C14F 08               ex af,af                ; Restore (Burst_sound).
- 475+ C150
- 476+ C150 67               ld h,a
- 477+ C151 2E 00            ld l,0                  ; (HL) contiene (Burst_sound).
- 478+ C153
- 479+ C153 E5               push hl                 ; Cantidad de explosión que queda por ejecutar.
- 480+ C154
- 481+ C154 22 84 94         ld (Sound),hl           ; Cargamos el sonido de la explosión en (Sound) y definimos el nº de ondas a reproducir.
- 482+ C157 0E 03            ld c,3
- 483+ C159 CD 1E 9F         call Noise_efect
- 484+ C15C
- 485+ C15C D1               pop de                  ; Hemos de averiguar que la explosión no tiene valor negativo. Evitamos que entre en un bucle infinito de ejecución.
- 486+ C15D
- 487+ C15D 7A               ld a,d                  ; Así podemos ejecutar una explosión con la duración que queramos.
- 488+ C15E 94               sub h
- 489+ C15F
- 490+ C15F 38 05            jr c,Clean_burst_efect  ; Burst end, (Clean_burst_efect).
- 491+ C161
- 492+ C161 7C               ld a,h
- 493+ C162 32 8B 94         ld (Burst_sound),a
- 494+ C165
- 495+ C165 C9               ret
- 496+ C166
- 497+ C166              Clean_burst_efect:
- 498+ C166
- 499+ C166 AF               xor a
- 500+ C167 32 8B 94         ld (Burst_sound),a
- 501+ C16A
- 502+ C16A 3A 5B 94         ld a,(Ctrl_6)
- 503+ C16D CB 87            res 0,a
- 504+ C16F 32 5B 94         ld (Ctrl_6),a
- 505+ C172
- 506+ C172 C9               ret
- 507+ C173
- 508+ C173              ;   -------------------------------------------------------------------------------------------
- 509+ C173              ;
- 510+ C173              ;   23/9/26
- 511+ C173              ;
- 512+ C173              ;   Shield_sound_effect es el efecto de sonido (in game time) con más prioridad de los tres, los otros dos efectos son: Burst_sound_efect y _
- 513+ C173              ;   _ Shield_sound_effect.
- 514+ C173              ;
- 515+ C173              ;   La rutina se ejecuta siempre que (Shield_sound) se haya iniciado, (su valor no sea "0"). Ignora el inhibidor de efectos de sonido debido _
- 516+ C173              ;   _a que el efecto se reproduce completamente cada vez que se ejecuta la rutina.
+ 455+ C13E 3A 8B 94         ld a,(Burst_sound)
+ 456+ C141 A7               and a
+ 457+ C142 C8               ret z                   ; RET si (Burst_sound) no está iniciado, (no hay explosión).
+ 458+ C143
+ 459+ C143 08               ex af,af
+ 460+ C144
+ 461+ C144 3A 5B 94         ld a,(Ctrl_6)
+ 462+ C147 CB 47            bit 0,a
+ 463+ C149 C0               ret nz                  ; RET si está activo el bit "Inhibidor de efectos de sonido". (Explosión anterior en curso).
+ 464+ C14A
+ 465+ C14A              ;   ----------------------
+ 466+ C14A
+ 467+ C14A CB C7            set 0,a
+ 468+ C14C 32 5B 94         ld (Ctrl_6),a           ; Activa el inhibidor de sounds effects.
+ 469+ C14F
+ 470+ C14F 08               ex af,af                ; Restore (Burst_sound).
+ 471+ C150
+ 472+ C150 67               ld h,a
+ 473+ C151 2E 00            ld l,0                  ; (HL) contiene (Burst_sound).
+ 474+ C153
+ 475+ C153 E5               push hl                 ; Cantidad de explosión que queda por ejecutar.
+ 476+ C154
+ 477+ C154 22 84 94         ld (Sound),hl           ; Cargamos el sonido de la explosión en (Sound) y definimos el nº de ondas a reproducir.
+ 478+ C157 0E 03            ld c,3
+ 479+ C159 CD 1E 9F         call Noise_efect
+ 480+ C15C
+ 481+ C15C D1               pop de                  ; Hemos de averiguar que la explosión no tiene valor negativo. Evitamos que entre en un bucle infinito de ejecución.
+ 482+ C15D
+ 483+ C15D 7A               ld a,d                  ; Así podemos ejecutar una explosión con la duración que queramos.
+ 484+ C15E 94               sub h
+ 485+ C15F
+ 486+ C15F 38 05            jr c,Clean_burst_efect  ; Burst end, (Clean_burst_efect).
+ 487+ C161
+ 488+ C161 7C               ld a,h
+ 489+ C162 32 8B 94         ld (Burst_sound),a
+ 490+ C165
+ 491+ C165 C9               ret
+ 492+ C166
+ 493+ C166              Clean_burst_efect:
+ 494+ C166
+ 495+ C166 AF               xor a
+ 496+ C167 32 8B 94         ld (Burst_sound),a
+ 497+ C16A
+ 498+ C16A 3A 5B 94         ld a,(Ctrl_6)
+ 499+ C16D CB 87            res 0,a
+ 500+ C16F 32 5B 94         ld (Ctrl_6),a
+ 501+ C172
+ 502+ C172 C9               ret
+ 503+ C173
+ 504+ C173              ;   -------------------------------------------------------------------------------------------
+ 505+ C173              ;
+ 506+ C173              ;   23/9/26
+ 507+ C173              ;
+ 508+ C173              ;   Shield_sound_effect es el efecto de sonido (in game time) con más prioridad de los tres, los otros dos efectos son: Burst_sound_efect y _
+ 509+ C173              ;   _ Shield_sound_effect.
+ 510+ C173              ;
+ 511+ C173              ;   La rutina se ejecuta siempre que (Shield_sound) se haya iniciado, (su valor no sea "0"). Ignora el inhibidor de efectos de sonido debido _
+ 512+ C173              ;   _a que el efecto se reproduce completamente cada vez que se ejecuta la rutina.
+ 513+ C173              ;
+ 514+ C173              ;   El efecto es una especie de BEEP corto. Su duración es de dos ondas completas y la duración del semiciclo está contenida en 1 byte.
+ 515+ C173              ;
+ 516+ C173              ;   INPUT: (Shield_sound) contiene (Shield_sound_init_value), ($c0).
  517+ C173              ;
- 518+ C173              ;   El efecto es una especie de BEEP corto. Su duración es de dos ondas completas y la duración del semiciclo está contenida en 1 byte.
- 519+ C173              ;
- 520+ C173              ;   INPUT: (Shield_sound) contiene (Shield_sound_init_value), ($c0).
- 521+ C173              ;
- 522+ C173              ;   MODIFY: AF'y BC.
- 523+ C173
- 524+ C173              Play_Shield_sound_effect:
- 525+ C173
- 526+ C173 3A 8C 94         ld a,(Shield_sound)
- 527+ C176 A7               and a
- 528+ C177 C8               ret z                   ; RET si no se ha iniciado SHIELD.
- 529+ C178
- 530+ C178 0E 02            ld c,2                  ; 2 ondas completas per frame.
- 531+ C17A
- 532+ C17A              Loop_3:
- 533+ C17A
- 534+ C17A 08               ex af,af
- 535+ C17B
- 536+ C17B 3E 10            ld a,%00010000          ; Black BORDER.
- 537+ C17D D3 FE            out ($fe),a             ; Beeper ON.
- 538+ C17F
- 539+ C17F 08               ex af,af
- 540+ C180
- 541+ C180 47               ld b,a
- 542+ C181
- 543+ C181 10 FE        Delay_7 djnz Delay_7
- 544+ C183
- 545+ C183 08               ex af,af
- 546+ C184
- 547+ C184 AF               xor a                   ; Black BORDER.
- 548+ C185 D3 FE            out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
- 549+ C187
- 550+ C187 08               ex af,af
- 551+ C188
- 552+ C188 47               ld b,a
- 553+ C189
- 554+ C189 10 FE        Delay_8 djnz Delay_8
- 555+ C18B
- 556+ C18B 0D               dec c
- 557+ C18C
- 558+ C18C 20 EC            jr nz,Loop_3
- 559+ C18E
- 560+ C18E AF               xor a
- 561+ C18F 32 8C 94         ld (Shield_sound),a
- 562+ C192
- 563+ C192 C9               ret
- 564+ C193
- 565+ C193              ; ---------------------------------------------------------------
+ 518+ C173              ;   MODIFY: AF'y BC.
+ 519+ C173
+ 520+ C173              Play_Shield_sound_effect:
+ 521+ C173
+ 522+ C173 3A 8C 94         ld a,(Shield_sound)
+ 523+ C176 A7               and a
+ 524+ C177 C8               ret z                   ; RET si no se ha iniciado SHIELD.
+ 525+ C178
+ 526+ C178 0E 02            ld c,2                  ; 2 ondas completas per frame.
+ 527+ C17A
+ 528+ C17A              Loop_3:
+ 529+ C17A
+ 530+ C17A 08               ex af,af
+ 531+ C17B
+ 532+ C17B 3E 10            ld a,%00010000          ; Black BORDER.
+ 533+ C17D D3 FE            out ($fe),a             ; Beeper ON.
+ 534+ C17F
+ 535+ C17F 08               ex af,af
+ 536+ C180
+ 537+ C180 47               ld b,a
+ 538+ C181
+ 539+ C181 10 FE        Delay_7 djnz Delay_7
+ 540+ C183
+ 541+ C183 08               ex af,af
+ 542+ C184
+ 543+ C184 AF               xor a                   ; Black BORDER.
+ 544+ C185 D3 FE            out ($fe),a             ; Semiciclo NEGATIVO de la onda, BEEPER OFF.
+ 545+ C187
+ 546+ C187 08               ex af,af
+ 547+ C188
+ 548+ C188 47               ld b,a
+ 549+ C189
+ 550+ C189 10 FE        Delay_8 djnz Delay_8
+ 551+ C18B
+ 552+ C18B 0D               dec c
+ 553+ C18C
+ 554+ C18C 20 EC            jr nz,Loop_3
+ 555+ C18E
+ 556+ C18E AF               xor a
+ 557+ C18F 32 8C 94         ld (Shield_sound),a
+ 558+ C192
+ 559+ C192 C9               ret
+ 560+ C193
+ 561+ C193              ; ---------------------------------------------------------------
+ 562+ C193              ;
+ 563+ C193              ;   18/9/26
+ 564+ C193              ;
+ 565+ C193              ;   Inicializa la variable (Burst_sound) con el valor de la longitud de la onda que genera la explosión a ejecutar:
  566+ C193              ;
- 567+ C193              ;   18/9/26
- 568+ C193              ;
- 569+ C193              ;   Inicializa la variable (Burst_sound) con el valor de la longitud de la onda que genera la explosión a ejecutar:
- 570+ C193              ;
- 571+ C193              ;   Burst_sound_init_value equ $35                   - Longitud de la explosión de las entidades, (duración).
- 572+ C193              ;   Amadeus_Burst_sound_init_value equ $70           - Longitud de la explosión de Amadeus, (duración).
- 573+ C193              ;
- 574+ C193              ;   MODIFY: A y H.
- 575+ C193              ;
- 576+ C193              ;   OUTPUT: (Burst_sound) y H contienen la duración del semiciclo de la onda que ha de generar la explosión.
- 577+ C193
- 578+ C193
- 579+ C193              Init_Burst_sound:
- 580+ C193
- 581+ C193 3A 8B 94         ld a,(Burst_sound)
- 582+ C196 A7               and a
- 583+ C197 C0               ret nz                                           ; RET si ya está iniciado el efecto.
+ 567+ C193              ;   Burst_sound_init_value equ $35                   - Longitud de la explosión de las entidades, (duración).
+ 568+ C193              ;   Amadeus_Burst_sound_init_value equ $70           - Longitud de la explosión de Amadeus, (duración).
+ 569+ C193              ;
+ 570+ C193              ;   MODIFY: A y H.
+ 571+ C193              ;
+ 572+ C193              ;   OUTPUT: (Burst_sound) y H contienen la duración del semiciclo de la onda que ha de generar la explosión.
+ 573+ C193
+ 574+ C193
+ 575+ C193              Init_Burst_sound:
+ 576+ C193
+ 577+ C193 3A 8B 94         ld a,(Burst_sound)
+ 578+ C196 A7               and a
+ 579+ C197 C0               ret nz                                           ; RET si ya está iniciado el efecto.
+ 580+ C198
+ 581+ C198              ;   Init Burst_sound_efect.
+ 582+ C198
+ 583+ C198              ;   La explosión de Amadeus ha de ser más larga que la de las entidades.
  584+ C198
- 585+ C198              ;   Init Burst_sound_efect.
- 586+ C198
- 587+ C198              ;   La explosión de Amadeus ha de ser más larga que la de las entidades.
- 588+ C198
- 589+ C198 26 35            ld h,Burst_sound_init_value
- 590+ C19A
- 591+ C19A 3A CF 90         ld a,(Impacto_Amadeus)
- 592+ C19D A7               and a
- 593+ C19E 28 02            jr z,1F
- 594+ C1A0
- 595+ C1A0 26 75            ld h,Amadeus_Burst_sound_init_value
- 596+ C1A2
- 597+ C1A2 7C           1 ld a,h
- 598+ C1A3
- 599+ C1A3 32 8B 94         ld (Burst_sound),a
- 600+ C1A6
- 601+ C1A6 C9               ret
- 602+ C1A7
- 603+ C1A7
+ 585+ C198 26 35            ld h,Burst_sound_init_value
+ 586+ C19A
+ 587+ C19A 3A CF 90         ld a,(Impacto_Amadeus)
+ 588+ C19D A7               and a
+ 589+ C19E 28 02            jr z,1F
+ 590+ C1A0
+ 591+ C1A0 26 75            ld h,Amadeus_Burst_sound_init_value
+ 592+ C1A2
+ 593+ C1A2 7C           1 ld a,h
+ 594+ C1A3
+ 595+ C1A3 32 8B 94         ld (Burst_sound),a
+ 596+ C1A6
+ 597+ C1A6 C9               ret
+ 598+ C1A7
+ 599+ C1A7
 # file closed: Sound.asm
-3126  C1A7              	include "Print_text_msg.asm"
+3125  C1A7              	include "Print_text_msg.asm"
 # file opened: Print_text_msg.asm
    1+ C1A7              ; ----------------------------------------------------------
    2+ C1A7              ;
@@ -17675,7 +17670,7 @@
 1092+ C627
 1093+ C627
 # file closed: Print_text_msg.asm
-3127  C627              	include "Niveles.asm"
+3126  C627              	include "Niveles.asm"
 # file opened: Niveles.asm
    1+ C627              ; ------------------------------------------------------------------
    2+ C627              ;
@@ -17923,11 +17918,11 @@
  221+ C702
  222+ C702
 # file closed: Niveles.asm
+3127  C702
 3128  C702
-3129  C702
-3130  C702              	SAVESNA "Amadeus.sna", START
+3129  C702              	SAVESNA "Amadeus.sna", START
+3130  C702
 3131  C702
 3132  C702
 3133  C702
-3134  C702
 # file closed: Banco_de_pruebas.asm
