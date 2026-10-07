@@ -495,17 +495,19 @@ Inicia_transicion_de_salida
 
 ; ------------------------------------------------------------------------
 ;
-;	29/4/26
+;	07/10/26
 ;
-;	Activa FLAG (GAME OVER), "reutilizamos" el .defw (Entidad_sospechosa_de_colision) como contador de 16 bits.
-;	Lo utilizaremos como temporizador. Determina el tiempo que aparece el msg. "GAME OVER" en pantalla.
+;	Activa el FLAG (GAME OVER). Utilizaremos la variable: (Entidad_sospechosa_de_colision) como temporizador.
+;	Determinará el tiempo que estará el msg "GAME OVER" en pantalla antes de volver al menú principal o a la pantalla del campeón.
+;
+;	MODIFY: HL, (Entidad_sospechosa_de_colision).
 
 game_over:
 
 	ld hl,Ctrl_5
 	set 6,(hl)
 
-	ld hl,$0150
+	ld hl,$0170
 	ld (Entidad_sospechosa_de_colision),hl
 
 	ret

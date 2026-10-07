@@ -50,11 +50,6 @@ Get_note:
     ld sp,hl
 
     pop bc                                            ; (B) indica PAUSE. "Z" NO PAUSE, "NZ" PAUSE.
-
-    inc b
-    dec b
-    jr nz, Aplica_pausa
-
     pop de
     pop hl                                            ; (HL) contiene la duración de cada semiciclo que forma la onda sonora, (nota).
 
@@ -74,20 +69,21 @@ Get_note:
 
 Note_Increase:
 
-    inc hl
-    inc hl
+    inc d
+
+    inc l
+
     jr 3F
 
 Note_Decrease:
 
-    dec hl
-    dec hl
+    inc d
+
+    dec l
 
 3 dec c
-    dec c
 
     jr z,Last_note
-    jr c,Last_note
 
 ;   Guardamos la nota incrementda/decrementada para seguir más tarde con la ejecución:
 
@@ -103,7 +99,7 @@ Note_Decrease:
 
 ;   Preparamos y ejecutamos la nota.
 
-    ld c,2                                           ; Duración de la nota.
+    ld c,4
 
     ld (Sound),hl
 
@@ -117,11 +113,6 @@ Last_note:
     ld (Indice_Sprite_der),a                         ; Indica que pasamos a la siguiente nota.
 
     jr 2B
-
-Aplica_pausa:
-
-    jr $
-
 
 ; ----------------------------------------------------------------------------------------------
 ;

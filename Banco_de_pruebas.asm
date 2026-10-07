@@ -368,7 +368,7 @@ Cambio_de_estado      													; 	El temporizador de estados a llegado a "0"
 
 	call Inicia_Shield
 
-	call Play_Shield_sound_effect 										; v2. Ok.
+	call Play_Shield_sound_effect	; v2. Ok.
 
 	ld a,(Shield)
 	and a
@@ -405,8 +405,8 @@ Incrementa_FRAMES
 
 ;	Sound efects
 
-	call Play_burst_sound_effect                                  		; v2. Ok.
-	call Play_shot_sound_effect 										; v2. Ok.
+	call Play_burst_sound_effect	; v2. Ok.
+	call Play_shot_sound_effect	; v2. Ok.
 
 ;	-------------------------------------------------------------
 ;
@@ -1077,8 +1077,8 @@ START:
 
 Main_menu:
 
-	call Clean_and_logo 									; v2. Ok.
-	call Print_Main_menu  									; v2. Ok.
+	call Clean_and_logo	; v2. Ok.
+	call Print_Main_menu	; v2. Ok.
 	call Firma
 
 ;	Print Best Score if it exist.
@@ -1519,7 +1519,8 @@ Game_over_00
 
 	ld hl,Lives
 	dec (hl)
-	call z,game_over
+
+	call z,game_over	; v2. Ok.
 	jr z,End_frame
 
 New_Amadeus:
