@@ -879,7 +879,7 @@ Shot_sound defw 0
 Burst_sound db 0 											; Byte que define la duración de una explosión.
 Shield_sound defw 0
 
-Puntero_musical defw DONE_NOTES_MELODY_INDEX
+Puntero_game_over_noise defw Game_over_noise_index 			; (Puntero_game_over_noise) situado en la 1a nota del índice.
 
 ; Varios:
 
@@ -1461,9 +1461,7 @@ Gestion_de_Amadeus:
 ;	Reponemos los controles KEYBOARD en caso de haber seleccionado joystick SINCLAIR.
 ;	Si la caja de 4 bytes (Sinclair_db_box) está vacía no habrá transvase de datos.
 
-
-	call Play_DONE_in_time
-
+	call Game_over_noise	; v2. Ok.
 
 	ld hl,Ctrl_7
 	res 1,(hl)

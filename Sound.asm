@@ -8,11 +8,24 @@
 ;   (Indice_Sprite_izq)
 ;   (Puntero_DESPLZ_der)
 ;
-;   Para almacenar el perfil de la nota que está en ejecución.
+;   Para almacenar el perfil de la nota que está en ejecución pues la rutina se ejecuta "IN GAME TIME" y sólo reproducirá 4 ondas_
+;   _del total que forman la nota.
 ;
-;   Con una rutina de sonido `IN TIME´, ejecutando unicamente una onda. La nota más alta que podremos ejecutar es $01b0.
+;   La rutina genera un "ruido" o especie de zumbido ascendente/descendente llamando a la rutina [Sound_Generator].
+;   La melodía consta de dos notas incluidas en el índice: "Game_over_noise_index:". El puntero (Puntero_game_over_noise) avanza_
+;   _ por el índice proporcionando los datos de las notas a la rutina.
+;
+;   La rutina [Sound_Generator] requiere que los parámetros de la nota a ejecutar se den de la siguiente forma:
+;
+;           C contiene el nº de veces que vamos a generar la onda del sonido.
+;           D Indica si el sonido es ascendente, "1" o descendente, "0".
+;           E Indica el nº de incrementos/decrementos que sumeremos/restaremos al delay inicial.
+;           B = "1". Indica que vamos a generar un efecto de ruido, (pseudo RND).
+;        (HL) = Contiene el sonido, (duración del semiciclo), NOTA.
+;
+;   MODIFY: AF, HL, BC y DE, (Puntero_game_over_noise).
 
-Play_DONE_in_time:
+Game_over_noise:
 
 ;   Nota en ejecución??
 
@@ -27,7 +40,7 @@ Play_DONE_in_time:
 
 New_note:
 
-    ld hl,(Puntero_musical)
+    ld hl,(Puntero_game_over_noise)
     call Extrae_address 
 
 ;   Detecta final de canción.
@@ -41,7 +54,7 @@ New_note:
     inc de
     inc de
 
-    ld (Puntero_musical),de                           ; (Puntero_musical) está situado en la siguiente nota del índice.
+    ld (Puntero_game_over_noise),de                   ; Puntero situado en la siguiente nota del índice.
 
 Get_note:
 
@@ -49,35 +62,24 @@ Get_note:
 
     ld sp,hl
 
-    pop bc                                            ; (B) indica PAUSE. "Z" NO PAUSE, "NZ" PAUSE.
-    pop de
-    pop hl                                            ; (HL) contiene la duración de cada semiciclo que forma la onda sonora, (nota).
+    pop bc                                            ; (B) siempre "0", (C) indica duración de la nota, (n°de ondas).
+    pop de                                            ; (DE) siempre contendrá "0".
+    pop hl                                            ; (H) = "0", (L) contiene el valor de la nota.
 
 ;   Tenemos la nota cargada en os registros.
 ;   Determinamos si la nota se ejecuta con incremento o decremento.
 
-;   (D)="0" Nota sin incremento o decremento.
-;   (D)="1" Note with INCREASE.
-;   (D)="2" Note with DECREASE.
-
     inc d
     dec d
-    jr z,3F
-
-    dec d
-    jr nz, Note_Decrease
+    jr z,Note_Decrease
 
 Note_Increase:
-
-    inc d
 
     inc l
 
     jr 3F
 
 Note_Decrease:
-
-    inc d
 
     dec l
 
@@ -103,7 +105,7 @@ Note_Decrease:
 
     ld (Sound),hl
 
-    call Sound_Generator
+    call Sound_Generator    ; v2. Ok.
 
     ret
 

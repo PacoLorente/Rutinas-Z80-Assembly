@@ -328,7 +328,7 @@ Definicion_Amadeus:
 ; ---------------------------------------------
 ; ---------------------------------------------
 
-DONE_NOTES_MELODY_INDEX:
+Game_over_noise_index:
 
 	defw Note_1x
 	defw Note_2x
@@ -340,15 +340,6 @@ DONE_NOTES_MELODY_INDEX:
 	defw Note_2x
 	defw Note_1x
 	defw Note_2x
-
-
-
-
-	defw 0
-
-
-	defw Note_3x
-	defw Note_4x
 
 	defw 0
 
@@ -368,7 +359,7 @@ Note_2x:
 ;    ld e,0                                                 ; No existe decremento. (sonido plano).
 
 	defw $0020
-	defw $0200
+	defw $0000
 	defw $0020
 
 Note_3x:
