@@ -244,7 +244,16 @@ No_repeat_key:
 
 	ret
 
-; -----------------------------------------------------------------------------------------------
+; --------------------------------------------------------------------------------------------------------------------
+;
+;	9/10/26
+;
+;	Escanea el teclado utilizando la rutina KEY_SCAN de la ROM. Almacena el KEYCODE de la tecla pulsa en el registro E.
+;	Es necesario pulsar UNA sola tecla para salir de la rutina.
+;
+;	MODIFY: AF, HL, BC y DE.
+;
+;	OUTPUT: (E) contiene el KEYCODE de la tecla pulsada.
 
 ROM_Key_Scan:
 
@@ -273,24 +282,35 @@ ROM_Key_Scan:
 
 ; --------------------------------------------
 ;
-;	9/3/26
+;	9/10/26
 ;
 ;	Scan keyboard in Main menu.
+;
+;	MODIFY: AF, HL, BC y DE.
 
 Main_menu_key:
 
-    ld hl,Ctrl_6 											; Inicializa RETURN TO MAIN MENU.
+	ld hl,Ctrl_6 											; 	   Inicializa RETURN TO MAIN MENU.
     res 1,(hl)
 
-	call ROM_Key_Scan 										; Scan keyboard.
+; 															BIT 1, "1" Este bit es activado por la rutina [Press_START] cuando el temporizador (Start_counter) llega a "0".
+; 																   El bit indica a la rutina principal START: que ha de volver a mostrar el menú principal.
+; 																   El submenú CONTROLS se muestra en pantalla un tiempo definido por (Start_counter), pasado este tiempo_
+;																   _la rutina activa `este bit´ y sale de la rutina. El menú está así diseñado para poder DEFINIR los controles si los
+; 																   _actuales no nos agradan.
+
+	call ROM_Key_Scan	; v2. Ok. 							; Scan keyboard.
 
 ;	Analize key_code.
+
+	jr $
+
 
 ;	"K" key was pressed ?
 
 	ld a,e
 	cp $11 		
-	call z,BEEP												; "K" key_code.
+	call z,BEEP	; v2. Ok.									; "K" key_code.
 	call z,Show_controls_keys
 	ret z
 

@@ -1093,7 +1093,7 @@ Main_menu:
 
 	call nz,Print_new_best_score	; v2. Ok. 				; Hemos superado la puntuación máxima. Imprimimos la nueva puntuación.
 
-	call Main_menu_key										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
+	call Main_menu_key	;###								; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 
 	ld a,(Ctrl_6)
 	bit 1,a
