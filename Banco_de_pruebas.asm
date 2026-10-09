@@ -44,13 +44,18 @@ Inicio_de_msg_de_nombre equ Line_20 + 14  								; En esta dirección de pantal
 ROM_ASCII equ $3c00 													; A esta dirección de memoria sumaremos el código ASCII correspondiente para situarnos en los 8 bytes que forman el char.
 KEY_SCAN equ $028e
 
+Sprite_vacio equ $82f0													; 48 Bytes de "0".
+
+; 	Dirección de la variable ROM, (FRAMES).
+
 FRAMES equ $5c78														; Variable de 24 bits. Almacena el nº de cuadros, (frames) que llevamos construidos. Reloj en tiempo real.
 FRAMES_3 equ $5c7a
 
-Direccion_Logo_principal equ $4049
-Sprite_vacio equ $82f0													; 48 Bytes de "0".
+; 	Direcciones de pantalla de vidas, escudos, Firma y cartel Best_Score:
 
-;	Vidas y escudos:
+Direccion_Logo_principal equ $4049
+Firma_address equ $50da 		 										; Dirección de pantalla donde se imprime la Firma.
+Best_Score_address equ Line_20 + 1 										; Dirección de pantalla donde se imprime el cartel "Best_Score". ($50a1).
 
 Vida_1 equ $4001														; Dirección de pantalla donde se pintan los escudos.
 Vida_2 equ $4003
@@ -60,7 +65,7 @@ Escudo_1 equ $4041														; Dirección de pantalla donde se pintan las vid
 Escudo_2 equ $4043
 Escudo_3 equ $4046
 
-;	Contador de entidades:
+;	 Contador de entidades:
 
 Decenas_cont_ent equ $400b
 
@@ -94,7 +99,7 @@ Decenas_cont_ent_23 equ Decenas_cont_ent_22 + 256
 
 ; ----- ----- ----- ----- ----- ----- ----- -----
 
-Unidades_cont_ent equ $400d									;$4010
+Unidades_cont_ent equ $400d
 
 Unidades_cont_ent_1 equ Unidades_cont_ent + 256
 Unidades_cont_ent_2 equ Unidades_cont_ent_1 + 256
@@ -141,7 +146,7 @@ Siete_Score equ $3db8
 Ocho_Score equ $3dc0
 Nueve_Score equ $3dc8
 
-Unidades_Score equ $4057												;$405e
+Unidades_Score equ $4057
 Unidades_Score_1 equ Unidades_Score + 256
 Unidades_Score_2 equ Unidades_Score_1 + 256
 Unidades_Score_3 equ Unidades_Score_2 + 256
@@ -213,7 +218,7 @@ Amadeus_disparos_scanlines_album_2 equ $8282	;	($8284 - $8289)
 Entidades_disparos_scanlines_album equ $8288	;	($8288 - $82b9)		; 49 bytes, (7 disparos, 7 bytes cada uno), $31. 
 Entidades_disparos_scanlines_album_2 equ $82bb	;	($82bb - $82ec)     Burst
 
-;	Atributos de la luna.
+; Dirección de Atributos de video de la luna.
 
 Attr_Moon_File4 equ $587a
 Attr_Moon_File4_2 equ $587c
@@ -1079,13 +1084,14 @@ Main_menu:
 
 	call Clean_and_logo	; v2. Ok.
 	call Print_Main_menu	; v2. Ok.
-	call Firma
+	call Firma	; v2. Ok.
 
 ;	Print Best Score if it exist.
 
 	ld a,(Ctrl_7)
 	bit 0,a
-	call nz,Print_new_best_score
+
+	call nz,Print_new_best_score	; v2. Ok. 				; Hemos superado la puntuación máxima. Imprimimos la nueva puntuación.
 
 	call Main_menu_key										; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
 

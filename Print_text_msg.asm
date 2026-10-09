@@ -2,27 +2,38 @@
 ;
 ;   16/6/26
 ;
+;   Imprime el cartel "Best_Score", el nombre del campeón y la nueva puntuación máxima en la esquina inferior izquierda del _
+;   _Menú Principal.
+;
+;   MODIFY: AF, HL, DE y BC.
 
 Print_new_best_score:
 
-	call Cartel_Best_Score                      ; Imprime el Cartel "Best Score" en la esquina inferior izquierda de la pantalla_
+	call Cartel_Best_Score ; v2. Ok.            ; Imprime el Cartel "Best Score" en la esquina inferior izquierda de la pantalla_
 ;                                               ; _del menú principal.
 
-;   Print msg.
+;   Imprime el nombre del campeón y la nueva puntuación máxima justo debajo del cartel Best_Score.
+;   La rutina [Print_text_msg] requiere de los siguientes parámetros para imprimir texto:
+
+;           HL apunta al mensage a imprimir, (msg).
+;           DE indica la fila de pantalla donde queremos imprimir el msg.
+;            A contiene los attrs. del msg.
+;            B Actúa como temporizador, ralentiza la impresión de caracteres, (simula una máquina de escribir).
+;              No actua cuando su valor es "0".
 
     ld de,Line_22+1
 
     ld a,%01000111
     ld b,0
     ld hl,Nombre_del_campeon
-    call Print_text_msg
+    call Print_text_msg ; v2. Ok.
 
     inc e
     inc e
 
     ld a,%01000111
     ld b,0
-    ld hl,a10
+    ld hl,a10                           ; a10 defm "--",0
     call Print_text_msg
 
     inc e

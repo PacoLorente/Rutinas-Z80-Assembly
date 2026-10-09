@@ -1,90 +1,107 @@
 ; ---------------------------------------------------------------------------
 ;
-;   10/6/26
+;   9/10/26
 ;
-;   Print "Best Score" in Main menu.
+;   Print "Best Score" in Main menu, (esquina inferior izquierda).
 ;
+;   El gráfico Best_Score está compuesto por siete bloques de datos:
+;
+;   Best_Score_1
+;   Best_Score_2
+;   Best_Score_3
+;   Best_Score_4
+;   Best_Score_5
+;   Best_Score_6
+;   Best_Score_7
+;
+;   MODIFY: AF, HL, DE y BC.
 
 Cartel_Best_Score:
 
-    ld hl,Line_20+1              ; Dirección de pantalla. ($5063).
-    ld de,Best_Score_1           ; Data.
+    ld hl,Best_Score_address        ; Dirección de pantalla del 1er bloque.
+    ld de,Best_Score_1              ; Data.
+    ld a,%01000110                  ; Attrs.
+    ld bc,$0101                     ; Columnas/Filas.
+
+    call Pinta_imagen   ; v2. Ok.   ; Print Best_Score_1.
+
+    ld hl,Best_Score_address        ; Dirección de pantalla del 2° bloque de datos.
+    call Down_File
+    ld de,Best_Score_2
     ld a,%01000110
     ld bc,$0101
 
-    call Pinta_imagen            ; Print Best_Score_1.
+    call Pinta_imagen
 
-    ld hl,Line_21+1              ; Dirección de pantalla.
-    ld de,Best_Score_2           ; Data.
+    ld hl,Best_Score_address + 1
+    ld de,Best_Score_3
     ld a,%01000110
     ld bc,$0101
 
-    call Pinta_imagen            ; Print Best_Score_2.
+    call Pinta_imagen
 
-    ld hl,Line_20+2              ; Dirección de pantalla.
-    ld de,Best_Score_3           ; Data.
-    ld a,%01000110
-    ld bc,$0101
-
-    call Pinta_imagen            ; Print Best_Score_3.
-
-    ld hl,Line_20+3              ; Dirección de pantalla.
-    ld de,Best_Score_4           ; Data.
+    ld hl,Best_Score_address + 2
+    ld de,Best_Score_4
     ld a,%01000110
     ld bc,$0102
 
-    call Pinta_imagen            ; Print Best_Score_4.
+    call Pinta_imagen
 
-    ld hl,Line_21+2              ; Dirección de pantalla.
-    ld de,Best_Score_5           ; Data.
+    ld hl,Best_Score_address + 1
+    call Down_File
+    ld de,Best_Score_5
     ld a,%01000110
     ld bc,$0101
 
-    call Pinta_imagen            ; Print Best_Score_5.
+    call Pinta_imagen
 
-    ld hl,Line_20+4              ; Dirección de pantalla.
-    ld de,Best_Score_6           ; Data.
+    ld hl,Best_Score_address + 3
+    ld de,Best_Score_6
     ld a,%01000110
     ld bc,$0102
 
-    call Pinta_imagen            ; Print Best_Score_6.
+    call Pinta_imagen
 
-    ld hl,Line_20+5              ; Dirección de pantalla.
-    ld de,Best_Score_7           ; Data.
+    ld hl,Best_Score_address + 4
+    ld de,Best_Score_7
     ld a,%01000110
     ld bc,$0202
 
-    call Pinta_imagen            ; Print Best_Score_7.
+    call Pinta_imagen
 
     ret
 
 ; ---------------------------------------------------------------------------
 ;
-;   7/6/26
+;   9/10/26
 ;
-;   Imprime Firma en pantalla.
+;   Imprime Firma en pantalla, (esquina inferior derecha en el menú principal.)
 ;
+;   El gráfico Firma está compuesto por tres bloques de datos:
 ;
+;   Firma_Lorente_1
+;   Firma_Lorente_2
+;   Fecha_Firma
+;
+;   MODIFY: AF, HL, DE y BC.
 
 Firma:
 
-;    jr $
-
-    ld hl,$50da                 ; Dirección de pantalla.
+    ld hl,Firma_address
     ld de,Firma_Lorente_1       ; Data.
     ld a,%01000110
     ld bc,$0201
 
-    call Pinta_imagen
+    call Pinta_imagen   ; v2. Ok.
 
-    ld hl,$50dc                 ; Dirección de pantalla.
+    ld hl,Firma_address + 2     ; Dirección de pantalla.
     ld de,Firma_Lorente_2       ; Data.
     ld a,%01000110
     ld bc,$0201
 
     call Pinta_imagen
 
-    ld hl,$50de                 ; Dirección de pantalla.
+    ld hl,Firma_address + 4     ; Dirección de pantalla.
     ld de,Fecha_Firma           ; Data.
     ld a,%01000110
     ld bc,$0101
