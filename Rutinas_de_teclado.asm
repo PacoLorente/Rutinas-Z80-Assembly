@@ -303,14 +303,13 @@ Main_menu_key:
 
 ;	Analize key_code.
 
-	jr $
-
+;	jr $
 
 ;	"K" key was pressed ?
 
 	ld a,e
-	cp $11 		
-	call z,BEEP	; v2. Ok.									; "K" key_code.
+	cp $11 		 											; "K" key_code.
+	call z,BEEP	; v2. Ok.									; "K" key is pressed. Play BEEP and show Controls keys screen.
 	call z,Show_controls_keys
 	ret z
 

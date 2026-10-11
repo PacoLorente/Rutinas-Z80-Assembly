@@ -697,23 +697,49 @@ Modifica_atributos:
 ;
 ;   10/3/26
 ;
+;   Imprime los controles, (teclas) que hemos seleccionado para nuestros movimientos.
+
+
+
+
+
 
 Show_controls_keys:
 
-;   Hay que corregir la posición donde escribiremos la primera línea de texto si hemos definido "SPACE" o "Enter"_
-;   _como alguna de las teclas de movimiento de Amadeus
 
-;   Borramos el menú principal.
-
-    call Clean_main_menu
+    call Clean_main_menu    ; v2. Ok.
 
 ;   Imprimimos CONTROLES.
 
-    ld hl,a7                                                ; "Controls:".
-    ld de,Line_8 + 12
-    ld b,0
-    ld a,%01000110                                          ; attrs.
-    call Print_text_msg                                     ; Print "Controls:".
+    ld hl,a7                                                ; Cadena de texto: "Controls:".
+    ld de,Line_8 + 12                                       ; Dirección de pantalla, Fila 8, columna 12.
+    ld b,0                                                  ; No efecto "Máquina de escribir".
+    ld a,%01000110                                          ; Attrs.: BRIGHT, BLACK PAPER, YELLOW INK.
+
+;           HL apunta al mensage a imprimir, (msg).
+;           DE indica la fila de pantalla donde queremos imprimir el msg.
+;            A contiene los attrs. del msg.
+;            B Actúa como temporizador, ralentiza la impresión de caracteres, (simula una máquina de escribir).
+;              No actua cuando su valor es "0".
+;
+;   Recordatorio. TABLA DE ATRIBUTOS:
+;
+;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;   COLORES: 0 ..... NEGRO
+;            1 ..... AZUL
+;            2 ..... ROJO
+;            3 ..... MAGENTA
+;            4 ..... VERDE
+;            5 ..... CIAN
+;            6 ..... AMARILLO
+;            7 ..... BLANCO
+;
+
+    call Print_text_msg ; v2. Ok.                           ; Print "Controls:".
+
+    jr $
+
 
     ld hl,Move_LEFT
     ld de,Line_12 + 6                                       ; Posición de inicio de línea.
@@ -862,10 +888,19 @@ Clean_Define_menu:
 
     ret
 
+; -----------------------------------------------------------------------
+;
+;   11/10/26
+;
+;   Fija los atributos a NEGRO de las Filas del Menú Principal que contienen texto.
+;
+;   MODIFY: AF, HL y B.
+
+
 Clean_main_menu: 
 
     ld hl,Line_9
-    call CLean_file
+    call CLean_file ; v2. Ok.
 
     ld hl,Line_11
     call CLean_file
@@ -912,11 +947,32 @@ Clean_Show_controls_menu:
 
     ret
 
-CLean_file
+; ---------------------------------------------------------------------
+;
+;   11/10/26
+;
+;   Set BLACK attrs. a screen file.
+;
+;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;   COLORES: 0 ..... NEGRO
+;            1 ..... AZUL
+;            2 ..... ROJO
+;            3 ..... MAGENTA
+;            4 ..... VERDE
+;            5 ..... CIAN
+;            6 ..... AMARILLO
+;            7 ..... BLANCO
+;
+;   INPUTS: HL contiene la dirección de pantalla del primer byte de la 1a columna de la fila, ej.: $4820, $4080, $5000, etc ..
+;
+;   MODIFY: AF, HL y B.
 
-    call Calcula_direccion_atributos
+CLean_file:
 
-    ld b,32
+    call Calcula_direccion_atributos    ; v2. Ok.
+
+    ld b,32                             ; B actúa como contador de columnas, ($20).
     xor a
 
 1 ld (hl),a
