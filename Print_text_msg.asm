@@ -736,28 +736,34 @@ Show_controls_keys:
 ;            7 ..... BLANCO
 ;
 
-    call Print_text_msg ; v2. Ok.                           ; Print "Controls:".
+    call Print_text_msg ; v2. Ok.                           ; PRINT "Controls:".
+
+;   Next line to print:                                     "Press "X" or "X" to move". -------------------------------------------
+
+    ld hl,Move_LEFT                                         ; HL se sitúa en el KEYCODE de la tecla de control "Move_LEFT".
+    ld de,Line_12 + 6                                       ; Posición inicial de la línea a imprimir.
+
+    call Corrige_inicio_de_linea    ; v2. Ok.
+
+    inc hl                                                  ; HL se sitúa en el KEYCODE de la tecla de control "Move_RIGHT".
+
+    call Corrige_inicio_de_linea                            ; Hemos DESPLAZADO el carro de impresión, si hemos seleccionado teclas especiales para_
+;                                                           ; _ los controles: (Move_LEFT) y (Move_RIGHT).
+
+;   PRINT LINE:
+
+    ld hl,a0                                                ; Cadena de texto: "Press ".
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+
+    call Print_text_msg ; v2. Ok.                           ; PRINT "Press ".
+
+    inc e                                                   ; +1 Columna.
+
+;   Imprime el código ASCII correspondiente al KEYCODE (Move_LEFT).
+;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_LEFT) es "1", KEYCODE $24.
 
     jr $
 
-
-    ld hl,Move_LEFT
-    ld de,Line_12 + 6                                       ; Posición de inicio de línea.
-
-    call Corrige_inicio_de_linea
-
-    inc hl                                                  
-
-    call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales).
-
-    ld hl,a0                                                ; "Press ".
-    ld a,%01000111                                          ; attrs.
-    ld b,0
-    call Print_text_msg                                     ; Print "Press ".
-
-    inc e
-
-;   Next msn
 
     ld hl,Move_LEFT_ASCII_CODE                              ; Move_LEFT_ASCII_CODE -----
     call Print_ctrl_key                                     ; Print (LEFT_ASCII_CODE).
@@ -768,7 +774,7 @@ Show_controls_keys:
 
     ld hl,a1                                                ; "or ".
     ld a,%01000111                                          ; attrs.
-    ld b,0
+
     call Print_text_msg                                     ; Print "or ".
 
     inc e
@@ -784,7 +790,7 @@ Show_controls_keys:
 
     ld hl,a2                                                ; " to move ".
     ld a,%01000111                                          ; attrs.
-    ld b,0
+
     call Print_text_msg                                     ; Print " to move".
 
     inc e
@@ -794,7 +800,7 @@ Show_controls_keys:
     ld hl,a3                                                ; " LEFT and RIGHT.".
     ld de,Line_14 + 8
     ld a,%01000111                                          ; attrs.
-    ld b,0
+
     call Print_text_msg                                     ; Print " LEFT and RIGHT.".
 
     inc e
@@ -815,7 +821,7 @@ Show_controls_keys:
 
     ld hl,a0                                                ; "Press ".
     ld a,%01000111                                          ; attrs.
-    ld b,0
+
     call Print_text_msg
 
     inc e                                                   ; Print "Press ".
@@ -831,7 +837,7 @@ Show_controls_keys:
 
     ld hl,a4                                                ; " to FIRE and ".
     ld a,%01000111                                          ; attrs.
-    ld b,0
+
     call Print_text_msg                                     ; Print " to FIRE and ".
 
     inc e
@@ -846,7 +852,7 @@ Show_controls_keys:
     ld hl,a5                                                ; "SHIELD".
     ld de,Line_18 + 11
     ld a,%01000111                                          ; attrs.
-    ld b,0
+
     call Print_text_msg                                     ; Print " to FIRE and ".
 
 ;   Next msn
@@ -854,7 +860,7 @@ Show_controls_keys:
     ld hl,a6                                                ; "Press FIRE to START"
     ld de,Line_22 + 7
     ld a,%11000101                                          ; attrs.
-    ld b,0
+
     call Print_text_msg                                     ; Print "Press FIRE to START".
 
 ;   Scan KEYBOARD to START GAME.
@@ -983,26 +989,50 @@ CLean_file:
 
 ; ----------------------------------------------------------
 ;
-;   28/2/26
+;   12/10/26
 ;
+;   Sitúa DOS columnas a la izquierda el comienzo de la línea de texto, (para que quede centrado), cuando el control_
+;   _ a analizar, (HL) sea una TECLA ESPECIAL.
+;
+;   Las teclas especiales se mostrarán en pantalla como cadenas de texto de 5 caracteres:
+;
+;   Special keys:
+;
+;   Symbol_key defm "SYMB."
+;   Space_key defm "SPACE"
+;   Enter_key defm "ENTER"
+;   Caps_key defm "CAPS."
+;
+;   MODIFY: AF, E.
+;
+;   INPUTS: HL apunta a la dirección que contiene el KEYCODE de la tecla de CONTROL a sondear:
+;
+;   Move_LEFT db $24
+;   Move_RIGHT db $1c
+;   Move_FIRE db $04
+;   Move_SHIELD db $20
+;
+;           (DE) contiene la dirección de pantalla del texto a imprimir: Fila/Columna.
+;
+;   OUTPUT: Retrocede DOS columnas a la izquierda el carro de impresión, (Columna donde se imprime la cadena de texto).
 
 Corrige_inicio_de_linea:
 
-;  Comprueba Move_LEFT_ASCII_CODE:
+;  Compara el KEYCODE contenido en (HL) con el de las 4 SPECIAL KEYS.
 
-    ld a,$18                                                ; "SYMBOL SHIFT" ascii code.
+    ld a,$18                                                ; "SYMBOL SHIFT" KEYCODE code.
     cp (hl)
     jr z,Retrocede_carro
 
-    ld a,$20                                                ; "SPACE" ascii code.
+    ld a,$20                                                ; "SPACE" KEYCODE.
     cp (hl)
     jr z,Retrocede_carro
 
-    ld a,$21                                                ; "ENTER" ascii code.
+    ld a,$21                                                ; "ENTER" KEYCODE.
     cp (hl)
     jr z,Retrocede_carro
 
-    ld a,$27                                                ; "CAPS SHIFT" ascii code.
+    ld a,$27                                                ; "CAPS SHIFT" KEYCODE.
     cp (hl)
     jr z,Retrocede_carro
 
@@ -1010,7 +1040,7 @@ Corrige_inicio_de_linea:
 
 ; --------------------------------
 
-Retrocede_carro
+Retrocede_carro:
 
     dec e
     dec e
