@@ -827,8 +827,8 @@ Move_RIGHT_ASCII_CODE db "2"
 	ds 5
 Move_FIRE_ASCII_CODE db "5"
 	ds 5
-Move_SHIELD_ASCII_CODE db " "
-	ds 5
+Move_SHIELD_ASCII_CODE db "SPACE"
+	ds 1
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;

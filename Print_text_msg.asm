@@ -695,14 +695,13 @@ Modifica_atributos:
 
 ; ----------------------------------------------------------
 ;
-;   10/3/26
+;   13/3/26
 ;
-;   Imprime los controles, (teclas) que hemos seleccionado para nuestros movimientos.
-
-
-
-
-
+;   Pantalla de información. Imprime los controles, (teclas) que hemos seleccionado para nuestros movimientos_
+;   _ después de seleccionar "K", KEYBOARD en el menú principal. Una vez en esta pantalla si pulsamos START, (FIRE)_
+;   _ iniciaremos partida. Si no pulsamos START, pasado un tiempo volveremos al menú principal.
+;
+;
 
 Show_controls_keys:
 
@@ -757,32 +756,29 @@ Show_controls_keys:
 
     call Print_text_msg ; v2. Ok.                           ; PRINT "Press ".
 
-    inc e                                                   ; +1 Columna.
+    inc e                                                   ; +1 Columna, (space).
 
-;   Imprime el código ASCII correspondiente al KEYCODE (Move_LEFT).
+;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_LEFT).
 ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_LEFT) es "1", KEYCODE $24.
 
-    jr $
-
-
     ld hl,Move_LEFT_ASCII_CODE                              ; Move_LEFT_ASCII_CODE -----
-    call Print_ctrl_key                                     ; Print (LEFT_ASCII_CODE).
+    ld a,%01110000
 
-    inc e
+    call Print_text_msg                                     ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
 
-;   Next msn
+    inc e                                                   ; +1 Columna, (space).
 
-    ld hl,a1                                                ; "or ".
-    ld a,%01000111                                          ; attrs.
+    ld hl,a1                                                ; Cadena de texto: "or ".
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
 
     call Print_text_msg                                     ; Print "or ".
 
-    inc e
+    inc e                                                   ; +1 Columna, (space).
 
-;   Next msn
+    jr $
 
     ld hl,Move_RIGHT_ASCII_CODE                             ; Move_RIGHT_ASCII_CODE -----
-    call Print_ctrl_key                                     ; Print (RIGHT_ASCII_CODE).
+;    call Print_ctrl_key                                     ; Print (RIGHT_ASCII_CODE).
 
     inc e
 
@@ -829,7 +825,7 @@ Show_controls_keys:
 ;   Next msn
 
     ld hl,Move_FIRE_ASCII_CODE                              ; Move_FIRE_ASCII_CODE -----
-    call Print_ctrl_key                                     ; Print (FIRE_ASCII_CODE).
+;    call Print_ctrl_key                                     ; Print (FIRE_ASCII_CODE).
 
     inc e
 
@@ -845,7 +841,7 @@ Show_controls_keys:
 ;   Next msn
 
     ld hl,Move_SHIELD_ASCII_CODE                            ; Move_SHIELD_ASCII_CODE -----
-    call Print_ctrl_key                                     ; Print (SHIELD_ASCII_CODE).
+;    call Print_ctrl_key                                     ; Print (SHIELD_ASCII_CODE).
 
 ;   Next msn
 
@@ -1046,31 +1042,6 @@ Retrocede_carro:
     dec e
  
     ret
-
-; -----------------------------------------------
-
-Print_ctrl_key:
-
-    ld a,(hl)
-    cp $0d                                                  ; ENTER ascii code.
-    jr z,Enter_ascii_code
-    cp $20
-    jr z,SPACE_ascii_code                                   ; SPACE ascii code.
-
-1 ld a,%01110000                                            ; attrs.
-    call Print_text_msg
-
-    ret
-
-Enter_ascii_code
-
-    ld hl,Enter_key
-    jr 1B
-
-SPACE_ascii_code
-
-    ld hl,Space_key
-    jr 1B
 
 ; ----------------------------------------------------------
 ;
