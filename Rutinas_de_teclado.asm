@@ -310,7 +310,7 @@ Main_menu_key:
 	ld a,e
 	cp $11 		 											; "K" key_code.
 	call z,BEEP	; v2. Ok.									; "K" key is pressed. Play BEEP and show Controls keys screen.
-	call z,Show_controls_keys
+	call z,Show_controls_keys ; v2. Ok.
 	ret z
 
 ;	"E" key was pressed ?
@@ -489,46 +489,52 @@ Main_keyboard_routine:
 
 ; -----------------------------------------------------------
 ;
-;	11/3/26
+;	14/10/26
 ;
-;	Espera la pulsación "FIRE" cuando seleccionamos la opción KEYBOARD.
+;	Espera la pulsación de "FIRE" para iniciar partida cuando hemos seleccionado KEYBOARD, (pantalla SHOW CONTROLS).
+;
+;	MODIFY: AF, HL, DE y BC.
+;
+;	OUTPUT: (A) = "0".
+; 			SET 1, (Ctrl_6) NO START PRESSED, (FIRE key).
+;           (Start_counter) = "$0000"
 
 Press_START:
 
 	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
 ; 															; _la pantalla de controles. Pasado este tiempo volvemos al menú principal.	
+; 															; Inicialmente "$0000".
+
 	dec hl
 	
 	ld a,h
 	or l
-	jr z, Leave_menu
+	jr z, Leave_menu 										; Detect "0", NO START GAME, RETURN to MAIN MENU.
 
-	ld (Start_counter),hl
+	ld (Start_counter),hl 									; Temporizador actualizado.
 
-	call KEY_SCAN
+	call KEY_SCAN 											; ROM, KEY-SCAN.
 
-	ld a,(Move_FIRE) 										; Esperamos la pulsación del disparo.
-	cp e
-	jr nz, Press_START
+	ld a,(Move_FIRE) 										; Detecta la pulsación de FIRE. (E) contiene el KEYCODE de la tecla pulsada, si el KEYCODE_
+	cp e 													; _ de la tecla pulsada coincide con el definido (Move_FIRE), iniciamos partida. Si no es así,_
+	jr nz, Press_START 										; _ decrementamos y actualizamos de nuevo el temporizador y realizamos nueva lectura de teclado.
 
-;	Order to play.
+;	Order to PLAY.
 
-	call BEEP	; v2. Ok.
+	call BEEP	; v2. Ok. 									; FIRE pressed.
 
 	ld hl,0
 	ld (Start_counter),hl 									; Inicializa temporizador.
-
-;	Activa START GAME.
 
 	xor a 													; "0" before RET to START GAME.
 
 	ret
 
-Leave_menu
+Leave_menu:
 
-	ld (Start_counter),hl
+	ld (Start_counter),hl 									;
 
-	call Clean_Show_controls_menu 							; Borra las líneas de la pantalla de CONTROLES. 
+	call Clean_Show_controls_menu	; v2. Ok. 				; SET in BLACK las 6 líneas de la pantalla SHOW CONTROLS MENU.
 
 	ld hl,Ctrl_6
 	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
@@ -539,13 +545,24 @@ Leave_menu
 
 ; -----------------------------------------------------------
 ;
-;	18/3/26
+;	14/10/26
 ;
-;	Press_START_KEMPSTON and Press_START_SINCLAIR.
+;	Espera la pulsación del boton FIRE del joystick KEMPSTON en la pantalla KEMPSTON MENU mientras el temporizador de 24 bits: _
+;	_ (Start_counter) + (Start_counter_2) <> "0".
+;
+;	Si el contador llega a "0" sin haber detectado ninguna pulsación, INICIALIZAMOS (Start_counter) + (Start_counter_2) a su valor _
+;	_ inicial, $05 0000 y activamos el Bit_1 de Ctrl_6, (Return to Main Menu). También desactiva los CONTROLES KEMPSTON, Res_1 de Ctrl_7.
+;
+;	MODIFY: AF, HL y BC,
+;
+;	OUTPUT: Set_1 Ctrl_6 (RETURN TO MAIN MENU).
+; 			Res_1 Ctrl_7    "     "   "    "
+; 			(Start_counter) = "$0000"
+;			(Start_counter_2) = "$05"
 
 Press_START_KEMPSTON:
 
-	call Dec_START_counter
+	call Dec_START_counter	; v2. Ok.
 
 ;	"Z" indica que salimos de la rutina, (out of time).
 ;	"NZ" Espera la pulsación "FIRE" para comenzar la partida.
@@ -571,23 +588,24 @@ Press_START_KEMPSTON:
 
 ;	Order to play with a Kempston joystick.
 
-Order_to_play
+Order_to_play:
 
 	call BEEP	; v2. Ok.
 
 	ld a,$05
 	ld (Start_counter_2),a 									
+
 	ld hl,0
 	ld (Start_counter),hl 									; Inicializa temporizador.
 
     ld hl,Line_22
-    call CLean_file  										; Clean "Press FIRE to START", (Line_22).
+    call CLean_file	; v2. Ok.  								; Clean "Press FIRE to START", (Line_22).
 
 	ret
 
-Leave_menu_2
+Leave_menu_2:
 
-	ld (hl),$05  											
+	ld (hl),$05   											; Inicializa (Start_counter_2) a su valor inicial.
 
 	ld hl,Ctrl_6
 	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
@@ -598,9 +616,23 @@ Leave_menu_2
 ;	Clean Kempston menu.
 
     ld hl,Line_22
-    call CLean_file 										; Borra "Press Fire to START".
+    call CLean_file	; v2. Ok.								; SET to BLACK "Press Fire to START".
 
 	ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 Press_START_SINCLAIR:
@@ -645,17 +677,23 @@ Leave_menu_3
 
 ; -----------------------------------------------------------
 ;
-;	18/3/26
+;	14/10/26
 ;
-;	DESTROY: HL.
+;	Decrementa un contador de 24 bits cuyo valor inicial es: $05 0000 compuesto por las variables:
+;
+;	(Start_counter) .defw
+;	(Start_counter_2) .db
+;
+;	MODIFY: HL, (Start_counter), (Start_counter_2).
 ;
 ;	OUTPUT: FLAG "Z" Out of time.
 ;				 "NZ" in time.	
+;
 
 Dec_START_counter: 
 
-	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
-; 															; _el menú KEMPSTON. Pasado este tiempo volvemos al menú principal.	
+	ld hl,(Start_counter)
+
 	dec hl
 	
 	ld a,h
@@ -674,25 +712,32 @@ Dec_START_counter:
 	ret
 
 ; ------------------------------------------------------------------------
+;
+;	14/10/26
+;
+
 
 Active_kempstom_joystick:
 
 	ld hl,Ctrl_7
-	set 1,(hl) 												; Indica que activamos el Kempston joystick.
+	set 1,(hl) 												; Indica: JOYSTICK KEMPSTON ON.
 
 ;	Fijamos
 
-	call Clean_main_menu
+	call Clean_main_menu	; v2. Ok.
 
-	ld hl,a6                                                ; "Press FIRE to START"
-    ld de,Line_22 + 7
-	ld b,0
-    ld a,%11000101                                          ; attrs.
-    call Print_text_msg                                     ; Print "Press FIRE to START".
+	ld hl,a6                                                ; Cadena de texto: "Press FIRE to START"
+    ld de,Line_22 + 7 										; Carro de impresió fijado en la Fila 22, Columna 7.
+	ld b,0 													; NO TEMPORIZADOR de impresión.
+    ld a,%11000101                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, CYAN INK.
+
+    call Print_text_msg	; v2. Ok.                           ; Print "Press FIRE to START".
 
 ;   Scan KEYBOARD to START GAME.
 
-    call Press_START_KEMPSTON
+    call Press_START_KEMPSTON	; v2. Ok.
+
+    jr $
 
     xor a
 

@@ -699,9 +699,11 @@ Modifica_atributos:
 ;
 ;   Pantalla de información. Imprime los controles, (teclas) que hemos seleccionado para nuestros movimientos_
 ;   _ después de seleccionar "K", KEYBOARD en el menú principal. Una vez en esta pantalla si pulsamos START, (FIRE)_
-;   _ iniciaremos partida. Si no pulsamos START, pasado un tiempo volveremos al menú principal.
+;   _ iniciaremos partida. Si no pulsamos START, pasado un tiempo volveremos al menú principal, (Set_1 Ctrl_6).
 ;
+;   MODIFY: AF, HL, DE y BC.
 ;
+;   OUTPUT: SET 1, (Ctrl_6) NO START PRESSED, (FIRE key). RETURN TO MAIN MENU.
 
 Show_controls_keys:
 
@@ -711,7 +713,7 @@ Show_controls_keys:
 ;   Imprimimos CONTROLES.
 
     ld hl,a7                                                ; Cadena de texto: "Controls:".
-    ld de,Line_8 + 12                                       ; Dirección de pantalla, Fila 8, columna 12.
+    ld de,Line_8 + 12                                       ; Dirección de pantalla, Fila 8, columna 12. (1a línea).
     ld b,0                                                  ; No efecto "Máquina de escribir".
     ld a,%01000110                                          ; Attrs.: BRIGHT, BLACK PAPER, YELLOW INK.
 
@@ -740,7 +742,7 @@ Show_controls_keys:
 ;   Next line to print:                                     "Press "X" or "X" to move". -------------------------------------------
 
     ld hl,Move_LEFT                                         ; HL se sitúa en el KEYCODE de la tecla de control "Move_LEFT".
-    ld de,Line_12 + 6                                       ; Posición inicial de la línea a imprimir.
+    ld de,Line_12 + 6                                       ; Posición inicial de la 2a línea a imprimir.
 
     call Corrige_inicio_de_linea    ; v2. Ok.
 
@@ -759,12 +761,12 @@ Show_controls_keys:
     inc e                                                   ; +1 Columna, (space).
 
 ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_LEFT).
-;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_LEFT) es "1", KEYCODE $24.
+;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_LEFT) es $31, tecla "1", KEYCODE $24.
 
     ld hl,Move_LEFT_ASCII_CODE                              ; Move_LEFT_ASCII_CODE -----
-    ld a,%01110000
+    ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
 
-    call Print_text_msg                                     ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
+    call Print_text_msg
 
     inc e                                                   ; +1 Columna, (space).
 
@@ -775,93 +777,96 @@ Show_controls_keys:
 
     inc e                                                   ; +1 Columna, (space).
 
-    jr $
+;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_RIGHT).
+;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_RIGHT) es $32, tecla "2", KEYCODE $1c.
 
     ld hl,Move_RIGHT_ASCII_CODE                             ; Move_RIGHT_ASCII_CODE -----
-;    call Print_ctrl_key                                     ; Print (RIGHT_ASCII_CODE).
-
-    inc e
-
-;   Next msn
-
-    ld hl,a2                                                ; " to move ".
-    ld a,%01000111                                          ; attrs.
-
-    call Print_text_msg                                     ; Print " to move".
-
-    inc e
-
-;   Next msn
-
-    ld hl,a3                                                ; " LEFT and RIGHT.".
-    ld de,Line_14 + 8
-    ld a,%01000111                                          ; attrs.
-
-    call Print_text_msg                                     ; Print " LEFT and RIGHT.".
-
-    inc e
-
-;   Hay que corregir la posición donde escribiremos la tercera línea de texto si hemos definido "SPACE" o "Enter"_
-;   _como alguna de las teclas de disparo o shield.
-
-    ld hl,Move_FIRE
-    ld de,Line_16 + 6                                       ; Posición de inicio de línea.
-
-    call Corrige_inicio_de_linea
-
-    inc hl
-                                                    
-    call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales). 
-
-;   Next msn
-
-    ld hl,a0                                                ; "Press ".
-    ld a,%01000111                                          ; attrs.
+    ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
 
     call Print_text_msg
 
-    inc e                                                   ; Print "Press ".
+    inc e                                                   ; +1 Columna, (space).
 
-;   Next msn
+    ld hl,a2                                                ; Cadena de texto: " to move ".
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+
+    call Print_text_msg                                     ; Print " to move".
+
+    inc e                                                   ; +1 Columna, (space).
+
+;   Next line.
+
+    ld hl,a3                                                ; Cadena de texto: " LEFT and RIGHT.".
+    ld de,Line_14 + 8                                       ; Posición inicial del carro de impresión en esta línea, fila 14, columna 8.
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+
+    call Print_text_msg                                     ; Print " LEFT and RIGHT.".
+
+;   Hay que corregir la posición donde escribiremos la tercera línea de texto si hemos definido "SPACE" o "ENTER"_
+;   _como alguna de las teclas de disparo o shield.
+
+    ld hl,Move_FIRE                                         ; HL se sitúa en el KEYCODE de la tecla de control "Move_FIRE".
+    ld de,Line_16 + 6                                       ; Posición inicial del carro de impresión de esta 4a línea.
+
+    call Corrige_inicio_de_linea    ; v2. Ok.
+
+    inc hl                                                  ; HL se sitúa en el KEYCODE de la tecla de control "Move_SHIELD".
+                                                    
+    call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales). 
+
+;   PRINT LINE:
+
+    ld hl,a0                                                ; Cadena de texto: "Press ".
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+
+    call Print_text_msg                                     ; Print "Press ".
+
+    inc e                                                   ; +1 Columna, (space).
+
+;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_FIRE).
+;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_FIRE) es $35, tecla "5", KEYCODE $04.
 
     ld hl,Move_FIRE_ASCII_CODE                              ; Move_FIRE_ASCII_CODE -----
-;    call Print_ctrl_key                                     ; Print (FIRE_ASCII_CODE).
+    ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
 
-    inc e
+    call Print_text_msg
 
-;   Next msn
+    inc e                                                   ; +1 Columna, (space).
 
-    ld hl,a4                                                ; " to FIRE and ".
-    ld a,%01000111                                          ; attrs.
+    ld hl,a4                                                ; Cadena de texto: " to FIRE and ".
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
 
     call Print_text_msg                                     ; Print " to FIRE and ".
 
-    inc e
+    inc e                                                   ; +1 Columna, (space).
 
-;   Next msn
+;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_SHIELD).
+;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_SHIELD) es $53,$50,$41,$43,$45, tecla "SPACE", KEYCODE $20.
 
     ld hl,Move_SHIELD_ASCII_CODE                            ; Move_SHIELD_ASCII_CODE -----
-;    call Print_ctrl_key                                     ; Print (SHIELD_ASCII_CODE).
+    ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
 
-;   Next msn
+    call Print_text_msg
 
-    ld hl,a5                                                ; "SHIELD".
-    ld de,Line_18 + 11
+;   Next line.
+
+    ld hl,a5                                                ; Cadena de texto: "to SHIELD."
+    ld de,Line_18 + 11                                      ; Posición inicial del carro de impresión de esta 5a línea.
     ld a,%01000111                                          ; attrs.
 
-    call Print_text_msg                                     ; Print " to FIRE and ".
+    call Print_text_msg                                     ; Print " to SHIELD.".
 
-;   Next msn
+;   Next line.
 
-    ld hl,a6                                                ; "Press FIRE to START"
-    ld de,Line_22 + 7
-    ld a,%11000101                                          ; attrs.
+    ld hl,a6                                                ; Cadena de texto: "Press FIRE to START"
+    ld de,Line_22 + 7                                       ; Posición inicial del carro de impresión de la última línea.
+    ld a,%11000101                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, CYAN INK.
 
     call Print_text_msg                                     ; Print "Press FIRE to START".
 
 ;   Scan KEYBOARD to START GAME.
 
-    call Press_START
+    call Press_START    ; v2. Ok.                           ; Activa el bit_1 de Ctrl_6 si no hemos pulsado START.
 
 	ret
 
@@ -926,6 +931,14 @@ Clean_main_menu:
     call CLean_file
 
     ret
+
+; -----------------------------------------------------------------------
+;
+;   14/10/26
+;
+;   Fija los atributos a NEGRO de las 6 Filas de texto que componen la pantalla SHOW CONTROLS MENU.
+;
+;   MODIFY: AF, HL y B.
 
 Clean_Show_controls_menu:
 
