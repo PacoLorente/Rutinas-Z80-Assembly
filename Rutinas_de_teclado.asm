@@ -303,8 +303,6 @@ Main_menu_key:
 
 ;	Analize key_code.
 
-;	jr $
-
 ;	"K" key was pressed ?
 
 	ld a,e
@@ -317,20 +315,24 @@ Main_menu_key:
 
 	cp $15 													; "E" key_code.
 	call z,BEEP
-	call z,Active_kempstom_joystick
+	call z,Active_kempstom_joystick	; v2. Ok.
 	ret z
 
 ;	"S" key was pressed ?
 
 	cp $1e 													; "S" key_code.
 	call z,BEEP
-	call z,Active_sinclair_joystick
+	call z,Active_sinclair_joystick	; v2. Ok.
 	ret z
 
 ;	"D" key was pressed ?
 
 	cp $16
 	call z,BEEP
+
+;	jr $
+
+
 	call z,Define_menu 										; "D" key_code.
 	ret z
 
@@ -489,8 +491,9 @@ Main_keyboard_routine:
 
 ; -----------------------------------------------------------
 ;
-;	14/10/26
+;	15/10/26
 ;
+;	Recupera las teclas asignadas para los controles con teclado de la caja ((Keyboard_db_box)).
 ;	Espera la pulsación de "FIRE" para iniciar partida cuando hemos seleccionado KEYBOARD, (pantalla SHOW CONTROLS).
 ;
 ;	MODIFY: AF, HL, DE y BC.
@@ -500,6 +503,16 @@ Main_keyboard_routine:
 ;           (Start_counter) = "$0000"
 
 Press_START:
+
+;	Recupera los última config. de teclas asignadas para los KEYBOARD CONTROLS.
+;	(Nota: De no ser así, si anteriormente hemos seleccionado SINCLAIR JOYSTICK tendremos asignadas las teclas "1", "2", "5" y "2").
+
+
+	ld hl,Keyboard_db_box
+	ld de,Move_LEFT
+	ld bc,4
+
+	ldir
 
 	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
 ; 															; _la pantalla de controles. Pasado este tiempo volvemos al menú principal.	
@@ -620,25 +633,27 @@ Leave_menu_2:
 
 	ret
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+; -----------------------------------------------------------
+;
+;	15/10/26
+;
+;	Espera la pulsación del boton FIRE del joystick SINCLAR, (KEY 5) en la pantalla SINCLAIR MENU mientras el temporizador de 16 bits: _
+;	_ (Start_counter) <> "0".
+;
+;	Si el contador llega a "0" sin haber detectado ninguna pulsación, INICIALIZAMOS (Start_counter) y activamos el Bit_1 de Ctrl_6, (Return to Main Menu).
+;
+;
+;	MODIFY: AF, HL, DE y BC.
+;
+;	OUTPUT: Set_1 Ctrl_6 (RETURN TO MAIN MENU).
+;
+; 			(Start_counter) = "$0000"
+;			(Start_counter_2) = "$05"
 
 Press_START_SINCLAIR:
 
 	ld hl,(Start_counter) 									; Temporizador de 16 bits. Tiempo máximo que se muestra en pantalla_
-; 															; _la pantalla de controles. Pasado este tiempo volvemos al menú principal.	
+; 															; _el msg: "Press FIRE to START" en la parte baja de la pantalla.
 	dec hl
 	
 	ld a,h
@@ -649,7 +664,7 @@ Press_START_SINCLAIR:
 
 ;	Esperamos la pulsación del disparo.
 
-	call KEY_SCAN
+	call KEY_SCAN 											; ROM, KEY-SCAN
 
 	ld a,(Move_FIRE) 										; Esperamos la pulsación del disparo.
 	cp e
@@ -659,19 +674,17 @@ Press_START_SINCLAIR:
 
 	jr Order_to_play
 
-Leave_menu_3
+Leave_menu_3:
 
-	ld (Start_counter),hl
+	ld (Start_counter),hl 									; (Start_counter) = "$0000".
 
 	ld hl,Ctrl_6
 	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
 
-;	Clean Kempston menu.
+;	Clean msg.
 
     ld hl,Line_22
     call CLean_file 										; Borra "Press Fire to START".
-
-;	Recuperar key_codes de la caja.
 
 	ret
 
@@ -713,60 +726,87 @@ Dec_START_counter:
 
 ; ------------------------------------------------------------------------
 ;
-;	14/10/26
+;	15/10/26
 ;
-
+;	Borra el Menú principal y muestra el msg. de texto "Press FIRE to START" en la parte inferior de la pantalla tras haber_
+;	_seleccionado "E", KEMPSTON JOYSTICK en el Menú Principal.
+;
+;	Salimos de la ruina cuando pulsmos FIRE en el joystick o cuando el temporizador de 24bits (Start_counter_2) + (Start_counter)_
+;	_llega a "$00 0000", en cuyo caso: Set_1 Ctrl_6 y Res_1 Ctrl_7.
+;
+;	Set_1 Ctrl_6 Indica que hemos de volver al Menú Principal, pues no se ha pulsado FIRE.
+;	Res 1_Ctrl_7 Desactiva el JOYSTICK KEMPSTON pues no se ha pulsado FIRE.
+;
+;	MODIFY: AF, HL, DE y BC.
 
 Active_kempstom_joystick:
 
 	ld hl,Ctrl_7
 	set 1,(hl) 												; Indica: JOYSTICK KEMPSTON ON.
 
-;	Fijamos
-
 	call Clean_main_menu	; v2. Ok.
+
+	call Sub_Press_FIRE_ 									; Print "Press FIRE to START". en la parte baja de la pantalla.
+
+;   Scan KEYBOARD to START GAME.
+
+    call Press_START_KEMPSTON	; v2. Ok.
+
+    xor a
+
+	ret
+
+Sub_Press_FIRE_:
 
 	ld hl,a6                                                ; Cadena de texto: "Press FIRE to START"
     ld de,Line_22 + 7 										; Carro de impresió fijado en la Fila 22, Columna 7.
 	ld b,0 													; NO TEMPORIZADOR de impresión.
     ld a,%11000101                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, CYAN INK.
 
-    call Print_text_msg	; v2. Ok.                           ; Print "Press FIRE to START".
-
-;   Scan KEYBOARD to START GAME.
-
-    call Press_START_KEMPSTON	; v2. Ok.
-
-    jr $
-
-    xor a
+	call Print_text_msg	; v2. Ok.                           ; Print "Press FIRE to START".
 
 	ret
 
-Active_sinclair_joystick:
-
+; ------------------------------------------------------------------------
+;
+;	15/10/26
+;
+;	Al contrario de lo que ocurre con el KEMPSTON JOYSTICK que se conecta a través del puerto (31), bits 0,1,2,3 y 4.
+;	El SINCLAIR JOYSTICK está conectado directamente a la malla del teclado, (teclas 1 a 5):
+;
 ;	"1" Izquierda ..... Key code $24
 ;	"2" Derecha   ..... Key code $1c
 ;	"3" Abajo     ..... Key code $14
 ;	"4" Arriba    ..... Key code $0c
 ;	"5" Disparo   ..... Key code $04
+;
+;	Funcionamiento de la rutina:
+;
+;	Borra el Menú principal y muestra el msg. de texto "Press FIRE to START" en la parte inferior de la pantalla tras haber_
+;	_seleccionado "S", SINCLAIR JOYSTICK en el Menú Principal.
+;
+;	Salimos de la ruina cuando pulsmos FIRE en el joystick o cuando el temporizador de 16bits (Start_counter) llega a "0"_
+;	_en cuyo caso: Set_1 Ctrl_6.
+;
+;	Set_1 Ctrl_6 Indica que hemos de volver al Menú Principal, pues no se ha pulsado FIRE.
+;
+;	MODIFY: AF, HL, DE y BC.
 
+Active_sinclair_joystick:
 
-	call Clean_main_menu
+	call Clean_main_menu	; v2. Ok.
 
-	ld hl,a6                                                ; "Press FIRE to START"
-    ld de,Line_22 + 7
-    ld a,%11000101                                          ; attrs.
-    call Print_text_msg                                     ; Print "Press FIRE to START".
+	call Sub_Press_FIRE_ 									; Print "Press FIRE to START". en la parte baja de la pantalla.
 
-;	Guarda los controles KEYBOARD en la caja.
+;	Guarda los actuales controles KEYBOARD en la caja.
 
 	ld hl,Move_LEFT
-	ld de,Sinclair_db_box
+	ld de,Keyboard_db_box
 	ld bc,4
+
 	ldir
 
-;	Introduce Sinclair´s key_code. 
+;	Introduce los controles SINCLAIR, (KEYCODES).
 
 	ld hl,Move_LEFT
 	ld (hl),$24 											; LEFT.
@@ -777,7 +817,7 @@ Active_sinclair_joystick:
 	inc hl
 	ld (hl),$14 											; SHIELD.
 
-	call Press_START_SINCLAIR
+	call Press_START_SINCLAIR	; v2. Ok.
 
 	xor a
 

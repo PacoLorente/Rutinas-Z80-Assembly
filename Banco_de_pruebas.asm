@@ -641,7 +641,6 @@ Shield_3 db 0
 ; Sounds:
 
 Sound defw 0												; Esta variable almacenará el efecto de sonido a reproducir, (disparo, explosión, etc).
-Sound_type db 0 											; Le dice a la rutina [Genera_sonido] el tipo de sonido que va a ejecutar.
 Laser_sound defw Laser_sound_init_value
 Shot_sound defw 0
 Burst_sound db 0 											; Byte que define la duración de una explosión.
@@ -716,10 +715,11 @@ Contador_de_caracteres_del_nombre_del_campeon db 5 										; El nombre del gan
 Non_authorized_KEY_CODES db $27,$18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
 
 ; Key code BOX.
-; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control con joystick SINCLAR.
+; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control SINCLAIR JYSTICK.
 ; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
 
-Sinclair_db_box ds 4
+Keyboard_db_box db $24, $1c, $04, $20													; Almacén donde almacenaremos los KEYCODES fijados para los KEYBOARD CONTROLS.
+; 																						; _ Cuando seleccionemos SINCLAIR JOYSTICK. Inicialmente las TECLAS: "1","2","5" y "SPACE".
 Desplazamiento_level_msg db 0
 Counter_msg_char db 0
 
@@ -1235,7 +1235,7 @@ Gestion_de_Amadeus:
 	ld hl,Ctrl_7
 	res 1,(hl)
 
-	ld hl,Sinclair_db_box
+	ld hl,Keyboard_db_box
 	ld a,(hl)
 	and a
 	jr z,Game_over_00

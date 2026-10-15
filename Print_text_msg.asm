@@ -370,6 +370,11 @@ Define_menu:
 
 ;   Borramos el menú principal.
 
+
+    jr $
+
+
+
     call Clean_main_menu
 
 ;   Imprime DEFINE MENU:
