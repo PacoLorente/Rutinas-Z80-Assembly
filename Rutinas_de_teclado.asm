@@ -332,7 +332,6 @@ Main_menu_key:
 
 ;	jr $
 
-
 	call z,Define_menu 										; "D" key_code.
 	ret z
 

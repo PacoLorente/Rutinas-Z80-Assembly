@@ -370,29 +370,26 @@ Define_menu:
 
 ;   Borramos el menú principal.
 
-
-    jr $
-
-
-
-    call Clean_main_menu
+    call Clean_main_menu    ; v2. Ok.
 
 ;   Imprime DEFINE MENU:
 
 ;   Title.
 
-    ld hl,b0                                                ; "DEFINE CONTROLS KEYS:".
-    ld de,Line_8 + 9
-    ld a,%01000110                                          ; attrs. Yellow ink.
-    ld b,0
-    call Print_text_msg
+    ld hl,b0                                                ; Cadena de texto: "DEFINE CONTROLS KEYS:".
+    ld de,Line_8 + 9                                        ; Dirección de pantalla, Fila 8, columna 9.
+    ld a,%01000110                                          ; Attrs.: BRIGHT, BLACK PAPER, YELLOW INK.
+    ld b,0                                                  ; No efecto "Máquina de escribir".
+
+    call Print_text_msg ; v2. Ok.                           ; PRINT "DEFINE CONTROLS KEYS:"
 
 ;   LEFT. -----------------------------------------------------------------------------------------------------------------
 
-    ld hl,b1                                                ; "LEFT".
-    ld de,Line_12 + 12
-    ld a,%11000111                                          ; attrs. Flash White.
-    ld b,0
+    ld hl,b1                                                ; Cadena de texto: "LEFT".
+    ld de,Line_12 + 12                                      ; Dirección de pantalla, Fila 12, columna 12.
+    ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
+    ld b,0                                                  ; No efecto "Máquina de escribir".
+
     call Print_text_msg
 
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
@@ -400,10 +397,13 @@ Define_menu:
     ld bc,$ffff
     call DELAY
 
-    push de                                                 ; Guardo la posición del carro de impresión.
+    push de                                                 ; PUSH Carro de impresión.
 
     ld hl,Move_LEFT
     ld de,Move_LEFT_ASCII_CODE
+
+;   jr $
+
     call Define_key                                         ; Almacena Key_code y ASCII_code en sus respectivas variables.
 
     ld hl,No_repeat_key_code
@@ -571,22 +571,19 @@ Define_menu:
 
 ; -----------------------------------------------------------------------------------------------------------
 ;
-;   10/04/26
+;   17/10/26
 ;
 ;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
 ;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
-
 
 Define_key:
 
     push hl
     push de
 
-3 call ROM_Key_Scan                                         ; Scan keyboard.
+3 call ROM_Key_Scan ; v2. Ok.                               ; Scan keyboard.
 
-;   Guarda el correspondiente KEY CODE / KEY ASCII CODE.
-
-;    ld a,e                                                  ; Key code en A.
+    jr $
 
 ;   Hay que evitar que se "defina" la misma tecla para realizar distintas funciones.
 
