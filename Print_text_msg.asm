@@ -363,7 +363,7 @@ Clear_level_msg:
     
 ; ----------------------------------------------------------
 ;
-;   11/3/26
+;   18/10/26
 ;
 
 Define_menu:
@@ -402,9 +402,9 @@ Define_menu:
     ld hl,Move_LEFT
     ld de,Move_LEFT_ASCII_CODE
 
-;   jr $
+    call Define_key ; v2. Ok.                               ; Almacena Key_code y ASCII_code en sus respectivas variables.
 
-    call Define_key                                         ; Almacena Key_code y ASCII_code en sus respectivas variables.
+    jr $
 
     ld hl,No_repeat_key_code
     inc (hl)
@@ -425,6 +425,7 @@ Define_menu:
 
     ld a,%01101000
     ld b,0
+
     call Print_text_msg
 
 ;   RIGHT. -----------------------------------------------------------------------------------------------------------------
@@ -433,6 +434,7 @@ Define_menu:
     ld de,Line_14 + 12
     ld a,%11000111                                          ; attrs. Flash White.
     ld b,0
+
     call Print_text_msg
 
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move LEFT).
@@ -541,7 +543,14 @@ Define_menu:
     ld b,0
     call Print_text_msg
 
-; Teclas definidas.
+;   All keys are defined.
+
+;   Guardamos los nuevos KEYCODE de las teclas definidas en ((Keyboard_db_box)).
+
+    call Store_CONTROLS_in_Keyboard_db_box                  ; Almacena los actuales controles, (KEYBOARD KEYCODES) en la caja de teclado_
+;                                                           ; _ y reemplaza los antiguos.
+
+;   DELAY before EXIT to Main menu.
 
     ld bc,$ffff
     call DELAY
@@ -550,11 +559,9 @@ Define_menu:
     ld bc,$ffff
     call DELAY
     ld bc,$ffff
-    call DELAY                                              ; DELAY before exit to Main menu.
+    call DELAY                                              ; DELAY before EXIT to Main menu.
     ld bc,$ffff
     call DELAY
-    ld bc,$ffff
-    call DELAY                                              ; DELAY before exit to Main menu.
 
 ; Clean Define menu.
 
@@ -573,45 +580,78 @@ Define_menu:
 ;
 ;   17/10/26
 ;
+;   Asigna un nuevo KEYCODE y sustituye al contenido en la variable MOVE_xxx, (al que apunta H)L.
+;   Nueva tecla para la función de movimiento, (KEYBOARD) a la que apunta HL.
+;
+;   Move_LEFT db $24
+;   Move_RIGHT db $1c
+;   Move_FIRE db $04
+;   Move_SHIELD db $20
+;
+;   El nuevo KEYCODE también modificará el msg. de texto contenido en la correspondiente caja ASCII.
+;
+;   El msg. de texto será de un char. si es una tecla normal, "q", "s", "2", ..., etc.
+;   El msg. de texto será de 5 chars. si es una tecla especial.
+;
+;   Special keys:
+;
+;   Symbol_key defm "SYMB.",0
+;   Space_key defm "SPACE",0
+;   Enter_key defm "ENTER",0
+;   Caps_key defm "CAPS.",0
+;
 ;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
 ;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
+;
+;           (No_repeat_key_code) contiene el n° de teclas YA DEFINIDAS.
+;
+;   MODIFY: AF, HL, BC y DE.
+;
+;   OUTPUT: (A) = "0".
 
 Define_key:
 
-    push hl
-    push de
+    push hl                                                 ; PUSH Puntero KEYCODE.
+    push de                                                 ; PUSH Puntero ASCII_CODE.
 
 3 call ROM_Key_Scan ; v2. Ok.                               ; Scan keyboard.
 
-    jr $
-
-;   Hay que evitar que se "defina" la misma tecla para realizar distintas funciones.
+;   Tras ejecutar[ROM_Key_Scan], (E) contiene el KEYCODE de la tecla pulsada.
 
     ld a,(No_repeat_key_code)
     and a
-    jr z,2F                                                 ; (A)="0" Indica que estamos definiendo Move_LEFT.
+    jr z,2F                                                 ; (No_repeat_key_code)="0" Indica que estamos definiendo Move_LEFT.
+;                                                           ; (No_repeat_key_code) se incrementa en una unidad cada vez que se define una tecla:
+;
+;                                                           ; Ej.: Si estamos definiendo Move_RIGHT, (No_repeat_key_code)="1"
+;                                                           ;      Si estamos definiendo Move_FIRE, (No_repeat_key_code)="2"
+;                                                           ;      Si estamos definiendo Move_SHIELD, (No_repeat_key_code)="3"
 
-    ld b,a                                                  ; B contiene el nº de teclas definidas-1.
+    ld b,a                                                  ; Así, (B) contiene el nº de teclas definidas -1.
 
-    ld hl,Move_LEFT
-4 ld a,(hl)                                                 ; KEY_CODE de Move_LEFT en A.
+;   (No_repeat_key_code) contiene el n° de comparativas que realizaremos entre el nuevo KEYCODE definido y los anteriormente definidos.
+;   Así evitaremos que se asigne una misma tecla para varias funciones distintas.
+
+    ld hl,Move_LEFT                                         ; 1er KEYCODE a comparar.
+
+1 ld a,(hl)                                                 ; KEY_CODE de Move_LEFT en A.
     cp e                                                    ; Comparo con el Key_code recién adquirido.
     jr z,3B                                                 ; Esta tecla ya se definió anteriormente. Volvemos a escanear el teclado.
 
-    inc hl                                                  ; Next key_code to compare.
+    inc hl                                                  ; Next KEYCODE to compare.
 
-    djnz 4B
+    djnz 1B
 
 2 ld a,e                                                    ; KEY_code en A.
 
-    pop de
-    pop hl
+    pop de                                                  ; POP Puntero ASCII_CODE.
+    pop hl                                                  ; POP Puntero KEYCODE.
 
     ld (hl),a                                               ; Key_code almacenado.
 
 ;   Sonido, (BEEP) de la pulsación de las teclas, (cuando está autorizada). No se ejecuta [BEEP] si la tecla ya está definida.
 
-    call BEEP
+    call BEEP   ; v2. Ok.
 
 ;   Special Key_code ???
 
@@ -627,6 +667,12 @@ Define_key:
 ;   No special key_code.
 
 ;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
+;
+;   Recordatorio: Cada caja ASCII consta de 6 bytes, esto es porque el msg. de texto que se almacena al pulsar una SPECIAL KEY consta de 5 caracteres.
+;   El 6° byte SIEMPRE contendrá "0" pues indica a [Print_text_msg], "FIN DE CADENA DE TEXTO".
+;
+;   Guardamos el ASCII_CODE seguido de "0" para indicar "fin de cadena de texto".
+;
 
     ld c,a
     ld b,0
@@ -635,39 +681,56 @@ Define_key:
 
     add hl,bc
 
-    ld b,4                                                  ; Contador de "0" para limpiar .db después de almacenar el ASCII_code.
-
     ld a,(hl)                                               
-1 ld (de),a                                                 ; ASCII_code almacenado. 
-    xor a                                                   ; Ahora almacenamos "0"´s.    
+    ld (de),a
+
     inc de
-    djnz 1B 
+
+    xor a
+    ld (de),a                                                ; "0", indica a [Print_text_msg], "Fin de cadena de texto".
 
     ret
 
-Print_SYMB
+Print_SYMB:
 
     ld hl,Symbol_key
     call Get_ascii_message
     ret z
 
-Print_SPACE
+Print_SPACE:
 
     ld hl,Space_key
     call Get_ascii_message
     ret z
 
-Print_ENTER
+Print_ENTER:
 
     ld hl,Enter_key
     call Get_ascii_message
     ret z
 
-Print_CAPS
+Print_CAPS:
 
     ld hl,Caps_key
     call Get_ascii_message
     ret z
+
+; --------------------------------------------------
+;
+;   18/10/26
+;
+;   Sub.: Almacena los 5 códigos ASCII que construyen la palabra de la SPECIAL KEY.:
+;
+;   Symbol_key defm "SYMB.",0
+;   Space_key defm "SPACE",0
+;   Enter_key defm "ENTER",0
+;   Caps_key defm "CAPS.",0
+;
+;   Al salir de la rutina tendremos en la caja correspondiente algo así:
+;
+;   $961e db $45, $4e, $54, $45, $52, $00 ..... Move_LEFT_ASCII_CODE db "SPACE",0
+;
+;   MODIFY: A, HL y DE.
 
 Get_ascii_message:
 
@@ -681,6 +744,14 @@ Get_ascii_message:
     inc de
 
     jr Get_ascii_message
+
+
+
+
+
+
+
+
 
 ; Modifica attrs. de left. NO FLASH NOW. Key pressed.
 

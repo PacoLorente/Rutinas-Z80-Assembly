@@ -768,7 +768,7 @@ Sub_Press_FIRE_:
 
 ; ------------------------------------------------------------------------
 ;
-;	15/10/26
+;	18/10/26
 ;
 ;	Al contrario de lo que ocurre con el KEMPSTON JOYSTICK que se conecta a través del puerto (31), bits 0,1,2,3 y 4.
 ;	El SINCLAIR JOYSTICK está conectado directamente a la malla del teclado, (teclas 1 a 5):
@@ -797,13 +797,8 @@ Active_sinclair_joystick:
 
 	call Sub_Press_FIRE_ 									; Print "Press FIRE to START". en la parte baja de la pantalla.
 
-;	Guarda los actuales controles KEYBOARD en la caja.
-
-	ld hl,Move_LEFT
-	ld de,Keyboard_db_box
-	ld bc,4
-
-	ldir
+	call Store_CONTROLS_in_Keyboard_db_box 					; Almacena los actuales controles, (KEYBOARD KEYCODES) en la caja de teclado.
+; 															; (Cabe la posibilidad de que más adelante queramos jugar con teclas).
 
 ;	Introduce los controles SINCLAIR, (KEYCODES).
 
@@ -822,6 +817,21 @@ Active_sinclair_joystick:
 
 	ret
 
+; ----------------------------------------
+;
+;	18/10/26
+;
+;	Sub.
+;
+;	Guarda los actuales controles KEYBOARD en la caja.
+;
+;	MODIFU: AF, HL, DE y BC.
 
+Store_CONTROLS_in_Keyboard_db_box:
 
-; FLAG. Indica DELETE a subrutina FLASH.
+	ld hl,Move_LEFT
+	ld de,Keyboard_db_box
+	ld bc,4
+	ldir
+
+	ret
