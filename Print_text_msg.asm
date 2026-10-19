@@ -383,10 +383,28 @@ Define_menu:
 
     call Print_text_msg ; v2. Ok.                           ; PRINT "DEFINE CONTROLS KEYS:"
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;   LEFT. -----------------------------------------------------------------------------------------------------------------
 
     ld hl,b1                                                ; Cadena de texto: "LEFT".
     ld de,Line_12 + 12                                      ; Dirección de pantalla, Fila 12, columna 12.
+
     ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
     ld b,0                                                  ; No efecto "Máquina de escribir".
 
@@ -404,29 +422,31 @@ Define_menu:
 
     call Define_key ; v2. Ok.                               ; Almacena Key_code y ASCII_code en sus respectivas variables.
 
-    jr $
-
-    ld hl,No_repeat_key_code
+    ld hl,Numero_de_teclas_definidas                        ; Incrementa el n° de teclas definidas, (+1).
     inc (hl)
 
-    ld hl,Line_12+12
-    ld b,4
-    call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+;   Hemos definido (Move_LEFT). Este hecho lo indicamos "quitando" el FLASH de la palabra "LEFT" e imprimiento el char. o chars. ASCII del KEYCODE asignado.
 
-; Imprime tecla pulsada, (LEFT).
+    ld hl,Line_12+12                                        ; Dirección de video del 1er char. al que vamos a asignar attrs.
+    ld b,4                                                  ; N° de chars. consecutivos a los que vamos asignar attrs.
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+
+    call Asigna_B_Attr  ; v2. Ok.                           ; Cambia atributos de la función a definir, NO FLASH.
+
+;   Imprime tecla pulsada, (LEFT). (Move_LEFT_ASCII_CODE).
 
     ld hl,Move_LEFT_ASCII_CODE
-    pop de                                                  ; Recupera posición del carro de impresión.
+    pop de                                                  ; POP Carro de impresión.
 
     inc e
     inc e
     inc e
-    inc e
+    inc e                                                   ; Separa 4 spaces la impresión de la tecla seleccionada de la palabra "LEFT".
 
-    ld a,%01101000
-    ld b,0
+    ld a,%01101000                                          ; Attrs.: BRIGHT, CYAN PAPER, BLACK INK.
+    ld b,0                                                  ; No efecto "Máquina de escribir".
 
-    call Print_text_msg
+    call Print_text_msg                                     ; Print DEFINED KEY to (Move_LEFT_ASCII_CODE).
 
 ;   RIGHT. -----------------------------------------------------------------------------------------------------------------
 
@@ -448,12 +468,14 @@ Define_menu:
     ld de,Move_RIGHT_ASCII_CODE
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
-    ld hl,No_repeat_key_code
+    ld hl,Numero_de_teclas_definidas
     inc (hl)
 
     ld hl,Line_14+12
     ld b,5
-    call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+
+    call Asigna_B_Attr                                      ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (RIGHT).
 
@@ -487,12 +509,14 @@ Define_menu:
     ld de,Move_FIRE_ASCII_CODE
     call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
 
-    ld hl,No_repeat_key_code
+    ld hl,Numero_de_teclas_definidas
     inc (hl)
 
     ld hl,Line_16+12
     ld b,4
-    call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+
+    call Asigna_B_Attr                                      ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (FIRE).
 
@@ -529,7 +553,9 @@ Define_menu:
 
     ld hl,Line_18+12
     ld b,6
-    call Modifica_atributos                                 ; Cambia atributos de la función a definir, NO FLASH.
+    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+
+    call Asigna_B_Attr                                      ; Cambia atributos de la función a definir, NO FLASH.
 
 ; Imprime tecla pulsada, (FIRE).
 
@@ -542,6 +568,17 @@ Define_menu:
     ld a,%01101000
     ld b,0
     call Print_text_msg
+
+
+
+
+
+
+
+
+
+
+
 
 ;   All keys are defined.
 
@@ -572,7 +609,7 @@ Define_menu:
 
     xor a
 
-    ld (No_repeat_key_code),a
+    ld (Numero_de_teclas_definidas),a
 
     ret
 
@@ -603,7 +640,7 @@ Define_menu:
 ;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
 ;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
 ;
-;           (No_repeat_key_code) contiene el n° de teclas YA DEFINIDAS.
+;           (Numero_de_teclas_definidas) contiene el n° de teclas YA DEFINIDAS.
 ;
 ;   MODIFY: AF, HL, BC y DE.
 ;
@@ -618,18 +655,18 @@ Define_key:
 
 ;   Tras ejecutar[ROM_Key_Scan], (E) contiene el KEYCODE de la tecla pulsada.
 
-    ld a,(No_repeat_key_code)
+    ld a,(Numero_de_teclas_definidas)                       ; N° de teclas ya definidas.
     and a
-    jr z,2F                                                 ; (No_repeat_key_code)="0" Indica que estamos definiendo Move_LEFT.
-;                                                           ; (No_repeat_key_code) se incrementa en una unidad cada vez que se define una tecla:
+    jr z,2F                                                 ; (Numero_de_teclas_definidas)="0" Indica que estamos definiendo Move_LEFT.
+;                                                           ; (Numero_de_teclas_definidas) se incrementa en una unidad cada vez que se define una tecla:
 ;
-;                                                           ; Ej.: Si estamos definiendo Move_RIGHT, (No_repeat_key_code)="1"
-;                                                           ;      Si estamos definiendo Move_FIRE, (No_repeat_key_code)="2"
-;                                                           ;      Si estamos definiendo Move_SHIELD, (No_repeat_key_code)="3"
+;                                                           ; Ej.: Si estamos definiendo Move_RIGHT, (Numero_de_teclas_definidas)="1"
+;                                                           ;      Si estamos definiendo Move_FIRE, (Numero_de_teclas_definidas)="2"
+;                                                           ;      Si estamos definiendo Move_SHIELD, (Numero_de_teclas_definidas)="3"
 
     ld b,a                                                  ; Así, (B) contiene el nº de teclas definidas -1.
 
-;   (No_repeat_key_code) contiene el n° de comparativas que realizaremos entre el nuevo KEYCODE definido y los anteriormente definidos.
+;   (Numero_de_teclas_definidas) contiene el n° de comparativas que realizaremos entre el nuevo KEYCODE definido y los anteriormente definidos.
 ;   Así evitaremos que se asigne una misma tecla para varias funciones distintas.
 
     ld hl,Move_LEFT                                         ; 1er KEYCODE a comparar.
@@ -744,27 +781,6 @@ Get_ascii_message:
     inc de
 
     jr Get_ascii_message
-
-
-
-
-
-
-
-
-
-; Modifica attrs. de left. NO FLASH NOW. Key pressed.
-
-Modifica_atributos:
-
-    call Calcula_direccion_atributos
-    ld a,%01000111
-
-1 ld (hl),a
-    inc l
-    djnz 1B
-
-    ret
 
 ; ----------------------------------------------------------
 ;

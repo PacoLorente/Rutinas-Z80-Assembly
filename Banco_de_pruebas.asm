@@ -814,7 +814,9 @@ Caps_key defm "CAPS.",0
 
 ; Control de Amadeus, (KEY CODES).
 
-No_repeat_key_code db 0
+Numero_de_teclas_definidas db 0								; Contiene el n° de teclas definidas (0-3). [Define_menu] y [Define_key].
+; 															; Compararemos el KEYCODE de la nueva key definida con las definidas anteriormente_
+; 															; _ , (Move_LEFT), (Move_RIGHT), ..., tantas veces como indique el contenido de (Numero_de_teclas_definidas).
 
 Move_LEFT db $24
 Move_RIGHT db $1c

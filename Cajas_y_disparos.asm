@@ -379,3 +379,19 @@ Note_4x:
 	defw $00c0
 	defw $0100
 	defw $0002
+
+
+; Indice Parámetros [Define_menu].
+
+Define_menu_index_parameters:
+
+	defw Left_key_parameters
+
+	defw 0
+
+Left_key_parameters: defw b1                                ; Cadena de texto: "LEFT".
+    defw Line_12 + 12                                       ; Dirección de pantalla, Fila 12, columna 12.
+    defw Move_LEFT
+    defw Move_LEFT_ASCII_CODE
+    db 4                                                    ; N° de chars. "LEFT".
+    db 4                                                    ; N° de espacios.

@@ -56,6 +56,46 @@ Calcula_direccion_atributos:
 
     ret
 
+; --------------------------------------------------
+;
+;   19/10/26
+;
+;   Asigna los attr. de pantalla definidos en (A) a un n° (B) de caracteres consecutivos de pantalla.
+;   HL apunta al la dirección de pantalla del 1er char.
+;
+;   INPUTS: HL contiene la dirección de pantalla.
+;            B    "     el n° de chars. al que vamos a asignar attrs.
+;            A    "     Atributos.
+;
+;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+;
+;   COLORES: 0 ..... NEGRO
+;            1 ..... AZUL
+;            2 ..... ROJO
+;            3 ..... MAGENTA
+;            4 ..... VERDE
+;            5 ..... CIAN
+;            6 ..... AMARILLO
+;            7 ..... BLANCO
+;
+;   MODIFY: HL, B.
+;
+;   OUTPUT: (B)="0".
+
+Asigna_B_Attr:
+
+    push af                                                  ; PUSH attr.
+
+    call Calcula_direccion_atributos    ; v2. Ok.
+
+    pop af                                                   ; POP attr.
+
+1 ld (hl),a
+    inc l
+    djnz 1B
+
+    ret
+
 ; ----------------------------------------------------------
 ;
 ;   17/7/26
