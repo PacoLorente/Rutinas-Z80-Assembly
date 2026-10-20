@@ -386,6 +386,9 @@ Note_4x:
 Define_menu_index_parameters:
 
 	defw Left_key_parameters
+	defw Right_key_parameters
+	defw Fire_key_parameters
+	defw Shield_key_parameters
 
 	defw 0
 
@@ -395,3 +398,24 @@ Left_key_parameters: defw b1                                ; Cadena de texto: "
     defw Move_LEFT_ASCII_CODE
     db 4                                                    ; N° de chars. "LEFT".
     db 4                                                    ; N° de espacios.
+
+Right_key_parameters: defw b2                               ; Cadena de texto: "RIGHT".
+    defw Line_14 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
+    defw Move_RIGHT
+    defw Move_RIGHT_ASCII_CODE
+    db 5                                                    ; N° de chars. que forman la cadena "RIGHT".
+    db 3                                                    ; SPACES.
+
+Fire_key_parameters: defw b2                                ; Cadena de texto: "FIRE".
+    defw Line_16 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
+    defw Move_FIRE
+    defw Move_FIRE_ASCII_CODE
+    db 4                                                    ; N° de chars. que forman la cadena "FIRE".
+    db 4                                                    ; SPACES.
+
+Shield_key_parameters: defw b2                              ; Cadena de texto: "SHIELD".
+    defw Line_18 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
+    defw Move_SHIELD
+    defw Move_SHIELD_ASCII_CODE
+    db 6                                                    ; N° de chars. que forman la cadena "FIRE".
+    db 2                                                    ; SPACES.

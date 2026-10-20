@@ -365,6 +365,15 @@ Clear_level_msg:
 ;
 ;   18/10/26
 ;
+;
+;
+;   Left_key_parameters: defw b1                                ; Cadena de texto: "LEFT".
+;       defw Line_12 + 12                                       ; Dirección de pantalla, Fila 12, columna 12.
+;       defw Move_LEFT
+;       defw Move_LEFT_ASCII_CODE
+;       db 4                                                    ; N° de chars. "LEFT".
+;       db 4                                                    ; N° de espacios.
+
 
 Define_menu:
 
@@ -383,8 +392,24 @@ Define_menu:
 
     call Print_text_msg ; v2. Ok.                           ; PRINT "DEFINE CONTROLS KEYS:"
 
+;   Para guardar el puntero del índice: `Define_menu_index_parameters´, (array con los parámetros que forman los 4 campos_
+;   _ que construyen el menú DEFINE), utilizaremos la variable: (Puntero_de_impresion).
 
+;   Inicializamos (Puntero_de_impresion), situándolo en el primer campo del índice.
 
+    ld hl,Define_menu_index_parameters
+    ld (Puntero_de_impresion),hl
+
+    ld a,h
+    or l
+    ret z                                                   ; Detecta RET.
+
+    call Extrae_address                                     ; HL apunta ahora al 1er parámetro del campo correspondiente, 
+;                                                           ; Cadena de texto: "XXXX".
+
+;   ABASTECIMIENTO:
+
+    jr $
 
 
 
