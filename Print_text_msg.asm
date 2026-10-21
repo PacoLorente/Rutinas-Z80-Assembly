@@ -400,199 +400,149 @@ Define_menu:
     ld hl,Define_menu_index_parameters
     ld (Puntero_de_impresion),hl
 
+Comprueba_salida_del_indice:
+
     ld a,h
     or l
-    ret z                                                   ; Detecta RET.
+
+    jr z,$
+
+;    jr z,2F                                                 ; Detecta RET.
 
     call Extrae_address                                     ; HL apunta ahora al 1er parámetro del campo correspondiente, 
 ;                                                           ; Cadena de texto: "XXXX".
 
 ;   ABASTECIMIENTO:
 
-    jr $
+;   Utilizamos la pila para abastecer registros con los datos de la tabla.
 
+Abastecimiento:
 
+    ld (Stack),sp
 
+    ld sp,hl
 
+    exx
 
+    pop hl                                                  ; HL' apunta a la cadena de texto a imprimir, "LEFT", "RIGHT", "FIRE", "SHIELD".
+    pop de                                                  ; DE' contiene la dirección de pantalla donde se imprime el primer char. del msg. de texto.
 
-
-
-
-
-
-
-
-
-
-;   LEFT. -----------------------------------------------------------------------------------------------------------------
-
-    ld hl,b1                                                ; Cadena de texto: "LEFT".
-    ld de,Line_12 + 12                                      ; Dirección de pantalla, Fila 12, columna 12.
-
-    ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
     ld b,0                                                  ; No efecto "Máquina de escribir".
 
+    exx
+
+    pop hl                                                  ; HL apunta a la variable de sistema que almacenará el KEYCODE de la tecla pulsada.
+    pop de                                                  ; DE apunta a la variable de sistema que almacenará el ASCII_CODE de la tecla pulsada.
+    pop bc                                                  ; (BC) contiene: (N° de chars / n° de spaces).
+
+    ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
+
+    ld sp,(Stack)
+
+;    jr $
+
+;    ret
+
+ ;   LEFT. -----------------------------------------------------------------------------------------------------------------
+
+;    ld hl,b1                                                ; Cadena de texto: "LEFT".
+;    ld de,Line_12 + 12                                      ; Dirección de pantalla, Fila 12, columna 12.
+
+;    ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
+;    ld b,0                                                  ; No efecto "Máquina de escribir".
+
+
+    exx
+
+    push de                                                 ; PUSH Carro de impresión.
+
     call Print_text_msg
+
+    push de
+    pop ix                                                  ; IX contiene la posición actualizada del carro de impresión tras imprimir la cadena de texto.
 
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
 
     ld bc,$ffff
     call DELAY
 
-    push de                                                 ; PUSH Carro de impresión.
+    exx
 
-    ld hl,Move_LEFT
-    ld de,Move_LEFT_ASCII_CODE
+;    ld hl,Move_LEFT
+;    ld de,Move_LEFT_ASCII_CODE
+
+    push bc
+    push hl
+    push de
 
     call Define_key ; v2. Ok.                               ; Almacena Key_code y ASCII_code en sus respectivas variables.
 
-    ld hl,Numero_de_teclas_definidas                        ; Incrementa el n° de teclas definidas, (+1).
-    inc (hl)
+    pop de
+    pop hl
+    pop bc
+
+    ld a,(Numero_de_teclas_definidas)
+    inc a
+    ld (Numero_de_teclas_definidas),a
 
 ;   Hemos definido (Move_LEFT). Este hecho lo indicamos "quitando" el FLASH de la palabra "LEFT" e imprimiento el char. o chars. ASCII del KEYCODE asignado.
 
-    ld hl,Line_12+12                                        ; Dirección de video del 1er char. al que vamos a asignar attrs.
-    ld b,4                                                  ; N° de chars. consecutivos a los que vamos asignar attrs.
+    ld a,b                                                  ; N° de chars de la cadena de texto en A.
+
+    exx
+
+    pop de                                                 ; PUSH Carro de impresión.
+
+    ld b,a
+
+    ex de,hl
+
+
+;    ld hl,Line_12+12                                        ; Dirección de video del 1er char. al que vamos a asignar attrs.
+
+;    ld b,4                                                  ; N° de chars. consecutivos a los que vamos asignar attrs.
+
     ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
 
     call Asigna_B_Attr  ; v2. Ok.                           ; Cambia atributos de la función a definir, NO FLASH.
 
+    exx
+
+    ex de,hl
+
+
+
 ;   Imprime tecla pulsada, (LEFT). (Move_LEFT_ASCII_CODE).
 
-    ld hl,Move_LEFT_ASCII_CODE
-    pop de                                                  ; POP Carro de impresión.
+;    ld hl,Move_LEFT_ASCII_CODE
+;    pop de                                                  ; POP Carro de impresión.
 
-    inc e
-    inc e
-    inc e
-    inc e                                                   ; Separa 4 spaces la impresión de la tecla seleccionada de la palabra "LEFT".
+;    jr $
+
+    push ix
+    pop de
+
+    ld b,c                                                  ; N° de espacios en B.
+
+1 inc e
+    djnz 1B
 
     ld a,%01101000                                          ; Attrs.: BRIGHT, CYAN PAPER, BLACK INK.
-    ld b,0                                                  ; No efecto "Máquina de escribir".
 
     call Print_text_msg                                     ; Print DEFINED KEY to (Move_LEFT_ASCII_CODE).
 
-;   RIGHT. -----------------------------------------------------------------------------------------------------------------
+Incrementa_puntero_de_parametros:
 
-    ld hl,b2                                                ; "RIGHT".
-    ld de,Line_14 + 12
-    ld a,%11000111                                          ; attrs. Flash White.
-    ld b,0
 
-    call Print_text_msg
+    ld hl,(Puntero_de_impresion)
 
-;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move LEFT).
+    inc hl
+    inc hl
 
-    ld bc,$ffff
-    call DELAY
+    ld (Puntero_de_impresion),hl
 
-    push de                                                 ; Guardo la posición del carro de impresión.
 
-    ld hl,Move_RIGHT
-    ld de,Move_RIGHT_ASCII_CODE
-    call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
-
-    ld hl,Numero_de_teclas_definidas
-    inc (hl)
-
-    ld hl,Line_14+12
-    ld b,5
-    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
-
-    call Asigna_B_Attr                                      ; Cambia atributos de la función a definir, NO FLASH.
-
-; Imprime tecla pulsada, (RIGHT).
-
-    ld hl,Move_RIGHT_ASCII_CODE
-    pop de                                                  ; Recupera posición del carro de impresión.
-
-    inc e
-    inc e
-    inc e
-
-    ld a,%01101000
-    ld b,0
-    call Print_text_msg
-
-;   FIRE. -----------------------------------------------------------------------------------------------------------------
-
-    ld hl,b3                                                ; "FIRE".
-    ld de,Line_16 + 12
-    ld a,%11000111                                          ; attrs. Flash White.
-    ld b,0
-    call Print_text_msg
-
-;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_RIGHT).
-
-    ld bc,$ffff
-    call DELAY
-
-    push de                                                 ; Guardo la posición del carro de impresión.
-
-    ld hl,Move_FIRE
-    ld de,Move_FIRE_ASCII_CODE
-    call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
-
-    ld hl,Numero_de_teclas_definidas
-    inc (hl)
-
-    ld hl,Line_16+12
-    ld b,4
-    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
-
-    call Asigna_B_Attr                                      ; Cambia atributos de la función a definir, NO FLASH.
-
-; Imprime tecla pulsada, (FIRE).
-
-    ld hl,Move_FIRE_ASCII_CODE
-    pop de                                                  ; Recupera posición del carro de impresión.
-
-    inc e
-    inc e
-    inc e
-    inc e
-
-    ld a,%01101000
-    ld b,0
-    call Print_text_msg
-
-;   SHIELD. -----------------------------------------------------------------------------------------------------------------
-
-    ld hl,b4                                                ; "SHIELD".
-    ld de,Line_18 + 12
-    ld a,%11000111                                          ; attrs. Flash White.
-    ld b,0
-    call Print_text_msg
-
-;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga (Move_FIRE).
-
-    ld bc,$ffff
-    call DELAY
-
-    push de                                                 ; Guardo la posición del carro de impresión.
-
-    ld hl,Move_SHIELD
-    ld de,Move_SHIELD_ASCII_CODE
-    call Define_key                                         ; Almacena Key_code y ASCII_codeen sus respectivas variables.
-
-    ld hl,Line_18+12
-    ld b,6
-    ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
-
-    call Asigna_B_Attr                                      ; Cambia atributos de la función a definir, NO FLASH.
-
-; Imprime tecla pulsada, (FIRE).
-
-    ld hl,Move_SHIELD_ASCII_CODE
-    pop de                                                  ; Recupera posición del carro de impresión.
-
-    inc e
-    inc e
-
-    ld a,%01101000
-    ld b,0
-    call Print_text_msg
+    jr Comprueba_salida_del_indice
 
 
 
@@ -604,6 +554,7 @@ Define_menu:
 
 
 
+2
 
 ;   All keys are defined.
 
