@@ -363,17 +363,42 @@ Clear_level_msg:
     
 ; ----------------------------------------------------------
 ;
-;   18/10/26
+;   22/10/26
 ;
+;   Esta función nos permite cambiar las teclas asignadas a los controles de Amadeus.
+;   Por defecto las teclas que controlan nuestra nave son:
 ;
+;   Move_LEFT db $24
+;   Move_RIGHT db $1c
+;   Move_FIRE db $04
+;   Move_SHIELD db $20
+
+;   Move_LEFT_ASCII_CODE db "1"
+;   ds 5
+;   Move_RIGHT_ASCII_CODE db "2"
+;   ds 5
+;   Move_FIRE_ASCII_CODE db "5"
+;   ds 5
+;   Move_SHIELD_ASCII_CODE db "SPACE"
+;   ds 1
+;
+;   Hemos creado una tabla de punteros con los .defw que contienen los datos necesarios para definir e imprimir_
+;   _ cada uno de los 4 controles.
+;
+;   Los datos son los siguientes:
 ;
 ;   Left_key_parameters: defw b1                                ; Cadena de texto: "LEFT".
 ;       defw Line_12 + 12                                       ; Dirección de pantalla, Fila 12, columna 12.
 ;       defw Move_LEFT
 ;       defw Move_LEFT_ASCII_CODE
-;       db 4                                                    ; N° de chars. "LEFT".
-;       db 4                                                    ; N° de espacios.
-
+;       db 4                                                    ; N° de chars. que forman la cadena de texto "LEFT".
+;       db 4                                                    ; N° de espacios que separan en pantalla la cadena de texto de la tecla definida.
+;
+;   Utilizaremos la variable: (Puntero_de_impresion) para guardar la posición del puntero indicial, (hl).
+;   Nota: Antes de salir de la función restauraremos su valor a "$0000".
+;
+;   MODIFY: AF, HL, HL´, DE, DE´, BC, IX
+;   OUTPUT: (Z), Set_1 (Ctrl_6).  Indica regreso al Menú Principal.
 
 Define_menu:
 
@@ -381,9 +406,7 @@ Define_menu:
 
     call Clean_main_menu    ; v2. Ok.
 
-;   Imprime DEFINE MENU:
-
-;   Title.
+;   Imprime el título: "DEFINE MENU:".
 
     ld hl,b0                                                ; Cadena de texto: "DEFINE CONTROLS KEYS:".
     ld de,Line_8 + 9                                        ; Dirección de pantalla, Fila 8, columna 9.
@@ -400,23 +423,15 @@ Define_menu:
     ld hl,Define_menu_index_parameters
     ld (Puntero_de_impresion),hl
 
-Comprueba_salida_del_indice:
+Abastecimiento:
+
+    call Extrae_address                                     ; HL apunta ahora al 1er parámetro del campo correspondiente, 
 
     ld a,h
     or l
-
-    jr z,$
-
-;    jr z,2F                                                 ; Detecta RET.
-
-    call Extrae_address                                     ; HL apunta ahora al 1er parámetro del campo correspondiente, 
-;                                                           ; Cadena de texto: "XXXX".
-
-;   ABASTECIMIENTO:
+    jr z, All_keys_defined
 
 ;   Utilizamos la pila para abastecer registros con los datos de la tabla.
-
-Abastecimiento:
 
     ld (Stack),sp
 
@@ -541,20 +556,9 @@ Incrementa_puntero_de_parametros:
 
     ld (Puntero_de_impresion),hl
 
+    jr Abastecimiento
 
-    jr Comprueba_salida_del_indice
-
-
-
-
-
-
-
-
-
-
-
-2
+All_keys_defined:
 
 ;   All keys are defined.
 
@@ -584,8 +588,12 @@ Incrementa_puntero_de_parametros:
     set 1,(hl)                                              ; Bit 1 "1", means: Return to Main menu.
 
     xor a
-
     ld (Numero_de_teclas_definidas),a
+
+    ld h,a
+    ld l,h
+
+    ld (Puntero_de_impresion),hl
 
     ret
 

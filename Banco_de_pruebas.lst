@@ -437,11 +437,11 @@
  201  83A7
  202  83A7 3A 8C 94     	ld a,(Ctrl_5)
  203  83AA CB 77        	bit 6,a
- 204  83AC C4 BC C5     	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
+ 204  83AC C4 C1 C5     	call nz,Print_Game_Over 										; Imprime "GAME OVER" si LIVES = "0".
  205  83AF
  206  83AF 3A 4E 94     	ld a,(Ctrl_1)
  207  83B2 CB 47        	bit 0,a
- 208  83B4 C4 9E C5     	call nz,Print_DONE 												; Imprime "DONE" si hemos eliminado a la última entidad del nivel.
+ 208  83B4 C4 A3 C5     	call nz,Print_DONE 												; Imprime "DONE" si hemos eliminado a la última entidad del nivel.
  209  83B7
  210  83B7 C1           	pop bc
  211  83B8 D1           	pop de
@@ -2190,30 +2190,27 @@
  399+ 9197 04               db 4                                                    ; N° de espacios.
  400+ 9198 04               db 4                                                    ; N° de chars. "LEFT".
  401+ 9199
- 402+ 9199
- 403+ 9199 21 96        Right_key_parameters: defw b2                               ; Cadena de texto: "RIGHT".
- 404+ 919B CC 48            defw Line_14 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
- 405+ 919D 4D 96            defw Move_RIGHT
- 406+ 919F 56 96            defw Move_RIGHT_ASCII_CODE
- 407+ 91A1 03               db 3                                                    ; SPACES.
- 408+ 91A2 05               db 5                                                    ; N° de chars. que forman la cadena "RIGHT".
- 409+ 91A3
- 410+ 91A3
- 411+ 91A3 27 96        Fire_key_parameters: defw b3                                ; Cadena de texto: "FIRE".
- 412+ 91A5 0C 50            defw Line_16 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
- 413+ 91A7 4E 96            defw Move_FIRE
- 414+ 91A9 5C 96            defw Move_FIRE_ASCII_CODE
- 415+ 91AB 04               db 4                                                    ; SPACES.
- 416+ 91AC 04               db 4                                                    ; N° de chars. que forman la cadena "FIRE".
- 417+ 91AD
- 418+ 91AD
- 419+ 91AD 2C 96        Shield_key_parameters: defw b4                              ; Cadena de texto: "SHIELD".
- 420+ 91AF 4C 50            defw Line_18 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
- 421+ 91B1 4F 96            defw Move_SHIELD
- 422+ 91B3 62 96            defw Move_SHIELD_ASCII_CODE
- 423+ 91B5 02               db 2                                                    ; SPACES.
- 424+ 91B6 06               db 6                                                    ; N° de chars. que forman la cadena "FIRE".
- 425+ 91B7
+ 402+ 9199 21 96        Right_key_parameters: defw b2                               ; Cadena de texto: "RIGHT".
+ 403+ 919B CC 48            defw Line_14 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
+ 404+ 919D 4D 96            defw Move_RIGHT
+ 405+ 919F 56 96            defw Move_RIGHT_ASCII_CODE
+ 406+ 91A1 03               db 3                                                    ; SPACES.
+ 407+ 91A2 05               db 5                                                    ; N° de chars. que forman la cadena "RIGHT".
+ 408+ 91A3
+ 409+ 91A3 27 96        Fire_key_parameters: defw b3                                ; Cadena de texto: "FIRE".
+ 410+ 91A5 0C 50            defw Line_16 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
+ 411+ 91A7 4E 96            defw Move_FIRE
+ 412+ 91A9 5C 96            defw Move_FIRE_ASCII_CODE
+ 413+ 91AB 04               db 4                                                    ; SPACES.
+ 414+ 91AC 04               db 4                                                    ; N° de chars. que forman la cadena "FIRE".
+ 415+ 91AD
+ 416+ 91AD 2C 96        Shield_key_parameters: defw b4                              ; Cadena de texto: "SHIELD".
+ 417+ 91AF 4C 50            defw Line_18 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
+ 418+ 91B1 4F 96            defw Move_SHIELD
+ 419+ 91B3 62 96            defw Move_SHIELD_ASCII_CODE
+ 420+ 91B5 02               db 2                                                    ; SPACES.
+ 421+ 91B6 06               db 6                                                    ; N° de chars. que forman la cadena "FIRE".
+ 422+ 91B7
 # file closed: Cajas_y_disparos.asm
  249  91B7              	include "Patrones_de_mov.asm"
 # file opened: Patrones_de_mov.asm
@@ -3065,13 +3062,13 @@
  659  94C5              Variables_DRAW1: 											; Estas variables no se inicializan si avanzamos de nivel.
  660  94C5
  661  94C5 01           Nivel db 1													; Nivel actual del juego.
- 662  94C6 52 C6        Puntero_indice_NIVELES defw Indice_de_niveles
- 663  94C8 CA C5        Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
+ 662  94C6 57 C6        Puntero_indice_NIVELES defw Indice_de_niveles
+ 663  94C8 CF C5        Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
  664  94CA 03           Lives db 3
  665  94CB 03           Shields db 3 												; Nº de Shields
  666  94CC
- 667  94CC 04 C6        Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
- 668  94CE F2 C5        Puntero_de_vidas defw Indice_de_vidas
+ 667  94CC 09 C6        Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
+ 668  94CE F7 C5        Puntero_de_vidas defw Indice_de_vidas
  669  94D0
  670  94D0 00           Entidades_BCD_unidades db 0
  671  94D1 00           Entidades_BCD_decenas db 0
@@ -3311,7 +3308,7 @@
  848  9672              Main_menu:
  849  9672
  850  9672 CD B9 A8     	call Clean_and_logo	; v2. Ok.
- 851  9675 CD 49 C5     	call Print_Main_menu	; v2. Ok.
+ 851  9675 CD 4E C5     	call Print_Main_menu	; v2. Ok.
  852  9678 CD 5E AD     	call Firma	; v2. Ok.
  853  967B
  854  967B              ;	Print Best Score if it exist.
@@ -5328,7 +5325,7 @@
 2865  9DE8 21 8B 94     	ld hl,Ctrl_4
 2866  9DEB CB AE        	res 5,(hl)
 2867  9DED
-2868  9DED CD AD C5     	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
+2868  9DED CD B2 C5     	call Clean_DONE   								;	Inicializa FLAF: (Nivel superado) y limpia el mensaje DONE.
 2869  9DF0
 2870  9DF0 CD 40 A9     	call Replace_Amadeus_attr_zone 					;	Repone los atributos de las 2 últimas líneas de pantalla para que la entrada de Amadeus del siguiente nivel sea azul.
 2871  9DF3
@@ -6389,7 +6386,7 @@
  308+ A044 7B           	ld a,e
  309+ A045 FE 11        	cp $11 		 											; "K" key_code.
  310+ A047 CC 3C C1     	call z,BEEP	; v2. Ok.									; "K" key is pressed. Play BEEP and show Controls keys screen.
- 311+ A04A CC 12 C4     	call z,Show_controls_keys ; v2. Ok.
+ 311+ A04A CC 17 C4     	call z,Show_controls_keys ; v2. Ok.
  312+ A04D C8           	ret z
  313+ A04E
  314+ A04E              ;	"E" key was pressed ?
@@ -6627,7 +6624,7 @@
  546+ A13D
  547+ A13D 22 A6 94     	ld (Start_counter),hl 									;
  548+ A140
- 549+ A140 CD 01 C5     	call Clean_Show_controls_menu	; v2. Ok. 				; SET in BLACK las 6 líneas de la pantalla SHOW CONTROLS MENU.
+ 549+ A140 CD 06 C5     	call Clean_Show_controls_menu	; v2. Ok. 				; SET in BLACK las 6 líneas de la pantalla SHOW CONTROLS MENU.
  550+ A143
  551+ A143 21 8D 94     	ld hl,Ctrl_6
  552+ A146 CB CE        	set 1,(hl) 												; Indica más adelante que volvemos al menú principal.
@@ -6692,7 +6689,7 @@
  611+ A162 22 A6 94     	ld (Start_counter),hl 									; Inicializa temporizador.
  612+ A165
  613+ A165 21 C0 50         ld hl,Line_22
- 614+ A168 CD 26 C5         call CLean_file	; v2. Ok.  								; Clean "Press FIRE to START", (Line_22).
+ 614+ A168 CD 2B C5         call CLean_file	; v2. Ok.  								; Clean "Press FIRE to START", (Line_22).
  615+ A16B
  616+ A16B C9           	ret
  617+ A16C
@@ -6709,7 +6706,7 @@
  628+ A178              ;	Clean Kempston menu.
  629+ A178
  630+ A178 21 C0 50         ld hl,Line_22
- 631+ A17B CD 26 C5         call CLean_file	; v2. Ok.								; SET to BLACK "Press Fire to START".
+ 631+ A17B CD 2B C5         call CLean_file	; v2. Ok.								; SET to BLACK "Press Fire to START".
  632+ A17E
  633+ A17E C9           	ret
  634+ A17F
@@ -6764,7 +6761,7 @@
  683+ A19D              ;	Clean msg.
  684+ A19D
  685+ A19D 21 C0 50         ld hl,Line_22
- 686+ A1A0 CD 26 C5         call CLean_file 										; Borra "Press Fire to START".
+ 686+ A1A0 CD 2B C5         call CLean_file 										; Borra "Press Fire to START".
  687+ A1A3
  688+ A1A3 C9           	ret
  689+ A1A4
@@ -6824,7 +6821,7 @@
  743+ A1B8 21 E9 94     	ld hl,Ctrl_7
  744+ A1BB CB CE        	set 1,(hl) 												; Indica: JOYSTICK KEMPSTON ON.
  745+ A1BD
- 746+ A1BD CD D0 C4     	call Clean_main_menu	; v2. Ok.
+ 746+ A1BD CD D5 C4     	call Clean_main_menu	; v2. Ok.
  747+ A1C0
  748+ A1C0 CD C8 A1     	call Sub_Press_FIRE_ 									; Print "Press FIRE to START". en la parte baja de la pantalla.
  749+ A1C3
@@ -6874,7 +6871,7 @@
  793+ A1D6
  794+ A1D6              Active_sinclair_joystick:
  795+ A1D6
- 796+ A1D6 CD D0 C4     	call Clean_main_menu	; v2. Ok.
+ 796+ A1D6 CD D5 C4     	call Clean_main_menu	; v2. Ok.
  797+ A1D9
  798+ A1D9 CD C8 A1     	call Sub_Press_FIRE_ 									; Print "Press FIRE to START". en la parte baja de la pantalla.
  799+ A1DC
@@ -7007,10 +7004,10 @@
   24+ A241 35           	dec (hl)
   25+ A242 C0           	ret nz
   26+ A243
-  27+ A243 21 52 C6     	ld hl,Indice_de_niveles
+  27+ A243 21 57 C6     	ld hl,Indice_de_niveles
   28+ A246 22 C6 94     	ld (Puntero_indice_NIVELES),hl
   29+ A249
-  30+ A249 21 CA C5     	ld hl,Msg_level_index
+  30+ A249 21 CF C5     	ld hl,Msg_level_index
   31+ A24C 22 C8 94     	ld (Puntero_de_mensajes_de_niveles),hl
   32+ A24F
   33+ A24F C9           	ret
@@ -7105,10 +7102,10 @@
  122+ A2B2 21 C5 94     	ld hl,Nivel
  123+ A2B5 36 01        	ld (hl),1
  124+ A2B7
- 125+ A2B7 21 52 C6     	ld hl,Indice_de_niveles
+ 125+ A2B7 21 57 C6     	ld hl,Indice_de_niveles
  126+ A2BA 22 C6 94     	ld (Puntero_indice_NIVELES),hl
  127+ A2BD
- 128+ A2BD 21 CA C5     	ld hl,Msg_level_index
+ 128+ A2BD 21 CF C5     	ld hl,Msg_level_index
  129+ A2C0 22 C8 94     	ld (Puntero_de_mensajes_de_niveles),hl
  130+ A2C3
  131+ A2C3 21 CA 94     	ld hl,Lives
@@ -7116,9 +7113,9 @@
  133+ A2C8 23           	inc hl
  134+ A2C9 36 03        	ld (hl),3
  135+ A2CB
- 136+ A2CB 21 04 C6     	ld hl,Indice_de_escudos
+ 136+ A2CB 21 09 C6     	ld hl,Indice_de_escudos
  137+ A2CE 22 CC 94     	ld (Puntero_de_escudos),hl
- 138+ A2D1 21 F2 C5     	ld hl,Indice_de_vidas
+ 138+ A2D1 21 F7 C5     	ld hl,Indice_de_vidas
  139+ A2D4 22 CE 94     	ld (Puntero_de_vidas),hl
  140+ A2D7
  141+ A2D7 3E 46        	ld a,%01000110
@@ -8253,7 +8250,7 @@
 1270+ A627
 1271+ A627 CD 50 A7     	call Calcula_salto_en_BC
 1272+ A62A
-1273+ A62A 21 16 C6     	ld hl,Indice_de_tablas_Random
+1273+ A62A 21 1B C6     	ld hl,Indice_de_tablas_Random
 1274+ A62D A7           	and a
 1275+ A62E ED 4A        	adc hl,bc
 1276+ A630 22 40 94     	ld (Puntero_tabla_Random),hl
@@ -17011,1134 +17008,1142 @@
  363+ C314
  364+ C314              ; ----------------------------------------------------------
  365+ C314              ;
- 366+ C314              ;   18/10/26
+ 366+ C314              ;   22/10/26
  367+ C314              ;
- 368+ C314              ;
- 369+ C314              ;
- 370+ C314              ;   Left_key_parameters: defw b1                                ; Cadena de texto: "LEFT".
- 371+ C314              ;       defw Line_12 + 12                                       ; Dirección de pantalla, Fila 12, columna 12.
- 372+ C314              ;       defw Move_LEFT
- 373+ C314              ;       defw Move_LEFT_ASCII_CODE
- 374+ C314              ;       db 4                                                    ; N° de chars. "LEFT".
- 375+ C314              ;       db 4                                                    ; N° de espacios.
- 376+ C314
- 377+ C314
- 378+ C314              Define_menu:
- 379+ C314
- 380+ C314              ;   Borramos el menú principal.
- 381+ C314
- 382+ C314 CD D0 C4         call Clean_main_menu    ; v2. Ok.
- 383+ C317
- 384+ C317              ;   Imprime DEFINE MENU:
- 385+ C317
- 386+ C317              ;   Title.
- 387+ C317
- 388+ C317 21 0C 96         ld hl,b0                                                ; Cadena de texto: "DEFINE CONTROLS KEYS:".
- 389+ C31A 11 09 48         ld de,Line_8 + 9                                        ; Dirección de pantalla, Fila 8, columna 9.
- 390+ C31D 3E 46            ld a,%01000110                                          ; Attrs.: BRIGHT, BLACK PAPER, YELLOW INK.
- 391+ C31F 06 00            ld b,0                                                  ; No efecto "Máquina de escribir".
- 392+ C321
- 393+ C321 CD CD 9E         call Print_text_msg ; v2. Ok.                           ; PRINT "DEFINE CONTROLS KEYS:"
- 394+ C324
- 395+ C324              ;   Para guardar el puntero del índice: `Define_menu_index_parameters´, (array con los parámetros que forman los 4 campos_
- 396+ C324              ;   _ que construyen el menú DEFINE), utilizaremos la variable: (Puntero_de_impresion).
- 397+ C324
- 398+ C324              ;   Inicializamos (Puntero_de_impresion), situándolo en el primer campo del índice.
- 399+ C324
- 400+ C324 21 85 91         ld hl,Define_menu_index_parameters
- 401+ C327 22 1B 94         ld (Puntero_de_impresion),hl
- 402+ C32A
- 403+ C32A              Comprueba_salida_del_indice:
- 404+ C32A
- 405+ C32A 7C               ld a,h
- 406+ C32B B5               or l
- 407+ C32C
- 408+ C32C 28 FE            jr z,$
- 409+ C32E
- 410+ C32E              ;    jr z,2F                                                 ; Detecta RET.
- 411+ C32E
- 412+ C32E CD FF 9D         call Extrae_address                                     ; HL apunta ahora al 1er parámetro del campo correspondiente,
- 413+ C331              ;                                                           ; Cadena de texto: "XXXX".
- 414+ C331
- 415+ C331              ;   ABASTECIMIENTO:
- 416+ C331
- 417+ C331              ;   Utilizamos la pila para abastecer registros con los datos de la tabla.
- 418+ C331
- 419+ C331              Abastecimiento:
- 420+ C331
- 421+ C331 ED 73 60 94      ld (Stack),sp
- 422+ C335
- 423+ C335 F9               ld sp,hl
- 424+ C336
- 425+ C336 D9               exx
- 426+ C337
- 427+ C337 E1               pop hl                                                  ; HL' apunta a la cadena de texto a imprimir, "LEFT", "RIGHT", "FIRE", "SHIELD".
- 428+ C338 D1               pop de                                                  ; DE' contiene la dirección de pantalla donde se imprime el primer char. del msg. de texto.
- 429+ C339
- 430+ C339 06 00            ld b,0                                                  ; No efecto "Máquina de escribir".
- 431+ C33B
- 432+ C33B D9               exx
- 433+ C33C
- 434+ C33C E1               pop hl                                                  ; HL apunta a la variable de sistema que almacenará el KEYCODE de la tecla pulsada.
- 435+ C33D D1               pop de                                                  ; DE apunta a la variable de sistema que almacenará el ASCII_CODE de la tecla pulsada.
- 436+ C33E C1               pop bc                                                  ; (BC) contiene: (N° de chars / n° de spaces).
- 437+ C33F
- 438+ C33F 3E C7            ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
- 439+ C341
- 440+ C341 ED 7B 60 94      ld sp,(Stack)
- 441+ C345
- 442+ C345              ;    jr $
- 443+ C345
- 444+ C345              ;    ret
- 445+ C345
- 446+ C345               ;   LEFT. -----------------------------------------------------------------------------------------------------------------
- 447+ C345
- 448+ C345              ;    ld hl,b1                                                ; Cadena de texto: "LEFT".
- 449+ C345              ;    ld de,Line_12 + 12                                      ; Dirección de pantalla, Fila 12, columna 12.
- 450+ C345
- 451+ C345              ;    ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
- 452+ C345              ;    ld b,0                                                  ; No efecto "Máquina de escribir".
- 453+ C345
- 454+ C345
- 455+ C345 D9               exx
- 456+ C346
- 457+ C346 D5               push de                                                 ; PUSH Carro de impresión.
- 458+ C347
- 459+ C347 CD CD 9E         call Print_text_msg
- 460+ C34A
- 461+ C34A D5               push de
- 462+ C34B DD E1            pop ix                                                  ; IX contiene la posición actualizada del carro de impresión tras imprimir la cadena de texto.
- 463+ C34D
- 464+ C34D              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
- 465+ C34D
- 466+ C34D 01 FF FF         ld bc,$ffff
- 467+ C350 CD 27 9B         call DELAY
- 468+ C353
- 469+ C353 D9               exx
- 470+ C354
- 471+ C354              ;    ld hl,Move_LEFT
- 472+ C354              ;    ld de,Move_LEFT_ASCII_CODE
- 473+ C354
- 474+ C354 C5               push bc
- 475+ C355 E5               push hl
- 476+ C356 D5               push de
- 477+ C357
- 478+ C357 CD B4 C3         call Define_key ; v2. Ok.                               ; Almacena Key_code y ASCII_code en sus respectivas variables.
- 479+ C35A
- 480+ C35A D1               pop de
- 481+ C35B E1               pop hl
- 482+ C35C C1               pop bc
- 483+ C35D
- 484+ C35D 3A 4B 96         ld a,(Numero_de_teclas_definidas)
- 485+ C360 3C               inc a
- 486+ C361 32 4B 96         ld (Numero_de_teclas_definidas),a
- 487+ C364
- 488+ C364              ;   Hemos definido (Move_LEFT). Este hecho lo indicamos "quitando" el FLASH de la palabra "LEFT" e imprimiento el char. o chars. ASCII del KEYCODE asignado.
- 489+ C364
- 490+ C364 78               ld a,b                                                  ; N° de chars de la cadena de texto en A.
- 491+ C365
- 492+ C365 D9               exx
- 493+ C366
- 494+ C366 D1               pop de                                                 ; PUSH Carro de impresión.
- 495+ C367
- 496+ C367 47               ld b,a
- 497+ C368
- 498+ C368 EB               ex de,hl
- 499+ C369
- 500+ C369
- 501+ C369              ;    ld hl,Line_12+12                                        ; Dirección de video del 1er char. al que vamos a asignar attrs.
- 502+ C369
- 503+ C369              ;    ld b,4                                                  ; N° de chars. consecutivos a los que vamos asignar attrs.
- 504+ C369
- 505+ C369 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
- 506+ C36B
- 507+ C36B CD 17 9E         call Asigna_B_Attr  ; v2. Ok.                           ; Cambia atributos de la función a definir, NO FLASH.
- 508+ C36E
- 509+ C36E D9               exx
- 510+ C36F
- 511+ C36F EB               ex de,hl
- 512+ C370
- 513+ C370
- 514+ C370
- 515+ C370              ;   Imprime tecla pulsada, (LEFT). (Move_LEFT_ASCII_CODE).
- 516+ C370
- 517+ C370              ;    ld hl,Move_LEFT_ASCII_CODE
- 518+ C370              ;    pop de                                                  ; POP Carro de impresión.
- 519+ C370
- 520+ C370              ;    jr $
- 521+ C370
- 522+ C370 DD E5            push ix
- 523+ C372 D1               pop de
- 524+ C373
- 525+ C373 41               ld b,c                                                  ; N° de espacios en B.
- 526+ C374
- 527+ C374 1C           1 inc e
- 528+ C375 10 FD            djnz 1B
- 529+ C377
- 530+ C377 3E 68            ld a,%01101000                                          ; Attrs.: BRIGHT, CYAN PAPER, BLACK INK.
- 531+ C379
- 532+ C379 CD CD 9E         call Print_text_msg                                     ; Print DEFINED KEY to (Move_LEFT_ASCII_CODE).
- 533+ C37C
- 534+ C37C              Incrementa_puntero_de_parametros:
- 535+ C37C
- 536+ C37C
- 537+ C37C 2A 1B 94         ld hl,(Puntero_de_impresion)
- 538+ C37F
- 539+ C37F 23               inc hl
- 540+ C380 23               inc hl
- 541+ C381
- 542+ C381 22 1B 94         ld (Puntero_de_impresion),hl
- 543+ C384
- 544+ C384
- 545+ C384 18 A4            jr Comprueba_salida_del_indice
- 546+ C386
- 547+ C386
- 548+ C386
- 549+ C386
- 550+ C386
- 551+ C386
- 552+ C386
- 553+ C386
- 554+ C386
- 555+ C386
- 556+ C386
- 557+ C386              2
- 558+ C386
- 559+ C386              ;   All keys are defined.
+ 368+ C314              ;   Esta función nos permite cambiar las teclas asignadas a los controles de Amadeus.
+ 369+ C314              ;   Por defecto las teclas que controlan nuestra nave son:
+ 370+ C314              ;
+ 371+ C314              ;   Move_LEFT db $24
+ 372+ C314              ;   Move_RIGHT db $1c
+ 373+ C314              ;   Move_FIRE db $04
+ 374+ C314              ;   Move_SHIELD db $20
+ 375+ C314
+ 376+ C314              ;   Move_LEFT_ASCII_CODE db "1"
+ 377+ C314              ;   ds 5
+ 378+ C314              ;   Move_RIGHT_ASCII_CODE db "2"
+ 379+ C314              ;   ds 5
+ 380+ C314              ;   Move_FIRE_ASCII_CODE db "5"
+ 381+ C314              ;   ds 5
+ 382+ C314              ;   Move_SHIELD_ASCII_CODE db "SPACE"
+ 383+ C314              ;   ds 1
+ 384+ C314              ;
+ 385+ C314              ;   Hemos creado una tabla de punteros con los .defw que contienen los datos necesarios para definir e imprimir_
+ 386+ C314              ;   _ cada uno de los 4 controles.
+ 387+ C314              ;
+ 388+ C314              ;   Los datos son los siguientes:
+ 389+ C314              ;
+ 390+ C314              ;   Left_key_parameters: defw b1                                ; Cadena de texto: "LEFT".
+ 391+ C314              ;       defw Line_12 + 12                                       ; Dirección de pantalla, Fila 12, columna 12.
+ 392+ C314              ;       defw Move_LEFT
+ 393+ C314              ;       defw Move_LEFT_ASCII_CODE
+ 394+ C314              ;       db 4                                                    ; N° de chars. que forman la cadena de texto "LEFT".
+ 395+ C314              ;       db 4                                                    ; N° de espacios que separan en pantalla la cadena de texto de la tecla definida.
+ 396+ C314              ;
+ 397+ C314              ;   Utilizaremos la variable: (Puntero_de_impresion) para guardar la posición del puntero indicial, (hl).
+ 398+ C314              ;   Nota: Antes de salir de la función restauraremos su valor a "$0000".
+ 399+ C314              ;
+ 400+ C314              ;   MODIFY: AF, HL, HL´, DE, DE´, BC, IX
+ 401+ C314              ;   OUTPUT: (Z), Set_1 (Ctrl_6).  Indica regreso al Menú Principal.
+ 402+ C314
+ 403+ C314              Define_menu:
+ 404+ C314
+ 405+ C314              ;   Borramos el menú principal.
+ 406+ C314
+ 407+ C314 CD D5 C4         call Clean_main_menu    ; v2. Ok.
+ 408+ C317
+ 409+ C317              ;   Imprime el título: "DEFINE MENU:".
+ 410+ C317
+ 411+ C317 21 0C 96         ld hl,b0                                                ; Cadena de texto: "DEFINE CONTROLS KEYS:".
+ 412+ C31A 11 09 48         ld de,Line_8 + 9                                        ; Dirección de pantalla, Fila 8, columna 9.
+ 413+ C31D 3E 46            ld a,%01000110                                          ; Attrs.: BRIGHT, BLACK PAPER, YELLOW INK.
+ 414+ C31F 06 00            ld b,0                                                  ; No efecto "Máquina de escribir".
+ 415+ C321
+ 416+ C321 CD CD 9E         call Print_text_msg ; v2. Ok.                           ; PRINT "DEFINE CONTROLS KEYS:"
+ 417+ C324
+ 418+ C324              ;   Para guardar el puntero del índice: `Define_menu_index_parameters´, (array con los parámetros que forman los 4 campos_
+ 419+ C324              ;   _ que construyen el menú DEFINE), utilizaremos la variable: (Puntero_de_impresion).
+ 420+ C324
+ 421+ C324              ;   Inicializamos (Puntero_de_impresion), situándolo en el primer campo del índice.
+ 422+ C324
+ 423+ C324 21 85 91         ld hl,Define_menu_index_parameters
+ 424+ C327 22 1B 94         ld (Puntero_de_impresion),hl
+ 425+ C32A
+ 426+ C32A              Abastecimiento:
+ 427+ C32A
+ 428+ C32A CD FF 9D         call Extrae_address                                     ; HL apunta ahora al 1er parámetro del campo correspondiente,
+ 429+ C32D
+ 430+ C32D 7C               ld a,h
+ 431+ C32E B5               or l
+ 432+ C32F 28 55            jr z, All_keys_defined
+ 433+ C331
+ 434+ C331              ;   Utilizamos la pila para abastecer registros con los datos de la tabla.
+ 435+ C331
+ 436+ C331 ED 73 60 94      ld (Stack),sp
+ 437+ C335
+ 438+ C335 F9               ld sp,hl
+ 439+ C336
+ 440+ C336 D9               exx
+ 441+ C337
+ 442+ C337 E1               pop hl                                                  ; HL' apunta a la cadena de texto a imprimir, "LEFT", "RIGHT", "FIRE", "SHIELD".
+ 443+ C338 D1               pop de                                                  ; DE' contiene la dirección de pantalla donde se imprime el primer char. del msg. de texto.
+ 444+ C339
+ 445+ C339 06 00            ld b,0                                                  ; No efecto "Máquina de escribir".
+ 446+ C33B
+ 447+ C33B D9               exx
+ 448+ C33C
+ 449+ C33C E1               pop hl                                                  ; HL apunta a la variable de sistema que almacenará el KEYCODE de la tecla pulsada.
+ 450+ C33D D1               pop de                                                  ; DE apunta a la variable de sistema que almacenará el ASCII_CODE de la tecla pulsada.
+ 451+ C33E C1               pop bc                                                  ; (BC) contiene: (N° de chars / n° de spaces).
+ 452+ C33F
+ 453+ C33F 3E C7            ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
+ 454+ C341
+ 455+ C341 ED 7B 60 94      ld sp,(Stack)
+ 456+ C345
+ 457+ C345              ;    jr $
+ 458+ C345
+ 459+ C345              ;    ret
+ 460+ C345
+ 461+ C345               ;   LEFT. -----------------------------------------------------------------------------------------------------------------
+ 462+ C345
+ 463+ C345              ;    ld hl,b1                                                ; Cadena de texto: "LEFT".
+ 464+ C345              ;    ld de,Line_12 + 12                                      ; Dirección de pantalla, Fila 12, columna 12.
+ 465+ C345
+ 466+ C345              ;    ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
+ 467+ C345              ;    ld b,0                                                  ; No efecto "Máquina de escribir".
+ 468+ C345
+ 469+ C345
+ 470+ C345 D9               exx
+ 471+ C346
+ 472+ C346 D5               push de                                                 ; PUSH Carro de impresión.
+ 473+ C347
+ 474+ C347 CD CD 9E         call Print_text_msg
+ 475+ C34A
+ 476+ C34A D5               push de
+ 477+ C34B DD E1            pop ix                                                  ; IX contiene la posición actualizada del carro de impresión tras imprimir la cadena de texto.
+ 478+ C34D
+ 479+ C34D              ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
+ 480+ C34D
+ 481+ C34D 01 FF FF         ld bc,$ffff
+ 482+ C350 CD 27 9B         call DELAY
+ 483+ C353
+ 484+ C353 D9               exx
+ 485+ C354
+ 486+ C354              ;    ld hl,Move_LEFT
+ 487+ C354              ;    ld de,Move_LEFT_ASCII_CODE
+ 488+ C354
+ 489+ C354 C5               push bc
+ 490+ C355 E5               push hl
+ 491+ C356 D5               push de
+ 492+ C357
+ 493+ C357 CD B9 C3         call Define_key ; v2. Ok.                               ; Almacena Key_code y ASCII_code en sus respectivas variables.
+ 494+ C35A
+ 495+ C35A D1               pop de
+ 496+ C35B E1               pop hl
+ 497+ C35C C1               pop bc
+ 498+ C35D
+ 499+ C35D 3A 4B 96         ld a,(Numero_de_teclas_definidas)
+ 500+ C360 3C               inc a
+ 501+ C361 32 4B 96         ld (Numero_de_teclas_definidas),a
+ 502+ C364
+ 503+ C364              ;   Hemos definido (Move_LEFT). Este hecho lo indicamos "quitando" el FLASH de la palabra "LEFT" e imprimiento el char. o chars. ASCII del KEYCODE asignado.
+ 504+ C364
+ 505+ C364 78               ld a,b                                                  ; N° de chars de la cadena de texto en A.
+ 506+ C365
+ 507+ C365 D9               exx
+ 508+ C366
+ 509+ C366 D1               pop de                                                 ; PUSH Carro de impresión.
+ 510+ C367
+ 511+ C367 47               ld b,a
+ 512+ C368
+ 513+ C368 EB               ex de,hl
+ 514+ C369
+ 515+ C369
+ 516+ C369              ;    ld hl,Line_12+12                                        ; Dirección de video del 1er char. al que vamos a asignar attrs.
+ 517+ C369
+ 518+ C369              ;    ld b,4                                                  ; N° de chars. consecutivos a los que vamos asignar attrs.
+ 519+ C369
+ 520+ C369 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+ 521+ C36B
+ 522+ C36B CD 17 9E         call Asigna_B_Attr  ; v2. Ok.                           ; Cambia atributos de la función a definir, NO FLASH.
+ 523+ C36E
+ 524+ C36E D9               exx
+ 525+ C36F
+ 526+ C36F EB               ex de,hl
+ 527+ C370
+ 528+ C370
+ 529+ C370
+ 530+ C370              ;   Imprime tecla pulsada, (LEFT). (Move_LEFT_ASCII_CODE).
+ 531+ C370
+ 532+ C370              ;    ld hl,Move_LEFT_ASCII_CODE
+ 533+ C370              ;    pop de                                                  ; POP Carro de impresión.
+ 534+ C370
+ 535+ C370              ;    jr $
+ 536+ C370
+ 537+ C370 DD E5            push ix
+ 538+ C372 D1               pop de
+ 539+ C373
+ 540+ C373 41               ld b,c                                                  ; N° de espacios en B.
+ 541+ C374
+ 542+ C374 1C           1 inc e
+ 543+ C375 10 FD            djnz 1B
+ 544+ C377
+ 545+ C377 3E 68            ld a,%01101000                                          ; Attrs.: BRIGHT, CYAN PAPER, BLACK INK.
+ 546+ C379
+ 547+ C379 CD CD 9E         call Print_text_msg                                     ; Print DEFINED KEY to (Move_LEFT_ASCII_CODE).
+ 548+ C37C
+ 549+ C37C              Incrementa_puntero_de_parametros:
+ 550+ C37C
+ 551+ C37C
+ 552+ C37C 2A 1B 94         ld hl,(Puntero_de_impresion)
+ 553+ C37F
+ 554+ C37F 23               inc hl
+ 555+ C380 23               inc hl
+ 556+ C381
+ 557+ C381 22 1B 94         ld (Puntero_de_impresion),hl
+ 558+ C384
+ 559+ C384 18 A4            jr Abastecimiento
  560+ C386
- 561+ C386              ;   Guardamos los nuevos KEYCODE de las teclas definidas en ((Keyboard_db_box)).
+ 561+ C386              All_keys_defined:
  562+ C386
- 563+ C386 CD F2 A1         call Store_CONTROLS_in_Keyboard_db_box                  ; Almacena los actuales controles, (KEYBOARD KEYCODES) en la caja de teclado_
- 564+ C389              ;                                                           ; _ y reemplaza los antiguos.
- 565+ C389
- 566+ C389              ;   DELAY before EXIT to Main menu.
- 567+ C389
- 568+ C389 01 FF FF         ld bc,$ffff
- 569+ C38C CD 27 9B         call DELAY
- 570+ C38F 01 FF FF         ld bc,$ffff
- 571+ C392 CD 27 9B         call DELAY
- 572+ C395 01 FF FF         ld bc,$ffff
- 573+ C398 CD 27 9B         call DELAY
- 574+ C39B 01 FF FF         ld bc,$ffff
- 575+ C39E CD 27 9B         call DELAY                                              ; DELAY before EXIT to Main menu.
- 576+ C3A1 01 FF FF         ld bc,$ffff
- 577+ C3A4 CD 27 9B         call DELAY
- 578+ C3A7
- 579+ C3A7              ; Clean Define menu.
- 580+ C3A7
- 581+ C3A7 CD B1 C4         call Clean_Define_menu
- 582+ C3AA
- 583+ C3AA 21 8D 94         ld hl,Ctrl_6
- 584+ C3AD CB CE            set 1,(hl)                                              ; Bit 1 "1", means: Return to Main menu.
- 585+ C3AF
- 586+ C3AF AF               xor a
- 587+ C3B0
- 588+ C3B0 32 4B 96         ld (Numero_de_teclas_definidas),a
- 589+ C3B3
- 590+ C3B3 C9               ret
- 591+ C3B4
- 592+ C3B4              ; -----------------------------------------------------------------------------------------------------------
- 593+ C3B4              ;
- 594+ C3B4              ;   17/10/26
- 595+ C3B4              ;
- 596+ C3B4              ;   Asigna un nuevo KEYCODE y sustituye al contenido en la variable MOVE_xxx, (al que apunta H)L.
- 597+ C3B4              ;   Nueva tecla para la función de movimiento, (KEYBOARD) a la que apunta HL.
- 598+ C3B4              ;
- 599+ C3B4              ;   Move_LEFT db $24
- 600+ C3B4              ;   Move_RIGHT db $1c
- 601+ C3B4              ;   Move_FIRE db $04
- 602+ C3B4              ;   Move_SHIELD db $20
- 603+ C3B4              ;
- 604+ C3B4              ;   El nuevo KEYCODE también modificará el msg. de texto contenido en la correspondiente caja ASCII.
- 605+ C3B4              ;
- 606+ C3B4              ;   El msg. de texto será de un char. si es una tecla normal, "q", "s", "2", ..., etc.
- 607+ C3B4              ;   El msg. de texto será de 5 chars. si es una tecla especial.
- 608+ C3B4              ;
- 609+ C3B4              ;   Special keys:
- 610+ C3B4              ;
- 611+ C3B4              ;   Symbol_key defm "SYMB.",0
- 612+ C3B4              ;   Space_key defm "SPACE",0
- 613+ C3B4              ;   Enter_key defm "ENTER",0
- 614+ C3B4              ;   Caps_key defm "CAPS.",0
- 615+ C3B4              ;
- 616+ C3B4              ;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
- 617+ C3B4              ;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
- 618+ C3B4              ;
- 619+ C3B4              ;           (Numero_de_teclas_definidas) contiene el n° de teclas YA DEFINIDAS.
- 620+ C3B4              ;
- 621+ C3B4              ;   MODIFY: AF, HL, BC y DE.
- 622+ C3B4              ;
- 623+ C3B4              ;   OUTPUT: (A) = "0".
- 624+ C3B4
- 625+ C3B4              Define_key:
- 626+ C3B4
- 627+ C3B4 E5               push hl                                                 ; PUSH Puntero KEYCODE.
- 628+ C3B5 D5               push de                                                 ; PUSH Puntero ASCII_CODE.
- 629+ C3B6
- 630+ C3B6 CD 2F A0     3 call ROM_Key_Scan ; v2. Ok.                               ; Scan keyboard.
- 631+ C3B9
- 632+ C3B9              ;   Tras ejecutar[ROM_Key_Scan], (E) contiene el KEYCODE de la tecla pulsada.
- 633+ C3B9
- 634+ C3B9 3A 4B 96         ld a,(Numero_de_teclas_definidas)                       ; N° de teclas ya definidas.
- 635+ C3BC A7               and a
- 636+ C3BD 28 0B            jr z,2F                                                 ; (Numero_de_teclas_definidas)="0" Indica que estamos definiendo Move_LEFT.
- 637+ C3BF              ;                                                           ; (Numero_de_teclas_definidas) se incrementa en una unidad cada vez que se define una tecla:
- 638+ C3BF              ;
- 639+ C3BF              ;                                                           ; Ej.: Si estamos definiendo Move_RIGHT, (Numero_de_teclas_definidas)="1"
- 640+ C3BF              ;                                                           ;      Si estamos definiendo Move_FIRE, (Numero_de_teclas_definidas)="2"
- 641+ C3BF              ;                                                           ;      Si estamos definiendo Move_SHIELD, (Numero_de_teclas_definidas)="3"
- 642+ C3BF
- 643+ C3BF 47               ld b,a                                                  ; Así, (B) contiene el nº de teclas definidas -1.
- 644+ C3C0
- 645+ C3C0              ;   (Numero_de_teclas_definidas) contiene el n° de comparativas que realizaremos entre el nuevo KEYCODE definido y los anteriormente definidos.
- 646+ C3C0              ;   Así evitaremos que se asigne una misma tecla para varias funciones distintas.
- 647+ C3C0
- 648+ C3C0 21 4C 96         ld hl,Move_LEFT                                         ; 1er KEYCODE a comparar.
- 649+ C3C3
- 650+ C3C3 7E           1 ld a,(hl)                                                 ; KEY_CODE de Move_LEFT en A.
- 651+ C3C4 BB               cp e                                                    ; Comparo con el Key_code recién adquirido.
- 652+ C3C5 28 EF            jr z,3B                                                 ; Esta tecla ya se definió anteriormente. Volvemos a escanear el teclado.
- 653+ C3C7
- 654+ C3C7 23               inc hl                                                  ; Next KEYCODE to compare.
- 655+ C3C8
- 656+ C3C8 10 F9            djnz 1B
- 657+ C3CA
- 658+ C3CA 7B           2 ld a,e                                                    ; KEY_code en A.
- 659+ C3CB
- 660+ C3CB D1               pop de                                                  ; POP Puntero ASCII_CODE.
- 661+ C3CC E1               pop hl                                                  ; POP Puntero KEYCODE.
- 662+ C3CD
- 663+ C3CD 77               ld (hl),a                                               ; Key_code almacenado.
- 664+ C3CE
- 665+ C3CE              ;   Sonido, (BEEP) de la pulsación de las teclas, (cuando está autorizada). No se ejecuta [BEEP] si la tecla ya está definida.
- 666+ C3CE
- 667+ C3CE CD 3C C1         call BEEP   ; v2. Ok.
- 668+ C3D1
- 669+ C3D1              ;   Special Key_code ???
- 670+ C3D1
- 671+ C3D1 FE 18            cp $18
- 672+ C3D3 28 19            jr z,Print_SYMB
- 673+ C3D5 FE 20            cp $20
- 674+ C3D7 28 1C            jr z,Print_SPACE
- 675+ C3D9 FE 21            cp $21
- 676+ C3DB 28 1F            jr z,Print_ENTER
- 677+ C3DD FE 27            cp $27
- 678+ C3DF 28 22            jr z,Print_CAPS
- 679+ C3E1
- 680+ C3E1              ;   No special key_code.
- 681+ C3E1
- 682+ C3E1              ;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
- 683+ C3E1              ;
- 684+ C3E1              ;   Recordatorio: Cada caja ASCII consta de 6 bytes, esto es porque el msg. de texto que se almacena al pulsar una SPECIAL KEY consta de 5 caracteres.
- 685+ C3E1              ;   El 6° byte SIEMPRE contendrá "0" pues indica a [Print_text_msg], "FIN DE CADENA DE TEXTO".
- 686+ C3E1              ;
- 687+ C3E1              ;   Guardamos el ASCII_CODE seguido de "0" para indicar "fin de cadena de texto".
- 688+ C3E1              ;
- 689+ C3E1
- 690+ C3E1 4F               ld c,a
- 691+ C3E2 06 00            ld b,0
- 692+ C3E4
- 693+ C3E4 21 0D 95         ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
- 694+ C3E7
- 695+ C3E7 09               add hl,bc
- 696+ C3E8
- 697+ C3E8 7E               ld a,(hl)
- 698+ C3E9 12               ld (de),a
- 699+ C3EA
- 700+ C3EA 13               inc de
- 701+ C3EB
- 702+ C3EB AF               xor a
- 703+ C3EC 12               ld (de),a                                                ; "0", indica a [Print_text_msg], "Fin de cadena de texto".
+ 563+ C386              ;   All keys are defined.
+ 564+ C386
+ 565+ C386              ;   Guardamos los nuevos KEYCODE de las teclas definidas en ((Keyboard_db_box)).
+ 566+ C386
+ 567+ C386 CD F2 A1         call Store_CONTROLS_in_Keyboard_db_box                  ; Almacena los actuales controles, (KEYBOARD KEYCODES) en la caja de teclado_
+ 568+ C389              ;                                                           ; _ y reemplaza los antiguos.
+ 569+ C389
+ 570+ C389              ;   DELAY before EXIT to Main menu.
+ 571+ C389
+ 572+ C389 01 FF FF         ld bc,$ffff
+ 573+ C38C CD 27 9B         call DELAY
+ 574+ C38F 01 FF FF         ld bc,$ffff
+ 575+ C392 CD 27 9B         call DELAY
+ 576+ C395 01 FF FF         ld bc,$ffff
+ 577+ C398 CD 27 9B         call DELAY
+ 578+ C39B 01 FF FF         ld bc,$ffff
+ 579+ C39E CD 27 9B         call DELAY                                              ; DELAY before EXIT to Main menu.
+ 580+ C3A1 01 FF FF         ld bc,$ffff
+ 581+ C3A4 CD 27 9B         call DELAY
+ 582+ C3A7
+ 583+ C3A7              ; Clean Define menu.
+ 584+ C3A7
+ 585+ C3A7 CD B6 C4         call Clean_Define_menu
+ 586+ C3AA
+ 587+ C3AA 21 8D 94         ld hl,Ctrl_6
+ 588+ C3AD CB CE            set 1,(hl)                                              ; Bit 1 "1", means: Return to Main menu.
+ 589+ C3AF
+ 590+ C3AF AF               xor a
+ 591+ C3B0 32 4B 96         ld (Numero_de_teclas_definidas),a
+ 592+ C3B3
+ 593+ C3B3 67               ld h,a
+ 594+ C3B4 6C               ld l,h
+ 595+ C3B5
+ 596+ C3B5 22 1B 94         ld (Puntero_de_impresion),hl
+ 597+ C3B8
+ 598+ C3B8 C9               ret
+ 599+ C3B9
+ 600+ C3B9              ; -----------------------------------------------------------------------------------------------------------
+ 601+ C3B9              ;
+ 602+ C3B9              ;   17/10/26
+ 603+ C3B9              ;
+ 604+ C3B9              ;   Asigna un nuevo KEYCODE y sustituye al contenido en la variable MOVE_xxx, (al que apunta H)L.
+ 605+ C3B9              ;   Nueva tecla para la función de movimiento, (KEYBOARD) a la que apunta HL.
+ 606+ C3B9              ;
+ 607+ C3B9              ;   Move_LEFT db $24
+ 608+ C3B9              ;   Move_RIGHT db $1c
+ 609+ C3B9              ;   Move_FIRE db $04
+ 610+ C3B9              ;   Move_SHIELD db $20
+ 611+ C3B9              ;
+ 612+ C3B9              ;   El nuevo KEYCODE también modificará el msg. de texto contenido en la correspondiente caja ASCII.
+ 613+ C3B9              ;
+ 614+ C3B9              ;   El msg. de texto será de un char. si es una tecla normal, "q", "s", "2", ..., etc.
+ 615+ C3B9              ;   El msg. de texto será de 5 chars. si es una tecla especial.
+ 616+ C3B9              ;
+ 617+ C3B9              ;   Special keys:
+ 618+ C3B9              ;
+ 619+ C3B9              ;   Symbol_key defm "SYMB.",0
+ 620+ C3B9              ;   Space_key defm "SPACE",0
+ 621+ C3B9              ;   Enter_key defm "ENTER",0
+ 622+ C3B9              ;   Caps_key defm "CAPS.",0
+ 623+ C3B9              ;
+ 624+ C3B9              ;   INPUTS: HL apunta a la variable que almacenará el correspondiente (KEY_CODE), ej: Move_LEFT.
+ 625+ C3B9              ;           DE apunta a la variable que almacenará el correspondiente (ASCII_CODE), ej: Move_LEFT_ASCII_CODE.
+ 626+ C3B9              ;
+ 627+ C3B9              ;           (Numero_de_teclas_definidas) contiene el n° de teclas YA DEFINIDAS.
+ 628+ C3B9              ;
+ 629+ C3B9              ;   MODIFY: AF, HL, BC y DE.
+ 630+ C3B9              ;
+ 631+ C3B9              ;   OUTPUT: (A) = "0".
+ 632+ C3B9
+ 633+ C3B9              Define_key:
+ 634+ C3B9
+ 635+ C3B9 E5               push hl                                                 ; PUSH Puntero KEYCODE.
+ 636+ C3BA D5               push de                                                 ; PUSH Puntero ASCII_CODE.
+ 637+ C3BB
+ 638+ C3BB CD 2F A0     3 call ROM_Key_Scan ; v2. Ok.                               ; Scan keyboard.
+ 639+ C3BE
+ 640+ C3BE              ;   Tras ejecutar[ROM_Key_Scan], (E) contiene el KEYCODE de la tecla pulsada.
+ 641+ C3BE
+ 642+ C3BE 3A 4B 96         ld a,(Numero_de_teclas_definidas)                       ; N° de teclas ya definidas.
+ 643+ C3C1 A7               and a
+ 644+ C3C2 28 0B            jr z,2F                                                 ; (Numero_de_teclas_definidas)="0" Indica que estamos definiendo Move_LEFT.
+ 645+ C3C4              ;                                                           ; (Numero_de_teclas_definidas) se incrementa en una unidad cada vez que se define una tecla:
+ 646+ C3C4              ;
+ 647+ C3C4              ;                                                           ; Ej.: Si estamos definiendo Move_RIGHT, (Numero_de_teclas_definidas)="1"
+ 648+ C3C4              ;                                                           ;      Si estamos definiendo Move_FIRE, (Numero_de_teclas_definidas)="2"
+ 649+ C3C4              ;                                                           ;      Si estamos definiendo Move_SHIELD, (Numero_de_teclas_definidas)="3"
+ 650+ C3C4
+ 651+ C3C4 47               ld b,a                                                  ; Así, (B) contiene el nº de teclas definidas -1.
+ 652+ C3C5
+ 653+ C3C5              ;   (Numero_de_teclas_definidas) contiene el n° de comparativas que realizaremos entre el nuevo KEYCODE definido y los anteriormente definidos.
+ 654+ C3C5              ;   Así evitaremos que se asigne una misma tecla para varias funciones distintas.
+ 655+ C3C5
+ 656+ C3C5 21 4C 96         ld hl,Move_LEFT                                         ; 1er KEYCODE a comparar.
+ 657+ C3C8
+ 658+ C3C8 7E           1 ld a,(hl)                                                 ; KEY_CODE de Move_LEFT en A.
+ 659+ C3C9 BB               cp e                                                    ; Comparo con el Key_code recién adquirido.
+ 660+ C3CA 28 EF            jr z,3B                                                 ; Esta tecla ya se definió anteriormente. Volvemos a escanear el teclado.
+ 661+ C3CC
+ 662+ C3CC 23               inc hl                                                  ; Next KEYCODE to compare.
+ 663+ C3CD
+ 664+ C3CD 10 F9            djnz 1B
+ 665+ C3CF
+ 666+ C3CF 7B           2 ld a,e                                                    ; KEY_code en A.
+ 667+ C3D0
+ 668+ C3D0 D1               pop de                                                  ; POP Puntero ASCII_CODE.
+ 669+ C3D1 E1               pop hl                                                  ; POP Puntero KEYCODE.
+ 670+ C3D2
+ 671+ C3D2 77               ld (hl),a                                               ; Key_code almacenado.
+ 672+ C3D3
+ 673+ C3D3              ;   Sonido, (BEEP) de la pulsación de las teclas, (cuando está autorizada). No se ejecuta [BEEP] si la tecla ya está definida.
+ 674+ C3D3
+ 675+ C3D3 CD 3C C1         call BEEP   ; v2. Ok.
+ 676+ C3D6
+ 677+ C3D6              ;   Special Key_code ???
+ 678+ C3D6
+ 679+ C3D6 FE 18            cp $18
+ 680+ C3D8 28 19            jr z,Print_SYMB
+ 681+ C3DA FE 20            cp $20
+ 682+ C3DC 28 1C            jr z,Print_SPACE
+ 683+ C3DE FE 21            cp $21
+ 684+ C3E0 28 1F            jr z,Print_ENTER
+ 685+ C3E2 FE 27            cp $27
+ 686+ C3E4 28 22            jr z,Print_CAPS
+ 687+ C3E6
+ 688+ C3E6              ;   No special key_code.
+ 689+ C3E6
+ 690+ C3E6              ;   Seleccionamos el ASCII_code correspondiente y lo almacenamos.
+ 691+ C3E6              ;
+ 692+ C3E6              ;   Recordatorio: Cada caja ASCII consta de 6 bytes, esto es porque el msg. de texto que se almacena al pulsar una SPECIAL KEY consta de 5 caracteres.
+ 693+ C3E6              ;   El 6° byte SIEMPRE contendrá "0" pues indica a [Print_text_msg], "FIN DE CADENA DE TEXTO".
+ 694+ C3E6              ;
+ 695+ C3E6              ;   Guardamos el ASCII_CODE seguido de "0" para indicar "fin de cadena de texto".
+ 696+ C3E6              ;
+ 697+ C3E6
+ 698+ C3E6 4F               ld c,a
+ 699+ C3E7 06 00            ld b,0
+ 700+ C3E9
+ 701+ C3E9 21 0D 95         ld hl,Tabla_de_conversion_KEYCODE_ASCII_CODE
+ 702+ C3EC
+ 703+ C3EC 09               add hl,bc
  704+ C3ED
- 705+ C3ED C9               ret
- 706+ C3EE
- 707+ C3EE              Print_SYMB:
- 708+ C3EE
- 709+ C3EE 21 33 96         ld hl,Symbol_key
- 710+ C3F1 CD 0A C4         call Get_ascii_message
- 711+ C3F4 C8               ret z
- 712+ C3F5
- 713+ C3F5              Print_SPACE:
- 714+ C3F5
- 715+ C3F5 21 39 96         ld hl,Space_key
- 716+ C3F8 CD 0A C4         call Get_ascii_message
- 717+ C3FB C8               ret z
- 718+ C3FC
- 719+ C3FC              Print_ENTER:
- 720+ C3FC
- 721+ C3FC 21 3F 96         ld hl,Enter_key
- 722+ C3FF CD 0A C4         call Get_ascii_message
- 723+ C402 C8               ret z
- 724+ C403
- 725+ C403              Print_CAPS:
- 726+ C403
- 727+ C403 21 45 96         ld hl,Caps_key
- 728+ C406 CD 0A C4         call Get_ascii_message
- 729+ C409 C8               ret z
- 730+ C40A
- 731+ C40A              ; --------------------------------------------------
- 732+ C40A              ;
- 733+ C40A              ;   18/10/26
- 734+ C40A              ;
- 735+ C40A              ;   Sub.: Almacena los 5 códigos ASCII que construyen la palabra de la SPECIAL KEY.:
- 736+ C40A              ;
- 737+ C40A              ;   Symbol_key defm "SYMB.",0
- 738+ C40A              ;   Space_key defm "SPACE",0
- 739+ C40A              ;   Enter_key defm "ENTER",0
- 740+ C40A              ;   Caps_key defm "CAPS.",0
- 741+ C40A              ;
- 742+ C40A              ;   Al salir de la rutina tendremos en la caja correspondiente algo así:
- 743+ C40A              ;
- 744+ C40A              ;   $961e db $45, $4e, $54, $45, $52, $00 ..... Move_LEFT_ASCII_CODE db "SPACE",0
- 745+ C40A              ;
- 746+ C40A              ;   MODIFY: A, HL y DE.
- 747+ C40A
- 748+ C40A              Get_ascii_message:
- 749+ C40A
- 750+ C40A 7E               ld a,(hl)
- 751+ C40B 12               ld (de),a
- 752+ C40C
- 753+ C40C A7               and a
- 754+ C40D C8               ret z
- 755+ C40E
- 756+ C40E 23               inc hl
- 757+ C40F 13               inc de
- 758+ C410
- 759+ C410 18 F8            jr Get_ascii_message
- 760+ C412
- 761+ C412              ; ----------------------------------------------------------
- 762+ C412              ;
- 763+ C412              ;   13/3/26
- 764+ C412              ;
- 765+ C412              ;   Pantalla de información. Imprime los controles, (teclas) que hemos seleccionado para nuestros movimientos_
- 766+ C412              ;   _ después de seleccionar "K", KEYBOARD en el menú principal. Una vez en esta pantalla si pulsamos START, (FIRE)_
- 767+ C412              ;   _ iniciaremos partida. Si no pulsamos START, pasado un tiempo volveremos al menú principal, (Set_1 Ctrl_6).
- 768+ C412              ;
- 769+ C412              ;   MODIFY: AF, HL, DE y BC.
- 770+ C412              ;
- 771+ C412              ;   OUTPUT: SET 1, (Ctrl_6) NO START PRESSED, (FIRE key). RETURN TO MAIN MENU.
- 772+ C412
- 773+ C412              Show_controls_keys:
- 774+ C412
- 775+ C412
- 776+ C412 CD D0 C4         call Clean_main_menu    ; v2. Ok.
- 777+ C415
- 778+ C415              ;   Imprimimos CONTROLES.
- 779+ C415
- 780+ C415 21 CD 95         ld hl,a7                                                ; Cadena de texto: "Controls:".
- 781+ C418 11 0C 48         ld de,Line_8 + 12                                       ; Dirección de pantalla, Fila 8, columna 12. (1a línea).
- 782+ C41B 06 00            ld b,0                                                  ; No efecto "Máquina de escribir".
- 783+ C41D 3E 46            ld a,%01000110                                          ; Attrs.: BRIGHT, BLACK PAPER, YELLOW INK.
- 784+ C41F
- 785+ C41F              ;           HL apunta al mensage a imprimir, (msg).
- 786+ C41F              ;           DE indica la fila de pantalla donde queremos imprimir el msg.
- 787+ C41F              ;            A contiene los attrs. del msg.
- 788+ C41F              ;            B Actúa como temporizador, ralentiza la impresión de caracteres, (simula una máquina de escribir).
- 789+ C41F              ;              No actua cuando su valor es "0".
- 790+ C41F              ;
- 791+ C41F              ;   Recordatorio. TABLA DE ATRIBUTOS:
- 792+ C41F              ;
- 793+ C41F              ;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
- 794+ C41F              ;
- 795+ C41F              ;   COLORES: 0 ..... NEGRO
- 796+ C41F              ;            1 ..... AZUL
- 797+ C41F              ;            2 ..... ROJO
- 798+ C41F              ;            3 ..... MAGENTA
- 799+ C41F              ;            4 ..... VERDE
- 800+ C41F              ;            5 ..... CIAN
- 801+ C41F              ;            6 ..... AMARILLO
- 802+ C41F              ;            7 ..... BLANCO
- 803+ C41F              ;
- 804+ C41F
- 805+ C41F CD CD 9E         call Print_text_msg ; v2. Ok.                           ; PRINT "Controls:".
- 806+ C422
- 807+ C422              ;   Next line to print:                                     "Press "X" or "X" to move". -------------------------------------------
- 808+ C422
- 809+ C422 21 4C 96         ld hl,Move_LEFT                                         ; HL se sitúa en el KEYCODE de la tecla de control "Move_LEFT".
- 810+ C425 11 86 48         ld de,Line_12 + 6                                       ; Posición inicial de la 2a línea a imprimir.
- 811+ C428
- 812+ C428 CD 31 C5         call Corrige_inicio_de_linea    ; v2. Ok.
- 813+ C42B
- 814+ C42B 23               inc hl                                                  ; HL se sitúa en el KEYCODE de la tecla de control "Move_RIGHT".
- 815+ C42C
- 816+ C42C CD 31 C5         call Corrige_inicio_de_linea                            ; Hemos DESPLAZADO el carro de impresión, si hemos seleccionado teclas especiales para_
- 817+ C42F              ;                                                           ; _ los controles: (Move_LEFT) y (Move_RIGHT).
- 818+ C42F
- 819+ C42F              ;   PRINT LINE:
- 820+ C42F
- 821+ C42F 21 79 95         ld hl,a0                                                ; Cadena de texto: "Press ".
- 822+ C432 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
- 823+ C434
- 824+ C434 CD CD 9E         call Print_text_msg ; v2. Ok.                           ; PRINT "Press ".
- 825+ C437
- 826+ C437 1C               inc e                                                   ; +1 Columna, (space).
- 827+ C438
- 828+ C438              ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_LEFT).
- 829+ C438              ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_LEFT) es $31, tecla "1", KEYCODE $24.
- 830+ C438
- 831+ C438 21 50 96         ld hl,Move_LEFT_ASCII_CODE                              ; Move_LEFT_ASCII_CODE -----
- 832+ C43B 3E 70            ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
- 833+ C43D
- 834+ C43D CD CD 9E         call Print_text_msg
- 835+ C440
- 836+ C440 1C               inc e                                                   ; +1 Columna, (space).
- 837+ C441
- 838+ C441 21 80 95         ld hl,a1                                                ; Cadena de texto: "or ".
- 839+ C444 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
- 840+ C446
- 841+ C446 CD CD 9E         call Print_text_msg                                     ; Print "or ".
- 842+ C449
- 843+ C449 1C               inc e                                                   ; +1 Columna, (space).
- 844+ C44A
- 845+ C44A              ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_RIGHT).
- 846+ C44A              ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_RIGHT) es $32, tecla "2", KEYCODE $1c.
- 847+ C44A
- 848+ C44A 21 56 96         ld hl,Move_RIGHT_ASCII_CODE                             ; Move_RIGHT_ASCII_CODE -----
- 849+ C44D 3E 70            ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
- 850+ C44F
- 851+ C44F CD CD 9E         call Print_text_msg
- 852+ C452
- 853+ C452 1C               inc e                                                   ; +1 Columna, (space).
- 854+ C453
- 855+ C453 21 85 95         ld hl,a2                                                ; Cadena de texto: " to move ".
- 856+ C456 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
- 857+ C458
- 858+ C458 CD CD 9E         call Print_text_msg                                     ; Print " to move".
- 859+ C45B
- 860+ C45B 1C               inc e                                                   ; +1 Columna, (space).
- 861+ C45C
- 862+ C45C              ;   Next line.
- 863+ C45C
- 864+ C45C 21 8F 95         ld hl,a3                                                ; Cadena de texto: " LEFT and RIGHT.".
- 865+ C45F 11 C8 48         ld de,Line_14 + 8                                       ; Posición inicial del carro de impresión en esta línea, fila 14, columna 8.
- 866+ C462 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
- 867+ C464
- 868+ C464 CD CD 9E         call Print_text_msg                                     ; Print " LEFT and RIGHT.".
- 869+ C467
- 870+ C467              ;   Hay que corregir la posición donde escribiremos la tercera línea de texto si hemos definido "SPACE" o "ENTER"_
- 871+ C467              ;   _como alguna de las teclas de disparo o shield.
- 872+ C467
- 873+ C467 21 4E 96         ld hl,Move_FIRE                                         ; HL se sitúa en el KEYCODE de la tecla de control "Move_FIRE".
- 874+ C46A 11 06 50         ld de,Line_16 + 6                                       ; Posición inicial del carro de impresión de esta 4a línea.
- 875+ C46D
- 876+ C46D CD 31 C5         call Corrige_inicio_de_linea    ; v2. Ok.
- 877+ C470
- 878+ C470 23               inc hl                                                  ; HL se sitúa en el KEYCODE de la tecla de control "Move_SHIELD".
- 879+ C471
- 880+ C471 CD 31 C5         call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales).
- 881+ C474
- 882+ C474              ;   PRINT LINE:
- 883+ C474
- 884+ C474 21 79 95         ld hl,a0                                                ; Cadena de texto: "Press ".
- 885+ C477 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
- 886+ C479
- 887+ C479 CD CD 9E         call Print_text_msg                                     ; Print "Press ".
- 888+ C47C
- 889+ C47C 1C               inc e                                                   ; +1 Columna, (space).
- 890+ C47D
- 891+ C47D              ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_FIRE).
- 892+ C47D              ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_FIRE) es $35, tecla "5", KEYCODE $04.
- 893+ C47D
- 894+ C47D 21 5C 96         ld hl,Move_FIRE_ASCII_CODE                              ; Move_FIRE_ASCII_CODE -----
- 895+ C480 3E 70            ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
- 896+ C482
- 897+ C482 CD CD 9E         call Print_text_msg
- 898+ C485
- 899+ C485 1C               inc e                                                   ; +1 Columna, (space).
- 900+ C486
- 901+ C486 21 A0 95         ld hl,a4                                                ; Cadena de texto: " to FIRE and ".
- 902+ C489 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
- 903+ C48B
- 904+ C48B CD CD 9E         call Print_text_msg                                     ; Print " to FIRE and ".
- 905+ C48E
- 906+ C48E 1C               inc e                                                   ; +1 Columna, (space).
- 907+ C48F
- 908+ C48F              ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_SHIELD).
- 909+ C48F              ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_SHIELD) es $53,$50,$41,$43,$45, tecla "SPACE", KEYCODE $20.
- 910+ C48F
- 911+ C48F 21 62 96         ld hl,Move_SHIELD_ASCII_CODE                            ; Move_SHIELD_ASCII_CODE -----
- 912+ C492 3E 70            ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
- 913+ C494
- 914+ C494 CD CD 9E         call Print_text_msg
- 915+ C497
- 916+ C497              ;   Next line.
- 917+ C497
- 918+ C497 21 AE 95         ld hl,a5                                                ; Cadena de texto: "to SHIELD."
- 919+ C49A 11 4B 50         ld de,Line_18 + 11                                      ; Posición inicial del carro de impresión de esta 5a línea.
- 920+ C49D 3E 47            ld a,%01000111                                          ; attrs.
- 921+ C49F
- 922+ C49F CD CD 9E         call Print_text_msg                                     ; Print " to SHIELD.".
- 923+ C4A2
- 924+ C4A2              ;   Next line.
- 925+ C4A2
- 926+ C4A2 21 B9 95         ld hl,a6                                                ; Cadena de texto: "Press FIRE to START"
- 927+ C4A5 11 C7 50         ld de,Line_22 + 7                                       ; Posición inicial del carro de impresión de la última línea.
- 928+ C4A8 3E C5            ld a,%11000101                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, CYAN INK.
- 929+ C4AA
- 930+ C4AA CD CD 9E         call Print_text_msg                                     ; Print "Press FIRE to START".
- 931+ C4AD
- 932+ C4AD              ;   Scan KEYBOARD to START GAME.
- 933+ C4AD
- 934+ C4AD CD 13 A1         call Press_START    ; v2. Ok.                           ; Activa el bit_1 de Ctrl_6 si no hemos pulsado START.
- 935+ C4B0
- 936+ C4B0 C9           	ret
- 937+ C4B1
- 938+ C4B1              ; ----------------------------------------------------------
- 939+ C4B1              ;
- 940+ C4B1              ;   9/3/26
- 941+ C4B1              ;
- 942+ C4B1              ;   CLEAN MENUS ROUTINES.
- 943+ C4B1
- 944+ C4B1              Clean_Define_menu:
- 945+ C4B1
- 946+ C4B1 21 00 48         ld hl,Line_8
- 947+ C4B4 CD 26 C5         call CLean_file
- 948+ C4B7
- 949+ C4B7 21 80 48         ld hl,Line_12
- 950+ C4BA CD 26 C5         call CLean_file
- 951+ C4BD
- 952+ C4BD 21 C0 48         ld hl,Line_14
- 953+ C4C0 CD 26 C5         call CLean_file
- 954+ C4C3
- 955+ C4C3 21 00 50         ld hl,Line_16
- 956+ C4C6 CD 26 C5         call CLean_file
- 957+ C4C9
- 958+ C4C9 21 40 50         ld hl,Line_18
- 959+ C4CC CD 26 C5         call CLean_file
- 960+ C4CF
- 961+ C4CF C9               ret
- 962+ C4D0
- 963+ C4D0              ; -----------------------------------------------------------------------
- 964+ C4D0              ;
- 965+ C4D0              ;   11/10/26
- 966+ C4D0              ;
- 967+ C4D0              ;   Fija los atributos a NEGRO de las Filas del Menú Principal que contienen texto.
- 968+ C4D0              ;
- 969+ C4D0              ;   MODIFY: AF, HL y B.
- 970+ C4D0
- 971+ C4D0
- 972+ C4D0              Clean_main_menu:
- 973+ C4D0
- 974+ C4D0 21 20 48         ld hl,Line_9
- 975+ C4D3 CD 26 C5         call CLean_file ; v2. Ok.
- 976+ C4D6
- 977+ C4D6 21 60 48         ld hl,Line_11
- 978+ C4D9 CD 26 C5         call CLean_file
- 979+ C4DC
- 980+ C4DC 21 A0 48         ld hl,Line_13
- 981+ C4DF CD 26 C5         call CLean_file
- 982+ C4E2
- 983+ C4E2 21 E0 48         ld hl,Line_15
- 984+ C4E5 CD 26 C5         call CLean_file
- 985+ C4E8
- 986+ C4E8 21 C0 50         ld hl,Line_22
- 987+ C4EB CD 26 C5         call CLean_file
- 988+ C4EE
- 989+ C4EE 21 60 50         ld hl,Line_19
- 990+ C4F1 CD 26 C5         call CLean_file
- 991+ C4F4
- 992+ C4F4 21 80 50         ld hl,Line_20
- 993+ C4F7 CD 26 C5         call CLean_file
- 994+ C4FA
- 995+ C4FA 21 A0 50         ld hl,Line_21
- 996+ C4FD CD 26 C5         call CLean_file
- 997+ C500
- 998+ C500 C9               ret
- 999+ C501
-1000+ C501              ; -----------------------------------------------------------------------
-1001+ C501              ;
-1002+ C501              ;   14/10/26
-1003+ C501              ;
-1004+ C501              ;   Fija los atributos a NEGRO de las 6 Filas de texto que componen la pantalla SHOW CONTROLS MENU.
-1005+ C501              ;
-1006+ C501              ;   MODIFY: AF, HL y B.
-1007+ C501
-1008+ C501              Clean_Show_controls_menu:
-1009+ C501
-1010+ C501 21 00 48         ld hl,Line_8
-1011+ C504 CD 26 C5         call CLean_file
-1012+ C507
-1013+ C507 21 80 48         ld hl,Line_12
-1014+ C50A CD 26 C5         call CLean_file
-1015+ C50D
-1016+ C50D 21 C0 48         ld hl,Line_14
-1017+ C510 CD 26 C5         call CLean_file
-1018+ C513
-1019+ C513 21 00 50         ld hl,Line_16
-1020+ C516 CD 26 C5         call CLean_file
-1021+ C519
-1022+ C519 21 40 50         ld hl,Line_18
-1023+ C51C CD 26 C5         call CLean_file
-1024+ C51F
-1025+ C51F 21 C0 50         ld hl,Line_22
-1026+ C522 CD 26 C5         call CLean_file
-1027+ C525
-1028+ C525 C9               ret
-1029+ C526
-1030+ C526              ; ---------------------------------------------------------------------
-1031+ C526              ;
-1032+ C526              ;   11/10/26
-1033+ C526              ;
-1034+ C526              ;   Set BLACK attrs. a screen file.
-1035+ C526              ;
-1036+ C526              ;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
-1037+ C526              ;
-1038+ C526              ;   COLORES: 0 ..... NEGRO
-1039+ C526              ;            1 ..... AZUL
-1040+ C526              ;            2 ..... ROJO
-1041+ C526              ;            3 ..... MAGENTA
-1042+ C526              ;            4 ..... VERDE
-1043+ C526              ;            5 ..... CIAN
-1044+ C526              ;            6 ..... AMARILLO
-1045+ C526              ;            7 ..... BLANCO
-1046+ C526              ;
-1047+ C526              ;   INPUTS: HL contiene la dirección de pantalla del primer byte de la 1a columna de la fila, ej.: $4820, $4080, $5000, etc ..
-1048+ C526              ;
-1049+ C526              ;   MODIFY: AF, HL y B.
-1050+ C526
-1051+ C526              CLean_file:
-1052+ C526
-1053+ C526 CD 0F 9E         call Calcula_direccion_atributos    ; v2. Ok.
-1054+ C529
-1055+ C529 06 20            ld b,32                             ; B actúa como contador de columnas, ($20).
-1056+ C52B AF               xor a
-1057+ C52C
-1058+ C52C 77           1 ld (hl),a
-1059+ C52D 23               inc hl
-1060+ C52E 10 FC            djnz 1B
-1061+ C530
-1062+ C530 C9               ret
-1063+ C531
-1064+ C531              ; ----------------------------------------------------------
-1065+ C531              ;
-1066+ C531              ;   12/10/26
-1067+ C531              ;
-1068+ C531              ;   Sitúa DOS columnas a la izquierda el comienzo de la línea de texto, (para que quede centrado), cuando el control_
-1069+ C531              ;   _ a analizar, (HL) sea una TECLA ESPECIAL.
-1070+ C531              ;
-1071+ C531              ;   Las teclas especiales se mostrarán en pantalla como cadenas de texto de 5 caracteres:
-1072+ C531              ;
-1073+ C531              ;   Special keys:
-1074+ C531              ;
-1075+ C531              ;   Symbol_key defm "SYMB."
-1076+ C531              ;   Space_key defm "SPACE"
-1077+ C531              ;   Enter_key defm "ENTER"
-1078+ C531              ;   Caps_key defm "CAPS."
-1079+ C531              ;
-1080+ C531              ;   MODIFY: AF, E.
-1081+ C531              ;
-1082+ C531              ;   INPUTS: HL apunta a la dirección que contiene el KEYCODE de la tecla de CONTROL a sondear:
-1083+ C531              ;
-1084+ C531              ;   Move_LEFT db $24
-1085+ C531              ;   Move_RIGHT db $1c
-1086+ C531              ;   Move_FIRE db $04
-1087+ C531              ;   Move_SHIELD db $20
-1088+ C531              ;
-1089+ C531              ;           (DE) contiene la dirección de pantalla del texto a imprimir: Fila/Columna.
-1090+ C531              ;
-1091+ C531              ;   OUTPUT: Retrocede DOS columnas a la izquierda el carro de impresión, (Columna donde se imprime la cadena de texto).
-1092+ C531
-1093+ C531              Corrige_inicio_de_linea:
-1094+ C531
-1095+ C531              ;  Compara el KEYCODE contenido en (HL) con el de las 4 SPECIAL KEYS.
-1096+ C531
-1097+ C531 3E 18            ld a,$18                                                ; "SYMBOL SHIFT" KEYCODE code.
-1098+ C533 BE               cp (hl)
-1099+ C534 28 10            jr z,Retrocede_carro
+ 705+ C3ED 7E               ld a,(hl)
+ 706+ C3EE 12               ld (de),a
+ 707+ C3EF
+ 708+ C3EF 13               inc de
+ 709+ C3F0
+ 710+ C3F0 AF               xor a
+ 711+ C3F1 12               ld (de),a                                                ; "0", indica a [Print_text_msg], "Fin de cadena de texto".
+ 712+ C3F2
+ 713+ C3F2 C9               ret
+ 714+ C3F3
+ 715+ C3F3              Print_SYMB:
+ 716+ C3F3
+ 717+ C3F3 21 33 96         ld hl,Symbol_key
+ 718+ C3F6 CD 0F C4         call Get_ascii_message
+ 719+ C3F9 C8               ret z
+ 720+ C3FA
+ 721+ C3FA              Print_SPACE:
+ 722+ C3FA
+ 723+ C3FA 21 39 96         ld hl,Space_key
+ 724+ C3FD CD 0F C4         call Get_ascii_message
+ 725+ C400 C8               ret z
+ 726+ C401
+ 727+ C401              Print_ENTER:
+ 728+ C401
+ 729+ C401 21 3F 96         ld hl,Enter_key
+ 730+ C404 CD 0F C4         call Get_ascii_message
+ 731+ C407 C8               ret z
+ 732+ C408
+ 733+ C408              Print_CAPS:
+ 734+ C408
+ 735+ C408 21 45 96         ld hl,Caps_key
+ 736+ C40B CD 0F C4         call Get_ascii_message
+ 737+ C40E C8               ret z
+ 738+ C40F
+ 739+ C40F              ; --------------------------------------------------
+ 740+ C40F              ;
+ 741+ C40F              ;   18/10/26
+ 742+ C40F              ;
+ 743+ C40F              ;   Sub.: Almacena los 5 códigos ASCII que construyen la palabra de la SPECIAL KEY.:
+ 744+ C40F              ;
+ 745+ C40F              ;   Symbol_key defm "SYMB.",0
+ 746+ C40F              ;   Space_key defm "SPACE",0
+ 747+ C40F              ;   Enter_key defm "ENTER",0
+ 748+ C40F              ;   Caps_key defm "CAPS.",0
+ 749+ C40F              ;
+ 750+ C40F              ;   Al salir de la rutina tendremos en la caja correspondiente algo así:
+ 751+ C40F              ;
+ 752+ C40F              ;   $961e db $45, $4e, $54, $45, $52, $00 ..... Move_LEFT_ASCII_CODE db "SPACE",0
+ 753+ C40F              ;
+ 754+ C40F              ;   MODIFY: A, HL y DE.
+ 755+ C40F
+ 756+ C40F              Get_ascii_message:
+ 757+ C40F
+ 758+ C40F 7E               ld a,(hl)
+ 759+ C410 12               ld (de),a
+ 760+ C411
+ 761+ C411 A7               and a
+ 762+ C412 C8               ret z
+ 763+ C413
+ 764+ C413 23               inc hl
+ 765+ C414 13               inc de
+ 766+ C415
+ 767+ C415 18 F8            jr Get_ascii_message
+ 768+ C417
+ 769+ C417              ; ----------------------------------------------------------
+ 770+ C417              ;
+ 771+ C417              ;   13/3/26
+ 772+ C417              ;
+ 773+ C417              ;   Pantalla de información. Imprime los controles, (teclas) que hemos seleccionado para nuestros movimientos_
+ 774+ C417              ;   _ después de seleccionar "K", KEYBOARD en el menú principal. Una vez en esta pantalla si pulsamos START, (FIRE)_
+ 775+ C417              ;   _ iniciaremos partida. Si no pulsamos START, pasado un tiempo volveremos al menú principal, (Set_1 Ctrl_6).
+ 776+ C417              ;
+ 777+ C417              ;   MODIFY: AF, HL, DE y BC.
+ 778+ C417              ;
+ 779+ C417              ;   OUTPUT: SET 1, (Ctrl_6) NO START PRESSED, (FIRE key). RETURN TO MAIN MENU.
+ 780+ C417
+ 781+ C417              Show_controls_keys:
+ 782+ C417
+ 783+ C417
+ 784+ C417 CD D5 C4         call Clean_main_menu    ; v2. Ok.
+ 785+ C41A
+ 786+ C41A              ;   Imprimimos CONTROLES.
+ 787+ C41A
+ 788+ C41A 21 CD 95         ld hl,a7                                                ; Cadena de texto: "Controls:".
+ 789+ C41D 11 0C 48         ld de,Line_8 + 12                                       ; Dirección de pantalla, Fila 8, columna 12. (1a línea).
+ 790+ C420 06 00            ld b,0                                                  ; No efecto "Máquina de escribir".
+ 791+ C422 3E 46            ld a,%01000110                                          ; Attrs.: BRIGHT, BLACK PAPER, YELLOW INK.
+ 792+ C424
+ 793+ C424              ;           HL apunta al mensage a imprimir, (msg).
+ 794+ C424              ;           DE indica la fila de pantalla donde queremos imprimir el msg.
+ 795+ C424              ;            A contiene los attrs. del msg.
+ 796+ C424              ;            B Actúa como temporizador, ralentiza la impresión de caracteres, (simula una máquina de escribir).
+ 797+ C424              ;              No actua cuando su valor es "0".
+ 798+ C424              ;
+ 799+ C424              ;   Recordatorio. TABLA DE ATRIBUTOS:
+ 800+ C424              ;
+ 801+ C424              ;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+ 802+ C424              ;
+ 803+ C424              ;   COLORES: 0 ..... NEGRO
+ 804+ C424              ;            1 ..... AZUL
+ 805+ C424              ;            2 ..... ROJO
+ 806+ C424              ;            3 ..... MAGENTA
+ 807+ C424              ;            4 ..... VERDE
+ 808+ C424              ;            5 ..... CIAN
+ 809+ C424              ;            6 ..... AMARILLO
+ 810+ C424              ;            7 ..... BLANCO
+ 811+ C424              ;
+ 812+ C424
+ 813+ C424 CD CD 9E         call Print_text_msg ; v2. Ok.                           ; PRINT "Controls:".
+ 814+ C427
+ 815+ C427              ;   Next line to print:                                     "Press "X" or "X" to move". -------------------------------------------
+ 816+ C427
+ 817+ C427 21 4C 96         ld hl,Move_LEFT                                         ; HL se sitúa en el KEYCODE de la tecla de control "Move_LEFT".
+ 818+ C42A 11 86 48         ld de,Line_12 + 6                                       ; Posición inicial de la 2a línea a imprimir.
+ 819+ C42D
+ 820+ C42D CD 36 C5         call Corrige_inicio_de_linea    ; v2. Ok.
+ 821+ C430
+ 822+ C430 23               inc hl                                                  ; HL se sitúa en el KEYCODE de la tecla de control "Move_RIGHT".
+ 823+ C431
+ 824+ C431 CD 36 C5         call Corrige_inicio_de_linea                            ; Hemos DESPLAZADO el carro de impresión, si hemos seleccionado teclas especiales para_
+ 825+ C434              ;                                                           ; _ los controles: (Move_LEFT) y (Move_RIGHT).
+ 826+ C434
+ 827+ C434              ;   PRINT LINE:
+ 828+ C434
+ 829+ C434 21 79 95         ld hl,a0                                                ; Cadena de texto: "Press ".
+ 830+ C437 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+ 831+ C439
+ 832+ C439 CD CD 9E         call Print_text_msg ; v2. Ok.                           ; PRINT "Press ".
+ 833+ C43C
+ 834+ C43C 1C               inc e                                                   ; +1 Columna, (space).
+ 835+ C43D
+ 836+ C43D              ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_LEFT).
+ 837+ C43D              ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_LEFT) es $31, tecla "1", KEYCODE $24.
+ 838+ C43D
+ 839+ C43D 21 50 96         ld hl,Move_LEFT_ASCII_CODE                              ; Move_LEFT_ASCII_CODE -----
+ 840+ C440 3E 70            ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
+ 841+ C442
+ 842+ C442 CD CD 9E         call Print_text_msg
+ 843+ C445
+ 844+ C445 1C               inc e                                                   ; +1 Columna, (space).
+ 845+ C446
+ 846+ C446 21 80 95         ld hl,a1                                                ; Cadena de texto: "or ".
+ 847+ C449 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+ 848+ C44B
+ 849+ C44B CD CD 9E         call Print_text_msg                                     ; Print "or ".
+ 850+ C44E
+ 851+ C44E 1C               inc e                                                   ; +1 Columna, (space).
+ 852+ C44F
+ 853+ C44F              ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_RIGHT).
+ 854+ C44F              ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_RIGHT) es $32, tecla "2", KEYCODE $1c.
+ 855+ C44F
+ 856+ C44F 21 56 96         ld hl,Move_RIGHT_ASCII_CODE                             ; Move_RIGHT_ASCII_CODE -----
+ 857+ C452 3E 70            ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
+ 858+ C454
+ 859+ C454 CD CD 9E         call Print_text_msg
+ 860+ C457
+ 861+ C457 1C               inc e                                                   ; +1 Columna, (space).
+ 862+ C458
+ 863+ C458 21 85 95         ld hl,a2                                                ; Cadena de texto: " to move ".
+ 864+ C45B 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+ 865+ C45D
+ 866+ C45D CD CD 9E         call Print_text_msg                                     ; Print " to move".
+ 867+ C460
+ 868+ C460 1C               inc e                                                   ; +1 Columna, (space).
+ 869+ C461
+ 870+ C461              ;   Next line.
+ 871+ C461
+ 872+ C461 21 8F 95         ld hl,a3                                                ; Cadena de texto: " LEFT and RIGHT.".
+ 873+ C464 11 C8 48         ld de,Line_14 + 8                                       ; Posición inicial del carro de impresión en esta línea, fila 14, columna 8.
+ 874+ C467 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+ 875+ C469
+ 876+ C469 CD CD 9E         call Print_text_msg                                     ; Print " LEFT and RIGHT.".
+ 877+ C46C
+ 878+ C46C              ;   Hay que corregir la posición donde escribiremos la tercera línea de texto si hemos definido "SPACE" o "ENTER"_
+ 879+ C46C              ;   _como alguna de las teclas de disparo o shield.
+ 880+ C46C
+ 881+ C46C 21 4E 96         ld hl,Move_FIRE                                         ; HL se sitúa en el KEYCODE de la tecla de control "Move_FIRE".
+ 882+ C46F 11 06 50         ld de,Line_16 + 6                                       ; Posición inicial del carro de impresión de esta 4a línea.
+ 883+ C472
+ 884+ C472 CD 36 C5         call Corrige_inicio_de_linea    ; v2. Ok.
+ 885+ C475
+ 886+ C475 23               inc hl                                                  ; HL se sitúa en el KEYCODE de la tecla de control "Move_SHIELD".
+ 887+ C476
+ 888+ C476 CD 36 C5         call Corrige_inicio_de_linea                            ; Hemos corregido el carro de impresión, (si hemos pulsado teclas especiales).
+ 889+ C479
+ 890+ C479              ;   PRINT LINE:
+ 891+ C479
+ 892+ C479 21 79 95         ld hl,a0                                                ; Cadena de texto: "Press ".
+ 893+ C47C 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+ 894+ C47E
+ 895+ C47E CD CD 9E         call Print_text_msg                                     ; Print "Press ".
+ 896+ C481
+ 897+ C481 1C               inc e                                                   ; +1 Columna, (space).
+ 898+ C482
+ 899+ C482              ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_FIRE).
+ 900+ C482              ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_FIRE) es $35, tecla "5", KEYCODE $04.
+ 901+ C482
+ 902+ C482 21 5C 96         ld hl,Move_FIRE_ASCII_CODE                              ; Move_FIRE_ASCII_CODE -----
+ 903+ C485 3E 70            ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
+ 904+ C487
+ 905+ C487 CD CD 9E         call Print_text_msg
+ 906+ C48A
+ 907+ C48A 1C               inc e                                                   ; +1 Columna, (space).
+ 908+ C48B
+ 909+ C48B 21 A0 95         ld hl,a4                                                ; Cadena de texto: " to FIRE and ".
+ 910+ C48E 3E 47            ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
+ 911+ C490
+ 912+ C490 CD CD 9E         call Print_text_msg                                     ; Print " to FIRE and ".
+ 913+ C493
+ 914+ C493 1C               inc e                                                   ; +1 Columna, (space).
+ 915+ C494
+ 916+ C494              ;   Lo siguiente es imprimir el código ASCII correspondiente al KEYCODE (Move_SHIELD).
+ 917+ C494              ;   A menos que hayamos definido nuevos controles, por defecto el ASCII CODE de (Move_SHIELD) es $53,$50,$41,$43,$45, tecla "SPACE", KEYCODE $20.
+ 918+ C494
+ 919+ C494 21 62 96         ld hl,Move_SHIELD_ASCII_CODE                            ; Move_SHIELD_ASCII_CODE -----
+ 920+ C497 3E 70            ld a,%01110000                                          ; Attrs.: BRIGHT, YELLOW PAPER, BLACK INK.
+ 921+ C499
+ 922+ C499 CD CD 9E         call Print_text_msg
+ 923+ C49C
+ 924+ C49C              ;   Next line.
+ 925+ C49C
+ 926+ C49C 21 AE 95         ld hl,a5                                                ; Cadena de texto: "to SHIELD."
+ 927+ C49F 11 4B 50         ld de,Line_18 + 11                                      ; Posición inicial del carro de impresión de esta 5a línea.
+ 928+ C4A2 3E 47            ld a,%01000111                                          ; attrs.
+ 929+ C4A4
+ 930+ C4A4 CD CD 9E         call Print_text_msg                                     ; Print " to SHIELD.".
+ 931+ C4A7
+ 932+ C4A7              ;   Next line.
+ 933+ C4A7
+ 934+ C4A7 21 B9 95         ld hl,a6                                                ; Cadena de texto: "Press FIRE to START"
+ 935+ C4AA 11 C7 50         ld de,Line_22 + 7                                       ; Posición inicial del carro de impresión de la última línea.
+ 936+ C4AD 3E C5            ld a,%11000101                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, CYAN INK.
+ 937+ C4AF
+ 938+ C4AF CD CD 9E         call Print_text_msg                                     ; Print "Press FIRE to START".
+ 939+ C4B2
+ 940+ C4B2              ;   Scan KEYBOARD to START GAME.
+ 941+ C4B2
+ 942+ C4B2 CD 13 A1         call Press_START    ; v2. Ok.                           ; Activa el bit_1 de Ctrl_6 si no hemos pulsado START.
+ 943+ C4B5
+ 944+ C4B5 C9           	ret
+ 945+ C4B6
+ 946+ C4B6              ; ----------------------------------------------------------
+ 947+ C4B6              ;
+ 948+ C4B6              ;   9/3/26
+ 949+ C4B6              ;
+ 950+ C4B6              ;   CLEAN MENUS ROUTINES.
+ 951+ C4B6
+ 952+ C4B6              Clean_Define_menu:
+ 953+ C4B6
+ 954+ C4B6 21 00 48         ld hl,Line_8
+ 955+ C4B9 CD 2B C5         call CLean_file
+ 956+ C4BC
+ 957+ C4BC 21 80 48         ld hl,Line_12
+ 958+ C4BF CD 2B C5         call CLean_file
+ 959+ C4C2
+ 960+ C4C2 21 C0 48         ld hl,Line_14
+ 961+ C4C5 CD 2B C5         call CLean_file
+ 962+ C4C8
+ 963+ C4C8 21 00 50         ld hl,Line_16
+ 964+ C4CB CD 2B C5         call CLean_file
+ 965+ C4CE
+ 966+ C4CE 21 40 50         ld hl,Line_18
+ 967+ C4D1 CD 2B C5         call CLean_file
+ 968+ C4D4
+ 969+ C4D4 C9               ret
+ 970+ C4D5
+ 971+ C4D5              ; -----------------------------------------------------------------------
+ 972+ C4D5              ;
+ 973+ C4D5              ;   11/10/26
+ 974+ C4D5              ;
+ 975+ C4D5              ;   Fija los atributos a NEGRO de las Filas del Menú Principal que contienen texto.
+ 976+ C4D5              ;
+ 977+ C4D5              ;   MODIFY: AF, HL y B.
+ 978+ C4D5
+ 979+ C4D5
+ 980+ C4D5              Clean_main_menu:
+ 981+ C4D5
+ 982+ C4D5 21 20 48         ld hl,Line_9
+ 983+ C4D8 CD 2B C5         call CLean_file ; v2. Ok.
+ 984+ C4DB
+ 985+ C4DB 21 60 48         ld hl,Line_11
+ 986+ C4DE CD 2B C5         call CLean_file
+ 987+ C4E1
+ 988+ C4E1 21 A0 48         ld hl,Line_13
+ 989+ C4E4 CD 2B C5         call CLean_file
+ 990+ C4E7
+ 991+ C4E7 21 E0 48         ld hl,Line_15
+ 992+ C4EA CD 2B C5         call CLean_file
+ 993+ C4ED
+ 994+ C4ED 21 C0 50         ld hl,Line_22
+ 995+ C4F0 CD 2B C5         call CLean_file
+ 996+ C4F3
+ 997+ C4F3 21 60 50         ld hl,Line_19
+ 998+ C4F6 CD 2B C5         call CLean_file
+ 999+ C4F9
+1000+ C4F9 21 80 50         ld hl,Line_20
+1001+ C4FC CD 2B C5         call CLean_file
+1002+ C4FF
+1003+ C4FF 21 A0 50         ld hl,Line_21
+1004+ C502 CD 2B C5         call CLean_file
+1005+ C505
+1006+ C505 C9               ret
+1007+ C506
+1008+ C506              ; -----------------------------------------------------------------------
+1009+ C506              ;
+1010+ C506              ;   14/10/26
+1011+ C506              ;
+1012+ C506              ;   Fija los atributos a NEGRO de las 6 Filas de texto que componen la pantalla SHOW CONTROLS MENU.
+1013+ C506              ;
+1014+ C506              ;   MODIFY: AF, HL y B.
+1015+ C506
+1016+ C506              Clean_Show_controls_menu:
+1017+ C506
+1018+ C506 21 00 48         ld hl,Line_8
+1019+ C509 CD 2B C5         call CLean_file
+1020+ C50C
+1021+ C50C 21 80 48         ld hl,Line_12
+1022+ C50F CD 2B C5         call CLean_file
+1023+ C512
+1024+ C512 21 C0 48         ld hl,Line_14
+1025+ C515 CD 2B C5         call CLean_file
+1026+ C518
+1027+ C518 21 00 50         ld hl,Line_16
+1028+ C51B CD 2B C5         call CLean_file
+1029+ C51E
+1030+ C51E 21 40 50         ld hl,Line_18
+1031+ C521 CD 2B C5         call CLean_file
+1032+ C524
+1033+ C524 21 C0 50         ld hl,Line_22
+1034+ C527 CD 2B C5         call CLean_file
+1035+ C52A
+1036+ C52A C9               ret
+1037+ C52B
+1038+ C52B              ; ---------------------------------------------------------------------
+1039+ C52B              ;
+1040+ C52B              ;   11/10/26
+1041+ C52B              ;
+1042+ C52B              ;   Set BLACK attrs. a screen file.
+1043+ C52B              ;
+1044+ C52B              ;   El formato: FBPPPIII (Flash, Brillo, Papel, Tinta).
+1045+ C52B              ;
+1046+ C52B              ;   COLORES: 0 ..... NEGRO
+1047+ C52B              ;            1 ..... AZUL
+1048+ C52B              ;            2 ..... ROJO
+1049+ C52B              ;            3 ..... MAGENTA
+1050+ C52B              ;            4 ..... VERDE
+1051+ C52B              ;            5 ..... CIAN
+1052+ C52B              ;            6 ..... AMARILLO
+1053+ C52B              ;            7 ..... BLANCO
+1054+ C52B              ;
+1055+ C52B              ;   INPUTS: HL contiene la dirección de pantalla del primer byte de la 1a columna de la fila, ej.: $4820, $4080, $5000, etc ..
+1056+ C52B              ;
+1057+ C52B              ;   MODIFY: AF, HL y B.
+1058+ C52B
+1059+ C52B              CLean_file:
+1060+ C52B
+1061+ C52B CD 0F 9E         call Calcula_direccion_atributos    ; v2. Ok.
+1062+ C52E
+1063+ C52E 06 20            ld b,32                             ; B actúa como contador de columnas, ($20).
+1064+ C530 AF               xor a
+1065+ C531
+1066+ C531 77           1 ld (hl),a
+1067+ C532 23               inc hl
+1068+ C533 10 FC            djnz 1B
+1069+ C535
+1070+ C535 C9               ret
+1071+ C536
+1072+ C536              ; ----------------------------------------------------------
+1073+ C536              ;
+1074+ C536              ;   12/10/26
+1075+ C536              ;
+1076+ C536              ;   Sitúa DOS columnas a la izquierda el comienzo de la línea de texto, (para que quede centrado), cuando el control_
+1077+ C536              ;   _ a analizar, (HL) sea una TECLA ESPECIAL.
+1078+ C536              ;
+1079+ C536              ;   Las teclas especiales se mostrarán en pantalla como cadenas de texto de 5 caracteres:
+1080+ C536              ;
+1081+ C536              ;   Special keys:
+1082+ C536              ;
+1083+ C536              ;   Symbol_key defm "SYMB."
+1084+ C536              ;   Space_key defm "SPACE"
+1085+ C536              ;   Enter_key defm "ENTER"
+1086+ C536              ;   Caps_key defm "CAPS."
+1087+ C536              ;
+1088+ C536              ;   MODIFY: AF, E.
+1089+ C536              ;
+1090+ C536              ;   INPUTS: HL apunta a la dirección que contiene el KEYCODE de la tecla de CONTROL a sondear:
+1091+ C536              ;
+1092+ C536              ;   Move_LEFT db $24
+1093+ C536              ;   Move_RIGHT db $1c
+1094+ C536              ;   Move_FIRE db $04
+1095+ C536              ;   Move_SHIELD db $20
+1096+ C536              ;
+1097+ C536              ;           (DE) contiene la dirección de pantalla del texto a imprimir: Fila/Columna.
+1098+ C536              ;
+1099+ C536              ;   OUTPUT: Retrocede DOS columnas a la izquierda el carro de impresión, (Columna donde se imprime la cadena de texto).
 1100+ C536
-1101+ C536 3E 20            ld a,$20                                                ; "SPACE" KEYCODE.
-1102+ C538 BE               cp (hl)
-1103+ C539 28 0B            jr z,Retrocede_carro
-1104+ C53B
-1105+ C53B 3E 21            ld a,$21                                                ; "ENTER" KEYCODE.
-1106+ C53D BE               cp (hl)
-1107+ C53E 28 06            jr z,Retrocede_carro
-1108+ C540
-1109+ C540 3E 27            ld a,$27                                                ; "CAPS SHIFT" KEYCODE.
-1110+ C542 BE               cp (hl)
-1111+ C543 28 01            jr z,Retrocede_carro
-1112+ C545
-1113+ C545 C9               ret
-1114+ C546
-1115+ C546              ; --------------------------------
-1116+ C546
-1117+ C546              Retrocede_carro:
-1118+ C546
-1119+ C546 1D               dec e
-1120+ C547 1D               dec e
-1121+ C548
-1122+ C548 C9               ret
-1123+ C549
-1124+ C549              ; ----------------------------------------------------------
-1125+ C549              ;
-1126+ C549              ;   16/9/26
-1127+ C549              ;
-1128+ C549              ;   Print MAIN MENU.
-1129+ C549              ;
-1130+ C549              ;       KEYBOARD
-1131+ C549              ;       KEMPSTON
-1132+ C549              ;       SINCLAIR
-1133+ C549              ;       DEFINE
-1134+ C549              ;
-1135+ C549              ;   MODIFY: AF, HL, BC y DE.
-1136+ C549
-1137+ C549              Print_Main_menu:
-1138+ C549
-1139+ C549 21 35 95         ld hl,Keyboard                                          ; HL contiene el mensaje.
-1140+ C54C 06 00            ld b,0                                                  ; NO TEMPORIZADOR.
-1141+ C54E 11 2C 48         ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
-1142+ C551 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1143+ C553
-1144+ C553 D5               push de
-1145+ C554 CD CD 9E         call Print_text_msg
-1146+ C557 E1               pop hl
-1147+ C558
-1148+ C558 06 50            ld b,%01010000                                          ; RED BRIGHT paper, BLACK ink.
-1149+ C55A CD 21 9E         call Modify_first_char_attr
-1150+ C55D
-1151+ C55D 21 3E 95         ld hl,Kempstom                                          ; msg.
-1152+ C560 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1153+ C563 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1154+ C566 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1155+ C568
-1156+ C568 D5               push de
-1157+ C569 CD CD 9E         call Print_text_msg
-1158+ C56C E1               pop hl
-1159+ C56D
-1160+ C56D 2C               inc l
-1161+ C56E
-1162+ C56E 06 70            ld b,%01110000                                          ; YELLOW BRIGHT paper, BLACK ink.
-1163+ C570 CD 21 9E         call Modify_first_char_attr
-1164+ C573
-1165+ C573 21 47 95         ld hl,Interface                                         ; msg.
-1166+ C576 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1167+ C579 11 AC 48         ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1168+ C57C 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1169+ C57E
-1170+ C57E D5               push de
-1171+ C57F CD CD 9E         call Print_text_msg
-1172+ C582 E1               pop hl
-1173+ C583
-1174+ C583 06 60            ld b,%01100000                                          ; GREEN BRIGHT paper, BLACK ink.
-1175+ C585 CD 21 9E         call Modify_first_char_attr
-1176+ C588
-1177+ C588 21 50 95         ld hl,Define                                            ; msg.
-1178+ C58B 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
-1179+ C58E 11 EC 48         ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1180+ C591 3E 47            ld a,%01000111                                          ; attrs. Ink white.
-1181+ C593
-1182+ C593 D5               push de
-1183+ C594 CD CD 9E         call Print_text_msg
-1184+ C597 E1               pop hl
-1185+ C598
-1186+ C598 06 48            ld b,%01001000                                          ; BLUE BRIGHT paper, BLACK ink.
-1187+ C59A CD 21 9E         call Modify_first_char_attr
-1188+ C59D
-1189+ C59D C9               ret
-1190+ C59E
-1191+ C59E              ; ----------------------------------------------------------
-1192+ C59E              ;
-1193+ C59E              ;   21/07/26
-1194+ C59E              ;
-1195+ C59E
-1196+ C59E              Print_DONE:
-1197+ C59E
-1198+ C59E 01 00 00         ld bc,0
-1199+ C5A1 21 6A 95         ld hl,Done                                              ; msg.
-1200+ C5A4 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
-1201+ C5A7 3E E0            ld a,%11100000                                          ; attrs.
-1202+ C5A9
-1203+ C5A9 CD CD 9E         call Print_text_msg
-1204+ C5AC
-1205+ C5AC C9               ret
-1206+ C5AD
-1207+ C5AD              Clean_DONE
-1208+ C5AD
-1209+ C5AD 21 07 96         ld hl,a12                                               ; msg., "    ",
-1210+ C5B0 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
-1211+ C5B3 3E 00            ld a,0                                                  ; attrs.
-1212+ C5B5
-1213+ C5B5 CD CD 9E         call Print_text_msg
-1214+ C5B8
-1215+ C5B8 C9               ret
-1216+ C5B9
-1217+ C5B9 AF               xor a
-1218+ C5BA 3C               inc a                                                   ; Fuerza NZ a la salida.
-1219+ C5BB
-1220+ C5BB C9               ret
-1221+ C5BC
-1222+ C5BC              ; ----------------------------------------------------------
-1223+ C5BC              ;
-1224+ C5BC              ;   29/4/26
-1225+ C5BC              ;
-1226+ C5BC
-1227+ C5BC              Print_Game_Over:
-1228+ C5BC
-1229+ C5BC 21 6F 95         ld hl,Game_Over                                         ; msg.
-1230+ C5BF 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
-1231+ C5C2 3E 50            ld a,%01010000                                          ; attrs.
-1232+ C5C4 06 00            ld b,0
-1233+ C5C6
-1234+ C5C6 CD CD 9E         call Print_text_msg
-1235+ C5C9
-1236+ C5C9 C9               ret
-1237+ C5CA
-1238+ C5CA
-1239+ C5CA
+1101+ C536              Corrige_inicio_de_linea:
+1102+ C536
+1103+ C536              ;  Compara el KEYCODE contenido en (HL) con el de las 4 SPECIAL KEYS.
+1104+ C536
+1105+ C536 3E 18            ld a,$18                                                ; "SYMBOL SHIFT" KEYCODE code.
+1106+ C538 BE               cp (hl)
+1107+ C539 28 10            jr z,Retrocede_carro
+1108+ C53B
+1109+ C53B 3E 20            ld a,$20                                                ; "SPACE" KEYCODE.
+1110+ C53D BE               cp (hl)
+1111+ C53E 28 0B            jr z,Retrocede_carro
+1112+ C540
+1113+ C540 3E 21            ld a,$21                                                ; "ENTER" KEYCODE.
+1114+ C542 BE               cp (hl)
+1115+ C543 28 06            jr z,Retrocede_carro
+1116+ C545
+1117+ C545 3E 27            ld a,$27                                                ; "CAPS SHIFT" KEYCODE.
+1118+ C547 BE               cp (hl)
+1119+ C548 28 01            jr z,Retrocede_carro
+1120+ C54A
+1121+ C54A C9               ret
+1122+ C54B
+1123+ C54B              ; --------------------------------
+1124+ C54B
+1125+ C54B              Retrocede_carro:
+1126+ C54B
+1127+ C54B 1D               dec e
+1128+ C54C 1D               dec e
+1129+ C54D
+1130+ C54D C9               ret
+1131+ C54E
+1132+ C54E              ; ----------------------------------------------------------
+1133+ C54E              ;
+1134+ C54E              ;   16/9/26
+1135+ C54E              ;
+1136+ C54E              ;   Print MAIN MENU.
+1137+ C54E              ;
+1138+ C54E              ;       KEYBOARD
+1139+ C54E              ;       KEMPSTON
+1140+ C54E              ;       SINCLAIR
+1141+ C54E              ;       DEFINE
+1142+ C54E              ;
+1143+ C54E              ;   MODIFY: AF, HL, BC y DE.
+1144+ C54E
+1145+ C54E              Print_Main_menu:
+1146+ C54E
+1147+ C54E 21 35 95         ld hl,Keyboard                                          ; HL contiene el mensaje.
+1148+ C551 06 00            ld b,0                                                  ; NO TEMPORIZADOR.
+1149+ C553 11 2C 48         ld de,Line_9 + 12                                       ; Línea de pantalla donde se imprimirá el msg.
+1150+ C556 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1151+ C558
+1152+ C558 D5               push de
+1153+ C559 CD CD 9E         call Print_text_msg
+1154+ C55C E1               pop hl
+1155+ C55D
+1156+ C55D 06 50            ld b,%01010000                                          ; RED BRIGHT paper, BLACK ink.
+1157+ C55F CD 21 9E         call Modify_first_char_attr
+1158+ C562
+1159+ C562 21 3E 95         ld hl,Kempstom                                          ; msg.
+1160+ C565 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1161+ C568 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1162+ C56B 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1163+ C56D
+1164+ C56D D5               push de
+1165+ C56E CD CD 9E         call Print_text_msg
+1166+ C571 E1               pop hl
+1167+ C572
+1168+ C572 2C               inc l
+1169+ C573
+1170+ C573 06 70            ld b,%01110000                                          ; YELLOW BRIGHT paper, BLACK ink.
+1171+ C575 CD 21 9E         call Modify_first_char_attr
+1172+ C578
+1173+ C578 21 47 95         ld hl,Interface                                         ; msg.
+1174+ C57B 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1175+ C57E 11 AC 48         ld de,Line_13 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1176+ C581 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1177+ C583
+1178+ C583 D5               push de
+1179+ C584 CD CD 9E         call Print_text_msg
+1180+ C587 E1               pop hl
+1181+ C588
+1182+ C588 06 60            ld b,%01100000                                          ; GREEN BRIGHT paper, BLACK ink.
+1183+ C58A CD 21 9E         call Modify_first_char_attr
+1184+ C58D
+1185+ C58D 21 50 95         ld hl,Define                                            ; msg.
+1186+ C590 01 00 00         ld bc,0                                                 ; NO TEMPORIZADOR.
+1187+ C593 11 EC 48         ld de,Line_15 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1188+ C596 3E 47            ld a,%01000111                                          ; attrs. Ink white.
+1189+ C598
+1190+ C598 D5               push de
+1191+ C599 CD CD 9E         call Print_text_msg
+1192+ C59C E1               pop hl
+1193+ C59D
+1194+ C59D 06 48            ld b,%01001000                                          ; BLUE BRIGHT paper, BLACK ink.
+1195+ C59F CD 21 9E         call Modify_first_char_attr
+1196+ C5A2
+1197+ C5A2 C9               ret
+1198+ C5A3
+1199+ C5A3              ; ----------------------------------------------------------
+1200+ C5A3              ;
+1201+ C5A3              ;   21/07/26
+1202+ C5A3              ;
+1203+ C5A3
+1204+ C5A3              Print_DONE:
+1205+ C5A3
+1206+ C5A3 01 00 00         ld bc,0
+1207+ C5A6 21 6A 95         ld hl,Done                                              ; msg.
+1208+ C5A9 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
+1209+ C5AC 3E E0            ld a,%11100000                                          ; attrs.
+1210+ C5AE
+1211+ C5AE CD CD 9E         call Print_text_msg
+1212+ C5B1
+1213+ C5B1 C9               ret
+1214+ C5B2
+1215+ C5B2              Clean_DONE
+1216+ C5B2
+1217+ C5B2 21 07 96         ld hl,a12                                               ; msg., "    ",
+1218+ C5B5 11 6E 48         ld de,Line_11 + 14                                      ; Línea de pantalla donde se imprimirá el msg.
+1219+ C5B8 3E 00            ld a,0                                                  ; attrs.
+1220+ C5BA
+1221+ C5BA CD CD 9E         call Print_text_msg
+1222+ C5BD
+1223+ C5BD C9               ret
+1224+ C5BE
+1225+ C5BE AF               xor a
+1226+ C5BF 3C               inc a                                                   ; Fuerza NZ a la salida.
+1227+ C5C0
+1228+ C5C0 C9               ret
+1229+ C5C1
+1230+ C5C1              ; ----------------------------------------------------------
+1231+ C5C1              ;
+1232+ C5C1              ;   29/4/26
+1233+ C5C1              ;
+1234+ C5C1
+1235+ C5C1              Print_Game_Over:
+1236+ C5C1
+1237+ C5C1 21 6F 95         ld hl,Game_Over                                         ; msg.
+1238+ C5C4 11 6C 48         ld de,Line_11 + 12                                      ; Línea de pantalla donde se imprimirá el msg.
+1239+ C5C7 3E 50            ld a,%01010000                                          ; attrs.
+1240+ C5C9 06 00            ld b,0
+1241+ C5CB
+1242+ C5CB CD CD 9E         call Print_text_msg
+1243+ C5CE
+1244+ C5CE C9               ret
+1245+ C5CF
+1246+ C5CF
+1247+ C5CF
 # file closed: Print_text_msg.asm
-2897  C5CA              	include "Niveles.asm"
+2897  C5CF              	include "Niveles.asm"
 # file opened: Niveles.asm
-   1+ C5CA              ; ------------------------------------------------------------------
-   2+ C5CA              ;
-   3+ C5CA              ; 	5/7/26
-   4+ C5CA              ;
-   5+ C5CA
-   6+ C5CA              ;	Fila donde se imprimen los msg: $4826
-   7+ C5CA
-   8+ C5CA              Msg_level_index:
-   9+ C5CA
-  10+ C5CA D4 C5        	defw Msg_1
-  11+ C5CC DC C5        	defw Msg_2
-  12+ C5CE E3 C5        	defw Msg_3
-  13+ C5D0              ;	defw Msg_4
-  14+ C5D0
-  15+ C5D0 00 00        	defw 0
-  16+ C5D2 00 00        	defw 0
-  17+ C5D4
-  18+ C5D4 08 05        Msg_1 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
-  19+ C5D6 46 4C 49 45  	defm "FLIES",0
-  19+ C5DA 53 00
-  20+ C5DC
-  21+ C5DC 08 05        Msg_2 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
-  22+ C5DE 55 46 4F 53  	defm "UFOS",0
-  22+ C5E2 00
-  23+ C5E3
-  24+ C5E3 04 0C        Msg_3 db 4,12
-  25+ C5E5 46 4C 49 45  	defm "FLIES & UFOS",0
-  25+ C5E9 53 20 26 20
-  25+ C5ED 55 46 4F 53
-  25+ C5F1 00
-  26+ C5F2
-  27+ C5F2              ; --------------------------------------------------------------------------------------------------------------
-  28+ C5F2
-  29+ C5F2              Indice_de_vidas
-  30+ C5F2
-  31+ C5F2 01 40 80 8A  	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
-  31+ C5F6 02 03
-  32+ C5F8 03 40 00 8B  	defw Vida_2,Amadeus_Fb,$0302
-  32+ C5FC 02 03
-  33+ C5FE 06 40 80 8A  	defw Vida_3,Amadeus,$0302
-  33+ C602 02 03
-  34+ C604
-  35+ C604              Indice_de_escudos
-  36+ C604
-  37+ C604 41 40 30 85  	defw Escudo_1,Escudo_00,$0201
-  37+ C608 01 02
-  38+ C60A 43 40 40 85  	defw Escudo_2,Escudo_00_Fb,$0301
-  38+ C60E 01 03
-  39+ C610 46 40 30 85  	defw Escudo_3,Escudo_00,$0201
-  39+ C614 01 02
-  40+ C616
-  41+ C616              ; --------------------------------------------------------------------------------------------------------------
-  42+ C616
-  43+ C616
-  44+ C616
-  45+ C616              Indice_de_tablas_Random
-  46+ C616
-  47+ C616              ; Entidades (Tipo) (1), (2) y (3). Son entidades (tipo) BadSat.
-  48+ C616
-  49+ C616 1E C6        	defw Tabla_Random_BadSat
-  50+ C618 3C C6        	defw Tabla_Random_Badplate
-  51+ C61A 00 00        	defw 0
-  52+ C61C
-  53+ C61C              ;	...
-  54+ C61C              ;	...
-  55+ C61C              ;	+ Tablas ...
-  56+ C61C
-  57+ C61C 00 00        	defw 0
-  58+ C61E
-  59+ C61E              ; --------------------------------------------------------------------------------------------------------------
-  60+ C61E              ;
-  61+ C61E              ;	4/3/25
-  62+ C61E              ;
-  63+ C61E              ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
-  64+ C61E              ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio.
-  65+ C61E              ;
-  66+ C61E              ;	El siguiente .defw indica:
-  67+ C61E              ;
-  68+ C61E              ;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
-  69+ C61E              ;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
-  70+ C61E              ;
-  71+ C61E              ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
-  72+ C61E              ;
-  73+ C61E              ; ----- ----- ----- ----- -----
-  74+ C61E              ;
-  75+ C61E              ;   Factor RANDOM --- BadSat.
-  76+ C61E
-  77+ C61E              ; Random_1_1_10 (1-10) Bajo_decelerando
-  78+ C61E              ; Random_2_1_15 (1-15) Derecha_y_subiendo
-  79+ C61E
-  80+ C61E              ; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
-  81+ C61E              ; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
-  82+ C61E
-  83+ C61E              ; Random_5_1_15 (1-5) Izquierda_y_subiendo
-  84+ C61E
-  85+ C61E              ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
-  86+ C61E              ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
-  87+ C61E              ;
-  88+ C61E              ; ----- ----- ----- ----- -----
-  89+ C61E              ;
-  90+ C61E              ;   Factor RANDOM --- BadPlate.
-  91+ C61E
-  92+ C61E              ; Random_1_1_10 (1-10) Bajo_decelerando
-  93+ C61E              ; Random_8_1_15 (1-15) Tira_pa_la_derecha
-  94+ C61E
-  95+ C61E              ; Random_9_1_15 (1-15) Tira_pa_la_izq
-  96+ C61E              ; Random_A_1_15 (1-15) Diagonal_bajando_izq
-  97+ C61E              ; Random_B_1_15 (1-15) Diagonal_bajando_derecha
-  98+ C61E              ;
-  99+ C61E              ; ----- ----- ----- ----- -----
- 100+ C61E
- 101+ C61E              Tabla_Random_BadSat
- 102+ C61E
- 103+ C61E 01 0A        	defw $0a01
- 104+ C620 82 92        	defw Random_1_1_10
- 105+ C622
- 106+ C622 01 0F        	defw $0f01
- 107+ C624 FF 92        	defw Random_2_1_15
- 108+ C626
- 109+ C626 00 01        	db 0,1 				;	1 repetición.
- 110+ C628 01 0F        	defw $0f01
- 111+ C62A 31 93        	defw Random_3_1_15	;	Igual
- 112+ C62C 3B 93        	defw Random_4_1_15	;	Igual
- 113+ C62E
- 114+ C62E 01 0F        	defw $0f01
- 115+ C630 A9 93        	defw Random_5_1_15
- 116+ C632
- 117+ C632 00 01        	db 0,1
- 118+ C634 01 0F        	defw $0f01
- 119+ C636 DB 93        	defw Random_6_1_15	;	Igual
- 120+ C638 E5 93        	defw Random_7_1_15	;	Igual
- 121+ C63A
- 122+ C63A 00 00        	defw 0 				;	Indica FIN de la tabla RANDOM.
- 123+ C63C
- 124+ C63C              Tabla_Random_Badplate
- 125+ C63C
- 126+ C63C 01 0A        	defw $0a01
- 127+ C63E 82 92        	defw Random_1_1_10
- 128+ C640
- 129+ C640 01 0F        	defw $0f01
- 130+ C642 6E 92        	defw Random_8_1_15
- 131+ C644
- 132+ C644 01 0F        	defw $0f01
- 133+ C646 73 92        	defw Random_9_1_15
- 134+ C648
- 135+ C648 01 03        	defw $0301
- 136+ C64A 78 92        	defw Random_A_1_3
- 137+ C64C
- 138+ C64C 01 03        	defw $0301
- 139+ C64E 7D 92        	defw Random_B_1_3
- 140+ C650
- 141+ C650 00 00        	defw 0				;	Indica FIN de la tabla RANDOM.
- 142+ C652
- 143+ C652              ; ----------------------------------------------------------------------
- 144+ C652              ;
- 145+ C652              ;	19/11/25
- 146+ C652
- 147+ C652              Indice_de_niveles:
- 148+ C652
- 149+ C652 5A C6        	defw Nivel_1
- 150+ C654 73 C6        	defw Nivel_2
- 151+ C656 8C C6        	defw Nivel_3
- 152+ C658              ;	defw Nivel_4
- 153+ C658
- 154+ C658              ;	...
- 155+ C658              ;	...
- 156+ C658              ;	+ Niveles ...
- 157+ C658
- 158+ C658 00 00        	defw 0
- 159+ C65A              ;	defw 0
- 160+ C65A
- 161+ C65A              ; NIVEL_1. Tres clases de entidades tipo BadSat.
- 162+ C65A
- 163+ C65A F0 0A 70 70  Nivel_1 db $f0,$0a,$70,$70 						; FLIES !!!
- 164+ C65E
- 165+ C65E              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 166+ C65E              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 167+ C65E              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 168+ C65E              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 169+ C65E 14           	db 20 										; Nº de entidades que tiene el nivel.
- 170+ C65F
- 171+ C65F 01 02 03 02  	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
- 171+ C663 01
- 172+ C664 03 02 01 02  	db 3,2,1,2,2
- 172+ C668 02
- 173+ C669 01 03 01 03  	db 1,3,1,3,2
- 173+ C66D 02
- 174+ C66E 01 03 03 02  	db 1,3,3,2,2
- 174+ C672 02
- 175+ C673
- 176+ C673              ; ---------------------------------------------------------------------------------------
- 177+ C673
- 178+ C673              ; Nivel_2. UFO´s
- 179+ C673
- 180+ C673 C0 15 50 70  Nivel_2 db $C0,$15,$50,$70 						; UFOS !!!
- 181+ C677
- 182+ C677              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 183+ C677              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 184+ C677              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 185+ C677              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 186+ C677 14           	db 20
- 187+ C678
- 188+ C678 04 05 06 04  	db 4,5,6,4,5
- 188+ C67C 05
- 189+ C67D 05 05 06 04  	db 5,5,6,4,6
- 189+ C681 06
- 190+ C682 04 05 06 05  	db 4,5,6,5,4
- 190+ C686 04
- 191+ C687 04 06 06 04  	db 4,6,6,4,5
- 191+ C68B 05
- 192+ C68C
- 193+ C68C
- 194+ C68C              ; ---------------------------------------------------------------------------------------
- 195+ C68C
- 196+ C68C              ; Nivel_3. Flies & UFOS.
- 197+ C68C
- 198+ C68C B0 15 50 70  Nivel_3 db $b0,$15,$50,$70 						; UFOS !!!
- 199+ C690
- 200+ C690              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
- 201+ C690              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
- 202+ C690              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
- 203+ C690              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
- 204+ C690
- 205+ C690 14           	db 20
- 206+ C691
- 207+ C691 01 04 06 01  	db 1,4,6,1,6
- 207+ C695 06
- 208+ C696 04 06 06 01  	db 4,6,6,1,4
- 208+ C69A 04
- 209+ C69B 01 06 01 06  	db 1,6,1,6,1
- 209+ C69F 01
- 210+ C6A0 04 01 06 01  	db 4,1,6,1,6
- 210+ C6A4 06
- 211+ C6A5
- 212+ C6A5
- 213+ C6A5
- 214+ C6A5
- 215+ C6A5
- 216+ C6A5
- 217+ C6A5
- 218+ C6A5
- 219+ C6A5
- 220+ C6A5
- 221+ C6A5
- 222+ C6A5
+   1+ C5CF              ; ------------------------------------------------------------------
+   2+ C5CF              ;
+   3+ C5CF              ; 	5/7/26
+   4+ C5CF              ;
+   5+ C5CF
+   6+ C5CF              ;	Fila donde se imprimen los msg: $4826
+   7+ C5CF
+   8+ C5CF              Msg_level_index:
+   9+ C5CF
+  10+ C5CF D9 C5        	defw Msg_1
+  11+ C5D1 E1 C5        	defw Msg_2
+  12+ C5D3 E8 C5        	defw Msg_3
+  13+ C5D5              ;	defw Msg_4
+  14+ C5D5
+  15+ C5D5 00 00        	defw 0
+  16+ C5D7 00 00        	defw 0
+  17+ C5D9
+  18+ C5D9 08 05        Msg_1 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
+  19+ C5DB 46 4C 49 45  	defm "FLIES",0
+  19+ C5DF 53 00
+  20+ C5E1
+  21+ C5E1 08 05        Msg_2 db 8,5 									; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
+  22+ C5E3 55 46 4F 53  	defm "UFOS",0
+  22+ C5E7 00
+  23+ C5E8
+  24+ C5E8 04 0C        Msg_3 db 4,12
+  25+ C5EA 46 4C 49 45  	defm "FLIES & UFOS",0
+  25+ C5EE 53 20 26 20
+  25+ C5F2 55 46 4F 53
+  25+ C5F6 00
+  26+ C5F7
+  27+ C5F7              ; --------------------------------------------------------------------------------------------------------------
+  28+ C5F7
+  29+ C5F7              Indice_de_vidas
+  30+ C5F7
+  31+ C5F7 01 40 80 8A  	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
+  31+ C5FB 02 03
+  32+ C5FD 03 40 00 8B  	defw Vida_2,Amadeus_Fb,$0302
+  32+ C601 02 03
+  33+ C603 06 40 80 8A  	defw Vida_3,Amadeus,$0302
+  33+ C607 02 03
+  34+ C609
+  35+ C609              Indice_de_escudos
+  36+ C609
+  37+ C609 41 40 30 85  	defw Escudo_1,Escudo_00,$0201
+  37+ C60D 01 02
+  38+ C60F 43 40 40 85  	defw Escudo_2,Escudo_00_Fb,$0301
+  38+ C613 01 03
+  39+ C615 46 40 30 85  	defw Escudo_3,Escudo_00,$0201
+  39+ C619 01 02
+  40+ C61B
+  41+ C61B              ; --------------------------------------------------------------------------------------------------------------
+  42+ C61B
+  43+ C61B
+  44+ C61B
+  45+ C61B              Indice_de_tablas_Random
+  46+ C61B
+  47+ C61B              ; Entidades (Tipo) (1), (2) y (3). Son entidades (tipo) BadSat.
+  48+ C61B
+  49+ C61B 23 C6        	defw Tabla_Random_BadSat
+  50+ C61D 41 C6        	defw Tabla_Random_Badplate
+  51+ C61F 00 00        	defw 0
+  52+ C621
+  53+ C621              ;	...
+  54+ C621              ;	...
+  55+ C621              ;	+ Tablas ...
+  56+ C621
+  57+ C621 00 00        	defw 0
+  58+ C623
+  59+ C623              ; --------------------------------------------------------------------------------------------------------------
+  60+ C623              ;
+  61+ C623              ;	4/3/25
+  62+ C623              ;
+  63+ C623              ;	En 1er lugar identificamos si existe .db de CTRL, ($00).
+  64+ C623              ;	Al .db de CTRL $00 le seguirá otro .db indicando el nº de .defw que compartirán nº aleatorio.
+  65+ C623              ;
+  66+ C623              ;	El siguiente .defw indica:
+  67+ C623              ;
+  68+ C623              ;	Byte alto: Límite superior que puede tener como máximo nuestro nº rnd.
+  69+ C623              ;	Byte bajo: Límite inferior que puede tener como mínimo nuestro nº rnd.
+  70+ C623              ;
+  71+ C623              ;	Los sucesivos .defw indican la dirección o direcciones de memoria correspondientes donde se almacenará el nº aleatorio.
+  72+ C623              ;
+  73+ C623              ; ----- ----- ----- ----- -----
+  74+ C623              ;
+  75+ C623              ;   Factor RANDOM --- BadSat.
+  76+ C623
+  77+ C623              ; Random_1_1_10 (1-10) Bajo_decelerando
+  78+ C623              ; Random_2_1_15 (1-15) Derecha_y_subiendo
+  79+ C623
+  80+ C623              ; Random_3_1_15 (1-15) Derecha_y_bajando_1 ----- Iguales
+  81+ C623              ; Random_4_1_15 (1-15) Derecha_y_bajando_2 -----
+  82+ C623
+  83+ C623              ; Random_5_1_15 (1-5) Izquierda_y_subiendo
+  84+ C623
+  85+ C623              ; Random_6_1_15 (1-5) Izquierda_y_bajando_1 ----- Iguales
+  86+ C623              ; Random_7_1_15 (1-15) Izquierda_y_bajando_2 -----
+  87+ C623              ;
+  88+ C623              ; ----- ----- ----- ----- -----
+  89+ C623              ;
+  90+ C623              ;   Factor RANDOM --- BadPlate.
+  91+ C623
+  92+ C623              ; Random_1_1_10 (1-10) Bajo_decelerando
+  93+ C623              ; Random_8_1_15 (1-15) Tira_pa_la_derecha
+  94+ C623
+  95+ C623              ; Random_9_1_15 (1-15) Tira_pa_la_izq
+  96+ C623              ; Random_A_1_15 (1-15) Diagonal_bajando_izq
+  97+ C623              ; Random_B_1_15 (1-15) Diagonal_bajando_derecha
+  98+ C623              ;
+  99+ C623              ; ----- ----- ----- ----- -----
+ 100+ C623
+ 101+ C623              Tabla_Random_BadSat
+ 102+ C623
+ 103+ C623 01 0A        	defw $0a01
+ 104+ C625 82 92        	defw Random_1_1_10
+ 105+ C627
+ 106+ C627 01 0F        	defw $0f01
+ 107+ C629 FF 92        	defw Random_2_1_15
+ 108+ C62B
+ 109+ C62B 00 01        	db 0,1 				;	1 repetición.
+ 110+ C62D 01 0F        	defw $0f01
+ 111+ C62F 31 93        	defw Random_3_1_15	;	Igual
+ 112+ C631 3B 93        	defw Random_4_1_15	;	Igual
+ 113+ C633
+ 114+ C633 01 0F        	defw $0f01
+ 115+ C635 A9 93        	defw Random_5_1_15
+ 116+ C637
+ 117+ C637 00 01        	db 0,1
+ 118+ C639 01 0F        	defw $0f01
+ 119+ C63B DB 93        	defw Random_6_1_15	;	Igual
+ 120+ C63D E5 93        	defw Random_7_1_15	;	Igual
+ 121+ C63F
+ 122+ C63F 00 00        	defw 0 				;	Indica FIN de la tabla RANDOM.
+ 123+ C641
+ 124+ C641              Tabla_Random_Badplate
+ 125+ C641
+ 126+ C641 01 0A        	defw $0a01
+ 127+ C643 82 92        	defw Random_1_1_10
+ 128+ C645
+ 129+ C645 01 0F        	defw $0f01
+ 130+ C647 6E 92        	defw Random_8_1_15
+ 131+ C649
+ 132+ C649 01 0F        	defw $0f01
+ 133+ C64B 73 92        	defw Random_9_1_15
+ 134+ C64D
+ 135+ C64D 01 03        	defw $0301
+ 136+ C64F 78 92        	defw Random_A_1_3
+ 137+ C651
+ 138+ C651 01 03        	defw $0301
+ 139+ C653 7D 92        	defw Random_B_1_3
+ 140+ C655
+ 141+ C655 00 00        	defw 0				;	Indica FIN de la tabla RANDOM.
+ 142+ C657
+ 143+ C657              ; ----------------------------------------------------------------------
+ 144+ C657              ;
+ 145+ C657              ;	19/11/25
+ 146+ C657
+ 147+ C657              Indice_de_niveles:
+ 148+ C657
+ 149+ C657 5F C6        	defw Nivel_1
+ 150+ C659 78 C6        	defw Nivel_2
+ 151+ C65B 91 C6        	defw Nivel_3
+ 152+ C65D              ;	defw Nivel_4
+ 153+ C65D
+ 154+ C65D              ;	...
+ 155+ C65D              ;	...
+ 156+ C65D              ;	+ Niveles ...
+ 157+ C65D
+ 158+ C65D 00 00        	defw 0
+ 159+ C65F              ;	defw 0
+ 160+ C65F
+ 161+ C65F              ; NIVEL_1. Tres clases de entidades tipo BadSat.
+ 162+ C65F
+ 163+ C65F F0 0A 70 70  Nivel_1 db $f0,$0a,$70,$70 						; FLIES !!!
+ 164+ C663
+ 165+ C663              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 166+ C663              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 167+ C663              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 168+ C663              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 169+ C663 14           	db 20 										; Nº de entidades que tiene el nivel.
+ 170+ C664
+ 171+ C664 01 02 03 02  	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
+ 171+ C668 01
+ 172+ C669 03 02 01 02  	db 3,2,1,2,2
+ 172+ C66D 02
+ 173+ C66E 01 03 01 03  	db 1,3,1,3,2
+ 173+ C672 02
+ 174+ C673 01 03 03 02  	db 1,3,3,2,2
+ 174+ C677 02
+ 175+ C678
+ 176+ C678              ; ---------------------------------------------------------------------------------------
+ 177+ C678
+ 178+ C678              ; Nivel_2. UFO´s
+ 179+ C678
+ 180+ C678 C0 15 50 70  Nivel_2 db $C0,$15,$50,$70 						; UFOS !!!
+ 181+ C67C
+ 182+ C67C              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 183+ C67C              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 184+ C67C              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 185+ C67C              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 186+ C67C 14           	db 20
+ 187+ C67D
+ 188+ C67D 04 05 06 04  	db 4,5,6,4,5
+ 188+ C681 05
+ 189+ C682 05 05 06 04  	db 5,5,6,4,6
+ 189+ C686 06
+ 190+ C687 04 05 06 05  	db 4,5,6,5,4
+ 190+ C68B 04
+ 191+ C68C 04 06 06 04  	db 4,6,6,4,5
+ 191+ C690 05
+ 192+ C691
+ 193+ C691
+ 194+ C691              ; ---------------------------------------------------------------------------------------
+ 195+ C691
+ 196+ C691              ; Nivel_3. Flies & UFOS.
+ 197+ C691
+ 198+ C691 B0 15 50 70  Nivel_3 db $b0,$15,$50,$70 						; UFOS !!!
+ 199+ C695
+ 200+ C695              ;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+ 201+ C695              ;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+ 202+ C695              ;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+ 203+ C695              ; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+ 204+ C695
+ 205+ C695 14           	db 20
+ 206+ C696
+ 207+ C696 01 04 06 01  	db 1,4,6,1,6
+ 207+ C69A 06
+ 208+ C69B 04 06 06 01  	db 4,6,6,1,4
+ 208+ C69F 04
+ 209+ C6A0 01 06 01 06  	db 1,6,1,6,1
+ 209+ C6A4 01
+ 210+ C6A5 04 01 06 01  	db 4,1,6,1,6
+ 210+ C6A9 06
+ 211+ C6AA
+ 212+ C6AA
+ 213+ C6AA
+ 214+ C6AA
+ 215+ C6AA
+ 216+ C6AA
+ 217+ C6AA
+ 218+ C6AA
+ 219+ C6AA
+ 220+ C6AA
+ 221+ C6AA
+ 222+ C6AA
 # file closed: Niveles.asm
-2898  C6A5
-2899  C6A5
-2900  C6A5              	SAVESNA "Amadeus.sna", START
-2901  C6A5
-2902  C6A5
-2903  C6A5
-2904  C6A5
+2898  C6AA
+2899  C6AA
+2900  C6AA              	SAVESNA "Amadeus.sna", START
+2901  C6AA
+2902  C6AA
+2903  C6AA
+2904  C6AA
 # file closed: Banco_de_pruebas.asm

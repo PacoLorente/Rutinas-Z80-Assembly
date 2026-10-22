@@ -399,7 +399,6 @@ Left_key_parameters: defw b1                                ; Cadena de texto: "
     db 4                                                    ; N° de espacios.
     db 4                                                    ; N° de chars. "LEFT".
 
-
 Right_key_parameters: defw b2                               ; Cadena de texto: "RIGHT".
     defw Line_14 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
     defw Move_RIGHT
@@ -407,14 +406,12 @@ Right_key_parameters: defw b2                               ; Cadena de texto: "
     db 3                                                    ; SPACES.
     db 5                                                    ; N° de chars. que forman la cadena "RIGHT".
 
-
 Fire_key_parameters: defw b3                                ; Cadena de texto: "FIRE".
     defw Line_16 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
     defw Move_FIRE
     defw Move_FIRE_ASCII_CODE
     db 4                                                    ; SPACES.
     db 4                                                    ; N° de chars. que forman la cadena "FIRE".
-
 
 Shield_key_parameters: defw b4                              ; Cadena de texto: "SHIELD".
     defw Line_18 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
