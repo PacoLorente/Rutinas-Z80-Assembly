@@ -363,7 +363,7 @@ Clear_level_msg:
     
 ; ----------------------------------------------------------
 ;
-;   22/10/26
+;   24/10/26
 ;
 ;   Esta función nos permite cambiar las teclas asignadas a los controles de Amadeus.
 ;   Por defecto las teclas que controlan nuestra nave son:
@@ -420,18 +420,20 @@ Define_menu:
 
 ;   Inicializamos (Puntero_de_impresion), situándolo en el primer campo del índice.
 
+;   INICIALIZACIÓN:
+
     ld hl,Define_menu_index_parameters
     ld (Puntero_de_impresion),hl
 
 Abastecimiento:
 
-    call Extrae_address                                     ; HL apunta ahora al 1er parámetro del campo correspondiente, 
+    call Extrae_address                                     ; HL apunta ahora al 1er parámetro del campo correspondiente, (La cadena de texto).
 
     ld a,h
     or l
-    jr z, All_keys_defined
+    jr z, All_keys_defined                                  ; Detecta fín de tabla de punteros.
 
-;   Utilizamos la pila para abastecer registros con los datos de la tabla.
+;   Utilizamos la pila para abastecer a los registros con los parámetros necesarios:
 
     ld (Stack),sp
 
@@ -454,41 +456,31 @@ Abastecimiento:
 
     ld sp,(Stack)
 
-;    jr $
+;   FUNCIÓN ---------------------------------------------------------------------------------------------------------------------------
 
-;    ret
-
- ;   LEFT. -----------------------------------------------------------------------------------------------------------------
-
-;    ld hl,b1                                                ; Cadena de texto: "LEFT".
-;    ld de,Line_12 + 12                                      ; Dirección de pantalla, Fila 12, columna 12.
-
-;    ld a,%11000111                                          ; Attrs.: FLASH, BRIGHT, BLACK PAPER, WHITE INK.
-;    ld b,0                                                  ; No efecto "Máquina de escribir".
-
-
-    exx
+    exx                                                     ; ' Registers. (HL') contiene la cadena de texto y (DE') la dirección de pantalla.
 
     push de                                                 ; PUSH Carro de impresión.
 
-    call Print_text_msg
+    call Print_text_msg                                     ; PRINT con FLASH la cadena "LEFT", "RIGHT", "FIRE", "SHIELD".
 
     push de
     pop ix                                                  ; IX contiene la posición actualizada del carro de impresión tras imprimir la cadena de texto.
 
-;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D".
+;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D" , última pulsación en el menú principal.
 
     ld bc,$ffff
     call DELAY
 
-    exx
+    exx                                                     ; Pasamos a los registros principales.
 
-;    ld hl,Move_LEFT
-;    ld de,Move_LEFT_ASCII_CODE
+;                                                           ; HL apunta a la variable de sistema que almacenará el KEYCODE de la tecla pulsada.
+;                                                           ; DE apunta a la variable de sistema que almacenará el ASCII_CODE de la tecla pulsada.
+;                                                           ; (BC) contiene: (N° de chars / n° de spaces).
 
     push bc
     push hl
-    push de
+    push de                                                 ; Guarda regs. se destruirán en [Define_key].
 
     call Define_key ; v2. Ok.                               ; Almacena Key_code y ASCII_code en sus respectivas variables.
 
@@ -496,55 +488,36 @@ Abastecimiento:
     pop hl
     pop bc
 
+;   Tecla definida. Actualiza (Numero_de_teclas_definidas).
+
     ld a,(Numero_de_teclas_definidas)
     inc a
     ld (Numero_de_teclas_definidas),a
 
-;   Hemos definido (Move_LEFT). Este hecho lo indicamos "quitando" el FLASH de la palabra "LEFT" e imprimiento el char. o chars. ASCII del KEYCODE asignado.
+;   We've defined a new key. Este hecho lo indicamos eliminando el FLASH de la cadena de texto "LEFT", "RIGHT", ETC... e imprimiendo la nueva_
+;   _ tecla asignada después de un espacio, (C) contiene el n° de espacios que separa cadena de texto de tecla elegida.
 
-    ld a,b                                                  ; N° de chars de la cadena de texto en A.
-
-    exx
-
-    pop de                                                 ; PUSH Carro de impresión.
-
-    ld b,a
-
-    ex de,hl
-
-
-;    ld hl,Line_12+12                                        ; Dirección de video del 1er char. al que vamos a asignar attrs.
-
-;    ld b,4                                                  ; N° de chars. consecutivos a los que vamos asignar attrs.
+    pop hl                                                  ; POP Carro de impresión inicial en HL.
 
     ld a,%01000111                                          ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
 
-    call Asigna_B_Attr  ; v2. Ok.                           ; Cambia atributos de la función a definir, NO FLASH.
+    call Asigna_B_Attr  ; v2. Ok.                           ; Cambia attrs a la cadena de texto, NO FLASH.
 
-    exx
+;   Preparamos registros para imprimir la KEY definida.
 
     ex de,hl
 
-
-
-;   Imprime tecla pulsada, (LEFT). (Move_LEFT_ASCII_CODE).
-
-;    ld hl,Move_LEFT_ASCII_CODE
-;    pop de                                                  ; POP Carro de impresión.
-
-;    jr $
-
     push ix
-    pop de
+    pop de                                                  ; Posición del carro de impresión tras imprimir la cadena de texto.
 
     ld b,c                                                  ; N° de espacios en B.
 
 1 inc e
-    djnz 1B
+    djnz 1B                                                 ; Carro de impresión + SPACES.
 
     ld a,%01101000                                          ; Attrs.: BRIGHT, CYAN PAPER, BLACK INK.
 
-    call Print_text_msg                                     ; Print DEFINED KEY to (Move_LEFT_ASCII_CODE).
+    call Print_text_msg                                     ; Print DEFINED KEY.
 
 Incrementa_puntero_de_parametros:
 
@@ -586,6 +559,8 @@ All_keys_defined:
 
     ld hl,Ctrl_6
     set 1,(hl)                                              ; Bit 1 "1", means: Return to Main menu.
+
+; Variables utilizadas a "0".
 
     xor a
     ld (Numero_de_teclas_definidas),a

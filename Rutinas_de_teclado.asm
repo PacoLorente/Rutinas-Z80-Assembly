@@ -282,7 +282,7 @@ ROM_Key_Scan:
 
 ; --------------------------------------------
 ;
-;	9/10/26
+;	24/10/26
 ;
 ;	Scan keyboard in Main menu.
 ;
@@ -330,9 +330,7 @@ Main_menu_key:
 	cp $16
 	call z,BEEP
 
-;	jr $
-
-	call z,Define_menu 										; "D" key_code.
+	call z,Define_menu	; v2. Ok.	 						; "D" key_code.
 	ret z
 
 	jr Main_menu_key

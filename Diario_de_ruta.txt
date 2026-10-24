@@ -1,13 +1,13 @@
-@@@ Simplificar [Define_menu] Utilizar puntero y tablas para cambiar datos.
-
 
                                         ; ------------------------------------------------------------------------------------------------------- ;
 
 
-call Main_menu_key (Banco_de_pruebas) > Main_menu_key (Rutinas_de_teclado) > Define_menu (Print_text_msg)
+call Main_menu_key (Banco_de_pruebas) > Main_menu_key (Rutinas_de_teclado)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
+[Main_menu_key]
+[Define_menu]
 [Asigna_B_Attr]
 [Define_key]
 [Active_sinclair_joystick]

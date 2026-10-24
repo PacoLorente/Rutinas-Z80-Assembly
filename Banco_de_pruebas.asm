@@ -284,7 +284,11 @@ Impacto db 0												; Si después del movimiento de la entidad, (Impacto) se
 ;															  _ que esta entidad haya colisionado con Amadeus.
 ; 																Hay que comprobar la posible colisión después de mover Amadeus. En este caso, (Impacto2)="3".
 
-Puntero_de_impresion defw 0									; Contiene el puntero de impresión, (calculado por DRAW). Esta dirección la utilizará la rutina_
+Puntero_de_impresion defw 0									; Esta variable tiene dos funciones, la primera:
+;
+;															; Es utilizada por la rutina [Define_menu] para almacenar el puntero indicial: Define_menu_index_parameters.
+;
+;															; Contiene el puntero de impresión, (calculado por DRAW). Esta dirección la utilizará la rutina_
 ;															; _ [Guarda_coordenadas_X] y [Compara_coordenadas_X] para detectar la colisión ENTIDAD-AMADEUS.
 
 Puntero_de_almacen_de_mov_masticados defw 0
@@ -858,20 +862,24 @@ Main_menu:
 
 	call nz,Print_new_best_score	; v2. Ok. 				; Hemos superado la puntuación máxima. Imprimimos la nueva puntuación.
 
-	call Main_menu_key	;###								; Bucle cerrado de escaneo del teclado buscando: "K", "E" y "D".
+	call Main_menu_key	; v2. Ok.							; Bucle cerrado de escaneo del teclado buscando: "K", "E", "S" y "D".
 
 	ld a,(Ctrl_6)
 	bit 1,a
-	jr nz,Main_menu 										; No hemos pulsado "FIRE" en los menús: Keyboard y Kempston. Pasado un tiempo, 
+	jr nz,Main_menu 										; No hemos pulsado "FIRE" en los menús: KEYBOARD, KEMPSTON, SINCLAIR o hemos definido teclas.
 
 INICIALIZACION:
 
 ;	Marcadores. -------------------------------------
 
-	ld a,%01000101											; Fondo NEGRO, tinta Cyan + bright.
-	call Cls
+;	Clean screen.
+
+	ld a,%01000101											; Attrs.: BRIGHT, BLACK PAPER, CYAN INK.
+	call Cls	; v2. Ok.
 
 ;	Imprime escudos y vidas.
+
+	jr $
 
 	call Pinta_Vida
 	call Pinta_Vida
