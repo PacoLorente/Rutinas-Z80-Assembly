@@ -1,0 +1,51 @@
+@@@ Simplificar [Define_menu] Utilizar puntero y tablas para cambiar datos.
+
+
+                                        ; ------------------------------------------------------------------------------------------------------- ;
+
+
+call Main_menu_key (Banco_de_pruebas) > Main_menu_key (Rutinas_de_teclado) > Define_menu (Print_text_msg)
+
+Rutinas v2. Ok. :   ; v2. Ok.
+
+[Asigna_B_Attr]
+[Define_key]
+[Active_sinclair_joystick]
+[Active_kempstom_joystick]
+[Dec_START_counter]
+[Show_controls_keys]
+[Press_START]
+[Press_START_SINCLAIR]
+[Press_START_KEMPSTON]
+[Clean_main_menu]
+[Calcula_direccion_atributos]
+[Clean_file]
+[Print_text_msg]
+[Corrige_inicio_de_linea]
+[BEEP]
+
+Variables o cajas que NO SE REINICIAN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+(Sound) ..... defw $0000 [BEEP], [Sound_Generator] ----- NO REINICIA !!!
+
+Estas 2 variables sólo se utilizan en las pantallas de menú. Ae pueden utilizar para otra cosa IN GAME.
+
+(Start_counter) ..... defw $0000 [Press_START], [Press_START_KEMPSTON], [Press_START_SINCLAIR] ----- NO REINICIA !!!
+(Start_counter_2) ..... db $05 [Press_START_KEMPSTON], [Press_START_SINCLAIR] ----- NO REINICIA !!!
+
+(Keyboard_db_box) ..... db $24, $1c, $04, $20 [Active_sinclair_joystick] ----- NO REINICIA !!!
+
+(Move_LEFT) ..... db $24 [Active_sinclair_joystick] ----- NO REINICIA !!!
+(Move_RIGHT) ..... db $1c [Active_sinclair_joystick] ----- NO REINICIA !!!
+(Move_FIRE) ..... db $04 [Active_sinclair_joystick] ----- NO REINICIA !!!
+(Move_SHIELD) ..... db $20 [Active_sinclair_joystick] ----- NO REINICIA !!!
+
+(Move_LEFT_ASCII_CODE) ..... db $31, $00, $00, $00, $00, $00 ----- NO REINICIA !!!
+(Move_RIGHT_ASCII_CODE) ..... db $32, $00, $00, $00, $00, $00 ----- NO REINICIA !!!
+(Move_FIRE_ASCII_CODE) ..... db $35, $00, $00, $00, $00, $00 ----- NO REINICIA !!!
+(Move_SHIELD_ASCII_CODE) ..... db $53, $50, $41, $43, $45, $00 ----- NO REINICIA !!!
+
+(Numero_de_teclas_definidas) ..... db $00 ----- NO REINICIA !!!
+
+
+
