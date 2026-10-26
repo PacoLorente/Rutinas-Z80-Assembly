@@ -293,7 +293,7 @@ Clean_mem:
 ;
 ;   Pinta cualquier imagen en pantalla, (XOR). Esta rutina se utiliza para imágenes estáticas, (NO SPRITES).
 ;
-;   INPUTS: HL contiene la dirección de memoria depantalla donde queremos imprimir la imagen, (esquina superior izquierda).
+;   INPUTS: HL contiene la dirección de memoria de pantalla donde queremos imprimir la imagen, (esquina superior izquierda).
 ;           DE contiene la dirección del 1er .db que conforman los datos de la imagen.
 ;            A contiene los Attr.
 ;            B contiene el nº de Columnas.

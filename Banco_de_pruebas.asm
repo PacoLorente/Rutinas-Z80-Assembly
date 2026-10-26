@@ -481,11 +481,9 @@ Datos_de_entidad defw 0										; Contiene los bytes de información de la enti
 ;
 ;	Álbumes.
 
-Stack defw 0 												; La rutinas de pintado, utilizan esta_
-;															; _variable para almacenar lo posición del puntero_
-; 															; _de pila, SP.
+Stack defw 0 												; Variable destinada a almacenar la dirección a la que apunta el vector (SP).
+; 															; Necesitamos guardar esta dirección antes de poder utilizar el puntero de pila para otros menesteres.
 Stack_2 defw 0												; 2º variable destinada a almacenar el puntero de pila, SP.
-;															; La utiliza la rutina [Extrae_foto_registros].
 
 ; Impresión. ----------------------------------------------------------------------------------------------------
 
@@ -668,8 +666,8 @@ Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al m
 Lives db 3
 Shields db 3 												; Nº de Shields
 
-Puntero_de_escudos defw Indice_de_escudos					; Ambos punteros se inician al comienzo de su respectivos índices.
-Puntero_de_vidas defw Indice_de_vidas
+Puntero_de_escudos defw Tabla_marcador_de_escudos			; Ambos punteros se inician al comienzo de su respectivas tablas. Estas variables las utilizan_
+Puntero_de_vidas defw Tabla_marcador_de_vidas 				; _ las rutinas que pintan y borran las vidas y escudos en la parte sup. izq. de la pantalla.
 
 Entidades_BCD_unidades db 0
 Entidades_BCD_decenas db 0
@@ -879,11 +877,11 @@ INICIALIZACION:
 
 ;	Imprime escudos y vidas.
 
-	jr $
+	call Pinta_Vida	; v2. Ok.
+	call Pinta_Vida
+	call Pinta_Vida
 
-	call Pinta_Vida
-	call Pinta_Vida
-	call Pinta_Vida
+	jr $
 
 	call Pinta_Escudo
 	call Pinta_Escudo

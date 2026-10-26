@@ -133,9 +133,9 @@ Inicializa_Variables_DRAW1:
 	inc hl
 	ld (hl),3
 
-	ld hl,Indice_de_escudos
+	ld hl,Tabla_marcador_de_escudos
 	ld (Puntero_de_escudos),hl
-	ld hl,Indice_de_vidas
+	ld hl,Tabla_marcador_de_vidas
 	ld (Puntero_de_vidas),hl
 
 	ld a,%01000110

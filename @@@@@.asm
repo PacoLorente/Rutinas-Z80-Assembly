@@ -1,31 +1,31 @@
+; ------------------------------------------------------------------------------------------------------- ;
 
-                                        ; ------------------------------------------------------------------------------------------------------- ;
-
-
-call Main_menu_key (Banco_de_pruebas) > Main_menu_key (Rutinas_de_teclado)
+;> call Main_menu_key (Banco_de_pruebas) > call Pinta_Escudo (Pinta_Sprites)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
-[Main_menu_key]
-[Define_menu]
-[Asigna_B_Attr]
-[Define_key]
-[Active_sinclair_joystick]
-[Active_kempstom_joystick]
-[Dec_START_counter]
-[Show_controls_keys]
-[Press_START]
-[Press_START_SINCLAIR]
-[Press_START_KEMPSTON]
-[Clean_main_menu]
-[Calcula_direccion_atributos]
-[Clean_file]
-[Print_text_msg]
-[Corrige_inicio_de_linea]
-[BEEP]
+Main_menu_key:
+Define_menu:
+Asigna_B_Attr:
+Define_key:
+Active_sinclair_joystick:
+Active_kempstom_joystick:
+Dec_START_counter:
+Show_controls_keys:
+Press_START:
+Press_START_SINCLAIR:
+Press_START_KEMPSTON:
+Clean_main_menu:
+Calcula_direccion_atributos:
+Clean_file:
+Print_text_msg:
+Corrige_inicio_de_linea:
+BEEP:
+Pinta_imagen:
 
-Variables o cajas que NO SE REINICIAN !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+(Stack) ..... defw $0000 [Define_menu] ----- NO REINICIA !!!
 (Sound) ..... defw $0000 [BEEP], [Sound_Generator] ----- NO REINICIA !!!
 
 Estas 2 variables sólo se utilizan en las pantallas de menú. Ae pueden utilizar para otra cosa IN GAME.
@@ -46,6 +46,12 @@ Estas 2 variables sólo se utilizan en las pantallas de menú. Ae pueden utiliza
 (Move_SHIELD_ASCII_CODE) ..... db $53, $50, $41, $43, $45, $00 ----- NO REINICIA !!!
 
 (Numero_de_teclas_definidas) ..... db $00 ----- NO REINICIA !!!
+
+;>>> Variables o cajas qu SE REINICIAN con GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+(Puntero_de_vidas) ..... defw Tabla_marcador_de_vidas [Pinta_Vida] ----- REINICIA GAME OVER !!!
+
+
 
 
 

@@ -621,29 +621,50 @@ Pintor:
 
 ; ------------------------------------------------------------------------
 ;
-;   26/9/25
+;   26/10/26
 ;
-;   Pinta un sprite de Amadeus en la parte superior izquierda de la pantalla.
+;   Pinta un sprite de Amadeus en la parte superior izquierda de la pantalla. IT's a LIFE !!!
+;
+;   Los datos de pintado de la vida vienen dados por la tabla:
+;
+;   Tabla_marcador_de_vidas:
+;
+;	defw Vida_1,Amadeus       							; (Puntero_de_impresion), (Puntero_objeto)
+;	defw Vida_2,Amadeus_Fb
+;	defw Vida_3,Amadeus
+;
+;   (Puntero_de_vidas) almacenará el puntero SP que será el encargado de ir desplazandose por la tabla abasteciendo de datos_
+;   _ a los registros HL y DE:
+;
+;    pop hl                                             ; Dirección de pantalla donde se imprime Vida_X, (Puntero_de_impresion).
+;    pop de                                             ; Dirección de memoria donde se encuentran los .db que componen Amadeus, (Puntero_objeto).
+;
+;   Al ser el n° de (Columnas/Filas) una constante, ($0302) lo cargamos directamente en el par de registros (BC).
+;   Los attrs. serían la 2a constante que será almacenada en (A).
+;
+;   Con estos datos, la rutina [Pinta_imagen] imprimirá la imagen en la parte superior izquierda de la pantalla.
 ;
 ;   MODIFY: A,HL,BC y DE
 
 
 Pinta_Vida:
 
-    ld (Stack),sp
-    ld sp,(Puntero_de_vidas)
+    ld (Stack),sp                                       ; Guarda el vector (SP).
+    ld sp,(Puntero_de_vidas)                            ; Utilizaremos el puntero SP para extraer la información de la ((Tabla_marcador_de_vidas))_
+;                                                       ; _ y abastecer REGs.
 
-    pop hl
-    pop de
-    pop bc
+    pop hl                                              ; Dirección de pantalla donde se imprime Vida_X, (Puntero_de_impresion).
+    pop de                                              ; Dirección de memoria donde se encuentran los .db que componen Amadeus, (Puntero_objeto).
 
-    ld (Puntero_de_vidas),sp
+    ld (Puntero_de_vidas),sp                            ; Sitúa (Puntero_de_vidas) en los datos de la tabla de la siguiente vida.
 
-    ld sp,(Stack)
+    ld sp,(Stack)                                       ; Recupera la dirección que contenía el vector SP.
 
-    ld a,%01000101                                                  ; Cyan.
+    ld a,%01000101                                      ; Attrs.: BRIGHT, BLACK PAPER, CYAN INK.
 
-    call Pinta_imagen
+    ld bc,$0302                                         ; (Columnas/Filas )
+
+    call Pinta_imagen   ; v2. Ok.                       ; Imprime AMADEUS.
 
     ret
 

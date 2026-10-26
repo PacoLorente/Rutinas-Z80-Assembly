@@ -26,13 +26,15 @@ Msg_3 db 4,12
 
 ; --------------------------------------------------------------------------------------------------------------
 
-Indice_de_vidas
+Tabla_marcador_de_vidas:
 
-	defw Vida_1,Amadeus,$0302							; (Puntero_de_impresion), (Puntero_objeto) y (Columnas/Filas).
-	defw Vida_2,Amadeus_Fb,$0302
-	defw Vida_3,Amadeus,$0302
+; (Puntero_de_impresion), (Puntero_objeto).
 
-Indice_de_escudos
+	defw Vida_1,Amadeus
+	defw Vida_2,Amadeus_Fb
+	defw Vida_3,Amadeus
+
+Tabla_marcador_de_escudos:
 
 	defw Escudo_1,Escudo_00,$0201
 	defw Escudo_2,Escudo_00_Fb,$0301
