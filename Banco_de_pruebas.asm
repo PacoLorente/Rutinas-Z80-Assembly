@@ -2,7 +2,8 @@
 	DEVICE ZXSPECTRUM48
 
 ;	include "Macros_y_herramientas.asm"
-	include "Constantes_definiciones.asm"
+
+	include "Equates.asm"
 
 ;	Datos fijos de los álbumes de líneas de Amadeus:
 
