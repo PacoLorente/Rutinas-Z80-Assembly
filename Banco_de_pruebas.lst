@@ -5347,8 +5347,8 @@
 2887  9E01
 2888  9E01              ;	Rutinas consecutivas, no hay bytes libres entre ellas.
 2889  9E01
-2890  9E01              	include "Funciones_genericas.asm"
-# file opened: Funciones_genericas.asm
+2890  9E01              	include "Generic_functions.asm"
+# file opened: Generic_functions.asm
    1+ 9E01              ; *************************************************************************************************************************************************************
    2+ 9E01              ;
    3+ 9E01              ;   13/9/26
@@ -6079,9 +6079,9 @@
  728+ 9F73
  729+ 9F73 C9               ret
  730+ 9F74
-# file closed: Funciones_genericas.asm
-2891  9F74              	include "Rutinas_de_teclado.asm"
-# file opened: Rutinas_de_teclado.asm
+# file closed: Generic_functions.asm
+2891  9F74              	include "Keyboard_routines.asm"
+# file opened: Keyboard_routines.asm
    1+ 9F74
    2+ 9F74              ; ------------------------------------------------------------------------
    3+ 9F74              ;
@@ -6918,7 +6918,7 @@
  834+ A1FF
  835+ A1FF C9           	ret
  836+ A200
-# file closed: Rutinas_de_teclado.asm
+# file closed: Keyboard_routines.asm
 2892  A200              	include "RND_Derivando.asm"
 # file opened: RND_Derivando.asm
    1+ A200              ; ******************************************************************************************************************************************************************************************
@@ -10537,8 +10537,8 @@
  649+ ACF5 18 B6            jr 1B
  650+ ACF7
 # file closed: Genera_datos_de_impresion.asm
-2896  ACF7              	include "Pinta_Sprites.asm"
-# file opened: Pinta_Sprites.asm
+2896  ACF7              	include "Print_routines.asm"
+# file opened: Print_routines.asm
    1+ ACF7              ; ---------------------------------------------------------------------------
    2+ ACF7              ;
    3+ ACF7              ;   9/10/26
@@ -12571,7 +12571,7 @@
 2027+ B49F ED 7B 60 94      ld sp,(Stack)
 2028+ B4A3 C9               ret
 2029+ B4A4
-# file closed: Pinta_Sprites.asm
+# file closed: Print_routines.asm
 2897  B4A4              	include "Draw_XOR.asm"
 # file opened: Draw_XOR.asm
    1+ B4A4              ; ------------------------------------------------------------------

@@ -2887,13 +2887,13 @@ Next_level:
 
 ;	Rutinas consecutivas, no hay bytes libres entre ellas.
 
-	include "Funciones_genericas.asm"
-	include "Rutinas_de_teclado.asm"
+	include "Generic_functions.asm"
+	include "Keyboard_routines.asm"
 	include "RND_Derivando.asm"
 	include "Rutinas_de_inicio_y_niveles.asm"
 	include "Transiciones_y_efectos.asm"
 	include "Genera_datos_de_impresion.asm"
-	include "Pinta_Sprites.asm"
+	include "Print_routines.asm"
 	include "Draw_XOR.asm"
 	include "Direcciones.asm"
 	include "Movimiento.asm"
