@@ -881,7 +881,7 @@ INICIALIZACION:
 	call Pinta_Vida
 	call Pinta_Vida
 
-	jr $
+;	jr $
 
 	call Pinta_Escudo
 	call Pinta_Escudo
@@ -2889,7 +2889,6 @@ Next_level:
 
 	include "Generic_functions.asm"
 	include "Keyboard_routines.asm"
-	include "RND_Derivando.asm"
 	include "Rutinas_de_inicio_y_niveles.asm"
 	include "Transiciones_y_efectos.asm"
 	include "Genera_datos_de_impresion.asm"
