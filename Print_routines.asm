@@ -645,7 +645,7 @@ Pintor:
 ;   Con estos datos, la rutina [Pinta_imagen] imprimirá la imagen en la parte superior izquierda de la pantalla.
 ;
 ;   MODIFY: A,HL,BC y DE
-
+;           (Puntero_de_vidas)
 
 Pinta_Vida:
 
@@ -695,32 +695,31 @@ Borra_vida:
 ;
 ;   29/10/26
 ;
-;   Pinta un sprite de Amadeus en la parte superior izquierda de la pantalla. IT's a LIFE !!!
+;   Pinta un sprite (SHIELD) en la parte superior izquierda de la pantalla, justo debajo del sprite de Amadeus que simboliza una vida.
 ;
-;   Los datos de pintado de la vida vienen dados por la tabla:
+;   Los datos de pintado del Sprite "SHIELD".
 ;
-;   Tabla_marcador_de_vidas:
+;   Tabla_marcador_de_escudos:
 ;
-;	defw Vida_1,Amadeus       							; (Puntero_de_impresion), (Puntero_objeto)
-;	defw Vida_2,Amadeus_Fb
-;	defw Vida_3,Amadeus
+;   	defw Escudo_1,Escudo_00,$0201
+;   	defw Escudo_2,Escudo_00_Fb,$0301
+;   	defw Escudo_3,Escudo_00,$0201
 ;
-;   (Puntero_de_vidas) almacenará el puntero SP que será el encargado de ir desplazandose por la tabla abasteciendo de datos_
-;   _ a los registros HL y DE:
+;   (Puntero_de_escudos) almacenará el puntero SP que será el encargado de ir desplazandose por la tabla abasteciendo de datos_
+;   _ a los registros HL,DE y BC:
 ;
 ;    pop hl                                             ; Dirección de pantalla donde se imprime Vida_X, (Puntero_de_impresion).
 ;    pop de                                             ; Dirección de memoria donde se encuentran los .db que componen Amadeus, (Puntero_objeto).
+;    pop bc                                             ; BC contendrá el n° de (Columnas/Filas) del Sprite a imprimir.
 ;
-;   Al ser el n° de (Columnas/Filas) una constante, ($0302) lo cargamos directamente en el par de registros (BC).
-;   Los attrs. serían la 2a constante que será almacenada en (A).
+;   (A) Contendrá los attrs. del Sprite a imprimir.
 ;
-;   Con estos datos, la rutina [Pinta_imagen] imprimirá la imagen en la parte superior izquierda de la pantalla.
+;   Con estos datos, la rutina [Pinta_imagen] imprimirá el escudo en la parte superior izquierda de la pantalla.
 ;
 ;   MODIFY: A,HL,BC y DE
+;           (Puntero_de_escudos)
 
 Pinta_Escudo:
-
-    jr $
 
     ld (Stack),sp
     ld sp,(Puntero_de_escudos)

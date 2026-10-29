@@ -119,3 +119,20 @@ Note_2x:
 	defw $0020
 	defw $0000
 	defw $0020
+
+; --------------------------------------------------------------------------------------------------------------
+
+Tabla_marcador_de_vidas:
+
+; (Puntero_de_impresion), (Puntero_objeto).
+
+	defw Vida_1,Amadeus
+	defw Vida_2,Amadeus_Fb
+	defw Vida_3,Amadeus
+
+Tabla_marcador_de_escudos:
+
+	defw Escudo_1,Escudo_00,$0201
+	defw Escudo_2,Escudo_00_Fb,$0301
+	defw Escudo_3,Escudo_00,$0201
+

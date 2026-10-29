@@ -4,7 +4,6 @@
 ;	include "Macros_y_herramientas.asm"
 
 	include "Equates.asm"
-	include "Indexes_&_Tables.asm"
 
 ;	Datos fijos de los álbumes de líneas de Amadeus:
 
@@ -248,6 +247,8 @@ Fecha_Firma:
 
 	include "Sprites_e_indices.asm"
 	include "Cajas_y_disparos.asm"
+	include "Indexes_&_Tables.asm"
+	include "Text_Strings.asm"
 	include "Patrones_de_mov.asm"
 
 ; --------------------------------------------------------------------------------
@@ -727,48 +728,6 @@ Keyboard_db_box db $24, $1c, $04, $20													; Almacén donde almacenaremos
 Desplazamiento_level_msg db 0
 Counter_msg_char db 0
 
-; Mensajes:
-
-Keyboard defm "KEYBOARD",0
-Kempstom defm "KEMPSTON",0
-Interface defm "SINCLAIR",0
-Define defm "DEFINE",0
-Start defm "START",0
-Top_score defm "BEST SCORE: ",0
-Done defm "DONE",0
-Game_Over defm "GAME OVER",0
-
-; Msg_keyboard_menu, show CONTROLS.
-
-a0 defm "Press ",0
-a1 defm " or ",0
-a2 defm " to move ",0
-a3 defm " LEFT and RIGHT.",0
-a4 defm " to FIRE and ",0
-a5 defm "to SHIELD.",0
-a6 defm "Press FIRE to START",0
-a7 defm "CONTROLS:",0
-a8 defm "New Best Score!",0
-a9 defm "Enter name & press ENTER",0
-a10 defm "--",0
-a11 defm "pts",0
-a12 defm "    ",0
-
-; DEFINE MENU.
-
-b0 defm "DEFINE CONTROLS",0
-b1 defm "LEFT",0
-b2 defm "RIGHT",0
-b3 defm "FIRE",0
-b4 defm "SHIELD",0
-
-; Special keys:
-
-Symbol_key defm "SYMB.",0
-Space_key defm "SPACE",0
-Enter_key defm "ENTER",0
-Caps_key defm "CAPS.",0
-
 ; Control de Amadeus, (KEY CODES).
 
 Numero_de_teclas_definidas db 0								; Contiene el n° de teclas definidas (0-3). [Define_menu] y [Define_key].
@@ -830,19 +789,19 @@ INICIALIZACION:
 	ld a,%01000101											; Attrs.: BRIGHT, BLACK PAPER, CYAN INK.
 	call Cls	; v2. Ok.
 
-;	Imprime escudos y vidas.
+;	Print Lives and Shields.
 
 	call Pinta_Vida	; v2. Ok.
 	call Pinta_Vida
 	call Pinta_Vida
 
-;	jr $
-
-	call Pinta_Escudo
+	call Pinta_Escudo	; v2. Ok.
 	call Pinta_Escudo
 	call Pinta_Escudo
 
 ;	Imprime SCORE:
+
+;	jr $
 
 	call Imprime_SCORE
 

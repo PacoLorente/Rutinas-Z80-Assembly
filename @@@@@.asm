@@ -22,6 +22,7 @@ Print_text_msg:
 Corrige_inicio_de_linea:
 BEEP:
 Pinta_imagen:
+Pinta_Escudo:
 
 ;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -47,10 +48,10 @@ Estas 2 variables sólo se utilizan en las pantallas de menú. Ae pueden utiliza
 
 (Numero_de_teclas_definidas) ..... db $00 ----- NO REINICIA !!!
 
-;>>> Variables o cajas qu SE REINICIAN con GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+;>>> Variables o cajas que SE REINICIAN con GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 (Puntero_de_vidas) ..... defw Tabla_marcador_de_vidas [Pinta_Vida] ----- REINICIA GAME OVER !!!
-
+(Puntero_de_escudos) .....defw Tabla_marcador_de_escudos [Pinta_Escudo] ----- REINICIA GAME OVER !!!
 
 
 

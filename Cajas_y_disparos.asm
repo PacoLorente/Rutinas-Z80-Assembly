@@ -323,31 +323,7 @@ Definicion_Amadeus:
 	db %01000101									; (Attr).
 
 
-Game_over_noise_index:
 
-	defw Note_1x
-	defw Note_2x
-	defw Note_1x
-	defw Note_2x
-	defw Note_1x
-	defw Note_2x
-	defw Note_1x
-	defw Note_2x
-	defw Note_1x
-	defw Note_2x
-	defw 0
-
-Note_1x:
-
-	defw $0020
-	defw $0100
-	defw $0000
-
-Note_2x:
-
-	defw $0020
-	defw $0000
-	defw $0020
 
 
 
