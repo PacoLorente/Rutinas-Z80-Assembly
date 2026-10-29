@@ -691,7 +691,36 @@ Borra_vida:
 
     ret
 
+; ------------------------------------------------------------------------
+;
+;   29/10/26
+;
+;   Pinta un sprite de Amadeus en la parte superior izquierda de la pantalla. IT's a LIFE !!!
+;
+;   Los datos de pintado de la vida vienen dados por la tabla:
+;
+;   Tabla_marcador_de_vidas:
+;
+;	defw Vida_1,Amadeus       							; (Puntero_de_impresion), (Puntero_objeto)
+;	defw Vida_2,Amadeus_Fb
+;	defw Vida_3,Amadeus
+;
+;   (Puntero_de_vidas) almacenará el puntero SP que será el encargado de ir desplazandose por la tabla abasteciendo de datos_
+;   _ a los registros HL y DE:
+;
+;    pop hl                                             ; Dirección de pantalla donde se imprime Vida_X, (Puntero_de_impresion).
+;    pop de                                             ; Dirección de memoria donde se encuentran los .db que componen Amadeus, (Puntero_objeto).
+;
+;   Al ser el n° de (Columnas/Filas) una constante, ($0302) lo cargamos directamente en el par de registros (BC).
+;   Los attrs. serían la 2a constante que será almacenada en (A).
+;
+;   Con estos datos, la rutina [Pinta_imagen] imprimirá la imagen en la parte superior izquierda de la pantalla.
+;
+;   MODIFY: A,HL,BC y DE
+
 Pinta_Escudo:
+
+    jr $
 
     ld (Stack),sp
     ld sp,(Puntero_de_escudos)

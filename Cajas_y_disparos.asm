@@ -322,11 +322,6 @@ Definicion_Amadeus:
 	defw $50c1	                                    ; (Posicion_inicio).
 	db %01000101									; (Attr).
 
-; ---------------------------------------------
-; ---------------------------------------------
-; ---------------------------------------------
-; ---------------------------------------------
-; ---------------------------------------------
 
 Game_over_noise_index:
 
@@ -340,83 +335,21 @@ Game_over_noise_index:
 	defw Note_2x
 	defw Note_1x
 	defw Note_2x
-
 	defw 0
 
 Note_1x:
 
-;	ld bc,$0014                                             ; No ruido / 20 ondas completas
-;	ld de,$0005                                             ; Nota descendente / 5 unid. decrease.
-;	ld hl,$015e                                             ; Note init. value. 
-
 	defw $0020
-	defw $0100 												; $90
+	defw $0100
 	defw $0000
 
 Note_2x:
 
-;    ld c,$14                                               ; Duración de la nueva nota, 20 ondas.
-;    ld e,0                                                 ; No existe decremento. (sonido plano).
-
 	defw $0020
 	defw $0000
 	defw $0020
 
-Note_3x:
-
-;	ld c,$24                                                ; Duración de la nueva nota.
-;	ld l,$a5                                                ; (HL) = $00a5. Nota, (duración de un semiciclo).
-
-	defw $0040
-	defw $0000
-	defw $002e
-
-Note_4x:
-
-;	ld c,$14                                                ; Duración de la nueva nota.
-;	ld l,$fa                                                ; New note, (HL) = $00fa
-
-	defw $00c0
-	defw $0100
-	defw $0002
 
 
-; Indice Parámetros [Define_menu].
 
-Define_menu_index_parameters:
-
-	defw Left_key_parameters
-	defw Right_key_parameters
-	defw Fire_key_parameters
-	defw Shield_key_parameters
-
-	defw 0
-
-Left_key_parameters: defw b1                                ; Cadena de texto: "LEFT".
-    defw Line_12 + 12                                       ; Dirección de pantalla, Fila 12, columna 12.
-    defw Move_LEFT
-    defw Move_LEFT_ASCII_CODE
-    db 4                                                    ; N° de espacios.
-    db 4                                                    ; N° de chars. "LEFT".
-
-Right_key_parameters: defw b2                               ; Cadena de texto: "RIGHT".
-    defw Line_14 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
-    defw Move_RIGHT
-    defw Move_RIGHT_ASCII_CODE
-    db 3                                                    ; SPACES.
-    db 5                                                    ; N° de chars. que forman la cadena "RIGHT".
-
-Fire_key_parameters: defw b3                                ; Cadena de texto: "FIRE".
-    defw Line_16 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
-    defw Move_FIRE
-    defw Move_FIRE_ASCII_CODE
-    db 4                                                    ; SPACES.
-    db 4                                                    ; N° de chars. que forman la cadena "FIRE".
-
-Shield_key_parameters: defw b4                              ; Cadena de texto: "SHIELD".
-    defw Line_18 + 12                                       ; Dirección de pantalla, Fila 14, columna 12.
-    defw Move_SHIELD
-    defw Move_SHIELD_ASCII_CODE
-    db 2                                                    ; SPACES.
-    db 6                                                    ; N° de chars. que forman la cadena "FIRE".
 

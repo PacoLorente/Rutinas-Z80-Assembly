@@ -4,6 +4,7 @@
 ;	include "Macros_y_herramientas.asm"
 
 	include "Equates.asm"
+	include "Indexes_&_Tables.asm"
 
 ;	Datos fijos de los álbumes de líneas de Amadeus:
 
@@ -725,53 +726,6 @@ Keyboard_db_box db $24, $1c, $04, $20													; Almacén donde almacenaremos
 ; 																						; _ Cuando seleccionemos SINCLAIR JOYSTICK. Inicialmente las TECLAS: "1","2","5" y "SPACE".
 Desplazamiento_level_msg db 0
 Counter_msg_char db 0
-
-Tabla_de_conversion_KEYCODE_ASCII_CODE
-
-    defm "B"
-    defm "H"
-    defm "Y"
-    defm "6"
-    defm "5"
-    defm "T"
-    defm "G"
-    defm "V"
-
-    defm "N"
-    defm "J"
-    defm "U"
-    defm "7"
-    defm "4"
-    defm "R"
-    defm "F"
-    defm "C"
-
-    defm "M"
-    defm "K"
-    defm "I"
-    defm "8"
-    defm "3"
-    defm "E"
-    defm "D"
-    defm "X"
-
-    db $18													; SYMBOL SHIFT no dispone de código ASCII.
-    defm "L"
-    defm "O"
-    defm "9"
-    defm "2"
-    defm "W"
-    defm "S"
-    defm "Z"
-
-    db $20 													; SPACE ASCII CODE.
-    db $21 													; ENTER ASCII CODE.
-    defm "P"
-    defm "0"
-    defm "1"
-    defm "Q"
-    defm "A"
-	db $27 													; CAPS SHIFT no dispone de código ASCII.
 
 ; Mensajes:
 

@@ -1,6 +1,6 @@
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call Pinta_Escudo (Pinta_Sprites)
+;> call Main_menu_key (Banco_de_pruebas) > call Pinta_Escudo (Print_routines)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
