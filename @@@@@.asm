@@ -1,6 +1,10 @@
+
+Subroutine_001
+
+
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call Pinta_Escudo (Print_routines)
+;> call Main_menu_key (Banco_de_pruebas) > call Print_Moon (Print_routines)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
@@ -23,6 +27,7 @@ Corrige_inicio_de_linea:
 BEEP:
 Pinta_imagen:
 Pinta_Escudo:
+Print_SCORE_Logo:
 
 ;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

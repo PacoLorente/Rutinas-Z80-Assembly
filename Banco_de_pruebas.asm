@@ -799,13 +799,13 @@ INICIALIZACION:
 	call Pinta_Escudo
 	call Pinta_Escudo
 
-;	Imprime SCORE:
+;	Imprime el logo "Score:" en el marcador.
 
-;	jr $
-
-	call Imprime_SCORE
+	call Print_SCORE_Logo	; v2. Ok.
 
 ;	Make Stars & moon.
+
+	jr $
 
 	call Print_Moon
 	call make_stars

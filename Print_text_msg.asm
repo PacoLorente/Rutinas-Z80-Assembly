@@ -469,7 +469,7 @@ Abastecimiento:
 
 ;   Retardo antes de leer el teclado. Evita que la rutina de escaneo recoga la tecla "D" , última pulsación en el menú principal.
 
-    ld bc,$ffff
+    ld bc,$fdff
     call DELAY
 
     exx                                                     ; Pasamos a los registros principales.

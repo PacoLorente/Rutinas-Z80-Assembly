@@ -43,15 +43,16 @@ FRAMES_3 equ $5c7a
 
 ; 	Direcciones de pantalla de vidas, escudos, Firma y cartel Best_Score:
 
-Direccion_Logo_principal equ $4049
+Direccion_Logo_principal equ $4049                                      ; Logo "Amadeus" Screen's address.
+Cartel_Score_address equ $4012                                          ; Logo "Score"     "         "   .
 Firma_address equ $50da 		 										; Dirección de pantalla donde se imprime la Firma.
-Best_Score_address equ Line_20 + 1 										; Dirección de pantalla donde se imprime el cartel "Best_Score". ($50a1).
+Best_Score_address equ Line_20 + 1 										; Dirección de pantalla donde se imprime el cartel "Best_Score".
 
-Vida_1 equ $4001														; Dirección de pantalla donde se pintan los escudos.
+Vida_1 equ $4001														; Dirección de pantalla donde se pintan las 3 vidas.
 Vida_2 equ $4003
 Vida_3 equ $4006
 
-Escudo_1 equ $4041														; Dirección de pantalla donde se pintan las vidas.
+Escudo_1 equ $4041														; Dirección de pantalla donde se pintan los 3 escudos.
 Escudo_2 equ $4043
 Escudo_3 equ $4046
 

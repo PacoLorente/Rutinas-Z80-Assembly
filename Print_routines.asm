@@ -389,35 +389,81 @@ Exit_1
     ret
 
 ;---------------------------------------------------------------------
-;   Imprime el cartel SCORE: (Encima del marcador de puntuación).
 ;
-;   10/10/25
+;   29/10/26
 ;
+;   Imprime el logo "Score:" en el marcador, (parte sup. de la pantalla).
+;
+;   Para ello haremos TRES llamadas a la rutina de pintado [Pinta_imagen].
+;
+;   El logo consta de tres grupos de datos de 2x2, (Columnas/Filas).
+;
+;   El 1er grupo construye el gráfico "Sc".
+;   El 2° construye "or".
+;   El 3er grupo de datos: "e:".
+;
+;   MODIFY: AF, HL, DE y BC.
 
-Imprime_SCORE:
+Print_SCORE_Logo:
 
-    ld hl,$4012                       ;$4019
-    ld de,_Sc
-    call bp
+    ld hl,Cartel_Score_address                          ; (HL) contendrá la dirección de pantalla donde imprimiremos el logo del panel marcador: "Score:".
+    ld de,_Sc                                           ; (DE) contiene la dirección de memoria donde se encuentran los datos del primer bloque, ("Sc").
 
-    ld de,_or
-    call bp
+    call Subroutine_001                                 ; [Subroutine_001] asigna (Columnas/Filas) en BC, Attrs. en (A) y pinta imagen, (call Pinta_imagen ).
 
-    ld de,_e
-    call bp
+    ld de,_or                                           ; (DE) contiene la dirección de memoria donde se encuentran los datos del 2° bloque, ("or").
+
+    call Subroutine_001                                 ; [Subroutine_001] asigna (Columnas/Filas) en BC, Attrs. en (A) y pinta imagen, (call Pinta_imagen ).
+
+    ld de,_e                                            ; (DE) contiene la dirección de memoria donde se encuentran los datos del 3er bloque, ("e:").
+
+    call Subroutine_001                                 ; [Subroutine_001] asigna (Columnas/Filas) en BC, Attrs. en (A) y pinta imagen, (call Pinta_imagen ).
 
     ret
 
-bp push hl
-    ld bc,$0202
-    ld a,%01000101
-    call Pinta_imagen
-    pop hl
+Subroutine_001:
+
+    push hl                                             ; PUSH Cartel_Score_address (actualizado).
+
+    ld bc,$0202                                         ; (BC) contiene (Columnas/Filas).
+    ld a,%01000101                                      ; Attrs.: BRIGHT, BLACK PAPER, CYAN INK.
+
+;   Parámetros necesarios antes de llamar a [Pinta_imagen]:
+
+;   INPUTS: HL contiene la dirección de memoria de pantalla donde queremos imprimir la imagen, (esquina superior izquierda).
+;           DE contiene la dirección del 1er .db que conforman los datos de la imagen.
+;            A contiene los Attr.
+;            B contiene el nº de Columnas.
+;            C contiene el nº de Filas.
+
+    call Pinta_imagen   ; v2. Ok.
+
+    pop hl                                              ; POP Cartel_Score_address (actualizado).
+
+;   Actualiza Cartel_Score_address, screen's address donde imprimiremos el siguiente bloque de datos.
 
     inc l
     inc l
 
     ret
+
+; ------------------------------------------------------------------------
+;
+;	27/11/25
+;
+;	Imprime en pantalla la Luna lunera.
+
+Print_Moon:
+
+	ld hl,$401a
+	ld de,$8ef4
+	ld a,%01000111
+	ld b,6
+	ld c,5
+
+	call Pinta_imagen
+
+	ret
 
 ;---------------------------------------------------------------------
 ;   Imprime el contador: ENEMIGOS RESTANTES.
