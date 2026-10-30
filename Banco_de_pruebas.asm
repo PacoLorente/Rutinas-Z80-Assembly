@@ -59,7 +59,7 @@
 	org $feff				      							; (Debajo de la pila).
 	defw $8310												; Indica al vector de interrupciones, (IM2), $8310
 
-;	CLOCK_IM2
+Core_IM2:
 
 	org $8310
 
@@ -546,7 +546,8 @@ Ctrl_4 db 0													; 4º Byte de Ctrl. general, (no específico) a una úni
 ; 																   _evita que se vuelva a asignar un nuevo color en la `segunda vuelta lenta?.
 ; 															BIT 4, "1" Indica que necesitamos 3 Filas de atributos para colorear esta entidad.
 ;															BIT 5, "1" Indica que ha terminado la transición de salida de Amadeus por la parte baja de la pantalla.
-;															BIT 6, "1" Indica aL reloj IM2 que ha de borrar una vida de la pantalla.
+;															BIT 6, [Genera_explosion_Amadeus] coloca este bit a "1". Indica aL reloj IM2 que ha de borrar una vida de la pantalla.
+; 																   [Borra_vida] RES el bit a "0" antes de borrar la vida.
 ; 															BIT 7, !!! Used !!!. Averiguar para qué.
 
 Ctrl_5 db 0
@@ -805,9 +806,7 @@ INICIALIZACION:
 
 ;	Make Stars & moon.
 
-	jr $
-
-	call Print_Moon
+	call Print_Moon	; v2. Ok.
 	call make_stars
 
 Init_level:

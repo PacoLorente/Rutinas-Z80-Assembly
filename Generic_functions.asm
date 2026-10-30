@@ -8,7 +8,7 @@
 ;   INPUTS: B contendrá el nº de números aleatorios que queremos generar, (0-$ff).
 ;                 HL contendrá la dirección de mem. donde vamos a almacenar los (B) nº RND.
 
-Derivando_RND
+Derivando_RND:
 
 3 ld a,r      			                ; La semilla inicial de nuestro nº aleatorio la proporciona el registro `R´. Cargamos A con R.
     push bc
@@ -377,7 +377,7 @@ Pinta_imagen:
     pop bc
     pop hl 
 
-    call Imprime_imagen
+    call Imprime_imagen ; v2. Ok.
 
     ret
 
@@ -492,7 +492,7 @@ Imprime_imagen:
     pop bc
     pop hl
 
-    call NextScan
+    call NextScan   ; v2. Ok.
 
     jr 1B
 

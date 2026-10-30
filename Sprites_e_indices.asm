@@ -911,7 +911,7 @@ Indice_de_digitos_score:
 ;Interleave:      Line
 ;Mask:            No
 
-Moon:
+Moon_data:
 
 	DEFB	$BF,$FF,$FD,$03,$7F,$FF,$D8,$F3
 	DEFB	$FD,$86,$FE,$07,$68,$F9,$FE,$FD

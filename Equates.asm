@@ -43,6 +43,7 @@ FRAMES_3 equ $5c7a
 
 ; 	Direcciones de pantalla de vidas, escudos, Firma y cartel Best_Score:
 
+Luna_lunera equ $401a                                                   ; Luna lunera screen's address.
 Direccion_Logo_principal equ $4049                                      ; Logo "Amadeus" Screen's address.
 Cartel_Score_address equ $4012                                          ; Logo "Score"     "         "   .
 Firma_address equ $50da 		 										; Dirección de pantalla donde se imprime la Firma.

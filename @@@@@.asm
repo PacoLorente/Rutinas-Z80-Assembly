@@ -4,7 +4,7 @@ Subroutine_001
 
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call Print_Moon (Print_routines)
+;> call Main_menu_key (Banco_de_pruebas) > call make_stars (Transiciones_y_efectos.asm)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
@@ -25,9 +25,15 @@ Clean_file:
 Print_text_msg:
 Corrige_inicio_de_linea:
 BEEP:
+Imprime_imagen:
 Pinta_imagen:
 Pinta_Escudo:
 Print_SCORE_Logo:
+Print_Moon:
+Borra_vida:
+Pinta_Vida:
+NextScan:
+PreviousScan:
 
 ;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -55,7 +61,7 @@ Estas 2 variables sólo se utilizan en las pantallas de menú. Ae pueden utiliza
 
 ;>>> Variables o cajas que SE REINICIAN con GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-(Puntero_de_vidas) ..... defw Tabla_marcador_de_vidas [Pinta_Vida] ----- REINICIA GAME OVER !!!
+(Puntero_de_vidas) ..... defw Tabla_marcador_de_vidas [Pinta_Vida], [Borra_vida] ----- REINICIA GAME OVER !!!
 (Puntero_de_escudos) .....defw Tabla_marcador_de_escudos [Pinta_Escudo] ----- REINICIA GAME OVER !!!
 
 

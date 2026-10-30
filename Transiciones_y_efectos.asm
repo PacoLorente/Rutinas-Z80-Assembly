@@ -219,6 +219,8 @@ make_stars:
 
 ;	Genera 7 nº aleatorios.
 
+	jr $
+
 	ld bc,$0705										 		; Generamos 7 nº aleatorios.
 
 3 push bc

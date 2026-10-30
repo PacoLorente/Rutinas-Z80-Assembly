@@ -449,15 +449,26 @@ Subroutine_001:
 
 ; ------------------------------------------------------------------------
 ;
-;	27/11/25
+;	30/10/26
 ;
-;	Imprime en pantalla la Luna lunera.
+;	Imprime en pantalla la Luna lunera llamando a la rutina de pintado [Pinta_imagen].
+;
+;   Parámetros necesarios antes de llamar a [Pinta_imagen]:
+
+;   INPUTS: HL contiene la dirección de memoria de pantalla donde queremos imprimir la imagen, (esquina superior izquierda).
+;           DE contiene la dirección del 1er .db que conforman los datos de la imagen.
+;            A contiene los Attr.
+;            B contiene el nº de Columnas.
+;            C contiene el nº de Filas.
+;
+;   MODIFY: A,HL,DE y BC.
+
 
 Print_Moon:
 
-	ld hl,$401a
-	ld de,$8ef4
-	ld a,%01000111
+	ld hl,Luna_lunera
+	ld de,Moon_data
+	ld a,%01000111                                       ; Attrs.: BRIGHT, BLACK PAPER, WHITE INK.
 	ld b,6
 	ld c,5
 
@@ -714,22 +725,44 @@ Pinta_Vida:
 
     ret
 
+; ------------------------------------------------------------------------
+;
+;   30/10/26
+;
+;   Borra el último Sprite de Amadeus impreso en la parte superior izquierda de la pantalla. CLEAR a LIFE !!!
+;
+;   Tabla_marcador_de_vidas:
+;
+;	defw Vida_1,Amadeus       							; (Puntero_de_impresion), (Puntero_objeto)
+;	defw Vida_2,Amadeus_Fb
+;	defw Vida_3,Amadeus
+;
+;   MODIFY: HL,BC
+;           (Puntero_de_vidas)
+
 Borra_vida:
 
     ld hl,Ctrl_4
-    res 6,(hl)                                                      ; Inicializa FLAG, para poder seguir borrando vidas.
+    res 6,(hl)                                          ; Inicializa FLAG, (para que no siga borrando vidas en el siguiente FRAME).
 
-;   Situamos (Puntero_de_vidas) en la posición correcta y actualizamos (Puntero_de_vidas).
+;   (Puntero de vidas) se encuentra siempre actualizado, (final de la línea de la Tabla_marcador_de_vidas) de la última vida IMPRESA en pantalla.
 
-    ld bc,6
+;   Sitúa (Puntero_de_vidas) al principio de la línea de la Tabla de la última vida impresa en pantalla.
 
     ld hl,(Puntero_de_vidas)
-    sbc hl,bc
+
+    dec hl
+    dec hl
+    dec hl
+    dec hl
+
     ld (Puntero_de_vidas),hl
+
+;   PUSH/POP (Puntero_de_vidas) debido a que la rutina [Pinta_Vida] vuelve a situarlo al final de la línea de la tabla de la vida "BORRADA".
 
     push hl
 
-    call Pinta_Vida
+    call Pinta_Vida ; v2. Ok.
 
     pop hl
 
