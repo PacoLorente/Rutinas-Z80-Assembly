@@ -1,67 +1,67 @@
 ; ******************************************************************************************************************************************************************************************
 ;
-;   3/4/25
+;   9/8/26
 ;
 ;   Construyo un nº aleatorio. Método: "DERIVANDO."
 ;   (XOR) bit a bit.
 ;
 ;   INPUTS: B contendrá el nº de números aleatorios que queremos generar, (0-$ff).
-;          HL contendrá la dirección de mem. donde vamos a almacenar los (B) nº RND.
+;                 HL contendrá la dirección de mem. donde vamos a almacenar los (B) nº RND.
 
 Derivando_RND:
 
-;    jr $
+3 ld a,r      			                ; La semilla inicial de nuestro nº aleatorio la proporciona el registro `R´. Cargamos A con R.
 
-    push bc                             ; PUSH N° de números aleatorios que queremos generar.
+    push bc
 ;                                       ; El registro R, es un registro de 8 bits que actúa como contador de refresco de la memoria dinámica. ($00 - $ff).
-
     ld bc,$0700                         ; C contendrá nuestro nº aleatorio: $0 - $ff. Inicialmente está a "0".
 ;                                       ; B actuará como contador de bits. Requerimos de 1 byte, ($ff).
 
-2 ld a,r      			            ; La semilla inicial de nuestro nº aleatorio la proporciona el registro `R´. Cargamos A con R.
+6 and a                                 ; Carry a "0".
+    srl a                               ; Rotación a la derecha.
+    jr nc,1F
 
-XOR_bit_1_and_bit_0:
+    set 0,c
 
-    ld d,a                               ; D contiene la copia de nuestra semilla después del DESPLAZAMIENTO.
+1 ld d,a                                ; D contiene la copia de nuestra semilla después de la rotación.
 
-    and %00000001
-    ld e,a                              ; Último bit de la semilla desplazado en E
+    and %00000001                       ; Extraigo bit(0) de r(srl) y lo guardo en E.
+    ld e,a
 
     ld a,d
-    and %00000010                       ; Extraigo el penúltimo bit de A y lo `traslado´ al último bit de A. El objetivo es implementar una función XOR_
-    jr z,1F                             ; _con el último y penúltimo bit de nuestra semilla.
+    and %00000010                       ; Extraigo bit(1) de r(srl).
 
-    ld a,1
+    jr z,2F
 
-1 xor e                                 ; XOR entre el último y penúltimo bit de A.
+    srl a
+
+2 xor e                                 ; Realizamos una FUNCIÓN XOR entre el bit(0) y bit (1) de nuestro número aleatorio desplazado.
+
+;   FUNCIÓN XOR
+
+;   0 0 ..... 0
+;   0 1 ..... 1
+;   1 0 ..... 1
+;   1 1 ..... 0
 
     ld a,d                              ; A vuelve a contener la copia de nuestra semilla después del DESPLAZAMIENTO.
 
-    jr z,Next_bit
+    jr z,4F
 
-    set 0,c
-;    set 7,a
+    set 7,a
+    jr 5F
 
-    scf                                 ; SET CARRY FLAG
+4 res 7,a
 
+5 sla c
+    djnz 6B
 
-Next_bit:
-
-    rr a
-
-    sla c                               ; SLA: Desplaza los 7 bits a la izquierda, el bit "7" pasará al FLAG "C" y el bit_0 se carga con un "0". ("C" << "0").
-
-    djnz 2B
-
-    ld a,c                              ; Nº aleatorio (1 Byte) en A.
-
-    ld (hl),a
+    ld (hl),c
 
     inc hl
 
     pop bc
-
-    djnz Derivando_RND
+    djnz 3B
 
     ret
 
