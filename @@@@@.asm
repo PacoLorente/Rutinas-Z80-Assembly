@@ -4,7 +4,7 @@ Subroutine_001
 
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call make_stars (Transiciones_y_efectos.asm)
+;> call Main_menu_key (Banco_de_pruebas) > call make_stars (Transiciones_y_efectos.asm) > Derivando_RND (Generic_functions)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 

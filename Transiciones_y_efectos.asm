@@ -211,87 +211,56 @@ Replace_Amadeus_attr_zone:
 
 ; ------------------------------------------------------------------------
 ;
-;	30/11/25
+;	21/11/26
 ;
 ;	Genera estrellas en pantalla.
+;
+;	Generamos DOS números pseudo-aleatorios con la rutina [Derivando_RND].
 
 make_stars:
 
-;	Genera 7 nº aleatorios.
+	ld b,40
+
+1 push bc
+
+	ld b,2
+	ld hl,Numeros_aleatorios 							; Dirección de mem. donde almacenamos los nº RND.
+
+	push hl
+
+	call Derivando_RND
+
+	pop hl
+
+	call Extrae_address
+
+	ld a,h
+
+	and $17 											; %0001 0111
+
+	ld h,a
+
+	ex de,hl
+
+	ld hl,Line_0										; $4000
+
+	and a
+
+	adc hl,de
+
+Print_Star:
+
+	ld a,$10
+
+	ld (hl),a
+
+	pop bc
+
+	djnz 1B
 
 	jr $
 
-	ld bc,$0705										 		; Generamos 7 nº aleatorios.
-
-3 push bc
-
-	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
-	call Derivando_RND 										; Rutina de generación de nº aleatorios.
-
-;	Datos iniciales.
-
-2 ld b,6 													; nº de estrellas.
-	ld hl,Numeros_aleatorios
-	ld de,$4080												; A partir de esta dirección se pueden generar estrellas.
-
-1 push bc
-	push hl
-
-;	Extraemos nº de 16 bits, ($0000 - $1fff).
-
-	ld c,(hl)
-	inc l
-	ld a,(hl)
-	and $1f
-	ld b,a
-
-;	Construimos dirección aleatoria de pantalla:
-
-	ld l,c
-	ld h,b
-
-	adc hl,de 												; Dirección aleatoria de pantalla en HL.
-
-;	Está dentro de los límites??
-
-	ld a,$57
-	sub h
-	jr nc,4F
-
-;	La dirección de pantalla supera los límites.
-
-	ld h,d
-
-	push af
-
-	ld a,l
-	cp e
-	jr nc,5F
-
-	ld h,$48
-
-5 pop af
-
-6 inc h
-	inc a
-	jr nz,6B
-
-;		Las estrellas se pintarán a partir de la 4ª fila del 1er tercio de pantalla, ($4080).
-;		$4080 + $177f = $57ff
-
-4 ld a,$10
-	ld (hl),a
-
-	pop hl
-	inc l
-	pop bc
-	djnz 1B
-
-	pop bc
-	dec c
-	ret z
-
-	jr 3B
+	ret
 
 ; ------------------------------------------------------------------------
 ;

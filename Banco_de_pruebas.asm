@@ -790,6 +790,15 @@ INICIALIZACION:
 	ld a,%01000101											; Attrs.: BRIGHT, BLACK PAPER, CYAN INK.
 	call Cls	; v2. Ok.
 
+
+	call make_stars
+
+
+
+
+
+
+
 ;	Print Lives and Shields.
 
 	call Pinta_Vida	; v2. Ok.
@@ -807,7 +816,9 @@ INICIALIZACION:
 ;	Make Stars & moon.
 
 	call Print_Moon	; v2. Ok.
-	call make_stars
+
+
+;	call make_stars
 
 Init_level:
 
