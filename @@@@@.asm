@@ -34,6 +34,9 @@ Borra_vida:
 Pinta_Vida:
 NextScan:
 PreviousScan:
+Imprime_Logo_principal:
+Down_File:
+Up_File:
 
 ;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

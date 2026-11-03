@@ -223,7 +223,7 @@ make_stars:
 
 1 push bc
 
-	ld b,2
+	ld b,7
 	ld hl,Numeros_aleatorios 							; Dirección de mem. donde almacenamos los nº RND.
 
 	push hl
@@ -259,122 +259,6 @@ Print_Star:
 	djnz 1B
 
 	jr $
-
-	ret
-
-; ------------------------------------------------------------------------
-;
-;	16/09/26
-;
-;	Imprime en pantalla la imagen del logo principal.
-;
-;	Nota: El logo principal está compuesto por varios fragmentos.
-;
-;	MODIFY: BC, DE y HL.
-
-
-Imprime_Logo_principal:
-
-;	Datos de entrada.
-
-	ld hl,Direccion_Logo_principal 									; $4049,$404a,$404b ..... $5849,$584a,$584b
-;																	; $4069,$406a,$406b
-; 																	; $4089,$408a,$408b
-
-	ld de,Logo_nave													; (3x24)
-	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
-	ld bc,$0303 													; Nº de Columnas en B y nº de Filas en C.
-
-	push hl
-	call Pinta_imagen												; Pinta la nave.
-	pop hl
-
-;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""ma"".
-
-	call Down_File 													; Coloca HL en la siguiente Fila.
-
-	inc l															; Sitúa en la columna correspondiente.
-	inc l
-	inc l
-
-;	Datos.
-
-	ld de,Logo_ma													; (3x16)
-
-;																	; $406c, $406d, $406e ..... $586c
-;																	; $408c, $408d, $408e
-
-	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
-	ld bc,$0302 													; Nº de Columnas en B y nº de Filas en C.
-
-	push hl
-	call Pinta_imagen												; Pinta "ma".
-	pop hl
-
-;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""ad"".
-
-	call Up_File 													; Coloca HL en la anterior Fila.
-
-	inc l															
-	inc l
-	inc l 															; Sitúa en la columna correspondiente.
-
-;	Datos.
-
-;								 									; $404f,$4050,$4051 ..... $584f,$5850,$5851
-;																	; $406f,$4070,$4071
-; 																	; $408f,$4090,$4091
-
-	ld de,logo_ad													; (3x24)
-
-	ld a,%01000101													; Attr. en A. --- Bright, black paper, ink cyan.
-	ld bc,$0303 													; Nº de Columnas en B y nº de Filas en C.
-
-	push hl
-	call Pinta_imagen												; Pinta "ad".
-	pop hl
-
-;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""eu"".
-
-	call Down_File 													; Coloca HL en la siguiente Fila.
-
-	inc l															; Sitúa en la columna correspondiente.
-	inc l
-	inc l
-
-;	Datos.
-
-;																	; $4072, $4073, $4074 ..... $5872, ...
-;																	; $4092, $4093, $4094
-
-	ld de,logo_eu													; (3x16)
-
-	ld a,%01000101													; Attr. en A.
-	ld bc,$0302 													; Nº de Columnas en B y nº de Filas en C.
-
-	push hl
-	call Pinta_imagen												; Pinta "eu".
-	pop hl
-
-;	Calculamos la dirección de pantalla de la siguiente imagen que forma el logo. ""us"".
-
-	inc l															; Sitúa en la columna correspondiente.
-	inc l
-	inc l
-
-;	Datos.
-
-;																	; $4075, $4076, $4077 ..... $5875, ...
-;																	; $4095, $4096, $4097
-
-	ld de,logo_us													; (3x16)
-
-	ld a,%01000101													; Attr. en A.
-	ld bc,$0302                                                     ; Nº de Columnas en B y nº de Filas en C.
-
-	push hl
-	call Pinta_imagen												; Pinta "us".
-	pop hl
 
 	ret
 

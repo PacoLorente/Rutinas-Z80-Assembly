@@ -10,32 +10,31 @@
 
 Derivando_RND:
 
-3 ld a,r      			                ; La semilla inicial de nuestro nº aleatorio la proporciona el registro `R´. Cargamos A con R.
-
-    push bc
 ;                                       ; El registro R, es un registro de 8 bits que actúa como contador de refresco de la memoria dinámica. ($00 - $ff).
+    ld a,r      			            ; La semilla inicial de nuestro nº aleatorio la proporciona el registro `R´. Cargamos A con R.
+
+3 push bc                               ; PUSH N° de números que queremos generar.
+
     ld bc,$0700                         ; C contendrá nuestro nº aleatorio: $0 - $ff. Inicialmente está a "0".
 ;                                       ; B actuará como contador de bits. Requerimos de 1 byte, ($ff).
 
-6 and a                                 ; Carry a "0".
-    srl a                               ; Rotación a la derecha.
-    jr nc,1F
+Xor_bit_1_bit_2:
 
-    set 0,c
+;   Realizamos operación lógica XOR entre el bit_0 y el bit_1 de la semilla.
 
-1 ld d,a                                ; D contiene la copia de nuestra semilla después de la rotación.
+    ld d,a                              ; D contiene la copia de nuestra semilla.
 
-    and %00000001                       ; Extraigo bit(0) de r(srl) y lo guardo en E.
+    and %00000001                       ; Bit_0 en (E).
     ld e,a
 
     ld a,d
-    and %00000010                       ; Extraigo bit(1) de r(srl).
+    and %00000010                       ; Bit_1 en (A).
 
-    jr z,2F
+    jr z,1F
 
-    srl a
+    ld a,1
 
-2 xor e                                 ; Realizamos una FUNCIÓN XOR entre el bit(0) y bit (1) de nuestro número aleatorio desplazado.
+1 xor e
 
 ;   FUNCIÓN XOR
 
@@ -44,23 +43,30 @@ Derivando_RND:
 ;   1 0 ..... 1
 ;   1 1 ..... 0
 
-    ld a,d                              ; A vuelve a contener la copia de nuestra semilla después del DESPLAZAMIENTO.
+    ld a,d                              ; A vuelve a contener la copia de nuestra semilla.
 
-    jr z,4F
+    jr z,2F
 
-    set 7,a
-    jr 5F
+;   FUNCIÓN XOR "1".
 
-4 res 7,a
+    set 0,c                             ; Set bit_0 del n° que estamos generando.
 
-5 sla c
-    djnz 6B
+    scf                                 ; Set Flag Carry.
+
+2 rr a                                  ; Right Rotate. Bit_0 >> "C" >> Bit_7.
+
+    sla c                               ; Shift left; "0" >> Bit_0 >> Bit_7 >> "C".
+
+    djnz Xor_bit_1_bit_2
 
     ld (hl),c
+
+    ld a,c
 
     inc hl
 
     pop bc
+
     djnz 3B
 
     ret
