@@ -10,19 +10,36 @@
 
 Derivando_RND:
 
+
+    jr $
+
 ;                                       ; El registro R, es un registro de 8 bits que actúa como contador de refresco de la memoria dinámica. ($00 - $ff).
     ld a,r      			            ; La semilla inicial de nuestro nº aleatorio la proporciona el registro `R´. Cargamos A con R.
+
+    ld d,a
 
 3 push bc                               ; PUSH N° de números que queremos generar.
 
     ld bc,$0700                         ; C contendrá nuestro nº aleatorio: $0 - $ff. Inicialmente está a "0".
 ;                                       ; B actuará como contador de bits. Requerimos de 1 byte, ($ff).
 
+;   Adquire último bit de la semilla.
+
+    and %00000001                           
+
+    ld c,a
+
+;   Rotamos los bits de la semilla una posición a la derecha. 
+
+    ld a,d
+
+    and a                               ; Carry a "0".
+
+    rr a                                ; Right Rotate. Bit_0 >> "C" >> Bit_7.
+
+    ld d,a
+
 Xor_bit_1_bit_2:
-
-;   Realizamos operación lógica XOR entre el bit_0 y el bit_1 de la semilla.
-
-    ld d,a                              ; D contiene la copia de nuestra semilla.
 
     and %00000001                       ; Bit_0 en (E).
     ld e,a
@@ -47,17 +64,12 @@ Xor_bit_1_bit_2:
 
     jr z,2F
 
-;   FUNCIÓN XOR "1".
+    set 7,a                             ; Cuando la función XOR entre los dos últimos bits de la semilla resulta "1",_
+;                                       ; _ seteamos a "1" el bit_7 de la misma.    
 
-    set 0,c                             ; Set bit_0 del n° que estamos generando.
+2 sla c                                 ; Shift left; "0" >> Bit_0 >> Bit_7 >> "C".
 
-    scf                                 ; Set Flag Carry.
-
-2 rr a                                  ; Right Rotate. Bit_0 >> "C" >> Bit_7.
-
-    sla c                               ; Shift left; "0" >> Bit_0 >> Bit_7 >> "C".
-
-    djnz Xor_bit_1_bit_2
+;    djnz Xor_bit_1_bit_2
 
     ld (hl),c
 

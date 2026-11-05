@@ -705,6 +705,8 @@ Variables_DRAW2:
 ;
 ;	Estas variables no se inicializan:
 
+Semilla db 0 																			; 
+
 Ctrl_7 db 0 																			; Variable de Control que no se inicializa al superar nivel.
 ;
 ; 																						; BIT 0, "1" Hay que imprimir la puntuación máxima en el menú principal. También indica que hemos terminado de introducir el nombre.
@@ -790,15 +792,6 @@ INICIALIZACION:
 	ld a,%01000101											; Attrs.: BRIGHT, BLACK PAPER, CYAN INK.
 	call Cls	; v2. Ok.
 
-
-	call make_stars
-
-
-
-
-
-
-
 ;	Print Lives and Shields.
 
 	call Pinta_Vida	; v2. Ok.
@@ -816,9 +809,7 @@ INICIALIZACION:
 ;	Make Stars & moon.
 
 	call Print_Moon	; v2. Ok.
-
-
-;	call make_stars
+	call make_stars
 
 Init_level:
 
