@@ -219,6 +219,8 @@ Replace_Amadeus_attr_zone:
 
 make_stars:
 
+	jr $
+
 	ld b,40
 
 1 push bc
@@ -228,7 +230,7 @@ make_stars:
 
 	push hl
 
-	call Derivando_RND
+	call Derivando_RND	; v2. Ok.
 
 	pop hl
 

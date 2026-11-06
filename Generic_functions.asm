@@ -1,43 +1,70 @@
 ; ******************************************************************************************************************************************************************************************
 ;
-;   9/8/26
+;   6/11/26
 ;
-;   Construyo un nº aleatorio. Método: "DERIVANDO."
-;   (XOR) bit a bit.
+;   Construyo un nº pseudo aleatorio. Método "DERIVANDO":
+;
+;   Inicialmente nuestra semilla será la contenida en el registro R. A partir de ahí irá mutando y la almacenaremos en la variable: (Semilla).
+;
+;   Para construir nuestro n° pseudo aleatorio necesitamos 8 bits que iremos adquiriendo del último bit, (bit_0) de la semilla.
+;
+;   Después de adquirir el bit de la semilla, desplazamos a la derecha los bits de la misma y realizamos una función lógica XOR entre los_
+;   _ bits 0 y 1, (los dos últimos).
+;
+;   Si el resultado de la operación XOR es "1" pondremos a "1" el bit_7 de la semilla. Si es "0" no realizamos cambios.
+;
+;   Desplazamos los bits del número que estamos generando una posición a la izquierda con el fin de adquirir un nuevo bit de la semilla.
+;
+;   Repetimos proceso hasta que hayamos adquirido los 8 bits necesarios de la semilla.
+;
+;   Guardamos la semilla en la variable (Semilla) y el número generado en (HL).
+;
+;   Incrementamos el puntero HL para situarlo en la siguiente dirección de memoria, (donde almacenaremos el siguiente n° pseudo aleatorio a generar).
 ;
 ;   INPUTS: B contendrá el nº de números aleatorios que queremos generar, (0-$ff).
-;                 HL contendrá la dirección de mem. donde vamos a almacenar los (B) nº RND.
+;          HL contendrá la dirección de mem. donde vamos a almacenar el 1er n° de los (B) números pseudo aleatorios a generar.
+;
+;   MODIFY: (Semilla), AF, HL, DE y B.
 
 Derivando_RND:
 
+;   En 1er lugar comprobamos si disponemos de semilla.
 
-    jr $
+    ld a,(Semilla)
+
+    and a
+
+    jr nz,Semilla_iniciada
 
 ;                                       ; El registro R, es un registro de 8 bits que actúa como contador de refresco de la memoria dinámica. ($00 - $ff).
     ld a,r      			            ; La semilla inicial de nuestro nº aleatorio la proporciona el registro `R´. Cargamos A con R.
 
-    ld d,a
+Semilla_iniciada:
 
-3 push bc                               ; PUSH N° de números que queremos generar.
+    ld d,a                              ; A partir de ahora, (D) contendrá nuestra semilla.
 
-    ld bc,$0700                         ; C contendrá nuestro nº aleatorio: $0 - $ff. Inicialmente está a "0".
-;                                       ; B actuará como contador de bits. Requerimos de 1 byte, ($ff).
+    push bc                             ; PUSH N° de números que queremos generar.
 
-;   Adquire último bit de la semilla.
+    ld bc,$0800                         ; C contendrá nuestro nº aleatorio: ($0 - $ff). Inicialmente está a "0".
+;                                       ; B actuará como contador de bits, (números de bits a generar), 8 bits.
 
-    and %00000001                           
-
-    ld c,a
-
-;   Rotamos los bits de la semilla una posición a la derecha. 
+3 sla c                                 ; Shift left; "0" >> Bit_0 >> Bit_7 >> "C".
 
     ld a,d
 
-    and a                               ; Carry a "0".
+;   El último bit de la semilla, (bit_0) será el 1° del número pseudo aleatorio generado, (bit_7).
 
-    rr a                                ; Right Rotate. Bit_0 >> "C" >> Bit_7.
+    and %00000001                           
 
-    ld d,a
+    jr z,4F
+
+    set 0,c                             ; One bit generated.
+
+;   Rotamos los bits de la semilla una posición a la derecha.
+
+4  rr d                                 ; Right Rotate. Bit_0 >> "C" >> Bit_7.
+
+    ld a,d
 
 Xor_bit_1_bit_2:
 
@@ -53,33 +80,33 @@ Xor_bit_1_bit_2:
 
 1 xor e
 
-;   FUNCIÓN XOR
+;   FUNCIÓN XOR entre el bit_0 y el bit_1 de la semilla después de una rotación de 1 bit a la derecha.
 
 ;   0 0 ..... 0
 ;   0 1 ..... 1
 ;   1 0 ..... 1
 ;   1 1 ..... 0
 
-    ld a,d                              ; A vuelve a contener la copia de nuestra semilla.
-
     jr z,2F
 
-    set 7,a                             ; Cuando la función XOR entre los dos últimos bits de la semilla resulta "1",_
+    set 7,d                             ; Cuando la función XOR entre los dos últimos bits de la semilla resulta "1",_
 ;                                       ; _ seteamos a "1" el bit_7 de la misma.    
 
-2 sla c                                 ; Shift left; "0" >> Bit_0 >> Bit_7 >> "C".
+2 djnz 3B
 
-;    djnz Xor_bit_1_bit_2
+Number_generated:
 
-    ld (hl),c
+    ld a,d
 
-    ld a,c
+    ld (Semilla),a                      ; Guarda la evolución de la semilla para seguir generando números.
 
-    inc hl
+    ld (hl),c                           ; Guardamos el número pseudo aleatorio generado en su correspondiente dirección de memoria.
+
+    inc hl                              ; HL apunta a la dirección de memoria donde vamos a guardar el siguiente número a generar.
 
     pop bc
 
-    djnz 3B
+    djnz Derivando_RND
 
     ret
 

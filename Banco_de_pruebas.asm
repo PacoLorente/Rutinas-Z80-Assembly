@@ -705,7 +705,7 @@ Variables_DRAW2:
 ;
 ;	Estas variables no se inicializan:
 
-Semilla db 0 																			; 
+Semilla db 0 																			; La semilla inicial adquirida del regstro R irá mutando, ([Derivando_RND]). Esta variable almacenará nuestra semilla.
 
 Ctrl_7 db 0 																			; Variable de Control que no se inicializa al superar nivel.
 ;
@@ -823,7 +823,7 @@ Init_level:
 
 	ld b,7										 			; Generamos 7 nº aleatorios.
 	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
-	call Derivando_RND
+	call Derivando_RND	; v2. Ok.
 
 	call Extrae_numero_aleatorio_y_avanza
 	ld (Clock_next_entity),a 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.

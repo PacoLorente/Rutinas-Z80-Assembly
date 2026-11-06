@@ -4,7 +4,7 @@ Subroutine_001
 
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call make_stars (Transiciones_y_efectos.asm) > Derivando_RND (Generic_functions)
+;> call Main_menu_key (Banco_de_pruebas) > call make_stars (Transiciones_y_efectos.asm)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
@@ -37,8 +37,12 @@ PreviousScan:
 Imprime_Logo_principal:
 Down_File:
 Up_File:
+Derivando_RND:
+
 
 ;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+(Semilla) ..... db $00 [Derivando_RND] ----- NO REINICIA !!!
 
 (Stack) ..... defw $0000 [Define_menu] ----- NO REINICIA !!!
 (Sound) ..... defw $0000 [BEEP], [Sound_Generator] ----- NO REINICIA !!!
