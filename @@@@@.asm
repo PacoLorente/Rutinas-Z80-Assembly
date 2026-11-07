@@ -1,5 +1,5 @@
 
-Subroutine_001
+Cambiar la rutina de impresión de Amadeus, NO IMPLEMENTAR FUNCIÓN XOR !!!
 
 
 ; ------------------------------------------------------------------------------------------------------- ;

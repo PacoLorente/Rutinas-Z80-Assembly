@@ -294,7 +294,21 @@ Puntero_de_impresion defw 0									; Esta variable tiene dos funciones, la prim
 ;															; Contiene el puntero de impresión, (calculado por DRAW). Esta dirección la utilizará la rutina_
 ;															; _ [Guarda_coordenadas_X] y [Compara_coordenadas_X] para detectar la colisión ENTIDAD-AMADEUS.
 
-Puntero_de_almacen_de_mov_masticados defw 0
+Puntero_de_almacen_de_mov_masticados defw Line_0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;															; Almacén donde la entidad guía va guardando comportamiento ya calculado, (rutinas DRAW).
 
@@ -604,7 +618,7 @@ Clock_explosion_Amadeus db 5
 Temp_new_live db 100										; Tiempo que tarda en aparecer una nueva nave Amadeus tras ser destruida.
 
 RND_SP defw Numeros_aleatorios								; Puntero que se irá desplazando por el SET de nº aleatorios.
-;Puntero_num_aleatorios_disparos defw Numeros_aleatorios		; Puntero que se irá desplazando por el SET de nº aleatorios, (para generar disparos de entidades).
+
 Numero_rnd_disparos db 0
 
 Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva entidad.

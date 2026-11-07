@@ -216,53 +216,77 @@ Replace_Amadeus_attr_zone:
 ;	Genera estrellas en pantalla.
 ;
 ;	Generamos DOS números pseudo-aleatorios con la rutina [Derivando_RND].
+;
+;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
 
 make_stars:
 
-	jr $
+	ld b,6 												; Generamos 42 estrellas, (6*7). Con esta cantidad nos aseguramos de no llegar a generar direcciones_
+; 														; _ de memoria de pantalla superiores a $57ff y entrar en memoria deatributos.
+; 														; Las direcciones de memoria generadas se inician a partir de la $4000 e irán incrementándose en función_
+; 														; _de los n° aleatorios generados.
 
-	ld b,40
+2 push bc 												; PUSH 6, (número de veces que vamos a ejecutar la función).
 
-1 push bc
+	ld b,7 												; Generamos 7 números pseudo aleatorios, (para generar 7 direcciónes de pantalla pseudo aleatorias).
 
-	ld b,7
-	ld hl,Numeros_aleatorios 							; Dirección de mem. donde almacenamos los nº RND.
+	ld hl,Numeros_aleatorios
 
 	push hl
 
-	call Derivando_RND	; v2. Ok.
+	call Derivando_RND
 
 	pop hl
 
-	call Extrae_address
+	ex de,hl 											; DE apunta a la dirección de mem. donde se encuentra el 1er n° generado.
 
-	ld a,h
+	ld hl,(Puntero_de_almacen_de_mov_masticados) 		; Inicialmente Line_0, ($4000).
 
-	and $17 											; %0001 0111
+	ld bc,$0700 										; Contador, Construimos 7 estrellas con 7 direcciones de memoria.
 
-	ld h,a
+Bucle_Print_7_Stars:
 
-	ex de,hl
+	push bc 											; PUSH counter.
 
-	ld hl,Line_0										; $4000
+	xor a
+	ld b,a
 
-	and a
+	ld a,(de)
 
-	adc hl,de
+	ld c,a 												; N° pseudo aleatorio en BC.
 
-Print_Star:
+	add hl,bc											; Nueva dirección de memoria de pantalla pseudo aleatoria en la que imprimiremos nuestra estrella.
 
 	ld a,$10
 
+	xor (hl)
+
 	ld (hl),a
+
+	inc de
 
 	pop bc
 
-	djnz 1B
+	djnz Bucle_Print_7_Stars
 
-	jr $
+;	Hemos generado un bloque de 7 estrellas. Guardamos la dirección de pantalla de la última estrella generada.
+
+	ld (Puntero_de_almacen_de_mov_masticados),hl
+
+	pop bc
+
+	djnz 2B
+
+;	Hemos terminado de generar todas las estrellas.
+;	Inicializamos la variable (Puntero_de_almacen_de_mov_masticados).
+
+	ld hl,0
+	ld (Puntero_de_almacen_de_mov_masticados),hl
 
 	ret
+
+
+
 
 ; ------------------------------------------------------------------------
 ;
