@@ -191,7 +191,7 @@ Colorea_columna_logo:
 
 	ret
 
-; ------------------------------------------------------------------------
+; -------------------------------------------------------------------------
 ;
 ;	30/11/25
 ;
@@ -211,13 +211,39 @@ Replace_Amadeus_attr_zone:
 
 ; ------------------------------------------------------------------------
 ;
-;	21/11/26
+;	8/11/26
 ;
-;	Genera estrellas en pantalla.
+;	Genera una constelación de 42 estrellas en pantalla.
 ;
-;	Generamos DOS números pseudo-aleatorios con la rutina [Derivando_RND].
+;	La rutina se ejecutará SEIS veces por medio de un bucle; generamos 7 estrellas cada vez que ejecutamos la función.
+;
+;	En primer lugar la función genera 7 n° pseudo aleatorios, ([Numeros_aleatorios]).
+;
+;	Sumaremos el 1er n° generado a la dirección de memoria de pantalla $4000.
+;
+;	A la dirección de memoria de pantalla resultante sumaremos el 2° número.
+;
+;	A la  "        "      "         "         "          "     el 3° y así sucesivamente hasta que agotemos los 7 números.
+;
+;	En cada dirección de memoria pseudo aleatoria, (de las SIETE generadas) pintaremos la estrella mediante una función XOR_
+;	_ para no borrar parte del marcador, vidas y luna en la parte alta de la pantalla.
+;
+;	Antes de ejecutar de nuevo la función y generar SIETE nuevos números pseudo aleatorios guardaremos la última dirección de_
+;	_ memoria de pantalla en la variable (Puntero_de_almacen_de_mov_masticados). Nota: Antes de salir de la rutina inicializaremos_
+;	_ esta variable, (Puntero_de_almacen_de_mov_masticados)="0".
+;
+;	Resumiendo: ($4000 + n°1) = STAR_1
+;				(STAR_1 + n°2) = STAR_2
+; 				(STAR_2 + n°3) = STAR_3
+;						"    "
+; 						"    "
+; 				(STAR_6 + n°7) = STAR_7
+;
+;				ld (Puntero_de_almacen_de_mov_masticados),STAR_7
 ;
 ;   010T TSSS LLLC CCCC (Codificación de la memoria de pantalla). $4000 - $57FF, (256 x 192 pixeles).
+;
+;	MODIFY: AF, HL, BC y DE.
 
 make_stars:
 

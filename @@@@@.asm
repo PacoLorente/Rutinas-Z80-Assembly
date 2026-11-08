@@ -4,10 +4,11 @@ Cambiar la rutina de impresión de Amadeus, NO IMPLEMENTAR FUNCIÓN XOR !!!
 
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call make_stars (Transiciones_y_efectos.asm)
+;> call Main_menu_key (Banco_de_pruebas) > call make_stars
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
+make_stars:
 Main_menu_key:
 Define_menu:
 Asigna_B_Attr:
@@ -71,6 +72,6 @@ Estas 2 variables sólo se utilizan en las pantallas de menú. Ae pueden utiliza
 (Puntero_de_vidas) ..... defw Tabla_marcador_de_vidas [Pinta_Vida], [Borra_vida] ----- REINICIA GAME OVER !!!
 (Puntero_de_escudos) .....defw Tabla_marcador_de_escudos [Pinta_Escudo] ----- REINICIA GAME OVER !!!
 
+;>>> Variables o cajas que SE REINICIAN SIEMPRE, CADA VEZ QUE INICIAMOS NUEVO NIVEL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-
-
+(Puntero_de_almacen_de_mov_masticados) ..... defw Line_0 [make_stars] ----- REINICIA !!!
