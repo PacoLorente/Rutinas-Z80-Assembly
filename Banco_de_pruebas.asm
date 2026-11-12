@@ -504,19 +504,20 @@ Stack_2 defw 0												; 2º variable destinada a almacenar el puntero de pil
 
 ; Impresión. ----------------------------------------------------------------------------------------------------
 
-Album_de_pintado defw 0
-Album_de_borrado defw 0
-Album_de_pintado_Amadeus defw 0
-Album_de_borrado_Amadeus defw 0
+Album_de_pintado defw Scanlines_album 											; Puntero. Apunta a la caja de scanlines de entidades que contiene los datos de PINTADO.
+Scanlines_album_SP defw Scanlines_album
+Album_de_borrado defw Scanlines_album_2 										; Puntero. Apunta a la caja de scanlines de entidades que contiene los datos de BORRADO.
 
-Album_de_pintado_disparos_Amadeus defw 0
-Album_de_borrado_disparos_Amadeus defw 0
+Album_de_pintado_Amadeus defw Amadeus_scanlines_album 							; Puntero. Apunta a la caja de scanlines de Amadeus que contiene los datos de PINTADO.
+Album_de_borrado_Amadeus defw Amadeus_scanlines_album_2							; Puntero. Apunta a la caja de scanlines de Amadeus que contiene los datos de BORRADO.
 
-Album_de_pintado_disparos_Entidades defw 0
-Album_de_borrado_disparos_Entidades defw 0
+Album_de_pintado_disparos_Amadeus defw Amadeus_disparos_scanlines_album			; Puntero. Apunta a la caja de scanlines de los disparos de Amadeus que contiene los datos de PINTADO.
+Album_de_borrado_disparos_Amadeus defw Amadeus_disparos_scanlines_album_2		; Puntero. Apunta a la caja de scanlines de los disparos de Amadeus que contiene los datos de BORRADO.
 
+Album_de_pintado_disparos_Entidades defw Entidades_disparos_scanlines_album 	; Puntero. Apunta a la caja de scanlines de los disparos de ENTIDADES que contiene los datos de PINTADO.
+Nivel_scan_disparos_album_de_pintado defw Entidades_disparos_scanlines_album
+Album_de_borrado_disparos_Entidades defw Entidades_disparos_scanlines_album_2	; Puntero. Apunta a la caja de scanlines de los disparos de Amadeus que contiene los datos de BORRADO.
 
-Nivel_scan_disparos_album_de_pintado defw 0
 
 Num_de_bytes_album_de_disparos db 0
 Num_de_bytes_album_de_disparos_borrado db 0
@@ -530,7 +531,7 @@ Techo_Scanlines_album defw 0
 Techo_Scanlines_album_2 defw 0
 Switch db 0
 Techo defw 0
-Scanlines_album_SP defw 0
+
 India_SP defw Tabla_de_pintado 
 India_2_SP defw 0
 India_3_SP defw Tabla_de_borrado
@@ -617,7 +618,7 @@ Clock_explosion db 4										; Temporización de las explosiones, (velocidad de
 Clock_explosion_Amadeus db 5
 Temp_new_live db 100										; Tiempo que tarda en aparecer una nueva nave Amadeus tras ser destruida.
 
-RND_SP defw Numeros_aleatorios								; Puntero que se irá desplazando por el SET de nº aleatorios.
+RND_SP defw Numeros_aleatorios								; Puntero que se irá desplazando por el SET de nº aleatorios. Inicialmente apunta al 1°.
 
 Numero_rnd_disparos db 0
 
@@ -827,16 +828,10 @@ INICIALIZACION:
 
 Init_level:
 
-;	Inicia los álbumes de líneas. -----------------------------------------------------------------------------------------
+;	Fabrica 7 n° pseudo aleatorios.
 
-	call Inicia_albumes_de_lineas
-	call Inicia_albumes_de_lineas_Amadeus
-	call Inicia_albumes_de_disparos
-
-;	Make 7 rnd numbers.
-
-	ld b,7										 			; Generamos 7 nº aleatorios.
-	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº RND.
+	ld b,7
+	ld hl,Numeros_aleatorios 								; Dirección de mem. donde almacenamos los nº generados.
 
 	call Derivando_RND	; v2. Ok.
 

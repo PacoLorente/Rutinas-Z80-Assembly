@@ -252,38 +252,48 @@ Clean_boxes_and_albums:
 
 ; ------------------------------------
 ;
-; 	18/11/25
-
-; 	Fija en A un nº aleatorio comprendido entre 0-255 y desplaza el puntero (RND_SP) al siguiente nº.
-; 	Si el puntero está situado en el último nº, lo volvemos a situar al principio.
-
-;	DESTRUYE: HL,DE,A
-;	OUTPUTS: A contiene un Nº aleatorio. Actualiza el puntero de nº aleatorios (RND_SP).
-
+; 	12/11/26
+;
+; 	Almacena en (A) uno de los 7 nº pseudo aleatorios generados, ($00-$ff) y avanza el puntero (RND_SP) a la posición de mem. del siguiente nº.
+; 	Reiniciamos el puntero (RND_SP) a su posición inicial, 'Numeros_aleatorios' cuando este apunta a: 'Numeros_aleatorios+7'.
+;
+;	MODIFY: HL,DE,A
+;
+;	OUTPUTS: (A) contiene un Nº aleatorio. Actualiza el puntero de nº aleatorios (RND_SP).
+;
 ;	Variables implicadas: (RND_SP).
 
 Extrae_numero_aleatorio_y_avanza:
 
-	ld hl,Numeros_aleatorios+7
-	ex de,hl
-	ld hl,(RND_SP)
+	ld hl,Numeros_aleatorios+7						; Dirección de memoria donde se almacena el último n° pseudo aleatorio generado +1.
+	ld de,(RND_SP) 									; Puntero que se irá desplazando por el SET de nº aleatorios. Inicialmente apunta al 1°.
 
-	ld a,e
-	sub l
+;													; (HL) contiene la dirección del n° aleatorio que vamos a extraer.
+;													; (DE)     "           "      "  último n° aleatorio +1, (detecta reinicio).
+
+	and a 											; Carry a "0".
+
+	sbc hl,de 										; Detecta el final de la caja de n° pseudo aleatorios.
 	jr nz,1F
 
-; Sitúa HL al principio de la tabla de nº aleatorios.
+; 	Inicializa el puntero al principio de la caja de nº aleatorios pseudo aleatorios.
 
 	ld hl,Numeros_aleatorios
 	ld (RND_SP),HL
 
-; Coloca el nº aleatorio en A y mueve el puntero al siguiente nº.
+	jr 2F
 
-1 ld a,(hl)
+;	Almacena el nº aleatorio en A y avanza el puntero (RND_SP) al siguiente nº.
+
+1 ex de,hl
+
+2 ld a,(hl)
 	inc hl
 	ld (RND_SP),hl
 
 	ret
+
+; ----------------------------------------------------------------------------------------
 
 Inicializa_Amadeus_scanline_album:
 
@@ -321,48 +331,6 @@ Inicializa_Amadeus_scanline_album:
 	dec a
 
 	jr nz,2B
-
-	ret
-
-; ---------------------------------------------------------------------------------------------------------------------
-;
-;	13/03/24
-;
-;	Inicialización de los álbumes de líneas, (pintado/borrado).
-
-Inicia_albumes_de_lineas:
-
-	ld hl,Scanlines_album
-	ld (Album_de_pintado),hl
-	ld (Scanlines_album_SP),hl
-
-	ld hl,Scanlines_album_2
-	ld (Album_de_borrado),hl
-
-	ret
-
-Inicia_albumes_de_lineas_Amadeus:
-
-	ld hl,Amadeus_scanlines_album
-	ld (Album_de_pintado_Amadeus),hl
-	ld hl,Amadeus_scanlines_album_2
-	ld (Album_de_borrado_Amadeus),hl
-
-	ret
-
-Inicia_albumes_de_disparos:
-
-	ld hl,Amadeus_disparos_scanlines_album
-	ld (Album_de_pintado_disparos_Amadeus),hl
-	ld hl,Amadeus_disparos_scanlines_album_2
-	ld (Album_de_borrado_disparos_Amadeus),hl
-
-	ld hl,Entidades_disparos_scanlines_album
-	ld (Album_de_pintado_disparos_Entidades),hl
-	ld (Nivel_scan_disparos_album_de_pintado),hl
-
-	ld hl,Entidades_disparos_scanlines_album_2
-	ld (Album_de_borrado_disparos_Entidades),hl
 
 	ret
 
