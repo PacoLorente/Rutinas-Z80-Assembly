@@ -15,7 +15,6 @@
 
 	org $9000
 
-Numeros_aleatorios ds 7
 Numeros_aleatorios_baile ds 7
 
 Tabla_de_pintado ds 30								; PUEDE HABER CAMBIO DE BYTE ALTO EN LA TABLA DE PINTADO.

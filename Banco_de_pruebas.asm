@@ -247,6 +247,7 @@ Fecha_Firma:
 
 	include "Sprites_e_indices.asm"
 	include "Cajas_y_disparos.asm"
+	include "Storage_boxes.asm"
 	include "Indexes_&_Tables.asm"
 	include "Text_Strings.asm"
 	include "Patrones_de_mov.asm"
@@ -737,12 +738,6 @@ Contador_de_caracteres_del_nombre_del_campeon db 5 										; El nombre del gan
 
 Non_authorized_KEY_CODES db $27,$18,$23,$24,$1c,$14,$0c,$04,$03,$0b,$13,$1b
 
-; Key code BOX.
-; Almacenamos los Key_Code que tenemos configurados para el control con KEYBOARD para introducir los correspondientes al control SINCLAIR JYSTICK.
-; Si volvemos al menú principal recuperaremos los Key codes KEYBOARD.
-
-Keyboard_db_box db $24, $1c, $04, $20													; Almacén donde almacenaremos los KEYCODES fijados para los KEYBOARD CONTROLS.
-; 																						; _ Cuando seleccionemos SINCLAIR JOYSTICK. Inicialmente las TECLAS: "1","2","5" y "SPACE".
 Desplazamiento_level_msg db 0
 Counter_msg_char db 0
 
@@ -757,14 +752,6 @@ Move_RIGHT db $1c
 Move_FIRE db $04
 Move_SHIELD db $20
 
-Move_LEFT_ASCII_CODE db "1"
-	ds 5
-Move_RIGHT_ASCII_CODE db "2"
-	ds 5
-Move_FIRE_ASCII_CODE db "5"
-	ds 5
-Move_SHIELD_ASCII_CODE db "SPACE"
-	ds 1
 
 ; 	INICIO  *************************************************************************************************************************************************************************
 ;
@@ -835,10 +822,8 @@ Init_level:
 
 	call Derivando_RND	; v2. Ok.
 
-	call Extrae_numero_aleatorio_y_avanza
+	call Extrae_numero_aleatorio_y_avanza	; v2. Ok.
 	ld (Clock_next_entity),a 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
-
-;	Inicia el nivel del juego. ------------------------------------------------------------------------------------------
 
 	call Inicializa_Nivel 									; After [Inicializa_Nivel], BC contains:
 

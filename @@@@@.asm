@@ -4,7 +4,7 @@ Cambiar la rutina de impresión de Amadeus, NO IMPLEMENTAR FUNCIÓN XOR !!!
 
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call Extrae_numero_aleatorio_y_avanza (Rutinas_de_inicio_y_niveles)
+;> call Main_menu_key (Banco_de_pruebas) > 
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
@@ -39,7 +39,7 @@ Imprime_Logo_principal:
 Down_File:
 Up_File:
 Derivando_RND:
-
+Extrae_numero_aleatorio_y_avanza:
 
 ;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -47,6 +47,8 @@ Derivando_RND:
 
 (Stack) ..... defw $0000 [Define_menu] ----- NO REINICIA !!!
 (Sound) ..... defw $0000 [BEEP], [Sound_Generator] ----- NO REINICIA !!!
+
+; ------------------------------------------------------------------------------------------------------------------
 
 Estas 2 variables sólo se utilizan en las pantallas de menú. Se pueden utilizar para otra cosa IN GAME.
 
@@ -92,8 +94,7 @@ Album_de_pintado_disparos_Entidades ..... defw Entidades_disparos_scanlines_albu
 Nivel_scan_disparos_album_de_pintado ..... defw Entidades_disparos_scanlines_album          ----- REINICIA !!!
 Album_de_borrado_disparos_Entidades ..... defw Entidades_disparos_scanlines_album_2         ----- REINICIA !!!
 
-
-
+RND_SP ..... defw Numeros_aleatorios [Extrae_numero_aleatorio_y_avanza] ----- REINICIA !!!
 
 
 
