@@ -250,7 +250,7 @@ Clean_boxes_and_albums:
 
 	ret
 
-; ------------------------------------
+; ---------------------------------------------------------------------------------------------------------------------------------------------
 ;
 ; 	12/11/26
 ;
@@ -1099,10 +1099,21 @@ Load_limits_and_place_registers:
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   4/4/26
+;   13/11/26
 ;
-;	Inicializa Nivel del juego.
+;	Inicializa cualquier nivel del juego.
 ;	
+;	Nivel_x db $f0,$0a,$70,$70 						
+;
+;												; 1er byte: Define el valor inicial de (Max_time_to_appear_entities).
+;												; 2º byte: Define el valor de (Decrease_top_time_entities).
+;												; 3er byte: Valor inicial de (Min_time_to_appear_entities).
+; 												; 4º byte: Valor inicial de (CLOCK_disparos_de_entidades).
+;	db 5 										; Nº de entidades que tiene el nivel.
+;
+;	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
+;
+;
 ;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
 ;									(Numero_de_entidades) ... Contiene el nº de entidades del nivel, (.db).
 ;									(Puntero_de_entidades) ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
@@ -1117,36 +1128,38 @@ Inicializa_Nivel:
 
 ; Actualiza (Puntero_indice_NIVELES).
 
-	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er nivel del índice.
+	ld hl,(Puntero_indice_NIVELES) 									; Inicialmente situado en el 1er puntero del índice de niveles, (defw Nivel_1).
 	call Extrae_address   						 					; Sitúa HL en el 1er byte que define: (Max_time_to_appear_entities).
 
 	ld a,(hl)
-	ld (Max_time_to_appear_entities),a
+	ld (Max_time_to_appear_entities),a 								; Valor máximo que tarda una entidad en aparecer en pantalla.
 
 	inc hl
 
 	ld a,(hl)
-	ld (Decrease_top_time_entities),a
+	ld (Decrease_top_time_entities),a 								; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
 
 	inc hl
 
 	ld a,(hl)
-	ld (Min_time_to_appear_entities),a
+	ld (Min_time_to_appear_entities),a 								; Valor mínimo que tarda una entidad en aparecer en pantalla.
 
 	inc hl
 
 	ld a,(hl)
-	ld (CLOCK_disparos_de_entidades),a
-	ld (Repone_CLOCK_disparos),a
+	ld (CLOCK_disparos_de_entidades),a 								; Habilita el permiso de disparo a las entidades cuando este contador llega a "0".
+	ld (Repone_CLOCK_disparos),a 									; Repone a su valor inicial el contador (CLOCK_disparos_de_entidades) cuando llega a "0". 
 
 	inc hl 
 
 	ld a,(hl)
-	ld (Numero_de_entidades),a					 					; Inicializa (Numero_de_entidades).
+	ld (Numero_de_entidades),a					 					; Nº total de entidades maliciosas que contiene el nivel.
 
 	ld b,a
 
 ;	Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
+
+	jr $
 
 	call M_entidades_a_BCD											; Inicializa:	Entidades_BCD_unidades db 0
 ;																					Entidades_BCD_decenas db 0

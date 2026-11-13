@@ -4,7 +4,7 @@ Cambiar la rutina de impresión de Amadeus, NO IMPLEMENTAR FUNCIÓN XOR !!!
 
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > 
+;> call Main_menu_key (Banco_de_pruebas) > call Inicializa_Nivel (Rutinas_de_inicio_y_niveles) > call M_entidades_a_BCD (Rutinas_de_inicio_y_niveles)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
@@ -71,8 +71,16 @@ Estas 2 variables sólo se utilizan en las pantallas de menú. Se pueden utiliza
 
 (Numero_de_teclas_definidas) ..... db $00 ----- NO REINICIA !!!
 
+(Max_time_to_appear_entities) ..... db 0 [Inicializa_Nivel] ----- NO REINICIA !!!
+(Decrease_top_time_entities) ..... db 0 [Inicializa_Nivel] ----- NO REINICIA !!!
+(Min_time_to_appear_entities) ..... db 0 [Inicializa_Nivel] ----- NO REINICIA !!!				 
+(CLOCK_disparos_de_entidades) ..... db 0 [Inicializa_Nivel] ----- NO REINICIA !!!
+(Repone_CLOCK_disparos) ..... db 0 [Inicializa_Nivel] ----- NO REINICIA !!!
+(Numero_de_entidades) ..... db 0 [Inicializa_Nivel] ----- NO REINICIA !!!	
+
 ;>>> Variables o cajas que SE REINICIAN con GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
+(Puntero_indice_NIVELES) ..... defw Indice_de_niveles [Inicializa_Nivel] ----- REINICIA GAME OVER !!!
 (Puntero_de_vidas) ..... defw Tabla_marcador_de_vidas [Pinta_Vida], [Borra_vida] ----- REINICIA GAME OVER !!!
 (Puntero_de_escudos) .....defw Tabla_marcador_de_escudos [Pinta_Escudo] ----- REINICIA GAME OVER !!!
 

@@ -485,7 +485,7 @@ Puntero_restore_caja defw 0
 Indice_restore_caja defw 0
 Puntero_indice_master defw 0
 
-Numero_de_entidades db 0									; Nº total de entidades maliciosas que contiene el nivel.
+Numero_de_entidades db 0									; Nº total de entidades que contiene el nivel.
 Numero_parcial_de_entidades db 0							; Nº de cajas que contiene un bloque de entidades. (7 Cajas).
 Entidades_en_curso db 0										; Entidades en pantalla.
 
@@ -624,8 +624,8 @@ RND_SP defw Numeros_aleatorios								; Puntero que se irá desplazando por el S
 Numero_rnd_disparos db 0
 
 Clock_next_entity db 0										; Transcurrido este tiempo aparece una nueva entidad.
-Repone_CLOCK_disparos db 0									; Reloj decreciente.
-CLOCK_disparos_de_entidades db 0
+Repone_CLOCK_disparos db 0									; Repone a su valor inicial el contador (CLOCK_disparos_de_entidades) cuando llega a "0". 
+CLOCK_disparos_de_entidades db 0 							; Habilita el permiso de disparo a las entidades cuando este contador llega a "0".
 
 Start_counter defw 0 										; Temporizador. Espera la pulsación de "FIRE" en los menús KEYBOARD y KEMPSTON. 
 Start_counter_2 db $05 										; 2º Temporizador, (3 bytes counter). Espera la pulsación "FIRE" en el menú KEMPSTON.
@@ -675,13 +675,15 @@ Puntero_game_over_noise defw Game_over_noise_index 			; (Puntero_game_over_noise
 Max_time_to_appear_entities db 0 							; Valor máximo que tarda una entidad en aparecer en pantalla.
 Decrease_top_time_entities db 0 							; Cada vez que aparece una nueva entidad decrementa (Max_time_to_appear_entities) con el valor de esta variable.
 Min_time_to_appear_entities db 0							;   ""  mínimo  "	 "	  "		"	 "		"	 "	    "   .
-; Dont_repeat_pos_ini db 0,0,0
+
 Temp_Amadeus_exit db 80										; Temporiza la secuencia de: "SALIDA DE AMADEUS", NIVEL SUPERADO.
 
 Variables_DRAW1: 											; Estas variables no se inicializan si avanzamos de nivel.
 
 Nivel db 1													; Nivel actual del juego.
-Puntero_indice_NIVELES defw Indice_de_niveles
+
+Puntero_indice_NIVELES defw Indice_de_niveles				; Inicialmente situado en el 1er puntero del índice de niveles, (defw Nivel_1).
+
 Puntero_de_mensajes_de_niveles defw Msg_level_index 		; Inicialmente apunta al mensaje del nivel 1.
 Lives db 3
 Shields db 3 												; Nº de Shields
