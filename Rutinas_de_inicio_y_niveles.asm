@@ -1159,10 +1159,14 @@ Inicializa_Nivel:
 
 ;	Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
 
-	jr $
+	push hl
+	push bc
 
-	call M_entidades_a_BCD											; Inicializa:	Entidades_BCD_unidades db 0
-;																					Entidades_BCD_decenas db 0
+	call M_entidades_a_BCD											; Inicializa:	UNIDADES_Marcador_decimal_de_entidades db 0
+;																					DECENAS_Marcador_decimal_de_entidades db 0
+	pop bc
+	pop hl
+
 	inc hl
 
 	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
@@ -1744,21 +1748,23 @@ Inicializa_Numero_parcial_de_entidades
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;	04/10/25
+;	16/11/26
 ;
-;	Convierte el valor hexadecimal de (Numero_de_entidades) a dos valores BCD que guardarán las variables:
+;	Convierte el valor hexadecimal de (Numero_de_entidades) en un valor decimal que almacenaremos en DOS variables:
 ;
-;   Entidades_BCD_unidades
-;	Entidades_BCD_decenas
+;   (UNIDADES_Marcador_decimal_de_entidades)
+;	(DECENAS_Marcador_decimal_de_entidades)
 ;
-;	Utilizaremos estas variables para construir el marcador de dos dígitos digital que muestra el nº de entidades del nivel.
+;	INPUTS: (A) Contiene (Numero_de_entidades).
+;
+;	Utilizaremos estas variables para construir el marcador decimal de dos dígitos que muestra el nº de entidades_
+;	_ que quedan por eliminar para completar el nivel.
 
 M_entidades_a_BCD:
 
-	push hl
-	push bc
+	jr $
 
-	ld hl,Entidades_BCD_unidades
+	ld hl,UNIDADES_Marcador_decimal_de_entidades
 	ld b,9
 	ld c,0
 
@@ -1774,27 +1780,26 @@ M_entidades_a_BCD:
 	jr 2B
 
 1 ld (hl),a
+
 	inc hl
+
 	ld (hl),c
 
 ;	Inicializa los punteros de dígitos.
 
 ;	Unidades:
 
-	ld a,(Entidades_BCD_unidades)
+	ld a,(UNIDADES_Marcador_decimal_de_entidades)
 	call Situa_en_indice_de_digitos_grandes
 	call Extrae_address
 	ld (Puntero_unidades_grandes),hl
 
 ;	Decenas:
 
-	ld a,(Entidades_BCD_decenas)
+	ld a,(DECENAS_Marcador_decimal_de_entidades)
 	call Situa_en_indice_de_digitos_grandes
 	call Extrae_address
 	ld (Puntero_decenas_grandes),hl
-
-	pop bc
-	pop hl
 
 	ret
 

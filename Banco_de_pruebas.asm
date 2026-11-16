@@ -691,8 +691,8 @@ Shields db 3 												; Nº de Shields
 Puntero_de_escudos defw Tabla_marcador_de_escudos			; Ambos punteros se inician al comienzo de su respectivas tablas. Estas variables las utilizan_
 Puntero_de_vidas defw Tabla_marcador_de_vidas 				; _ las rutinas que pintan y borran las vidas y escudos en la parte sup. izq. de la pantalla.
 
-Entidades_BCD_unidades db 0
-Entidades_BCD_decenas db 0
+UNIDADES_Marcador_decimal_de_entidades db 0
+DECENAS_Marcador_decimal_de_entidades db 0
 
 Puntero_unidades_grandes defw 0
 Puntero_decenas_grandes defw 0

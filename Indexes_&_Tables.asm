@@ -136,3 +136,23 @@ Tabla_marcador_de_escudos:
 	defw Escudo_2,Escudo_00_Fb,$0301
 	defw Escudo_3,Escudo_00,$0201
 
+; --------------------------------------------------------------------------------------------------------------
+
+Msg_level_index:
+
+    defw Msg_1
+    defw Msg_2
+    defw Msg_3
+;   defw Msg_4
+
+    defw 0
+    defw 0
+
+Msg_1 db 8,5                                    ; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
+    defm "FLIES",0
+
+Msg_2 db 8,5                                    ; El 1er .db indica que sumamos +8 columnas a la dirección donde se imprimen los mensajes: $4826.
+    defm "UFOS",0
+
+Msg_3 db 4,12
+    defm "FLIES & UFOS",0
