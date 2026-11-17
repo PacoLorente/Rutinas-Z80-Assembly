@@ -351,7 +351,7 @@ Prepara_Cajas_Master:
 
 ;	Preparamos el puntero_master para que apunte al .defw correspondiente del índice según el (Tipo) de entidad.
 
-	ld a,c														
+	ld a,c
 	ex af,af
 	ld a,c 															; (Clase) de la entidad en A y A´.
 
@@ -1099,7 +1099,7 @@ Load_limits_and_place_registers:
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;   13/11/26
+;   17/11/26
 ;
 ;	Inicializa cualquier nivel del juego.
 ;	
@@ -1113,16 +1113,25 @@ Load_limits_and_place_registers:
 ;
 ;	db 1,2,3,2,1 								; Clases de entidades. (Irán apareciendo por este orden).
 ;
+;	---------------------------------------------------------------------------------------------
 ;
-;	OUTPUT:	Inicializa: (Puntero_indice_NIVELES) ... Situado en el 1er Nivel del Índice de Niveles, (.defw).
-;									(Numero_de_entidades) ... Contiene el nº de entidades del nivel, (.db).
-;									(Puntero_de_entidades) ... Puntero,  (.defw). Define el (Tipo) de las distintas entidades que componen el nivel.
-; 									(Puntero_indice_master)	... Se sitúa en la 1ª de las 3 Cajas_Master.
+;	MODIFY: A,HL,BC y DE.
+;
+;	OUTPUT: Inicializa las siguientes variables de nivel: (Max_time_to_appear_entities).
+;                                   					  (Decrease_top_time_entities).
+;	                                                      (Min_time_to_appear_entities).				   
+; 														  (CLOCK_disparos_de_entidades).
+; 														  (Repone_CLOCK_disparos).
+; 														  (Numero_de_entidades).
+; 														  (Puntero_unidades_grandes).
+; 														  (Puntero_decenas_grandes).
+; 	 													  (Puntero_de_entidades).													  
+;
 ;
 ;					B contiene (Numero_de_entidades).
 ;					C contiene el (Tipo) de la 1ª entidad del nivel.
-;
-;	MODIFY: A,HL,BC y DE.
+
+
 
 Inicializa_Nivel:
 
@@ -1154,22 +1163,15 @@ Inicializa_Nivel:
 
 	ld a,(hl)
 	ld (Numero_de_entidades),a					 					; Nº total de entidades maliciosas que contiene el nivel.
-
 	ld b,a
 
-;	Codificamos (Numero_de_entidades) en BCD para poder pintar en cada FRAME el marcador de entidades.
+;	Convertimos (Numero_de_entidades) a sistema DECIMAL para poder representarlo en pantalla.
 
-	push hl
-	push bc
-
-	call M_entidades_a_BCD											; Inicializa:	UNIDADES_Marcador_decimal_de_entidades db 0
-;																					DECENAS_Marcador_decimal_de_entidades db 0
-	pop bc
-	pop hl
-
+	call Num_de_entidades_a_decimal									
+;																				
 	inc hl
 
-	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel_1
+	ld (Puntero_de_entidades),hl									; Inicializa (Puntero_de_entidades), .defw que define el (Tipo) de la 1ª entidad del Nivel.
 	ld c,(hl)													
 
 	ret 										 
@@ -1748,36 +1750,52 @@ Inicializa_Numero_parcial_de_entidades
 
 ;---------------------------------------------------------------------------------------------------------------
 ;
-;	16/11/26
+;	17/11/26
 ;
 ;	Convierte el valor hexadecimal de (Numero_de_entidades) en un valor decimal que almacenaremos en DOS variables:
 ;
 ;   (UNIDADES_Marcador_decimal_de_entidades)
 ;	(DECENAS_Marcador_decimal_de_entidades)
 ;
-;	INPUTS: (A) Contiene (Numero_de_entidades).
-;
 ;	Utilizaremos estas variables para construir el marcador decimal de dos dígitos que muestra el nº de entidades_
 ;	_ que quedan por eliminar para completar el nivel.
+;
+;	INPUTS: (A) Contiene (Numero_de_entidades).
+;
+;	MODIFY: AF, HL, BC, (UNIDADES_Marcador_decimal_de_entidades), (DECENAS_Marcador_decimal_de_entidades).
+;
+;	OUTPUT: Actualiza las variables: (UNIDADES_Marcador_decimal_de_entidades) y (DECENAS_Marcador_decimal_de_entidades).
 
-M_entidades_a_BCD:
 
-	jr $
+
+Num_de_entidades_a_decimal:
+
+	push hl
+	push bc 											; Hay tres llamadas a esta rutina: La primera desde [Inicializa_Nivel], cuando iniciamos el marcador,_	
+; 														; _ (antes de empezar la partida) y las DOS restantes desde [Genera_explosion], (cada vez que eliminamos_
+; 														; _ a una entidad).
+;
+;														; Guardamos los registros BC y HL dentro de la rutina para ahorrarnos PUSH y POP.									
 
 	ld hl,UNIDADES_Marcador_decimal_de_entidades
 	ld b,9
-	ld c,0
+	ld c,0 												; (C) actúa como contador de decenas.
 
 2 cp b
 
 	jr z,1F
-	jr c,1F
+	jr c,1F 											; Si (Numero_de_entidades) es < "9" volcamos resultado en las variables.
+
+;	(Numero_de_entidades) es > "9".
+;	Descontamos una decena y aumentamos el contador de decenas, (C).
 
 	sub 10
 
 	inc c
 
-	jr 2B
+	jr 2B 												; Return to compare with "9".
+
+;	Volcamos resultado en variables:
 
 1 ld (hl),a
 
@@ -1789,31 +1807,35 @@ M_entidades_a_BCD:
 
 ;	Unidades:
 
-	ld a,(UNIDADES_Marcador_decimal_de_entidades)
-	call Situa_en_indice_de_digitos_grandes
+	call Situa_en_indice_de_digitos_grandes 			
 	call Extrae_address
 	ld (Puntero_unidades_grandes),hl
 
 ;	Decenas:
 
-	ld a,(DECENAS_Marcador_decimal_de_entidades)
+	ld a,c
+
 	call Situa_en_indice_de_digitos_grandes
 	call Extrae_address
 	ld (Puntero_decenas_grandes),hl
 
+	pop bc
+	pop hl
+
 	ret
 
-; -----------------------------------------------
+; ---------------------------------
 
-Situa_en_indice_de_digitos_grandes:
+Situa_en_indice_de_digitos_grandes: 					; Subrutina de [Num_de_entidades_a_decimal].
 
-	and a 												; Identifica si el dígito BCD es "0".
-
+	and a 												; Identifica si las unidades son "0".
 	ld b,a
 
 	ld hl,Index_big_numbers
 
 	ret z
+
+;	Bucle que nos sitúa en el puntero apropiado del índice.
 
 1 inc hl
 	inc hl

@@ -691,11 +691,10 @@ Shields db 3 												; Nº de Shields
 Puntero_de_escudos defw Tabla_marcador_de_escudos			; Ambos punteros se inician al comienzo de su respectivas tablas. Estas variables las utilizan_
 Puntero_de_vidas defw Tabla_marcador_de_vidas 				; _ las rutinas que pintan y borran las vidas y escudos en la parte sup. izq. de la pantalla.
 
-UNIDADES_Marcador_decimal_de_entidades db 0
-DECENAS_Marcador_decimal_de_entidades db 0
-
-Puntero_unidades_grandes defw 0
-Puntero_decenas_grandes defw 0
+UNIDADES_Marcador_decimal_de_entidades db 0 				; Unidades del contador decimal de entidades que quedan por eliminar.
+DECENAS_Marcador_decimal_de_entidades db 0 					; Decenas del contador decimal de entidades   "     "    "      "
+Puntero_unidades_grandes defw 0								; Almacena dirección de memoria donde se encuentran los datos del numero grandote, UNIDADES.
+Puntero_decenas_grandes defw 0 								;      "       "           "      "           "      "    "          "       "   , DECENAS.
 
 Attr_big_counter db %01000110
 
@@ -827,21 +826,24 @@ Init_level:
 	call Extrae_numero_aleatorio_y_avanza	; v2. Ok.
 	ld (Clock_next_entity),a 								; El 1er nº aleatorio define cuando aparece la 1ª entidad en pantalla.
 
-	call Inicializa_Nivel 									; After [Inicializa_Nivel], BC contains:
+	call Inicializa_Nivel	; v2. Ok. 						
+
+; 	After [Inicializa_Nivel], BC contains:
 
 ;					B contain (Numero_de_entidades).
 ;					C contain (Tipo), (first level's entity).
 ;
-; 					HL apunta al .db que define el (Tipo) de la primera entidad de este nivel.
+; 					HL apunta al .db que define la (Clase) de la primera entidad de este nivel.
 
-;	Imprime Contador de entidades.
+	push hl 												; PUSH (Puntero_de_entidades).
 
-	push hl
-	call Print_enemy_counter
+	jr $
+
+	call Print_enemy_counter 								; Imprime Contador de entidades
 
 ;	Imprime Puntuación.
 
-	push bc
+	push bc 												; PUSH (Numero_de_entidades) / (Clase).
 	call Print_Score_Counter
 
 	ld bc,$ffff
@@ -854,8 +856,8 @@ Init_level:
 	call Print_level_msg
 	call No_zeros
 
-	pop bc
-	pop hl
+	pop bc 													; POP (Numero_de_entidades) / (Clase).
+	pop hl 													; POP (Puntero_de_entidades).
 
 ;	Prepara cajas.
 
@@ -980,6 +982,7 @@ Main:
 
 	ld a,(Entidades_en_curso)									; Entidades que hay en pantalla.
 	cp b
+
 	jr z,1F
 
 	ld a,(FRAMES)
@@ -2426,7 +2429,7 @@ Siguiente_frame_explosion:
 
 ; ----------------------------------
 
-	call nz, M_entidades_a_BCD								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
+	call nz, Num_de_entidades_a_decimal								; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
 
 ; Restauramos una nueva entidad de la caja "Master" correspondiente.
 ; IX apunta al 1er .db de la entidad eliminada.
@@ -2473,7 +2476,7 @@ Siguiente_frame_explosion:
 	dec (hl)
 
 	ld a,(hl)
-	call M_entidades_a_BCD									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
+	call Num_de_entidades_a_decimal									; Actualizamos la representación BCD de (Numero_de_entidades) + (Numero_parcial_de_entidades).
 
 	inc hl
 	dec (hl)		

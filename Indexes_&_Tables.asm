@@ -156,3 +156,18 @@ Msg_2 db 8,5                                    ; El 1er .db indica que sumamos 
 
 Msg_3 db 4,12
     defm "FLIES & UFOS",0
+
+; --------------------------------------------------------------------------------------------------------------
+
+Index_big_numbers:
+
+    DEFW Cero
+    DEFW Uno
+    DEFW Dos
+    DEFW Tres
+    DEFW Cuatro
+    DEFW Cinco
+    DEFW Seis
+    DEFW Siete
+    DEFW Ocho
+    DEFW Nueve

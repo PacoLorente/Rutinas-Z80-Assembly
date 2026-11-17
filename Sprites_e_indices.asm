@@ -696,21 +696,6 @@ Explosion_Amadeus_3:
 
 ; --------------------------------------------------------------------------
 
-Index_big_numbers:
-
-	DEFW Cero
-	DEFW Uno
-	DEFW Dos
-	DEFW Tres
-	DEFW Cuatro
-	DEFW Cinco
-	DEFW Seis
-	DEFW Siete
-	DEFW Ocho
-	DEFW Nueve
-
-; --------------------------------------------------------------------------
-
 ; ASM source file created by SevenuP v1.20
 ; SevenuP (C) Copyright 2002-2006 by Jaime Tejedor Gomez, aka Metalbrain
 

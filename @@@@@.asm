@@ -4,7 +4,7 @@ Cambiar la rutina de impresión de Amadeus, NO IMPLEMENTAR FUNCIÓN XOR !!!
 
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call Inicializa_Nivel (Rutinas_de_inicio_y_niveles) > call M_entidades_a_BCD (Rutinas_de_inicio_y_niveles)
+;> call Main_menu_key (Banco_de_pruebas) > call Print_enemy_counter (Print_routines)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
@@ -40,6 +40,9 @@ Down_File:
 Up_File:
 Derivando_RND:
 Extrae_numero_aleatorio_y_avanza:
+Num_de_entidades_a_decimal:
+Inicializa_Nivel:
+
 
 ;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -78,11 +81,42 @@ Estas 2 variables sólo se utilizan en las pantallas de menú. Se pueden utiliza
 (Repone_CLOCK_disparos) ..... db 0 [Inicializa_Nivel] ----- NO REINICIA !!!
 (Numero_de_entidades) ..... db 0 [Inicializa_Nivel] ----- NO REINICIA !!!	
 
+(Puntero_unidades_grandes) ..... defw 0	[Num_de_entidades_a_decimal] ----- NO REINICIA !!!	
+(Puntero_decenas_grandes) ..... defw 0 [Num_de_entidades_a_decimal] ----- NO REINICIA !!!	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;>>> Variables o cajas que SE REINICIAN con GAME OVER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 (Puntero_indice_NIVELES) ..... defw Indice_de_niveles [Inicializa_Nivel] ----- REINICIA GAME OVER !!!
 (Puntero_de_vidas) ..... defw Tabla_marcador_de_vidas [Pinta_Vida], [Borra_vida] ----- REINICIA GAME OVER !!!
 (Puntero_de_escudos) .....defw Tabla_marcador_de_escudos [Pinta_Escudo] ----- REINICIA GAME OVER !!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;>>> Variables o cajas que SE REINICIAN SIEMPRE, CADA VEZ QUE INICIAMOS NUEVO NIVEL !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -92,19 +126,19 @@ Estas 2 variables sólo se utilizan en las pantallas de menú. Se pueden utiliza
 (Album_de_borrado) ..... defw Scanlines_album_2                 ----- REINICIA !!!
 (Scanlines_album_SP) ..... defw Scanlines_album                   ----- REINICIA !!!
 
-Album_de_pintado_Amadeus ..... defw Amadeus_scanlines_album             ----- REINICIA !!!
-Album_de_borrado_Amadeus ..... defw Amadeus_scanlines_album_2           ----- REINICIA !!!
+(Album_de_pintado_Amadeus) ..... defw Amadeus_scanlines_album             ----- REINICIA !!!
+(Album_de_borrado_Amadeus) ..... defw Amadeus_scanlines_album_2           ----- REINICIA !!!
 
-Album_de_pintado_disparos_Amadeus ..... defw Amadeus_disparos_scanlines_album           ----- REINICIA !!!
-Album_de_borrado_disparos_Amadeus ..... defw Amadeus_disparos_scanlines_album_2         ----- REINICIA !!!
+(Album_de_borrado_disparos_Amadeus) ..... defw Amadeus_disparos_scanlines_album_2         ----- REINICIA !!!
 
-Album_de_pintado_disparos_Entidades ..... defw Entidades_disparos_scanlines_album           ----- REINICIA !!!
-Nivel_scan_disparos_album_de_pintado ..... defw Entidades_disparos_scanlines_album          ----- REINICIA !!!
-Album_de_borrado_disparos_Entidades ..... defw Entidades_disparos_scanlines_album_2         ----- REINICIA !!!
+(Album_de_pintado_disparos_Entidades) ..... defw Entidades_disparos_scanlines_album           ----- REINICIA !!!
+(Nivel_scan_disparos_album_de_pintado) ..... defw Entidades_disparos_scanlines_album          ----- REINICIA !!!
+(Album_de_borrado_disparos_Entidades) ..... defw Entidades_disparos_scanlines_album_2         ----- REINICIA !!!
 
-RND_SP ..... defw Numeros_aleatorios [Extrae_numero_aleatorio_y_avanza] ----- REINICIA !!!
+(RND_SP) ..... defw Numeros_aleatorios [Extrae_numero_aleatorio_y_avanza] ----- REINICIA !!!
 
-
+(UNIDADES_Marcador_decimal_de_entidades) ..... db 0 [Num_de_entidades_a_decimal] ----- REINICIA !!!			
+(DECENAS_Marcador_decimal_de_entidades) ..... db 0 [Num_de_entidades_a_decimal] ----- REINICIA !!! 					
 
 
 
