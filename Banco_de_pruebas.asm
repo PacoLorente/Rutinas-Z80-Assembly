@@ -696,9 +696,7 @@ DECENAS_Marcador_decimal_de_entidades db 0 					; Decenas del contador decimal d
 Puntero_unidades_grandes defw 0								; Almacena dirección de memoria donde se encuentran los datos del numero grandote, UNIDADES.
 Puntero_decenas_grandes defw 0 								;      "       "           "      "           "      "    "          "       "   , DECENAS.
 
-Attr_big_counter db %01000110
-
-; SCORE:
+; SCORE PANEL:
 
 Score_hex defw 0
 
@@ -707,6 +705,7 @@ Score_BCD_decenas db 0
 Score_BCD_centenas db 0
 Score_BCD_unidades_de_millar db 0
 Score_BCD_decenas_de_millar db 0
+
 Puntero_de_unidades_Score defw Cero_Score
 Puntero_de_decenas_Score defw Cero_Score
 Puntero_de_centenas_Score defw Cero_Score
@@ -837,13 +836,14 @@ Init_level:
 
 	push hl 												; PUSH (Puntero_de_entidades).
 
-	jr $
-
-	call Print_enemy_counter 								; Imprime Contador de entidades
+	call Print_enemy_counter	; v2. Ok. 					; Imprime Contador de entidades
 
 ;	Imprime Puntuación.
 
 	push bc 												; PUSH (Numero_de_entidades) / (Clase).
+
+;	jr $
+
 	call Print_Score_Counter
 
 	ld bc,$ffff

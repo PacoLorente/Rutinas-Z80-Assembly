@@ -4,7 +4,7 @@ Cambiar la rutina de impresión de Amadeus, NO IMPLEMENTAR FUNCIÓN XOR !!!
 
 ; ------------------------------------------------------------------------------------------------------- ;
 
-;> call Main_menu_key (Banco_de_pruebas) > call Print_enemy_counter (Print_routines)
+;> call Main_menu_key (Banco_de_pruebas) > call Print_Score_Counter (Print_routines)
 
 Rutinas v2. Ok. :   ; v2. Ok.
 
@@ -42,7 +42,7 @@ Derivando_RND:
 Extrae_numero_aleatorio_y_avanza:
 Num_de_entidades_a_decimal:
 Inicializa_Nivel:
-
+Print_enemy_counter:
 
 ;>>> Variables o cajas que NO SE REINICIAN NUNCA !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 

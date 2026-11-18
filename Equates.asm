@@ -121,6 +121,12 @@ Unidades_cont_ent_21 equ Unidades_cont_ent_20 + 256
 Unidades_cont_ent_22 equ Unidades_cont_ent_21 + 256
 Unidades_cont_ent_23 equ Unidades_cont_ent_22 + 256
 
+Attr_big_counter equ %01000110
+
+Entyties_counter_address_attrs_1 equ $580b
+Entyties_counter_address_attrs_2 equ $582b
+Entyties_counter_address_attrs_3 equ $584b
+
 ; ----- ----- ----- ----- ----- ----- ----- -----
 
 ; SCORE:

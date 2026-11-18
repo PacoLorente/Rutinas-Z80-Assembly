@@ -593,31 +593,36 @@ Print_Moon:
 	ret
 
 ;---------------------------------------------------------------------
-;   Imprime el contador: ENEMIGOS RESTANTES.
+;   
+;   18/11/26
 ;
-;   4/10/25
+;   Imprime el contador: ENEMIGOS RESTANTES en pantalla.
 ;
-;   MODIFY:HL
+;   Cada dígito del contador ocupa 48 bytes. (3 Files X 2 Columns).
 ;
-
-;   Decenas.
+;   MODIFY: AF y HL.
+;
 
 Print_enemy_counter:
 
+;   Vamos a utilizar el puntero de pila, (SP) para extraer los datos que componen el dígito.
+
+;   Decenas.
+
     ld (Stack),sp
-    ld sp,(Puntero_decenas_grandes)
+    ld sp,(Puntero_decenas_grandes)                      ; SP apaunta ahora a los datos que componen el dígito DECENAS del contador de enemigos.
 
     pop hl
-    ld (Decenas_cont_ent),hl
+    ld (Decenas_cont_ent),hl                             ; ($400b) / ($400c).
 
     pop hl
-    ld (Decenas_cont_ent_1),hl
+    ld (Decenas_cont_ent_1),hl                           ; ($410b) / ($410c).
 
     pop hl
-    ld (Decenas_cont_ent_2),hl
+    ld (Decenas_cont_ent_2),hl                           ; ($420b) / ($420c).
 
     pop hl
-    ld (Decenas_cont_ent_3),hl
+    ld (Decenas_cont_ent_3),hl                           ; ($430b) / ($430c).
 
     pop hl
     ld (Decenas_cont_ent_4),hl
@@ -681,19 +686,19 @@ Print_enemy_counter:
 
 ;   Unidades.
 
-    ld sp,(Puntero_unidades_grandes)
+    ld sp,(Puntero_unidades_grandes)                     ; SP apaunta ahora a los datos que componen el dígito DECENAS del contador de enemigos.
 
     pop hl
-    ld (Unidades_cont_ent),hl
+    ld (Unidades_cont_ent),hl                            ; ($400d) / ($400e).
 
     pop hl
-    ld (Unidades_cont_ent_1),hl
+    ld (Unidades_cont_ent_1),hl                          ; ($410d) / ($420e).
 
     pop hl
-    ld (Unidades_cont_ent_2),hl
+    ld (Unidades_cont_ent_2),hl                          ; ($410d) / ($420e).
 
     pop hl
-    ld (Unidades_cont_ent_3),hl
+    ld (Unidades_cont_ent_3),hl                          ; ($410d) / ($420e).
 
     pop hl
     ld (Unidades_cont_ent_4),hl
@@ -757,30 +762,21 @@ Print_enemy_counter:
 
     ld sp,(Stack)
 
-;   Attrs.
+;   Imprime 3 Filas de atributos, (4 columnas).
 
-    ld hl,Decenas_cont_ent
-    call Calcula_direccion_atributos
+    ld a, Attr_big_counter                               ;  %01000110 
+;                                                        ;  Attrs.: BRIGHT, BLACK PAPER, YELLOW INK.
 
-    ld a, (Attr_big_counter)
-    ld sp,(Stack)
-    call Pintor:
+    ld hl,Entyties_counter_address_attrs_1               ;  $580b
+    call Pintor_de_attrs
 
-    ld hl,Decenas_cont_ent_8
-    call Calcula_direccion_atributos
+    ld hl,Entyties_counter_address_attrs_2               ;  $582b
+    call Pintor_de_attrs
 
-    ld a, (Attr_big_counter)
-    ld sp,(Stack)
-    call Pintor:
+    ld hl,Entyties_counter_address_attrs_3               ;  $584b
+    call Pintor_de_attrs
 
-    ld hl,Decenas_cont_ent_16
-    call Calcula_direccion_atributos
-
-    ld a, (Attr_big_counter)
-    ld sp,(Stack)
-    call Pintor:
-
-Pintor:
+Pintor_de_attrs:
 
     ld (hl),a
     inc l
