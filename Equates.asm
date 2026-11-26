@@ -238,3 +238,47 @@ Shot_sound_init_value equ $1601 				;	Valor inicial del efecto de disparo de Ama
 ;	Mensajes de texto.
 
 Fila_msg_de_nivel equ Line_9 + 6				;	Los mensajes de nivel se imprimen en la fila 9, columna 6, (antes del centrado).
+
+;	Datos fijos de los álbumes de líneas de Amadeus:
+
+	org Amadeus_scanlines_album
+
+	db $00,$00,$10
+	db $00,$50
+	db $00,$51
+	db $00,$52
+	db $00,$53
+	db $00,$54
+	db $00,$55
+	db $00,$56
+	db $00,$57
+
+	db $00,$50
+	db $00,$51
+	db $00,$52
+	db $00,$53
+	db $00,$54
+	db $00,$55
+	db $00,$56
+	db $00,$57
+
+	org Amadeus_scanlines_album_2
+
+	db $00,$00,$10
+	db $00,$50
+	db $00,$51
+	db $00,$52
+	db $00,$53
+	db $00,$54
+	db $00,$55
+	db $00,$56
+	db $00,$57
+
+	db $00,$50
+	db $00,$51
+	db $00,$52
+	db $00,$53
+	db $00,$54
+	db $00,$55
+	db $00,$56
+	db $00,$57

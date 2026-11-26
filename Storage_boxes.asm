@@ -13,3 +13,4 @@ Move_SHIELD_ASCII_CODE db "SPACE"
 	ds 1
 
 Numeros_aleatorios ds 7 																; Almacén de 7 nº pseudo aleatorios.
+
