@@ -2773,7 +2773,7 @@
    5+ 9608              ; Parámetros DRAW.
    6+ 9608              ;
    7+ 9608
-   8+ 9608              Bandeja_DRAW: 	; ---------------------------------------------------------------------------------------------------------------------------
+   8+ 9608              Variables: 	; ---------------------------------------------------------------------------------------------------------------------------
    9+ 9608
   10+ 9608 00           Clase db 0  												; A cada entidad se le asigna un nº o (Clase) para poder asignarle una de las 3 Cajas_Master.
   11+ 9609              ; 															; En cada (Nivel) sólo puede haber 3 (Clases) diferentes de entidad pués sólo dispondremos de_
@@ -3389,7 +3389,7 @@
  133  977A              ;														 	; La rutina [Genera_datos_de_impresion] activa las interrupciones antes del RET.
  134  977A
  135  977A 11 EE 91     	ld de,Amadeus_BOX
- 136  977D CD EF A7     	call Parametros_de_bandeja_DRAW_a_Caja_Master	 		; Volcamos Amadeus en (Amadeus_BOX).
+ 136  977D CD EF A7     	call Parametros_de_Variables_a_Caja_Master	 		; Volcamos Amadeus en (Amadeus_BOX).
  137  9780
  138  9780              ;	Limpiamos la bandeja DRAW.
  139  9780
@@ -7251,8 +7251,8 @@
  244+ A3EB 21 58 82     	ld hl,Amadeus_scanlines_album_2
  245+ A3EE CD 16 A4     	call Inicializa_Amadeus_scanline_album
  246+ A3F1
- 247+ A3F1 21 08 96     	ld hl,Bandeja_DRAW
- 248+ A3F4 01 AD 00     	ld bc,(Variables_DRAW1-Bandeja_DRAW)-1
+ 247+ A3F1 21 08 96     	ld hl,Variables
+ 248+ A3F4 01 AD 00     	ld bc,(Variables_DRAW1-Variables)-1
  249+ A3F7 CD 3F 9F     	call Clean_mem
  250+ A3FA
  251+ A3FA C9           	ret
@@ -7376,7 +7376,7 @@
  369+ A43B 32 08 96     	ld (Clase),a 													; (Clase) de la entidad en la Bandeja Draw. La definición de la entidad no contiene (Clase).
  370+ A43E
  371+ A43E CD 33 A7     	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
- 372+ A441 CD C5 A7     	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
+ 372+ A441 CD C5 A7     	call Definicion_de_entidad_a_Variables						; Vuelca los datos de la definición de entidad en DRAW.
  373+ A444
  374+ A444              ;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
  375+ A444              ;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
@@ -7420,9 +7420,9 @@
  413+ A46B 5D           	ld e,l
  414+ A46C 54           	ld d,h
  415+ A46D
- 416+ A46D CD EF A7     	call Parametros_de_bandeja_DRAW_a_Caja_Master	 				; Caja de entidades Master completa.
+ 416+ A46D CD EF A7     	call Parametros_de_Variables_a_Caja_Master	 				; Caja de entidades Master completa.
  417+ A470
- 418+ A470              ;	Limpiamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
+ 418+ A470              ;	Limpiamos la Variables y las variables de movimiento para poder generar los mov. masticados_
  419+ A470              ;	_de otro (Tipo) de entidad.
  420+ A470              ;
  421+ A470              ;	Limpiamos bandeja y variables.
@@ -7431,7 +7431,7 @@
  424+ A471 32 7B 96     	ld (Ctrl_3),a 													; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
  425+ A474              ;																	; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados.
  426+ A474 21 08 96     	ld hl,Clase
- 427+ A477 01 3A 00     	ld bc,Gestion_de_ENTIDADES_y_CAJAS-Bandeja_DRAW
+ 427+ A477 01 3A 00     	ld bc,Gestion_de_ENTIDADES_y_CAJAS-Variables
  428+ A47A
  429+ A47A 0B           	dec bc
  430+ A47B
@@ -7716,14 +7716,14 @@
  709+ A535
  710+ A535              Inicia_puntero_objeto_izq:
  711+ A535
- 712+ A535 2A 21 96     	ld hl,(Indice_Sprite_izq) 								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
+ 712+ A535 2A 21 96     	ld hl,(Indice_Sprite_izq) 								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Variables.
  713+ A538 22 25 96     	ld (Puntero_DESPLZ_izq),hl
  714+ A53B
  715+ A53B CD C1 9E     	call Extrae_address
  716+ A53E
  717+ A53E 22 1C 96     	ld (Puntero_objeto),hl
  718+ A541
- 719+ A541 2A 1F 96     	ld hl,(Indice_Sprite_der) 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
+ 719+ A541 2A 1F 96     	ld hl,(Indice_Sprite_der) 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Variables.
  720+ A544 22 23 96     	ld (Puntero_DESPLZ_der),hl
  721+ A547
  722+ A547 C9           	ret
@@ -7734,13 +7734,13 @@
  727+ A548              Inicia_puntero_objeto_der:
  728+ A548
  729+ A548 2A 1F 96     	ld hl,(Indice_Sprite_der)
- 730+ A54B 22 23 96     	ld (Puntero_DESPLZ_der),hl 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
+ 730+ A54B 22 23 96     	ld (Puntero_DESPLZ_der),hl 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Variables.
  731+ A54E
  732+ A54E CD C1 9E     	call Extrae_address
  733+ A551
  734+ A551 22 1C 96     	ld (Puntero_objeto),hl
  735+ A554
- 736+ A554 2A 21 96     	ld hl,(Indice_Sprite_izq)								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
+ 736+ A554 2A 21 96     	ld hl,(Indice_Sprite_izq)								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Variables.
  737+ A557 22 25 96     	ld (Puntero_DESPLZ_izq),hl
  738+ A55A
  739+ A55A C9           	ret
@@ -8385,7 +8385,7 @@
 1378+ A6EC              Inicia_Amadeus:
 1379+ A6EC
 1380+ A6EC 21 64 92     	ld hl,Definicion_Amadeus
-1381+ A6EF CD C5 A7     	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
+1381+ A6EF CD C5 A7     	call Definicion_de_entidad_a_Variables						; Vuelca los datos de la definición de Amadeus en DRAW.
 1382+ A6F2
 1383+ A6F2 21 00 C8     	ld hl,Almacen_de_movimientos_masticados_Amadeus
 1384+ A6F5 22 0E 96     	ld (Puntero_de_almacen_de_mov_masticados),hl
@@ -8662,9 +8662,9 @@
 1655+ A7C5              ;	MODIFICA: HL,DE y BC
 1656+ A7C5
 1657+ A7C5
-1658+ A7C5              Definicion_de_entidad_a_bandeja_DRAW:
+1658+ A7C5              Definicion_de_entidad_a_Variables:
 1659+ A7C5
-1660+ A7C5 11 09 96     	ld de,Tipo   	 												; DE apunta al 2° .db de la bandeja_DRAW, (Tipo).
+1660+ A7C5 11 09 96     	ld de,Tipo   	 												; DE apunta al 2° .db de la Variables, (Tipo).
 1661+ A7C8 7E           	ld a,(hl)
 1662+ A7C9 12           	ld (de),a 														; Volcamos (Tipo).
 1663+ A7CA
@@ -8699,9 +8699,9 @@
 1692+ A7EF              ;	7/7/26
 1693+ A7EF              ;
 1694+ A7EF
-1695+ A7EF              Parametros_de_bandeja_DRAW_a_Caja_Master:
+1695+ A7EF              Parametros_de_Variables_a_Caja_Master:
 1696+ A7EF
-1697+ A7EF 21 08 96     	ld hl,Bandeja_DRAW
+1697+ A7EF 21 08 96     	ld hl,Variables
 1698+ A7F2 01 0C 00     	ld bc,12
 1699+ A7F5 ED B0        	ldir
 1700+ A7F7

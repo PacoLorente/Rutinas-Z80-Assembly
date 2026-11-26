@@ -133,7 +133,7 @@ Init_level:
 ;														 	; La rutina [Genera_datos_de_impresion] activa las interrupciones antes del RET.
 
 	ld de,Amadeus_BOX
-	call Parametros_de_bandeja_DRAW_a_Caja_Master	 		; Volcamos Amadeus en (Amadeus_BOX).
+	call Parametros_de_Variables_a_Caja_Master	 		; Volcamos Amadeus en (Amadeus_BOX).
 
 ;	Limpiamos la bandeja DRAW.
 

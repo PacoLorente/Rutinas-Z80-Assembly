@@ -244,8 +244,8 @@ Clean_boxes_and_albums:
 	ld hl,Amadeus_scanlines_album_2
 	call Inicializa_Amadeus_scanline_album
 
-	ld hl,Bandeja_DRAW
-	ld bc,(Variables_DRAW1-Bandeja_DRAW)-1
+	ld hl,Variables
+	ld bc,(Variables_DRAW1-Variables)-1
 	call Clean_mem
 
 	ret
@@ -369,7 +369,7 @@ Prepara_Cajas_Master:
 	ld (Clase),a 													; (Clase) de la entidad en la Bandeja Draw. La definición de la entidad no contiene (Clase).
 
 	call Definicion_segun_tipo										; HL apunta al 1er .db que define la entidad.
-	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de entidad en DRAW.
+	call Definicion_de_entidad_a_Variables						; Vuelca los datos de la definición de entidad en DRAW.
 
 ;	Antes de fabricar los movimientos masticados de una entidad generaremos un set de 7 nº aleatorios.
 ;	Así nos aseguramos de que dos entidades `del mismo (Tipo)', (que comparten PATRÓN_DE_MOV) tengan_
@@ -413,9 +413,9 @@ Movimientos_masticados_construidos:
 	ld e,l
 	ld d,h
 
-	call Parametros_de_bandeja_DRAW_a_Caja_Master	 				; Caja de entidades Master completa.
+	call Parametros_de_Variables_a_Caja_Master	 				; Caja de entidades Master completa.
 
-;	Limpiamos la bandeja_DRAW y las variables de movimiento para poder generar los mov. masticados_
+;	Limpiamos la Variables y las variables de movimiento para poder generar los mov. masticados_
 ;	_de otro (Tipo) de entidad.
 ;
 ;	Limpiamos bandeja y variables.
@@ -424,7 +424,7 @@ Movimientos_masticados_construidos:
 	ld (Ctrl_3),a 													; (Ctrl_3) ha de inicializarse pués lo utilizamos para indicar_
 ;																	; _, (entre otras cosas) cuando finalizamos de generar los mov. masticados.
 	ld hl,Clase
-	ld bc,Gestion_de_ENTIDADES_y_CAJAS-Bandeja_DRAW
+	ld bc,Gestion_de_ENTIDADES_y_CAJAS-Variables
 
 	dec bc
 
@@ -709,14 +709,14 @@ Inicia_Puntero_objeto:
 
 Inicia_puntero_objeto_izq:
 
-	ld hl,(Indice_Sprite_izq) 								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
+	ld hl,(Indice_Sprite_izq) 								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Variables.
 	ld (Puntero_DESPLZ_izq),hl
 
 	call Extrae_address
 
 	ld (Puntero_objeto),hl
 
-	ld hl,(Indice_Sprite_der) 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
+	ld hl,(Indice_Sprite_der) 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Variables.
 	ld (Puntero_DESPLZ_der),hl
 
 	ret
@@ -727,13 +727,13 @@ Inicia_puntero_objeto_izq:
 Inicia_puntero_objeto_der:
 
 	ld hl,(Indice_Sprite_der)
-	ld (Puntero_DESPLZ_der),hl 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Bandeja_DRAW.
+	ld (Puntero_DESPLZ_der),hl 								; La definición de la entidad asigna .defw a (Indice_Sprite_der) cuando iniciamos la Variables.
 
 	call Extrae_address
 
 	ld (Puntero_objeto),hl
 
-	ld hl,(Indice_Sprite_izq)								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Bandeja_DRAW.
+	ld hl,(Indice_Sprite_izq)								; La definición de la entidad asigna .defw a (Indice_Sprite_izq) cuando iniciamos la Variables.
 	ld (Puntero_DESPLZ_izq),hl
 
 	ret
@@ -1378,7 +1378,7 @@ Prepara_Cajas_de_Entidades:
 Inicia_Amadeus:
 
 	ld hl,Definicion_Amadeus
-	call Definicion_de_entidad_a_bandeja_DRAW						; Vuelca los datos de la definición de Amadeus en DRAW.
+	call Definicion_de_entidad_a_Variables						; Vuelca los datos de la definición de Amadeus en DRAW.
 
 	ld hl,Almacen_de_movimientos_masticados_Amadeus
 	ld (Puntero_de_almacen_de_mov_masticados),hl	
@@ -1655,9 +1655,9 @@ Situa_en_datos_de_definicion:
 ;	MODIFICA: HL,DE y BC
 
 
-Definicion_de_entidad_a_bandeja_DRAW:
+Definicion_de_entidad_a_Variables:
 
-	ld de,Tipo   	 												; DE apunta al 2° .db de la bandeja_DRAW, (Tipo).
+	ld de,Tipo   	 												; DE apunta al 2° .db de la Variables, (Tipo).
 	ld a,(hl)
 	ld (de),a 														; Volcamos (Tipo).
 
@@ -1692,9 +1692,9 @@ Definicion_de_entidad_a_bandeja_DRAW:
 ;	7/7/26
 ;
 
-Parametros_de_bandeja_DRAW_a_Caja_Master:
+Parametros_de_Variables_a_Caja_Master:
 
-	ld hl,Bandeja_DRAW
+	ld hl,Variables
 	ld bc,12
 	ldir													 
 

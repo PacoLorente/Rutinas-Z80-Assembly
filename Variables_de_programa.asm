@@ -5,7 +5,7 @@
 ; Parámetros DRAW. 	
 ;
 
-Bandeja_DRAW: 	; ---------------------------------------------------------------------------------------------------------------------------
+Variables: 	; ---------------------------------------------------------------------------------------------------------------------------
 
 Clase db 0  												; A cada entidad se le asigna un nº o (Clase) para poder asignarle una de las 3 Cajas_Master.
 ; 															; En cada (Nivel) sólo puede haber 3 (Clases) diferentes de entidad pués sólo dispondremos de_
